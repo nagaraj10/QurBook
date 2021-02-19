@@ -51,6 +51,19 @@ class FamilyListView {
         });
   }
 
+  String getName(Child child) {
+    var name = '';
+    if (child.firstName != null) {
+      name = child.firstName.toLowerCase();
+      if (child.lastName != null) {
+        name = name + ' ' + child.lastName.toLowerCase();
+      }
+      return toBeginningOfSentenceCase(name);
+    } else {
+      return name;
+    }
+  }
+
   Widget setupAlertDialoadContainer(
       List<SharedByUsers> sharedByMeList,
       BuildContext context,
@@ -129,8 +142,8 @@ class FamilyListView {
                   shrinkWrap: true,
                   itemCount: sharedByMe.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return ListTile(
-                      title: InkWell(
+                    return Card(
+                      child: InkWell(
                         child: Container(
                           margin: EdgeInsets.only(bottom: 6),
                           padding: EdgeInsets.all(6),
@@ -207,47 +220,52 @@ class FamilyListView {
                                                   fhbColors.bgColorContainer),
                                             )),
                               SizedBox(width: 20),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(
-                                    index == 0
-                                        ? sharedByMe[index].nickName != null
-                                            ? toBeginningOfSentenceCase(
-                                                sharedByMe[index]
-                                                    .nickName
-                                                    .toLowerCase())
-                                            : ''
-                                        : sharedByMe[index].child.firstName !=
-                                                null
-                                            ? toBeginningOfSentenceCase(
-                                                sharedByMe[index]
-                                                    .child
-                                                    .firstName
-                                                    .toLowerCase())
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Flexible(
+                                      child: Text(
+                                        index == 0
+                                            ? sharedByMe[index].nickName != null
+                                                ? toBeginningOfSentenceCase(
+                                                    sharedByMe[index]
+                                                        .nickName
+                                                        .toLowerCase())
+                                                : ''
+                                            : sharedByMe[index].child != null
+                                                ? getName(
+                                                    sharedByMe[index].child)
+                                                : '',
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                    Flexible(
+                                      child: Text(
+                                        sharedByMe[index].relationship != null
+                                            ? sharedByMe[index]
+                                                        .relationship
+                                                        .name !=
+                                                    null
+                                                ? toBeginningOfSentenceCase(
+                                                    sharedByMe[index]
+                                                        .relationship
+                                                        .name
+                                                        .toLowerCase())
+                                                : ''
                                             : '',
-                                    softWrap: false,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                  Text(
-                                    sharedByMe[index].relationship != null
-                                        ? sharedByMe[index].relationship.name !=
-                                                null
-                                            ? toBeginningOfSentenceCase(
-                                                sharedByMe[index]
-                                                    .relationship
-                                                    .name
-                                                    .toLowerCase())
-                                            : ''
-                                        : '',
-                                    softWrap: false,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(fontSize: 10),
-                                  )
-                                ],
+                                        softWrap: false,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(fontSize: 10),
+                                      ),
+                                    )
+                                  ],
+                                ),
                               )
                             ],
                           ),
