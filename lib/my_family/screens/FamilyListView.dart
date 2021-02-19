@@ -51,6 +51,19 @@ class FamilyListView {
         });
   }
 
+  String getName(Child child) {
+    var name = '';
+    if (child.firstName != null) {
+      name = child.firstName.toLowerCase();
+      if (child.lastName != null) {
+        name = name + ' ' + child.lastName.toLowerCase();
+      }
+      return toBeginningOfSentenceCase(name);
+    } else {
+      return name;
+    }
+  }
+
   Widget setupAlertDialoadContainer(
       List<SharedByUsers> sharedByMeList,
       BuildContext context,
@@ -129,8 +142,8 @@ class FamilyListView {
                   shrinkWrap: true,
                   itemCount: sharedByMe.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return ListTile(
-                      title: InkWell(
+                    return Card(
+                      child: InkWell(
                         child: Container(
                           margin: EdgeInsets.only(bottom: 6),
                           padding: EdgeInsets.all(6),
@@ -209,6 +222,7 @@ class FamilyListView {
                               SizedBox(width: 20),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
                                   Text(
                                     index == 0
@@ -218,16 +232,11 @@ class FamilyListView {
                                                     .nickName
                                                     .toLowerCase())
                                             : ''
-                                        : sharedByMe[index].child.firstName !=
-                                                null
-                                            ? toBeginningOfSentenceCase(
-                                                sharedByMe[index]
-                                                    .child
-                                                    .firstName
-                                                    .toLowerCase())
+                                        : sharedByMe[index].child != null
+                                            ? getName(sharedByMe[index].child)
                                             : '',
-                                    softWrap: false,
                                     overflow: TextOverflow.ellipsis,
+                                    maxLines: 2,
                                     style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w500),
