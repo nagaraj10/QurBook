@@ -43,9 +43,9 @@ import 'dart:convert';
 class EachDeviceValues extends StatefulWidget {
   EachDeviceValues(
       {this.device_name,
-      this.device_icon,
-      this.sheelaRequestString,
-      this.deviceNameForAdding});
+        this.device_icon,
+        this.sheelaRequestString,
+        this.deviceNameForAdding});
 
   final String device_name;
   final String device_icon;
@@ -80,7 +80,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   List<bool> isSelected = new List(2);
 
   HealthReportListForUserBlock _healthReportListForUserBlock =
-      new HealthReportListForUserBlock();
+  new HealthReportListForUserBlock();
 
   List<String> imagePathMain = new List();
 
@@ -192,18 +192,18 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                   onPressed: onOkClicked
                       ? () {}
                       : () async {
-                          onOkClicked = true;
+                    onOkClicked = true;
 
-                          new FHBUtils().check().then((intenet) {
-                            if (intenet != null && intenet) {
-                              createDeviceRecords(widget.deviceNameForAdding);
-                            } else {
-                              onOkClicked = false;
-                              new FHBBasicWidget().showInSnackBar(
-                                  STR_NO_CONNECTIVITY, scaffold_state);
-                            }
-                          });
-                        } /*() {
+                    new FHBUtils().check().then((intenet) {
+                      if (intenet != null && intenet) {
+                        createDeviceRecords(widget.deviceNameForAdding);
+                      } else {
+                        onOkClicked = false;
+                        new FHBBasicWidget().showInSnackBar(
+                            STR_NO_CONNECTIVITY, scaffold_state);
+                      }
+                    });
+                  } /*() {
                       new FHBUtils().check().then((intenet) {
                         if (intenet != null && intenet) {
                           createDeviceRecords(deviceName);
@@ -519,7 +519,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
   Widget getCardForBPMonitor(String deviceName) {
     return Container(
-        //height: 70,
+      //height: 70,
         padding: EdgeInsets.all(10.0),
         margin: EdgeInsets.only(left: 15, right: 15, top: 10),
         decoration: BoxDecoration(
@@ -578,7 +578,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                       fontWeight: FontWeight.w500,
                                       fontSize: 12,
                                       color:
-                                          Color(CommonConstants.bplightColor)),
+                                      Color(CommonConstants.bplightColor)),
                                   softWrap: true,
                                 ),
                                 /*Container(
@@ -681,7 +681,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                       fontWeight: FontWeight.w500,
                                       fontSize: 12,
                                       color:
-                                          Color(CommonConstants.bplightColor)),
+                                      Color(CommonConstants.bplightColor)),
                                   softWrap: true,
                                 ),
                                 /*Container(
@@ -738,7 +738,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
   Widget getCardForThermometer(String deviceName) {
     return Container(
-        //height: 70,
+      //height: 70,
         padding: EdgeInsets.all(10.0),
         margin: EdgeInsets.only(left: 15, right: 15, top: 10),
         decoration: BoxDecoration(
@@ -866,7 +866,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
   Widget getCardForPulseOxidometer(String deviceName) {
     return Container(
-        //height: 70,
+      //height: 70,
         padding: EdgeInsets.all(10.0),
         margin: EdgeInsets.only(left: 15, right: 15, top: 10),
         decoration: BoxDecoration(
@@ -1000,7 +1000,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
   Widget getCardForWeighingScale(String deviceName) {
     return Container(
-        //height: 70,
+      //height: 70,
         padding: EdgeInsets.all(10.0),
         margin: EdgeInsets.only(left: 15, right: 15, top: 10),
         decoration: BoxDecoration(
@@ -1077,7 +1077,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
   Widget getCardForGlucometer(String deviceName) {
     return Container(
-        //height: 70,
+      //height: 70,
         padding: EdgeInsets.all(10.0),
         margin: EdgeInsets.only(left: 15, right: 15, top: 10),
         decoration: BoxDecoration(
@@ -1239,7 +1239,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                   return new Center(
                     child: new CircularProgressIndicator(
                       backgroundColor:
-                          Color(new CommonUtil().getMyPrimaryColor()),
+                      Color(new CommonUtil().getMyPrimaryColor()),
                     ),
                   );
                 }
@@ -1248,53 +1248,53 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 List<DeviceIntervalData> deviceFullList = translis.last;
                 return !bpResult.isEmpty
                     ? GroupedListView<BPResult, String>(
-                        groupBy: (element) =>
-                            getFormattedDateTime(element.startDateTime),
-                        elements: bpResult,
-                        sort: false,
-                        groupSeparatorBuilder: (String value) => Padding(
-                          padding: const EdgeInsets.all(6.0),
-                          child: Row(
-                            children: [
-                              SizedBoxWidget(width: 15),
-                              Text(
-                                todayDate != value ? value : 'Today, ' + value,
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ],
-                          ),
+                  groupBy: (element) =>
+                      getFormattedDateTime(element.startDateTime),
+                  elements: bpResult,
+                  sort: false,
+                  groupSeparatorBuilder: (String value) => Padding(
+                    padding: const EdgeInsets.all(6.0),
+                    child: Row(
+                      children: [
+                        SizedBoxWidget(width: 15),
+                        Text(
+                          todayDate != value ? value : 'Today, ' + value,
+                          style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500),
                         ),
-                        indexedItemBuilder: (context, i, index) {
-                          return buildRowForBp(
-                              bpResult[index].sourceType,
-                              getFormattedDateTime(
-                                  bpResult[index].startDateTime),
-                              '${bpResult[index].systolic}',
-                              '${bpResult[index].diastolic}',
-                              '',
-                              'Systolic',
-                              'Diastolic',
-                              '',
-                              getFormattedTime(bpResult[index].startDateTime),deviceFullList[index].heartRateCollection[0].bpm!=null?deviceFullList[index].heartRateCollection[0].bpm.toString():''
-                              ,deviceFullList[index].deviceId);
-                        },
-                      )
+                      ],
+                    ),
+                  ),
+                  indexedItemBuilder: (context, i, index) {
+                    return buildRowForBp(
+                        bpResult[index].sourceType,
+                        getFormattedDateTime(
+                            bpResult[index].startDateTime),
+                        '${bpResult[index].systolic}',
+                        '${bpResult[index].diastolic}',
+                        '',
+                        'Systolic',
+                        'Diastolic',
+                        '',
+                        getFormattedTime(bpResult[index].startDateTime),deviceFullList[index].heartRateCollection[0].bpm!=null?deviceFullList[index].heartRateCollection[0].bpm.toString():''
+                        ,deviceFullList[index].deviceId);
+                  },
+                )
                     : Container(
-                        child: Center(
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 40, right: 40),
-                            child: Text(
-                              "No health record details available.",
-                              textAlign: TextAlign.center,
-                              style:
-                                  TextStyle(fontFamily: variable.font_roboto),
-                            ),
-                          ),
-                        ),
-                      );
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 40, right: 40),
+                      child: Text(
+                        "No health record details available.",
+                        textAlign: TextAlign.center,
+                        style:
+                        TextStyle(fontFamily: variable.font_roboto),
+                      ),
+                    ),
+                  ),
+                );
               });
         }
         break;
@@ -1307,7 +1307,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                   return new Center(
                     child: new CircularProgressIndicator(
                       backgroundColor:
-                          Color(new CommonUtil().getMyPrimaryColor()),
+                      Color(new CommonUtil().getMyPrimaryColor()),
                     ),
                   );
                 }
@@ -1317,56 +1317,56 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 List<DeviceIntervalData> deviceFullList = translis.last;
                 return !translist.isEmpty
                     ? GroupedListView<GVResult, String>(
-                        groupBy: (element) =>
-                            getFormattedDateTime(element.startDateTime),
-                        elements: translist,
-                        sort: false,
-                        groupSeparatorBuilder: (String value) => Padding(
-                          padding: const EdgeInsets.all(6.0),
-                          child: Row(
-                            children: [
-                              SizedBoxWidget(width: 15),
-                              Text(
-                                todayDate != value ? value : 'Today, ' + value,
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ],
-                          ),
+                  groupBy: (element) =>
+                      getFormattedDateTime(element.startDateTime),
+                  elements: translist,
+                  sort: false,
+                  groupSeparatorBuilder: (String value) => Padding(
+                    padding: const EdgeInsets.all(6.0),
+                    child: Row(
+                      children: [
+                        SizedBoxWidget(width: 15),
+                        Text(
+                          todayDate != value ? value : 'Today, ' + value,
+                          style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500),
                         ),
-                        indexedItemBuilder: (context, i, index) {
-                          return buildRowForGulcose(
-                              translist[index].sourceType,
-                              getFormattedDateTime(
-                                  translist[index].startDateTime),
-                              '${translist[index].bloodGlucoseLevel}',
-                              translist[index].mealContext == null ||
-                                      translist[index].mealContext == ''
-                                  ? 'Random'
-                                  : '${translist[index].mealContext}',
-                              '',
-                              'Blood Glucose',
-                              'Meal Type',
-                              '',
-                              getFormattedTime(translist[index].startDateTime),
-                              translist[index].bgUnit,deviceFullList[index].deviceId);
-                        },
-                      )
+                      ],
+                    ),
+                  ),
+                  indexedItemBuilder: (context, i, index) {
+                    return buildRowForGulcose(
+                        translist[index].sourceType,
+                        getFormattedDateTime(
+                            translist[index].startDateTime),
+                        '${translist[index].bloodGlucoseLevel}',
+                        translist[index].mealContext == null ||
+                            translist[index].mealContext == ''
+                            ? 'Random'
+                            : '${translist[index].mealContext}',
+                        '',
+                        'Blood Glucose',
+                        'Meal Type',
+                        '',
+                        getFormattedTime(translist[index].startDateTime),
+                        translist[index].bgUnit,deviceFullList[index].deviceId);
+                  },
+                )
                     : Container(
-                        child: Center(
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 40, right: 40),
-                            child: Text(
-                              "No health record details available.",
-                              textAlign: TextAlign.center,
-                              style:
-                                  TextStyle(fontFamily: variable.font_roboto),
-                            ),
-                          ),
-                        ),
-                      );
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 40, right: 40),
+                      child: Text(
+                        "No health record details available.",
+                        textAlign: TextAlign.center,
+                        style:
+                        TextStyle(fontFamily: variable.font_roboto),
+                      ),
+                    ),
+                  ),
+                );
               });
         }
         break;
@@ -1379,7 +1379,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                   return new Center(
                     child: new CircularProgressIndicator(
                       backgroundColor:
-                          Color(new CommonUtil().getMyPrimaryColor()),
+                      Color(new CommonUtil().getMyPrimaryColor()),
                     ),
                   );
                 }
@@ -1388,54 +1388,54 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 List<DeviceIntervalData> deviceFullList = translis.last;
                 return !translist.isEmpty
                     ? GroupedListView<OxyResult, String>(
-                        groupBy: (element) =>
-                            getFormattedDateTime(element.startDateTime),
-                        elements: translist,
-                        sort: false,
-                        groupSeparatorBuilder: (String value) => Padding(
-                          padding: const EdgeInsets.all(6.0),
-                          child: Row(
-                            children: [
-                              SizedBoxWidget(width: 15),
-                              Text(
-                                todayDate != value ? value : 'Today, ' + value,
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ],
-                          ),
+                  groupBy: (element) =>
+                      getFormattedDateTime(element.startDateTime),
+                  elements: translist,
+                  sort: false,
+                  groupSeparatorBuilder: (String value) => Padding(
+                    padding: const EdgeInsets.all(6.0),
+                    child: Row(
+                      children: [
+                        SizedBoxWidget(width: 15),
+                        Text(
+                          todayDate != value ? value : 'Today, ' + value,
+                          style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500),
                         ),
-                        indexedItemBuilder: (context, i, index) {
-                          return buildRowForOxygen(
-                              translist[index].sourceType,
-                              getFormattedDateTime(
-                                  translist[index].startDateTime),
-                              '${translist[index].oxygenSaturation}',
-                              '',
-                              '',
-                              'SPO2',
-                              '',
-                              '',
-                              getFormattedTime(translist[index].startDateTime),
-                              '',deviceFullList[index].heartRateCollection[0].bpm!=null?deviceFullList[index].heartRateCollection[0].bpm.toString():''
-                          ,deviceFullList[index].deviceId);
-                        },
-                      )
+                      ],
+                    ),
+                  ),
+                  indexedItemBuilder: (context, i, index) {
+                    return buildRowForOxygen(
+                        translist[index].sourceType,
+                        getFormattedDateTime(
+                            translist[index].startDateTime),
+                        '${translist[index].oxygenSaturation}',
+                        '',
+                        '',
+                        'SPO2',
+                        '',
+                        '',
+                        getFormattedTime(translist[index].startDateTime),
+                        '',deviceFullList[index].heartRateCollection[0].bpm!=null?deviceFullList[index].heartRateCollection[0].bpm.toString():''
+                        ,deviceFullList[index].deviceId);
+                  },
+                )
                     : Container(
-                        child: Center(
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 40, right: 40),
-                            child: Text(
-                              "No health record details available.",
-                              textAlign: TextAlign.center,
-                              style:
-                                  TextStyle(fontFamily: variable.font_roboto),
-                            ),
-                          ),
-                        ),
-                      );
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 40, right: 40),
+                      child: Text(
+                        "No health record details available.",
+                        textAlign: TextAlign.center,
+                        style:
+                        TextStyle(fontFamily: variable.font_roboto),
+                      ),
+                    ),
+                  ),
+                );
               });
         }
         break;
@@ -1448,7 +1448,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                   return new Center(
                     child: new CircularProgressIndicator(
                       backgroundColor:
-                          Color(new CommonUtil().getMyPrimaryColor()),
+                      Color(new CommonUtil().getMyPrimaryColor()),
                     ),
                   );
                 }
@@ -1458,53 +1458,53 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 List<DeviceIntervalData> deviceFullList = translis.last;
                 return !translist.isEmpty
                     ? GroupedListView<WVResult, String>(
-                        groupBy: (element) =>
-                            getFormattedDateTime(element.startDateTime),
-                        elements: translist,
-                        sort: false,
-                        groupSeparatorBuilder: (String value) => Padding(
-                          padding: const EdgeInsets.all(6.0),
-                          child: Row(
-                            children: [
-                              SizedBoxWidget(width: 15),
-                              Text(
-                                todayDate != value ? value : 'Today, ' + value,
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ],
-                          ),
+                  groupBy: (element) =>
+                      getFormattedDateTime(element.startDateTime),
+                  elements: translist,
+                  sort: false,
+                  groupSeparatorBuilder: (String value) => Padding(
+                    padding: const EdgeInsets.all(6.0),
+                    child: Row(
+                      children: [
+                        SizedBoxWidget(width: 15),
+                        Text(
+                          todayDate != value ? value : 'Today, ' + value,
+                          style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500),
                         ),
-                        indexedItemBuilder: (context, i, index) {
-                          return buildRowForTempWeight(
-                              translist[index].sourceType,
-                              getFormattedDateTime(
-                                  translist[index].startDateTime),
-                              '${translist[index].weight}',
-                              '',
-                              '',
-                              'Weight',
-                              '',
-                              '',
-                              getFormattedTime(translist[index].startDateTime),
-                              'Kg',deviceFullList[index].deviceId);
-                        },
-                      )
+                      ],
+                    ),
+                  ),
+                  indexedItemBuilder: (context, i, index) {
+                    return buildRowForTempWeight(
+                        translist[index].sourceType,
+                        getFormattedDateTime(
+                            translist[index].startDateTime),
+                        '${translist[index].weight}',
+                        '',
+                        '',
+                        'Weight',
+                        '',
+                        '',
+                        getFormattedTime(translist[index].startDateTime),
+                        'Kg',deviceFullList[index].deviceId);
+                  },
+                )
                     : Container(
-                        child: Center(
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 40, right: 40),
-                            child: Text(
-                              "No health record details available.",
-                              textAlign: TextAlign.center,
-                              style:
-                                  TextStyle(fontFamily: variable.font_roboto),
-                            ),
-                          ),
-                        ),
-                      );
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 40, right: 40),
+                      child: Text(
+                        "No health record details available.",
+                        textAlign: TextAlign.center,
+                        style:
+                        TextStyle(fontFamily: variable.font_roboto),
+                      ),
+                    ),
+                  ),
+                );
               });
         }
         break;
@@ -1517,7 +1517,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                   return new Center(
                     child: new CircularProgressIndicator(
                       backgroundColor:
-                          Color(new CommonUtil().getMyPrimaryColor()),
+                      Color(new CommonUtil().getMyPrimaryColor()),
                     ),
                   );
                 }
@@ -1527,53 +1527,53 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 List<DeviceIntervalData> deviceFullList = translis.last;
                 return !translist.isEmpty
                     ? GroupedListView<TMPResult, String>(
-                        groupBy: (element) =>
-                            getFormattedDateTime(element.startDateTime),
-                        elements: translist,
-                        sort: false,
-                        groupSeparatorBuilder: (String value) => Padding(
-                          padding: const EdgeInsets.all(6.0),
-                          child: Row(
-                            children: [
-                              SizedBoxWidget(width: 15),
-                              Text(
-                                todayDate != value ? value : 'Today, ' + value,
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ],
-                          ),
+                  groupBy: (element) =>
+                      getFormattedDateTime(element.startDateTime),
+                  elements: translist,
+                  sort: false,
+                  groupSeparatorBuilder: (String value) => Padding(
+                    padding: const EdgeInsets.all(6.0),
+                    child: Row(
+                      children: [
+                        SizedBoxWidget(width: 15),
+                        Text(
+                          todayDate != value ? value : 'Today, ' + value,
+                          style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500),
                         ),
-                        indexedItemBuilder: (context, i, index) {
-                          return buildRowForTempWeight(
-                              translist[index].sourceType,
-                              getFormattedDateTime(
-                                  translist[index].startDateTime),
-                              '${translist[index].temperature}',
-                              '',
-                              '',
-                              'Temperature',
-                              '',
-                              '',
-                              getFormattedTime(translist[index].startDateTime),
-                              'F',deviceFullList[index].deviceId);
-                        },
-                      )
+                      ],
+                    ),
+                  ),
+                  indexedItemBuilder: (context, i, index) {
+                    return buildRowForTempWeight(
+                        translist[index].sourceType,
+                        getFormattedDateTime(
+                            translist[index].startDateTime),
+                        '${translist[index].temperature}',
+                        '',
+                        '',
+                        'Temperature',
+                        '',
+                        '',
+                        getFormattedTime(translist[index].startDateTime),
+                        'F',deviceFullList[index].deviceId);
+                  },
+                )
                     : Container(
-                        child: Center(
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 40, right: 40),
-                            child: Text(
-                              "No health record details available.",
-                              textAlign: TextAlign.center,
-                              style:
-                                  TextStyle(fontFamily: variable.font_roboto),
-                            ),
-                          ),
-                        ),
-                      );
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 40, right: 40),
+                      child: Text(
+                        "No health record details available.",
+                        textAlign: TextAlign.center,
+                        style:
+                        TextStyle(fontFamily: variable.font_roboto),
+                      ),
+                    ),
+                  ),
+                );
               });
         }
         break;
@@ -1789,16 +1789,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                   ),
                 )
                     : SizedBox(),
-                GestureDetector(
-                  onTap: (){
-                    deleteDeviceRecord(deviceId);
-                  },
-                  child: Image.asset(
-                    'assets/icons/delete_icon.png',
-                    height: 16.0,
-                    width: 16.0,
-                  ),
-                ),
+                getDeleteIcon(deviceId,type),
                 SizedBoxWidget(width: 10)
                 /*Expanded(
                 flex: 1,
@@ -1854,6 +1845,24 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         ),
       ),
     );
+  }
+
+  Widget getDeleteIcon(String deviceId,String type){
+
+    if(type == strsourceHK || type == strsourceGoogle){
+      return SizedBox();
+    }else{
+      return GestureDetector(
+        onTap: (){
+          deleteDeviceRecord(deviceId);
+        },
+        child: Image.asset(
+          'assets/icons/delete_icon.png',
+          height: 16.0,
+          width: 16.0,
+        ),
+      );
+    }
   }
 
   Widget buildRowForGulcose(
@@ -1944,16 +1953,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        GestureDetector(
-                          onTap: (){
-                            deleteDeviceRecord(deviceId);
-                          },
-                          child: Image.asset(
-                            'assets/icons/delete_icon.png',
-                            height: 16.0,
-                            width: 16.0,
-                          ),
-                        ),
+                        getDeleteIcon(deviceId,type),
                         SizedBoxWidget(width: 10)
                       ],
                     ),
@@ -2130,16 +2130,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                   ),
                 )
                     : SizedBoxWidget(),
-                GestureDetector(
-                  onTap: (){
-                    deleteDeviceRecord(deviceId);
-                  },
-                  child: Image.asset(
-                    'assets/icons/delete_icon.png',
-                    height: 16.0,
-                    width: 16.0,
-                  ),
-                ),
+                getDeleteIcon(deviceId,type),
                 SizedBoxWidget(width: 10)
               ],
             ),
@@ -2299,16 +2290,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                   ),
                 )
                     : SizedBoxWidget(),
-                GestureDetector(
-                  onTap: (){
-                    deleteDeviceRecord(deviceId);
-                  },
-                  child: Image.asset(
-                    'assets/icons/delete_icon.png',
-                    height: 16.0,
-                    width: 16.0,
-                  ),
-                ),
+                getDeleteIcon(deviceId,type),
                 SizedBoxWidget(width: 10)
               ],
             ),
@@ -2348,19 +2330,3 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
