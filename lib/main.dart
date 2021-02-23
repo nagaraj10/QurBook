@@ -119,7 +119,7 @@ Future<void> main() async {
 
   Map appsFlyerOptions = {
     "afDevKey": 'UJdqFKHff633D3TcaZ5d55',
-    "afAppId": '',
+    "afAppId": 'wAZtv6sqho7WqLGgTAAqFV',
     "isDebug": true
   };
 
@@ -129,7 +129,6 @@ Future<void> main() async {
     registerConversionDataCallback: true,
     registerOnAppOpenAttributionCallback: true,
   );
-
   runApp(
     MyFHB(),
   );
