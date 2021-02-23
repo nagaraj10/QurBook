@@ -224,13 +224,7 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
                               color: Colors.black54,
                             )
                           : Container(),
-                      widget.mediaMeta.contains(mediaMetaInfoObj.id)
-                          ? Icon(
-                              Icons.done,
-                              color:
-                                  Color(new CommonUtil().getMyPrimaryColor()),
-                            )
-                          : SizedBox(),
+                      checkedWidget(mediaMetaInfoObj),
                     ],
                   ),
                 ),
@@ -260,5 +254,22 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
         ///load until snapshot.hasData resolves to true
       },
     );
+  }
+
+  Widget checkedWidget(HealthResult mediaMetaInfoObj) {
+    if (CommonUtil.audioPage) {
+      CommonUtil.audioPage = false;
+      return Icon(
+        Icons.done,
+        color: Color(new CommonUtil().getMyPrimaryColor()),
+      );
+    } else if (widget.mediaMeta.contains(mediaMetaInfoObj.id)) {
+      return Icon(
+        Icons.done,
+        color: Color(new CommonUtil().getMyPrimaryColor()),
+      );
+    } else {
+      return SizedBox();
+    }
   }
 }

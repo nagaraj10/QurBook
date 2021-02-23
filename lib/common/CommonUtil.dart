@@ -92,6 +92,8 @@ class CommonUtil {
 
   CategoryResult categoryDataObjClone = new CategoryResult();
 
+  static bool audioPage = false;
+
   static List<String> recordIds = new List();
   static List<String> notesId = new List();
   static List<String> voiceIds = new List();
@@ -1087,7 +1089,10 @@ class CommonUtil {
           value_name: parameters.strOxgenSaturation,
           value1: 'OS',
           value2: '',
-          color: [Color(new CommonUtil().getMyPrimaryColor()), Color(new CommonUtil().getMyGredientColor())]);
+          color: [
+            Color(new CommonUtil().getMyPrimaryColor()),
+            Color(new CommonUtil().getMyGredientColor())
+          ]);
     }
 
     if (PreferenceUtil.getStringValue(Constants.wsMon) != variable.strFalse) {
