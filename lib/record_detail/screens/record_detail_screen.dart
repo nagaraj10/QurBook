@@ -546,6 +546,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           PreferenceUtil.saveCompleteData(Constants.KEY_COMPLETE_DATA, value);
           Navigator.of(context).pop();
           Navigator.of(context).pop();
+          toast.getToast(
+              ' Delete functionality can be performed from Sheela as well.',
+              Colors.green);
         });
       }
     });
@@ -562,7 +565,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           PreferenceUtil.saveCompleteData(Constants.KEY_COMPLETE_DATA, value);
           Navigator.of(context).pop();
           widget.data.metadata.hasVoiceNotes = false;
-
           setState(() {});
         });
       } else {}
