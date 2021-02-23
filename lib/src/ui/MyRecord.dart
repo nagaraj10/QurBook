@@ -509,10 +509,10 @@ class _MyRecordsState extends State<MyRecords> {
       _mediaTypeBlock = new MediaTypeBlock();
       _mediaTypeBlock.getMediTypesList();
     }
-    if (_familyListBloc == null) {
+    /* if (_familyListBloc == null) {
       _familyListBloc = new FamilyListBloc();
       _familyListBloc.getFamilyMembersList();
-    }
+    }*/
 
     if (_myProfileBloc == null) {
       _myProfileBloc = new MyProfileBloc();
@@ -987,11 +987,11 @@ class _CustomTabsState extends State<CustomTabView>
   void rebuildAllBlocks() {
     if (_categoryListBlock == null) {
       _categoryListBlock = new CategoryListBlock();
-      _categoryListBlock.getCategoryList();
+      _categoryListBlock.getCategoryLists();
     } else if (_categoryListBlock != null) {
       _categoryListBlock = null;
       _categoryListBlock = new CategoryListBlock();
-      _categoryListBlock.getCategoryList();
+      _categoryListBlock.getCategoryLists();
     }
 
     if (_healthReportListForUserBlock == null) {
@@ -1008,10 +1008,10 @@ class _CustomTabsState extends State<CustomTabView>
       _mediaTypeBlock = new MediaTypeBlock();
       _mediaTypeBlock.getMediTypesList();
     }
-    if (_familyListBloc == null) {
+    /*if (_familyListBloc == null) {
       _familyListBloc = new FamilyListBloc();
       _familyListBloc.getFamilyMembersList();
-    }
+    }*/
 
     if (_myProfileBloc == null) {
       _myProfileBloc = new MyProfileBloc();

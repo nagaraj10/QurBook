@@ -475,10 +475,12 @@ class ApiBaseHelper {
             var responseJson = convert.jsonDecode(response.body.toString());
             return responseJson;
           } else {
-            exitFromApp();
+            var responseJson = convert.jsonDecode(response.body.toString());
+            return responseJson;
           }
         } catch (e) {
-          exitFromApp();
+          var responseJson = convert.jsonDecode(response.body.toString());
+          return responseJson;
         }
         break;
       default:

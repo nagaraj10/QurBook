@@ -109,7 +109,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     _isRecordBookmarked = widget.data.isBookmarked;
     _healthReportListForUserBlock = new HealthReportListForUserBlock();
     _familyListBloc = new FamilyListBloc();
-    _familyListBloc.getFamilyMembersList();
+    _familyListBloc.getFamilyMembersListNew();
 
     if (checkIfMp3IsPresent(widget.data) != '') {
       widget.data.metadata.hasVoiceNotes = true;

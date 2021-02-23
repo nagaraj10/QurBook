@@ -1086,7 +1086,10 @@ class CommonUtil {
           value_name: parameters.strOxgenSaturation,
           value1: 'OS',
           value2: '',
-          color: [Color(new CommonUtil().getMyPrimaryColor()), Color(new CommonUtil().getMyGredientColor())]);
+          color: [
+            Color(new CommonUtil().getMyPrimaryColor()),
+            Color(new CommonUtil().getMyGredientColor())
+          ]);
     }
 
     if (PreferenceUtil.getStringValue(Constants.wsMon) != variable.strFalse) {
@@ -1130,10 +1133,10 @@ class CommonUtil {
     try {
       if (PreferenceUtil.getMediaType() != null) {
       } else {
-        _mediaTypeBlock.getMediTypes().then(() {});
+        _mediaTypeBlock.getMediTypesList().then((value) {});
       }
     } catch (e) {
-      _mediaTypeBlock.getMediTypes().then(() {});
+      _mediaTypeBlock.getMediTypesList().then((value) {});
     }
   }
 
