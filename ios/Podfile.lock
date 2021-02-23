@@ -221,6 +221,12 @@ PODS:
     - AppAuth/ExternalUserAgent (= 1.4.0)
   - AppAuth/Core (1.4.0)
   - AppAuth/ExternalUserAgent (1.4.0)
+  - appsflyer_sdk (6.2.0):
+    - AppsFlyerFramework (= 6.2.1)
+    - Flutter
+  - AppsFlyerFramework (6.2.1):
+    - AppsFlyerFramework/Main (= 6.2.1)
+  - AppsFlyerFramework/Main (6.2.1)
   - audioplayer (0.0.1):
     - Flutter
   - BoringSSL-GRPC (0.0.7):
@@ -536,6 +542,7 @@ PODS:
 
 DEPENDENCIES:
   - agora_rtc_engine (from `.symlinks/plugins/agora_rtc_engine/ios`)
+  - appsflyer_sdk (from `.symlinks/plugins/appsflyer_sdk/ios`)
   - audioplayer (from `.symlinks/plugins/audioplayer/ios`)
   - camera (from `.symlinks/plugins/camera/ios`)
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
@@ -590,6 +597,7 @@ SPEC REPOS:
     - abseil
     - AgoraRtcEngine_iOS
     - AppAuth
+    - AppsFlyerFramework
     - BoringSSL-GRPC
     - BSGridCollectionViewLayout
     - BSImagePicker
@@ -629,6 +637,8 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   agora_rtc_engine:
     :path: ".symlinks/plugins/agora_rtc_engine/ios"
+  appsflyer_sdk:
+    :path: ".symlinks/plugins/appsflyer_sdk/ios"
   audioplayer:
     :path: ".symlinks/plugins/audioplayer/ios"
   camera:
@@ -731,6 +741,8 @@ SPEC CHECKSUMS:
   agora_rtc_engine: e45c7d4fd42f3f679195a56c5c9cdc61f6818ea1
   AgoraRtcEngine_iOS: b2eedd8f9ab47b71163f3285e836bd23feb43fff
   AppAuth: 31bcec809a638d7bd2f86ea8a52bd45f6e81e7c7
+  appsflyer_sdk: 7290e097f7f8e5da0032bee75365b9b69e7b03ef
+  AppsFlyerFramework: a0e02440784f9e2e0fa41116025f880aeab819cf
   audioplayer: 0584f31a697e4b0bbad405ae7903d7a93585e784
   BoringSSL-GRPC: 8edf627ee524575e2f8d19d56f068b448eea3879
   BSGridCollectionViewLayout: 333dcb457a5a3bdd9212607ab5756553dcfe06cb
