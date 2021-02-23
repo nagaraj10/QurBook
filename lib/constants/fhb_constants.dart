@@ -379,3 +379,12 @@ const String STR_USER_PROFILE_SETTING_ALREADY =
     'User Profile Setting is already exists for this User.';
 const String STR_ARE_SURE = 'Are you sure?';
 const String STR_SURE_CANCEL_PAY = 'Do you want to cancel the payment';
+const String STR_UPDATE_AVAIL = 'New Update Available';
+const String STR_UPDATE_CONTENT = 'There is a newer version of app available please update it now.';
+const String STR_UPDATE_NOW = 'Update Now';
+const String STR_LATER = 'Later';
+
+const APP_STORE_URL =
+    'https://phobos.apple.com/WebObjects/MZStore.woa/wa/viewSoftwareUpdate?id=1526444520&mt=8';
+const PLAY_STORE_URL =
+    'https://play.google.com/store/apps/details?id=com.ventechsolutions.myFHB';

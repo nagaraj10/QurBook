@@ -51,10 +51,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
   GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
 
   //ChatViewModel chatViewModel = new ChatViewModel();
+  CommonUtil commonUtil = new CommonUtil();
 
   @override
   void initState() {
     super.initState();
+
+    try {
+      commonUtil.versionCheck(context);
+    } catch (e) {
+      print(e);
+    }
 
     //chatViewModel.getUnreadMSGCount(PreferenceUtil.getStringValue(Constants.KEY_USERID));
 
