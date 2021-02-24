@@ -1274,6 +1274,9 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         child: Column(
           children: [
             TextFormField(
+              style: TextStyle(
+                fontSize: 14.0.sp,
+              ),
               controller: cntrlr_addr_one,
               enabled: false,
               keyboardType: TextInputType.streetAddress,
@@ -1289,6 +1292,9 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               },
             ),
             TextFormField(
+              style: TextStyle(
+                fontSize: 14.0.sp,
+              ),
               controller: cntrlr_addr_two,
               enabled: false,
               keyboardType: TextInputType.streetAddress,
@@ -1299,6 +1305,9 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               ),
             ),
             TextFormField(
+              style: TextStyle(
+                fontSize: 14.0.sp,
+              ),
               controller: cntrlr_addr_city,
               enabled: false,
               keyboardType: TextInputType.streetAddress,
@@ -1309,6 +1318,9 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               ),
             ),
             TextFormField(
+              style: TextStyle(
+                fontSize: 14.0.sp,
+              ),
               controller: cntrlr_addr_state,
               enabled: false,
               keyboardType: TextInputType.streetAddress,
@@ -1319,6 +1331,9 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               ),
             ),
             TextFormField(
+              style: TextStyle(
+                fontSize: 14.0.sp,
+              ),
               controller: cntrlr_addr_zip,
               enabled: false,
               keyboardType: TextInputType.number,

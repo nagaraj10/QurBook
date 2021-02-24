@@ -44,7 +44,7 @@ class BadgeIcon extends StatelessWidget {
             count.toString(),
             style: new TextStyle(
               color: Colors.white,
-              fontSize: 10,
+              fontSize: 10.0.sp,
             ),
             textAlign: TextAlign.center,
           ),

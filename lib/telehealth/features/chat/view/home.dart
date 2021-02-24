@@ -185,7 +185,10 @@ class HomeScreenState extends State<ChatHomeScreen> {
                     Text(
                       CANCEL,
                       style: TextStyle(
-                          color: primaryColor, fontWeight: FontWeight.bold),
+                        color: primaryColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14.0.sp,
+                      ),
                     )
                   ],
                 ),
@@ -206,7 +209,10 @@ class HomeScreenState extends State<ChatHomeScreen> {
                     Text(
                       YES,
                       style: TextStyle(
-                          color: primaryColor, fontWeight: FontWeight.bold),
+                        color: primaryColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14.0.sp,
+                      ),
                     )
                   ],
                 ),
@@ -239,7 +245,10 @@ class HomeScreenState extends State<ChatHomeScreen> {
         backgroundColor: Colors.transparent,
         title: Text(
           CHAT,
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 14.0.sp,
+          ),
         ),
         centerTitle: true,
         actions: [
@@ -265,7 +274,12 @@ class HomeScreenState extends State<ChatHomeScreen> {
             body: Center(child: new CircularProgressIndicator()),
           );
         } else if (snapshot.hasError) {
-          return new Text('Error: ${snapshot.error}');
+          return new Text(
+            'Error: ${snapshot.error}',
+            style: TextStyle(
+              fontSize: 14.0.sp,
+            ),
+          );
         } else {
           return getChatList();
         }

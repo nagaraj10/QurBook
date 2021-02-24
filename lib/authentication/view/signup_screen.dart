@@ -99,6 +99,9 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                   ),
                                 ),
                               ),
+                              style: TextStyle(
+                                fontSize: 14.0.sp,
+                              ),
                               controller: firstNameController,
                               autovalidate: _autoValidateBool,
                               validator: (value) {
@@ -111,6 +114,9 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                           SizedBox(height: 10.0.h),
                           _signupTextFields(
                             TextFormField(
+                              style: TextStyle(
+                                fontSize: 14.0.sp,
+                              ),
                               autovalidate: _autoValidateBool,
                               decoration: InputDecoration(
                                 hintText: strLastNameHint,
@@ -140,6 +146,9 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                           SizedBox(height: 10.0.h),
                           _signupTextFields(
                             TextFormField(
+                              style: TextStyle(
+                                fontSize: 14.0.sp,
+                              ),
                               autovalidate: _autoValidateBool,
                               decoration: InputDecoration(
                                 hintText: strNewPhoneHint,
@@ -181,6 +190,9 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                           SizedBox(height: 10.0.h),
                           _signupTextFields(
                             TextFormField(
+                              style: TextStyle(
+                                fontSize: 14.0.sp,
+                              ),
                               autovalidate: _autoValidateBool,
                               decoration: InputDecoration(
                                 hintText: strEmailHintText,
@@ -212,6 +224,9 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                           SizedBox(height: 10.0.h),
                           _signupTextFields(
                             TextFormField(
+                              style: TextStyle(
+                                fontSize: 14.0.sp,
+                              ),
                               autovalidate: _autoValidateBool,
                               obscureText: true,
                               decoration: InputDecoration(

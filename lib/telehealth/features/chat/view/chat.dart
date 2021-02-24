@@ -512,7 +512,9 @@ class ChatScreenState extends State<ChatScreen> {
         return AlertDialog(
           content: Text(
             'Are you sure want to download?',
-            style: TextStyle(fontSize: 16),
+            style: TextStyle(
+              fontSize: 16.0.sp,
+            ),
           ),
           actions: <Widget>[
             FlatButton(
@@ -520,7 +522,12 @@ class ChatScreenState extends State<ChatScreen> {
                 saveImageToGallery(fileUrl, contxt, isPdf, type);
                 Navigator.pop(context);
               },
-              child: Text('Download'),
+              child: Text(
+                'Download',
+                style: TextStyle(
+                  fontSize: 14.0.sp,
+                ),
+              ),
             ),
           ],
         );
@@ -545,7 +552,12 @@ class ChatScreenState extends State<ChatScreen> {
 
     String _currentImage;
     Scaffold.of(contxt).showSnackBar(SnackBar(
-      content: const Text(variable.strDownloadStart),
+      content: Text(
+        variable.strDownloadStart,
+        style: TextStyle(
+          fontSize: 14.0.sp,
+        ),
+      ),
       backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
     ));
 
@@ -565,7 +577,12 @@ class ChatScreenState extends State<ChatScreen> {
         CommonUtil.downloadFile(_currentImage, fileType).then((filePath) async {
           if (Platform.isAndroid) {
             Scaffold.of(contxt).showSnackBar(SnackBar(
-              content: const Text(variable.strFileDownloaded),
+              content: Text(
+                variable.strFileDownloaded,
+                style: TextStyle(
+                  fontSize: 14.0.sp,
+                ),
+              ),
               backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
               action: SnackBarAction(
                 label: 'Open',
@@ -662,7 +679,9 @@ class ChatScreenState extends State<ChatScreen> {
                     child: RichText(
                       text: TextSpan(
                           style: TextStyle(
-                              color: Color(CommonUtil().getMyPrimaryColor())),
+                            color: Color(CommonUtil().getMyPrimaryColor()),
+                            fontSize: 14.0.sp,
+                          ),
                           children: textSpanList),
                     ),
                   ),
@@ -769,8 +788,10 @@ class ChatScreenState extends State<ChatScreen> {
                                   Text(
                                     'Click to view PDF',
                                     style: TextStyle(
-                                        color: Color(
-                                            CommonUtil().getMyPrimaryColor())),
+                                      color: Color(
+                                          CommonUtil().getMyPrimaryColor()),
+                                      fontSize: 14.0.sp,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -793,7 +814,11 @@ class ChatScreenState extends State<ChatScreen> {
                                     children: <Widget>[
                                       CircleAvatar(
                                           child: Text(
-                                              patientName.substring(0, 1))),
+                                        patientName.substring(0, 1),
+                                        style: TextStyle(
+                                          fontSize: 14.0.sp,
+                                        ),
+                                      )),
                                       IconButton(
                                         icon: Icon(currentPlayedVoiceURL ==
                                                 document[STR_CONTENT]
@@ -1061,7 +1086,7 @@ class ChatScreenState extends State<ChatScreen> {
                               .toString()),
                       style: TextStyle(
                           color: greyColor,
-                          fontSize: 12.0,
+                          fontSize: 12.0.sp,
                           fontStyle: FontStyle.italic),
                     ),
                     margin: EdgeInsets.only(left: 50.0, top: 5.0, bottom: 5.0),
@@ -1280,7 +1305,12 @@ class ChatScreenState extends State<ChatScreen> {
       itemBuilder: (context) => [
             PopupMenuItem(
               value: 0,
-              child: Text('$popUpChoiceOne'),
+              child: Text(
+                '$popUpChoiceOne',
+                style: TextStyle(
+                  fontSize: 14.0.sp,
+                ),
+              ),
             ),
             /* PopupMenuItem(
             child: GestureDetector(child: Text('$popUpChoiceTwo'))),
@@ -1371,7 +1401,7 @@ class ChatScreenState extends State<ChatScreen> {
                         maxLines: 1,
                         style: TextStyle(
                             fontFamily: variable.font_poppins,
-                            fontSize: 16,
+                            fontSize: 16.0.sp,
                             color: Colors.white)),
                     Text('Booking Id: ' + bookingId,
                         textAlign: TextAlign.left,
@@ -1379,7 +1409,7 @@ class ChatScreenState extends State<ChatScreen> {
                         maxLines: 1,
                         style: TextStyle(
                             fontFamily: variable.font_poppins,
-                            fontSize: 10,
+                            fontSize: 10.0.sp,
                             color: Colors.white)),
                     Text(
                         'Next Appointment: ' +
@@ -1389,7 +1419,7 @@ class ChatScreenState extends State<ChatScreen> {
                         maxLines: 1,
                         style: TextStyle(
                             fontFamily: variable.font_poppins,
-                            fontSize: 10,
+                            fontSize: 10.0.sp,
                             color: Colors.white)),
                     Text(
                         toBeginningOfSentenceCase('Last Appointment: ' +
@@ -1399,7 +1429,7 @@ class ChatScreenState extends State<ChatScreen> {
                         maxLines: 1,
                         style: TextStyle(
                             fontFamily: variable.font_poppins,
-                            fontSize: 10,
+                            fontSize: 10.0.sp,
                             color: Colors.white)),
                     Text(
                       widget.lastDate != null
@@ -1409,7 +1439,7 @@ class ChatScreenState extends State<ChatScreen> {
                       maxLines: 1,
                       style: TextStyle(
                           fontFamily: variable.font_poppins,
-                          fontSize: 10,
+                          fontSize: 10.0.sp,
                           color: Colors.white),
                     ),
                   ],
@@ -1666,7 +1696,10 @@ class ChatScreenState extends State<ChatScreen> {
                       ],
                       decoration: InputDecoration(
                         hintText: "$chatTextFieldHintText",
-                        hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
+                        hintStyle: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14.0.sp,
+                        ),
                         filled: true,
                         fillColor: Colors.white70,
                         enabledBorder: OutlineInputBorder(
@@ -1850,18 +1883,33 @@ class ChatScreenState extends State<ChatScreen> {
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        content: Text('Send to Dr. ' + peerName),
+        content: Text(
+          'Send to Dr. ' + peerName,
+          style: TextStyle(
+            fontSize: 14.0.sp,
+          ),
+        ),
         actions: <Widget>[
           FlatButton(
             onPressed: () => closeDialog(),
-            child: Text('Cancel'),
+            child: Text(
+              'Cancel',
+              style: TextStyle(
+                fontSize: 14.0.sp,
+              ),
+            ),
           ),
           FlatButton(
             onPressed: () {
               closeDialog();
               onSendMessage(content, type);
             },
-            child: Text('Send'),
+            child: Text(
+              'Send',
+              style: TextStyle(
+                fontSize: 14.0.sp,
+              ),
+            ),
           ),
         ],
       ),

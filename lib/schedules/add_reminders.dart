@@ -95,6 +95,9 @@ class _AddReminderState extends State<AddReminder> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         TextFormField(
+                          style: TextStyle(
+                            fontSize: 14.0.sp,
+                          ),
                           controller: tileContoller,
                           decoration: InputDecoration(
                               labelText: variable.strTitle,
@@ -103,6 +106,9 @@ class _AddReminderState extends State<AddReminder> {
                                   : null),
                         ),
                         TextFormField(
+                          style: TextStyle(
+                            fontSize: 14.0.sp,
+                          ),
                           controller: notesController,
                           decoration: InputDecoration(
                               labelText: variable.strNote,

@@ -497,7 +497,7 @@ class NewPrescriptionState extends State<NewPrescription> {
               GestureDetector(
                 child: Text(
                   '$scheduleOptionOne',
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.white, fontSize: 14.0.sp),
                 ),
                 onTap: () {
                   setState(() {
@@ -524,7 +524,10 @@ class NewPrescriptionState extends State<NewPrescription> {
               GestureDetector(
                 child: Text(
                   '$scheduleOptionTwo',
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14.0.sp,
+                  ),
                 ),
                 onTap: () {
                   setState(() {
@@ -553,7 +556,10 @@ class NewPrescriptionState extends State<NewPrescription> {
               GestureDetector(
                 child: Text(
                   '$scheduleOptionThree',
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14.0.sp,
+                  ),
                 ),
                 onTap: () {
                   setState(() {
@@ -589,7 +595,10 @@ class NewPrescriptionState extends State<NewPrescription> {
           side: BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))),
       child: Text(
         buttonText,
-        style: TextStyle(color: Color(CommonUtil().getMyPrimaryColor())),
+        style: TextStyle(
+          color: Color(CommonUtil().getMyPrimaryColor()),
+          fontSize: 14.0.sp,
+        ),
       ),
       onPressed: () {},
     );

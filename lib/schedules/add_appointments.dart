@@ -72,6 +72,9 @@ class _AddAppointmentState extends State<AddAppointments> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         TextFormField(
+                          style: TextStyle(
+                            fontSize: 14.0.sp,
+                          ),
                           controller: hosContoller,
                           decoration: InputDecoration(
                               labelText: Constants.HospitalName,
@@ -80,6 +83,9 @@ class _AddAppointmentState extends State<AddAppointments> {
                                   : null),
                         ),
                         TextFormField(
+                          style: TextStyle(
+                            fontSize: 14.0.sp,
+                          ),
                           controller: docNameController,
                           decoration: InputDecoration(
                               labelText: Constants.DoctorName,
@@ -151,6 +157,9 @@ class _AddAppointmentState extends State<AddAppointments> {
                               ),
                             )),
                         TextFormField(
+                          style: TextStyle(
+                            fontSize: 14.0.sp,
+                          ),
                           controller: reasonController,
                           decoration: InputDecoration(
                             labelText: Constants.Reason,

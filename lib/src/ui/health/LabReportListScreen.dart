@@ -98,7 +98,10 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
                   child: Text(
                     Constants.NO_DATA_LAB_REPORT,
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontFamily: variable.font_poppins),
+                    style: TextStyle(
+                      fontFamily: variable.font_poppins,
+                      fontSize: 14.0.sp,
+                    ),
                   ),
                 ),
               ),

@@ -127,7 +127,12 @@ class _VerifyPatientState extends State<VerifyPatient> {
                         width: 120.0.h,
                       ),
                       SizedBox(height: 20.0.h),
-                      Text(getNumber()),
+                      Text(
+                        getNumber(),
+                        style: TextStyle(
+                          fontSize: 14.0.sp,
+                        ),
+                      ),
                       SizedBox(
                         height: 10.0.h,
                       ),
@@ -282,6 +287,9 @@ class _VerifyPatientState extends State<VerifyPatient> {
           keyboardType: TextInputType.number,
           autovalidate: _autoValidateBool,
           obscureText: isPassword,
+          style: TextStyle(
+            fontSize: 14.0.sp,
+          ),
           controller: controller,
           decoration: InputDecoration(
               labelText: title,

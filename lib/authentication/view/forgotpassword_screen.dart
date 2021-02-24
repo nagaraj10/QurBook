@@ -118,6 +118,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     return Container(
         margin: EdgeInsets.symmetric(vertical: 2),
         child: TextFormField(
+          style: TextStyle(
+            fontSize: 14.0.sp,
+          ),
           autovalidate: _autoValidateBool,
           obscureText: isPassword,
           controller: controller,

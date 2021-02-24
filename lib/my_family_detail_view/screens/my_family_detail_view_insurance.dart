@@ -54,7 +54,12 @@ class MyFamilyDetailViewInsuranceState
             ))
         : Container(
             child: Center(
-              child: Text(variable.strNodata),
+              child: Text(
+                variable.strNodata,
+                style: TextStyle(
+                  fontSize: 14.0.sp,
+                ),
+              ),
             ),
             color: const Color(fhbColors.bgColorContainer),
           );

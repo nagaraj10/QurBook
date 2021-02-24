@@ -823,14 +823,24 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       builder: (BuildContext context) {
         return StatefulBuilder(builder: (context, setState) {
           return AlertDialog(
-              title: Text(variable.makeAChoice),
+              title: Text(
+                variable.makeAChoice,
+                style: TextStyle(
+                  fontSize: 14.0.sp,
+                ),
+              ),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(1)),
               content: SingleChildScrollView(
                 child: ListBody(
                   children: <Widget>[
                     GestureDetector(
-                      child: Text(variable.Gallery),
+                      child: Text(
+                        variable.Gallery,
+                        style: TextStyle(
+                          fontSize: 14.0.sp,
+                        ),
+                      ),
                       onTap: () async {
                         var image = await ImagePicker.pickImage(
                             source: ImageSource.gallery);
@@ -1348,6 +1358,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         child: Column(
           children: [
             TextFormField(
+              style: TextStyle(
+                fontSize: 14.0.sp,
+              ),
               controller: cntrlr_addr_one,
               enabled: true,
               keyboardType: TextInputType.streetAddress,
@@ -1364,6 +1377,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               },
             ),
             TextFormField(
+              style: TextStyle(
+                fontSize: 14.0.sp,
+              ),
               controller: cntrlr_addr_two,
               enabled: true,
               keyboardType: TextInputType.streetAddress,
@@ -1473,6 +1489,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               onSaved: (value) => this.state = value,
             ),
             TextFormField(
+              style: TextStyle(
+                fontSize: 14.0.sp,
+              ),
               controller: cntrlr_addr_zip,
               enabled: true,
               keyboardType: TextInputType.number,

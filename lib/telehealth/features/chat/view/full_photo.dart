@@ -23,7 +23,10 @@ class FullPhoto extends StatelessWidget {
         ),
         title: Text(
           'Attachment',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 14.0.sp,
+          ),
         ),
         centerTitle: false,
       ),

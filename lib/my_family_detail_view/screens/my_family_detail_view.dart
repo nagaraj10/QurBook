@@ -171,7 +171,12 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
             ),
           );
         } else if (snapshot.hasError) {
-          return new Text('Error: ${snapshot.error}');
+          return new Text(
+            'Error: ${snapshot.error}',
+            style: TextStyle(
+              fontSize: 14.0.sp,
+            ),
+          );
         } else {
           return getHealthReportToDisplayInBody();
         }

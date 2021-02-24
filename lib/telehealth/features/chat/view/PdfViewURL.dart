@@ -20,7 +20,12 @@ class _MyAppState extends State<PDFViewURL> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text('PDF Viewer'),
+          title: Text(
+            'PDF Viewer',
+            style: TextStyle(
+              fontSize: 14.0.sp,
+            ),
+          ),
           elevation: 0,
           automaticallyImplyLeading: false,
           flexibleSpace: GradientAppBar(),

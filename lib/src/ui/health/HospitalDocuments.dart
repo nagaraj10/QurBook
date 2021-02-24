@@ -97,7 +97,10 @@ class _HospitalDocumentsState extends State<HospitalDocuments> {
                   child: Text(
                     Constants.NO_DATA_MEDICAL_REPORT,
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontFamily: variable.font_poppins),
+                    style: TextStyle(
+                      fontFamily: variable.font_poppins,
+                      fontSize: 14.0.sp,
+                    ),
                   ),
                 ),
               ),
@@ -228,7 +231,10 @@ class _HospitalDocumentsState extends State<HospitalDocuments> {
                                 ? toBeginningOfSentenceCase(data
                                     .metadata.hospital.healthOrganizationName)
                                 : '',
-                            style: TextStyle(fontWeight: FontWeight.w500),
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14.0.sp,
+                            ),
                           )
                         : Text(''),
                     Text(
@@ -238,7 +244,10 @@ class _HospitalDocumentsState extends State<HospitalDocuments> {
                                   ? data.metadata.doctor.name
                                   : '')
                           : '',
-                      style: TextStyle(color: Colors.grey),
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 14.0.sp,
+                      ),
                     ),
                     Text(
                       new FHBUtils().getFormattedDateString(data.createdOn),

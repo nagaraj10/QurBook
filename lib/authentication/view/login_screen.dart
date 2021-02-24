@@ -78,7 +78,12 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                         width: 120.0.h,
                       ),
                       SizedBox(height: 20.0.h),
-                      Text(strPhoneandPass),
+                      Text(
+                        strPhoneandPass,
+                        style: TextStyle(
+                          fontSize: 14.0.sp,
+                        ),
+                      ),
                       SizedBox(
                         height: 10.0.h,
                       ),
@@ -86,6 +91,9 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                         children: [
                           _loginTextFields(
                             TextFormField(
+                              style: TextStyle(
+                                fontSize: 14.0.sp,
+                              ),
                               autovalidate: _autoValidateBool,
                               decoration: InputDecoration(
                                 prefixIcon: Container(
@@ -126,6 +134,9 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                           SizedBox(height: 10.0.h),
                           _loginTextFields(
                             TextFormField(
+                              style: TextStyle(
+                                fontSize: 14.0.sp,
+                              ),
                               autovalidate: _autoValidateBool,
                               obscureText: true,
                               decoration: InputDecoration(

@@ -370,7 +370,12 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         width: 1.sw - 40,
         child: DropdownButton<String>(
           isExpanded: true,
-          hint: Text(CommonConstants.genderWithStar),
+          hint: Text(
+            CommonConstants.genderWithStar,
+            style: TextStyle(
+              fontSize: 14.0.sp,
+            ),
+          ),
           value: selectedGender != null
               ? toBeginningOfSentenceCase(selectedGender.toLowerCase())
               : selectedGender,
@@ -528,6 +533,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         child: Column(
           children: [
             TextFormField(
+              style: TextStyle(
+                fontSize: 14.0.sp,
+              ),
               controller: cntrlr_addr_one,
               enabled: true,
               keyboardType: TextInputType.streetAddress,
@@ -544,6 +552,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               },
             ),
             TextFormField(
+              style: TextStyle(
+                fontSize: 14.0.sp,
+              ),
               controller: cntrlr_addr_two,
               enabled: true,
               keyboardType: TextInputType.streetAddress,
@@ -634,7 +645,12 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               },
               itemBuilder: (context, suggestion) {
                 return ListTile(
-                  title: Text(suggestion.name),
+                  title: Text(
+                    suggestion.name,
+                    style: TextStyle(
+                      fontSize: 14.0.sp,
+                    ),
+                  ),
                 );
               },
               transitionBuilder: (context, suggestionsBox, controller) {
@@ -663,6 +679,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               onSaved: (value) => this.state = value,
             ),
             TextFormField(
+              style: TextStyle(
+                fontSize: 14.0.sp,
+              ),
               controller: cntrlr_addr_zip,
               enabled: true,
               keyboardType: TextInputType.number,
@@ -772,12 +791,22 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     return Padding(
       padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
       child: DropdownButton<RelationsShipModel>(
-        hint: Text(CommonConstants.relationship),
+        hint: Text(
+          CommonConstants.relationship,
+          style: TextStyle(
+            fontSize: 14.0.sp,
+          ),
+        ),
         isExpanded: true,
         value: currentSelectedUserRole,
         items: data.map((RelationsShipModel val) {
           return DropdownMenuItem<RelationsShipModel>(
-            child: Text(val.name),
+            child: Text(
+              val.name,
+              style: TextStyle(
+                fontSize: 14.0.sp,
+              ),
+            ),
             value: val,
           );
         }).toList(),
@@ -849,7 +878,12 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       child: Container(
         width: 1.sw / 2 - 40,
         child: DropdownButton<String>(
-          hint: Text(CommonConstants.blood_groupWithStar),
+          hint: Text(
+            CommonConstants.blood_groupWithStar,
+            style: TextStyle(
+              fontSize: 14.0.sp,
+            ),
+          ),
           value: currentselectedBloodGroup,
           items: variable.bloodGroupArray.map((eachBloodGroup) {
             return DropdownMenuItem<String>(
@@ -877,7 +911,12 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       child: Container(
         width: 1.sw / 2 - 40,
         child: DropdownButton<String>(
-          hint: Text(CommonConstants.blood_rangeWithStar),
+          hint: Text(
+            CommonConstants.blood_rangeWithStar,
+            style: TextStyle(
+              fontSize: 14.0.sp,
+            ),
+          ),
           isExpanded: true,
           value: currentselectedBloodGroupRange,
           items: variable.bloodRangeArray.map((eachBloodGroup) {
@@ -1833,14 +1872,24 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       builder: (BuildContext context) {
         return StatefulBuilder(builder: (context, setState) {
           return AlertDialog(
-              title: Text(variable.makeAChoice),
+              title: Text(
+                variable.makeAChoice,
+                style: TextStyle(
+                  fontSize: 14.0.sp,
+                ),
+              ),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(1)),
               content: SingleChildScrollView(
                 child: ListBody(
                   children: <Widget>[
                     GestureDetector(
-                      child: Text(variable.Gallery),
+                      child: Text(
+                        variable.Gallery,
+                        style: TextStyle(
+                          fontSize: 14.0.sp,
+                        ),
+                      ),
                       onTap: () async {
                         var image = await ImagePicker.pickImage(
                             source: ImageSource.gallery);
@@ -1864,7 +1913,12 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                       padding: EdgeInsets.all(8.0),
                     ),
                     GestureDetector(
-                      child: Text(variable.Camera),
+                      child: Text(
+                        variable.Camera,
+                        style: TextStyle(
+                          fontSize: 14.0.sp,
+                        ),
+                      ),
                       onTap: () async {
                         var image = await ImagePicker.pickImage(
                             source: ImageSource.camera);
@@ -1913,7 +1967,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             case Status.ERROR:
               familyWidget = Center(
                   child: Text(Constants.STR_ERROR_LOADING_DATA,
-                      style: TextStyle(color: Colors.red)));
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 14.0.sp,
+                      )));
               break;
 
             case Status.COMPLETED:
