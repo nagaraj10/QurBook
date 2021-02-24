@@ -70,6 +70,7 @@ import 'package:myfhb/src/ui/user/UserAccounts.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
+import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:myfhb/telehealth/features/chat/view/BadgeIcon.dart';
 import 'package:package_info/package_info.dart';
 import 'package:path/path.dart';
@@ -1524,7 +1525,8 @@ class CommonUtil {
   versionCheck(context) async {
     //Get Current installed version of app
     final PackageInfo info = await PackageInfo.fromPlatform();
-    double currentVersion = double.parse(info.version.trim().replaceAll(".", ""));
+    double currentVersion =
+        double.parse(info.version.trim().replaceAll(".", ""));
 
     //Get Latest version info from firebase config
     final RemoteConfig remoteConfig = await RemoteConfig.instance;
@@ -1533,9 +1535,13 @@ class CommonUtil {
       // Using default duration to force fetching from remote server.
       await remoteConfig.fetch(expiration: const Duration(seconds: 0));
       await remoteConfig.activateFetched();
-      remoteConfig.getString(Platform.isIOS?STR_FIREBASE_REMOTE_KEY_IOS:STR_FIREBASE_REMOTE_KEY);
+      remoteConfig.getString(Platform.isIOS
+          ? STR_FIREBASE_REMOTE_KEY_IOS
+          : STR_FIREBASE_REMOTE_KEY);
       double newVersion = double.parse(remoteConfig
-          .getString(Platform.isIOS?STR_FIREBASE_REMOTE_KEY_IOS:STR_FIREBASE_REMOTE_KEY)
+          .getString(Platform.isIOS
+              ? STR_FIREBASE_REMOTE_KEY_IOS
+              : STR_FIREBASE_REMOTE_KEY)
           .trim()
           .replaceAll(".", ""));
       if (newVersion > currentVersion) {
@@ -1550,45 +1556,76 @@ class CommonUtil {
     }
   }
 
-      _showVersionDialog(context) async {
+  _showVersionDialog(context) async {
     await showDialog<String>(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         String title = STR_UPDATE_AVAIL;
-        String message =
-            STR_UPDATE_CONTENT;
+        String message = STR_UPDATE_CONTENT;
         String btnLabel = STR_UPDATE_NOW;
         String btnLabelCancel = STR_LATER;
         return Platform.isIOS
             ? new CupertinoAlertDialog(
-          title: Text(title,style: TextStyle(fontSize: 16),),
-          content: Text(message,style: TextStyle(fontSize: 14),),
-          actions: <Widget>[
-            FlatButton(
-              child: Text(btnLabel),
-              onPressed: () => _launchURL(APP_STORE_URL),
-            ),
-            FlatButton(
-              child: Text(btnLabelCancel),
-              onPressed: () => Navigator.pop(context),
-            ),
-          ],
-        )
+                title: Text(
+                  title,
+                  style: TextStyle(fontSize: 16),
+                ),
+                content: Text(
+                  message,
+                  style: TextStyle(fontSize: 14),
+                ),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text(
+                      btnLabel,
+                      style: TextStyle(
+                        color: Color(getMyPrimaryColor()),
+                      ),
+                    ),
+                    onPressed: () => _launchURL(APP_STORE_URL),
+                  ),
+                  FlatButton(
+                    child: Text(
+                      btnLabelCancel,
+                      style: TextStyle(
+                        color: Color(getMyPrimaryColor()),
+                      ),
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
+              )
             : new AlertDialog(
-          title: Text(title,style: TextStyle(fontSize: 16),),
-          content: Text(message,style: TextStyle(fontSize: 14),),
-          actions: <Widget>[
-            FlatButton(
-              child: Text(btnLabel),
-              onPressed: () => _launchURL(PLAY_STORE_URL),
-            ),
-            FlatButton(
-              child: Text(btnLabelCancel),
-              onPressed: () => Navigator.pop(context),
-            ),
-          ],
-        );
+                title: Text(
+                  title,
+                  style: TextStyle(fontSize: 16),
+                ),
+                content: Text(
+                  message,
+                  style: TextStyle(fontSize: 14),
+                ),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text(
+                      btnLabel,
+                      style: TextStyle(
+                        color: Color(getMyPrimaryColor()),
+                      ),
+                    ),
+                    onPressed: () => _launchURL(PLAY_STORE_URL),
+                  ),
+                  FlatButton(
+                    child: Text(
+                      btnLabelCancel,
+                      style: TextStyle(
+                        color: Color(getMyPrimaryColor()),
+                      ),
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
+              );
       },
     );
   }
