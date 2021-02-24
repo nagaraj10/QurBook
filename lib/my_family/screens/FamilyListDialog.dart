@@ -17,6 +17,7 @@ import 'package:myfhb/my_family/models/Sharedbyme.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class FamilyListDialog extends StatefulWidget {
   final FamilyData familyData;
@@ -68,7 +69,10 @@ class FamilyListDialogState extends State<FamilyListDialog> {
                   case Status.ERROR:
                     return Center(
                         child: Text(variable.strSomethingWrong,
-                            style: TextStyle(color: Colors.red)));
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 14.0.sp,
+                            )));
                     break;
 
                   case Status.COMPLETED:
@@ -81,8 +85,8 @@ class FamilyListDialogState extends State<FamilyListDialog> {
                 }
               } else {
                 return Container(
-                  width: 100,
-                  height: 100,
+                  width: 100.0.h,
+                  height: 100.0.h,
                 );
               }
             },
@@ -105,6 +109,7 @@ class FamilyListDialogState extends State<FamilyListDialog> {
                     icon: Icon(
                       Icons.close,
                       color: Colors.black54,
+                      size: 24.0.sp,
                     ),
                     onPressed: () {
                       Navigator.of(context).pop();
@@ -131,6 +136,7 @@ class FamilyListDialogState extends State<FamilyListDialog> {
               icon: Icon(
                 Icons.close,
                 color: Colors.black54,
+                size: 24.0.sp,
               ),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -162,10 +168,8 @@ class FamilyListDialogState extends State<FamilyListDialog> {
     }
     if (sharedByMe.length > 0) {
       return Container(
-          height: MediaQuery.of(context)
-              .size
-              .height, // Change as per your requirement
-          width: MediaQuery.of(context).size.width,
+          height: 1.sh, // Change as per your requirement
+          width: 1.sw,
           // Change as per your requirement
           child: Stack(
             alignment: Alignment.bottomCenter,
@@ -196,11 +200,11 @@ class FamilyListDialogState extends State<FamilyListDialog> {
                                             .profileData
                                             .profilePicThumbnail
                                             .data),
-                                        height: 50,
-                                        width: 50,
+                                        height: 50.0.h,
+                                        width: 50.0.h,
                                         fit: BoxFit.cover,
                                       )),
-                            SizedBox(width: 20),
+                            SizedBox(width: 20.0.w),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
@@ -209,14 +213,16 @@ class FamilyListDialogState extends State<FamilyListDialog> {
                                   softWrap: false,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: 16.0.sp,
                                       fontWeight: FontWeight.w500),
                                 ),
                                 Text(
                                   sharedByMe[index].linkedData.roleName,
                                   softWrap: false,
                                   overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(fontSize: 10),
+                                  style: TextStyle(
+                                    fontSize: 10.0.sp,
+                                  ),
                                 )
                               ],
                             )
@@ -241,7 +247,10 @@ class FamilyListDialogState extends State<FamilyListDialog> {
                 child: FlatButton(
                   child: Text(
                     variable.strAddFamily,
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14.0.sp,
+                    ),
                   ),
                   onPressed: () {},
                 ),

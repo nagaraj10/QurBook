@@ -13,6 +13,7 @@ import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class NotesScreenList extends StatefulWidget {
   final HealthRecordList completeData;
@@ -168,8 +169,8 @@ class _NotesScreenListState extends State<NotesScreenList> {
                         :
                           Constants.BASE_URL +*/
                           mediaMetaInfoObj.metadata.healthRecordCategory.logo,
-                          height: 25,
-                          width: 25,
+                          height: 25.0.h,
+                          width: 25.0.h,
                           color: Color(new CommonUtil().getMyPrimaryColor()),
                         )
                       : SizedBox(),
@@ -183,7 +184,7 @@ class _NotesScreenListState extends State<NotesScreenList> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      SizedBox(height: 10.0),
+                      SizedBox(height: 10.0.h),
                       Text(
                         mediaMetaInfoObj.metadata.fileName != null
                             ? mediaMetaInfoObj.metadata.fileName
@@ -195,7 +196,8 @@ class _NotesScreenListState extends State<NotesScreenList> {
                       Text(
                         new FHBUtils()
                             .getFormattedDateString(mediaMetaInfoObj.createdOn),
-                        style: TextStyle(color: Colors.grey[400], fontSize: 12),
+                        style: TextStyle(
+                            color: Colors.grey[400], fontSize: 12.0.sp),
                       )
                     ],
                   ),
@@ -253,13 +255,13 @@ class _NotesScreenListState extends State<NotesScreenList> {
           return Image.memory(snapshot.data);
         } else {
           return new SizedBox(
-            width: 50.0,
-            height: 50.0,
+            width: 50.0.h,
+            height: 50.0.h,
             child: Shimmer.fromColors(
                 baseColor: Colors.grey[200],
                 highlightColor: Colors.grey[600],
-                child:
-                    Container(width: 50, height: 50, color: Colors.grey[200])),
+                child: Container(
+                    width: 50.0.h, height: 50.0.h, color: Colors.grey[200])),
           );
         }
 
@@ -284,8 +286,8 @@ class _NotesScreenListState extends State<NotesScreenList> {
                     backgroundColor:
                         Color(new CommonUtil().getMyPrimaryColor()),
                   ),
-                  width: 30,
-                  height: 30,
+                  width: 30.0.h,
+                  height: 30.0.h,
                 )),
               );
               break;
@@ -304,7 +306,7 @@ class _NotesScreenListState extends State<NotesScreenList> {
               break;
           }
         } else {
-          return Container(height: 0, color: Colors.white);
+          return Container(height: 0.0.h, color: Colors.white);
         }
       },
     );

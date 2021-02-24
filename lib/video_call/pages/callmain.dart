@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:io';
-
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -108,16 +108,19 @@ class CallMain extends StatelessWidget {
                                 (isMute, isVideoHide) {
                               _isMute = isMute;
                               _isVideoHide = isVideoHide;
-                            }, _isMute, _isVideoHide, doctorName, doctorPic,patientId,patientName,patientPicUrl),
+                            }, _isMute, _isVideoHide, doctorName, doctorPic,
+                                patientId, patientName, patientPicUrl),
                             SizedBox(
-                              height: 20,
+                              height: 20.0.h,
                             ),
                           ],
                         )),
                   );
                 },
               ),
-              SizedBoxWidget(height: 20,),
+              SizedBoxWidget(
+                height: 20.0.h,
+              ),
               PrescriptionModule(),
             ],
           ),
@@ -140,7 +143,7 @@ class CallMain extends StatelessWidget {
               child: Text(
                 parameters.warning,
                 style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 20.0.sp,
                     fontWeight: FontWeight.bold,
                     color: Colors.black.withOpacity(0.8)),
               ),
@@ -153,7 +156,7 @@ class CallMain extends StatelessWidget {
                     parameters.exit_call,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 20.0.sp,
                         fontWeight: FontWeight.w600,
                         color: Colors.black.withOpacity(0.5)),
                   ),

@@ -11,6 +11,7 @@ import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class VoiceRecordList extends StatefulWidget {
   final HealthRecordList completeData;
@@ -164,8 +165,8 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
                           : */
                       /*Constants.BASE_URL +*/
                       mediaMetaInfoObj.metadata.healthRecordCategory.logo,
-                      height: 25,
-                      width: 25,
+                      height: 25.0.h,
+                      width: 25.0.h,
                       color: Color(new CommonUtil().getMyPrimaryColor()),
                     )),
                 SizedBox(width: 20),
@@ -175,7 +176,9 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      SizedBox(height: 10.0),
+                      SizedBox(
+                        height: 10.0.h,
+                      ),
                       Text(
                         mediaMetaInfoObj.metadata.fileName != null
                             ? mediaMetaInfoObj.metadata.fileName
@@ -189,7 +192,10 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
                       Text(
                         new FHBUtils()
                             .getFormattedDateString(mediaMetaInfoObj.createdOn),
-                        style: TextStyle(color: Colors.grey[400], fontSize: 12),
+                        style: TextStyle(
+                          color: Colors.grey[400],
+                          fontSize: 12.0.sp,
+                        ),
                       )
                     ],
                   ),
@@ -206,12 +212,12 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
                                   AssetImage(variable.icon_record_fav_active),
                                   color: Color(
                                       new CommonUtil().getMyPrimaryColor()),
-                                  size: 20,
+                                  size: 20.0.sp,
                                 )
                               : ImageIcon(
                                   AssetImage(variable.icon_record_fav),
                                   color: Colors.black,
-                                  size: 20,
+                                  size: 20.0.sp,
                                 ),
                           onPressed: () {
                             new CommonUtil()
@@ -247,13 +253,13 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
           return Image.memory(snapshot.data);
         } else {
           return new SizedBox(
-            width: 50.0,
-            height: 50.0,
+            width: 50.0.h,
+            height: 50.0.h,
             child: Shimmer.fromColors(
                 baseColor: Colors.grey[200],
                 highlightColor: Colors.grey[600],
-                child:
-                    Container(width: 50, height: 50, color: Colors.grey[200])),
+                child: Container(
+                    width: 50.0.h, height: 50.0.h, color: Colors.grey[200])),
           );
         }
 

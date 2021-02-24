@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'dart:math';
-
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -52,8 +52,8 @@ class AddFamilyUserInfoScreen extends StatefulWidget {
 
 class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
-  final double circleRadius = 100.0;
-  final double circleBorderWidth = 2.0;
+  final double circleRadius = 100.0.h;
+  final double circleBorderWidth = 2.0.w;
   File imageURI;
 
   final mobileNoController = TextEditingController(text: '');
@@ -159,6 +159,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 icon: Icon(
                   Icons.arrow_back_ios,
                   color: Colors.black,
+                  size: 24.0.sp,
                 ),
                 onPressed: () {
                   Navigator.of(context).pop();
@@ -172,14 +173,14 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 SizedBox(
-                  height: 80,
+                  height: 80.0.h,
                 ),
                 Padding(
                     padding:
                         EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
                     child: Container(
-                      width: 100,
-                      height: 100,
+                      width: 100.0.h,
+                      height: 100.0.h,
                       decoration: ShapeDecoration(
                           shape: CircleBorder(),
                           color: Color(new CommonUtil().getMyPrimaryColor())),
@@ -191,8 +192,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                                   ? Image.file(
                                       imageURI,
                                       fit: BoxFit.cover,
-                                      width: 60,
-                                      height: 60,
+                                      width: 60.0.h,
+                                      height: 60.0.h,
                                     )
                                   : showProfileImageNew()),
                           onTap: () {
@@ -208,7 +209,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 //                      padding: EdgeInsets.only(bottom: circleRadius / 2.0),
 //                      child: Container(
 //                        color: Color(new CommonUtil().getMyPrimaryColor()),
-//                        height: 160.0,
+//                        height: 160.0.h,
 //                        child: Stack(
 //                            fit: StackFit.expand,
 //                            overflow: Overflow.visible,
@@ -236,8 +237,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 //                                      ? Image.file(
 //                                          imageURI,
 //                                          fit: BoxFit.cover,
-//                                          width: 60,
-//                                          height: 60,
+//                                          width: 60.0.h,
+//                                          height: 60.0.h,
 //                                        )
 //                                      : showProfileImageNew()),
 //                              onTap: () {
@@ -366,7 +367,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     return Padding(
       padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
       child: Container(
-        width: MediaQuery.of(context).size.width - 40,
+        width: 1.sw - 40,
         child: DropdownButton<String>(
           isExpanded: true,
           hint: Text(CommonConstants.genderWithStar),
@@ -378,7 +379,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               child: new Text(eachGender,
                   style: new TextStyle(
                       fontWeight: FontWeight.w500,
-                      fontSize: 16.0,
+                      fontSize: 16.0.sp,
                       color: ColorUtils.blackcolor)),
               value: eachGender,
             );
@@ -412,11 +413,14 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             },
             style: new TextStyle(
                 fontWeight: FontWeight.w500,
-                fontSize: 16.0,
+                fontSize: 16.0.sp,
                 color: ColorUtils.blackcolor),
             decoration: InputDecoration(
               suffixIcon: new IconButton(
-                icon: new Icon(Icons.calendar_today),
+                icon: new Icon(
+                  Icons.calendar_today,
+                  size: 24.0.sp,
+                ),
                 onPressed: () {
                   _selectDate(context);
                 },
@@ -424,11 +428,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               labelText: CommonConstants.date_of_birthWithStar,
               hintText: CommonConstants.date_of_birth,
               labelStyle: TextStyle(
-                  fontSize: 12.0,
+                  fontSize: 12.0.sp,
                   fontWeight: FontWeight.w400,
                   color: ColorUtils.myFamilyGreyColor),
               hintStyle: TextStyle(
-                fontSize: 14.0,
+                fontSize: 14.0.sp,
                 color: ColorUtils.myFamilyGreyColor,
                 fontWeight: FontWeight.w400,
               ),
@@ -490,18 +494,18 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           },
           style: new TextStyle(
               fontWeight: FontWeight.w500,
-              fontSize: 16.0,
+              fontSize: 16.0.sp,
               color: ColorUtils.blackcolor),
           decoration: InputDecoration(
             labelText: labelText,
             hintText: hintText,
             counterText: '',
             labelStyle: TextStyle(
-                fontSize: 13.0,
+                fontSize: 13.0.sp,
                 fontWeight: FontWeight.w400,
                 color: ColorUtils.myFamilyGreyColor),
             hintStyle: TextStyle(
-              fontSize: 14.0,
+              fontSize: 14.0.sp,
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
@@ -528,7 +532,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               enabled: true,
               keyboardType: TextInputType.streetAddress,
               decoration: InputDecoration(
-                hintStyle: TextStyle(fontSize: 12),
+                hintStyle: TextStyle(
+                  fontSize: 12.0.sp,
+                ),
                 labelText: CommonConstants.addr_line_1,
               ),
               validator: (res) {
@@ -542,7 +548,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               enabled: true,
               keyboardType: TextInputType.streetAddress,
               decoration: InputDecoration(
-                hintStyle: TextStyle(fontSize: 12),
+                hintStyle: TextStyle(
+                  fontSize: 12.0.sp,
+                ),
                 labelText: CommonConstants.addr_line_2,
               ),
             ),
@@ -553,7 +561,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     hintText: "City*",
                     labelText: "City*",
                     border: InputBorder.none,
-                    hintStyle: TextStyle(fontSize: 14.0),
+                    hintStyle: TextStyle(
+                      fontSize: 14.0.sp,
+                    ),
                   )),
               suggestionsCallback: (pattern) async {
                 if (pattern.length >= 3) {
@@ -568,7 +578,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   title: Text(
                     suggestion.name,
                     style: TextStyle(
-                      fontSize: 14.0,
+                      fontSize: 14.0.sp,
                     ),
                   ),
                 );
@@ -581,7 +591,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   title: Text(
                     'Oops. We could not find the city you typed.',
                     style: TextStyle(
-                      fontSize: 14.0,
+                      fontSize: 14.0.sp,
                     ),
                   ),
                 );
@@ -610,7 +620,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     hintText: "State",
                     labelText: 'State',
                     border: InputBorder.none,
-                    hintStyle: TextStyle(fontSize: 14.0),
+                    hintStyle: TextStyle(
+                      fontSize: 14.0.sp,
+                    ),
                   )),
               suggestionsCallback: (pattern) async {
                 if (pattern.length >= 3) {
@@ -633,7 +645,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   title: Text(
                     'Oops. We could not find the state you typed.',
                     style: TextStyle(
-                      fontSize: 14.0,
+                      fontSize: 14.0.sp,
                     ),
                   ),
                 );
@@ -655,7 +667,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               enabled: true,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
-                hintStyle: TextStyle(fontSize: 12),
+                hintStyle: TextStyle(
+                  fontSize: 12.0.sp,
+                ),
                 labelText: CommonConstants.addr_zip,
               ),
               validator: (res) {
@@ -678,8 +692,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         children: <Widget>[
           new Container(
             margin: EdgeInsets.only(top: 20, bottom: 20),
-            width: 150,
-            height: 40.0,
+            width: 150.0.w,
+            height: 40.0.h,
             decoration: new BoxDecoration(
               color: Color(new CommonUtil().getMyPrimaryColor()),
               borderRadius: new BorderRadius.all(Radius.circular(10.0)),
@@ -700,7 +714,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     : CommonConstants.save,
                 style: new TextStyle(
                   color: Colors.white,
-                  fontSize: 14.0,
+                  fontSize: 14.0.sp,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -809,17 +823,17 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           },
           style: new TextStyle(
               fontWeight: FontWeight.w500,
-              fontSize: 16.0,
+              fontSize: 16.0.sp,
               color: ColorUtils.blackcolor),
           decoration: InputDecoration(
             labelText: CommonConstants.relationship,
             hintText: CommonConstants.relationship,
             labelStyle: TextStyle(
-                fontSize: 13.0,
+                fontSize: 13.0.sp,
                 fontWeight: FontWeight.w400,
                 color: ColorUtils.myFamilyGreyColor),
             hintStyle: TextStyle(
-              fontSize: 14.0,
+              fontSize: 14.0.sp,
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
@@ -833,7 +847,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     return Padding(
       padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
       child: Container(
-        width: MediaQuery.of(context).size.width / 2 - 40,
+        width: 1.sw / 2 - 40,
         child: DropdownButton<String>(
           hint: Text(CommonConstants.blood_groupWithStar),
           value: currentselectedBloodGroup,
@@ -842,7 +856,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               child: new Text(eachBloodGroup,
                   style: new TextStyle(
                       fontWeight: FontWeight.w500,
-                      fontSize: 16.0,
+                      fontSize: 16.0.sp,
                       color: ColorUtils.blackcolor)),
               value: eachBloodGroup,
             );
@@ -861,7 +875,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     return Padding(
       padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
       child: Container(
-        width: MediaQuery.of(context).size.width / 2 - 40,
+        width: 1.sw / 2 - 40,
         child: DropdownButton<String>(
           hint: Text(CommonConstants.blood_rangeWithStar),
           isExpanded: true,
@@ -871,7 +885,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               child: new Text(eachBloodGroup,
                   style: new TextStyle(
                       fontWeight: FontWeight.w500,
-                      fontSize: 16.0,
+                      fontSize: 16.0.sp,
                       color: ColorUtils.blackcolor)),
               value: eachBloodGroup,
             );
@@ -889,7 +903,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       return Padding(
           padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
           child: Container(
-              width: MediaQuery.of(context).size.width / 2 - 40,
+              width: 1.sw / 2 - 40,
               child: DropdownButton(
                 isExpanded: true,
                 hint: Text(CommonConstants.blood_rangeWithStar),
@@ -899,7 +913,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     child: new Text(eachBloodGroup,
                         style: new TextStyle(
                             fontWeight: FontWeight.w500,
-                            fontSize: 16.0,
+                            fontSize: 16.0.sp,
                             color: ColorUtils.blackcolor)),
                     value: eachBloodGroup,
                   );
@@ -1610,8 +1624,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   // ignore: always_specify_types
                   key: ValueKey(Random().nextInt(100)),
                   fit: BoxFit.cover,
-                  width: 60,
-                  height: 60,
+                  width: 60.0.h,
+                  height: 60.0.h,
                 );
               } else {
                 return Center(
@@ -1622,7 +1636,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                         : '',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 60.0,
+                      fontSize: 60.0.sp,
                       fontWeight: FontWeight.w200,
                     ),
                   ),
@@ -1637,7 +1651,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                       : '',
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 60.0,
+                    fontSize: 60.0.sp,
                     fontWeight: FontWeight.w200,
                   ),
                 ),
@@ -1658,7 +1672,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     : '',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 60.0,
+                  fontSize: 60.0.sp,
                   fontWeight: FontWeight.w200,
                 ),
               ),
@@ -1679,8 +1693,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 return Image.network(
                   snapshot.data.result,
                   fit: BoxFit.cover,
-                  width: 60,
-                  height: 60,
+                  width: 60.0.h,
+                  height: 60.0.h,
                   headers: {
                     HttpHeaders.authorizationHeader:
                         PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)
@@ -1695,7 +1709,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                         : '',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 60.0,
+                      fontSize: 60.0.sp,
                       fontWeight: FontWeight.w200,
                     ),
                   ),
@@ -1710,7 +1724,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                       : '',
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 60.0,
+                    fontSize: 60.0.sp,
                     fontWeight: FontWeight.w200,
                   ),
                 ),
@@ -1731,7 +1745,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     : '',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 60.0,
+                  fontSize: 60.0.sp,
                   fontWeight: FontWeight.w200,
                 ),
               ),
@@ -1752,8 +1766,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 return Image.network(
                   snapshot.data.result,
                   fit: BoxFit.cover,
-                  width: 60,
-                  height: 60,
+                  width: 60.0.h,
+                  height: 60.0.h,
                   headers: {
                     HttpHeaders.authorizationHeader:
                         PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)
@@ -1767,7 +1781,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                         : '',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 60.0,
+                      fontSize: 60.0.sp,
                       fontWeight: FontWeight.w200,
                     ),
                   ),
@@ -1781,7 +1795,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                       : '',
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 60.0,
+                    fontSize: 60.0.sp,
                     fontWeight: FontWeight.w200,
                   ),
                 ),
@@ -1801,7 +1815,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     : '',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 60.0,
+                  fontSize: 60.0.sp,
                   fontWeight: FontWeight.w200,
                 ),
               ),
@@ -1916,8 +1930,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           }
         } else {
           familyWidget = Container(
-            width: 100,
-            height: 100,
+            width: 100.0.h,
+            height: 100.0.h,
           );
         }
 

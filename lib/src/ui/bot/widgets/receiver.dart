@@ -8,6 +8,7 @@ import '../../../../common/CommonUtil.dart';
 import '../../../../common/PreferenceUtil.dart';
 import '../../../model/bot/ConversationModel.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class ReceiverLayout extends StatefulWidget {
   final Conversation c;
@@ -44,10 +45,10 @@ class _ReceiverLayoutState extends State<ReceiverLayout> {
             PreferenceUtil.getStringValue(constants.keyMayaAsset) != null
                 ? PreferenceUtil.getStringValue(constants.keyMayaAsset) + '.png'
                 : variable.icon_maya,
-            height: 32,
-            width: 32,
+            height: 32.0.h,
+            width: 32.0.h,
           ),
-          radius: 30,
+          radius: 30.0.sp,
           backgroundColor: Colors.white,
         ),
         Column(
@@ -67,7 +68,7 @@ class _ReceiverLayoutState extends State<ReceiverLayout> {
                       bottomRight: Radius.circular(25))),
               child: Container(
                 constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width * .6,
+                  maxWidth: 1.sw * .6,
                 ),
                 padding: const EdgeInsets.all(15.0),
                 decoration: BoxDecoration(
@@ -99,7 +100,7 @@ class _ReceiverLayoutState extends State<ReceiverLayout> {
             ),
           ],
         ),
-        SizedBox(width: 20),
+        SizedBox(width: 20.0.w),
       ],
     );
   }

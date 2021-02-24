@@ -28,6 +28,7 @@ import 'package:myfhb/src/model/Media/media_result.dart';
 import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class CommonDialogBox {
   String categoryName, deviceName;
@@ -149,6 +150,7 @@ class CommonDialogBox {
               icon: Icon(
                 Icons.close,
                 color: Colors.black54,
+                size: 24.0.sp,
               ),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -161,7 +163,7 @@ class CommonDialogBox {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(
-              height: 20,
+              height: 20.0.h,
             ),
             Expanded(
               child: SingleChildScrollView(
@@ -183,14 +185,14 @@ class CommonDialogBox {
                           containsAudio);
                     }, doctor, CommonConstants.keyDoctor),
                     SizedBox(
-                      height: 15,
+                      height: 15.0.h,
                     ),
                     fhbBasicWidget.getTextForAlertDialog(
                         context, CommonConstants.strFileName),
                     fhbBasicWidget.getTextFieldWithNoCallbacks(
                         context, fileName),
                     SizedBox(
-                      height: 15,
+                      height: 15.0.h,
                     ),
                     fhbBasicWidget.getTextForAlertDialog(
                         context, CommonConstants.strHospitalNameWithoutStar),
@@ -208,20 +210,20 @@ class CommonDialogBox {
                           containsAudio);
                     }, hospital, CommonConstants.keyHospital),
                     SizedBox(
-                      height: 15,
+                      height: 15.0.h,
                     ),
                     fhbBasicWidget.getTextForAlertDialog(
                         context, CommonConstants.strDateOfVisit),
                     _showDateOfVisit(context, dateOfVisit),
                     SizedBox(
-                      height: 15,
+                      height: 15.0.h,
                     ),
                     fhbBasicWidget.getTextForAlertDialog(
                         context, CommonConstants.strMemo),
                     fhbBasicWidget.getTextFieldWithNoCallbacksForMemo(
                         context, memoController),
                     SizedBox(
-                      height: 15,
+                      height: 15.0.h,
                     ),
                   ],
                 ),
@@ -339,6 +341,7 @@ class CommonDialogBox {
               icon: Icon(
                 Icons.close,
                 color: Colors.black54,
+                size: 24.0.sp,
               ),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -351,7 +354,7 @@ class CommonDialogBox {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(
-              height: 20,
+              height: 20.0.h,
             ),
             Expanded(
               child: SingleChildScrollView(
@@ -373,7 +376,7 @@ class CommonDialogBox {
                           containsAudio);
                     }, lab, CommonConstants.keyLab),
                     SizedBox(
-                      height: 15,
+                      height: 15.0.h,
                     ),
                     fhbBasicWidget.getTextForAlertDialog(
                         context, CommonConstants.strDoctorsName),
@@ -391,27 +394,27 @@ class CommonDialogBox {
                           containsAudio);
                     }, doctor, CommonConstants.keyDoctor),
                     SizedBox(
-                      height: 15,
+                      height: 15.0.h,
                     ),
                     fhbBasicWidget.getTextForAlertDialog(
                         context, CommonConstants.strFileName),
                     fhbBasicWidget.getTextFieldWithNoCallbacks(
                         context, fileName),
                     SizedBox(
-                      height: 15,
+                      height: 15.0.h,
                     ),
                     fhbBasicWidget.getTextForAlertDialog(
                         context, CommonConstants.strDateOfVisit),
                     _showDateOfVisit(context, dateOfVisit),
                     SizedBox(
-                      height: 15,
+                      height: 15.0.h,
                     ),
                     fhbBasicWidget.getTextForAlertDialog(
                         context, CommonConstants.strMemo),
                     fhbBasicWidget.getTextFieldWithNoCallbacks(
                         context, memoController),
                     SizedBox(
-                      height: 15,
+                      height: 15.0.h,
                     ),
                   ],
                 ),
@@ -500,6 +503,7 @@ class CommonDialogBox {
               icon: Icon(
                 Icons.close,
                 color: Colors.black54,
+                size: 24.0.sp,
               ),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -516,13 +520,13 @@ class CommonDialogBox {
                 context, CommonConstants.strFileName),
             fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
             SizedBox(
-              height: 15,
+              height: 15.0.h,
             ),
             fhbBasicWidget.getTextForAlertDialog(
                 context, CommonConstants.strMemo),
             fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController),
             SizedBox(
-              height: 15,
+              height: 15.0.h,
             ),
             modeOfSave
                 ? fhbBasicWidget.getSaveButton(() {
@@ -638,6 +642,7 @@ class CommonDialogBox {
               icon: Icon(
                 Icons.close,
                 color: Colors.black54,
+                size: 24.0.sp,
               ),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -654,16 +659,16 @@ class CommonDialogBox {
                 context, CommonConstants.strFileName),
             fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
             SizedBox(
-              height: 15,
+              height: 15.0.h,
             ),
             fhbBasicWidget.getTextForAlertDialog(
                 context, CommonConstants.strMemo),
             fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController),
             SizedBox(
-              height: 15,
+              height: 15.0.h,
             ),
             Container(
-                width: MediaQuery.of(context).size.width - 60,
+                width: 1.sw - 60,
                 child: GestureDetector(
                     onTap: () => _selectDate(context, dateOfVisit),
                     child: TextField(
@@ -673,13 +678,16 @@ class CommonDialogBox {
                       decoration: InputDecoration(
                           labelText: CommonConstants.exprityDate,
                           suffixIcon: new IconButton(
-                            icon: new Icon(Icons.calendar_today),
+                            icon: new Icon(
+                              Icons.calendar_today,
+                              size: 24.0.sp,
+                            ),
                             onPressed: () =>
                                 _selectDateFuture(context, dateOfVisit),
                           )),
                     ))),
             SizedBox(
-              height: 15,
+              height: 15.0.h,
             ),
             new Center(
               child: new DropdownButton(
@@ -704,7 +712,7 @@ class CommonDialogBox {
               ),
             ),
             SizedBox(
-              height: 15,
+              height: 15.0.h,
             ),
             modeOfSave
                 ? fhbBasicWidget.getSaveButton(() {
@@ -797,6 +805,7 @@ class CommonDialogBox {
                 icon: Icon(
                   Icons.close,
                   color: Colors.black54,
+                  size: 24.0.sp,
                 ),
                 onPressed: () {
                   Navigator.of(context).pop();
@@ -813,7 +822,7 @@ class CommonDialogBox {
                   context, CommonConstants.strFileName),
               fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
               SizedBox(
-                height: 15,
+                height: 15.0.h,
               ),
               fhbBasicWidget.getTextFiledWithHintAndSuffixText(
                   context,
@@ -825,14 +834,14 @@ class CommonDialogBox {
                 });
               }, errGluco, variable.strGlucUnit),
               SizedBox(
-                height: 15,
+                height: 15.0.h,
               ),
               fhbBasicWidget.getTextForAlertDialog(
                   context, CommonConstants.strMemo),
               fhbBasicWidget.getTextFieldWithNoCallbacks(
                   context, memoController),
               SizedBox(
-                height: 15,
+                height: 15.0.h,
               ),
               fhbBasicWidget.getTextForAlertDialog(
                   context, CommonConstants.strTimeTaken),
@@ -849,14 +858,18 @@ class CommonDialogBox {
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       variable.strbfood,
-                      style: TextStyle(fontSize: 16),
+                      style: TextStyle(
+                        fontSize: 16.0.sp,
+                      ),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       variable.strafood,
-                      style: TextStyle(fontSize: 16),
+                      style: TextStyle(
+                        fontSize: 16.0.sp,
+                      ),
                     ),
                   ),
                 ],
@@ -870,7 +883,7 @@ class CommonDialogBox {
                 isSelected: isSelected,
               ),
               SizedBox(
-                height: 15,
+                height: 15.0.h,
               ),
               modeOfSave
                   ? fhbBasicWidget.getSaveButton(() {
@@ -958,6 +971,7 @@ class CommonDialogBox {
               icon: Icon(
                 Icons.close,
                 color: Colors.black54,
+                size: 24.0.sp,
               ),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -974,7 +988,7 @@ class CommonDialogBox {
                 context, CommonConstants.strFileName),
             fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
             SizedBox(
-              height: 15,
+              height: 15.0.h,
             ),
             fhbBasicWidget.getTextFiledWithHintAndSuffixText(
                 context,
@@ -986,13 +1000,13 @@ class CommonDialogBox {
               });
             }, errTemp, commonConstants.tempUNIT),
             SizedBox(
-              height: 15,
+              height: 15.0.h,
             ),
             fhbBasicWidget.getTextForAlertDialog(
                 context, CommonConstants.strMemo),
             fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController),
             SizedBox(
-              height: 15,
+              height: 15.0.h,
             ),
             modeOfSave
                 ? fhbBasicWidget.getSaveButton(() {
@@ -1134,7 +1148,7 @@ class CommonDialogBox {
                 context, CommonConstants.strFileName),
             fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
             SizedBox(
-              height: 15,
+              height: 15.0.h,
             ),
             fhbBasicWidget.getTextFiledWithHintAndSuffixText(
                 context,
@@ -1146,13 +1160,13 @@ class CommonDialogBox {
               });
             }, errWeight, commonConstants.weightUNIT),
             SizedBox(
-              height: 15,
+              height: 15.0.h,
             ),
             fhbBasicWidget.getTextForAlertDialog(
                 context, CommonConstants.strMemo),
             fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController),
             SizedBox(
-              height: 15,
+              height: 15.0.h,
             ),
             modeOfSave
                 ? fhbBasicWidget.getSaveButton(() {
@@ -1262,7 +1276,7 @@ class CommonDialogBox {
                 context, CommonConstants.strFileName),
             fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
             SizedBox(
-              height: 15,
+              height: 15.0.h,
             ),
             fhbBasicWidget.getTextFiledWithHintAndSuffixText(
                 context,
@@ -1274,7 +1288,7 @@ class CommonDialogBox {
               });
             }, errPoOs, variable.strpulseUnit),
             SizedBox(
-              height: 15,
+              height: 15.0.h,
             ),
             fhbBasicWidget.getTextFiledWithHintAndSuffixText(
                 context,
@@ -1286,13 +1300,13 @@ class CommonDialogBox {
               });
             }, errPoPulse, variable.strpulse),
             SizedBox(
-              height: 15,
+              height: 15.0.h,
             ),
             fhbBasicWidget.getTextForAlertDialog(
                 context, CommonConstants.strMemo),
             fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController),
             SizedBox(
-              height: 15,
+              height: 15.0.h,
             ),
             modeOfSave
                 ? fhbBasicWidget.getSaveButton(() {
@@ -1403,7 +1417,7 @@ class CommonDialogBox {
                 context, CommonConstants.strFileName),
             fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
             SizedBox(
-              height: 15,
+              height: 15.0.h,
             ),
             fhbBasicWidget.getTextFiledWithHintAndSuffixText(
                 context,
@@ -1415,7 +1429,7 @@ class CommonDialogBox {
               });
             }, errForbpSp, variable.strbpunit),
             SizedBox(
-              height: 15,
+              height: 15.0.h,
             ),
             fhbBasicWidget.getTextFiledWithHintAndSuffixText(
                 context,
@@ -1427,7 +1441,7 @@ class CommonDialogBox {
               });
             }, errFForbpDp, variable.strbpdp),
             SizedBox(
-              height: 15,
+              height: 15.0.h,
             ),
             fhbBasicWidget.getTextFiledWithHintAndSuffixText(
                 context,
@@ -1439,13 +1453,13 @@ class CommonDialogBox {
               });
             }, errForbpPulse, variable.strpulse),
             SizedBox(
-              height: 15,
+              height: 15.0.h,
             ),
             fhbBasicWidget.getTextForAlertDialog(
                 context, CommonConstants.strMemo),
             fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController),
             SizedBox(
-              height: 15,
+              height: 15.0.h,
             ),
             modeOfSave
                 ? fhbBasicWidget.getSaveButton(() {
@@ -1582,8 +1596,8 @@ class CommonDialogBox {
       Function(bool, String) updateUI) {
     return GestureDetector(
       child: Container(
-        height: 80,
-        width: 80,
+        height: 80.0.h,
+        width: 80.0.h,
         padding: EdgeInsets.all(10),
         child: Material(
           color: Colors.transparent,
@@ -1593,10 +1607,10 @@ class CommonDialogBox {
             backgroundColor: ColorUtils.greycolor,
             child: Icon(
               Icons.mic,
-              size: 40,
+              size: 40.0.sp,
               color: Colors.black,
             ),
-            radius: 30.0,
+            radius: 30.0.sp,
           ),
         ),
       ),
@@ -2110,14 +2124,14 @@ class CommonDialogBox {
                 context, CommonConstants.strFileName),
             fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
             SizedBox(
-              height: 15,
+              height: 15.0.h,
             ),
             fhbBasicWidget.getTextForAlertDialog(
                 context, CommonConstants.strMemo),
             fhbBasicWidget.getTextFieldWithNoCallbacksForMemo(
                 context, memoController),
             SizedBox(
-              height: 15,
+              height: 15.0.h,
             ),
             modeOfSave
                 ? fhbBasicWidget.getSaveButton(() {
@@ -2359,14 +2373,14 @@ class CommonDialogBox {
                 context, CommonConstants.strFileName),
             fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
             SizedBox(
-              height: 15,
+              height: 15.0.h,
             ),
             fhbBasicWidget.getTextForAlertDialog(
                 context, CommonConstants.strMemo),
             fhbBasicWidget.getRichTextFieldWithNoCallbacks(
                 context, memoController),
             SizedBox(
-              height: 15,
+              height: 15.0.h,
             ),
             modeOfSave
                 ? fhbBasicWidget.getSaveButton(() {

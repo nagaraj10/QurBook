@@ -11,6 +11,7 @@ import 'package:myfhb/my_providers/models/Hospitals.dart';
 import 'package:myfhb/my_providers/models/User.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DateSlots.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DoctorsFromHospitalModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/Slots.dart';
@@ -221,10 +222,11 @@ class CommonWidgets {
   Widget getDownArrowWidget() {
     return Container(
       color: Colors.white,
-      width: 15,
-      height: 30,
+      width: 15.0.w,
+      height: 30.0.h,
       child: Icon(
         Icons.keyboard_arrow_down,
+        size: 24.0.sp,
         color: Color(new CommonUtil().getMyPrimaryColor()),
       ),
     );
@@ -343,14 +345,14 @@ class CommonWidgets {
     return profilePicThumbnail != null
         ? Image.network(
             profilePicThumbnail,
-            height: 40,
-            width: 40,
+            height: 40.0.h,
+            width: 40.0.h,
             fit: BoxFit.cover,
           )
         : Container(
             color: Color(fhbColors.bgColorContainer),
-            height: 40,
-            width: 40,
+            height: 40.0.h,
+            width: 40.0.h,
           );
   }
 
@@ -362,7 +364,7 @@ class CommonWidgets {
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             content: Container(
-              width: MediaQuery.of(context).size.width - 20,
+              width: 1.sw - 20,
               child: Stack(
                 overflow: Overflow.visible,
                 children: <Widget>[
@@ -448,7 +450,8 @@ class CommonWidgets {
     return Text(
       textSlotTime,
       style: TextStyle(
-          color: Color(new CommonUtil().getMyPrimaryColor()), fontSize: fhbStyles.fnt_sessionTime),
+          color: Color(new CommonUtil().getMyPrimaryColor()),
+          fontSize: fhbStyles.fnt_sessionTime),
     );
   }
 
@@ -509,8 +512,8 @@ class CommonWidgets {
     return Container(
       alignment: Alignment.bottomRight,
       child: Container(
-        width: 10.0,
-        height: 10.0,
+        width: 10.0.h,
+        height: 10.0.h,
         decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: getDoctorStatus('${docs.isActive}', position)
@@ -524,8 +527,8 @@ class CommonWidgets {
     return Container(
       alignment: Alignment.bottomRight,
       child: Container(
-        width: 10.0,
-        height: 10.0,
+        width: 10.0.h,
+        height: 10.0.h,
         decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: getDoctorStatus('${docs.isActive}', position)
@@ -539,8 +542,8 @@ class CommonWidgets {
     return Container(
       alignment: Alignment.bottomRight,
       child: Container(
-        width: 10.0,
-        height: 10.0,
+        width: 10.0.h,
+        height: 10.0.h,
         decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: getDoctorStatus('${docs.isActive}', position)
@@ -635,7 +638,7 @@ class CommonWidgets {
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             content: Container(
-              width: MediaQuery.of(context).size.width - 20,
+              width: 1.sw - 20,
               child: Stack(
                 overflow: Overflow.visible,
                 children: <Widget>[
@@ -700,7 +703,7 @@ class CommonWidgets {
                                       : '',
                                   maxLines: 1,
                                   style: TextStyle(
-                                      fontSize: 13.0,
+                                      fontSize: 13.0.sp,
                                       fontWeight: FontWeight.w400,
                                       color: ColorUtils.lightgraycolor),
                                 ),
@@ -754,7 +757,7 @@ class CommonWidgets {
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             content: Container(
-              width: MediaQuery.of(context).size.width - 20,
+              width: 1.sw - 20,
               child: Stack(
                 overflow: Overflow.visible,
                 children: <Widget>[
@@ -819,7 +822,7 @@ class CommonWidgets {
                                       : '',
                                   maxLines: 1,
                                   style: TextStyle(
-                                      fontSize: 13.0,
+                                      fontSize: 13.0.sp,
                                       fontWeight: FontWeight.w400,
                                       color: ColorUtils.lightgraycolor),
                                 ),

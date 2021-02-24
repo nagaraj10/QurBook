@@ -15,6 +15,7 @@ import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class MedicalReportListScreen extends StatefulWidget {
   final HealthRecordList completeData;
@@ -139,9 +140,8 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                 } else {
                   toast.getToast('No Image Attached ', Colors.red);
                 }
-              }else{
+              } else {
                 toast.getToast('No Image Attached ', Colors.red);
-
               }
             } else {
               bool condition;
@@ -249,7 +249,7 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                       style: TextStyle(
                           color: Colors.grey[400],
                           fontWeight: FontWeight.w200,
-                          fontSize: 12),
+                          fontSize: 12.0.sp),
                     )
                   ],
                 ),

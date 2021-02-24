@@ -16,6 +16,7 @@ import 'package:myfhb/src/model/user/MyProfileResult.dart';
 import 'package:myfhb/src/ui/authentication/OtpVerifyScreen.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class MyProfilePage extends StatefulWidget {
   @override
@@ -98,7 +99,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 ),
                 Text(
                   'Hey Please Hangon!\nprofile is loading.',
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                  style:
+                      TextStyle(fontSize: 14.0.sp, fontWeight: FontWeight.w500),
                   textAlign: TextAlign.center,
                 )
               ],
@@ -224,12 +226,12 @@ class _MyProfilePageState extends State<MyProfilePage> {
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Container(
-                  height: 100,
-                  width: 100,
+                  height: 100.0.h,
+                  width: 100.0.h,
                   decoration: ShapeDecoration(
                     shape: CircleBorder(
                         side: BorderSide(
-                            width: 1.5,
+                            width: 1.5.w,
                             color:
                                 Color(new CommonUtil().getMyPrimaryColor()))),
                   ),
@@ -251,7 +253,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                     enabled: false,
                     decoration: InputDecoration(
                       hintText: variable.strMobileNum,
-                      hintStyle: TextStyle(fontSize: 12),
+                      hintStyle: TextStyle(fontSize: 12.0.sp),
                       labelText: variable.strMobileNum,
                     ),
                   )),
@@ -263,7 +265,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                     enabled: false,
                     decoration: InputDecoration(
                       hintText: CommonConstants.firstName,
-                      hintStyle: TextStyle(fontSize: 12),
+                      hintStyle: TextStyle(fontSize: 12.0.sp),
                       labelText: CommonConstants.firstName,
                     ),
                   )),
@@ -274,7 +276,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                     enabled: false,
                     decoration: InputDecoration(
                       hintText: CommonConstants.middleName,
-                      hintStyle: TextStyle(fontSize: 12),
+                      hintStyle: TextStyle(fontSize: 12.0.sp),
                       labelText: CommonConstants.middleName,
                     ),
                   )),
@@ -286,7 +288,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                     enabled: false,
                     decoration: InputDecoration(
                       hintText: CommonConstants.lastName,
-                      hintStyle: TextStyle(fontSize: 12),
+                      hintStyle: TextStyle(fontSize: 12.0.sp),
                       labelText: CommonConstants.lastName,
                     ),
                   )),
@@ -300,7 +302,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                       enabled: false,
                       decoration: InputDecoration(
                         hintText: variable.strEmailAddress,
-                        hintStyle: TextStyle(fontSize: 12),
+                        hintStyle: TextStyle(fontSize: 12.0.sp),
                         labelText: variable.strEmailAddress,
                         //suffix: Text('Tap to verify')
                       ),
@@ -315,7 +317,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                   //             padding: EdgeInsets.all(10),
                   //             child: Text(Constants.VerifyEmail,
                   //                 style: TextStyle(
-                  //                     fontSize: 13.0,
+                  //                     fontSize: 13.0.sp,
                   //                     fontWeight: FontWeight.w400,
                   //                     color: Color(new CommonUtil()
                   //                         .getMyPrimaryColor())))),
@@ -342,7 +344,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                   enabled: false,
                   decoration: InputDecoration(
                     hintText: CommonConstants.gender,
-                    hintStyle: TextStyle(fontSize: 12),
+                    hintStyle: TextStyle(fontSize: 12.0.sp),
                     labelText: CommonConstants.gender,
                   ),
                 ),
@@ -352,26 +354,26 @@ class _MyProfilePageState extends State<MyProfilePage> {
                   Padding(
                       padding: EdgeInsets.all(10),
                       child: Container(
-                        width: MediaQuery.of(context).size.width / 2 - 40,
+                        width: 1.sw / 2 - 40,
                         child: TextField(
                           controller: bloodGroupController,
                           enabled: false,
                           decoration: InputDecoration(
                               hintText: CommonConstants.blood_group,
-                              hintStyle: TextStyle(fontSize: 12),
+                              hintStyle: TextStyle(fontSize: 12.0.sp),
                               labelText: CommonConstants.blood_group),
                         ),
                       )),
                   Padding(
                       padding: EdgeInsets.all(10),
                       child: Container(
-                        width: MediaQuery.of(context).size.width / 2 - 40,
+                        width: 1.sw / 2 - 40,
                         child: TextField(
                           controller: bloodRangeController,
                           enabled: false,
                           decoration: InputDecoration(
                               hintText: CommonConstants.STR_RHTYPE,
-                              hintStyle: TextStyle(fontSize: 12),
+                              hintStyle: TextStyle(fontSize: 12.0.sp),
                               labelText: CommonConstants.STR_RHTYPE),
                         ),
                       )),
@@ -382,26 +384,26 @@ class _MyProfilePageState extends State<MyProfilePage> {
                   Padding(
                       padding: EdgeInsets.all(10),
                       child: Container(
-                        width: MediaQuery.of(context).size.width / 2 - 40,
+                        width: 1.sw / 2 - 40,
                         child: TextField(
                           controller: heightController,
                           enabled: false,
                           decoration: InputDecoration(
                               hintText: CommonConstants.height,
-                              hintStyle: TextStyle(fontSize: 12),
+                              hintStyle: TextStyle(fontSize: 12.0.sp),
                               labelText: CommonConstants.height),
                         ),
                       )),
                   Padding(
                       padding: EdgeInsets.all(10),
                       child: Container(
-                        width: MediaQuery.of(context).size.width / 2 - 40,
+                        width: 1.sw / 2 - 40,
                         child: TextField(
                           controller: weightController,
                           enabled: false,
                           decoration: InputDecoration(
                               hintText: CommonConstants.weight,
-                              hintStyle: TextStyle(fontSize: 12),
+                              hintStyle: TextStyle(fontSize: 12.0.sp),
                               labelText: CommonConstants.weight),
                         ),
                       )),
@@ -415,7 +417,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                   enabled: false,
                   decoration: InputDecoration(
                       hintText: CommonConstants.date_of_birth,
-                      hintStyle: TextStyle(fontSize: 12),
+                      hintStyle: TextStyle(fontSize: 12.0.sp),
                       labelText: CommonConstants.date_of_birth),
                 ),
               ),
@@ -425,7 +427,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                   controller: cntrlr_addr_one,
                   enabled: false,
                   decoration: InputDecoration(
-                    hintStyle: TextStyle(fontSize: 12),
+                    hintStyle: TextStyle(fontSize: 12.0.sp),
                     labelText: CommonConstants.addr_line_1,
                   ),
                 ),
@@ -436,7 +438,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                   controller: cntrlr_addr_two,
                   enabled: false,
                   decoration: InputDecoration(
-                    hintStyle: TextStyle(fontSize: 12),
+                    hintStyle: TextStyle(fontSize: 12.0.sp),
                     labelText: CommonConstants.addr_line_2,
                   ),
                 ),
@@ -447,7 +449,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                   controller: cntrlr_addr_city,
                   enabled: false,
                   decoration: InputDecoration(
-                    hintStyle: TextStyle(fontSize: 12),
+                    hintStyle: TextStyle(fontSize: 12.0.sp),
                     labelText: CommonConstants.addr_city,
                   ),
                 ),
@@ -458,7 +460,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                   controller: cntrlr_addr_state,
                   enabled: false,
                   decoration: InputDecoration(
-                    hintStyle: TextStyle(fontSize: 12),
+                    hintStyle: TextStyle(fontSize: 12.0.sp),
                     labelText: CommonConstants.addr_state,
                   ),
                 ),
@@ -469,7 +471,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                   controller: cntrlr_addr_zip,
                   enabled: false,
                   decoration: InputDecoration(
-                    hintStyle: TextStyle(fontSize: 12),
+                    hintStyle: TextStyle(fontSize: 12.0.sp),
                     labelText: CommonConstants.addr_zip,
                   ),
                 ),

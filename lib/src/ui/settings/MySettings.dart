@@ -16,6 +16,7 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/device_integration/viewModel/deviceDataHelper.dart';
 import 'AppleHealthSettings.dart';
 import 'dart:io';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class MySettings extends StatefulWidget {
   @override
@@ -96,18 +97,18 @@ class _MySettingsState extends State<MySettings> {
           _isWSActive = true;
           _isHealthFirstTime = false;
         }
-      }else{
-          userMappingId = '';
-         _isdigitRecognition = true;
-         _isdeviceRecognition = true;
-         _isHKActive = false;
-         _firstTym = true;
-         _isBPActive = true;
-         _isGLActive = true;
-         _isOxyActive = true;
-         _isTHActive = true;
-         _isWSActive = true;
-         _isHealthFirstTime = false;
+      } else {
+        userMappingId = '';
+        _isdigitRecognition = true;
+        _isdeviceRecognition = true;
+        _isHKActive = false;
+        _firstTym = true;
+        _isBPActive = true;
+        _isGLActive = true;
+        _isOxyActive = true;
+        _isTHActive = true;
+        _isWSActive = true;
+        _isHealthFirstTime = false;
       }
     });
     return selectionResult;
@@ -126,7 +127,7 @@ class _MySettingsState extends State<MySettings> {
             _isOxyActive,
             _isTHActive,
             _isWSActive,
-              userId)
+            userId)
         .then((value) {
       createDeviceSelectionModel = value;
       if (createDeviceSelectionModel.isSuccess) {
@@ -268,7 +269,7 @@ class _MySettingsState extends State<MySettings> {
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              size: 20,
+              size: 24.0.sp,
             ),
             onPressed: () {
               isTouched ? _onWillPop() : Navigator.of(context).pop();
@@ -295,7 +296,7 @@ class _MySettingsState extends State<MySettings> {
                             title: Text(variable.strAllowDigit),
                             subtitle: Text(
                               variable.strScanDevices,
-                              style: TextStyle(fontSize: 10),
+                              style: TextStyle(fontSize: 10.0.sp),
                             ),
                             trailing: Transform.scale(
                               scale: 0.8,
@@ -328,7 +329,7 @@ class _MySettingsState extends State<MySettings> {
                             title: Text(variable.strAllowDevice),
                             subtitle: Text(
                               variable.strScanAuto,
-                              style: TextStyle(fontSize: 10),
+                              style: TextStyle(fontSize: 10.0.sp),
                             ),
                             trailing: Transform.scale(
                               scale: 0.8,
@@ -365,7 +366,7 @@ class _MySettingsState extends State<MySettings> {
                                   title: Text(variable.strGoogleFit),
                                   subtitle: Text(
                                     variable.strAllowGoogle,
-                                    style: TextStyle(fontSize: 10),
+                                    style: TextStyle(fontSize: 10.0.sp),
                                   ),
                                   trailing: Wrap(
                                     children: <Widget>[
@@ -412,7 +413,7 @@ class _MySettingsState extends State<MySettings> {
                                 title: Text(variable.strHealthKit),
                                 subtitle: Text(
                                   variable.strAllowHealth,
-                                  style: TextStyle(fontSize: 10),
+                                  style: TextStyle(fontSize: 10.0.sp),
                                 ),
                                 trailing: Wrap(
                                   children: <Widget>[
@@ -482,7 +483,7 @@ class _MySettingsState extends State<MySettings> {
                   children: [
                     Text(
                       variable.strAddDevice,
-                      style: TextStyle(color: Colors.black, fontSize: 12),
+                      style: TextStyle(color: Colors.black, fontSize: 12.0.sp),
                     ),
                     SizedBox(
                       height: 10,

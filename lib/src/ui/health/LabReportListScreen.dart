@@ -14,6 +14,7 @@ import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class LabReportListScreen extends StatefulWidget {
   final HealthRecordList completeData;
@@ -142,9 +143,8 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
               } else {
                 toast.getToast('No Image Attached ', Colors.red);
               }
-            }else{
+            } else {
               toast.getToast('No Image Attached ', Colors.red);
-
             }
           } else {
             bool condition;
@@ -170,7 +170,7 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
         }
       },
       child: Container(
-        //height: 90,
+        //height: 90.0.h,
         padding: EdgeInsets.all(10.0),
         margin: EdgeInsets.only(left: 10, right: 10, top: 10),
         decoration: BoxDecoration(
@@ -193,8 +193,8 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
                           ? Image.network(
                               Constants.BASE_URL +
                                   data.metadata.hospital.logoThumbnail,
-                              height: 50,
-                              width: 50,
+                              height: 50.0.h,
+                              width: 50.0.h,
                             )
                           :*/
                     Container(
@@ -202,8 +202,8 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
               child: Image.network(
                 /*Constants.BASE_URL +*/
                 mediaMetaInfo.metadata.healthRecordCategory.logo,
-                height: 30,
-                width: 30,
+                height: 30.0.h,
+                width: 30.0.h,
                 color: Color(
                   CommonUtil().getMyPrimaryColor(),
                 ),
@@ -213,12 +213,12 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
               ),
             )
                 /*: Container(
-                          height: 50,
-                          width: 50,
+                          height: 50.0.h,
+                          width: 50.0.h,
                           color: Colors.grey[200],
                         )*/
                 ),
-            SizedBox(width: 20),
+            SizedBox(width: 20.0.w),
             Expanded(
               flex: 6,
               child: Column(
@@ -255,7 +255,7 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
                     style: TextStyle(
                         color: Colors.grey[400],
                         fontWeight: FontWeight.w200,
-                        fontSize: 12),
+                        fontSize: 12.0.sp),
                   )
                 ],
               ),
@@ -313,19 +313,19 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
         if (snapshot.hasData) {
           return Image.memory(
             snapshot.data,
-            height: 50,
-            width: 50,
+            height: 50.0.h,
+            width: 50.0.h,
             fit: BoxFit.cover,
           );
         } else {
           return new SizedBox(
-            width: 50.0,
-            height: 50.0,
+            width: 50.0.h,
+            height: 50.0.h,
             child: Shimmer.fromColors(
                 baseColor: Colors.grey[200],
                 highlightColor: Colors.grey[550],
-                child:
-                    Container(width: 50, height: 50, color: Colors.grey[200])),
+                child: Container(
+                    width: 50.0.h, height: 50.0.h, color: Colors.grey[200])),
           );
         }
 
@@ -343,13 +343,13 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
           return Image.memory(snapshot.data);
         } else {
           return new SizedBox(
-            width: 50.0,
-            height: 50.0,
+            width: 50.0.h,
+            height: 50.0.h,
             child: Shimmer.fromColors(
                 baseColor: Colors.grey[200],
                 highlightColor: Colors.grey[600],
-                child:
-                    Container(width: 50, height: 50, color: Colors.grey[200])),
+                child: Container(
+                    width: 50.0.h, height: 50.0.h, color: Colors.grey[200])),
           );
         }
 

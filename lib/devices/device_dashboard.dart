@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
@@ -95,7 +95,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
             leading: IconWidget(
               icon: Icons.arrow_back_ios,
               colors: Colors.white,
-              size: 20,
+              size: 24.0.sp,
               onTap: () {
                 Navigator.pop(context);
               },
@@ -107,7 +107,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
             children: [
               getCardBasedOnDevices(deviceName),
               SizedBox(
-                height: 20,
+                height: 20.0.h,
               ),
               Text(errorMsg),
               new Container(
@@ -122,7 +122,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                         onPressed: () {},
                         child: Text('',
                             style: TextStyle(
-                                fontSize: 22.0, fontWeight: FontWeight.w400),
+                                fontSize: 22.0.sp, fontWeight: FontWeight.w400),
                             textAlign: TextAlign.center),
                       ),
                       OutlineButton(
@@ -167,7 +167,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                         },
                         child: Text('',
                             style: TextStyle(
-                                fontSize: 22.0, fontWeight: FontWeight.w400),
+                                fontSize: 22.0.sp, fontWeight: FontWeight.w400),
                             textAlign: TextAlign.center),
                       ),
                     ],
@@ -207,7 +207,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                 onTap: () => Navigator.of(context).pop(false),
                 child: Text("NO"),
               ),
-              SizedBox(height: 16),
+              SizedBox(height: 16.0.h),
               new GestureDetector(
                 onTap: () => Navigator.of(context).pop(true),
                 child: Text("YES"),
@@ -239,7 +239,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
 
   Widget getCardForBPMonitor(String deviceName) {
     return Container(
-        //height: 70,
+        //height: 70.0.h,
         padding: EdgeInsets.all(10.0),
         margin: EdgeInsets.only(left: 15, right: 15, top: 10),
         decoration: BoxDecoration(
@@ -261,22 +261,22 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                   children: [
                     Image.asset(
                       Devices_BP,
-                      height: 30.0,
-                      width: 30.0,
+                      height: 30.0.h,
+                      width: 30.0.h,
                       color: Color(CommonConstants.bpDarkColor),
                     ),
                     Text(
                       CommonConstants.STR_BP_MONITOR,
                       style: TextStyle(
                           fontWeight: FontWeight.w500,
-                          fontSize: 14,
+                          fontSize: 14.0.sp,
                           color: Color(CommonConstants.bpDarkColor)),
                       softWrap: true,
                     ),
                   ],
                 ),
                 SizedBox(
-                  width: 5,
+                  width: 5.0.w,
                 ),
                 Expanded(
                   child: Row(
@@ -284,7 +284,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SizedBox(
-                        width: 15,
+                        width: 15.0.w,
                       ),
                       Expanded(
                           child: Padding(
@@ -296,7 +296,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                                   'Sys',
                                   style: TextStyle(
                                       fontWeight: FontWeight.w500,
-                                      fontSize: 12,
+                                      fontSize: 12.0.sp,
                                       color:
                                           Color(CommonConstants.bplightColor)),
                                   softWrap: true,
@@ -322,7 +322,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                                 'Dia',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500,
-                                    fontSize: 12,
+                                    fontSize: 12.0.sp,
                                     color: Color(CommonConstants.bplightColor)),
                                 softWrap: true,
                               ),
@@ -348,7 +348,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                                   'Pul',
                                   style: TextStyle(
                                       fontWeight: FontWeight.w500,
-                                      fontSize: 12,
+                                      fontSize: 12.0.sp,
                                       color:
                                           Color(CommonConstants.bplightColor)),
                                   softWrap: true,
@@ -367,7 +367,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                           ),
                           flex: 1),
                       SizedBox(
-                        width: 15,
+                        width: 15.0.w,
                       ),
                     ],
                   ),
@@ -637,7 +637,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
 
   Widget getCardForThermometer(String deviceName) {
     return Container(
-        //height: 70,
+        //height: 70.0.h,
         padding: EdgeInsets.all(10.0),
         margin: EdgeInsets.only(left: 15, right: 15, top: 10),
         decoration: BoxDecoration(
@@ -658,15 +658,15 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                 children: [
                   Image.asset(
                     Devices_THM,
-                    height: 40.0,
-                    width: 40.0,
+                    height: 40.0.h,
+                    width: 40.0.h,
                     color: Color(CommonConstants.ThermoDarkColor),
                   ),
                   Text(
                     CommonConstants.STR_THERMOMETER,
                     style: TextStyle(
                         fontWeight: FontWeight.w500,
-                        fontSize: 14,
+                        fontSize: 14.0.sp,
                         color: Color(CommonConstants.ThermoDarkColor)),
                     softWrap: true,
                   ),
@@ -675,7 +675,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
               flex: 1,
             ),
             SizedBox(
-              width: 5,
+              width: 5.0.w,
             ),
             Expanded(
               flex: 1,
@@ -690,7 +690,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                         'Temp',
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
-                            fontSize: 12,
+                            fontSize: 12.0.sp,
                             color: Color(CommonConstants.ThermolightColor)),
                         softWrap: true,
                       ),
@@ -701,7 +701,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                             controller: deviceController,
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                                fontSize: 13.0,
+                                fontSize: 13.0.sp,
                                 fontWeight: FontWeight.w500,
                                 color: Color(CommonConstants.ThermoDarkColor)),
                             decoration: InputDecoration(
@@ -713,7 +713,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                                 ),
                                 hintText: '0',
                                 hintStyle:
-                                    TextStyle(color: Colors.grey, fontSize: 13),
+                                    TextStyle(color: Colors.grey, fontSize: 13.0.sp),
                                 contentPadding: EdgeInsets.zero),
                             cursorColor: Color(CommonConstants.ThermoDarkColor),
                             keyboardType: TextInputType.number,
@@ -738,18 +738,18 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                         '',
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
-                            fontSize: 12,
+                            fontSize: 12.0.sp,
                             color: Color(CommonUtil().getMyPrimaryColor())),
                         softWrap: true,
                       ),
                       Container(
-                        width: 50,
-                        constraints: BoxConstraints(maxWidth: 100),
+                        width: 50.0.w,
+                        constraints: BoxConstraints(maxWidth: 100.0.w),
                         child: Text(
                           'F',
                           style: TextStyle(
                               fontWeight: FontWeight.w500,
-                              fontSize: 12,
+                              fontSize: 12.0.sp,
                               color: Color(CommonConstants.ThermoDarkColor)),
                           softWrap: true,
                         ),
@@ -765,7 +765,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
 
   Widget getCardForWeighingScale(String deviceName) {
     return Container(
-        //height: 70,
+        //height: 70.0.h,
         padding: EdgeInsets.all(10.0),
         margin: EdgeInsets.only(left: 15, right: 15, top: 10),
         decoration: BoxDecoration(
@@ -786,15 +786,15 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                 children: [
                   Image.asset(
                     Devices_WS,
-                    height: 30.0,
-                    width: 30.0,
+                    height: 30.0.h,
+                    width: 30.0.h,
                     color: Color(CommonConstants.weightDarkColor),
                   ),
                   Text(
                     CommonConstants.STR_WEIGHING_SCALE,
                     style: TextStyle(
                         fontWeight: FontWeight.w500,
-                        fontSize: 14,
+                        fontSize: 14.0.sp,
                         color: Color(CommonConstants.weightDarkColor)),
                     softWrap: true,
                   ),
@@ -803,7 +803,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
               flex: 1,
             ),
             SizedBox(
-              width: 5,
+              width: 5.0.w,
             ),
             Expanded(
               flex: 1,
@@ -818,7 +818,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                         'Kg',
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
-                            fontSize: 12,
+                            fontSize: 12.0.sp,
                             color: Color(CommonConstants.weightlightColor)),
                         softWrap: true,
                       ),
@@ -842,7 +842,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
 
   Widget getCardForPulseOxidometer(String deviceName) {
     return Container(
-        //height: 70,
+        //height: 70.0.h,
         padding: EdgeInsets.all(10.0),
         margin: EdgeInsets.only(left: 15, right: 15, top: 10),
         decoration: BoxDecoration(
@@ -863,18 +863,18 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                 children: [
                   Image.asset(
                     Devices_OxY,
-                    height: 30.0,
-                    width: 30.0,
+                    height: 30.0.h,
+                    width: 30.0.h,
                     color: Color(CommonConstants.pulseDarkColor),
                   ),
                   SizedBox(
-                    height: 10,
+                    height: 10.0.h,
                   ),
                   Text(
                     deviceName,
                     style: TextStyle(
                         fontWeight: FontWeight.w500,
-                        fontSize: 14,
+                        fontSize: 14.0.sp,
                         color: Color(CommonConstants.pulseDarkColor)),
                     softWrap: true,
                   ),
@@ -883,7 +883,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
               flex: 1,
             ),
             SizedBox(
-              width: 5,
+              width: 5.0.w,
             ),
             Expanded(
               flex: 1,
@@ -900,7 +900,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                             'SPO2',
                             style: TextStyle(
                                 fontWeight: FontWeight.w500,
-                                fontSize: 12,
+                                fontSize: 12.0.sp,
                                 color: Color(CommonConstants.pulselightColor)),
                             softWrap: true,
                           ),
@@ -924,7 +924,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                             'PRBpm',
                             style: TextStyle(
                                 fontWeight: FontWeight.w500,
-                                fontSize: 12,
+                                fontSize: 12.0.sp,
                                 color: Color(CommonConstants.pulselightColor)),
                             softWrap: true,
                           ),
@@ -935,7 +935,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                                 controller: pulse,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                    fontSize: 13.0,
+                                    fontSize: 13.0.sp,
                                     fontWeight: FontWeight.w500,
                                     color:
                                         Color(CommonConstants.pulseDarkColor)),
@@ -948,7 +948,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                                     ),
                                     hintText: '0',
                                     hintStyle: TextStyle(
-                                        color: Colors.grey, fontSize: 13),
+                                        color: Colors.grey, fontSize: 13.0.sp),
                                     contentPadding: EdgeInsets.zero),
                                 cursorColor:
                                     Color(CommonConstants.pulseDarkColor),
@@ -976,7 +976,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
 
   Widget getCardForGlucometer(String deviceName) {
     return Container(
-        //height: 70,
+        //height: 70.0.h,
         padding: EdgeInsets.all(10.0),
         margin: EdgeInsets.only(left: 15, right: 15, top: 10),
         decoration: BoxDecoration(
@@ -997,18 +997,18 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                 children: [
                   Image.asset(
                     Devices_GL,
-                    height: 40.0,
-                    width: 40.0,
+                    height: 40.0.h,
+                    width: 40.0.h,
                     color: Color(CommonConstants.GlucoDarkColor),
                   ),
                   SizedBox(
-                    height: 10,
+                    height: 10.0.h,
                   ),
                   Text(
                     deviceName,
                     style: TextStyle(
                         fontWeight: FontWeight.w500,
-                        fontSize: 14,
+                        fontSize: 14.0.sp,
                         color: Color(CommonConstants.GlucoDarkColor)),
                     softWrap: true,
                   ),
@@ -1017,7 +1017,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
               flex: 1,
             ),
             SizedBox(
-              width: 5,
+              width: 5.0.w,
             ),
             Expanded(
                 flex: 1,
@@ -1028,7 +1028,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                       'mg/dl',
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
-                          fontSize: 12,
+                          fontSize: 12.0.sp,
                           color: Color(CommonConstants.GlucolightColor)),
                       softWrap: true,
                     ),
@@ -1044,7 +1044,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                   ],
                 )),
             SizedBox(
-              width: 5,
+              width: 5.0.w,
             ),
             Expanded(
               flex: 1,
@@ -1061,13 +1061,13 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                             'Fasting',
                             style: TextStyle(
                                 fontWeight: FontWeight.w500,
-                                fontSize: 12,
+                                fontSize: 12.0.sp,
                                 color: Colors.grey),
                             softWrap: true,
                           ),
                           Container(
-                              width: 50,
-                              constraints: BoxConstraints(maxWidth: 100),
+                              width: 50.0.w,
+                              constraints: BoxConstraints(maxWidth: 100.0.w),
                               child: MyCheckbox(
                                   value: isSelected[0],
                                   onChanged: (value) {
@@ -1079,7 +1079,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                         ],
                       )),
                   SizedBox(
-                    width: 5,
+                    width: 5.0.w,
                   ),
                   Expanded(
                       flex: 1,
@@ -1090,13 +1090,13 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                             'PP',
                             style: TextStyle(
                                 fontWeight: FontWeight.w500,
-                                fontSize: 12,
+                                fontSize: 12.0.sp,
                                 color: Colors.grey),
                             softWrap: true,
                           ),
                           Container(
-                              width: 50,
-                              constraints: BoxConstraints(maxWidth: 100),
+                              width: 50.0.w,
+                              constraints: BoxConstraints(maxWidth: 100.0.w),
                               child: MyCheckbox(
                                   value: isSelected[1],
                                   onChanged: (value) {

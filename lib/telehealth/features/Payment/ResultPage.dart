@@ -5,12 +5,14 @@ import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class ResultPage extends StatefulWidget {
   final bool status;
   final String refNo;
   Function(String) closePage;
-  ResultPage({Key key, @required this.status, this.refNo,this.closePage}) : super(key: key);
+  ResultPage({Key key, @required this.status, this.refNo, this.closePage})
+      : super(key: key);
   @override
   _ResultPage createState() => _ResultPage();
 }
@@ -37,19 +39,19 @@ class _ResultPage extends State<ResultPage> {
                   children: <Widget>[
                     Image.asset(
                         status ? PAYMENT_SUCCESS_PNG : PAYMENT_FAILURE_PNG,
-                        width: 120,
-                        height: 120,
+                        width: 120.0.h,
+                        height: 120.0.h,
                         color: status ? Colors.white : Colors.red),
-                    SizedBox(height: 15),
+                    SizedBox(height: 15.0.h),
                     Text(status ? PAYMENT_SUCCESS_MSG : PAYMENT_FAILURE_MSG,
                         style: TextStyle(
-                            fontSize: 22,
+                            fontSize: 22.0.sp,
                             color: Colors.white,
                             fontWeight: FontWeight.bold)),
-                    SizedBox(height: 10),
+                    SizedBox(height: 10.0.h),
                     Text(status ? APPOINTMENT_CONFIRM : UNABLE_PROCESS,
                         style: TextStyle(
-                            fontSize: 14,
+                            fontSize: 14.0.sp,
                             color: Colors.white,
                             fontWeight: FontWeight.bold)),
                     status
@@ -58,11 +60,11 @@ class _ResultPage extends State<ResultPage> {
                                 ? 'Ref.no: ' + widget.refNo
                                 : '',
                             style: TextStyle(
-                                fontSize: 14,
+                                fontSize: 14.0.sp,
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold))
                         : SizedBox(),
-                    SizedBox(height: 30),
+                    SizedBox(height: 30.0.h),
                     FlatButton(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0),
@@ -71,22 +73,23 @@ class _ResultPage extends State<ResultPage> {
                       textColor: Colors.white,
                       padding: EdgeInsets.all(12.0),
                       onPressed: () {
-                        status?
-                        widget.closePage(STR_SUCCESS):widget.closePage(STR_FAILED);
+                        status
+                            ? widget.closePage(STR_SUCCESS)
+                            : widget.closePage(STR_FAILED);
                         status
                             ? Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => TelehealthProviders(
-                                  arguments: HomeScreenArguments(
-                                      selectedIndex: 0),
-                                )))
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => TelehealthProviders(
+                                          arguments: HomeScreenArguments(
+                                              selectedIndex: 0),
+                                        )))
                             : Navigator.pop(context);
                       },
                       child: Text(
                         STR_DONE.toUpperCase(),
                         style: TextStyle(
-                          fontSize: 14.0,
+                          fontSize: 14.0.sp,
                         ),
                       ),
                     ),

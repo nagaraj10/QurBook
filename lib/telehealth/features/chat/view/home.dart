@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -82,7 +82,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
     });
 
     firebaseMessaging.getToken().then((token) {
-      print('FCMToken: '+token);
+      print('FCMToken: ' + token);
 
       Firestore.instance
           .collection(STR_USERS)
@@ -97,7 +97,8 @@ class HomeScreenState extends State<ChatHomeScreen> {
     var initializationSettingsAndroid =
         new AndroidInitializationSettings(STR_MIP_MAP_LAUNCHER);
     var initializationSettingsIOS = new IOSInitializationSettings();
-    var initializationSettings = new InitializationSettings(android: initializationSettingsAndroid,iOS: initializationSettingsIOS);
+    var initializationSettings = new InitializationSettings(
+        android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
     flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
@@ -114,7 +115,9 @@ class HomeScreenState extends State<ChatHomeScreen> {
       priority: Priority.high,
     );
     var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
-    var platformChannelSpecifics = new NotificationDetails(android: androidPlatformChannelSpecifics,iOS: iOSPlatformChannelSpecifics);
+    var platformChannelSpecifics = new NotificationDetails(
+        android: androidPlatformChannelSpecifics,
+        iOS: iOSPlatformChannelSpecifics);
 
     await flutterLocalNotificationsPlugin.show(0, message['title'].toString(),
         message['body'].toString(), platformChannelSpecifics,
@@ -153,12 +156,15 @@ class HomeScreenState extends State<ChatHomeScreen> {
                       EXIT_APP,
                       style: TextStyle(
                           color: Colors.white,
-                          fontSize: 18.0,
+                          fontSize: 18.0.sp,
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
                       EXIT_APP_TO_EXIT,
-                      style: TextStyle(color: Colors.white70, fontSize: 14.0),
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 14.0.sp,
+                      ),
                     ),
                   ],
                 ),
@@ -222,7 +228,10 @@ class HomeScreenState extends State<ChatHomeScreen> {
       appBar: AppBar(
         flexibleSpace: GradientAppBar(),
         leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios),
+            icon: Icon(
+              Icons.arrow_back_ios,
+              size: 24.0.sp,
+            ),
             onPressed: () {
               Navigator.of(context).pop();
             }),
@@ -287,8 +296,8 @@ class HomeScreenState extends State<ChatHomeScreen> {
                 return countChatListUsers(patientId, snapshot) > 0
                     ? ListView.builder(
                         padding: EdgeInsets.all(10.0),
-                        itemBuilder: (context, index) =>
-                            buildItem(context, snapshot.data.documents[index],snapshot,index),
+                        itemBuilder: (context, index) => buildItem(context,
+                            snapshot.data.documents[index], snapshot, index),
                         itemCount: snapshot.data.documents.length,
                       )
                     : Container(
@@ -299,7 +308,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                             Text(
                               'No Messages',
                               style: TextStyle(
-                                  fontSize: 16, color: Colors.grey[800]),
+                                  fontSize: 16.0.sp, color: Colors.grey[800]),
                               textAlign: TextAlign.center,
                             ),
                           ],
@@ -318,7 +327,8 @@ class HomeScreenState extends State<ChatHomeScreen> {
     );
   }
 
-  Widget buildItem(BuildContext context, DocumentSnapshot document,chatListSnapshot,int index) {
+  Widget buildItem(BuildContext context, DocumentSnapshot document,
+      chatListSnapshot, int index) {
     String lastMessage = document[STR_LAST_MESSAGE];
     if (document[STR_ID] == patientId) {
       return Container();
@@ -347,10 +357,10 @@ class HomeScreenState extends State<ChatHomeScreen> {
             child: Container(
               child: Row(
                 children: <Widget>[
-                  SizedBox(width: MediaQuery.of(context).size.width * 0.025),
+                  SizedBox(width: 1.sw * 0.025),
                   Container(
-                    width: MediaQuery.of(context).size.width * 0.12,
-                    height: MediaQuery.of(context).size.width * 0.12,
+                    width: 1.sw * 0.12,
+                    height: 1.sw * 0.12,
                     child: Row(
                       children: [
                         Expanded(
@@ -384,7 +394,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                     ),
                   ),
                   SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.055,
+                    width: 1.sw * 0.055,
                   ),
                   Container(
                     child: Expanded(
@@ -400,7 +410,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                               maxLines: 1,
                               style: TextStyle(
                                   fontWeight: FontWeight.w400,
-                                  fontSize: 15,
+                                  fontSize: 15.0.sp,
                                   fontFamily: variable.font_poppins),
                             ),
                           ),
@@ -408,9 +418,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                             height: 1,
                           ),
                           Container(
-                            constraints: BoxConstraints(
-                                maxWidth:
-                                    MediaQuery.of(context).size.width * 0.5),
+                            constraints: BoxConstraints(maxWidth: 1.sw * 0.5),
                             padding: const EdgeInsets.only(bottom: 4),
                             child: lastMessage != null
                                 ? lastMessage.contains(STR_HTTPS)
@@ -429,7 +437,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                             overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
                                                 color: Colors.grey[600],
-                                                fontSize: 12,
+                                                fontSize: 12.0.sp,
                                                 fontFamily:
                                                     variable.font_poppins),
                                           )
@@ -441,7 +449,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.grey[600],
-                                            fontSize: 12,
+                                            fontSize: 12.0.sp,
                                             fontFamily: variable.font_poppins),
                                       )
                                 : '',
@@ -463,7 +471,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                               style: TextStyle(
                                   fontWeight: FontWeight.w300,
                                   color: Colors.grey[600],
-                                  fontSize: 10,
+                                  fontSize: 10.0.sp,
                                   fontFamily: variable.font_poppins),
                             ),
                           ),
@@ -472,7 +480,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                     ),
                   ),
                   SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.035,
+                    width: 1.sw * 0.035,
                   ),
                   Container(
                     child: Column(
@@ -524,8 +532,9 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                                             ? '${notReadMSGSnapshot.data.documents.length}'
                                                             : '')
                                                         : '',
-                                                    style:
-                                                        TextStyle(fontSize: 10),
+                                                    style: TextStyle(
+                                                      fontSize: 10.0.sp,
+                                                    ),
                                                   ),
                                                   backgroundColor:
                                                       (notReadMSGSnapshot

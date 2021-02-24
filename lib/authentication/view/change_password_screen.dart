@@ -8,6 +8,7 @@ import 'package:myfhb/authentication/model/change_password_model.dart'
     as changePasswordModel;
 import 'package:myfhb/authentication/view_model/patientauth_view_model.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   @override
@@ -32,7 +33,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
+    final height = 1.sh;
     return Scaffold(
       body: Form(
         key: _ChangePasswordKey,
@@ -50,15 +51,15 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       SizedBox(height: height * .1),
                       AssetImageWidget(
                         icon: myFHB_logo,
-                        height: 120,
-                        width: 120,
+                        height: 120.0.h,
+                        width: 120.0.h,
                       ),
                       SizedBox(
-                        height: 10,
+                        height: 10.0.h,
                       ),
                       Text(strChangePasswordText),
                       SizedBox(
-                        height: 10,
+                        height: 10.0.h,
                       ),
                       Column(
                         children: [
@@ -70,7 +71,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                   borderSide: BorderSide(
-                                    color: Color(CommonUtil().getMyPrimaryColor()),
+                                    color:
+                                        Color(CommonUtil().getMyPrimaryColor()),
                                   ),
                                 ),
                               ),
@@ -84,7 +86,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                               onSaved: (value) {},
                             ),
                           ),
-                          SizedBox(height: 10),
+                          SizedBox(height: 10.0.h),
                           _changepasswordTextFields(
                             TextFormField(
                               autovalidate: _autoValidateBool,
@@ -95,7 +97,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                   borderSide: BorderSide(
-                                    color: Color(CommonUtil().getMyPrimaryColor()),
+                                    color:
+                                        Color(CommonUtil().getMyPrimaryColor()),
                                   ),
                                 ),
                               ),
@@ -108,7 +111,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                               onSaved: (value) {},
                             ),
                           ),
-                          SizedBox(height: 10),
+                          SizedBox(height: 10.0.h),
                           _changepasswordTextFields(
                             TextFormField(
                               autovalidate: _autoValidateBool,
@@ -119,7 +122,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                   borderSide: BorderSide(
-                                    color: Color(CommonUtil().getMyPrimaryColor()),
+                                    color:
+                                        Color(CommonUtil().getMyPrimaryColor()),
                                   ),
                                 ),
                               ),
@@ -137,7 +141,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                         ],
                       ),
                       SizedBox(
-                        height: 20,
+                        height: 20.0.h,
                       ),
                       _changePassword(),
                     ],
@@ -157,7 +161,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         _verifyDetails();
       },
       child: Container(
-        width: MediaQuery.of(context).size.width,
+        width: 1.sw,
         padding: EdgeInsets.symmetric(vertical: 15),
         alignment: Alignment.center,
         decoration: BoxDecoration(
@@ -178,7 +182,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 ])),
         child: Text(
           strChangeButtonText,
-          style: TextStyle(fontSize: 16, color: Colors.white),
+          style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
         ),
       ),
     );

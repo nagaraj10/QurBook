@@ -18,6 +18,7 @@ import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class HealthReportListScreen extends StatefulWidget {
   final HealthRecordList completeData;
@@ -249,9 +250,10 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                         new FHBUtils()
                             .getFormattedDateString(mediaMetaInfoObj.createdOn),
                         style: TextStyle(
-                            color: Colors.grey[400],
-                            fontWeight: FontWeight.w200,
-                            fontSize: 12),
+                          color: Colors.grey[400],
+                          fontWeight: FontWeight.w200,
+                          fontSize: 12.0.sp,
+                        ),
                       )
                     ],
                   ),
@@ -268,12 +270,12 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                                   AssetImage(variable.icon_record_fav_active),
                                   color: Color(
                                       new CommonUtil().getMyPrimaryColor()),
-                                  size: 20,
+                                  size: 20.0.sp,
                                 )
                               : ImageIcon(
                                   AssetImage(variable.icon_record_fav),
                                   color: Colors.black,
-                                  size: 20,
+                                  size: 20.0.sp,
                                 ),
                           onPressed: () {
                             new CommonUtil()

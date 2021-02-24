@@ -8,8 +8,7 @@ import 'package:myfhb/widgets/RaisedGradientButton.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-
-
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class AddAppointments extends StatefulWidget {
   final ReminderModel model;
@@ -54,7 +53,10 @@ class _AddAppointmentState extends State<AddAppointments> {
         flexibleSpace: GradientAppBar(),
         title: Text(Constants.AddAppointment),
         leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios),
+            icon: Icon(
+              Icons.arrow_back_ios,
+              size: 24.0.sp,
+            ),
             onPressed: () {
               Navigator.of(context).pop();
             }),
@@ -89,7 +91,10 @@ class _AddAppointmentState extends State<AddAppointments> {
                           child: Text(
                             Constants.AppointmentDateTime,
                             textAlign: TextAlign.start,
-                            style: TextStyle(color: Colors.grey[600]),
+                            style: TextStyle(
+                              color: Colors.grey[600],
+                              fontSize: 14.0.sp,
+                            ),
                           ),
                           padding: EdgeInsets.only(top: 20),
                         ),
@@ -102,13 +107,12 @@ class _AddAppointmentState extends State<AddAppointments> {
                               },
                               child: Row(
                                 children: <Widget>[
-                                  Text(
-                                      FHBUtils().getFormattedDateOnly(
-                                          selectedDate.toString())),
-                                  SizedBox(width: 10),
+                                  Text(FHBUtils().getFormattedDateOnly(
+                                      selectedDate.toString())),
+                                  SizedBox(width: 10.0.w),
                                   Icon(
                                     Icons.calendar_today,
-                                    size: 18,
+                                    size: 18.0.sp,
                                     color: Colors.grey,
                                   )
                                 ],
@@ -122,10 +126,10 @@ class _AddAppointmentState extends State<AddAppointments> {
                                 children: <Widget>[
                                   Text(
                                       FHBUtils().formatTimeOfDay(selectedTime)),
-                                  SizedBox(width: 10),
+                                  SizedBox(width: 10.0.w),
                                   Icon(
                                     Icons.alarm,
-                                    size: 18,
+                                    size: 18.0.sp,
                                     color: Colors.grey,
                                   )
                                 ],
@@ -133,15 +137,17 @@ class _AddAppointmentState extends State<AddAppointments> {
                             ),
                           ],
                         ),
-                        SizedBox(height: 10),
+                        SizedBox(height: 10.0.h),
                         Align(
                             alignment: Alignment.centerRight,
                             child: Opacity(
                               opacity: _isTimeAfter ? 0.0 : 1.0,
                               child: Text(
-                               Constants.WrongTime,
+                                Constants.WrongTime,
                                 style: TextStyle(
-                                    color: Colors.red[500], fontSize: 14.0),
+                                  color: Colors.red[500],
+                                  fontSize: 14.0.sp,
+                                ),
                               ),
                             )),
                         TextFormField(
@@ -158,10 +164,13 @@ class _AddAppointmentState extends State<AddAppointments> {
                   Color(new CommonUtil().getMyPrimaryColor()),
                   Color(new CommonUtil().getMyGredientColor()),
                 ]),
-                width: 200,
+                width: 200.0.w,
                 child: Text(
                   Constants.Save,
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14.0.sp,
+                  ),
                 ),
                 onPressed: () {
                   NewAppointment();
@@ -197,7 +206,6 @@ class _AddAppointmentState extends State<AddAppointments> {
         setState(() {
           _isTimeAfter = false;
         });
-      
       }
     }
   }
@@ -224,12 +232,10 @@ class _AddAppointmentState extends State<AddAppointments> {
         setState(() {
           _isTimeAfter = true;
         });
-
       } else {
         setState(() {
           _isTimeAfter = false;
         });
-
       }
     }
   }

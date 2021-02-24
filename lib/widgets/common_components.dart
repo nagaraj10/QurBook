@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class CommonComponents {
   getOutlineButton(String buttonText, onPressed) {
@@ -32,7 +33,7 @@ class CommonComponents {
         builder: (context) => Positioned(
             top: 20.0,
             //left: 20.0,
-            width: MediaQuery.of(context).size.width,
+            width: 1.sw,
             child: Material(
               color: Colors.transparent,
               child: Container(
@@ -55,16 +56,16 @@ class CommonComponents {
                     Icon(
                       icon,
                       color: Colors.white,
-                      size: 20,
+                      size: 20.0.sp,
                     ),
-                    SizedBox(width: 10),
+                    SizedBox(width: 10.0.w),
                     Flexible(
                       child: Text(
                         message,
                         softWrap: true,
                         style: TextStyle(
                             color: Colors.white,
-                            fontSize: 14,
+                            fontSize: 14.0.sp,
                             fontFamily: variable.font_roboto,
                             fontWeight: FontWeight.w300),
                       ),

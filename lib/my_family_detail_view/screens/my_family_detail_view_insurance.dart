@@ -12,6 +12,7 @@ import 'package:myfhb/src/model/Health/CompleteData.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/fhb_query.dart' as query;
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class MyFamilyDetailViewInsurance extends StatefulWidget {
   HealthRecordList completeData;
@@ -96,13 +97,13 @@ class MyFamilyDetailViewInsuranceState
                         :*/
                     Constants.BASE_URL +
                         mediaMetaInfoObj.metadata.healthRecordCategory.logo,
-                    height: 20,
-                    width: 20,
+                    height: 20.0.h,
+                    width: 20.0.h,
                     color: Color(CommonUtil().getMyPrimaryColor()),
                   ),
                 ),
                 SizedBox(
-                  width: 20,
+                  width: 20.0.w,
                 ),
                 Expanded(
                   flex: 6,
@@ -114,7 +115,10 @@ class MyFamilyDetailViewInsuranceState
                         mediaMetaInfoObj.metadata.fileName != null
                             ? mediaMetaInfoObj.metadata.fileName
                             : '',
-                        style: TextStyle(fontWeight: FontWeight.w500),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14.0.sp,
+                        ),
                         softWrap: false,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -129,13 +133,16 @@ class MyFamilyDetailViewInsuranceState
                                 : '',
                             overflow: TextOverflow.ellipsis,
                             softWrap: false,
-                            style: TextStyle(color: Colors.grey),
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 14.0.sp,
+                            ),
                           )),
                       Text(
                         new FHBUtils().getFormattedDateString(mediaMetaInfoObj
                             .metadata.healthRecordType.createdOn),
                         style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 12.0.sp,
                             color: Colors.grey[400],
                             fontWeight: FontWeight.w200),
                       )
@@ -153,12 +160,12 @@ class MyFamilyDetailViewInsuranceState
                               AssetImage(variable.icon_record_fav_active),
                               color:
                                   Color(new CommonUtil().getMyPrimaryColor()),
-                              size: 20,
+                              size: 20.0.sp,
                             )
                           : ImageIcon(
                               AssetImage(variable.icon_record_fav),
                               color: Colors.black,
-                              size: 20,
+                              size: 20.0.sp,
                             ),
                     ],
                   ),

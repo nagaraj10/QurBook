@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class DeviceCard extends StatefulWidget {
   final DeviceData deviceData;
@@ -13,14 +14,13 @@ class DeviceCard extends StatefulWidget {
 
 class _DeviceCardState extends State<DeviceCard> {
   Color colors = Colors.white;
-  bool isSelected; 
+  bool isSelected;
   @override
   Widget build(BuildContext context) {
     isSelected = widget.deviceData.isSelected;
     return InkWell(
       onTap: () {
-        setState(() 
-        {
+        setState(() {
           isSelected = !isSelected;
           widget.isSelected(isSelected);
         });
@@ -37,8 +37,8 @@ class _DeviceCardState extends State<DeviceCard> {
                 children: <Widget>[
                   Image.asset(
                     widget.deviceData.icon,
-                    height: 30.0,
-                    width: 30.0,
+                    height: 30.0.h,
+                    width: 30.0.h,
                   ),
                   isSelected
                       ? Align(
@@ -53,7 +53,7 @@ class _DeviceCardState extends State<DeviceCard> {
                 ],
               ),
               SizedBox(
-                height: 5.0,
+                height: 5.0.h,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -61,7 +61,7 @@ class _DeviceCardState extends State<DeviceCard> {
                   Text(
                     widget.deviceData.title,
                     style: TextStyle(
-                      fontSize: 11.0,
+                      fontSize: 11.0.sp,
                     ),
                   ),
                 ],

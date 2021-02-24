@@ -5,6 +5,7 @@ import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/SlotSessionsModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/GridViewNew.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class SessionList extends StatefulWidget {
   final List<SlotSessionsModel> sessionData;
@@ -47,12 +48,12 @@ class SessionListState extends State<SessionList> {
                     child: new Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBoxWidget(width: 10),
+                        SizedBoxWidget(width: 10.0.w),
                         Expanded(
                             flex: 1,
                             child: sessionTimings == ''
                                 ? SizedBoxWidget(
-                                    width: 132,
+                                    width: 132.0.w,
                                   )
                                 : TextWidget(text: sessionTimings)),
                         Expanded(
@@ -66,12 +67,12 @@ class SessionListState extends State<SessionList> {
                                   rowPosition, itemPosition);
                               setState(() {});
                             }, selectedRow)),
-                        SizedBoxWidget(width: 10),
+                        SizedBoxWidget(width: 10.0.w),
                       ],
                     ),
                   ),
                   SizedBoxWidget(
-                    height: 12.0,
+                    height: 12.0.h,
                   ),
                 ],
               ),

@@ -17,6 +17,7 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/src/utils/alert.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class AddFamilyOTPScreen extends StatefulWidget {
   AddFamilyOTPArguments arguments;
@@ -66,28 +67,41 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
   Widget build(BuildContext context) {
     List<Widget> widgetList = [
       Padding(
-        padding: EdgeInsets.only(left: 0.0, right: 2.0),
+        padding: EdgeInsets.only(
+          left: 0.0.w,
+          right: 2.0.w,
+        ),
         child: new Container(
           color: Colors.transparent,
         ),
       ),
       Padding(
-        padding: const EdgeInsets.only(right: 2.0, left: 2.0),
+        padding: EdgeInsets.only(
+          right: 2.0.w,
+          left: 2.0.w,
+        ),
         child: new Container(
-            alignment: Alignment.center,
-            child: new TextField(
-              inputFormatters: [
-                LengthLimitingTextInputFormatter(1),
-              ],
-              enabled: false,
-              controller: controller1,
-              autofocus: false,
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 14.0, color: Colors.black),
-            )),
+          alignment: Alignment.center,
+          child: new TextField(
+            inputFormatters: [
+              LengthLimitingTextInputFormatter(1),
+            ],
+            enabled: false,
+            controller: controller1,
+            autofocus: false,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 14.0.sp,
+              color: Colors.black,
+            ),
+          ),
+        ),
       ),
       Padding(
-        padding: const EdgeInsets.only(right: 2.0, left: 2.0),
+        padding: EdgeInsets.only(
+          right: 2.0.w,
+          left: 2.0.w,
+        ),
         child: new Container(
           alignment: Alignment.center,
           child: new TextField(
@@ -99,12 +113,18 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
             enabled: false,
             keyboardType: TextInputType.number,
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 14.0, color: Colors.black),
+            style: TextStyle(
+              fontSize: 14.0.sp,
+              color: Colors.black,
+            ),
           ),
         ),
       ),
       Padding(
-        padding: const EdgeInsets.only(right: 2.0, left: 2.0),
+        padding: EdgeInsets.only(
+          right: 2.0.w,
+          left: 2.0.w,
+        ),
         child: new Container(
           alignment: Alignment.center,
           child: new TextField(
@@ -116,12 +136,18 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
             textAlign: TextAlign.center,
             autofocus: false,
             enabled: false,
-            style: TextStyle(fontSize: 14.0, color: Colors.black),
+            style: TextStyle(
+              fontSize: 14.0.sp,
+              color: Colors.black,
+            ),
           ),
         ),
       ),
       Padding(
-        padding: const EdgeInsets.only(right: 2.0, left: 2.0),
+        padding: EdgeInsets.only(
+          right: 2.0.w,
+          left: 2.0.w,
+        ),
         child: new Container(
           alignment: Alignment.center,
           child: new TextField(
@@ -132,12 +158,18 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
             controller: controller4,
             autofocus: false,
             enabled: false,
-            style: TextStyle(fontSize: 14.0, color: Colors.black),
+            style: TextStyle(
+              fontSize: 14.0.sp,
+              color: Colors.black,
+            ),
           ),
         ),
       ),
       Padding(
-        padding: EdgeInsets.only(left: 2.0, right: 0.0),
+        padding: EdgeInsets.only(
+          left: 2.0.w,
+          right: 0.0.w,
+        ),
         child: new Container(
           color: Colors.transparent,
         ),
@@ -147,35 +179,48 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
     return Scaffold(
         appBar: AppBar(
           flexibleSpace: GradientAppBar(),
-          title:
-              Text(variable.strOTPVerification, style: TextStyle(fontSize: 18)),
+          title: Text(
+            variable.strOTPVerification,
+            style: TextStyle(
+              fontSize: 18.0.sp,
+            ),
+          ),
         ),
         key: scaffold_state,
         body: Column(
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.only(top: 40),
+              padding: EdgeInsets.only(
+                top: 40.0.h,
+              ),
               child: Text(
                 toBeginningOfSentenceCase(
                     '${widget.arguments.enteredFirstName} ${widget.arguments.enteredMiddleName} ${widget.arguments.enteredLastName}'),
                 style: TextStyle(
-                    color: Color(new CommonUtil().getMyPrimaryColor()),
-                    fontWeight: FontWeight.w500),
+                  color: Color(new CommonUtil().getMyPrimaryColor()),
+                  fontWeight: FontWeight.w500,
+                  fontSize: 14.0.sp,
+                ),
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 10),
+              padding: EdgeInsets.only(
+                top: 10.0.h,
+              ),
               child: Text(
                 variable.strEnterOtp,
                 style: TextStyle(
-                    color: Colors.black38, fontWeight: FontWeight.w400),
+                  color: Colors.black38,
+                  fontWeight: FontWeight.w400,
+                  fontSize: 14.0.sp,
+                ),
               ),
             ),
             Expanded(
               child: Image.asset(
                 variable.strOtpIcon,
-                width: 70,
-                height: 70,
+                width: 70.0.h,
+                height: 70.0.h,
               ),
             ),
             Expanded(
@@ -191,16 +236,18 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                     children: List<Container>.generate(
                       6,
                       (int index) => Container(
-                        constraints: BoxConstraints(maxWidth: 20),
+                        constraints: BoxConstraints(maxWidth: 20.0.w),
                         child: widgetList[index],
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(
+                    height: 20.0.h,
+                  ),
                   Text(
                     variable.strdidtReceive,
                     style: TextStyle(
-                      fontSize: 11,
+                      fontSize: 11.0.sp,
                       color: Colors.grey,
                     ),
                     textAlign: TextAlign.center,
@@ -218,7 +265,9 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                           fontWeight: FontWeight.w600),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(
+                    height: 20.0.h,
+                  ),
                 ],
               ),
             ),
@@ -335,6 +384,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                                   Icons.backspace,
                                   color: Color(
                                       new CommonUtil().getMyPrimaryColor()),
+                                  size: 24.0.sp,
                                 )),
                             MaterialButton(
                               onPressed: () {
@@ -372,6 +422,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                                 Icons.done,
                                 color:
                                     Color(new CommonUtil().getMyPrimaryColor()),
+                                size: 24.0.sp,
                               ),
                             ),
                           ],
@@ -461,7 +512,10 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
             content: Text(variable.strOTPMatched),
             actions: <Widget>[
               IconButton(
-                  icon: Icon(Icons.check),
+                  icon: Icon(
+                    Icons.check,
+                    size: 24.0.sp,
+                  ),
                   onPressed: () {
                     Navigator.of(context).pop();
                   })
@@ -546,7 +600,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
 
   Widget getNumberWidet(String text) {
     return Text(text,
-        style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w400),
+        style: TextStyle(fontSize: 22.0.sp, fontWeight: FontWeight.w400),
         textAlign: TextAlign.center);
   }
 }

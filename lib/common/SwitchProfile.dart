@@ -15,6 +15,7 @@ import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class SwitchProfile {
   FamilyListBloc _familyListBloc;
@@ -69,8 +70,8 @@ class SwitchProfile {
                               ? new FHBBasicWidget().getProfilePicWidgeUsingUrl(
                                   myProfile.result.profilePicThumbnailUrl)
                               : Container(
-                                  height: 50,
-                                  width: 50,
+                                  height: 50.0.h,
+                                  width: 50.0.h,
                                   color: Color(fhbColors.bgColorContainer),
                                   child: Center(
                                     child: Text(
@@ -84,13 +85,13 @@ class SwitchProfile {
                                     ),
                                   ))
                           : Container(
-                              height: 50,
-                              width: 50,
+                              height: 50.0.h,
+                              width: 50.0.h,
                               color: Color(fhbColors.bgColorContainer),
                             )
                       : Container(
-                          height: 50,
-                          width: 50,
+                          height: 50.0.h,
+                          width: 50.0.h,
                           color: Color(fhbColors.bgColorContainer),
                         )),
             )));

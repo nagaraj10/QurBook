@@ -5,7 +5,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
-
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class FeedbackSuccess extends StatefulWidget {
   @override
@@ -47,7 +47,7 @@ class _FeedbackSuccessState extends State<FeedbackSuccess> {
                   backgroundColor: Colors.transparent,
                   child: Icon(
                     Icons.check,
-                    size: 60,
+                    size: 60.0.sp,
                     color: Color(CommonUtil().getMyPrimaryColor()),
                   ),
                   radius: 40.0,
@@ -57,16 +57,17 @@ class _FeedbackSuccessState extends State<FeedbackSuccess> {
               animate: true,
               curve: Curves.fastOutSlowIn,
             )),
-            SizedBox(height: 20),
+            SizedBox(height: 20.0.h),
             Text(
               variable.strSucess,
               style: TextStyle(
-                  fontSize: 30, color: Color(CommonUtil().getMyPrimaryColor())),
+                  fontSize: 30.0.sp,
+                  color: Color(CommonUtil().getMyPrimaryColor())),
             ),
             Text(
               variable.strFeedThank,
               style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 18.0.sp,
                   color:
                       Color(CommonUtil().getMyPrimaryColor()).withOpacity(0.8)),
             ),

@@ -1,7 +1,7 @@
 import 'dart:core';
 import 'dart:io';
 import 'dart:typed_data';
-
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -157,7 +157,10 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
             maxFontSize: 16,
           ),
           leading: IconButton(
-              icon: Icon(Icons.arrow_back_ios),
+              icon: Icon(
+                Icons.arrow_back_ios,
+                size: 24.0.sp,
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               }),
@@ -168,7 +171,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
             ListView(
               children: <Widget>[
                 Container(
-                    constraints: BoxConstraints(maxHeight: 400),
+                    constraints: BoxConstraints(
+                      maxHeight: 400.0.h,
+                    ),
                     color: Colors.black87,
                     child: Column(
                       children: <Widget>[
@@ -212,6 +217,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                         icon: Icon(
                                           Icons.fullscreen,
                                           color: Colors.white,
+                                          size: 24.0.sp,
                                         ),
                                       ),
                                 widget?.data?.metadata?.sourceName == 'SHEELA'
@@ -324,7 +330,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                   ),
                 ),
                 getCategoryInfo(widget.data),
-                SizedBox(height: 80)
+                SizedBox(
+                  height: 80.0.h,
+                )
               ],
             ),
             containsAudio
@@ -383,7 +391,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         });
       },
       child: Container(
-        height: 60,
+        height: 60.0.h,
         color: Colors.white70,
         padding: EdgeInsets.all(10),
         child: Row(
@@ -392,11 +400,12 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
             Icon(
               Icons.mic,
               color: Color(new CommonUtil().getMyPrimaryColor()),
+              size: 24.0.sp,
             ),
-            SizedBox(width: 10),
+            SizedBox(width: 10.0.w),
             Text(variable.strAddVoiceNote,
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 14.0.sp,
                   color: Color(new CommonUtil().getMyPrimaryColor()),
                 ))
           ],
@@ -596,7 +605,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     var path = (fpath != null || fpath != '') ? fpath : audioPath;
 
     return Container(
-        //height: 60,
+        //height: 60.0.h,
         child: Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisAlignment: MainAxisAlignment.end,
@@ -1168,8 +1177,8 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               ? (imagesPath != null && imagesPath.length > 0)
                   ? Expanded(
                       child: carouselSlider = CarouselSlider(
-                        height: 400,
-                        //width: MediaQuery.of(context).size.width,
+                        height: 400.0.h,
+                        //width: 1.sw,
                         initialPage: 0,
                         enlargeCenterPage: true,
                         reverse: false,
@@ -1188,8 +1197,8 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                   height: double.infinity,
                                   child: Image.network(
                                     imgUrl.healthRecordUrl,
-                                    height: 200,
-                                    width: 200,
+                                    height: 200.0.h,
+                                    width: 200.0.h,
                                     headers: {
                                       HttpHeaders.authorizationHeader: authToken
                                     },
@@ -1239,8 +1248,8 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                           ? Container(
                               child: Image.asset(
                                 'assets/maya/maya_us_main.png',
-                                height: 100.0,
-                                width: 100.0,
+                                height: 100.0.h,
+                                width: 100.0.h,
                               ),
                             )
                           : Container(
@@ -1248,17 +1257,22 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                 Icons.mic,
                                 color:
                                     Color(new CommonUtil().getMyPrimaryColor()),
+                                size: 24.0.sp,
                               ),
                             )
               : widget?.data?.metadata?.sourceName == 'SHEELA'
                   ? Container(
                       child: Image.asset(
                       'assets/maya/maya_us_main.png',
-                      height: 100,
-                      width: 100,
+                      height: 100.0.h,
+                      width: 100.0.h,
                     ))
                   : Container(
-                      child: Icon(Icons.mic, size: 60, color: Colors.white)),
+                      child: Icon(
+                      Icons.mic,
+                      size: 60.0.sp,
+                      color: Colors.white,
+                    )),
         ],
       ),
     );
@@ -1294,8 +1308,8 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               return Center(
                   child: SizedBox(
                 child: CircularProgressIndicator(),
-                width: 30,
-                height: 30,
+                width: 30.0.h,
+                height: 30.0.h,
               ));
               break;
 
@@ -1316,8 +1330,8 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           }
         } else {
           return Container(
-            width: 100,
-            height: 100,
+            width: 100.0.h,
+            height: 100.0.h,
           );
         }
       },

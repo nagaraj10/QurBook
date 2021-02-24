@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
-
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 
@@ -27,12 +27,14 @@ class _MyFhbWebViewState extends State<MyFhbWebView> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
         appBar: AppBar(
           flexibleSpace: GradientAppBar(),
           leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios),
+            icon: Icon(
+              Icons.arrow_back_ios,
+              size: 24.0.sp,
+            ),
             onPressed: () {
               Navigator.of(context).pop();
             },
@@ -69,7 +71,8 @@ class _MyFhbWebViewState extends State<MyFhbWebView> {
   _loadHtmlFromAssets(String selectedUrl) async {
     String fileText = await rootBundle.loadString(selectedUrl);
     _controller.loadUrl(Uri.dataFromString(fileText,
-            mimeType: variable.strtexthtml, encoding: Encoding.getByName(variable.strUtf))
+            mimeType: variable.strtexthtml,
+            encoding: Encoding.getByName(variable.strUtf))
         .toString());
   }
 }

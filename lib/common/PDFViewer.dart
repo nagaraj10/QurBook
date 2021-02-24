@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:pdf_render/pdf_render_widgets.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class PDFViewer extends StatelessWidget {
   /// render at 100 dpi
@@ -26,7 +27,10 @@ class PDFViewer extends StatelessWidget {
               automaticallyImplyLeading: false,
               flexibleSpace: GradientAppBar(),
               leading: IconButton(
-                  icon: Icon(Icons.arrow_back_ios),
+                  icon: Icon(
+                    Icons.arrow_back_ios,
+                    size: 24.0.sp,
+                  ),
                   onPressed: () {
                     Navigator.of(context).pop();
                   })),
@@ -53,7 +57,7 @@ class PDFViewer extends StatelessWidget {
                         page != null ? page : 0,
                         Text(
                           '',
-                          style: TextStyle(fontSize: 2),
+                          style: TextStyle(fontSize: 2.0.sp),
                         ) // adding page number on the bottom of rendered page
                       ],
                     ),

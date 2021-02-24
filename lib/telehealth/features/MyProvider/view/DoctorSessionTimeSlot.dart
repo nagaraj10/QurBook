@@ -13,6 +13,7 @@ import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/GetTimeSlots.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/SlotsAvailabilityViewModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class DoctorSessionTimeSlot extends StatefulWidget {
   final String doctorId;
@@ -99,20 +100,24 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
     return Column(
       children: <Widget>[
         Container(
-          height: 65,
+          height: 65.0.h,
           color: Colors.grey[200],
           child: DatePicker(
             DateTime.now().add(Duration(days: -0)),
             controller: _controller,
-            width: 40,
-            height: 45,
+            width: 40.0.w,
+            height: 45.0.h,
             initialSelectedDate: initialDate(),
             selectionColor: Color(new CommonUtil().getMyPrimaryColor()),
             selectedTextColor: Colors.white,
             dayTextStyle: TextStyle(
-                fontSize: fhbStyles.fnt_day, fontWeight: FontWeight.w600),
+              fontSize: fhbStyles.fnt_day,
+              fontWeight: FontWeight.w600,
+            ),
             dateTextStyle: TextStyle(
-                fontSize: fhbStyles.fnt_date, fontWeight: FontWeight.w700),
+              fontSize: fhbStyles.fnt_date,
+              fontWeight: FontWeight.w700,
+            ),
             onDateChange: (date) {
               setState(() {
                 _selectedValue = date;
@@ -174,16 +179,16 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
             return new Center(
                 child: new Column(
               children: <Widget>[
-                SizedBoxWidget(height: 20.0),
+                SizedBoxWidget(height: 20.0.h),
                 new SizedBox(
                   child: CircularProgressIndicator(
                       strokeWidth: 2.0,
                       backgroundColor:
                           Color(new CommonUtil().getMyPrimaryColor())),
-                  height: 20.0,
-                  width: 20.0,
+                  height: 20.0.h,
+                  width: 20.0.h,
                 ),
-                SizedBoxWidget(height: 120.0),
+                SizedBoxWidget(height: 120.0.h),
               ],
             ));
           } else if (snapshot.hasError) {
@@ -210,7 +215,7 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
                           closePage: (value) {
                             widget.closePage(value);
                           },
-                          isRefresh: (){
+                          isRefresh: () {
                             widget.refresh();
                           },
                           isFromNotification: widget.isFromNotification,
@@ -221,28 +226,32 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
                     : Column(
                         children: <Widget>[
                           SizedBoxWidget(
-                            height: 8,
+                            height: 8.0.h,
                           ),
                           new Text(
                             slotsAreNotAvailable,
-                            style: TextStyle(fontSize: 10.0),
+                            style: TextStyle(
+                              fontSize: 10.0.sp,
+                            ),
                           ),
                           SizedBoxWidget(
-                            height: 8,
+                            height: 8.0.h,
                           ),
                         ],
                       )
                 : Column(
                     children: <Widget>[
                       SizedBoxWidget(
-                        height: 8,
+                        height: 8.0.h,
                       ),
                       new Text(
                         slotsAreNotAvailable,
-                        style: TextStyle(fontSize: 10.0),
+                        style: TextStyle(
+                          fontSize: 10.0.sp,
+                        ),
                       ),
                       SizedBoxWidget(
-                        height: 8,
+                        height: 8.0.h,
                       ),
                     ],
                   );
@@ -251,14 +260,16 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
           return Column(
             children: <Widget>[
               SizedBoxWidget(
-                height: 8,
+                height: 8.0.h,
               ),
               new Text(
                 slotsAreNotAvailable,
-                style: TextStyle(fontSize: 10.0),
+                style: TextStyle(
+                  fontSize: 10.0.sp,
+                ),
               ),
               SizedBoxWidget(
-                height: 8,
+                height: 8.0.h,
               ),
             ],
           );

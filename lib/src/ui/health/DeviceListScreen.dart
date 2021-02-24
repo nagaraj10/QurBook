@@ -16,6 +16,7 @@ import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class DeviceListScreen extends StatefulWidget {
   final HealthRecordList completeData;
@@ -170,7 +171,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
           }
         },
         child: Container(
-            //height: 70,
+            //height: 70.0.h,
             padding: EdgeInsets.all(10.0),
             margin: EdgeInsets.only(left: 10, right: 10, top: 10),
             decoration: BoxDecoration(
@@ -191,13 +192,11 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      new FHBUtils()
-                          .getFormattedDateString(data.createdOn),
+                      new FHBUtils().getFormattedDateString(data.createdOn),
                       style: TextStyle(
-                          color: Color(
-                              new CommonUtil().getMyPrimaryColor()),
+                          color: Color(new CommonUtil().getMyPrimaryColor()),
                           fontWeight: FontWeight.w200,
-                          fontSize: 8),
+                          fontSize: 8.0.sp),
                     )
                   ],
                 ),
@@ -209,13 +208,13 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                       backgroundColor: const Color(fhbColors.bgColorContainer),
                       child: Image.network(
                         data.metadata.healthRecordType.logo,
-                        height: 25,
-                        width: 25,
+                        height: 25.0.h,
+                        width: 25.0.h,
                         color: Color(new CommonUtil().getMyPrimaryColor()),
                       ),
                     ),
                     SizedBox(
-                      width: 3,
+                      width: 3.0.w,
                     ),
                     Container(
                       width: 70,
@@ -224,14 +223,18 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                             ? toBeginningOfSentenceCase(
                                 data.metadata.healthRecordType.name)
                             : '',
-                        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 10,color: Color(
-                            new CommonUtil().getMyPrimaryColor()),),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 10.0.sp,
+                          color: Color(new CommonUtil().getMyPrimaryColor()),
+                        ),
                         maxLines: 2,
                         softWrap: true,
                       ),
                     ),
                     Expanded(
-                      child: getDeviceReadings(data, data.metadata.deviceReadings),
+                      child:
+                          getDeviceReadings(data, data.metadata.deviceReadings),
                     ),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -242,8 +245,8 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                                 ? ImageIcon(
                                     AssetImage(variable.icon_record_fav_active),
                                     //TODO chnage theme
-                                    color:
-                                        Color(new CommonUtil().getMyPrimaryColor()),
+                                    color: Color(
+                                        new CommonUtil().getMyPrimaryColor()),
                                     size: 20,
                                   )
                                 : ImageIcon(
@@ -264,7 +267,8 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                         widget.mediaMeta.contains(data.id)
                             ? Icon(
                                 Icons.done,
-                                color: Color(new CommonUtil().getMyPrimaryColor()),
+                                color:
+                                    Color(new CommonUtil().getMyPrimaryColor()),
                               )
                             : SizedBox(),
                       ],
@@ -282,8 +286,8 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           return Container(
-            width: 40,
-            height: 60,
+            width: 40.0.w,
+            height: 60.0.h,
             child: Image.memory(snapshot.data),
             decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
           );
@@ -292,8 +296,8 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
               baseColor: Colors.grey[300],
               highlightColor: Colors.grey[100],
               child: Container(
-                width: 50,
-                height: 50,
+                width: 50.0.h,
+                height: 50.0.h,
               ));
         }
       },
@@ -314,7 +318,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                   ? toBeginningOfSentenceCase(
                       deviceReadings[i].parameter.toLowerCase())
                   : '',
-              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 10),
+              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 10.0.sp),
               maxLines: 2,
               softWrap: true,
             ),
@@ -325,14 +329,13 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                   style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.w500,
-                      fontSize: 10),
+                      fontSize: 10.0.sp),
                 ),
                 Text(deviceReadings[i].unit.toString(),
                     maxLines: 2,
-                    style: TextStyle(color: Colors.black54, fontSize: 8))
+                    style: TextStyle(color: Colors.black54, fontSize: 8.0.sp))
               ],
             ),
-
           ],
         ),
       ));

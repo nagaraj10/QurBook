@@ -21,6 +21,7 @@ import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class Appointments extends StatefulWidget {
   @override
@@ -61,31 +62,51 @@ class _AppointmentsState extends State<Appointments> {
     appointmentsViewModel =
         Provider.of<AppointmentsListViewModel>(context, listen: false);
     return Container(
-        margin: EdgeInsets.only(left: 20, right: 20),
+        margin: EdgeInsets.only(
+          left: 20.0.w,
+          right: 20.0.w,
+        ),
         child: Padding(
-          padding: EdgeInsets.only(top: 10, right: 10),
+          padding: EdgeInsets.only(
+            top: 10.0.h,
+            right: 10.0.w,
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Expanded(
                 child: Container(
-                  constraints: BoxConstraints(maxHeight: 40),
+                  constraints: BoxConstraints(
+                    maxHeight: 40.0.h,
+                  ),
                   decoration: BoxDecoration(
-                      color: Color(fhbColors.cardShadowColor),
-                      borderRadius: BorderRadius.circular(5.0)),
+                    color: Color(fhbColors.cardShadowColor),
+                    borderRadius: BorderRadius.circular(
+                      5.0.sp,
+                    ),
+                  ),
                   child: TextField(
                     controller: _searchQueryController,
                     autofocus: false,
                     decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(2),
+                      contentPadding: EdgeInsets.all(
+                        2.0.sp,
+                      ),
                       suffixIcon: Icon(
                         Icons.search,
                         color: Colors.black54,
+                        size: 24.0.sp,
                       ),
                       border: InputBorder.none,
-                      hintStyle: TextStyle(color: Colors.black45, fontSize: 12),
+                      hintStyle: TextStyle(
+                        color: Colors.black45,
+                        fontSize: 12.0.sp,
+                      ),
                     ),
-                    style: TextStyle(color: Colors.black54, fontSize: 16.0),
+                    style: TextStyle(
+                      color: Colors.black54,
+                      fontSize: 16.0.sp,
+                    ),
                     onChanged: (value) {
                       if (value.trim().length > 1) {
                         setState(() {
@@ -116,13 +137,16 @@ class _AppointmentsState extends State<Appointments> {
   Widget body() {
     return SingleChildScrollView(
       child: Container(
-          padding: EdgeInsets.only(left: 20, right: 20),
+          padding: EdgeInsets.only(
+            left: 20.0.w,
+            right: 20.0.w,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBoxWidget(
-                width: 0,
-                height: 20,
+                width: 0.0.w,
+                height: 20.0.h,
               ),
               search(),
               getDoctorsAppoinmentsList()
@@ -137,7 +161,10 @@ class _AppointmentsState extends State<Appointments> {
       case LoadingStatus.searching:
         return new Center(
           child: new CircularProgressIndicator(
-              backgroundColor: Color(new CommonUtil().getMyPrimaryColor())),
+            backgroundColor: Color(
+              new CommonUtil().getMyPrimaryColor(),
+            ),
+          ),
         );
       case LoadingStatus.completed:
         return Consumer<AppointmentsListViewModel>(
@@ -153,8 +180,8 @@ class _AppointmentsState extends State<Appointments> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         SizedBoxWidget(
-                          width: 0,
-                          height: 10,
+                          width: 0.0.h,
+                          height: 10.0.h,
                         ),
                         isSearch
                             ? (upcomingInfo != null && upcomingInfo.length != 0)
@@ -168,8 +195,8 @@ class _AppointmentsState extends State<Appointments> {
                                     .title(Constants.Appointments_upcoming)
                                 : Container(),
                         SizedBoxWidget(
-                          width: 0,
-                          height: 10,
+                          width: 0.0.h,
+                          height: 10.0.h,
                         ),
                         ListView.builder(
                           physics: NeverScrollableScrollPhysics(),
@@ -194,8 +221,8 @@ class _AppointmentsState extends State<Appointments> {
                               : upcomingInfo.length,
                         ),
                         SizedBoxWidget(
-                          width: 0,
-                          height: 10,
+                          width: 0.0.h,
+                          height: 10.0.h,
                         ),
                         isSearch
                             ? (historyInfo != null && historyInfo.length != 0)
@@ -208,8 +235,8 @@ class _AppointmentsState extends State<Appointments> {
                                     .title(Constants.Appointments_history)
                                 : Container(),
                         SizedBoxWidget(
-                          width: 0,
-                          height: 10,
+                          width: 0.0.h,
+                          height: 10.0.h,
                         ),
                         (appointmentsData?.result?.past != null &&
                                 appointmentsData?.result?.past.length > 0)
@@ -245,10 +272,15 @@ class _AppointmentsState extends State<Appointments> {
                       ],
                     )
                   : Container(
-                      height: MediaQuery.of(context).size.height / 2,
+                      height: 1.sh / 2,
                       alignment: Alignment.center,
                       child: Center(
-                        child: Text(variable.strNoAppointments),
+                        child: Text(
+                          variable.strNoAppointments,
+                          style: TextStyle(
+                            fontSize: 14.0.sp,
+                          ),
+                        ),
                       ),
                     );
             } else {
@@ -263,10 +295,15 @@ class _AppointmentsState extends State<Appointments> {
       case LoadingStatus.empty:
       default:
         return Container(
-          height: MediaQuery.of(context).size.height / 2,
+          height: 1.sh / 2,
           alignment: Alignment.center,
           child: Center(
-            child: Text(variable.strNoAppointments),
+            child: Text(
+              variable.strNoAppointments,
+              style: TextStyle(
+                fontSize: 14.0.sp,
+              ),
+            ),
           ),
         );
     }
@@ -280,13 +317,13 @@ class _AppointmentsState extends State<Appointments> {
           mainAxisSize: MainAxisSize.max,
           children: [
             SizedBoxWidget(
-              height: 0,
-              width: 30,
+              height: 0.0.h,
+              width: 30.0.w,
             ),
             IconWidget(
               icon: Icons.arrow_back_ios,
               colors: Colors.white,
-              size: 20,
+              size: 24.0.sp,
               onTap: () {
                 //Navigator.pop(context);
                 PageNavigator.goToPermanent(context, router.rt_Dashboard);
@@ -306,7 +343,7 @@ class _AppointmentsState extends State<Appointments> {
             colors: Colors.white,
             overflow: TextOverflow.visible,
             fontWeight: FontWeight.w600,
-            fontsize: 18,
+            fontsize: 18.0.sp,
             softwrap: true,
           ),
         ),

@@ -14,6 +14,7 @@ import 'package:myfhb/authentication/view/verify_arguments.dart';
 import 'package:myfhb/authentication/view_model/patientauth_view_model.dart';
 import 'package:myfhb/authentication/model/patientverify_model.dart'
     as OtpModel;
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
@@ -104,7 +105,7 @@ class _VerifyPatientState extends State<VerifyPatient> {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
+    final height = 1.sh;
     return Scaffold(
       body: Form(
         key: _OtpKey,
@@ -122,20 +123,20 @@ class _VerifyPatientState extends State<VerifyPatient> {
                       SizedBox(height: height * .1),
                       AssetImageWidget(
                         icon: myFHB_logo,
-                        height: 120,
-                        width: 120,
+                        height: 120.0.h,
+                        width: 120.0.h,
                       ),
-                      SizedBox(height: 20),
+                      SizedBox(height: 20.0.h),
                       Text(getNumber()),
                       SizedBox(
-                        height: 10,
+                        height: 10.0.h,
                       ),
                       Column(
                         children: [
                           _resetTextFields(strOtp, strOtpHint, OtpController),
                         ],
                       ),
-                      SizedBox(height: 5),
+                      SizedBox(height: 5.0.h),
                       InkWell(
                         onTap: () {
                           _resendOtpDetails();
@@ -150,7 +151,7 @@ class _VerifyPatientState extends State<VerifyPatient> {
                                   style: TextStyle(
                                       color: Color(
                                           CommonUtil().getMyPrimaryColor()),
-                                      fontSize: 13,
+                                      fontSize: 13.0.sp,
                                       fontWeight: FontWeight.w600),
                                 ),
                               )
@@ -160,7 +161,7 @@ class _VerifyPatientState extends State<VerifyPatient> {
                               from == strFromVerifyFamilyMember)
                           ? _getResendForSignIN()
                           : Container(),
-                      SizedBox(height: 10),
+                      SizedBox(height: 10.0.h),
                       _resetButton(),
                       SizedBox(height: height * .015),
                     ],
@@ -197,7 +198,7 @@ class _VerifyPatientState extends State<VerifyPatient> {
                 strresendOtp,
                 style: TextStyle(
                     color: Color(CommonUtil().getMyPrimaryColor()),
-                    fontSize: 13,
+                    fontSize: 13.0.sp,
                     fontWeight: FontWeight.w600),
               ),
             ))
@@ -208,7 +209,7 @@ class _VerifyPatientState extends State<VerifyPatient> {
               strresendOtp,
               style: TextStyle(
                   color: Colors.grey,
-                  fontSize: 13,
+                  fontSize: 13.0.sp,
                   fontWeight: FontWeight.w600),
             ),
           );
@@ -314,7 +315,7 @@ class _VerifyPatientState extends State<VerifyPatient> {
         });
       },
       child: Container(
-        width: MediaQuery.of(context).size.width,
+        width: 1.sw,
         padding: EdgeInsets.symmetric(vertical: 15),
         alignment: Alignment.center,
         decoration: BoxDecoration(
@@ -337,7 +338,7 @@ class _VerifyPatientState extends State<VerifyPatient> {
                 ])),
         child: Text(
           strVerify,
-          style: TextStyle(fontSize: 16, color: Colors.white),
+          style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
         ),
       ),
     );

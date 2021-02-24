@@ -16,6 +16,7 @@ import 'package:myfhb/telehealth/features/Notifications/view/notification_main.d
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/city.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/doctor.dart'
     as doc;
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
 import 'package:myfhb/telehealth/features/appointments/view/resheduleMain.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
@@ -122,7 +123,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     date: widget.appointmentDate,
                     templateName: widget.templateName),
               ));
-            }else {
+            } else {
               PageNavigator.goToPermanent(context, router.rt_Dashboard);
             }
           } else {
@@ -156,8 +157,8 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Center(
           child: Image.asset(
         variable.icon_splash_logo,
-        height: 150,
-        width: 150,
+        height: 150.0.h,
+        width: 150.0.h,
       )),
     );
   }

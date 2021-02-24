@@ -7,6 +7,7 @@ import 'package:myfhb/telehealth/features/BottomNavigationMenu/view/BottomBarWid
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/BottomNavigationMenu/viewModel/BottomNavigationViewModel.dart'
     as bottomNavigationVModel;
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class BottomNavigationWidget extends StatefulWidget {
   BottomNavigationWidget(
@@ -34,7 +35,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
       child: CurvedNavigationBar(
           key: _bottomNavigationKey,
           index: widget.selectedPageIndex,
-          height: 60.0,
+          height: 60.0.h,
           items: getAllWidgetsInsideBottom(),
           color: Colors.white,
           buttonBackgroundColor: widget.selectedPageIndex == 2

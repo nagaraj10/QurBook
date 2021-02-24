@@ -13,6 +13,7 @@ import 'package:myfhb/authentication/view/login_screen.dart';
 import 'package:myfhb/authentication/view_model/patientauth_view_model.dart';
 import 'package:myfhb/authentication/model/forgot_password_model.dart'
     as forgotPasswordModel;
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/authentication/widgets/country_code_picker.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/variable_constant.dart';
@@ -40,7 +41,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
+    final height = 1.sh;
     return Scaffold(
       body: Form(
         key: _ForgetPassKey,
@@ -58,13 +59,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       SizedBox(height: height * .1),
                       AssetImageWidget(
                         icon: myFHB_logo,
-                        height: 120,
-                        width: 120,
+                        height: 120.0.h,
+                        width: 120.0.h,
                       ),
-                      SizedBox(height: 20),
+                      SizedBox(height: 20.0.h),
                       Text(strOtpShowText),
                       SizedBox(
-                        height: 10,
+                        height: 10.0.h,
                       ),
                       Column(
                         children: [
@@ -72,26 +73,29 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               strPhoneNumber, strPhoneHint, mobileController),
                         ],
                       ),
-                      SizedBox(height: 10),
+                      SizedBox(height: 10.0.h),
                       _resetbutton(),
                       SizedBox(height: height * .015),
-                      Text(strsupportEmail,style: TextStyle(fontSize: 13),),
+                      Text(
+                        strsupportEmail,
+                        style: TextStyle(fontSize: 13.0.sp),
+                      ),
                       // RichText(
                       //   softWrap: true,
                       //   text: TextSpan(
                       //     text:
                       //         'If OTP is not received within 5mins, please contact to support at ',
-                      //     style: TextStyle(color: Colors.black, fontSize: 15),
+                      //     style: TextStyle(color: Colors.black, fontSize: 15.0.sp),
                       //     children: [
                       //       TextSpan(
                       //           text: 'docsupport@qurhealth.in',
                       //           style: TextStyle(
                       //               color: Colors.blue,
-                      //               fontSize: 15,
+                      //               fontSize: 15.0.sp,
                       //               fontWeight: FontWeight.w500),
                       //           recognizer: TapGestureRecognizer()
                       //             ..onTap = () {
-                                    
+
                       //             }),
                       //     ],
                       //   ),
@@ -119,7 +123,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           controller: controller,
           decoration: InputDecoration(
               prefixIcon: Container(
-                constraints: BoxConstraints(maxWidth: 100, minWidth: 50),
+                constraints:
+                    BoxConstraints(maxWidth: 100.0.w, minWidth: 50.0.w),
                 child: CountryCodePickerPage(
                     onValuePicked: (Country country) =>
                         setState(() => _selectedDialogCountry = country),
@@ -161,16 +166,16 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           children: <Widget>[
             Text(
               strBackTo,
-              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+              style: TextStyle(fontSize: 13.0.sp, fontWeight: FontWeight.w600),
             ),
             SizedBox(
-              width: 10,
+              width: 10.0.w,
             ),
             Text(
               strSignIn,
               style: TextStyle(
                   color: Color(CommonUtil().getMyPrimaryColor()),
-                  fontSize: 13,
+                  fontSize: 13.0.sp,
                   fontWeight: FontWeight.w600),
             ),
           ],
@@ -204,7 +209,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         }
       },
       child: Container(
-        width: MediaQuery.of(context).size.width,
+        width: 1.sw,
         padding: EdgeInsets.symmetric(vertical: 15),
         alignment: Alignment.center,
         decoration: BoxDecoration(
@@ -227,7 +232,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 ])),
         child: Text(
           strResetButton,
-          style: TextStyle(fontSize: 16, color: Colors.white),
+          style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
         ),
       ),
     );
