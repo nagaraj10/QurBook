@@ -28,6 +28,7 @@ import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
 import 'package:myfhb/my_family/screens/FamilyListView.dart';
 import 'package:myfhb/record_detail/bloc/deleteRecordBloc.dart';
 import 'package:myfhb/record_detail/model/ImageDocumentResponse.dart';
+import 'package:myfhb/record_detail/model/deleteRecordResponse.dart';
 import 'package:myfhb/record_detail/screens/record_info_card.dart';
 import 'package:myfhb/record_detail/services/downloadmultipleimages.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
@@ -547,9 +548,11 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           Navigator.of(context).pop();
           Navigator.of(context).pop();
           toast.getToast(
-              ' Delete functionality can be performed from Sheela as well.',
+              'Record deleted successfully, Delete functionality can be performed from Sheela as well.',
               Colors.green);
         });
+      } else {
+        toast.getToast('Failed to delete the record', Colors.red);
       }
     });
   }
@@ -565,9 +568,12 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           PreferenceUtil.saveCompleteData(Constants.KEY_COMPLETE_DATA, value);
           Navigator.of(context).pop();
           widget.data.metadata.hasVoiceNotes = false;
+          toast.getToast('Record deleted successfully', Colors.green);
           setState(() {});
         });
-      } else {}
+      } else {
+        toast.getToast('Failed to delete the record', Colors.red);
+      }
     });
   }
 
