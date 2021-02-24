@@ -46,11 +46,16 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
   String user_mobile_no;
   String id_token_string;
   Map<String, dynamic> dataForResendOtp;
+  CommonUtil commonUtil = new CommonUtil();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     authViewModel = new AuthViewModel();
+    try {
+      commonUtil.versionCheck(context);
+    } catch (e) {
+    }
   }
 
   @override

@@ -51,6 +51,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
 
   //ChatViewModel chatViewModel = new ChatViewModel();
+  CommonUtil commonUtil = new CommonUtil();
 
   @override
   void initState() {
@@ -84,6 +85,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     if (profilebanner != null) {
       imageURIProfile = File(profilebanner);
     }
+    try {
+      commonUtil.versionCheck(context);
+    } catch (e) {}
   }
 
   @override
