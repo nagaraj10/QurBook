@@ -57,12 +57,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     super.initState();
 
-    try {
-      commonUtil.versionCheck(context);
-    } catch (e) {
-      print(e);
-    }
-
     //chatViewModel.getUnreadMSGCount(PreferenceUtil.getStringValue(Constants.KEY_USERID));
 
     /*
@@ -91,6 +85,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     if (profilebanner != null) {
       imageURIProfile = File(profilebanner);
     }
+    try {
+      commonUtil.versionCheck(context);
+    } catch (e) {}
   }
 
   @override

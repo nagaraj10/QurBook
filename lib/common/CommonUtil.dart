@@ -1527,9 +1527,9 @@ class CommonUtil {
       // Using default duration to force fetching from remote server.
       await remoteConfig.fetch(expiration: const Duration(seconds: 0));
       await remoteConfig.activateFetched();
-      remoteConfig.getString('force_update_current_version_myfhb');
+      remoteConfig.getString(Platform.isIOS?STR_FIREBASE_REMOTE_KEY_IOS:STR_FIREBASE_REMOTE_KEY);
       double newVersion = double.parse(remoteConfig
-          .getString('force_update_current_version_myfhb')
+          .getString(Platform.isIOS?STR_FIREBASE_REMOTE_KEY_IOS:STR_FIREBASE_REMOTE_KEY)
           .trim()
           .replaceAll(".", ""));
       if (newVersion > currentVersion) {
@@ -1542,19 +1542,6 @@ class CommonUtil {
       print('Unable to fetch remote config. Cached or default values will be '
           'used');
     }
-  }
-
-  void testAlert(BuildContext context) {
-    var alert = AlertDialog(
-      title: Text("Test"),
-      content: Text("Done..!"),
-    );
-
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return alert;
-        });
   }
 
       _showVersionDialog(context) async {
