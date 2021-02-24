@@ -92,6 +92,8 @@ class CommonUtil {
 
   CategoryResult categoryDataObjClone = new CategoryResult();
 
+  static bool audioPage = false;
+
   static List<String> recordIds = new List();
   static List<String> notesId = new List();
   static List<String> voiceIds = new List();

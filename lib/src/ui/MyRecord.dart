@@ -69,6 +69,7 @@ class MyRecords extends StatefulWidget {
   bool isFromBills;
   String userID;
   bool fromAppointments;
+  String fromClass;
 
   MyRecords(
       {this.categoryPosition,
@@ -82,7 +83,8 @@ class MyRecords extends StatefulWidget {
       this.isAssociateOrChat,
       this.isFromBills,
       this.userID,
-      this.fromAppointments});
+      this.fromAppointments,
+      this.fromClass});
 
   @override
   _MyRecordsState createState() => _MyRecordsState();
@@ -118,6 +120,7 @@ class _MyRecordsState extends State<MyRecords> {
   CategoryResult categoryDataObjClone = new CategoryResult();
 
   List<String> selectedMedia = new List();
+  static bool audioPage = false;
 
   @override
   void initState() {
@@ -392,6 +395,7 @@ class _MyRecordsState extends State<MyRecords> {
       recordsState: this,
       userID: widget.userID ?? '',
       fromAppointments: widget.fromAppointments ?? false,
+      fromClass: widget.fromClass,
     );
   }
 
@@ -591,6 +595,7 @@ class CustomTabView extends StatefulWidget {
   bool isFromBills;
   String userID;
   bool fromAppointments;
+  String fromClass;
   CustomTabView(
       {@required this.itemCount,
       this.tabBuilder,
@@ -617,7 +622,8 @@ class CustomTabView extends StatefulWidget {
       this.isAssociateOrChat,
       this.isFromBills,
       this.userID,
-      this.fromAppointments});
+      this.fromAppointments,
+      this.fromClass});
 
   @override
   _CustomTabsState createState() => _CustomTabsState();
@@ -1298,6 +1304,9 @@ class _CustomTabsState extends State<CustomTabView>
             addHealthRecords));
       } else if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionVoiceRecord) {
+        if (CommonUtil.audioPage == false && widget.fromClass == 'audio') {
+          widget.selectedMedia = new List();
+        }
         tabWidgetList.add(new VoiceRecordList(
             completeData,
             callBackToRefresh,

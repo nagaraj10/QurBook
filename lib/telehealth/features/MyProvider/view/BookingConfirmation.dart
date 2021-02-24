@@ -78,7 +78,7 @@ class BookingConfirmation extends StatefulWidget {
       this.doctorListPos,
       this.closePage,
       this.refresh,
-        this.isFromHospital});
+      this.isFromHospital});
 
   @override
   BookingConfirmationState createState() => BookingConfirmationState();
@@ -185,8 +185,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     scheduleDate =
         commonUtil.dateConversionToApiFormat(widget.selectedDate).toString();
 
-    doctorId = widget.isFromHospital?widget.resultFromHospitalList[widget.doctorListIndex].doctor.user.id
-        :widget.docs[widget.doctorListPos].user.id;
+    doctorId = widget.isFromHospital
+        ? widget.resultFromHospitalList[widget.doctorListIndex].doctor.user.id
+        : widget.docs[widget.doctorListPos].user.id;
   }
 
   Widget getDropdown() {
@@ -262,14 +263,13 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
     if (_familyNames.length > 0) {
       for (SharedByUsers sharedByUsers in _familyNames) {
-        if(sharedByUsers!=null){
-          if(sharedByUsers.child!=null){
+        if (sharedByUsers != null) {
+          if (sharedByUsers.child != null) {
             if (sharedByUsers.child.id == selectedId) {
               selectedUser = sharedByUsers;
             }
           }
         }
-
       }
     }
 
@@ -398,7 +398,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                   width: 30,
                   height: 30,
                   decoration: BoxDecoration(
-                    color: Color(new CommonUtil().getMyPrimaryColor()), // border color
+                    color: Color(
+                        new CommonUtil().getMyPrimaryColor()), // border color
                     shape: BoxShape.circle,
                   ),
                   child: Padding(
@@ -407,7 +408,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       // or ClipRRect if you need to clip the content
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Color(new CommonUtil().getMyPrimaryColor()), // inner circle color
+                        color: Color(new CommonUtil()
+                            .getMyPrimaryColor()), // inner circle color
                       ),
                       child: Center(
                         child: TextWidget(
@@ -525,7 +527,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                         child: IconButtonWidget(
                                           iconPath: Constants.NOTES_ICON_LINK,
                                           size: 18.0,
-                                          color: Color(new CommonUtil().getMyPrimaryColor()),
+                                          color: Color(new CommonUtil()
+                                              .getMyPrimaryColor()),
                                           padding: new EdgeInsets.all(1.0),
                                           onPressed: () {
                                             FetchRecords(
@@ -572,7 +575,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                         child: IconButtonWidget(
                                           iconPath: Constants.VOICE_ICON_LINK,
                                           size: 18.0,
-                                          color: Color(new CommonUtil().getMyPrimaryColor()),
+                                          color: Color(new CommonUtil()
+                                              .getMyPrimaryColor()),
                                           padding: new EdgeInsets.all(1.0),
                                           onPressed: () {
                                             FetchRecords(
@@ -619,7 +623,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                         child: IconButtonWidget(
                                           iconPath: Constants.RECORDS_ICON_LINK,
                                           size: 18.0,
-                                          color: Color(new CommonUtil().getMyPrimaryColor()),
+                                          color: Color(new CommonUtil()
+                                              .getMyPrimaryColor()),
                                           padding: new EdgeInsets.all(1.0),
                                           onPressed: () {
                                             FetchRecords(
@@ -636,8 +641,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                           ? BadgesBlue(
                                               badgeValue:
                                                   recordIdCount.toString(),
-                                              backColor: Color(
-                                                  commonUtil.getMyPrimaryColor()))
+                                              backColor: Color(commonUtil
+                                                  .getMyPrimaryColor()))
                                           : SizedBox(),
                                     ],
                                   ),
@@ -670,8 +675,12 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       text: 'Pay INR ' +
                           commonWidgets.getMoneyWithForamt(widget.isFollowUp
                               ? getFollowUpFee()
-                              : widget.isFromHospital?getFeesFromHospital(widget.resultFromHospitalList[widget.doctorListIndex]):getFees(
-                                  widget.healthOrganizationResult[widget.i])),
+                              : widget.isFromHospital
+                                  ? getFeesFromHospital(
+                                      widget.resultFromHospitalList[
+                                          widget.doctorListIndex])
+                                  : getFees(widget
+                                      .healthOrganizationResult[widget.i])),
                       fontsize: 22.0,
                       fontWeight: FontWeight.w500,
                       colors: Color(new CommonUtil().getMyPrimaryColor())),
@@ -706,7 +715,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       child: FlatButton(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12.0),
-                            side: BorderSide(color: Color(new CommonUtil().getMyPrimaryColor()))),
+                            side: BorderSide(
+                                color: Color(
+                                    new CommonUtil().getMyPrimaryColor()))),
                         color: Colors.transparent,
                         textColor: Color(new CommonUtil().getMyPrimaryColor()),
                         padding: EdgeInsets.all(8.0),
@@ -715,8 +726,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                             if (intenet != null && intenet) {
                               _displayDialog(context);
                             } else {
-                              toast.getToast(
-                                  Constants.STR_NO_CONNECTIVITY, Colors.black54);
+                              toast.getToast(Constants.STR_NO_CONNECTIVITY,
+                                  Colors.black54);
                             }
                           });
                         },
@@ -736,10 +747,16 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   String getFollowUpFee() {
     if (widget.doctorsData?.plannedFollowupDate != null &&
         widget.followUpFee != null) {
-      if(widget.doctorsData.isFollowUpTaken==true){
-        return widget.isFromHospital?getFeesFromHospital(widget.resultFromHospitalList[widget.doctorListIndex]):getFees(widget.healthOrganizationResult[widget.i]);
-      }else if (widget.doctorsData?.plannedFollowupDate == null) {
-        return widget.isFromHospital?getFeesFromHospital(widget.resultFromHospitalList[widget.doctorListIndex]):getFees(widget.healthOrganizationResult[widget.i]);
+      if (widget.doctorsData.isFollowUpTaken == true) {
+        return widget.isFromHospital
+            ? getFeesFromHospital(
+                widget.resultFromHospitalList[widget.doctorListIndex])
+            : getFees(widget.healthOrganizationResult[widget.i]);
+      } else if (widget.doctorsData?.plannedFollowupDate == null) {
+        return widget.isFromHospital
+            ? getFeesFromHospital(
+                widget.resultFromHospitalList[widget.doctorListIndex])
+            : getFees(widget.healthOrganizationResult[widget.i]);
       } else {
         if (widget.selectedDate
                 .difference(
@@ -748,11 +765,17 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             0) {
           return widget.followUpFee;
         } else {
-          return widget.isFromHospital?getFeesFromHospital(widget.resultFromHospitalList[widget.doctorListIndex]):getFees(widget.healthOrganizationResult[widget.i]);
+          return widget.isFromHospital
+              ? getFeesFromHospital(
+                  widget.resultFromHospitalList[widget.doctorListIndex])
+              : getFees(widget.healthOrganizationResult[widget.i]);
         }
       }
     } else {
-      return widget.isFromHospital?getFeesFromHospital(widget.resultFromHospitalList[widget.doctorListIndex]):getFees(widget.healthOrganizationResult[widget.i]);
+      return widget.isFromHospital
+          ? getFeesFromHospital(
+              widget.resultFromHospitalList[widget.doctorListIndex])
+          : getFees(widget.healthOrganizationResult[widget.i]);
     }
   }
 
@@ -818,9 +841,11 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                           borderRadius:
                                               BorderRadius.circular(12.0),
                                           side: BorderSide(
-                                              color: Color(new CommonUtil().getMyPrimaryColor()))),
+                                              color: Color(new CommonUtil()
+                                                  .getMyPrimaryColor()))),
                                       color: Colors.transparent,
-                                      textColor: Color(new CommonUtil().getMyPrimaryColor()),
+                                      textColor: Color(
+                                          new CommonUtil().getMyPrimaryColor()),
                                       padding: EdgeInsets.all(8.0),
                                       onPressed: () {
                                         addHealthRecords();
@@ -866,9 +891,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     if (widget.doctorsData?.plannedFollowupDate != null &&
         widget.followUpFee != null &&
         widget.isFollowUp == true) {
-      if(widget.doctorsData.isFollowUpTaken==true){
+      if (widget.doctorsData.isFollowUpTaken == true) {
         return false;
-      }else if (widget.doctorsData?.plannedFollowupDate == null) {
+      } else if (widget.doctorsData?.plannedFollowupDate == null) {
         return false;
       } else {
         if (widget.selectedDate
@@ -1060,18 +1085,23 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             Container(
               alignment: Alignment.center,
               child: commonWidgets.getClipOvalImageNew(
-                  widget.isFromHospital?widget.resultFromHospitalList[widget.doctorListIndex].
-                  doctor.user.profilePicThumbnailUrl
-                      :widget.docs[widget.doctorListPos].user.profilePicThumbnailUrl,
+                  widget.isFromHospital
+                      ? widget.resultFromHospitalList[widget.doctorListIndex]
+                          .doctor.user.profilePicThumbnailUrl
+                      : widget.docs[widget.doctorListPos].user
+                          .profilePicThumbnailUrl,
                   fhbStyles.cardClipImage),
             ),
             new Positioned(
               bottom: 0.0,
               right: 2.0,
-              child: widget.isFromHospital?commonWidgets
-                  .getDoctorStatusWidgetNewForHos(widget.resultFromHospitalList[widget.doctorListIndex].doctor, widget.i)
-                  :commonWidgets.getDoctorStatusWidgetNew(
-                  widget.docs[widget.doctorListPos], widget.i),
+              child: widget.isFromHospital
+                  ? commonWidgets.getDoctorStatusWidgetNewForHos(
+                      widget.resultFromHospitalList[widget.doctorListIndex]
+                          .doctor,
+                      widget.i)
+                  : commonWidgets.getDoctorStatusWidgetNew(
+                      widget.docs[widget.doctorListPos], widget.i),
             )
           ],
         ),
@@ -1087,41 +1117,58 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                   Expanded(
                       child: Row(
                     children: [
-                      widget.isFromHospital?
-                      commonWidgets.setDoctornameForHos(widget.resultFromHospitalList[widget.doctorListIndex].doctor.user):commonWidgets.setDoctorname(widget.docs[widget.doctorListPos].user),
+                      widget.isFromHospital
+                          ? commonWidgets.setDoctornameForHos(widget
+                              .resultFromHospitalList[widget.doctorListIndex]
+                              .doctor
+                              .user)
+                          : commonWidgets.setDoctorname(
+                              widget.docs[widget.doctorListPos].user),
                       commonWidgets.getSizeBoxWidth(10.0),
                       commonWidgets.getIcon(
                           width: fhbStyles.imageWidth,
                           height: fhbStyles.imageHeight,
                           icon: Icons.info,
                           onTap: () {
-                            widget.isFromHospital?commonWidgets.showDoctorDetailViewNewForHos(
-                                widget.resultFromHospitalList[widget.doctorListIndex].doctor, context):commonWidgets.showDoctorDetailViewNew(
-                                widget.docs[widget.doctorListPos], context);
+                            widget.isFromHospital
+                                ? commonWidgets.showDoctorDetailViewNewForHos(
+                                    widget
+                                        .resultFromHospitalList[
+                                            widget.doctorListIndex]
+                                        .doctor,
+                                    context)
+                                : commonWidgets.showDoctorDetailViewNew(
+                                    widget.docs[widget.doctorListPos], context);
                           }),
                     ],
                   )),
-                  widget.isFromHospital?widget.resultFromHospitalList[widget.doctorListIndex].doctor.isActive? commonWidgets.getIcon(
-                      width: fhbStyles.imageWidth,
-                      height: fhbStyles.imageHeight,
-                      icon: Icons.check_circle,
-                      onTap: () {}):widget.docs[widget.doctorListPos].isActive
-                      ? commonWidgets.getIcon(
-                          width: fhbStyles.imageWidth,
-                          height: fhbStyles.imageHeight,
-                          icon: Icons.check_circle,
-                          onTap: () {})
-                      : SizedBox(): SizedBox(),
+                  widget.isFromHospital
+                      ? widget.resultFromHospitalList[widget.doctorListIndex]
+                              .doctor.isActive
+                          ? commonWidgets.getIcon(
+                              width: fhbStyles.imageWidth,
+                              height: fhbStyles.imageHeight,
+                              icon: Icons.check_circle,
+                              onTap: () {})
+                          : widget.docs[widget.doctorListPos].isActive
+                              ? commonWidgets.getIcon(
+                                  width: fhbStyles.imageWidth,
+                                  height: fhbStyles.imageHeight,
+                                  icon: Icons.check_circle,
+                                  onTap: () {})
+                              : SizedBox()
+                      : SizedBox(),
                 ],
               ),
               commonWidgets.getSizedBox(5.0),
               Row(children: [
                 Expanded(
-                    child:
-                        widget.isFromHospital?commonWidgets.
-                        getDoctoSpecialistOnlyForHos(widget.resultFromHospitalList[widget.doctorListIndex].doctor):
-                             commonWidgets.getDoctoSpecialistOnly(
-                                widget.docs[widget.doctorListPos])),
+                    child: widget.isFromHospital
+                        ? commonWidgets.getDoctoSpecialistOnlyForHos(widget
+                            .resultFromHospitalList[widget.doctorListIndex]
+                            .doctor)
+                        : commonWidgets.getDoctoSpecialistOnly(
+                            widget.docs[widget.doctorListPos])),
               ]),
               commonWidgets.getSizedBox(5.0),
               Row(
@@ -1129,11 +1176,14 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                 children: [
                   Expanded(
                       child: Text(
-                        widget.isFromHospital?'' +
-                        commonWidgets.
-                    getCityDoctorsModelForHos(widget.resultFromHospitalList[widget.doctorListIndex].doctor)
-                        :''+commonWidgets.getCityDoctorsModel(
-                            widget.docs[widget.doctorListPos]),
+                    widget.isFromHospital
+                        ? '' +
+                            commonWidgets.getCityDoctorsModelForHos(widget
+                                .resultFromHospitalList[widget.doctorListIndex]
+                                .doctor)
+                        : '' +
+                            commonWidgets.getCityDoctorsModel(
+                                widget.docs[widget.doctorListPos]),
                     overflow: TextOverflow.ellipsis,
                     softWrap: false,
                     style: TextStyle(
@@ -1141,22 +1191,56 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                         color: Colors.grey[600],
                         fontSize: fhbStyles.fnt_city),
                   )),
-                  widget.isFromHospital?widget.resultFromHospitalList[widget.doctorListIndex].doctor.isMciVerified? commonWidgets.getMCVerified(
-                      widget.isFromHospital?widget.resultFromHospitalList[widget.doctorListIndex].doctor.isMciVerified
-                          :widget.resultFromHospitalList[widget.doctorListIndex].doctor.isMciVerified,
-                      'Verified'):commonWidgets.getMCVerified(
-                      widget.isFromHospital?widget.resultFromHospitalList[widget.doctorListIndex].doctor.isMciVerified
-                          :widget.resultFromHospitalList[widget.doctorListIndex].doctor.isMciVerified,
-                      'Not Verified')
-                      :widget.docs[widget.doctorListPos].isMciVerified
-                      ? commonWidgets.getMCVerified(
-                      widget.isFromHospital?widget.resultFromHospitalList[widget.doctorListPos].doctor.isMciVerified
-                          :widget.docs[widget.doctorListPos].isMciVerified,
-                          'Verified')
-                      : commonWidgets.getMCVerified(
-                      widget.isFromHospital?widget.resultFromHospitalList[widget.doctorListPos].doctor.isMciVerified
-                          :widget.docs[widget.doctorListPos].isMciVerified,
-                          'Not Verified'),
+                  widget.isFromHospital
+                      ? widget.resultFromHospitalList[widget.doctorListIndex]
+                              .doctor.isMciVerified
+                          ? commonWidgets.getMCVerified(
+                              widget.isFromHospital
+                                  ? widget
+                                      .resultFromHospitalList[
+                                          widget.doctorListIndex]
+                                      .doctor
+                                      .isMciVerified
+                                  : widget
+                                      .resultFromHospitalList[
+                                          widget.doctorListIndex]
+                                      .doctor
+                                      .isMciVerified,
+                              'Verified')
+                          : commonWidgets.getMCVerified(
+                              widget.isFromHospital
+                                  ? widget
+                                      .resultFromHospitalList[
+                                          widget.doctorListIndex]
+                                      .doctor
+                                      .isMciVerified
+                                  : widget
+                                      .resultFromHospitalList[
+                                          widget.doctorListIndex]
+                                      .doctor
+                                      .isMciVerified,
+                              'Not Verified')
+                      : widget.docs[widget.doctorListPos].isMciVerified
+                          ? commonWidgets.getMCVerified(
+                              widget.isFromHospital
+                                  ? widget
+                                      .resultFromHospitalList[
+                                          widget.doctorListPos]
+                                      .doctor
+                                      .isMciVerified
+                                  : widget
+                                      .docs[widget.doctorListPos].isMciVerified,
+                              'Verified')
+                          : commonWidgets.getMCVerified(
+                              widget.isFromHospital
+                                  ? widget
+                                      .resultFromHospitalList[
+                                          widget.doctorListPos]
+                                      .doctor
+                                      .isMciVerified
+                                  : widget
+                                      .docs[widget.doctorListPos].isMciVerified,
+                              'Not Verified'),
                   commonWidgets.getSizeBoxWidth(10.0),
                 ],
               )
@@ -1297,6 +1381,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     }
     return fees;
   }
+
   String getFeesFromHospital(ResultFromHospital result) {
     String fees;
     if (result.doctorFeeCollection != null) {
