@@ -41,6 +41,8 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
   Country _selectedDialogCountry =
       CountryPickerUtils.getCountryByPhoneCode(strinitialMobileLabel);
 
+  bool _isHidden = true;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -208,10 +210,19 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                           _signupTextFields(
                             TextFormField(
                               autovalidate: _autoValidateBool,
-                              obscureText: true,
+                              obscureText: _isHidden,
                               decoration: InputDecoration(
                                 hintText: strPassword,
                                 labelText: strPassword,
+                                suffix: InkWell(
+                                  onTap: _togglePasswordView,
+                                  child: Icon(
+                                    _isHidden
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                    size: 18,
+                                  ),
+                                ),
                                 focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10.0),
                                     borderSide: BorderSide(
@@ -254,6 +265,12 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
         ),
       ),
     );
+  }
+
+  void _togglePasswordView() {
+    setState(() {
+      _isHidden = !_isHidden;
+    });
   }
 
   Widget _saveUser() {

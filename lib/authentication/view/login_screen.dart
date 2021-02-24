@@ -46,16 +46,18 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
   String user_mobile_no;
   String id_token_string;
   Map<String, dynamic> dataForResendOtp;
-  CommonUtil commonUtil = new CommonUtil();
+  //CommonUtil commonUtil = new CommonUtil();
+  bool _isHidden = true;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     authViewModel = new AuthViewModel();
-    try {
+   /* try {
       commonUtil.versionCheck(context);
     } catch (e) {
-    }
+    }*/
   }
 
   @override
@@ -130,10 +132,19 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                           _loginTextFields(
                             TextFormField(
                               autovalidate: _autoValidateBool,
-                              obscureText: true,
+                              obscureText: _isHidden,
                               decoration: InputDecoration(
                                 hintText: strPassword,
                                 labelText: strPassword,
+                                suffix: InkWell(
+                                  onTap: _togglePasswordView,
+                                  child: Icon(
+                                    _isHidden
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                    size: 18,
+                                  ),
+                                ),
                                 focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10.0),
                                     borderSide: BorderSide(
@@ -190,6 +201,12 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
         ),
       ),
     );
+  }
+
+  void _togglePasswordView() {
+    setState(() {
+      _isHidden = !_isHidden;
+    });
   }
 
   Widget _gotoregistertap() {
