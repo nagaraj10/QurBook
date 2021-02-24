@@ -1,14 +1,13 @@
 package com.ventechsolutions.myFHB
 
 import android.app.Activity
-import android.app.AlertDialog
 import android.app.Dialog
 import android.app.KeyguardManager
 import android.content.*
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.os.CountDownTimer
+import android.os.Handler
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
@@ -17,7 +16,6 @@ import android.speech.tts.UtteranceProgressListener
 import android.util.Log
 import android.view.View
 import android.view.Window
-import android.view.WindowManager
 import android.widget.*
 import androidx.annotation.NonNull
 import androidx.core.app.ActivityCompat
@@ -36,7 +34,6 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugins.GeneratedPluginRegistrant
 import kotlinx.android.synthetic.main.progess_dialog.*
 import java.util.*
-import kotlin.concurrent.thread
 import kotlin.system.exitProcess
 
 
@@ -360,6 +357,13 @@ class MainActivity : FlutterActivity() {
         speechRecognizer!!.destroy()
     }
 
+    val handler: Handler = Handler()
+    val runnable = Runnable {
+        if (dialog.isShowing) {
+            dialog.dismiss()
+        }
+    }
+
     //todo this method need to uncomment
     private fun speakWithVoiceAssistant(langCode: String) {
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
@@ -463,12 +467,8 @@ class MainActivity : FlutterActivity() {
                     finalWords = data!![0].toString()
                     _result.success(finalWords)
                     if (finalWords != null && finalWords?.length!! > 0) {
-//                        thread {
-//                            Thread.sleep(2000)
-//                            dialog.dismiss()
-//                            finalWords = null
-//                        }
-                        dialog.dismiss()
+                        handler.postDelayed(runnable,1000)
+                        //dialog.dismiss()
                         finalWords = null
                     } else {
                         this@MainActivity.runOnUiThread(
