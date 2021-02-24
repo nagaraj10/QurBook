@@ -440,7 +440,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                         children: [
                                           Icon(
                                             Icons.photo,
-                                            size: 14,
+                                            size: 14.0.sp,
                                             color: Colors.black54,
                                           ),
                                           SizedBoxWidget(

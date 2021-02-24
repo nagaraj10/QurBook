@@ -1385,10 +1385,10 @@ class ChatScreenState extends State<ChatScreen> {
             children: <Widget>[
               CircleAvatar(
                 backgroundImage: NetworkImage(widget.peerAvatar),
-                radius: 18,
+                radius: 18.0.sp,
               ),
               SizedBox(
-                width: 15,
+                width: 15.0.w,
               ),
               Container(
                   child: Expanded(
