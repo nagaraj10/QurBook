@@ -77,6 +77,8 @@ class ProfileSetting {
   bool pulseOximeter;
   int preColor;
   int greColor;
+  String preferred_language;
+  String qa_subscription;
 
   ProfileSetting(
       {this.bpMonitor,
@@ -89,8 +91,9 @@ class ProfileSetting {
         this.thermoMeter,
         this.pulseOximeter,
         this.preColor,
-        this.greColor
-
+        this.greColor,
+        this.preferred_language,
+        this.qa_subscription
       });
 
   ProfileSetting.fromJson(Map<String, dynamic> json) {
@@ -105,6 +108,8 @@ class ProfileSetting {
     pulseOximeter = json['pulseOximeter'];
     preColor = json['priColor'];
     greColor = json['greColor'];
+    preferred_language = json['preferred_language'];
+    qa_subscription = json['qa-subscription'];
   }
 
   Map<String, dynamic> toJson() {
@@ -120,6 +125,8 @@ class ProfileSetting {
     data['pulseOximeter'] = this.pulseOximeter;
     data['priColor'] = this.preColor;
     data['greColor'] = this.greColor;
+    data['preferred_language'] = this.preferred_language;
+    data['qa-subscription'] = this.qa_subscription;
     return data;
   }
 }

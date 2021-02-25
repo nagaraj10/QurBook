@@ -36,6 +36,8 @@ class _MySettingsState extends State<MySettings> {
   bool _isTHActive = true;
   bool _isWSActive = true;
   bool _isHealthFirstTime = false;
+  String preferred_language;
+  String qa_subscription;
 
   List<DeviceData> selectedList;
   DeviceDataHelper _deviceDataHelper = DeviceDataHelper();
@@ -154,7 +156,9 @@ class _MySettingsState extends State<MySettings> {
             _isGLActive,
             _isOxyActive,
             _isTHActive,
-            _isWSActive)
+            _isWSActive,
+            preferred_language,
+            qa_subscription)
         .then((value) {
       updateDeviceModel = value;
       if (updateDeviceModel.isSuccess) {
@@ -248,6 +252,24 @@ class _MySettingsState extends State<MySettings> {
               getDeviceSelectionModel.result[0].profileSetting.thermoMeter != ''
           ? getDeviceSelectionModel.result[0].profileSetting.thermoMeter
           : true;
+
+      preferred_language = getDeviceSelectionModel
+                      .result[0].profileSetting.preferred_language !=
+                  null &&
+              getDeviceSelectionModel
+                      .result[0].profileSetting.preferred_language !=
+                  ''
+          ? getDeviceSelectionModel.result[0].profileSetting.preferred_language
+          : 'undef';
+
+      qa_subscription =
+          getDeviceSelectionModel.result[0].profileSetting.qa_subscription !=
+                      null &&
+                  getDeviceSelectionModel
+                          .result[0].profileSetting.qa_subscription !=
+                      ''
+              ? getDeviceSelectionModel.result[0].profileSetting.qa_subscription
+              : 'Y';
     });
   }
 
