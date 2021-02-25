@@ -223,7 +223,7 @@ class _BillsListState extends State<BillsList> {
                             .getFormattedDateString(mediaMetaInfoObj.createdOn)
                         : '',
                     style:
-                        TextStyle(color: Colors.grey[400], fontSize: 12.0.sp),
+                        TextStyle(color: Colors.grey[400], fontSize: 14.0.sp),
                   )
                 ],
               ),

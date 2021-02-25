@@ -420,7 +420,7 @@ class _MyRecordsState extends State<MyRecords> {
                   ),
                   border: InputBorder.none,
                   hintStyle:
-                      TextStyle(color: Colors.black45, fontSize: 10.0.sp),
+                      TextStyle(color: Colors.black45, fontSize: 16.0.sp),
                 ),
                 style: TextStyle(color: Colors.black54, fontSize: 16.0.sp),
                 onChanged: (editedValue) {
@@ -458,7 +458,7 @@ class _MyRecordsState extends State<MyRecords> {
           ),
           new CommonUtil().getNotificationIcon(context),
           new SwitchProfile()
-              .buildActions(context, _keyLoader, callBackToRefresh,false),
+              .buildActions(context, _keyLoader, callBackToRefresh, false),
         ],
       ),
     );
@@ -1417,7 +1417,7 @@ class _CustomTabsState extends State<CustomTabView>
         Container(
             child: Text(
           dataObj.categoryName,
-          style: TextStyle(fontSize: 12.0.sp),
+          style: TextStyle(fontSize: 14.0.sp),
         )),
         Padding(padding: EdgeInsets.only(top: 10)),
       ]));

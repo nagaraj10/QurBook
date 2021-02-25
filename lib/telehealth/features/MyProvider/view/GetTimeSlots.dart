@@ -134,7 +134,7 @@ class GetTimeSlots extends StatelessWidget {
               },
               child: TextWidget(
                 text: bookNow,
-                fontsize: 12.0.sp,
+                fontsize: 14.0.sp,
               ),
             ),
           ),

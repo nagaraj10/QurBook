@@ -207,7 +207,7 @@ class TakePictureScreenForDevicesState
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                           color: Colors.white,
-                                          fontSize: 14.0.sp,
+                                          fontSize: 16.0.sp,
                                           fontWeight: FontWeight.w500),
                                     )),
                               ),
@@ -318,7 +318,7 @@ class TakePictureScreenForDevicesState
                                         (imagePaths.length).toString(),
                                         style: TextStyle(
                                           color: Colors.white,
-                                          fontSize: 8.0.sp,
+                                          fontSize: 10.0.sp,
                                         ),
                                         textAlign: TextAlign.center,
                                       ),
@@ -594,7 +594,7 @@ class TakePictureScreenForDevicesState
             variable.strChoose,
             style: new TextStyle(
               color: Colors.white,
-              fontSize: 14.0.sp,
+              fontSize: 16.0.sp,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -638,7 +638,7 @@ class TakePictureScreenForDevicesState
             variable.strConfirm,
             style: new TextStyle(
               color: Colors.white,
-              fontSize: 14.0.sp,
+              fontSize: 16.0.sp,
               fontWeight: FontWeight.w500,
             ),
           ),

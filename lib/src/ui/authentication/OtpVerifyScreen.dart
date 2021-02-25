@@ -88,7 +88,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
               controller: controller1,
               autofocus: false,
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 14.0.sp, color: Colors.black),
+              style: TextStyle(fontSize: 16.0.sp, color: Colors.black),
             )),
       ),
       Padding(
@@ -104,7 +104,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
             enabled: false,
             keyboardType: TextInputType.number,
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 14.0.sp, color: Colors.black),
+            style: TextStyle(fontSize: 16.0.sp, color: Colors.black),
           ),
         ),
       ),
@@ -121,7 +121,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
             textAlign: TextAlign.center,
             autofocus: false,
             enabled: false,
-            style: TextStyle(fontSize: 14.0.sp, color: Colors.black),
+            style: TextStyle(fontSize: 16.0.sp, color: Colors.black),
           ),
         ),
       ),
@@ -137,7 +137,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
             controller: controller4,
             autofocus: false,
             enabled: false,
-            style: TextStyle(fontSize: 14.0.sp, color: Colors.black),
+            style: TextStyle(fontSize: 16.0.sp, color: Colors.black),
           ),
         ),
       ),
@@ -237,7 +237,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                   variable.strdidtReceive,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 11.0.sp,
+                    fontSize: 13.0.sp,
                     color: Colors.grey,
                   ),
                 ),
@@ -666,11 +666,11 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
     TextStyle defaultStyle = TextStyle(
         color: Colors.black,
         fontFamily: variable.font_poppins,
-        fontSize: 12.0.sp);
+        fontSize: 14.0.sp);
     TextStyle linkStyle = TextStyle(
         color: Color(CommonUtil().getMyPrimaryColor()),
         fontFamily: variable.font_poppins,
-        fontSize: 12.0.sp);
+        fontSize: 14.0.sp);
     return Padding(
         padding: EdgeInsets.only(top: 10, bottom: 10, right: 40, left: 40),
         child: RichText(

@@ -197,7 +197,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                     (imagePaths.length).toString(),
                                     style: TextStyle(
                                       color: Colors.white,
-                                      fontSize: 8.0.sp,
+                                      fontSize: 10.0.sp,
                                     ),
                                     textAlign: TextAlign.center,
                                   ),

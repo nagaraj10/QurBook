@@ -105,7 +105,7 @@ class FHBBasicWidget {
         width: 1.sw - 60,
         child: Text(
           hintText,
-          style: TextStyle(fontSize: 14.0.sp),
+          style: TextStyle(fontSize: 16.0.sp),
         ));
   }
 
@@ -380,7 +380,7 @@ class FHBBasicWidget {
             ),
             content: Text(
               variable.strLogoutMsg,
-              style: TextStyle(fontSize: 14.0.sp),
+              style: TextStyle(fontSize: 16.0.sp),
             ),
             actions: <Widget>[
               FlatButton(
@@ -448,7 +448,7 @@ class FHBBasicWidget {
                             desc,
                             textAlign: TextAlign.start,
                             style: TextStyle(
-                                color: Colors.white, fontSize: 13.0.sp),
+                                color: Colors.white, fontSize: 15.0.sp),
                             softWrap: true,
                           ),
                         ],
@@ -496,7 +496,7 @@ class FHBBasicWidget {
         children: <Widget>[
           Text(errorMsg,
               style: TextStyle(
-                fontSize: 13.0.sp,
+                fontSize: 15.0.sp,
               )),
         ],
       ),
@@ -516,7 +516,7 @@ class FHBBasicWidget {
             ),
             content: Text(
               msg,
-              style: TextStyle(fontSize: 14.0.sp),
+              style: TextStyle(fontSize: 16.0.sp),
             ),
             actions: <Widget>[
               FlatButton(
@@ -550,7 +550,7 @@ class FHBBasicWidget {
         decoration: InputDecoration(
             disabledBorder:
                 OutlineInputBorder(borderSide: BorderSide(width: 5)),
-            hintStyle: TextStyle(fontSize: 13.0.sp),
+            hintStyle: TextStyle(fontSize: 15.0.sp),
             hintText:
                 'Provide details on existing illness, allergies, history of the disease and medication taken',
             border: OutlineInputBorder(
@@ -586,7 +586,7 @@ class FHBBasicWidget {
           textAlign: TextAlign.center,
           maxLength: 3,
           style: TextStyle(
-              fontSize: 13.0.sp,
+              fontSize: 15.0.sp,
               fontWeight: FontWeight.w500,
               color: getColorBasedOnDevice(
                   deviceName, unitsTosearch, controllerValue.text)),
@@ -621,7 +621,7 @@ class FHBBasicWidget {
                     width: 0.5.w),
               ),
               hintText: '0',
-              hintStyle: TextStyle(color: Colors.grey, fontSize: 13.0.sp),
+              hintStyle: TextStyle(color: Colors.grey, fontSize: 15.0.sp),
               contentPadding: EdgeInsets.zero),
           cursorColor: getColorBasedOnDevice(deviceName, unitsTosearch, ''),
           keyboardType: TextInputType.number,

@@ -125,7 +125,7 @@ class _MyAppointmentState extends State<MyAppointment> {
                                           style: TextStyle(
                                             fontWeight: FontWeight.w500,
                                             color: Colors.black,
-                                            fontSize: 14.0.sp,
+                                            fontSize: 16.0.sp,
                                           )),
                                       SizedBox(height: 5.0.h),
                                       Text(
@@ -133,7 +133,7 @@ class _MyAppointmentState extends State<MyAppointment> {
                                             toBeginningOfSentenceCase(
                                                 model.dName),
                                         style: TextStyle(
-                                            fontSize: 13.0.sp,
+                                            fontSize: 15.0.sp,
                                             color: Colors.grey,
                                             fontWeight: FontWeight.w500),
                                       ),
@@ -144,7 +144,7 @@ class _MyAppointmentState extends State<MyAppointment> {
                                                 ',' +
                                                 model.appTime),
                                         style: TextStyle(
-                                            fontSize: 12.0.sp,
+                                            fontSize: 14.0.sp,
                                             color: Colors.grey[400]),
                                       )
                                     ],
@@ -187,7 +187,7 @@ class _MyAppointmentState extends State<MyAppointment> {
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontFamily: variable.font_poppins,
-                              fontSize: 14.0.sp,
+                              fontSize: 16.0.sp,
                             ),
                           ),
                         ),

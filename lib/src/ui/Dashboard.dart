@@ -104,8 +104,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
               key: scaffold_state,
               bottomNavigationBar: BottomNavigationBar(
                 type: BottomNavigationBarType.fixed,
-                selectedFontSize: 10.0.sp,
-                unselectedFontSize: 10.0.sp,
+                selectedFontSize: 12.0.sp,
+                unselectedFontSize: 12.0.sp,
                 items: <BottomNavigationBarItem>[
                   BottomNavigationBarItem(
                       icon: InkWell(

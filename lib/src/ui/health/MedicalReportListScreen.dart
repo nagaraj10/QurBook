@@ -100,7 +100,7 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: variable.font_poppins,
-                      fontSize: 14.0.sp,
+                      fontSize: 16.0.sp,
                     ),
                   ),
                 ),
@@ -234,7 +234,7 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                                 : '',
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
-                              fontSize: 14.0.sp,
+                              fontSize: 16.0.sp,
                             ),
                           )
                         : Text(''),
@@ -250,7 +250,7 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                           : '',
                       style: TextStyle(
                         color: Colors.grey,
-                        fontSize: 14.0.sp,
+                        fontSize: 16.0.sp,
                       ),
                     ),
                     Text(
@@ -258,7 +258,7 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                       style: TextStyle(
                           color: Colors.grey[400],
                           fontWeight: FontWeight.w200,
-                          fontSize: 12.0.sp),
+                          fontSize: 14.0.sp),
                     )
                   ],
                 ),

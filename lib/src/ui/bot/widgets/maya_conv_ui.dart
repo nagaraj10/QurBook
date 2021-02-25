@@ -44,7 +44,7 @@ class MayaConvUI extends StatelessWidget {
                         buttonData.title,
                         style: TextStyle(
                           color: Color(new CommonUtil().getMyPrimaryColor()),
-                          fontSize: 14.0.sp,
+                          fontSize: 16.0.sp,
                         ),
                       ),
                     ),

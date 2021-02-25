@@ -23,7 +23,7 @@ class _MyAppState extends State<PDFViewURL> {
           title: Text(
             'PDF Viewer',
             style: TextStyle(
-              fontSize: 14.0.sp,
+              fontSize: 16.0.sp,
             ),
           ),
           elevation: 0,

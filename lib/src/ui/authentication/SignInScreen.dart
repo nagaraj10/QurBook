@@ -72,7 +72,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   variable.strgetStart,
                   style: TextStyle(
                       color: Colors.black,
-                      fontSize: 14.0.sp,
+                      fontSize: 16.0.sp,
                       fontWeight: FontWeight.w400),
                 ),
               ),
@@ -150,6 +150,7 @@ class _SignInScreenState extends State<SignInScreen> {
       stream: bloc.mobileNumber,
       builder: (context, snapshot) {
         return TextField(
+          style: TextStyle(fontSize: 16.0.sp),
           controller: textController,
           onChanged: bloc.mobileNumberChanged,
           keyboardType: TextInputType.phone,
@@ -162,7 +163,7 @@ class _SignInScreenState extends State<SignInScreen> {
               border: InputBorder.none,
               contentPadding: EdgeInsets.only(left: 10, right: 10),
               hintText: Constants.ENTER_MOB_NUM,
-              hintStyle: TextStyle(fontSize: 12.0.sp)),
+              hintStyle: TextStyle(fontSize: 16.0.sp)),
         );
       },
     );

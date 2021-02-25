@@ -174,7 +174,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                                               CommonUtil().getMyPrimaryColor()),
                                       overflow: TextOverflow.visible,
                                       fontWeight: FontWeight.w600,
-                                      fontsize: 13.0.sp,
+                                      fontsize: 15.0.sp,
                                       softwrap: true,
                                     ),
                                     SizedBox(
@@ -185,7 +185,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                                       colors: Color(CommonUtil.secondaryGrey),
                                       overflow: TextOverflow.visible,
                                       fontWeight: FontWeight.w500,
-                                      fontsize: 12.0.sp,
+                                      fontsize: 14.0.sp,
                                       softwrap: true,
                                     ),
                                     SizedBox(
@@ -297,7 +297,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                                                     overflow:
                                                         TextOverflow.visible,
                                                     fontWeight: FontWeight.w600,
-                                                    fontsize: 13.0.sp,
+                                                    fontsize: 15.0.sp,
                                                   ),
                                                 ),
                                                 SizedBox(
@@ -358,7 +358,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                                                     overflow:
                                                         TextOverflow.visible,
                                                     fontWeight: FontWeight.w600,
-                                                    fontsize: 13.0.sp,
+                                                    fontsize: 15.0.sp,
                                                   ),
                                                 ),
                                               ],
@@ -383,7 +383,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                                       colors: Colors.black,
                                       overflow: TextOverflow.visible,
                                       fontWeight: FontWeight.w500,
-                                      fontsize: 10.0.sp,
+                                      fontsize: 12.0.sp,
                                       softwrap: true,
                                     ),
                                     SizedBox(
@@ -404,7 +404,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                                       //colors: Color(CommonUtil.primaryColor),
                                       overflow: TextOverflow.visible,
                                       fontWeight: FontWeight.w600,
-                                      fontsize: 10.0.sp,
+                                      fontsize: 12.0.sp,
                                       softwrap: true,
                                     ),
                                   ],
@@ -436,7 +436,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                       colors: Colors.black,
                       overflow: TextOverflow.visible,
                       fontWeight: FontWeight.w600,
-                      fontsize: 13.0.sp,
+                      fontsize: 15.0.sp,
                       softwrap: true,
                     ),
                     subtitle: TextWidget(
@@ -444,7 +444,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                       colors: Colors.grey,
                       overflow: TextOverflow.visible,
                       fontWeight: FontWeight.w500,
-                      fontsize: 12.0.sp,
+                      fontsize: 14.0.sp,
                       softwrap: true,
                     ),
                     trailing: Column(
@@ -455,7 +455,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                           colors: Colors.black,
                           overflow: TextOverflow.visible,
                           fontWeight: FontWeight.w500,
-                          fontsize: 10.0.sp,
+                          fontsize: 12.0.sp,
                           softwrap: true,
                         ),
                         TextWidget(
@@ -464,7 +464,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                           colors: Color(CommonUtil().getMyPrimaryColor()),
                           overflow: TextOverflow.visible,
                           fontWeight: FontWeight.w600,
-                          fontsize: 10.0.sp,
+                          fontsize: 12.0.sp,
                           softwrap: true,
                         ),
                       ],
@@ -514,7 +514,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                                       : Colors.grey,
                                   overflow: TextOverflow.visible,
                                   fontWeight: FontWeight.w600,
-                                  fontsize: 13.0.sp,
+                                  fontsize: 15.0.sp,
                                 ),
                               ),
                               SizedBox(
@@ -587,7 +587,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                                       : Colors.grey,
                                   overflow: TextOverflow.visible,
                                   fontWeight: FontWeight.w600,
-                                  fontsize: 13.0.sp,
+                                  fontsize: 15.0.sp,
                                 ),
                               )
                             ],
@@ -636,7 +636,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                               TextWidget(
                                   text: parameters
                                       .cancellationAppointmentConfirmation,
-                                  fontsize: 14.0.sp,
+                                  fontsize: 16.0.sp,
                                   fontWeight: FontWeight.w500,
                                   colors: Colors.grey[600]),
                               SizedBoxWidget(
@@ -665,7 +665,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                                       },
                                       child: TextWidget(
                                         text: parameters.no,
-                                        fontsize: 12.0.sp,
+                                        fontsize: 14.0.sp,
                                       ),
                                     ),
                                   ),
@@ -691,7 +691,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                                       },
                                       child: TextWidget(
                                         text: parameters.yes,
-                                        fontsize: 12.0.sp,
+                                        fontsize: 14.0.sp,
                                       ),
                                     ),
                                   ),

@@ -208,7 +208,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
                                     : '',
                                 style: TextStyle(
                                     fontFamily: variable.font_poppins,
-                                    fontSize: 12.0.sp,
+                                    fontSize: 14.0.sp,
                                     color: Colors.white),
                               ),*/
                           commonWidgets.getCityHospital(hospitals[index]) != ''
@@ -219,7 +219,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
                                   maxLines: 1,
                                   style: TextStyle(
                                       fontFamily: variable.font_poppins,
-                                      fontSize: 12.0.sp,
+                                      fontSize: 14.0.sp,
                                       color: Colors.white),
                                 )
                               : Container(),
@@ -379,7 +379,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
                                 text: INR +
                                     commonWidgets
                                         .getMoneyWithForamt(getFees(docs[i])),
-                                fontsize: 14.0.sp,
+                                fontsize: 16.0.sp,
                                 fontWeight: FontWeight.w400,
                                 colors: Color(
                                     new CommonUtil().getMyPrimaryColor())),

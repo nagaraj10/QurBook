@@ -96,7 +96,7 @@ class _AddReminderState extends State<AddReminder> {
                       children: <Widget>[
                         TextFormField(
                           style: TextStyle(
-                            fontSize: 14.0.sp,
+                            fontSize: 16.0.sp,
                           ),
                           controller: tileContoller,
                           decoration: InputDecoration(
@@ -107,7 +107,7 @@ class _AddReminderState extends State<AddReminder> {
                         ),
                         TextFormField(
                           style: TextStyle(
-                            fontSize: 14.0.sp,
+                            fontSize: 16.0.sp,
                           ),
                           controller: notesController,
                           decoration: InputDecoration(
@@ -172,7 +172,7 @@ class _AddReminderState extends State<AddReminder> {
                                 Constants.WrongTime,
                                 style: TextStyle(
                                   color: Colors.red[500],
-                                  fontSize: 14.0.sp,
+                                  fontSize: 16.0.sp,
                                 ),
                               ),
                             )),
@@ -199,7 +199,7 @@ class _AddReminderState extends State<AddReminder> {
                                 child: Text(
                                   variable.strDaily,
                                   style: TextStyle(
-                                    fontSize: 14.0.sp,
+                                    fontSize: 16.0.sp,
                                   ),
                                 ),
                               ),
@@ -212,7 +212,7 @@ class _AddReminderState extends State<AddReminder> {
                                 child: Text(
                                   variable.strWeekly,
                                   style: TextStyle(
-                                    fontSize: 14.0.sp,
+                                    fontSize: 16.0.sp,
                                   ),
                                 ),
                               ),
@@ -225,7 +225,7 @@ class _AddReminderState extends State<AddReminder> {
                                 child: Text(
                                   variable.strMonthly,
                                   style: TextStyle(
-                                    fontSize: 14.0.sp,
+                                    fontSize: 16.0.sp,
                                   ),
                                 ),
                               ),
@@ -254,7 +254,7 @@ class _AddReminderState extends State<AddReminder> {
                   isUpdate ? variable.strUpate : variable.strSave,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 14.0.sp,
+                    fontSize: 16.0.sp,
                   ),
                 ),
                 onPressed: () {

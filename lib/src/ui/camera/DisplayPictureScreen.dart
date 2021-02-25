@@ -392,7 +392,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
             variable.strSkip,
             style: new TextStyle(
               color: Colors.white,
-              fontSize: 14.0.sp,
+              fontSize: 16.0.sp,
               fontWeight: FontWeight.w500,
             ),
           ),

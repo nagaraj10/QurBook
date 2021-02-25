@@ -61,7 +61,7 @@ class _DeviceCardState extends State<DeviceCard> {
                   Text(
                     widget.deviceData.title,
                     style: TextStyle(
-                      fontSize: 11.0.sp,
+                      fontSize: 13.0.sp,
                     ),
                   ),
                 ],

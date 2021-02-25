@@ -292,7 +292,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
               SizedBoxWidget(width: 20),
               Text(parameters.self,
                   style: TextStyle(
-                    fontSize: 12.0.sp,
+                    fontSize: 14.0.sp,
                   )),
             ],
           ),
@@ -303,7 +303,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                         SizedBoxWidget(width: 20),
                         Text(user.nickName == null ? 'Self' : user.nickName,
                             style: TextStyle(
-                              fontSize: 12.0.sp,
+                              fontSize: 14.0.sp,
                             )),
                       ],
                     ),
@@ -343,7 +343,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             child: Row(
               children: <Widget>[
                 Text(parameters.theAppointmentIsFor,
-                    style: TextStyle(fontSize: 10.0.sp, color: Colors.grey)),
+                    style: TextStyle(fontSize: 12.0.sp, color: Colors.grey)),
               ],
             ),
           ),
@@ -359,7 +359,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
               children: <Widget>[
                 TextWidget(
                   text: parameters.dateAndTime,
-                  fontsize: 10.0.sp,
+                  fontsize: 12.0.sp,
                   colors: Colors.grey,
                 ),
               ],
@@ -389,14 +389,14 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                               .dateConversionToDayMonthYear(widget.selectedDate)
                               .toString()
                           : '',
-                      fontsize: 12.0.sp,
+                      fontsize: 14.0.sp,
                     ),
                     SizedBoxWidget(
                       width: 5.0,
                     ),
                     TextWidget(
                       text: slotTime != null ? slotTime : '0.00',
-                      fontsize: 12.0.sp,
+                      fontsize: 14.0.sp,
                     ),
                   ],
                 ),
@@ -454,11 +454,11 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         maxProgress: 100.0,
         progressTextStyle: TextStyle(
             color: Colors.black,
-            fontSize: 10.0.sp,
+            fontSize: 12.0.sp,
             fontWeight: FontWeight.w400),
         messageTextStyle: TextStyle(
             color: Colors.black,
-            fontSize: 14.0.sp,
+            fontSize: 16.0.sp,
             fontWeight: FontWeight.w600));
 
     return WillPopScope(
@@ -515,7 +515,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                             children: <Widget>[
                               Text(parameters.preConsultingDetails,
                                   style: TextStyle(
-                                      fontSize: 10.0.sp, color: Colors.grey)),
+                                      fontSize: 12.0.sp, color: Colors.grey)),
                             ],
                           ),
                           SizedBoxWidget(
@@ -568,7 +568,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                   SizedBoxWidget(height: 2.0),
                                   TextWidget(
                                       text: parameters.addNotes,
-                                      fontsize: 8.0.sp,
+                                      fontsize: 10.0.sp,
                                       colors: Colors.grey),
                                 ],
                               ),
@@ -616,7 +616,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                   SizedBoxWidget(height: 2.0),
                                   TextWidget(
                                       text: parameters.addVoice,
-                                      fontsize: 8.0.sp,
+                                      fontsize: 10.0.sp,
                                       colors: Colors.grey),
                                 ],
                               ),
@@ -660,7 +660,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                   SizedBoxWidget(height: 2.0),
                                   TextWidget(
                                       text: parameters.records,
-                                      fontsize: 8.0.sp,
+                                      fontsize: 10.0.sp,
                                       colors: Colors.grey),
                                 ],
                               ),
@@ -719,7 +719,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                         },
                         child: TextWidget(
                           text: Constants.Cancel,
-                          fontsize: 12.0.sp,
+                          fontsize: 14.0.sp,
                         ),
                       ),
                     ),
@@ -747,7 +747,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                         },
                         child: TextWidget(
                           text: payNow,
-                          fontsize: 12.0.sp,
+                          fontsize: 14.0.sp,
                         ),
                       ),
                     ),
@@ -822,7 +822,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                             children: <Widget>[
                               TextWidget(
                                   text: redirectedToPaymentMessage,
-                                  fontsize: 14.0.sp,
+                                  fontsize: 16.0.sp,
                                   fontWeight: FontWeight.w500,
                                   colors: Colors.grey[600]),
                               SizedBoxWidget(
@@ -848,7 +848,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                       },
                                       child: TextWidget(
                                         text: 'Cancel',
-                                        fontsize: 12.0.sp,
+                                        fontsize: 14.0.sp,
                                       ),
                                     ),
                                   ),
@@ -890,7 +890,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                       },
                                       child: TextWidget(
                                         text: ok,
-                                        fontsize: 12.0.sp,
+                                        fontsize: 14.0.sp,
                                       ),
                                     ),
                                   ),

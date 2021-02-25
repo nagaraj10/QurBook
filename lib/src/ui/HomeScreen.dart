@@ -149,7 +149,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                           )
                         : Text(
                             variable.strhome,
-                            style: TextStyle(fontSize: 10.0.sp),
+                            style: TextStyle(fontSize: 12.0.sp),
                           )
                   ],
                 )),
@@ -172,7 +172,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                           )
                         : Text(
                             variable.strMyRecords,
-                            style: TextStyle(fontSize: 10.0.sp),
+                            style: TextStyle(fontSize: 12.0.sp),
                           )
                   ],
                 )),
@@ -198,7 +198,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                           )
                         : Text(
                             variable.strMaya,
-                            style: TextStyle(fontSize: 10.0.sp),
+                            style: TextStyle(fontSize: 12.0.sp),
                           )
                   ],
                 )),
@@ -221,7 +221,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                           )
                         : Text(
                             variable.strMyProvider,
-                            style: TextStyle(fontSize: 10.0.sp),
+                            style: TextStyle(fontSize: 12.0.sp),
                           )
                   ],
                 )),
@@ -244,7 +244,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                           )
                         : Text(
                             variable.strMore,
-                            style: TextStyle(fontSize: 10.0.sp),
+                            style: TextStyle(fontSize: 12.0.sp),
                           )
                   ],
                 )),

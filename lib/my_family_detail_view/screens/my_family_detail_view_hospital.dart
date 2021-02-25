@@ -54,7 +54,7 @@ class MyFamilyDetailViewHospitalState
               child: Text(
                 variable.strNodata,
                 style: TextStyle(
-                  fontSize: 14.0.sp,
+                  fontSize: 16.0.sp,
                 ),
               ),
             ),
@@ -119,7 +119,7 @@ class MyFamilyDetailViewHospitalState
                             : '',
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
-                          fontSize: 14.0.sp,
+                          fontSize: 16.0.sp,
                         ),
                         softWrap: false,
                         overflow: TextOverflow.ellipsis,
@@ -137,14 +137,14 @@ class MyFamilyDetailViewHospitalState
                             softWrap: false,
                             style: TextStyle(
                               color: Colors.grey,
-                              fontSize: 14.0.sp,
+                              fontSize: 16.0.sp,
                             ),
                           )),
                       Text(
                         new FHBUtils().getFormattedDateString(mediaMetaInfoObj
                             .metadata.healthRecordType.createdOn),
                         style: TextStyle(
-                            fontSize: 12.0.sp,
+                            fontSize: 14.0.sp,
                             color: Colors.grey[400],
                             fontWeight: FontWeight.w200),
                       )

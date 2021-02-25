@@ -826,7 +826,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               title: Text(
                 variable.makeAChoice,
                 style: TextStyle(
-                  fontSize: 14.0.sp,
+                  fontSize: 16.0.sp,
                 ),
               ),
               shape: RoundedRectangleBorder(
@@ -838,7 +838,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                       child: Text(
                         variable.Gallery,
                         style: TextStyle(
-                          fontSize: 14.0.sp,
+                          fontSize: 16.0.sp,
                         ),
                       ),
                       onTap: () async {
@@ -1044,11 +1044,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             labelText: CommonConstants.mobile_numberWithStar,
             hintText: CommonConstants.mobile_number,
             labelStyle: TextStyle(
-                fontSize: 13.0.sp,
+                fontSize: 15.0.sp,
                 fontWeight: FontWeight.w400,
                 color: ColorUtils.myFamilyGreyColor),
             hintStyle: TextStyle(
-              fontSize: 14.0.sp,
+              fontSize: 16.0.sp,
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
@@ -1084,11 +1084,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             labelText: CommonConstants.name,
             hintText: CommonConstants.name,
             labelStyle: TextStyle(
-                fontSize: 13.0.sp,
+                fontSize: 15.0.sp,
                 fontWeight: FontWeight.w400,
                 color: ColorUtils.myFamilyGreyColor),
             hintStyle: TextStyle(
-              fontSize: 14.0.sp,
+              fontSize: 16.0.sp,
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
@@ -1139,11 +1139,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             labelText: CommonConstants.relationship,
             hintText: CommonConstants.relationship,
             labelStyle: TextStyle(
-                fontSize: 13.0.sp,
+                fontSize: 15.0.sp,
                 fontWeight: FontWeight.w400,
                 color: ColorUtils.myFamilyGreyColor),
             hintStyle: TextStyle(
-              fontSize: 14.0.sp,
+              fontSize: 16.0.sp,
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
@@ -1182,11 +1182,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               labelText: CommonConstants.email_address_optional,
               hintText: CommonConstants.email_address_optional,
               labelStyle: TextStyle(
-                  fontSize: 13.0.sp,
+                  fontSize: 15.0.sp,
                   fontWeight: FontWeight.w400,
                   color: ColorUtils.myFamilyGreyColor),
               hintStyle: TextStyle(
-                fontSize: 14.0.sp,
+                fontSize: 16.0.sp,
                 color: ColorUtils.myFamilyGreyColor,
                 fontWeight: FontWeight.w400,
               ),
@@ -1206,7 +1206,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           //         ? GestureDetector(
           //             child: Text(variable.VerifyEmail,
           //                 style: TextStyle(
-          //                     fontSize: 13.0.sp,
+          //                     fontSize: 15.0.sp,
           //                     fontWeight: FontWeight.w400,
           //                     color:
           //                         Color(new CommonUtil().getMyPrimaryColor()))),
@@ -1250,11 +1250,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             labelText: CommonConstants.gender,
             hintText: CommonConstants.gender,
             labelStyle: TextStyle(
-                fontSize: 13.0.sp,
+                fontSize: 15.0.sp,
                 fontWeight: FontWeight.w400,
                 color: ColorUtils.myFamilyGreyColor),
             hintStyle: TextStyle(
-              fontSize: 14.0.sp,
+              fontSize: 16.0.sp,
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
@@ -1286,11 +1286,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             labelText: CommonConstants.blood_group,
             hintText: CommonConstants.blood_group,
             labelStyle: TextStyle(
-                fontSize: 13.0.sp,
+                fontSize: 15.0.sp,
                 fontWeight: FontWeight.w400,
                 color: ColorUtils.myFamilyGreyColor),
             hintStyle: TextStyle(
-              fontSize: 14.0.sp,
+              fontSize: 16.0.sp,
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
@@ -1335,11 +1335,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               labelText: CommonConstants.date_of_birthWithStar,
               hintText: CommonConstants.date_of_birth,
               labelStyle: TextStyle(
-                  fontSize: 12.0.sp,
+                  fontSize: 15.0.sp,
                   fontWeight: FontWeight.w400,
                   color: ColorUtils.myFamilyGreyColor),
               hintStyle: TextStyle(
-                fontSize: 14.0.sp,
+                fontSize: 16.0.sp,
                 color: ColorUtils.myFamilyGreyColor,
                 fontWeight: FontWeight.w400,
               ),
@@ -1359,14 +1359,14 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           children: [
             TextFormField(
               style: TextStyle(
-                fontSize: 14.0.sp,
+                fontSize: 16.0.sp,
               ),
               controller: cntrlr_addr_one,
               enabled: true,
               keyboardType: TextInputType.streetAddress,
               decoration: InputDecoration(
                 hintStyle: TextStyle(
-                  fontSize: 12.0.sp,
+                  fontSize: 16.0.sp,
                 ),
                 labelText: CommonConstants.addr_line_1,
               ),
@@ -1378,14 +1378,14 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             ),
             TextFormField(
               style: TextStyle(
-                fontSize: 14.0.sp,
+                fontSize: 16.0.sp,
               ),
               controller: cntrlr_addr_two,
               enabled: true,
               keyboardType: TextInputType.streetAddress,
               decoration: InputDecoration(
                 hintStyle: TextStyle(
-                  fontSize: 12.0.sp,
+                  fontSize: 16.0.sp,
                 ),
                 labelText: CommonConstants.addr_line_2,
               ),
@@ -1398,7 +1398,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     labelText: "City",
                     border: InputBorder.none,
                     hintStyle: TextStyle(
-                      fontSize: 14.0.sp,
+                      fontSize: 16.0.sp,
                     ),
                   )),
               suggestionsCallback: (pattern) async {
@@ -1414,7 +1414,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   title: Text(
                     suggestion.name,
                     style: TextStyle(
-                      fontSize: 14.0.sp,
+                      fontSize: 16.0.sp,
                     ),
                   ),
                 );
@@ -1440,7 +1440,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               enabled: true,
               keyboardType: TextInputType.text,
               decoration: InputDecoration(
-                hintStyle: TextStyle(fontSize: 12.0.sp,),
+                hintStyle: TextStyle(fontSize: 14.0.sp,),
                 labelText: CommonConstants.addr_state,
               ),
               validator: (res) {
@@ -1457,7 +1457,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     labelText: 'State',
                     border: InputBorder.none,
                     hintStyle: TextStyle(
-                      fontSize: 14.0.sp,
+                      fontSize: 16.0.sp,
                     ),
                   )),
               suggestionsCallback: (pattern) async {
@@ -1490,14 +1490,14 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             ),
             TextFormField(
               style: TextStyle(
-                fontSize: 14.0.sp,
+                fontSize: 16.0.sp,
               ),
               controller: cntrlr_addr_zip,
               enabled: true,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 hintStyle: TextStyle(
-                  fontSize: 12.0.sp,
+                  fontSize: 16.0.sp,
                 ),
                 labelText: CommonConstants.addr_zip,
               ),
@@ -1543,7 +1543,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     : CommonConstants.save,
                 style: new TextStyle(
                   color: Colors.white,
-                  fontSize: 14.0.sp,
+                  fontSize: 16.0.sp,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -2513,11 +2513,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             labelText: CommonConstants.firstNameWithStar,
             hintText: CommonConstants.firstName,
             labelStyle: TextStyle(
-                fontSize: 13.0.sp,
+                fontSize: 15.0.sp,
                 fontWeight: FontWeight.w400,
                 color: ColorUtils.myFamilyGreyColor),
             hintStyle: TextStyle(
-              fontSize: 14.0.sp,
+              fontSize: 16.0.sp,
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
@@ -2551,11 +2551,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             labelText: CommonConstants.middleName,
             hintText: CommonConstants.middleName,
             labelStyle: TextStyle(
-                fontSize: 13.0.sp,
+                fontSize: 15.0.sp,
                 fontWeight: FontWeight.w400,
                 color: ColorUtils.myFamilyGreyColor),
             hintStyle: TextStyle(
-              fontSize: 14.0.sp,
+              fontSize: 16.0.sp,
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
@@ -2589,11 +2589,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             labelText: CommonConstants.lastNameWithStar,
             hintText: CommonConstants.lastName,
             labelStyle: TextStyle(
-                fontSize: 13.0.sp,
+                fontSize: 15.0.sp,
                 fontWeight: FontWeight.w400,
                 color: ColorUtils.myFamilyGreyColor),
             hintStyle: TextStyle(
-              fontSize: 14.0.sp,
+              fontSize: 16.0.sp,
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),

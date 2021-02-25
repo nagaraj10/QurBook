@@ -318,7 +318,7 @@ class _MySettingsState extends State<MySettings> {
                             title: Text(variable.strAllowDigit),
                             subtitle: Text(
                               variable.strScanDevices,
-                              style: TextStyle(fontSize: 10.0.sp),
+                              style: TextStyle(fontSize: 12.0.sp),
                             ),
                             trailing: Transform.scale(
                               scale: 0.8,
@@ -351,7 +351,7 @@ class _MySettingsState extends State<MySettings> {
                             title: Text(variable.strAllowDevice),
                             subtitle: Text(
                               variable.strScanAuto,
-                              style: TextStyle(fontSize: 10.0.sp),
+                              style: TextStyle(fontSize: 12.0.sp),
                             ),
                             trailing: Transform.scale(
                               scale: 0.8,
@@ -388,7 +388,7 @@ class _MySettingsState extends State<MySettings> {
                                   title: Text(variable.strGoogleFit),
                                   subtitle: Text(
                                     variable.strAllowGoogle,
-                                    style: TextStyle(fontSize: 10.0.sp),
+                                    style: TextStyle(fontSize: 12.0.sp),
                                   ),
                                   trailing: Wrap(
                                     children: <Widget>[
@@ -435,7 +435,7 @@ class _MySettingsState extends State<MySettings> {
                                 title: Text(variable.strHealthKit),
                                 subtitle: Text(
                                   variable.strAllowHealth,
-                                  style: TextStyle(fontSize: 10.0.sp),
+                                  style: TextStyle(fontSize: 12.0.sp),
                                 ),
                                 trailing: Wrap(
                                   children: <Widget>[
@@ -505,7 +505,7 @@ class _MySettingsState extends State<MySettings> {
                   children: [
                     Text(
                       variable.strAddDevice,
-                      style: TextStyle(color: Colors.black, fontSize: 12.0.sp),
+                      style: TextStyle(color: Colors.black, fontSize: 14.0.sp),
                     ),
                     SizedBox(
                       height: 10,

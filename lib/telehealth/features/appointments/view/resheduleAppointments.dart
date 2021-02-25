@@ -179,7 +179,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                                 : '',
                             style: TextStyle(
                                 fontFamily: variable.font_poppins,
-                                fontSize: 12.0.sp,
+                                fontSize: 14.0.sp,
                                 color: Colors.white),
                           ),
                           Text(
@@ -188,7 +188,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                             maxLines: 1,
                             style: TextStyle(
                                 fontFamily: variable.font_poppins,
-                                fontSize: 12.0.sp,
+                                fontSize: 14.0.sp,
                                 color: Colors.white),
                           ),
                         ],
@@ -364,7 +364,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                     : '',
                 maxLines: 1,
                 style: TextStyle(
-                  fontSize: 14.0.sp,
+                  fontSize: 16.0.sp,
                   fontWeight: FontWeight.w500,
                 ),
                 textAlign: TextAlign.start,
@@ -385,7 +385,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                     : '',
                 maxLines: 1,
                 style: TextStyle(
-                    fontSize: 13.0.sp,
+                    fontSize: 15.0.sp,
                     fontWeight: FontWeight.w400,
                     color: ColorUtils.lightgraycolor),
               ),
@@ -396,7 +396,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                     : '',
                 maxLines: 1,
                 style: TextStyle(
-                    fontSize: 13.0.sp,
+                    fontSize: 15.0.sp,
                     fontWeight: FontWeight.w400,
                     color: ColorUtils.lightgraycolor),
               ),
@@ -426,7 +426,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
 //                                          : widget.doc.doctorFollowUpFee != null
 //                                              ? widget.doc.doctorFollowUpFee
 //                                              : getFees(eachHospitalModel[i])),
-                          fontsize: 14.0.sp,
+                          fontsize: 16.0.sp,
                           fontWeight: FontWeight.w400,
                           colors: Color(new CommonUtil().getMyPrimaryColor())),
                     ),

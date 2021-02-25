@@ -102,7 +102,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                 ),
                               ),
                               style: TextStyle(
-                                fontSize: 14.0.sp,
+                                fontSize: 16.0.sp,
                               ),
                               controller: firstNameController,
                               autovalidate: _autoValidateBool,
@@ -117,7 +117,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                           _signupTextFields(
                             TextFormField(
                               style: TextStyle(
-                                fontSize: 14.0.sp,
+                                fontSize: 16.0.sp,
                               ),
                               autovalidate: _autoValidateBool,
                               decoration: InputDecoration(
@@ -149,7 +149,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                           _signupTextFields(
                             TextFormField(
                               style: TextStyle(
-                                fontSize: 14.0.sp,
+                                fontSize: 16.0.sp,
                               ),
                               autovalidate: _autoValidateBool,
                               decoration: InputDecoration(
@@ -193,7 +193,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                           _signupTextFields(
                             TextFormField(
                               style: TextStyle(
-                                fontSize: 14.0.sp,
+                                fontSize: 16.0.sp,
                               ),
                               autovalidate: _autoValidateBool,
                               decoration: InputDecoration(
@@ -227,7 +227,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                           _signupTextFields(
                             TextFormField(
                               style: TextStyle(
-                                fontSize: 14.0.sp,
+                                fontSize: 16.0.sp,
                               ),
                               autovalidate: _autoValidateBool,
                               obscureText: _isHidden,
@@ -407,7 +407,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
           children: <Widget>[
             Text(
               strAccount,
-              style: TextStyle(fontSize: 13.0.sp, fontWeight: FontWeight.w600),
+              style: TextStyle(fontSize: 15.0.sp, fontWeight: FontWeight.w600),
             ),
             SizedBox(
               width: 10.0.w,
@@ -416,7 +416,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
               strSignIn,
               style: TextStyle(
                   color: Color(CommonUtil().getMyPrimaryColor()),
-                  fontSize: 13.0.sp,
+                  fontSize: 15.0.sp,
                   fontWeight: FontWeight.w600),
             ),
           ],

@@ -11,7 +11,7 @@ class BadgeIcon extends StatelessWidget {
       : this.badgeTextStyle = badgeTextStyle ??
             TextStyle(
               color: Colors.white,
-              fontSize: 8.0.sp,
+              fontSize: 10.0.sp,
             );
   final Widget icon;
   final int badgeCount;
@@ -44,7 +44,7 @@ class BadgeIcon extends StatelessWidget {
             count.toString(),
             style: new TextStyle(
               color: Colors.white,
-              fontSize: 10.0.sp,
+              fontSize: 12.0.sp,
             ),
             textAlign: TextAlign.center,
           ),

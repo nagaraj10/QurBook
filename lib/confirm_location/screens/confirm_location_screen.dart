@@ -151,11 +151,11 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
             ),
             hintText: CommonConstants.searchPlaces,
             labelStyle: TextStyle(
-                fontSize: 14.0.sp,
+                fontSize: 16.0.sp,
                 fontWeight: FontWeight.w400,
                 color: ColorUtils.greycolor1),
             hintStyle: TextStyle(
-              fontSize: 14.0.sp,
+              fontSize: 16.0.sp,
               color: ColorUtils.greycolor1,
               fontWeight: FontWeight.w400,
             ),
@@ -186,7 +186,7 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
             CommonConstants.confirm_location,
             style: new TextStyle(
               color: Colors.white,
-              fontSize: 14.0.sp,
+              fontSize: 16.0.sp,
               fontWeight: FontWeight.w500,
             ),
           ),

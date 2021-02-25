@@ -164,7 +164,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                               .result.userContactCollection3[0].phoneNumber
                           : ''
                       : '',
-                  style: TextStyle(fontSize: 12.0.sp),
+                  style: TextStyle(fontSize: 14.0.sp),
                 ),
                 Text(
                   (myProfile.result.userContactCollection3 != null &&
@@ -173,13 +173,13 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                           ? myProfile.result.userContactCollection3[0].email
                           : ''
                       : '',
-                  style: TextStyle(fontSize: 11.0.sp),
+                  style: TextStyle(fontSize: 13.0.sp),
                 )
               ],
             ),
             trailing: Icon(
               Icons.arrow_forward_ios,
-              size: 14.0.sp,
+              size: 16.0.sp,
             ),
             onTap: () {
               Navigator.pushNamed(
@@ -196,7 +196,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
               style: TextStyle(fontWeight: FontWeight.w500)),
           trailing: Icon(
             Icons.arrow_forward_ios,
-            size: 14.0.sp,
+            size: 16.0.sp,
           ),
           onTap: () {
             PageNavigator.goTo(context, router.rt_AppSettings);

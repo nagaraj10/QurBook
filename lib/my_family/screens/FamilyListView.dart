@@ -264,7 +264,7 @@ class FamilyListView {
                                             : '',
                                         softWrap: false,
                                         overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(fontSize: 10.0.sp),
+                                        style: TextStyle(fontSize: 12.0.sp),
                                       ),
                                     )
                                   ],

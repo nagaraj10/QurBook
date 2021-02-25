@@ -665,7 +665,7 @@ class _CallPageState extends State<CallPage> {
                           _infoStrings[index],
                           style: TextStyle(
                             color: Color(new CommonUtil().getMyPrimaryColor()),
-                            fontSize: 14.0.sp,
+                            fontSize: 16.0.sp,
                           ),
                         ),
                       ),
@@ -697,7 +697,7 @@ class _CallPageState extends State<CallPage> {
                 Text(
                   message,
                   style: TextStyle(
-                    fontSize: 14.0.sp,
+                    fontSize: 16.0.sp,
                   ),
                 ),
               ],

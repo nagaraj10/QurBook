@@ -73,7 +73,7 @@ class _AddAppointmentState extends State<AddAppointments> {
                       children: <Widget>[
                         TextFormField(
                           style: TextStyle(
-                            fontSize: 14.0.sp,
+                            fontSize: 16.0.sp,
                           ),
                           controller: hosContoller,
                           decoration: InputDecoration(
@@ -84,7 +84,7 @@ class _AddAppointmentState extends State<AddAppointments> {
                         ),
                         TextFormField(
                           style: TextStyle(
-                            fontSize: 14.0.sp,
+                            fontSize: 16.0.sp,
                           ),
                           controller: docNameController,
                           decoration: InputDecoration(
@@ -99,7 +99,7 @@ class _AddAppointmentState extends State<AddAppointments> {
                             textAlign: TextAlign.start,
                             style: TextStyle(
                               color: Colors.grey[600],
-                              fontSize: 14.0.sp,
+                              fontSize: 16.0.sp,
                             ),
                           ),
                           padding: EdgeInsets.only(top: 20),
@@ -152,13 +152,13 @@ class _AddAppointmentState extends State<AddAppointments> {
                                 Constants.WrongTime,
                                 style: TextStyle(
                                   color: Colors.red[500],
-                                  fontSize: 14.0.sp,
+                                  fontSize: 16.0.sp,
                                 ),
                               ),
                             )),
                         TextFormField(
                           style: TextStyle(
-                            fontSize: 14.0.sp,
+                            fontSize: 16.0.sp,
                           ),
                           controller: reasonController,
                           decoration: InputDecoration(
@@ -178,7 +178,7 @@ class _AddAppointmentState extends State<AddAppointments> {
                   Constants.Save,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 14.0.sp,
+                    fontSize: 16.0.sp,
                   ),
                 ),
                 onPressed: () {

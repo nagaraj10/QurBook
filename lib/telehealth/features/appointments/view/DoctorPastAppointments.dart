@@ -183,7 +183,7 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                           commonWidget.count(doc.slotNumber),
                           doc.plannedFollowupDate == null
                               ? TextWidget(
-                                  fontsize: 10.0.sp,
+                                  fontsize: 12.0.sp,
                                   text: doc.plannedStartDateTime == null
                                       ? ''
                                       : DateFormat(Constants
@@ -197,14 +197,14 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                                       new CommonUtil().getMyPrimaryColor()),
                                 )
                               : TextWidget(
-                                  fontsize: 9.0.sp,
+                                  fontsize: 11.0.sp,
                                   text: Constants.Appointments_followUpStatus,
                                   overflow: TextOverflow.visible,
                                   fontWeight: FontWeight.w400,
                                   colors: Colors.black38,
                                 ),
                           TextWidget(
-                            fontsize: 10.0.sp,
+                            fontsize: 12.0.sp,
                             text: doc.plannedFollowupDate == null
                                 ? doc.plannedStartDateTime == null
                                     ? ""

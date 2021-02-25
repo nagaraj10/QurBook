@@ -130,7 +130,7 @@ class _MyRemindersState extends State<MyReminders> {
                                                     style: TextStyle(
                                                         color: Color(CommonUtil()
                                                             .getMyGredientColor()),
-                                                        fontSize: 12.0.sp,
+                                                        fontSize: 14.0.sp,
                                                         fontWeight:
                                                             FontWeight.normal),
                                                   ),
@@ -143,7 +143,7 @@ class _MyRemindersState extends State<MyReminders> {
                                         Text(
                                           '${dateArr[2]} ${dateArr[3]}',
                                           style: TextStyle(
-                                              fontSize: 12.0.sp,
+                                              fontSize: 14.0.sp,
                                               color: Colors.grey[400]),
                                         ),
                                       ],
@@ -171,7 +171,7 @@ class _MyRemindersState extends State<MyReminders> {
                                           toBeginningOfSentenceCase(
                                               model.notes.toLowerCase()),
                                           style: TextStyle(
-                                              fontSize: 12.0.sp,
+                                              fontSize: 14.0.sp,
                                               fontWeight: FontWeight.normal),
                                         ),
                                       ],
@@ -192,7 +192,7 @@ class _MyRemindersState extends State<MyReminders> {
                                         Text(
                                           model.interval,
                                           style: TextStyle(
-                                              fontSize: 12.0.sp,
+                                              fontSize: 14.0.sp,
                                               color: Colors.grey[400]),
                                         ),
                                         SizedBox(

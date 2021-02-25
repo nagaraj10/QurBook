@@ -52,7 +52,7 @@ class AppointmentsCommonWidget {
               IconWidget(
                   colors: Color(new CommonUtil().getMyPrimaryColor()),
                   icon: Icons.info,
-                  size: 10.0.sp,
+                  size: 12.0.sp,
                   onTap: () {}),
             ],
           ),
@@ -315,7 +315,7 @@ class AppointmentsCommonWidget {
             height: 5.0.h,
           ),
           TextWidget(
-            fontsize: 8.0.sp,
+            fontsize: 10.0.sp,
             text: text,
             fontWeight: FontWeight.w400,
             colors: color,
@@ -339,7 +339,7 @@ class AppointmentsCommonWidget {
           height: 5.0.h,
         ),
         TextWidget(
-          fontsize: 8.0.sp,
+          fontsize: 10.0.sp,
           text: text,
           fontWeight: FontWeight.w400,
           colors: color,
@@ -362,7 +362,7 @@ class AppointmentsCommonWidget {
           child: TextWidget(
             text: Constants.Appointments_joinCall,
             colors: Color(new CommonUtil().getMyPrimaryColor()),
-            fontsize: 8.0.sp,
+            fontsize: 10.0.sp,
           ),
           color: Color(new CommonUtil().getMyPrimaryColor()),
         ),
@@ -433,7 +433,7 @@ class AppointmentsCommonWidget {
           colors: Color(CommonUtil().getMyPrimaryColor()),
           overflow: TextOverflow.visible,
           fontWeight: FontWeight.w500,
-          fontsize: 14.0.sp,
+          fontsize: 16.0.sp,
           softwrap: true,
         ));
   }

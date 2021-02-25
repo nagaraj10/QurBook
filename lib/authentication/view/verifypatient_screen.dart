@@ -130,7 +130,7 @@ class _VerifyPatientState extends State<VerifyPatient> {
                       Text(
                         getNumber(),
                         style: TextStyle(
-                          fontSize: 14.0.sp,
+                          fontSize: 16.0.sp,
                         ),
                       ),
                       SizedBox(
@@ -156,7 +156,7 @@ class _VerifyPatientState extends State<VerifyPatient> {
                                   style: TextStyle(
                                       color: Color(
                                           CommonUtil().getMyPrimaryColor()),
-                                      fontSize: 13.0.sp,
+                                      fontSize: 15.0.sp,
                                       fontWeight: FontWeight.w600),
                                 ),
                               )
@@ -203,7 +203,7 @@ class _VerifyPatientState extends State<VerifyPatient> {
                 strresendOtp,
                 style: TextStyle(
                     color: Color(CommonUtil().getMyPrimaryColor()),
-                    fontSize: 13.0.sp,
+                    fontSize: 15.0.sp,
                     fontWeight: FontWeight.w600),
               ),
             ))
@@ -214,7 +214,7 @@ class _VerifyPatientState extends State<VerifyPatient> {
               strresendOtp,
               style: TextStyle(
                   color: Colors.grey,
-                  fontSize: 13.0.sp,
+                  fontSize: 15.0.sp,
                   fontWeight: FontWeight.w600),
             ),
           );
@@ -288,7 +288,7 @@ class _VerifyPatientState extends State<VerifyPatient> {
           autovalidate: _autoValidateBool,
           obscureText: isPassword,
           style: TextStyle(
-            fontSize: 14.0.sp,
+            fontSize: 16.0.sp,
           ),
           controller: controller,
           decoration: InputDecoration(

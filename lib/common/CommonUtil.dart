@@ -342,7 +342,7 @@ class CommonUtil {
                           msgToDisplay,
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 14.0.sp,
+                            fontSize: 16.0.sp,
                           ),
                         )
                       ]),
@@ -854,7 +854,7 @@ class CommonUtil {
                 Text(
                   desc,
                   style: TextStyle(
-                      fontSize: 12.0.sp,
+                      fontSize: 14.0.sp,
                       color: Color(CommonUtil().getMyPrimaryColor()),
                       fontFamily: variable.font_poppins),
                   softWrap: true,

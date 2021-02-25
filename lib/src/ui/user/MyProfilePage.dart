@@ -100,7 +100,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 Text(
                   'Hey Please Hangon!\nprofile is loading.',
                   style:
-                      TextStyle(fontSize: 14.0.sp, fontWeight: FontWeight.w500),
+                      TextStyle(fontSize: 16.0.sp, fontWeight: FontWeight.w500),
                   textAlign: TextAlign.center,
                 )
               ],
@@ -249,11 +249,12 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 Padding(
                     padding: EdgeInsets.all(10),
                     child: TextField(
+                      style: TextStyle(fontSize: 16.0.sp),
                       controller: mobile,
                       enabled: false,
                       decoration: InputDecoration(
                         hintText: variable.strMobileNum,
-                        hintStyle: TextStyle(fontSize: 12.0.sp),
+                        hintStyle: TextStyle(fontSize: 16.0.sp),
                         labelText: variable.strMobileNum,
                       ),
                     )),
@@ -261,22 +262,24 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 Padding(
                     padding: EdgeInsets.all(10),
                     child: TextField(
+                      style: TextStyle(fontSize: 16.0.sp),
                       controller: firstName,
                       enabled: false,
                       decoration: InputDecoration(
                         hintText: CommonConstants.firstName,
-                        hintStyle: TextStyle(fontSize: 12.0.sp),
+                        hintStyle: TextStyle(fontSize: 16.0.sp),
                         labelText: CommonConstants.firstName,
                       ),
                     )),
                 Padding(
                     padding: EdgeInsets.all(10),
                     child: TextField(
+                      style: TextStyle(fontSize: 16.0.sp),
                       controller: middleName,
                       enabled: false,
                       decoration: InputDecoration(
                         hintText: CommonConstants.middleName,
-                        hintStyle: TextStyle(fontSize: 12.0.sp),
+                        hintStyle: TextStyle(fontSize: 16.0.sp),
                         labelText: CommonConstants.middleName,
                       ),
                     )),
@@ -284,11 +287,12 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 Padding(
                     padding: EdgeInsets.all(10),
                     child: TextField(
+                      style: TextStyle(fontSize: 16.0.sp),
                       controller: lastName,
                       enabled: false,
                       decoration: InputDecoration(
                         hintText: CommonConstants.lastName,
-                        hintStyle: TextStyle(fontSize: 12.0.sp),
+                        hintStyle: TextStyle(fontSize: 16.0.sp),
                         labelText: CommonConstants.lastName,
                       ),
                     )),
@@ -298,11 +302,12 @@ class _MyProfilePageState extends State<MyProfilePage> {
                     Padding(
                       padding: EdgeInsets.all(10),
                       child: TextField(
+                        style: TextStyle(fontSize: 16.0.sp),
                         controller: email,
                         enabled: false,
                         decoration: InputDecoration(
                           hintText: variable.strEmailAddress,
-                          hintStyle: TextStyle(fontSize: 12.0.sp),
+                          hintStyle: TextStyle(fontSize: 16.0.sp),
                           labelText: variable.strEmailAddress,
                           //suffix: Text('Tap to verify')
                         ),
@@ -317,7 +322,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                     //             padding: EdgeInsets.all(10),
                     //             child: Text(Constants.VerifyEmail,
                     //                 style: TextStyle(
-                    //                     fontSize: 13.0.sp,
+                    //                     fontSize: 15.0.sp,
                     //                     fontWeight: FontWeight.w400,
                     //                     color: Color(new CommonUtil()
                     //                         .getMyPrimaryColor())))),
@@ -340,11 +345,12 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 Padding(
                   padding: EdgeInsets.all(10),
                   child: TextField(
+                    style: TextStyle(fontSize: 16.0.sp),
                     controller: gender,
                     enabled: false,
                     decoration: InputDecoration(
                       hintText: CommonConstants.gender,
-                      hintStyle: TextStyle(fontSize: 12.0.sp),
+                      hintStyle: TextStyle(fontSize: 16.0.sp),
                       labelText: CommonConstants.gender,
                     ),
                   ),
@@ -356,11 +362,12 @@ class _MyProfilePageState extends State<MyProfilePage> {
                         child: Container(
                           width: 1.sw / 2 - 40,
                           child: TextField(
+                            style: TextStyle(fontSize: 16.0.sp),
                             controller: bloodGroupController,
                             enabled: false,
                             decoration: InputDecoration(
                                 hintText: CommonConstants.blood_group,
-                                hintStyle: TextStyle(fontSize: 12.0.sp),
+                                hintStyle: TextStyle(fontSize: 16.0.sp),
                                 labelText: CommonConstants.blood_group),
                           ),
                         )),
@@ -369,11 +376,12 @@ class _MyProfilePageState extends State<MyProfilePage> {
                         child: Container(
                           width: 1.sw / 2 - 40,
                           child: TextField(
+                            style: TextStyle(fontSize: 16.0.sp),
                             controller: bloodRangeController,
                             enabled: false,
                             decoration: InputDecoration(
                                 hintText: CommonConstants.STR_RHTYPE,
-                                hintStyle: TextStyle(fontSize: 12.0.sp),
+                                hintStyle: TextStyle(fontSize: 16.0.sp),
                                 labelText: CommonConstants.STR_RHTYPE),
                           ),
                         )),
@@ -386,11 +394,12 @@ class _MyProfilePageState extends State<MyProfilePage> {
                         child: Container(
                           width: 1.sw / 2 - 40,
                           child: TextField(
+                            style: TextStyle(fontSize: 16.0.sp),
                             controller: heightController,
                             enabled: false,
                             decoration: InputDecoration(
                                 hintText: CommonConstants.height,
-                                hintStyle: TextStyle(fontSize: 12.0.sp),
+                                hintStyle: TextStyle(fontSize: 16.0.sp),
                                 labelText: CommonConstants.height),
                           ),
                         )),
@@ -399,11 +408,12 @@ class _MyProfilePageState extends State<MyProfilePage> {
                         child: Container(
                           width: 1.sw / 2 - 40,
                           child: TextField(
+                            style: TextStyle(fontSize: 16.0.sp),
                             controller: weightController,
                             enabled: false,
                             decoration: InputDecoration(
                                 hintText: CommonConstants.weight,
-                                hintStyle: TextStyle(fontSize: 12.0.sp),
+                                hintStyle: TextStyle(fontSize: 16.0.sp),
                                 labelText: CommonConstants.weight),
                           ),
                         )),
@@ -413,21 +423,23 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 Padding(
                   padding: EdgeInsets.all(10),
                   child: TextField(
+                    style: TextStyle(fontSize: 16.0.sp),
                     controller: dob,
                     enabled: false,
                     decoration: InputDecoration(
                         hintText: CommonConstants.date_of_birth,
-                        hintStyle: TextStyle(fontSize: 12.0.sp),
+                        hintStyle: TextStyle(fontSize: 16.0.sp),
                         labelText: CommonConstants.date_of_birth),
                   ),
                 ),
                 Padding(
                   padding: EdgeInsets.all(10),
                   child: TextField(
+                    style: TextStyle(fontSize: 16.0.sp),
                     controller: cntrlr_addr_one,
                     enabled: false,
                     decoration: InputDecoration(
-                      hintStyle: TextStyle(fontSize: 12.0.sp),
+                      hintStyle: TextStyle(fontSize: 16.0.sp),
                       labelText: CommonConstants.addr_line_1,
                     ),
                   ),
@@ -435,10 +447,11 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 Padding(
                   padding: EdgeInsets.all(10),
                   child: TextField(
+                    style: TextStyle(fontSize: 16.0.sp),
                     controller: cntrlr_addr_two,
                     enabled: false,
                     decoration: InputDecoration(
-                      hintStyle: TextStyle(fontSize: 12.0.sp),
+                      hintStyle: TextStyle(fontSize: 16.0.sp),
                       labelText: CommonConstants.addr_line_2,
                     ),
                   ),
@@ -446,10 +459,11 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 Padding(
                   padding: EdgeInsets.all(10),
                   child: TextField(
+                    style: TextStyle(fontSize: 16.0.sp),
                     controller: cntrlr_addr_city,
                     enabled: false,
                     decoration: InputDecoration(
-                      hintStyle: TextStyle(fontSize: 12.0.sp),
+                      hintStyle: TextStyle(fontSize: 16.0.sp),
                       labelText: CommonConstants.addr_city,
                     ),
                   ),
@@ -457,10 +471,11 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 Padding(
                   padding: EdgeInsets.all(10),
                   child: TextField(
+                    style: TextStyle(fontSize: 16.0.sp),
                     controller: cntrlr_addr_state,
                     enabled: false,
                     decoration: InputDecoration(
-                      hintStyle: TextStyle(fontSize: 12.0.sp),
+                      hintStyle: TextStyle(fontSize: 16.0.sp),
                       labelText: CommonConstants.addr_state,
                     ),
                   ),
@@ -468,10 +483,11 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 Padding(
                   padding: EdgeInsets.all(10),
                   child: TextField(
+                    style: TextStyle(fontSize: 16.0.sp),
                     controller: cntrlr_addr_zip,
                     enabled: false,
                     decoration: InputDecoration(
-                      hintStyle: TextStyle(fontSize: 12.0.sp),
+                      hintStyle: TextStyle(fontSize: 16.0.sp),
                       labelText: CommonConstants.addr_zip,
                     ),
                   ),

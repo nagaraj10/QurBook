@@ -252,7 +252,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                         style: TextStyle(
                           color: Colors.grey[400],
                           fontWeight: FontWeight.w200,
-                          fontSize: 12.0.sp,
+                          fontSize: 14.0.sp,
                         ),
                       )
                     ],

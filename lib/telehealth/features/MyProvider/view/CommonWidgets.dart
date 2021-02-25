@@ -703,7 +703,7 @@ class CommonWidgets {
                                       : '',
                                   maxLines: 1,
                                   style: TextStyle(
-                                      fontSize: 13.0.sp,
+                                      fontSize: 15.0.sp,
                                       fontWeight: FontWeight.w400,
                                       color: ColorUtils.lightgraycolor),
                                 ),
@@ -822,7 +822,7 @@ class CommonWidgets {
                                       : '',
                                   maxLines: 1,
                                   style: TextStyle(
-                                      fontSize: 13.0.sp,
+                                      fontSize: 15.0.sp,
                                       fontWeight: FontWeight.w400,
                                       color: ColorUtils.lightgraycolor),
                                 ),
