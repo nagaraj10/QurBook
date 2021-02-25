@@ -369,7 +369,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
       context,
       router.rt_TelehealthProvider,
       arguments: HomeScreenArguments(selectedIndex: position),
-    ).then((value) {});
+    ).then((value) {
+      setState(() {
+      });
+    });
   }
 
   bool checkPagesForEveryIndex(int position) {
