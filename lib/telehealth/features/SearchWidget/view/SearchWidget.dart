@@ -5,6 +5,7 @@ import '../../../../common/CommonUtil.dart';
 import '../../../../common/CommonUtil.dart';
 import '../../../../widgets/common_components.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class SearchWidget extends StatefulWidget {
   final void Function(String) onChanged;
@@ -29,7 +30,7 @@ class SearchWdigetState extends State<SearchWidget> {
             children: <Widget>[
               Expanded(
                 child: Container(
-                  constraints: BoxConstraints(maxHeight: 40),
+                  constraints: BoxConstraints(maxHeight: 40.0.h),
                   decoration: BoxDecoration(color: Colors.white),
                   child: TextField(
                     controller: _searchQueryController,
@@ -40,6 +41,7 @@ class SearchWdigetState extends State<SearchWidget> {
                       prefixIcon: Icon(
                         Icons.search,
                         color: Colors.black54,
+                        size: 24.0.sp,
                       ),
                       suffixIcon: Visibility(
                         visible: _searchQueryController.text.length >= 3
@@ -49,6 +51,7 @@ class SearchWdigetState extends State<SearchWidget> {
                           icon: Icon(
                             Icons.clear,
                             color: Colors.black54,
+                            size: 24.0.sp,
                           ),
                           onPressed: () {
                             _searchQueryController.clear();
@@ -57,9 +60,15 @@ class SearchWdigetState extends State<SearchWidget> {
                         ),
                       ),
                       border: InputBorder.none,
-                      hintStyle: TextStyle(color: Colors.black45, fontSize: 12),
+                      hintStyle: TextStyle(
+                        color: Colors.black45,
+                        fontSize: 12.0.sp,
+                      ),
                     ),
-                    style: TextStyle(color: Colors.black54, fontSize: 14.0),
+                    style: TextStyle(
+                      color: Colors.black54,
+                      fontSize: 14.0.sp,
+                    ),
                     onChanged: (editedValue) {
                       widget.onChanged(editedValue);
                     },

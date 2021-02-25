@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert' as convert;
 import 'dart:typed_data';
 import 'dart:ui' as ui;
-
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geocoder/geocoder.dart';
@@ -166,8 +166,8 @@ class AddProvidersState extends State<AddProviders> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height / 2,
+              width: 1.sw,
+              height: 1.sh / 2,
               child: Stack(
                 children: <Widget>[
                   GoogleMap(
@@ -196,25 +196,25 @@ class AddProvidersState extends State<AddProviders> {
                             }
                           },
                           child: Container(
-                            height: 40,
+                            height: 40.0.h,
                             color: Colors.white,
                             margin:
                                 EdgeInsets.only(left: 10, right: 10, top: 40),
                             child: Row(
                               children: <Widget>[
-                                SizedBox(width: 10),
+                                SizedBox(width: 10.0.w),
                                 InkWell(
                                     onTap: () {
                                       Navigator.pop(context);
                                     },
                                     child: Image.asset(ImageUrlUtils.backImg,
-                                        width: 16,
-                                        height: 16,
+                                        width: 16.0.h,
+                                        height: 16.0.h,
                                         fit: BoxFit.cover)),
-                                SizedBox(width: 10),
+                                SizedBox(width: 10.0.w),
                                 Text(CommonConstants.searchPlaces,
                                     style: TextStyle(
-                                        fontSize: 16.0,
+                                        fontSize: 16.0.sp,
                                         fontWeight: FontWeight.w400,
                                         color: ColorUtils.greycolor1)),
                               ],
@@ -227,13 +227,13 @@ class AddProvidersState extends State<AddProviders> {
                                   : false
                               : false,
                           child: Container(
-                            height: MediaQuery.of(context).size.height / 2 - 80,
+                            height: 1.sh / 2 - 80,
                             color: ColorUtils.blackcolor.withOpacity(0.7),
                             child: Center(
                               child: Text(
                                 CommonConstants.comingSoon,
                                 style: TextStyle(
-                                    fontSize: 16.0,
+                                    fontSize: 16.0.sp,
                                     fontWeight: FontWeight.w400,
                                     color: Colors.white),
                               ),
@@ -259,22 +259,22 @@ class AddProvidersState extends State<AddProviders> {
                               ? 'Add ${widget.arguments.searchKeyWord}'
                               : '',
                           style: TextStyle(
-                              fontSize: 18.0,
+                              fontSize: 18.0.sp,
                               fontWeight: FontWeight.w500,
                               color: ColorUtils.blackcolor),
                         )),
                     _ShowDoctorTextField(),
-                    SizedBox(height: 10),
+                    SizedBox(height: 10.0.h),
                     Text(
                       variable.strAssociateMember,
                       style: TextStyle(
-                          fontSize: 14.0,
+                          fontSize: 14.0.sp,
                           fontWeight: FontWeight.w400,
                           color: ColorUtils.greycolor1),
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: 10.0.h),
                     _showUser(),
-                    SizedBox(height: 10),
+                    SizedBox(height: 10.0.h),
                     InkWell(
                       // onTap: () {
                       //   if (widget.arguments.fromClass !=
@@ -310,13 +310,13 @@ class AddProvidersState extends State<AddProviders> {
                       child: Text(
                         variable.Switch_User,
                         style: TextStyle(
-                          fontSize: 14.0,
+                          fontSize: 14.0.sp,
                           fontWeight: FontWeight.w400,
                           //color: Color(new CommonUtil().getMyPrimaryColor())
                         ),
                       ),
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: 10.0.h),
                     Row(
                       children: <Widget>[
                         IgnorePointer(
@@ -334,7 +334,7 @@ class AddProvidersState extends State<AddProviders> {
                         Text(
                           variable.Set_as_Preferred,
                           style: TextStyle(
-                              fontSize: 14.0,
+                              fontSize: 14.0.sp,
                               fontWeight: FontWeight.w400,
                               color: ColorUtils.blackcolor),
                         ),
@@ -350,7 +350,7 @@ class AddProvidersState extends State<AddProviders> {
                         ],
                       ),
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: 20.0.h),
                   ],
                 ),
               ),
@@ -638,8 +638,8 @@ class AddProvidersState extends State<AddProviders> {
               children: [
                 ClipOval(
                     child: Container(
-                  height: 30,
-                  width: 30,
+                  height: 30.0.h,
+                  width: 30.0.h,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(30),
                     color: Colors.white,
@@ -653,7 +653,7 @@ class AddProvidersState extends State<AddProviders> {
                                     ? myProfile.result.lastName.toUpperCase()
                                     : selectedFamilyMemberName[0].toUpperCase(),
                                 style: TextStyle(
-                                    fontSize: 14,
+                                    fontSize: 14.0.sp,
                                     color: Color(
                                         CommonUtil().getMyPrimaryColor())),
                               ),
@@ -671,7 +671,7 @@ class AddProvidersState extends State<AddProviders> {
                                             : selectedFamilyMemberName[0]
                                                 .toUpperCase(),
                                         style: TextStyle(
-                                            fontSize: 14,
+                                            fontSize: 14.0.sp,
                                             color: Color(CommonUtil()
                                                 .getMyPrimaryColor())),
                                       ),
@@ -687,7 +687,7 @@ class AddProvidersState extends State<AddProviders> {
                                         : selectedFamilyMemberName[0]
                                             .toUpperCase(),
                                     style: TextStyle(
-                                        fontSize: 14,
+                                        fontSize: 14.0.sp,
                                         color: Color(
                                             CommonUtil().getMyPrimaryColor())),
                                   ),
@@ -696,13 +696,13 @@ class AddProvidersState extends State<AddProviders> {
                               child: Text(
                                 '',
                                 style: TextStyle(
-                                    fontSize: 14,
+                                    fontSize: 14.0.sp,
                                     color: Color(
                                         CommonUtil().getMyPrimaryColor())),
                               ),
                             ),
                 )),
-                SizedBox(width: 10),
+                SizedBox(width: 10.0.w),
                 Container(
                   margin: EdgeInsets.only(right: 10),
                   child: Text(
@@ -716,7 +716,7 @@ class AddProvidersState extends State<AddProviders> {
                     style: TextStyle(
                       color: Color.fromARGB(255, 85, 92, 89),
                       fontWeight: FontWeight.w500,
-                      fontSize: 14,
+                      fontSize: 14.0.sp,
                     ),
                   ),
                 ),
@@ -744,7 +744,7 @@ class AddProvidersState extends State<AddProviders> {
         },
         style: new TextStyle(
             fontWeight: FontWeight.w500,
-            fontSize: 16.0,
+            fontSize: 16.0.sp,
             color: Theme.of(context).primaryColor),
         decoration: InputDecoration(
             enabledBorder: UnderlineInputBorder(
@@ -752,7 +752,7 @@ class AddProvidersState extends State<AddProviders> {
             ),
             labelText: widget.arguments.searchKeyWord,
             labelStyle: TextStyle(
-                fontSize: 16.0,
+                fontSize: 16.0.sp,
                 fontWeight: FontWeight.w400,
                 color: ColorUtils.greycolor1),
             hintStyle: TextStyle(
@@ -767,8 +767,8 @@ class AddProvidersState extends State<AddProviders> {
     final GestureDetector addButtonWithGesture = new GestureDetector(
       onTap: _addBtnTapped,
       child: new Container(
-        width: 100,
-        height: 40.0,
+        width: 100.0.w,
+        height: 40.0.h,
         decoration: new BoxDecoration(
           color: Theme.of(context).primaryColor,
           borderRadius: new BorderRadius.all(Radius.circular(25.0)),
@@ -787,7 +787,7 @@ class AddProvidersState extends State<AddProviders> {
                 : variable.Add,
             style: new TextStyle(
               color: Colors.white,
-              fontSize: 14.0,
+              fontSize: 14.0.sp,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -804,8 +804,8 @@ class AddProvidersState extends State<AddProviders> {
     final GestureDetector loginButtonWithGesture = new GestureDetector(
       onTap: _cancelBtnTapped,
       child: new Container(
-        width: 100,
-        height: 40.0,
+        width: 100.0.w,
+        height: 40.0.h,
         decoration: new BoxDecoration(
           color: ColorUtils.greycolor,
           borderRadius: new BorderRadius.all(Radius.circular(25.0)),
@@ -822,7 +822,7 @@ class AddProvidersState extends State<AddProviders> {
             variable.Cancel,
             style: new TextStyle(
               color: ColorUtils.blackcolor,
-              fontSize: 14.0,
+              fontSize: 14.0.sp,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -1095,7 +1095,10 @@ class AddProvidersState extends State<AddProviders> {
                   content: Text(variable.choose_address),
                   actions: <Widget>[
                     IconButton(
-                        icon: Icon(Icons.check),
+                        icon: Icon(
+                          Icons.check,
+                          size: 24.0.sp,
+                        ),
                         onPressed: () {
                           Navigator.of(context).pop();
                         })
@@ -1152,7 +1155,10 @@ class AddProvidersState extends State<AddProviders> {
                   content: Text(variable.choose_address),
                   actions: <Widget>[
                     IconButton(
-                        icon: Icon(Icons.check),
+                        icon: Icon(
+                          Icons.check,
+                          size: 24.0.sp,
+                        ),
                         onPressed: () {
                           Navigator.of(context).pop();
                         })
@@ -1216,7 +1222,10 @@ class AddProvidersState extends State<AddProviders> {
                   content: Text(variable.choose_address),
                   actions: <Widget>[
                     IconButton(
-                        icon: Icon(Icons.check),
+                        icon: Icon(
+                          Icons.check,
+                          size: 24.0.sp,
+                        ),
                         onPressed: () {
                           Navigator.of(context).pop();
                         })
@@ -1354,14 +1363,14 @@ class AddProvidersState extends State<AddProviders> {
     return profilePicThumbnail != null
         ? Image.network(
             profilePicThumbnail,
-            height: 30,
-            width: 30,
+            height: 30.0.h,
+            width: 30.0.h,
             fit: BoxFit.cover,
           )
         : Container(
             color: Color(fhbColors.bgColorContainer),
-            height: 30,
-            width: 30,
+            height: 30.0.h,
+            width: 30.0.h,
           );
   }
 

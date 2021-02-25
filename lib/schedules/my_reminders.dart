@@ -11,7 +11,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/router_variable.dart' as router;
-
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class MyReminders extends StatefulWidget {
   static _MyRemindersState of(BuildContext context) =>
@@ -40,10 +40,7 @@ class _MyRemindersState extends State<MyReminders> {
       builder: (context, projectSnap) {
         if (detailsList == null) {
           return MaterialApp(
-            home: Scaffold(
-                body: Center(
-              child: Text(variable.strLoadWait)
-            )),
+            home: Scaffold(body: Center(child: Text(variable.strLoadWait))),
           );
         } else {
           return MaterialApp(
@@ -113,7 +110,7 @@ class _MyRemindersState extends State<MyReminders> {
                                                   MainAxisAlignment.center,
                                               children: <Widget>[
                                                 SizedBox(
-                                                  height: 1,
+                                                  height: 1.0.h,
                                                 ),
                                                 Padding(
                                                   padding: EdgeInsets.all(2.0),
@@ -122,7 +119,7 @@ class _MyRemindersState extends State<MyReminders> {
                                                     style: TextStyle(
                                                       color: Color(CommonUtil()
                                                           .getMyPrimaryColor()),
-                                                      fontSize: 20.0,
+                                                      fontSize: 20.0.sp,
                                                     ),
                                                   ),
                                                 ),
@@ -133,7 +130,7 @@ class _MyRemindersState extends State<MyReminders> {
                                                     style: TextStyle(
                                                         color: Color(CommonUtil()
                                                             .getMyGredientColor()),
-                                                        fontSize: 12.0,
+                                                        fontSize: 12.0.sp,
                                                         fontWeight:
                                                             FontWeight.normal),
                                                   ),
@@ -142,11 +139,11 @@ class _MyRemindersState extends State<MyReminders> {
                                             ),
                                           ),
                                         ),
-                                        SizedBox(height: 5),
+                                        SizedBox(height: 5.0.h),
                                         Text(
                                           '${dateArr[2]} ${dateArr[3]}',
                                           style: TextStyle(
-                                              fontSize: 12,
+                                              fontSize: 12.0.sp,
                                               color: Colors.grey[400]),
                                         ),
                                       ],
@@ -164,17 +161,17 @@ class _MyRemindersState extends State<MyReminders> {
                                           toBeginningOfSentenceCase(
                                               model.title.toLowerCase()),
                                           style: TextStyle(
-                                            fontSize: 18,
+                                            fontSize: 18.0.sp,
                                           ),
                                         ),
                                         SizedBox(
-                                          height: 5.0,
+                                          height: 5.0.h,
                                         ),
                                         Text(
                                           toBeginningOfSentenceCase(
                                               model.notes.toLowerCase()),
                                           style: TextStyle(
-                                              fontSize: 12,
+                                              fontSize: 12.0.sp,
                                               fontWeight: FontWeight.normal),
                                         ),
                                       ],
@@ -195,16 +192,17 @@ class _MyRemindersState extends State<MyReminders> {
                                         Text(
                                           model.interval,
                                           style: TextStyle(
-                                              fontSize: 12,
+                                              fontSize: 12.0.sp,
                                               color: Colors.grey[400]),
                                         ),
                                         SizedBox(
-                                          height: 3,
+                                          height: 3.0.h,
                                         ),
                                         InkWell(
                                           onTap: () {
-                                            FHBUtils()
-                                                .delete(variable.strremainder, model.id);
+                                            FHBUtils().delete(
+                                                variable.strremainder,
+                                                model.id);
                                             setState(() {});
                                           },
                                           child: Icon(
@@ -241,8 +239,6 @@ class _MyRemindersState extends State<MyReminders> {
   }
 
   getRemindersList() async {
-    
-
     detailsList = await FHBUtils().getAll(variable.strremainder);
     reverseDetailsList = detailsList.reversed.toList();
     return detailsList;

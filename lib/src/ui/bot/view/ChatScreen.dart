@@ -13,6 +13,7 @@ import 'package:myfhb/src/model/bot/ConversationModel.dart';
 import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 // ignore: must_be_immutable
 class ChatScreen extends StatefulWidget {
@@ -113,6 +114,7 @@ class _ChatScreenState extends State<ChatScreen>
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
+              size: 24.0.sp,
               color: Colors.white,
             ),
             onPressed: () {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class MyYoutubePlayer extends StatefulWidget {
   final String videoId;
@@ -67,8 +68,10 @@ class _YoutubePlayerState extends State<MyYoutubePlayer> {
         _controller.play();
       },
       onEnterFullScreen: () {
-        SystemChrome.setPreferredOrientations(
-            [DeviceOrientation.landscapeLeft,DeviceOrientation.landscapeRight]);
+        SystemChrome.setPreferredOrientations([
+          DeviceOrientation.landscapeLeft,
+          DeviceOrientation.landscapeRight
+        ]);
         if (!_controller.value.isPlaying) {
           _controller.play();
         }
@@ -78,13 +81,13 @@ class _YoutubePlayerState extends State<MyYoutubePlayer> {
         showVideoProgressIndicator: false,
         progressIndicatorColor: Color(new CommonUtil().getMyPrimaryColor()),
         topActions: <Widget>[
-          const SizedBox(width: 8.0),
+          SizedBox(width: 8.0.w),
           // Expanded(
           //   child: Text(
           //     _controller.metadata.title,
           //     style: const TextStyle(
           //       color: Colors.white,
-          //       fontSize: 18.0,
+          //       fontSize: 18.0.sp,
           //     ),
           //     overflow: TextOverflow.ellipsis,
           //     maxLines: 1,
@@ -114,7 +117,10 @@ class _YoutubePlayerState extends State<MyYoutubePlayer> {
           ),
           backgroundColor: Colors.black,
           leading: IconButton(
-            icon: Icon(Icons.close),
+            icon: Icon(
+              Icons.close,
+              size: 24.0.sp,
+            ),
             color: Colors.white,
             onPressed: () {
               Navigator.pop(context);

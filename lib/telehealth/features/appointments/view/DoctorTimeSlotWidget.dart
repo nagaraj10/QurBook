@@ -2,13 +2,15 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
-import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart' as Constants;
+import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart'
+    as Constants;
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
 import 'package:myfhb/telehealth/features/appointments/model/timeModel.dart';
 import 'package:myfhb/telehealth/features/appointments/viewModel/appointmentsListViewModel.dart';
 import 'package:provider/provider.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class DoctorTimeSlotWidget extends StatefulWidget {
   Past doc;
@@ -44,11 +46,14 @@ class DoctorTimeSlotWidgetState extends State<DoctorTimeSlotWidget> {
       if (widget.doc.plannedStartDateTime != null) {
         setState(() {
           hour = appointmentsViewModel
-              .getTimeSlot(widget.doc.plannedStartDateTime).hours;
+              .getTimeSlot(widget.doc.plannedStartDateTime)
+              .hours;
           minutes = appointmentsViewModel
-              .getTimeSlot(widget.doc.plannedStartDateTime).minutes;
+              .getTimeSlot(widget.doc.plannedStartDateTime)
+              .minutes;
           days = appointmentsViewModel
-              .getTimeSlot(widget.doc.plannedStartDateTime).daysCount;
+              .getTimeSlot(widget.doc.plannedStartDateTime)
+              .daysCount;
         });
       } else {
         setState(() {
@@ -65,7 +70,7 @@ class DoctorTimeSlotWidgetState extends State<DoctorTimeSlotWidget> {
   Widget build(BuildContext context) {
     return days != Constants.ZERO && days != null
         ? TextWidget(
-            fontsize: 10,
+            fontsize: 10.0.sp,
             text: days + Constants.Appointments_days,
             fontWeight: FontWeight.w500,
             colors: Colors.black,
@@ -83,21 +88,21 @@ class DoctorTimeSlotWidgetState extends State<DoctorTimeSlotWidget> {
                         border: Border.all(
                             color: Color(new CommonUtil().getMyPrimaryColor())),
                       ),
-                      height: 29,
-                      width: 25,
+                      height: 29.0.h,
+                      width: 25.0.h,
                       alignment: Alignment.center,
                       padding: EdgeInsets.all(2.0),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           TextWidget(
-                            fontsize: 10,
+                            fontsize: 10.0.sp,
                             text: hour,
                             fontWeight: FontWeight.w500,
                             colors: Colors.grey,
                           ),
                           TextWidget(
-                            fontsize: 5,
+                            fontsize: 5.0.sp,
                             text: Constants.Appointments_hours,
                             fontWeight: FontWeight.w500,
                             colors: Color(new CommonUtil().getMyPrimaryColor()),
@@ -106,28 +111,28 @@ class DoctorTimeSlotWidgetState extends State<DoctorTimeSlotWidget> {
                       ),
                     ),
                   ),
-                  SizedBoxWidget(width: 2.0),
+                  SizedBoxWidget(width: 2.0.w),
                   ClipRect(
                     child: Container(
                       decoration: BoxDecoration(
                         border: Border.all(
                             color: Color(new CommonUtil().getMyPrimaryColor())),
                       ),
-                      height: 29,
-                      width: 25,
+                      height: 29.0.h,
+                      width: 25.0.w,
                       alignment: Alignment.center,
                       padding: EdgeInsets.all(2.0),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           TextWidget(
-                            fontsize: 10,
+                            fontsize: 10.0.sp,
                             text: minutes,
                             fontWeight: FontWeight.w500,
                             colors: Colors.grey,
                           ),
                           TextWidget(
-                            fontsize: 5,
+                            fontsize: 5.0.sp,
                             text: Constants.Appointments_minutes,
                             fontWeight: FontWeight.w500,
                             colors: Color(new CommonUtil().getMyPrimaryColor()),

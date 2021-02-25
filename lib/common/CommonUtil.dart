@@ -80,6 +80,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:showcaseview/showcase.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:url_launcher/url_launcher.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class CommonUtil {
   static String SHEELA_URL = "";
@@ -335,11 +336,14 @@ class CommonUtil {
                       child: Column(children: [
                         CircularProgressIndicator(),
                         SizedBox(
-                          height: 10,
+                          height: 10.0.h,
                         ),
                         Text(
                           msgToDisplay,
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14.0.sp,
+                          ),
                         )
                       ]),
                     )
@@ -825,10 +829,10 @@ class CommonUtil {
           children: <Widget>[
             Image.asset(
               variable.icon_maya,
-              height: 80,
-              width: 80,
+              height: 80.0.h,
+              width: 80.0.h,
             ),
-            SizedBox(width: 20),
+            SizedBox(width: 20.0.w),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -837,7 +841,7 @@ class CommonUtil {
                   child: Text(
                     desc,
                     style: TextStyle(
-                        fontSize: 20.0,
+                        fontSize: 20.0.sp,
                         color: Color(CommonUtil().getMyPrimaryColor()),
                         fontFamily: variable.font_poppins),
                     maxLines: 2,
@@ -845,12 +849,12 @@ class CommonUtil {
                   ),
                 ),
                 SizedBox(
-                  height: 10.0,
+                  height: 10.0.h,
                 ),
                 Text(
                   desc,
                   style: TextStyle(
-                      fontSize: 12,
+                      fontSize: 12.0.sp,
                       color: Color(CommonUtil().getMyPrimaryColor()),
                       fontFamily: variable.font_poppins),
                   softWrap: true,
@@ -866,7 +870,7 @@ class CommonUtil {
   networkUI() {
     Get.bottomSheet(
       Container(
-        constraints: BoxConstraints(maxHeight: 120),
+        constraints: BoxConstraints(maxHeight: 120.0.h),
         child: Card(
           elevation: 10.0,
           //margin: EdgeInsets.only(left: 3.0,right: 3.0),
@@ -887,7 +891,7 @@ class CommonUtil {
                 variable.strNoInternet,
                 style: TextStyle(
                   color: Color(CommonUtil().getMyPrimaryColor()),
-                  fontSize: 16.0,
+                  fontSize: 16.0.sp,
                 ),
               ),
             ],
@@ -902,7 +906,7 @@ class CommonUtil {
 
   Widget customSnack(bool isOffline) {
     return Container(
-      height: 20.0,
+      height: 20.0.h,
       color: isOffline ? Colors.green : Colors.red,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -910,11 +914,11 @@ class CommonUtil {
         children: <Widget>[
           Icon(isOffline ? Icons.flash_on : Icons.flash_off),
           SizedBox(
-            width: 10.0,
+            width: 10.0.w,
           ),
           Text(
             isOffline ? variable.strBackOnline : variable.strNoConnection,
-            style: TextStyle(color: Colors.white, fontSize: 15.0),
+            style: TextStyle(color: Colors.white, fontSize: 15.0.sp),
           ),
         ],
       ),
@@ -1279,15 +1283,16 @@ class CommonUtil {
     if (doctorUrl != null && doctorUrl != '') {
       return Image.network(
         doctorUrl,
-        height: 50,
-        width: 50,
+        height: 50.0.h,
+        width: 50.0.h,
         fit: BoxFit.cover,
       );
     } else {
       return new SizedBox(
-        width: 50.0,
-        height: 50.0,
-        child: Container(width: 50, height: 50, color: Colors.grey[200]),
+        width: 50.0.h,
+        height: 50.0.h,
+        child:
+            Container(width: 50.0.h, height: 50.0.h, color: Colors.grey[200]),
       );
     }
 

@@ -7,6 +7,7 @@ import 'package:myfhb/src/model/Category/CategoryData.dart';
 import 'package:myfhb/src/model/Category/CategoryResponseList.dart';
 import 'package:myfhb/src/model/Category/catergory_result.dart';
 import 'package:myfhb/src/model/Media/DeviceModel.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class OverlayCategoryDialog extends ModalRoute<void> {
   @override
@@ -51,7 +52,7 @@ class OverlayCategoryDialog extends ModalRoute<void> {
           Expanded(
             flex: 1,
             child: Container(
-              height: 50,
+              height: 50.0.h,
             ),
           ),
           getCustomGridView(context),
@@ -106,8 +107,9 @@ class OverlayCategoryDialog extends ModalRoute<void> {
   List<Widget> getWidgetsFordevices(BuildContext context) {
     List<Widget> categoryWidgetList = new List();
 
-    List<CategoryResult> catgoryDataList = PreferenceUtil.getCategoryTypeDisplay(
-        Constants.KEY_CATEGORYLIST_VISIBLE);
+    List<CategoryResult> catgoryDataList =
+        PreferenceUtil.getCategoryTypeDisplay(
+            Constants.KEY_CATEGORYLIST_VISIBLE);
 
     for (int i = 0; i < catgoryDataList.length; i++) {
       categoryWidgetList.add(
@@ -116,8 +118,8 @@ class OverlayCategoryDialog extends ModalRoute<void> {
             children: <Widget>[
               GestureDetector(
                 child: SizedBox(
-                  width: 25,
-                  height: 25,
+                  width: 25.0.h,
+                  height: 25.0.h,
                   child: CachedNetworkImage(
                     imageUrl: Constants.BASE_URL + catgoryDataList[i].logo,
                     color: Colors.white70,

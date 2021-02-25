@@ -6,7 +6,7 @@ import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'dart:typed_data';
-
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
@@ -96,8 +96,8 @@ class _FeedbacksState extends State<Feedbacks> {
       itemBuilder: (BuildContext context, int index) {
         ByteData byteData = byteDataClonelist[index];
         return Container(
-          height: 30,
-          width: 30,
+          height: 30.0.h,
+          width: 30.0.h,
           child: Image.memory(
             byteData.buffer.asUint8List(),
             fit: BoxFit.fill,
@@ -110,7 +110,7 @@ class _FeedbacksState extends State<Feedbacks> {
   Widget buildGridView() {
     return images.length != 0
         ? Container(
-            height: 150,
+            height: 150.0.h,
             child: GridView.count(
               crossAxisCount: 1,
               scrollDirection: Axis.horizontal,
@@ -126,7 +126,7 @@ class _FeedbacksState extends State<Feedbacks> {
                 );
               }),
             ))
-        : SizedBox(height: 0);
+        : SizedBox(height: 0.0.h);
   }
 
   @override
@@ -135,7 +135,10 @@ class _FeedbacksState extends State<Feedbacks> {
       appBar: AppBar(
         backgroundColor: Color(CommonUtil().getMyGredientColor()),
         leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios),
+            icon: Icon(
+              Icons.arrow_back_ios,
+              size: 24.0.sp,
+            ),
             onPressed: () => Navigator.of(context).pop()),
         title: Text(''),
         centerTitle: false,
@@ -155,18 +158,18 @@ class _FeedbacksState extends State<Feedbacks> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         /*  Container(
-                          height: 60,
+                          height: 60.0.h,
                         ), */
                         Padding(
                           padding: EdgeInsets.all(10),
                           child: Image.asset(variable.icon_fhb,
-                              width: 100, height: 100),
+                              width: 100.0.h, height: 100.0.h),
                         ),
                         Padding(
                             padding: EdgeInsets.only(left: 20),
                             child: Text(variable.strFeedBack,
                                 style: TextStyle(
-                                    fontSize: 24, color: Colors.white))),
+                                    fontSize: 24.0.sp, color: Colors.white))),
                         Padding(
                           padding: EdgeInsets.only(left: 20),
                           child: Text(
@@ -179,7 +182,7 @@ class _FeedbacksState extends State<Feedbacks> {
                     ),
                   )),
               Container(
-                height: 10,
+                height: 10.0.h,
               ),
               Padding(
                 padding: EdgeInsets.only(left: 20),
@@ -189,36 +192,36 @@ class _FeedbacksState extends State<Feedbacks> {
                     _showFeedbacktextFiled(),
                     Divider(),
                     Container(
-                      height: 10,
+                      height: 10.0.h,
                     ),
                     Container(
                       child: Text(variable.strAttachImage),
                     ),
                     SizedBox(
-                      height: 10,
+                      height: 10.0.h,
                     ),
                     Container(
-                      height: 80,
-                      width: 80,
+                      height: 80.0.h,
+                      width: 80.0.h,
                       color: ColorUtils.greycolor,
                       child: IconButton(
                         icon: new ImageIcon(
                           AssetImage(variable.icon_attach),
                           color: Color(new CommonUtil().getMyPrimaryColor()),
-                          size: 32,
+                          size: 32.0.sp,
                         ),
                         onPressed: loadAssets,
                       ),
                     ),
                     buildGridView(),
                     SizedBox(
-                      height: 20,
+                      height: 20.0.h,
                     ),
                     Container(
                       child: Text(variable.strAddVoice),
                     ),
                     SizedBox(
-                      height: 10,
+                      height: 10.0.h,
                     ),
                     containsAudioMain
                         ? new AudioWidget(audioPathMain,
@@ -229,8 +232,8 @@ class _FeedbacksState extends State<Feedbacks> {
                             setState(() {});
                           })
                         : Container(
-                            height: 80,
-                            width: 80,
+                            height: 80.0.h,
+                            width: 80.0.h,
                             color: ColorUtils.greycolor,
                             child: fhbBasicWidget.getMicIcon(
                                 context, containsAudioMain, audioPathMain,
@@ -246,7 +249,7 @@ class _FeedbacksState extends State<Feedbacks> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    SizedBox(height: 20),
+                    SizedBox(height: 20.0.h),
                     fhbBasicWidget.getSaveButton(() {
                       setState(() {
                         feedbackController.text.isEmpty
@@ -257,7 +260,7 @@ class _FeedbacksState extends State<Feedbacks> {
                             : onPostDataToServer(context, imagePaths);
                       });
                     }),
-                    SizedBox(height: 20)
+                    SizedBox(height: 20.0.h)
                   ],
                 ),
               )
@@ -453,17 +456,17 @@ class _FeedbacksState extends State<Feedbacks> {
       },
       style: new TextStyle(
           fontWeight: FontWeight.w500,
-          fontSize: 16.0,
+          fontSize: 16.0.sp,
           color: ColorUtils.blackcolor),
       decoration: InputDecoration(
         errorText: isFeedBackEmptied ? variable.strFeedbackEmpty : null,
         hintText: variable.strFeedBack,
         labelStyle: TextStyle(
-            fontSize: 12.0,
+            fontSize: 12.0.sp,
             fontWeight: FontWeight.w400,
             color: ColorUtils.myFamilyGreyColor),
         hintStyle: TextStyle(
-          fontSize: 14.0,
+          fontSize: 14.0.sp,
           color: ColorUtils.myFamilyGreyColor,
           fontWeight: FontWeight.w400,
         ),

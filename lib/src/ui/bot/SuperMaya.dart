@@ -11,6 +11,7 @@ import 'package:myfhb/telehealth/features/Notifications/view/notification_main.d
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/widgets/RaisedGradientButton.dart';
 import 'package:showcaseview/showcase_widget.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 import 'view/ChatScreen.dart';
 
@@ -75,7 +76,7 @@ class _SuperMayaState extends State<SuperMaya> {
                   leading: IconWidget(
                     icon: Icons.arrow_back_ios,
                     colors: Colors.white,
-                    size: 20,
+                    size: 24.0.sp,
                     onTap: () {
                       Navigator.pop(context);
                     },
@@ -86,7 +87,7 @@ class _SuperMayaState extends State<SuperMaya> {
                     Center(
                         child: new CommonUtil().getNotificationIcon(context)),
                     SizedBoxWidget(
-                      width: 10,
+                      width: 10.0.w,
                     ),
                   ],
                   centerTitle: true,
@@ -104,8 +105,8 @@ class _SuperMayaState extends State<SuperMaya> {
                                   Constants.keyMayaAsset) +
                               variable.strExtImg
                           : variable.icon_mayaMain,
-                      height: 160,
-                      width: 160,
+                      height: 160.0.h,
+                      width: 160.0.h,
                       //color: Colors.deepPurple,
                     ),
                     //Icon(Icons.people),
@@ -117,8 +118,8 @@ class _SuperMayaState extends State<SuperMaya> {
                       height: 30,
                     ),
                     SizedBox(
-                        width: 150,
-                        height: 50,
+                        width: 150.0.w,
+                        height: 50.0.h,
                         child: FHBBasicWidget.customShowCase(
                             _micKey,
                             variable.strTapMaya,
@@ -127,7 +128,7 @@ class _SuperMayaState extends State<SuperMaya> {
                                 child: Text(
                                   variable.strStartNow,
                                   style: TextStyle(
-                                      color: Colors.white, fontSize: 16),
+                                      color: Colors.white, fontSize: 16.0.sp),
                                 ),
                                 gradient: LinearGradient(
                                   colors: <Color>[

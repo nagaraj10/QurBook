@@ -28,6 +28,7 @@ import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/alert.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class MyFamily extends StatefulWidget {
   @override
@@ -94,6 +95,7 @@ class _MyFamilyState extends State<MyFamily> {
           child: Icon(
             Icons.add,
             color: Colors.white,
+            size: 24.0.sp,
           ),
           onPressed: () {
             saveMediaDialog(context);
@@ -117,8 +119,8 @@ class _MyFamilyState extends State<MyFamily> {
                 child: CircularProgressIndicator(
                   backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
                 ),
-                width: 30,
-                height: 30,
+                width: 30.0.h,
+                height: 30.0.h,
               ));
               break;
 
@@ -141,8 +143,8 @@ class _MyFamilyState extends State<MyFamily> {
           }
         } else {
           familyWidget = Container(
-            width: 100,
-            height: 100,
+            width: 100.0.h,
+            height: 100.0.h,
           );
         }
         return familyWidget;
@@ -166,8 +168,8 @@ class _MyFamilyState extends State<MyFamily> {
                             backgroundColor:
                                 Color(CommonUtil().getMyPrimaryColor()),
                           ),
-                          width: 30,
-                          height: 30,
+                          width: 30.0.h,
+                          height: 30.0.h,
                         ));
                         break;
 
@@ -191,8 +193,8 @@ class _MyFamilyState extends State<MyFamily> {
                     }
                   } else {
                     familyWidget = Container(
-                      width: 100,
-                      height: 100,
+                      width: 100.0.h,
+                      height: 100.0.h,
                     );
                   }
                   return familyWidget;
@@ -318,8 +320,8 @@ class _MyFamilyState extends State<MyFamily> {
                 child: position != 0
                     ? data?.child?.profilePicThumbnailUrl == null
                         ? Container(
-                            width: 60,
-                            height: 60,
+                            width: 60.0.h,
+                            height: 60.0.h,
                             color: Color(fhbColors.bgColorContainer),
                             child: Center(
                               child: Text(
@@ -327,7 +329,7 @@ class _MyFamilyState extends State<MyFamily> {
                                     ? data.child.firstName[0].toUpperCase()
                                     : '',
                                 style: TextStyle(
-                                    fontSize: 22,
+                                    fontSize: 22.0.sp,
                                     color: Color(
                                         CommonUtil().getMyPrimaryColor())),
                               ),
@@ -336,8 +338,8 @@ class _MyFamilyState extends State<MyFamily> {
                         : Image.network(
                             data.child.profilePicThumbnailUrl,
                             fit: BoxFit.cover,
-                            width: 60,
-                            height: 60,
+                            width: 60.0.h,
+                            height: 60.0.h,
                             headers: {
                               HttpHeaders.authorizationHeader:
                                   PreferenceUtil.getStringValue(
@@ -355,12 +357,12 @@ class _MyFamilyState extends State<MyFamily> {
                                 /* ? Image.file(
                             File(parentProfilePic),
                             fit: BoxFit.cover,
-                            width: 60,
-                            height: 60,
+                            width: 60.0.h,
+                            height: 60.0.h,
                           )*/
                                 Container(
-                                    width: 60,
-                                    height: 60,
+                                    width: 60.0.h,
+                                    height: 60.0.h,
                                     color: Color(fhbColors.bgColorContainer),
                                     child: Center(
                                       child: Text(
@@ -368,15 +370,15 @@ class _MyFamilyState extends State<MyFamily> {
                                             ? fulName[0].toUpperCase()
                                             : '',
                                         style: TextStyle(
-                                            fontSize: 22,
+                                            fontSize: 22.0.sp,
                                             color: Color(CommonUtil()
                                                 .getMyPrimaryColor())),
                                       ),
                                     ),
                                   )
                             : Container(
-                                width: 60,
-                                height: 60,
+                                width: 60.0.h,
+                                height: 60.0.h,
                                 color: Color(fhbColors.bgColorContainer),
                                 child: Center(
                                   child: Text(
@@ -384,21 +386,21 @@ class _MyFamilyState extends State<MyFamily> {
                                         ? fulName[0].toUpperCase()
                                         : '',
                                     style: TextStyle(
-                                        fontSize: 22,
+                                        fontSize: 22.0.sp,
                                         color: Color(
                                             CommonUtil().getMyPrimaryColor())),
                                   ),
                                 ),
                               )
                         : Container(
-                            width: 60,
-                            height: 60,
+                            width: 60.0.h,
+                            height: 60.0.h,
                             color: Color(fhbColors.bgColorContainer),
                             child: Center(
                               child: Text(
                                 fulName != null ? fulName[0].toUpperCase() : '',
                                 style: TextStyle(
-                                    fontSize: 22,
+                                    fontSize: 22.0.sp,
                                     color: Color(
                                         CommonUtil().getMyPrimaryColor())),
                               ),
@@ -406,7 +408,7 @@ class _MyFamilyState extends State<MyFamily> {
                           ),
               ),
               SizedBox(
-                width: 20,
+                width: 20.0.w,
               ),
               Expanded(
                 // flex: 4,
@@ -426,11 +428,16 @@ class _MyFamilyState extends State<MyFamily> {
                                       ' ' +
                                       data.child.lastName)
                               : '',
-                      style: TextStyle(fontWeight: FontWeight.w500),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14.0.sp,
+                      ),
                       softWrap: false,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    SizedBox(height: 10.0),
+                    SizedBox(
+                      height: 10.0.h,
+                    ),
                     Text(
                       position == 0 //this is checking self
                           ? (myProfile?.result?.userContactCollection3 !=
@@ -494,12 +501,16 @@ class _MyFamilyState extends State<MyFamily> {
                               : ''
                           : '', */
                       style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          color: ColorUtils.greycolor1),
+                        fontWeight: FontWeight.w400,
+                        color: ColorUtils.greycolor1,
+                        fontSize: 14.0.sp,
+                      ),
                       softWrap: false,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    SizedBox(height: 10.0),
+                    SizedBox(
+                      height: 10.0.h,
+                    ),
                     Text(
                       position == 0
                           ? variable.Self
@@ -512,6 +523,7 @@ class _MyFamilyState extends State<MyFamily> {
                       softWrap: false,
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
+                          fontSize: 14.0.sp,
                           color: Color(new CommonUtil().getMyPrimaryColor())),
                     ),
                   ],
@@ -610,7 +622,7 @@ class _MyFamilyState extends State<MyFamily> {
                             child: Text(
                               variable.DeLink,
                               style: TextStyle(
-                                  fontSize: 14,
+                                  fontSize: 14.0.sp,
                                   fontWeight: FontWeight.w500,
                                   color: Color(
                                       new CommonUtil().getMyPrimaryColor())),
@@ -647,8 +659,8 @@ class _MyFamilyState extends State<MyFamily> {
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(1)),
             content: Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height / 1.5,
+                width: 1.sw,
+                height: 1.sh / 1.5,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -661,7 +673,10 @@ class _MyFamilyState extends State<MyFamily> {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: <Widget>[
                                 IconButton(
-                                    icon: Icon(Icons.close),
+                                    icon: Icon(
+                                      Icons.close,
+                                      size: 24.0.sp,
+                                    ),
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                     })
@@ -697,60 +712,73 @@ class _MyFamilyState extends State<MyFamily> {
                                 _ShowMobileNoTextField()
                               ],
                             ),
-                            SizedBox(height: 10),
+                            SizedBox(
+                              height: 10.0.h,
+                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                 InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        if (isPrimaryNoSelected) {
-                                          isPrimaryNoSelected = false;
-                                          mobileNoController.text = '';
-                                        } else {
-                                          isPrimaryNoSelected = true;
-                                          mobileNoController.text =
-                                              PreferenceUtil.getStringValue(
-                                                      Constants.MOB_NUM)
-                                                  .replaceAll('+91', '');
-                                        }
-                                      });
-                                    },
-                                    child: Icon(
-                                        isPrimaryNoSelected == true
-                                            ? Icons.radio_button_checked
-                                            : Icons.radio_button_unchecked,
-                                        color: isPrimaryNoSelected == true
-                                            ? Theme.of(context).primaryColor
-                                            : ColorUtils.myFamilyGreyColor)),
-                                SizedBox(width: 5),
+                                  onTap: () {
+                                    setState(() {
+                                      if (isPrimaryNoSelected) {
+                                        isPrimaryNoSelected = false;
+                                        mobileNoController.text = '';
+                                      } else {
+                                        isPrimaryNoSelected = true;
+                                        mobileNoController.text =
+                                            PreferenceUtil.getStringValue(
+                                                    Constants.MOB_NUM)
+                                                .replaceAll('+91', '');
+                                      }
+                                    });
+                                  },
+                                  child: Icon(
+                                    isPrimaryNoSelected == true
+                                        ? Icons.radio_button_checked
+                                        : Icons.radio_button_unchecked,
+                                    color: isPrimaryNoSelected == true
+                                        ? Theme.of(context).primaryColor
+                                        : ColorUtils.myFamilyGreyColor,
+                                    size: 24.0.sp,
+                                  ),
+                                ),
+                                SizedBox(width: 5.0.w),
                                 Text(CommonConstants.primary_number,
                                     style: TextStyle(
-                                        fontSize: 13.0,
+                                        fontSize: 13.0.sp,
                                         fontWeight: FontWeight.w400,
                                         color: ColorUtils.myFamilyGreyColor))
                               ],
                             ),
-                            SizedBox(height: 10),
+                            SizedBox(
+                              height: 10.0.h,
+                            ),
                             Row(
                               children: <Widget>[
                                 _showFirstNameTextField(),
                               ],
                             ),
-                            SizedBox(height: 10),
+                            SizedBox(
+                              height: 10.0.h,
+                            ),
                             Row(
                               children: <Widget>[
                                 _showMiddleNameTextField(),
                               ],
                             ),
-                            SizedBox(height: 10),
+                            SizedBox(
+                              height: 10.0.h,
+                            ),
                             Row(
                               children: <Widget>[
                                 _showLastNameTextField(),
                               ],
                             ),
-                            SizedBox(height: 10),
+                            SizedBox(
+                              height: 10.0.h,
+                            ),
                             Row(
                               children: <Widget>[
                                 data != null
@@ -759,14 +787,18 @@ class _MyFamilyState extends State<MyFamily> {
                                 //getRelationshipDetailsNew()
                               ],
                             ),
-                            SizedBox(height: 20),
+                            SizedBox(
+                              height: 20.0.h,
+                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 _showOTPButton(),
                               ],
                             ),
-                            SizedBox(height: 20),
+                            SizedBox(
+                              height: 20.0.h,
+                            ),
                             // callAddFamilyStreamBuilder(),
                           ],
                         ),
@@ -793,15 +825,18 @@ class _MyFamilyState extends State<MyFamily> {
               familyWidget = Center(
                   child: SizedBox(
                 child: CircularProgressIndicator(),
-                width: 30,
-                height: 30,
+                width: 30.0.h,
+                height: 30.0.h,
               ));
               break;
 
             case Status.ERROR:
               familyWidget = Center(
                   child: Text(Constants.STR_ERROR_LOADING_DATA,
-                      style: TextStyle(color: Colors.red)));
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 14.0.sp,
+                      )));
               break;
 
             case Status.COMPLETED:
@@ -818,8 +853,8 @@ class _MyFamilyState extends State<MyFamily> {
           }
         } else {
           familyWidget = Container(
-            width: 100,
-            height: 100,
+            width: 100.0.h,
+            height: 100.0.h,
           );
         }
         return familyWidget;
@@ -840,7 +875,7 @@ class _MyFamilyState extends State<MyFamily> {
                 child: new Text(relationShipDetail.name,
                     style: new TextStyle(
                         fontWeight: FontWeight.w500,
-                        fontSize: 16.0,
+                        fontSize: 16.0.sp,
                         color: ColorUtils.blackcolor)),
                 value: relationShipDetail,
               );
@@ -869,16 +904,16 @@ class _MyFamilyState extends State<MyFamily> {
           },
           style: new TextStyle(
               fontWeight: FontWeight.w500,
-              fontSize: 16.0,
+              fontSize: 16.0.sp,
               color: ColorUtils.blackcolor),
           decoration: InputDecoration(
             hintText: CommonConstants.mobile_numberWithStar,
             labelStyle: TextStyle(
-                fontSize: 12.0,
+                fontSize: 12.0.sp,
                 fontWeight: FontWeight.w400,
                 color: ColorUtils.myFamilyGreyColor),
             hintStyle: TextStyle(
-              fontSize: 14.0,
+              fontSize: 14.0.sp,
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
@@ -902,16 +937,16 @@ class _MyFamilyState extends State<MyFamily> {
           },
           style: new TextStyle(
               fontWeight: FontWeight.w500,
-              fontSize: 16.0,
+              fontSize: 16.0.sp,
               color: ColorUtils.blackcolor),
           decoration: InputDecoration(
             hintText: CommonConstants.name,
             labelStyle: TextStyle(
-                fontSize: 12.0,
+                fontSize: 12.0.sp,
                 fontWeight: FontWeight.w400,
                 color: ColorUtils.myFamilyGreyColor),
             hintStyle: TextStyle(
-              fontSize: 14.0,
+              fontSize: 14.0.sp,
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
@@ -935,17 +970,17 @@ class _MyFamilyState extends State<MyFamily> {
       },
       style: new TextStyle(
           fontWeight: FontWeight.w500,
-          fontSize: 16.0,
+          fontSize: 16.0.sp,
           color: ColorUtils.blackcolor),
       decoration: InputDecoration(
         labelText: CommonConstants.firstNameWithStar,
         hintText: CommonConstants.firstName,
         labelStyle: TextStyle(
-            fontSize: 13.0,
+            fontSize: 13.0.sp,
             fontWeight: FontWeight.w400,
             color: ColorUtils.myFamilyGreyColor),
         hintStyle: TextStyle(
-          fontSize: 14.0,
+          fontSize: 14.0.sp,
           color: ColorUtils.myFamilyGreyColor,
           fontWeight: FontWeight.w400,
         ),
@@ -969,17 +1004,17 @@ class _MyFamilyState extends State<MyFamily> {
       },
       style: new TextStyle(
           fontWeight: FontWeight.w500,
-          fontSize: 16.0,
+          fontSize: 16.0.sp,
           color: ColorUtils.blackcolor),
       decoration: InputDecoration(
         labelText: CommonConstants.middleName,
         hintText: CommonConstants.middleName,
         labelStyle: TextStyle(
-            fontSize: 13.0,
+            fontSize: 13.0.sp,
             fontWeight: FontWeight.w400,
             color: ColorUtils.myFamilyGreyColor),
         hintStyle: TextStyle(
-          fontSize: 14.0,
+          fontSize: 14.0.sp,
           color: ColorUtils.myFamilyGreyColor,
           fontWeight: FontWeight.w400,
         ),
@@ -1003,17 +1038,17 @@ class _MyFamilyState extends State<MyFamily> {
       },
       style: new TextStyle(
           fontWeight: FontWeight.w500,
-          fontSize: 16.0,
+          fontSize: 16.0.sp,
           color: ColorUtils.blackcolor),
       decoration: InputDecoration(
         labelText: CommonConstants.lastNameWithStar,
         hintText: CommonConstants.lastName,
         labelStyle: TextStyle(
-            fontSize: 13.0,
+            fontSize: 13.0.sp,
             fontWeight: FontWeight.w400,
             color: ColorUtils.myFamilyGreyColor),
         hintStyle: TextStyle(
-          fontSize: 14.0,
+          fontSize: 14.0.sp,
           color: ColorUtils.myFamilyGreyColor,
           fontWeight: FontWeight.w400,
         ),
@@ -1027,8 +1062,8 @@ class _MyFamilyState extends State<MyFamily> {
     final GestureDetector addButtonWithGesture = new GestureDetector(
       onTap: _sendOTPBtnTapped,
       child: new Container(
-        width: 130,
-        height: 40.0,
+        width: 130.0.w,
+        height: 40.0.h,
         decoration: new BoxDecoration(
           color: Color(new CommonUtil().getMyPrimaryColor()),
           borderRadius: new BorderRadius.all(Radius.circular(2.0)),
@@ -1047,7 +1082,7 @@ class _MyFamilyState extends State<MyFamily> {
                 : CommonConstants.send_otp,
             style: new TextStyle(
               color: Colors.white,
-              fontSize: 14.0,
+              fontSize: 14.0.sp,
               fontWeight: FontWeight.w400,
             ),
           ),

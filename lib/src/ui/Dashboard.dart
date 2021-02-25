@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -104,8 +104,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
               key: scaffold_state,
               bottomNavigationBar: BottomNavigationBar(
                 type: BottomNavigationBarType.fixed,
-                selectedFontSize: 10,
-                unselectedFontSize: 10,
+                selectedFontSize: 10.0.sp,
+                unselectedFontSize: 10.0.sp,
                 items: <BottomNavigationBarItem>[
                   BottomNavigationBarItem(
                       icon: InkWell(
@@ -165,8 +165,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       Constants.keyMayaAsset) +
                                   variable.strExtImg
                               : variable.icon_mayaMain,
-                          height: 25,
-                          width: 25,
+                          height: 25.0.h,
+                          width: 25.0.h,
                         ),
                       ),
                       title: Text(
@@ -255,7 +255,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
               backgroundColor: Colors.grey[200],
               body: SingleChildScrollView(
-                //height: MediaQuery.of(context).size.height - 200,
+                //height: 1.sh - 200,
                 child: ChangeNotifierProvider(
                   create: (context) => DevicesViewModel(),
                   child: ShowDevicesNew(),

@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
@@ -100,7 +100,7 @@ class _UserAccountsState extends State<UserAccounts>
             leading: IconButton(
               icon: Icon(
                 Icons.arrow_back_ios,
-                size: 20,
+                size: 24.0.sp,
               ),
               onPressed: () {
                 Navigator.popUntil(context, (Route<dynamic> route) {
@@ -116,47 +116,47 @@ class _UserAccountsState extends State<UserAccounts>
             actions: <Widget>[
               selectedTab == 0
                   ? IconButton(
-                  icon: _isEditable
-                      ? Visibility(visible: false, child: Icon(Icons.save))
-                      : Icon(Icons.edit),
-                  onPressed: () {
-                    setState(() {
-                      if (_isEditable) {
-                        _isEditable = false;
-                      } else {
-                        _isEditable = true;
-                        //sliverBarHeight = 50;
-                        if (myProfile?.result != null) {
-                          Navigator.pushNamed(
-                              context, router.rt_AddFamilyUserInfo,
-                              arguments: AddFamilyUserInfoArguments(
-                                  myProfileResult: myProfile?.result,
-                                  fromClass:
-                                  CommonConstants.user_update))
-                              .then((value) {
-                            setState(() {
-                              _isEditable = false;
-                            });
-                          });
-                        } else {
-                          FlutterToast().getToast(
-                              'Unable to Fetch User Profile data',
-                              Colors.red);
-                          setState(() {
+                      icon: _isEditable
+                          ? Visibility(visible: false, child: Icon(Icons.save))
+                          : Icon(Icons.edit),
+                      onPressed: () {
+                        setState(() {
+                          if (_isEditable) {
                             _isEditable = false;
-                          });
-                        }
-                      }
-                      sliverBarHeight = 220;
-                    });
-                  })
+                          } else {
+                            _isEditable = true;
+                            //sliverBarHeight = 50;
+                            if (myProfile?.result != null) {
+                              Navigator.pushNamed(
+                                      context, router.rt_AddFamilyUserInfo,
+                                      arguments: AddFamilyUserInfoArguments(
+                                          myProfileResult: myProfile?.result,
+                                          fromClass:
+                                              CommonConstants.user_update))
+                                  .then((value) {
+                                setState(() {
+                                  _isEditable = false;
+                                });
+                              });
+                            } else {
+                              FlutterToast().getToast(
+                                  'Unable to Fetch User Profile data',
+                                  Colors.red);
+                              setState(() {
+                                _isEditable = false;
+                              });
+                            }
+                          }
+                          sliverBarHeight = 220;
+                        });
+                      })
                   : Container(
-                height: 0,
-                width: 0,
-              )
+                      height: 0.0.h,
+                      width: 0.0.h,
+                    )
             ],
             bottom: PreferredSize(
-              preferredSize: Size.fromHeight(50),
+              preferredSize: Size.fromHeight(50.0.h),
               child: TabBar(
                 controller: _sliverTabController,
                 labelColor: Colors.white,
@@ -291,7 +291,7 @@ class _UserAccountsState extends State<UserAccounts>
 ////                            //       : '',
 ////                            //   style: TextStyle(
 ////                            //       color: Colors.white,
-////                            //       fontSize: 13.0,
+////                            //       fontSize: 13.0.sp,
 ////                            //       fontWeight: FontWeight.w400),
 ////                            //   overflow: TextOverflow.fade,
 ////                            // )

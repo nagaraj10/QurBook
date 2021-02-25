@@ -15,6 +15,7 @@ import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class HospitalDocuments extends StatefulWidget {
   final HealthRecordList completeData;
@@ -96,7 +97,10 @@ class _HospitalDocumentsState extends State<HospitalDocuments> {
                   child: Text(
                     Constants.NO_DATA_MEDICAL_REPORT,
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontFamily: variable.font_poppins),
+                    style: TextStyle(
+                      fontFamily: variable.font_poppins,
+                      fontSize: 14.0.sp,
+                    ),
                   ),
                 ),
               ),
@@ -138,9 +142,8 @@ class _HospitalDocumentsState extends State<HospitalDocuments> {
                 } else {
                   toast.getToast('No Image Attached ', Colors.red);
                 }
-              }else{
+              } else {
                 toast.getToast('No Image Attached ', Colors.red);
-
               }
             } else {
               bool condition;
@@ -166,7 +169,7 @@ class _HospitalDocumentsState extends State<HospitalDocuments> {
           }
         },
         child: Container(
-          //height: 90,
+          //height: 90.0.h,
           padding: EdgeInsets.all(10.0),
           margin: EdgeInsets.only(left: 10, right: 10, top: 10),
           decoration: BoxDecoration(
@@ -189,8 +192,8 @@ class _HospitalDocumentsState extends State<HospitalDocuments> {
                           ? Image.network(
                               Constants.BASE_URL +
                                   data.metadata.hospital.logoThumbnail,
-                              height: 50,
-                              width: 50,
+                              height: 50.0.h,
+                              width: 50.0.h,
                             )
                           :*/
                       Container(
@@ -198,8 +201,8 @@ class _HospitalDocumentsState extends State<HospitalDocuments> {
                 child: Image.network(
                   /*Constants.BASE_URL + */ data
                       .metadata.healthRecordCategory.logo,
-                  height: 30,
-                  width: 30,
+                  height: 30.0.h,
+                  width: 30.0.h,
                   color: Color(
                     CommonUtil().getMyPrimaryColor(),
                   ),
@@ -209,12 +212,12 @@ class _HospitalDocumentsState extends State<HospitalDocuments> {
                 ),
               )
                   /*: Container(
-                          height: 50,
-                          width: 50,
+                          height: 50.0.h,
+                          width: 50.0.h,
                           color: Colors.grey[200],
                         )*/
                   ),
-              SizedBox(width: 20),
+              SizedBox(width: 20.0.w),
               Expanded(
                 flex: 6,
                 child: Column(
@@ -228,7 +231,10 @@ class _HospitalDocumentsState extends State<HospitalDocuments> {
                                 ? toBeginningOfSentenceCase(data
                                     .metadata.hospital.healthOrganizationName)
                                 : '',
-                            style: TextStyle(fontWeight: FontWeight.w500),
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14.0.sp,
+                            ),
                           )
                         : Text(''),
                     Text(
@@ -238,14 +244,17 @@ class _HospitalDocumentsState extends State<HospitalDocuments> {
                                   ? data.metadata.doctor.name
                                   : '')
                           : '',
-                      style: TextStyle(color: Colors.grey),
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 14.0.sp,
+                      ),
                     ),
                     Text(
                       new FHBUtils().getFormattedDateString(data.createdOn),
                       style: TextStyle(
                           color: Colors.grey[400],
                           fontWeight: FontWeight.w200,
-                          fontSize: 12),
+                          fontSize: 12.0.sp),
                     )
                   ],
                 ),
@@ -302,19 +311,19 @@ class _HospitalDocumentsState extends State<HospitalDocuments> {
         if (snapshot.hasData) {
           return Image.memory(
             snapshot.data,
-            height: 50,
-            width: 50,
+            height: 50.0.h,
+            width: 50.0.h,
             fit: BoxFit.cover,
           );
         } else {
           return new SizedBox(
-            width: 50.0,
-            height: 50.0,
+            width: 50.0.h,
+            height: 50.0.h,
             child: Shimmer.fromColors(
                 baseColor: Colors.grey[200],
                 highlightColor: Colors.grey[550],
-                child:
-                    Container(width: 50, height: 50, color: Colors.grey[200])),
+                child: Container(
+                    width: 50.0.h, height: 50.0.h, color: Colors.grey[200])),
           );
         }
       },
@@ -330,13 +339,13 @@ class _HospitalDocumentsState extends State<HospitalDocuments> {
           return Image.memory(snapshot.data);
         } else {
           return new SizedBox(
-            width: 50.0,
-            height: 50.0,
+            width: 50.0.h,
+            height: 50.0.h,
             child: Shimmer.fromColors(
                 baseColor: Colors.grey[200],
                 highlightColor: Colors.grey[600],
-                child:
-                    Container(width: 50, height: 50, color: Colors.grey[200])),
+                child: Container(
+                    width: 50.0.h, height: 50.0.h, color: Colors.grey[200])),
           );
         }
       },

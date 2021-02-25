@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:intl/intl.dart';
@@ -38,7 +38,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   File profileImage;
 
   HealthReportListForUserRepository healthReportListForUserRepository =
-  HealthReportListForUserRepository();
+      HealthReportListForUserRepository();
   GetDeviceSelectionModel selectionResult;
   CreateDeviceSelectionModel createDeviceSelectionModel;
   UpdateDeviceModel updateDeviceModel;
@@ -67,7 +67,6 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   void initState() {
     //getProfileImage();
     getAppColorValues();
-
   }
 
   getProfileImage() async {
@@ -101,14 +100,17 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             leading: IconWidget(
               icon: Icons.arrow_back_ios,
               colors: Colors.white,
-              size: 20,
+              size: 24.0.sp,
               onTap: () {
                 Navigator.pop(context);
               },
             ),
             actions: <Widget>[
               IconButton(
-                  icon: Icon(Icons.exit_to_app),
+                  icon: Icon(
+                    Icons.exit_to_app,
+                    size: 24.0.sp,
+                  ),
                   onPressed: () {
                     new FHBBasicWidget().exitApp(context, () {
                       new CommonUtil().logout(moveToLoginPage);
@@ -135,7 +137,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             leading: ClipOval(
               child: profileImage != null
                   ? Image.file(profileImage,
-                      width: 50, height: 50, fit: BoxFit.cover)
+                      width: 50.0.h, height: 50.0.h, fit: BoxFit.cover)
                   : FHBBasicWidget().getProfilePicWidgeUsingUrl(
                       myProfile.result.profilePicThumbnailUrl),
             ),
@@ -162,7 +164,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                               .result.userContactCollection3[0].phoneNumber
                           : ''
                       : '',
-                  style: TextStyle(fontSize: 12),
+                  style: TextStyle(fontSize: 12.0.sp),
                 ),
                 Text(
                   (myProfile.result.userContactCollection3 != null &&
@@ -171,13 +173,13 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                           ? myProfile.result.userContactCollection3[0].email
                           : ''
                       : '',
-                  style: TextStyle(fontSize: 11),
+                  style: TextStyle(fontSize: 11.0.sp),
                 )
               ],
             ),
             trailing: Icon(
               Icons.arrow_forward_ios,
-              size: 14,
+              size: 14.0.sp,
             ),
             onTap: () {
               Navigator.pushNamed(
@@ -194,7 +196,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
               style: TextStyle(fontWeight: FontWeight.w500)),
           trailing: Icon(
             Icons.arrow_forward_ios,
-            size: 14,
+            size: 14.0.sp,
           ),
           onTap: () {
             PageNavigator.goTo(context, router.rt_AppSettings);
@@ -216,7 +218,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                       AssetImage(variable.icon_faq),
                       color: Colors.black,
                     ),
-                    SizedBox(width: 20),
+                    SizedBox(width: 20.0.w),
                     Text(Constants.FAQ),
                   ],
                 )),
@@ -232,7 +234,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                       AssetImage(variable.icon_feedback),
                       color: Colors.black,
                     ),
-                    SizedBox(width: 20),
+                    SizedBox(width: 20.0.w),
                     Text(variable.strFeedBack),
                   ],
                 )),
@@ -247,11 +249,11 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                   children: <Widget>[
                     ImageIcon(
                       AssetImage(variable.icon_term),
-                      size: 20,
+                      size: 20.0.sp,
                       //size: 30,
                       color: Colors.black,
                     ),
-                    SizedBox(width: 20),
+                    SizedBox(width: 20.0.w),
                     Text(Constants.terms_of_service)
                   ],
                 )),
@@ -270,10 +272,10 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                   children: <Widget>[
                     ImageIcon(
                       AssetImage(variable.icon_privacy),
-                      size: 20,
+                      size: 20.0.sp,
                       color: Colors.black,
                     ),
-                    SizedBox(width: 20),
+                    SizedBox(width: 20.0.w),
                     Text(variable.strPrivacy),
                   ],
                 )),
@@ -289,10 +291,10 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                   children: <Widget>[
                     ImageIcon(
                       AssetImage(variable.icon_record_fav),
-                      size: 20,
+                      size: 20.0.sp,
                       color: Colors.black,
                     ),
-                    SizedBox(width: 20),
+                    SizedBox(width: 20.0.w),
                     Text(variable.strRateus),
                   ],
                 )),
@@ -309,9 +311,9 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                     ImageIcon(
                       AssetImage(variable.icon_whatsapp),
                       color: Color(0XFF66AB5B),
-                      size: 22,
+                      size: 22.0.sp,
                     ),
-                    SizedBox(width: 20),
+                    SizedBox(width: 20.0.sp),
                     Text(variable.c_chat_with_whatsapp),
                   ],
                 )),
@@ -376,7 +378,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
               children: <Widget>[
                 ListTile(
                     title: Container(
-                        height: 60,
+                        height: 60.0.h,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
                           itemCount: variable.myThemes.length,
@@ -388,7 +390,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                                   variable.myGradient[index]);
                               selectedPrimaryColor = variable.myThemes[index];
 
-                              createAppColorSelection(variable.myThemes[index],variable.myGradient[index]);
+                              createAppColorSelection(variable.myThemes[index],
+                                  variable.myGradient[index]);
 
                               HomeScreen.of(context).refresh();
                               setState(() {});
@@ -402,13 +405,14 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                                         Color(variable.myThemes[index]),
                                         Color(variable.myGradient[index])
                                       ])),
-                                  height: 50,
-                                  width: 50,
+                                  height: 50.0.h,
+                                  width: 50.0.h,
                                   child: variable.myThemes[index] ==
                                           selectedPrimaryColor
                                       ? Icon(
                                           Icons.check,
                                           color: Colors.white,
+                                          size: 24.0.sp,
                                         )
                                       : SizedBox(),
                                 )),
@@ -435,12 +439,12 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
 
           selectedPrimaryColor = 0xff5f0cf9;
         }
-      }else{
-          userMappingId = '';
-         preColor = 0xff5e1fe0;
-         greColor = 0xff753aec;
+      } else {
+        userMappingId = '';
+        preColor = 0xff5e1fe0;
+        greColor = 0xff753aec;
 
-         selectedPrimaryColor = 0xff5f0cf9;
+        selectedPrimaryColor = 0xff5f0cf9;
       }
     });
     return selectionResult;
@@ -448,50 +452,43 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
 
   setValues(GetDeviceSelectionModel getDeviceSelectionModel) {
     setState(() {
-
       preColor = getDeviceSelectionModel.result[0].profileSetting.preColor;
       greColor = getDeviceSelectionModel.result[0].profileSetting.greColor;
 
       selectedPrimaryColor = preColor;
-
     });
   }
 
-  Future<CreateDeviceSelectionModel> createAppColorSelection(int priColor,int greColor) async {
+  Future<CreateDeviceSelectionModel> createAppColorSelection(
+      int priColor, int greColor) async {
     var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     await healthReportListForUserRepository
-        .createAppColorSelection(
-        priColor,
-        greColor,userId)
+        .createAppColorSelection(priColor, greColor, userId)
         .then((value) {
       createDeviceSelectionModel = value;
       if (createDeviceSelectionModel.isSuccess) {
-
       } else {
         if (createDeviceSelectionModel.message ==
             STR_USER_PROFILE_SETTING_ALREADY) {
-          updateDeviceSelectionModel(priColor,greColor);
+          updateDeviceSelectionModel(priColor, greColor);
         }
       }
     });
     return createDeviceSelectionModel;
   }
 
-  Future<UpdateDeviceModel> updateDeviceSelectionModel(int priColor,int greColor) async {
+  Future<UpdateDeviceModel> updateDeviceSelectionModel(
+      int priColor, int greColor) async {
     await healthReportListForUserRepository
-        .updateAppColorModel(
-        userMappingId,
-        priColor,
-        greColor)
+        .updateAppColorModel(userMappingId, priColor, greColor)
         .then((value) {
       updateDeviceModel = value;
       if (updateDeviceModel.isSuccess) {
-       // app color updated
+        // app color updated
       }
     });
     return updateDeviceModel;
   }
-
 
   Widget getValuesFromSharedPrefernce() {
     return new FutureBuilder<MyProfileModel>(

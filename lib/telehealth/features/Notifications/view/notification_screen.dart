@@ -8,6 +8,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/MyProvidersMain.dart';
 import 'package:myfhb/telehealth/features/Notifications/constants/notification_constants.dart'
     as constants;
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/telehealth/features/Notifications/model/notificationResult.dart';
 import 'package:myfhb/telehealth/features/Notifications/model/notification_ontap_req.dart';
@@ -67,7 +68,7 @@ class _NotificationScreen extends State<NotificationScreen> {
       leading: IconWidget(
         icon: Icons.arrow_back_ios,
         colors: Colors.white,
-        size: 20,
+        size: 24.0.sp,
         onTap: () {
           Navigator.pop(context);
         },
@@ -77,7 +78,7 @@ class _NotificationScreen extends State<NotificationScreen> {
         colors: Colors.white,
         overflow: TextOverflow.visible,
         fontWeight: FontWeight.w600,
-        fontsize: 18,
+        fontsize: 18.0.sp,
         softwrap: true,
       ),
     );
@@ -118,7 +119,7 @@ class _NotificationScreen extends State<NotificationScreen> {
 
   Widget emptyNotification() {
     return Container(
-      height: MediaQuery.of(context).size.height,
+      height: 1.sh,
       alignment: Alignment.center,
       child: Center(
         child: Text(constants.lblNoNotification),
@@ -157,7 +158,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                               flex: 3,
                               child: Container(
                                 padding: EdgeInsets.only(top: 5, left: 10),
-                                width: MediaQuery.of(context).size.width * 0.8,
+                                width: 1.sw * 0.8,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -173,22 +174,22 @@ class _NotificationScreen extends State<NotificationScreen> {
                                               CommonUtil().getMyPrimaryColor()),
                                       overflow: TextOverflow.visible,
                                       fontWeight: FontWeight.w600,
-                                      fontsize: 13,
+                                      fontsize: 13.0.sp,
                                       softwrap: true,
                                     ),
                                     SizedBox(
-                                      height: 5,
+                                      height: 5.0.h,
                                     ),
                                     TextWidget(
                                       text: message.messageBody,
                                       colors: Color(CommonUtil.secondaryGrey),
                                       overflow: TextOverflow.visible,
                                       fontWeight: FontWeight.w500,
-                                      fontsize: 12,
+                                      fontsize: 12.0.sp,
                                       softwrap: true,
                                     ),
                                     SizedBox(
-                                      height: 5,
+                                      height: 5.0.h,
                                     ),
                                     (payload?.templateName ==
                                                 constants.strCancelByDoctor ||
@@ -296,11 +297,11 @@ class _NotificationScreen extends State<NotificationScreen> {
                                                     overflow:
                                                         TextOverflow.visible,
                                                     fontWeight: FontWeight.w600,
-                                                    fontsize: 13,
+                                                    fontsize: 13.0.sp,
                                                   ),
                                                 ),
                                                 SizedBox(
-                                                  width: 15,
+                                                  width: 15.0.w,
                                                 ),
                                                 OutlineButton(
                                                   onPressed:
@@ -357,7 +358,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                                                     overflow:
                                                         TextOverflow.visible,
                                                     fontWeight: FontWeight.w600,
-                                                    fontsize: 13,
+                                                    fontsize: 13.0.sp,
                                                   ),
                                                 ),
                                               ],
@@ -382,11 +383,11 @@ class _NotificationScreen extends State<NotificationScreen> {
                                       colors: Colors.black,
                                       overflow: TextOverflow.visible,
                                       fontWeight: FontWeight.w500,
-                                      fontsize: 10,
+                                      fontsize: 10.0.sp,
                                       softwrap: true,
                                     ),
                                     SizedBox(
-                                      height: 5,
+                                      height: 5.0.h,
                                     ),
                                     TextWidget(
                                       text: constants.notificationTime(
@@ -403,7 +404,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                                       //colors: Color(CommonUtil.primaryColor),
                                       overflow: TextOverflow.visible,
                                       fontWeight: FontWeight.w600,
-                                      fontsize: 10,
+                                      fontsize: 10.0.sp,
                                       softwrap: true,
                                     ),
                                   ],
@@ -416,7 +417,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                     ),
                   ),
                   Container(
-                    height: 0.2,
+                    height: 0.2.h,
                     color: Colors.black,
                   )
                 ],
@@ -435,7 +436,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                       colors: Colors.black,
                       overflow: TextOverflow.visible,
                       fontWeight: FontWeight.w600,
-                      fontsize: 13,
+                      fontsize: 13.0.sp,
                       softwrap: true,
                     ),
                     subtitle: TextWidget(
@@ -443,7 +444,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                       colors: Colors.grey,
                       overflow: TextOverflow.visible,
                       fontWeight: FontWeight.w500,
-                      fontsize: 12,
+                      fontsize: 12.0.sp,
                       softwrap: true,
                     ),
                     trailing: Column(
@@ -454,7 +455,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                           colors: Colors.black,
                           overflow: TextOverflow.visible,
                           fontWeight: FontWeight.w500,
-                          fontsize: 10,
+                          fontsize: 10.0.sp,
                           softwrap: true,
                         ),
                         TextWidget(
@@ -463,7 +464,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                           colors: Color(CommonUtil().getMyPrimaryColor()),
                           overflow: TextOverflow.visible,
                           fontWeight: FontWeight.w600,
-                          fontsize: 10,
+                          fontsize: 10.0.sp,
                           softwrap: true,
                         ),
                       ],
@@ -513,11 +514,11 @@ class _NotificationScreen extends State<NotificationScreen> {
                                       : Colors.grey,
                                   overflow: TextOverflow.visible,
                                   fontWeight: FontWeight.w600,
-                                  fontsize: 13,
+                                  fontsize: 13.0.sp,
                                 ),
                               ),
                               SizedBox(
-                                width: 15,
+                                width: 15.0.w,
                               ),
                               OutlineButton(
                                 onPressed: !notification
@@ -586,7 +587,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                                       : Colors.grey,
                                   overflow: TextOverflow.visible,
                                   fontWeight: FontWeight.w600,
-                                  fontsize: 13,
+                                  fontsize: 13.0.sp,
                                 ),
                               )
                             ],
@@ -617,7 +618,7 @@ class _NotificationScreen extends State<NotificationScreen> {
             backgroundColor: Colors.transparent,
             content: Container(
               width: double.maxFinite,
-              height: 250.0,
+              height: 250.0.h,
               child: Column(
                 children: <Widget>[
                   Column(
@@ -627,7 +628,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                           borderRadius: BorderRadius.circular(4.0),
                         ),
                         child: Container(
-                          height: 160,
+                          height: 160.0.h,
                           padding: EdgeInsets.all(8.0),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -635,19 +636,19 @@ class _NotificationScreen extends State<NotificationScreen> {
                               TextWidget(
                                   text: parameters
                                       .cancellationAppointmentConfirmation,
-                                  fontsize: 14,
+                                  fontsize: 14.0.sp,
                                   fontWeight: FontWeight.w500,
                                   colors: Colors.grey[600]),
                               SizedBoxWidget(
-                                height: 10,
+                                height: 10.0.h,
                               ),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
                                 children: <Widget>[
                                   SizedBoxWithChild(
-                                    width: 90,
-                                    height: 40,
+                                    width: 90.0.w,
+                                    height: 40.0.h,
                                     child: FlatButton(
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
@@ -660,12 +661,14 @@ class _NotificationScreen extends State<NotificationScreen> {
                                         Navigator.pop(context);
                                       },
                                       child: TextWidget(
-                                          text: parameters.no, fontsize: 12),
+                                        text: parameters.no,
+                                        fontsize: 12.0.sp,
+                                      ),
                                     ),
                                   ),
                                   SizedBoxWithChild(
-                                    width: 90,
-                                    height: 40,
+                                    width: 90.0.w,
+                                    height: 40.0.h,
                                     child: FlatButton(
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
@@ -684,7 +687,9 @@ class _NotificationScreen extends State<NotificationScreen> {
                                                 body, notification));
                                       },
                                       child: TextWidget(
-                                          text: parameters.yes, fontsize: 12),
+                                        text: parameters.yes,
+                                        fontsize: 12.0.sp,
+                                      ),
                                     ),
                                   ),
                                 ],

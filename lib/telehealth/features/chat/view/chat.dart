@@ -38,6 +38,7 @@ import 'package:open_file/open_file.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../common/CommonUtil.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class Chat extends StatefulWidget {
   final String peerId;
@@ -511,7 +512,9 @@ class ChatScreenState extends State<ChatScreen> {
         return AlertDialog(
           content: Text(
             'Are you sure want to download?',
-            style: TextStyle(fontSize: 16),
+            style: TextStyle(
+              fontSize: 16.0.sp,
+            ),
           ),
           actions: <Widget>[
             FlatButton(
@@ -519,7 +522,12 @@ class ChatScreenState extends State<ChatScreen> {
                 saveImageToGallery(fileUrl, contxt, isPdf, type);
                 Navigator.pop(context);
               },
-              child: Text('Download'),
+              child: Text(
+                'Download',
+                style: TextStyle(
+                  fontSize: 14.0.sp,
+                ),
+              ),
             ),
           ],
         );
@@ -544,7 +552,12 @@ class ChatScreenState extends State<ChatScreen> {
 
     String _currentImage;
     Scaffold.of(contxt).showSnackBar(SnackBar(
-      content: const Text(variable.strDownloadStart),
+      content: Text(
+        variable.strDownloadStart,
+        style: TextStyle(
+          fontSize: 14.0.sp,
+        ),
+      ),
       backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
     ));
 
@@ -564,7 +577,12 @@ class ChatScreenState extends State<ChatScreen> {
         CommonUtil.downloadFile(_currentImage, fileType).then((filePath) async {
           if (Platform.isAndroid) {
             Scaffold.of(contxt).showSnackBar(SnackBar(
-              content: const Text(variable.strFileDownloaded),
+              content: Text(
+                variable.strFileDownloaded,
+                style: TextStyle(
+                  fontSize: 14.0.sp,
+                ),
+              ),
               backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
               action: SnackBarAction(
                 label: 'Open',
@@ -642,7 +660,7 @@ class ChatScreenState extends State<ChatScreen> {
                           bottomRight: Radius.circular(25))),
                   child: Container(
                     constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width * .6,
+                      maxWidth: 1.sw * .6,
                     ),
                     padding: const EdgeInsets.all(15.0),
                     decoration: BoxDecoration(
@@ -661,7 +679,9 @@ class ChatScreenState extends State<ChatScreen> {
                     child: RichText(
                       text: TextSpan(
                           style: TextStyle(
-                              color: Color(CommonUtil().getMyPrimaryColor())),
+                            color: Color(CommonUtil().getMyPrimaryColor()),
+                            fontSize: 14.0.sp,
+                          ),
                           children: textSpanList),
                     ),
                   ),
@@ -677,8 +697,8 @@ class ChatScreenState extends State<ChatScreen> {
                                 valueColor:
                                     AlwaysStoppedAnimation<Color>(themeColor),
                               ),
-                              width: 200.0,
-                              height: 200.0,
+                              width: 200.0.h,
+                              height: 200.0.h,
                               padding: EdgeInsets.all(70.0),
                               decoration: BoxDecoration(
                                 color: greyColor2,
@@ -690,8 +710,8 @@ class ChatScreenState extends State<ChatScreen> {
                             errorWidget: (context, url, error) => Material(
                               child: Image.asset(
                                 'images/img_not_available.jpeg',
-                                width: 200.0,
-                                height: 200.0,
+                                width: 200.0.h,
+                                height: 200.0.h,
                                 fit: BoxFit.cover,
                               ),
                               borderRadius: BorderRadius.all(
@@ -700,8 +720,8 @@ class ChatScreenState extends State<ChatScreen> {
                               clipBehavior: Clip.hardEdge,
                             ),
                             imageUrl: document[STR_CONTENT],
-                            width: 200.0,
-                            height: 200.0,
+                            width: 200.0.h,
+                            height: 200.0.h,
                             fit: BoxFit.cover,
                           ),
                           borderRadius: BorderRadius.all(Radius.circular(8.0)),
@@ -743,8 +763,7 @@ class ChatScreenState extends State<ChatScreen> {
                             },
                             child: Container(
                               constraints: BoxConstraints(
-                                maxWidth:
-                                    MediaQuery.of(context).size.width * .6,
+                                maxWidth: 1.sw * .6,
                               ),
                               padding: const EdgeInsets.all(15.0),
                               decoration: BoxDecoration(
@@ -764,13 +783,15 @@ class ChatScreenState extends State<ChatScreen> {
                                     color: Colors.black54,
                                   ),
                                   SizedBoxWidget(
-                                    width: 5,
+                                    width: 5.0.w,
                                   ),
                                   Text(
                                     'Click to view PDF',
                                     style: TextStyle(
-                                        color: Color(
-                                            CommonUtil().getMyPrimaryColor())),
+                                      color: Color(
+                                          CommonUtil().getMyPrimaryColor()),
+                                      fontSize: 14.0.sp,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -786,14 +807,18 @@ class ChatScreenState extends State<ChatScreen> {
                                 elevation: 2.0,
                                 child: Container(
                                   padding: EdgeInsets.all(10.0),
-                                  width: MediaQuery.of(context).size.width / 3,
+                                  width: 1.sw / 3,
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
                                       CircleAvatar(
                                           child: Text(
-                                              patientName.substring(0, 1))),
+                                        patientName.substring(0, 1),
+                                        style: TextStyle(
+                                          fontSize: 14.0.sp,
+                                        ),
+                                      )),
                                       IconButton(
                                         icon: Icon(currentPlayedVoiceURL ==
                                                 document[STR_CONTENT]
@@ -817,8 +842,8 @@ class ChatScreenState extends State<ChatScreen> {
                           : Container(
                               child: Image.asset(
                                 'images/${document[STR_CONTENT]}.gif',
-                                width: 100.0,
-                                height: 100.0,
+                                width: 100.0.h,
+                                height: 100.0.h,
                                 fit: BoxFit.cover,
                               ),
                               margin: EdgeInsets.only(
@@ -841,17 +866,17 @@ class ChatScreenState extends State<ChatScreen> {
                         child: CachedNetworkImage(
                           placeholder: (context, url) => Container(
                             child: CircularProgressIndicator(
-                              strokeWidth: 1.0,
+                              strokeWidth: 1.0.sp,
                               valueColor:
                                   AlwaysStoppedAnimation<Color>(themeColor),
                             ),
-                            width: 35.0,
-                            height: 35.0,
+                            width: 35.0.h,
+                            height: 35.0.h,
                             padding: EdgeInsets.all(10.0),
                           ),
                           imageUrl: peerAvatar,
-                          width: 35.0,
-                          height: 35.0,
+                          width: 35.0.h,
+                          height: 35.0.h,
                           fit: BoxFit.cover,
                         ),
                         borderRadius: BorderRadius.all(
@@ -859,7 +884,7 @@ class ChatScreenState extends State<ChatScreen> {
                         ),
                         clipBehavior: Clip.hardEdge,
                       )
-                    : Container(width: 35.0),
+                    : Container(width: 35.0.w),
                 document[STR_TYPE] == 0
                     ? Card(
                         color: Colors.transparent,
@@ -870,7 +895,7 @@ class ChatScreenState extends State<ChatScreen> {
                                 bottomRight: Radius.circular(25))),
                         child: Container(
                           constraints: BoxConstraints(
-                            maxWidth: MediaQuery.of(context).size.width * .6,
+                            maxWidth: 1.sw * .6,
                           ),
                           padding: const EdgeInsets.all(15.0),
                           decoration: BoxDecoration(
@@ -898,8 +923,8 @@ class ChatScreenState extends State<ChatScreen> {
                                       valueColor: AlwaysStoppedAnimation<Color>(
                                           themeColor),
                                     ),
-                                    width: 200.0,
-                                    height: 200.0,
+                                    width: 200.0.h,
+                                    height: 200.0.h,
                                     padding: EdgeInsets.all(70.0),
                                     decoration: BoxDecoration(
                                       color: greyColor2,
@@ -912,8 +937,8 @@ class ChatScreenState extends State<ChatScreen> {
                                       Material(
                                     child: Image.asset(
                                       'images/img_not_available.jpeg',
-                                      width: 200.0,
-                                      height: 200.0,
+                                      width: 200.0.h,
+                                      height: 200.0.h,
                                       fit: BoxFit.cover,
                                     ),
                                     borderRadius: BorderRadius.all(
@@ -922,8 +947,8 @@ class ChatScreenState extends State<ChatScreen> {
                                     clipBehavior: Clip.hardEdge,
                                   ),
                                   imageUrl: document[STR_CONTENT],
-                                  width: 200.0,
-                                  height: 200.0,
+                                  width: 200.0.h,
+                                  height: 200.0.h,
                                   fit: BoxFit.cover,
                                 ),
                                 borderRadius:
@@ -964,9 +989,7 @@ class ChatScreenState extends State<ChatScreen> {
                                   },
                                   child: Container(
                                     constraints: BoxConstraints(
-                                      maxWidth:
-                                          MediaQuery.of(context).size.width *
-                                              .6,
+                                      maxWidth: 1.sw * .6,
                                     ),
                                     padding: const EdgeInsets.all(15.0),
                                     decoration: BoxDecoration(
@@ -988,7 +1011,7 @@ class ChatScreenState extends State<ChatScreen> {
                                           color: Colors.black54,
                                         ),
                                         SizedBoxWidget(
-                                          width: 5,
+                                          width: 5.0.w,
                                         ),
                                         Text(
                                           'Click to view PDF',
@@ -1009,9 +1032,7 @@ class ChatScreenState extends State<ChatScreen> {
                                       elevation: 2.0,
                                       child: Container(
                                         padding: EdgeInsets.all(10.0),
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                3,
+                                        width: 1.sw / 3,
                                         child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
@@ -1021,10 +1042,11 @@ class ChatScreenState extends State<ChatScreen> {
                                                     peerName.substring(0, 1))),
                                             IconButton(
                                               icon: Icon(currentPlayedVoiceURL ==
-                                                  document[STR_CONTENT]
+                                                      document[STR_CONTENT]
                                                   ? isPlaying
-                                                  ? Icons.pause_circle_filled
-                                                  : Icons.play_circle_filled
+                                                      ? Icons
+                                                          .pause_circle_filled
+                                                      : Icons.play_circle_filled
                                                   : Icons.play_circle_filled),
                                               onPressed: () {
                                                 isPlaying
@@ -1042,8 +1064,8 @@ class ChatScreenState extends State<ChatScreen> {
                                 : Container(
                                     child: Image.asset(
                                       'images/${document[STR_CONTENT]}.gif',
-                                      width: 100.0,
-                                      height: 100.0,
+                                      width: 100.0.h,
+                                      height: 100.0.h,
                                       fit: BoxFit.cover,
                                     ),
                                     margin: EdgeInsets.only(
@@ -1064,7 +1086,7 @@ class ChatScreenState extends State<ChatScreen> {
                               .toString()),
                       style: TextStyle(
                           color: greyColor,
-                          fontSize: 12.0,
+                          fontSize: 12.0.sp,
                           fontStyle: FontStyle.italic),
                     ),
                     margin: EdgeInsets.only(left: 50.0, top: 5.0, bottom: 5.0),
@@ -1167,6 +1189,7 @@ class ChatScreenState extends State<ChatScreen> {
                         child: Icon(
                           Icons.arrow_back_ios,
                           color: Colors.white,
+                          size: 24.0.sp,
                         ),
                         onTap: () {
                           //Add code for tapping back
@@ -1180,16 +1203,16 @@ class ChatScreenState extends State<ChatScreen> {
                     AnimatedSwitcher(
                       duration: Duration(milliseconds: 10),
                       child: Container(
-                        width: MediaQuery.of(context).size.width * 0.66,
+                        width: 1.sw * 0.66,
                         child: _patientDetailOrSearch(),
                       ),
                     ),
                     SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.03,
+                      width: 1.sw * 0.03,
                     ),
                     SizedBoxWithChild(
-                      height: 24,
-                      width: 24,
+                      height: 24.0.h,
+                      width: 24.0.h,
                       child: new CommonUtil().getNotificationIcon(context),
                     ),
                     moreOptionsPopup()
@@ -1227,7 +1250,7 @@ class ChatScreenState extends State<ChatScreen> {
                   AnimatedSwitcher(
                     duration: Duration(milliseconds: 10),
                     child: Container(
-                      width: MediaQuery.of(context).size.width * 0.65,
+                      width: 1.sw * 0.65,
                       child: _patientDetailOrSearch(),
                     ),
                   ),
@@ -1282,7 +1305,12 @@ class ChatScreenState extends State<ChatScreen> {
       itemBuilder: (context) => [
             PopupMenuItem(
               value: 0,
-              child: Text('$popUpChoiceOne'),
+              child: Text(
+                '$popUpChoiceOne',
+                style: TextStyle(
+                  fontSize: 14.0.sp,
+                ),
+              ),
             ),
             /* PopupMenuItem(
             child: GestureDetector(child: Text('$popUpChoiceTwo'))),
@@ -1321,7 +1349,7 @@ class ChatScreenState extends State<ChatScreen> {
         resultWidget = AnimatedSwitcher(
           duration: Duration(milliseconds: 10),
           child: Container(
-            height: 45,
+            height: 45.0.h,
             child: TextField(
               decoration: InputDecoration(
                   suffixIcon: IconButton(
@@ -1357,10 +1385,10 @@ class ChatScreenState extends State<ChatScreen> {
             children: <Widget>[
               CircleAvatar(
                 backgroundImage: NetworkImage(widget.peerAvatar),
-                radius: 18,
+                radius: 18.0.sp,
               ),
               SizedBox(
-                width: 15,
+                width: 15.0.w,
               ),
               Container(
                   child: Expanded(
@@ -1373,7 +1401,7 @@ class ChatScreenState extends State<ChatScreen> {
                         maxLines: 1,
                         style: TextStyle(
                             fontFamily: variable.font_poppins,
-                            fontSize: 16,
+                            fontSize: 16.0.sp,
                             color: Colors.white)),
                     Text('Booking Id: ' + bookingId,
                         textAlign: TextAlign.left,
@@ -1381,7 +1409,7 @@ class ChatScreenState extends State<ChatScreen> {
                         maxLines: 1,
                         style: TextStyle(
                             fontFamily: variable.font_poppins,
-                            fontSize: 10,
+                            fontSize: 10.0.sp,
                             color: Colors.white)),
                     Text(
                         'Next Appointment: ' +
@@ -1391,7 +1419,7 @@ class ChatScreenState extends State<ChatScreen> {
                         maxLines: 1,
                         style: TextStyle(
                             fontFamily: variable.font_poppins,
-                            fontSize: 10,
+                            fontSize: 10.0.sp,
                             color: Colors.white)),
                     Text(
                         toBeginningOfSentenceCase('Last Appointment: ' +
@@ -1401,7 +1429,7 @@ class ChatScreenState extends State<ChatScreen> {
                         maxLines: 1,
                         style: TextStyle(
                             fontFamily: variable.font_poppins,
-                            fontSize: 10,
+                            fontSize: 10.0.sp,
                             color: Colors.white)),
                     Text(
                       widget.lastDate != null
@@ -1411,7 +1439,7 @@ class ChatScreenState extends State<ChatScreen> {
                       maxLines: 1,
                       style: TextStyle(
                           fontFamily: variable.font_poppins,
-                          fontSize: 10,
+                          fontSize: 10.0.sp,
                           color: Colors.white),
                     ),
                   ],
@@ -1429,8 +1457,7 @@ class ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-          preferredSize:
-              Size.fromHeight(MediaQuery.of(context).size.height * 0.15),
+          preferredSize: Size.fromHeight(1.sh * 0.15),
           child: _patientChatBar()),
       floatingActionButton: isSearchVisible
           ? Padding(
@@ -1446,8 +1473,8 @@ class ChatScreenState extends State<ChatScreen> {
                       accentColor: Colors.transparent,
                     ),
                     child: Container(
-                      height: MediaQuery.of(context).size.width * 0.1,
-                      width: MediaQuery.of(context).size.width * 0.1,
+                      height: 1.sw * 0.1,
+                      width: 1.sw * 0.1,
                       child: new FloatingActionButton(
                         heroTag: null,
                         onPressed: () async {
@@ -1466,15 +1493,15 @@ class ChatScreenState extends State<ChatScreen> {
                     ),
                   ),
                   SizedBoxWidget(
-                    height: 5,
+                    height: 5.0.h,
                   ),
                   new Theme(
                     data: new ThemeData(
                       accentColor: Colors.transparent,
                     ),
                     child: Container(
-                      height: MediaQuery.of(context).size.width * 0.1,
-                      width: MediaQuery.of(context).size.width * 0.1,
+                      height: 1.sw * 0.1,
+                      width: 1.sw * 0.1,
                       child: new FloatingActionButton(
                         heroTag: null,
                         onPressed: () async {
@@ -1511,7 +1538,7 @@ class ChatScreenState extends State<ChatScreen> {
                 // Input content
                 buildInput(),
                 SizedBox(
-                  height: 20,
+                  height: 20.0.h,
                 ),
               ],
             ),
@@ -1535,8 +1562,8 @@ class ChatScreenState extends State<ChatScreen> {
                 onPressed: () => onSendMessage('mimi1', 2),
                 child: Image.asset(
                   'images/mimi1.gif',
-                  width: 50.0,
-                  height: 50.0,
+                  width: 50.0.h,
+                  height: 50.0.h,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -1544,8 +1571,8 @@ class ChatScreenState extends State<ChatScreen> {
                 onPressed: () => onSendMessage('mimi2', 2),
                 child: Image.asset(
                   'images/mimi2.gif',
-                  width: 50.0,
-                  height: 50.0,
+                  width: 50.0.h,
+                  height: 50.0.h,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -1553,8 +1580,8 @@ class ChatScreenState extends State<ChatScreen> {
                 onPressed: () => onSendMessage('mimi3', 2),
                 child: Image.asset(
                   'images/mimi3.gif',
-                  width: 50.0,
-                  height: 50.0,
+                  width: 50.0.h,
+                  height: 50.0.h,
                   fit: BoxFit.cover,
                 ),
               )
@@ -1567,8 +1594,8 @@ class ChatScreenState extends State<ChatScreen> {
                 onPressed: () => onSendMessage('mimi4', 2),
                 child: Image.asset(
                   'images/mimi4.gif',
-                  width: 50.0,
-                  height: 50.0,
+                  width: 50.0.h,
+                  height: 50.0.h,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -1576,8 +1603,8 @@ class ChatScreenState extends State<ChatScreen> {
                 onPressed: () => onSendMessage('mimi5', 2),
                 child: Image.asset(
                   'images/mimi5.gif',
-                  width: 50.0,
-                  height: 50.0,
+                  width: 50.0.h,
+                  height: 50.0.h,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -1585,8 +1612,8 @@ class ChatScreenState extends State<ChatScreen> {
                 onPressed: () => onSendMessage('mimi6', 2),
                 child: Image.asset(
                   'images/mimi6.gif',
-                  width: 50.0,
-                  height: 50.0,
+                  width: 50.0.h,
+                  height: 50.0.h,
                   fit: BoxFit.cover,
                 ),
               )
@@ -1599,8 +1626,8 @@ class ChatScreenState extends State<ChatScreen> {
                 onPressed: () => onSendMessage('mimi7', 2),
                 child: Image.asset(
                   'images/mimi7.gif',
-                  width: 50.0,
-                  height: 50.0,
+                  width: 50.0.h,
+                  height: 50.0.h,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -1608,8 +1635,8 @@ class ChatScreenState extends State<ChatScreen> {
                 onPressed: () => onSendMessage('mimi8', 2),
                 child: Image.asset(
                   'images/mimi8.gif',
-                  width: 50.0,
-                  height: 50.0,
+                  width: 50.0.h,
+                  height: 50.0.h,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -1617,8 +1644,8 @@ class ChatScreenState extends State<ChatScreen> {
                 onPressed: () => onSendMessage('mimi9', 2),
                 child: Image.asset(
                   'images/mimi9.gif',
-                  width: 50.0,
-                  height: 50.0,
+                  width: 50.0.h,
+                  height: 50.0.h,
                   fit: BoxFit.cover,
                 ),
               )
@@ -1632,7 +1659,7 @@ class ChatScreenState extends State<ChatScreen> {
           border: Border(top: BorderSide(color: greyColor2, width: 0.5)),
           color: Colors.white),
       padding: EdgeInsets.all(5.0),
-      height: 180.0,
+      height: 180.0.h,
     );
   }
 
@@ -1652,7 +1679,7 @@ class ChatScreenState extends State<ChatScreen> {
             Flexible(
               flex: 4,
               child: Container(
-                height: 58,
+                height: 58.0.h,
                 child: Stack(
                   alignment: Alignment.centerRight,
                   children: [
@@ -1669,7 +1696,10 @@ class ChatScreenState extends State<ChatScreen> {
                       ],
                       decoration: InputDecoration(
                         hintText: "$chatTextFieldHintText",
-                        hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
+                        hintStyle: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14.0.sp,
+                        ),
                         filled: true,
                         fillColor: Colors.white70,
                         enabledBorder: OutlineInputBorder(
@@ -1685,8 +1715,8 @@ class ChatScreenState extends State<ChatScreen> {
                       /*onSubmitted: (value) =>*/
                     ),
                     SizedBoxWithChild(
-                      width: 50,
-                      height: 50,
+                      width: 50.0.h,
+                      height: 50.0.h,
                       child: FlatButton(
                           onPressed: () {
                             recordIds.clear();
@@ -1853,18 +1883,33 @@ class ChatScreenState extends State<ChatScreen> {
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        content: Text('Send to Dr. ' + peerName),
+        content: Text(
+          'Send to Dr. ' + peerName,
+          style: TextStyle(
+            fontSize: 14.0.sp,
+          ),
+        ),
         actions: <Widget>[
           FlatButton(
             onPressed: () => closeDialog(),
-            child: Text('Cancel'),
+            child: Text(
+              'Cancel',
+              style: TextStyle(
+                fontSize: 14.0.sp,
+              ),
+            ),
           ),
           FlatButton(
             onPressed: () {
               closeDialog();
               onSendMessage(content, type);
             },
-            child: Text('Send'),
+            child: Text(
+              'Send',
+              style: TextStyle(
+                fontSize: 14.0.sp,
+              ),
+            ),
           ),
         ],
       ),

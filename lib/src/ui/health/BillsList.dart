@@ -13,6 +13,7 @@ import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class BillsList extends StatefulWidget {
   final HealthRecordList completeData;
@@ -144,9 +145,8 @@ class _BillsListState extends State<BillsList> {
               } else {
                 toast.getToast('No Image Attached ', Colors.red);
               }
-            }else{
+            } else {
               toast.getToast('No Image Attached ', Colors.red);
-
             }
           } else {
             bool condition;
@@ -194,9 +194,9 @@ class _BillsListState extends State<BillsList> {
                     ? mediaMetaInfoObj.metaInfo.mediaTypeInfo.url
                     :
                 Constants.BASE_URL +*/
-                    mediaMetaInfoObj.metadata.healthRecordCategory.logo,
-                height: 25,
-                width: 25,
+                mediaMetaInfoObj.metadata.healthRecordCategory.logo,
+                height: 25.0.h,
+                width: 25.0.h,
                 color: Color(new CommonUtil().getMyPrimaryColor()),
               ),
             ),
@@ -222,7 +222,8 @@ class _BillsListState extends State<BillsList> {
                         ? new FHBUtils()
                             .getFormattedDateString(mediaMetaInfoObj.createdOn)
                         : '',
-                    style: TextStyle(color: Colors.grey[400], fontSize: 12),
+                    style:
+                        TextStyle(color: Colors.grey[400], fontSize: 12.0.sp),
                   )
                 ],
               ),
@@ -280,8 +281,8 @@ class _BillsListState extends State<BillsList> {
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           return Container(
-            width: 40,
-            height: 60,
+            width: 40.0.w,
+            height: 60.0.h,
             child: Image.memory(snapshot.data),
             decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
           );
@@ -290,8 +291,8 @@ class _BillsListState extends State<BillsList> {
               baseColor: Colors.grey[300],
               highlightColor: Colors.grey[100],
               child: Container(
-                width: 50,
-                height: 50,
+                width: 50.0.h,
+                height: 50.0.h,
               ));
         }
       },

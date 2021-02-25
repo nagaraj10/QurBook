@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -145,7 +145,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
                     'Done',
                     style: TextStyle(
                         color: Colors.white,
-                        fontSize: 16,
+                        fontSize: 16.0.sp,
                         fontWeight: FontWeight.w500),
                   ),
                   gradient: LinearGradient(
@@ -392,7 +392,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
             variable.strSkip,
             style: new TextStyle(
               color: Colors.white,
-              fontSize: 14.0,
+              fontSize: 14.0.sp,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -705,14 +705,14 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
           padding: const EdgeInsets.all(8.0),
           child: Text(
             'Before Food',
-            style: TextStyle(fontSize: 16),
+            style: TextStyle(fontSize: 16.0.sp),
           ),
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
             'After Food',
-            style: TextStyle(fontSize: 16),
+            style: TextStyle(fontSize: 16.0.sp),
           ),
         ),
       ],
@@ -751,7 +751,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
         children: <Widget>[
           Expanded(
             child: carouselSlider = CarouselSlider(
-              height: MediaQuery.of(context).size.height,
+              height: 1.sh,
               initialPage: 0,
               enlargeCenterPage: true,
               reverse: false,
@@ -767,7 +767,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
                 return Builder(
                   builder: (BuildContext context) {
                     return Container(
-                        width: MediaQuery.of(context).size.width,
+                        width: 1.sw,
                         margin: EdgeInsets.symmetric(horizontal: 10.0),
                         decoration: BoxDecoration(),
                         child: Container(
@@ -791,12 +791,16 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               IconButton(
-                icon: Icon(Icons.arrow_back_ios, color: Colors.white),
+                icon: Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.white,
+                  size: 24.0.sp,
+                ),
                 onPressed: goToPrevious,
               ),
               Container(
-                width: 50.0,
-                height: 30.0,
+                width: 50.0.w,
+                height: 30.0.h,
                 child: Text('$index /' + widget.imagePath.length.toString(),
                     style: TextStyle(color: Colors.white)),
                 decoration: BoxDecoration(
@@ -806,7 +810,11 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
               ),
               IconButton(
                 onPressed: goToNext,
-                icon: Icon(Icons.arrow_forward_ios, color: Colors.white),
+                icon: Icon(
+                  Icons.arrow_forward_ios,
+                  color: Colors.white,
+                  size: 24.0.sp,
+                ),
               ),
             ],
           ),

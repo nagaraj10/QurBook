@@ -3,7 +3,7 @@ import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/widgets/RaisedGradientButton.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
-
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class HealthApp extends StatelessWidget {
   @override
@@ -14,7 +14,7 @@ class HealthApp extends StatelessWidget {
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,
-            size: 20,
+            size: 24.0.sp,
           ),
           onPressed: () {
             Navigator.of(context).pop();
@@ -39,31 +39,31 @@ class HealthApp extends StatelessWidget {
           Flexible(
             fit: FlexFit.tight,
             flex: 1,
-            child: Container(            
-            alignment: Alignment.center,
-            padding: EdgeInsets.all(1),
-            child: RaisedGradientButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              borderRadius: 30,
-              child: Container(
-                padding: EdgeInsets.all(10),
-                //alignment: Alignment.center,
-                child: Text(
-                  variable.strUnderstood,
-                  style: TextStyle(color: Colors.white, fontSize: 16),
+            child: Container(
+              alignment: Alignment.center,
+              padding: EdgeInsets.all(1),
+              child: RaisedGradientButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                borderRadius: 30,
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  //alignment: Alignment.center,
+                  child: Text(
+                    variable.strUnderstood,
+                    style: TextStyle(color: Colors.white, fontSize: 16.0.sp),
+                  ),
                 ),
-              ),
-              gradient: LinearGradient(
-                colors: <Color>[
-                  Color(new CommonUtil().getMyPrimaryColor()),
-                  Color(new CommonUtil().getMyGredientColor()),
-                ],
+                gradient: LinearGradient(
+                  colors: <Color>[
+                    Color(new CommonUtil().getMyPrimaryColor()),
+                    Color(new CommonUtil().getMyGredientColor()),
+                  ],
+                ),
               ),
             ),
           ),
-           ),
         ],
       ),
     );

@@ -6,10 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
-
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/record_detail/model/ImageDocumentResponse.dart';
-
 
 class ImageSlider extends StatefulWidget {
   final List<HealthRecordCollection> imageList;
@@ -41,14 +40,13 @@ class _ImageSliderState extends State<ImageSlider> {
                   borderSide: BorderSide(color: Colors.white70),
                   onPressed: Navigator.of(context).pop),
             ),
-
-            Expanded(flex: 7, child: showPhotoView(widget.imageList)
-                ),
+            Expanded(flex: 7, child: showPhotoView(widget.imageList)),
           ],
         ),
       ),
     );
   }
+
   goToPrevious() {
     carouselSlider.previousPage(
         duration: Duration(milliseconds: 300), curve: Curves.ease);
@@ -65,19 +63,16 @@ class _ImageSliderState extends State<ImageSlider> {
       scrollPhysics: const BouncingScrollPhysics(),
       builder: (BuildContext context, int index) {
         return PhotoViewGalleryPageOptions(
-               imageProvider: NetworkImage(
-                imageList[index].healthRecordUrl),
+            imageProvider: NetworkImage(imageList[index].healthRecordUrl),
             initialScale: PhotoViewComputedScale.contained * 1.0,
             minScale: PhotoViewComputedScale.contained * 1.0,
-            maxScale: PhotoViewComputedScale.contained * 2.0
-
-            );
+            maxScale: PhotoViewComputedScale.contained * 2.0);
       },
       itemCount: imageList.length,
       loadingBuilder: (context, event) => Center(
         child: Container(
-          width: 20.0,
-          height: 20.0,
+          width: 20.0.h,
+          height: 20.0.h,
           child: CircularProgressIndicator(
             value: event == null
                 ? 0

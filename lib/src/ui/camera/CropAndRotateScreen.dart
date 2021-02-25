@@ -12,7 +12,7 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/src/ui/camera/DisplayPictureScreen.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
-
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class CropAndRotateScreen extends StatefulWidget {
   final List<String> imagePath;
@@ -87,7 +87,6 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
   }
 
   void callBackToRefresh() {
-  
     (context as Element).markNeedsBuild();
   }
 
@@ -106,7 +105,7 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
         children: <Widget>[
           Expanded(
             child: carouselSlider = CarouselSlider(
-              height: MediaQuery.of(context).size.height,
+              height: 1.sh,
               initialPage: 0,
               enlargeCenterPage: true,
               reverse: false,
@@ -116,7 +115,7 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
               onPageChanged: (index) {
                 setState(() {
                   _current = index;
-                  
+
                   currentImagePath = widget.imagePath[_current];
                 });
               },
@@ -124,7 +123,7 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
                 return Builder(
                   builder: (BuildContext context) {
                     return Container(
-                        width: MediaQuery.of(context).size.width,
+                        width: 1.sw,
                         margin: EdgeInsets.symmetric(horizontal: 10.0),
                         decoration: BoxDecoration(),
                         child: Container(
@@ -134,23 +133,19 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
                               : Image.file(
                                   File(imgUrl),
                                   fit: BoxFit.scaleDown,
-                                )
-
-                        
-                          ,
+                                ),
                         ));
-                  
                   },
                 );
               }).toList(),
             ),
           ),
           SizedBox(
-            height: 10.0,
+            height: 10.0.h,
           ),
           Container(
-            width: 50.0,
-            height: 30.0,
+            width: 50.0.w,
+            height: 30.0.h,
             child: Text('$index /' + widget.imagePath.length.toString(),
                 style: TextStyle(color: Colors.white)),
             decoration: BoxDecoration(
@@ -170,7 +165,11 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   IconButton(
-                    icon: Icon(Icons.arrow_back_ios, color: Colors.white),
+                    icon: Icon(
+                      Icons.arrow_back_ios,
+                      color: Colors.white,
+                      size: 24.0.sp,
+                    ),
                     onPressed: goToPrevious,
                   ),
                   IconButton(
@@ -250,7 +249,6 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
             toolbarTitle: variable.strCropper,
             toolbarColor: Color(new CommonUtil().getMyPrimaryColor()),
             toolbarWidgetColor: Colors.white,
-         
             initAspectRatio: CropAspectRatioPreset.original,
             lockAspectRatio: false),
         iosUiSettings: IOSUiSettings(
@@ -278,11 +276,11 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 CircularProgressIndicator(
-                  strokeWidth: 2.0,
+                  strokeWidth: 2.0.sp,
                   valueColor: AlwaysStoppedAnimation(primaryColor),
                 ),
                 SizedBox(
-                  width: 10.0,
+                  width: 10.0.w,
                 ),
                 Text(
                   variable.strCropping,

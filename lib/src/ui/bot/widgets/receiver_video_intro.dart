@@ -1,5 +1,5 @@
 import 'dart:ui';
-
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:loading/indicator/ball_pulse_indicator.dart';
@@ -29,10 +29,10 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
             PreferenceUtil.getStringValue(constants.keyMayaAsset) != null
                 ? PreferenceUtil.getStringValue(constants.keyMayaAsset) + '.png'
                 : variable.icon_maya,
-            height: 32,
-            width: 32,
+            height: 32.0.h,
+            width: 32.0.h,
           ),
-          radius: 30,
+          radius: 30.0.sp,
           backgroundColor: Colors.white,
         ),
         Column(
@@ -52,7 +52,7 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                       bottomRight: Radius.circular(25))),
               child: Container(
                 constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width * .6,
+                  maxWidth: 1.sw * .6,
                 ),
                 padding: const EdgeInsets.all(15.0),
                 decoration: BoxDecoration(
@@ -82,7 +82,7 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
               style:
                   Theme.of(context).textTheme.body1.apply(color: Colors.grey),
             ),
-            SizedBox(width: 10),
+            SizedBox(width: 10.0.w),
             Column(
               children: [
                 Card(
@@ -96,7 +96,7 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                           bottomRight: Radius.circular(10))),
                   child: Container(
                     constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width * .7,
+                      maxWidth: 1.sw * .7,
                       //maxHeight: 280,
                     ),
                     padding: const EdgeInsets.all(5.0),
@@ -112,7 +112,7 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                     child: Column(
                       children: [
                         Container(
-                          width: MediaQuery.of(context).size.width * .7,
+                          width: 1.sw * .7,
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -122,11 +122,13 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                                   alignment: Alignment.center,
                                   children: [
                                     FadeInImage.assetNetwork(
-                                      placeholder: 'assets/icons/placeholder.jpg',
+                                      placeholder:
+                                          'assets/icons/placeholder.jpg',
                                       image: videoThumbnail(0),
                                     ),
                                     IconButton(
-                                      icon: Icon(Icons.play_circle_fill_rounded),
+                                      icon:
+                                          Icon(Icons.play_circle_fill_rounded),
                                       color: Colors.black54,
                                       iconSize: 75,
                                       onPressed: () {
@@ -137,7 +139,8 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) => MyYoutubePlayer(
+                                            builder: (context) =>
+                                                MyYoutubePlayer(
                                               videoId: videoId,
                                             ),
                                           ),
@@ -152,7 +155,8 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                         ),
                         Text(
                           c?.videoLinks[0]?.title,
-                          style: TextStyle(color: Colors.white, fontSize: 13),
+                          style:
+                              TextStyle(color: Colors.white, fontSize: 13.0.sp),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -171,7 +175,7 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                           bottomRight: Radius.circular(10))),
                   child: Container(
                     constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width * .7,
+                      maxWidth: 1.sw * .7,
                       //maxHeight: 200,
                     ),
                     padding: const EdgeInsets.all(5.0),
@@ -187,7 +191,7 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                     child: Column(
                       children: [
                         Container(
-                          width: MediaQuery.of(context).size.width * .7,
+                          width: 1.sw * .7,
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -197,11 +201,13 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                                   alignment: Alignment.center,
                                   children: [
                                     FadeInImage.assetNetwork(
-                                      placeholder: 'assets/icons/placeholder.jpg',
+                                      placeholder:
+                                          'assets/icons/placeholder.jpg',
                                       image: videoThumbnail(1),
                                     ),
                                     IconButton(
-                                      icon: Icon(Icons.play_circle_fill_rounded),
+                                      icon:
+                                          Icon(Icons.play_circle_fill_rounded),
                                       color: Colors.black54,
                                       iconSize: 75,
                                       onPressed: () {
@@ -212,7 +218,8 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) => MyYoutubePlayer(
+                                            builder: (context) =>
+                                                MyYoutubePlayer(
                                               videoId: videoId,
                                             ),
                                           ),
@@ -227,7 +234,8 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                         ),
                         Text(
                           c?.videoLinks[1]?.title,
-                          style: TextStyle(color: Colors.white, fontSize: 13),
+                          style:
+                              TextStyle(color: Colors.white, fontSize: 13.0.sp),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -246,7 +254,7 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                           bottomRight: Radius.circular(10))),
                   child: Container(
                     constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width * .7,
+                      maxWidth: 1.sw * .7,
                       //maxHeight: 200,
                     ),
                     padding: const EdgeInsets.all(5.0),
@@ -262,7 +270,7 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                     child: Column(
                       children: [
                         Container(
-                          width: MediaQuery.of(context).size.width * .7,
+                          width: 1.sw * .7,
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -272,11 +280,13 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                                   alignment: Alignment.center,
                                   children: [
                                     FadeInImage.assetNetwork(
-                                      placeholder: 'assets/icons/placeholder.jpg',
+                                      placeholder:
+                                          'assets/icons/placeholder.jpg',
                                       image: videoThumbnail(2),
                                     ),
                                     IconButton(
-                                      icon: Icon(Icons.play_circle_fill_rounded),
+                                      icon:
+                                          Icon(Icons.play_circle_fill_rounded),
                                       color: Colors.black54,
                                       iconSize: 75,
                                       onPressed: () {
@@ -287,7 +297,8 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) => MyYoutubePlayer(
+                                            builder: (context) =>
+                                                MyYoutubePlayer(
                                               videoId: videoId,
                                             ),
                                           ),
@@ -302,7 +313,8 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                         ),
                         Text(
                           c?.videoLinks[2]?.title,
-                          style: TextStyle(color: Colors.white, fontSize: 13),
+                          style:
+                              TextStyle(color: Colors.white, fontSize: 13.0.sp),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -321,7 +333,7 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                           bottomRight: Radius.circular(10))),
                   child: Container(
                     constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width * .7,
+                      maxWidth: 1.sw * .7,
                       //maxHeight: 200,
                     ),
                     padding: const EdgeInsets.all(5.0),
@@ -337,7 +349,7 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                     child: Column(
                       children: [
                         Container(
-                          width: MediaQuery.of(context).size.width * .7,
+                          width: 1.sw * .7,
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -347,11 +359,13 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                                   alignment: Alignment.center,
                                   children: [
                                     FadeInImage.assetNetwork(
-                                      placeholder: 'assets/icons/placeholder.jpg',
+                                      placeholder:
+                                          'assets/icons/placeholder.jpg',
                                       image: videoThumbnail(3),
                                     ),
                                     IconButton(
-                                      icon: Icon(Icons.play_circle_fill_rounded),
+                                      icon:
+                                          Icon(Icons.play_circle_fill_rounded),
                                       color: Colors.black54,
                                       iconSize: 75,
                                       onPressed: () {
@@ -362,7 +376,8 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) => MyYoutubePlayer(
+                                            builder: (context) =>
+                                                MyYoutubePlayer(
                                               videoId: videoId,
                                             ),
                                           ),
@@ -377,7 +392,8 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                         ),
                         Text(
                           c?.videoLinks[3]?.title,
-                          style: TextStyle(color: Colors.white, fontSize: 13),
+                          style:
+                              TextStyle(color: Colors.white, fontSize: 13.0.sp),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -389,7 +405,7 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(width: 20),
+        SizedBox(width: 20.0.w),
       ],
     );
   }

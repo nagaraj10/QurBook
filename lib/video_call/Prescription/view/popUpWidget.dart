@@ -1,12 +1,12 @@
 import 'dart:ui';
-
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ShowMoreTextPopup {
-  double _popupWidth = 200.0;
-  double _popupHeight = 200.0;
-  double arrowHeight = 10.0;
+  double _popupWidth = 200.0.h;
+  double _popupHeight = 200.0.h;
+  double arrowHeight = 10.0.h;
   OverlayEntry _entry;
   Widget _Widget;
   TextStyle _textStyle;
@@ -28,13 +28,13 @@ class ShowMoreTextPopup {
 
   ShowMoreTextPopup(this.context,
       {double height,
-        double width,
-        VoidCallback onDismiss,
-        Color backgroundColor,
-        Widget widget,
-        TextStyle textStyle,
-        BorderRadius borderRadius,
-        EdgeInsetsGeometry padding}) {
+      double width,
+      VoidCallback onDismiss,
+      Color backgroundColor,
+      Widget widget,
+      TextStyle textStyle,
+      BorderRadius borderRadius,
+      EdgeInsetsGeometry padding}) {
     this.dismissCallback = onDismiss;
     this._popupHeight = height;
     this._popupWidth = width;

@@ -10,7 +10,7 @@ import 'package:myfhb/src/ui/MyRecord.dart';
 //import 'package:myfhb/src/ui/MyRecords.dart';
 import 'package:myfhb/src/ui/bot/SuperMaya.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/src/ui/user/UserAccountMain.dart';
@@ -33,8 +33,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 1;
   GlobalKey _bottomNavigationKey = GlobalKey();
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  static TextStyle optionStyle =
+      TextStyle(fontSize: 30.0.sp, fontWeight: FontWeight.bold);
   var _widgetOptions = [
     MyFhbNotifications(),
     MyRecords(),
@@ -114,7 +114,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
       child: CurvedNavigationBar(
           key: _bottomNavigationKey,
           index: widget.selectedPageIndex,
-          height: 60.0,
+          height: 60.0.h,
           items: <Widget>[
             Padding(
                 padding: EdgeInsets.all(5),
@@ -131,12 +131,12 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                     ),
                     widget.selectedPageIndex == 0
                         ? Container(
-                            height: 0,
-                            width: 0,
+                            height: 0.0.h,
+                            width: 0.0.h,
                           )
                         : Text(
                             variable.strhome,
-                            style: TextStyle(fontSize: 10),
+                            style: TextStyle(fontSize: 10.0.sp),
                           )
                   ],
                 )),
@@ -154,12 +154,12 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                     ),
                     widget.selectedPageIndex == 1
                         ? Container(
-                            height: 0,
-                            width: 0,
+                            height: 0.0.h,
+                            width: 0.0.h,
                           )
                         : Text(
                             variable.strMyRecords,
-                            style: TextStyle(fontSize: 10),
+                            style: TextStyle(fontSize: 10.0.sp),
                           )
                   ],
                 )),
@@ -175,17 +175,17 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                                   Constants.keyMayaAsset) +
                               variable.strExtImg
                           : variable.icon_mayaMain,
-                      height: 32,
-                      width: 32,
+                      height: 32.0.h,
+                      width: 32.0.h,
                     ),
                     widget.selectedPageIndex == 2
                         ? Container(
-                            height: 0,
-                            width: 0,
+                            height: 0.0.h,
+                            width: 0.0.h,
                           )
                         : Text(
                             variable.strMaya,
-                            style: TextStyle(fontSize: 10),
+                            style: TextStyle(fontSize: 10.0.sp),
                           )
                   ],
                 )),
@@ -203,12 +203,12 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                     ),
                     widget.selectedPageIndex == 3
                         ? Container(
-                            height: 0,
-                            width: 0,
+                            height: 0.0.h,
+                            width: 0.0.h,
                           )
                         : Text(
                             variable.strMyProvider,
-                            style: TextStyle(fontSize: 10),
+                            style: TextStyle(fontSize: 10.0.sp),
                           )
                   ],
                 )),
@@ -226,12 +226,12 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                     ),
                     widget.selectedPageIndex == 4
                         ? Container(
-                            height: 0,
-                            width: 0,
+                            height: 0.0.h,
+                            width: 0.0.h,
                           )
                         : Text(
                             variable.strMore,
-                            style: TextStyle(fontSize: 10),
+                            style: TextStyle(fontSize: 10.0.sp),
                           )
                   ],
                 )),

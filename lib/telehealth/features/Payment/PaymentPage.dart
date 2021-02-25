@@ -13,6 +13,7 @@ import 'package:myfhb/telehealth/features/MyProvider/model/updatePayment/UpdateP
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/UpdatePaymentViewModel.dart';
 import 'package:myfhb/telehealth/features/Payment/ResultPage.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class PaymentPage extends StatefulWidget {
   final String redirectUrl;
@@ -52,7 +53,10 @@ class _WebViewExampleState extends State<PaymentPage> {
       child: Scaffold(
         appBar: AppBar(
           leading: new IconButton(
-            icon: new Icon(Icons.arrow_back_ios),
+            icon: new Icon(
+              Icons.arrow_back_ios,
+              size: 24.0.sp,
+            ),
             onPressed: () {
               _onWillPop();
             },
@@ -62,7 +66,6 @@ class _WebViewExampleState extends State<PaymentPage> {
             NavigationControls(_controller.future),
           ],
         ),
-
         body: Builder(builder: (BuildContext context) {
           return WebView(
             initialUrl: PAYMENT_URL,
@@ -77,8 +80,8 @@ class _WebViewExampleState extends State<PaymentPage> {
             navigationDelegate: (NavigationRequest request) {
               String finalUrl = request.url.toString();
               if (finalUrl.contains(CHECK_URL)) {
-                String paymentOrderId='';
-                String paymentRequestId='';
+                String paymentOrderId = '';
+                String paymentRequestId = '';
                 Uri uri = Uri.parse(finalUrl);
                 String paymentStatus = uri.queryParameters[PAYMENT_STATUS];
                 paymentOrderId = uri.queryParameters[PAYMENT_ID];
@@ -106,26 +109,26 @@ class _WebViewExampleState extends State<PaymentPage> {
 
   Future<bool> _onWillPop() {
     return showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(STR_ARE_SURE),
-        content: Text(STR_SURE_CANCEL_PAY),
-        actions: <Widget>[
-          FlatButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('No'),
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(STR_ARE_SURE),
+            content: Text(STR_SURE_CANCEL_PAY),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('No'),
+              ),
+              FlatButton(
+                onPressed: () {
+                  widget.closePage(STR_FAILED);
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                },
+                child: Text('Yes'),
+              ),
+            ],
           ),
-          FlatButton(
-            onPressed: () {
-              widget.closePage(STR_FAILED);
-              Navigator.pop(context);
-              Navigator.pop(context);
-            },
-            child: Text('Yes'),
-          ),
-        ],
-      ),
-    ) ??
+        ) ??
         false;
   }
 

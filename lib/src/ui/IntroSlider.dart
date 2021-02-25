@@ -6,8 +6,7 @@ import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/router_variable.dart' as router;
-
-
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class IntroSliderPage extends StatefulWidget {
   @override
@@ -16,7 +15,7 @@ class IntroSliderPage extends StatefulWidget {
 
 class _IntroSliderState extends State<IntroSliderPage> {
   List<Slide> pages = new List<Slide>();
- 
+
   @override
   void initState() {
     super.initState();
@@ -35,14 +34,14 @@ class _IntroSliderState extends State<IntroSliderPage> {
 
   void onDonePress() {
     //PageNavigator.goToPermanent(context,router.rt_Signinscreen);
-    PageNavigator.goToPermanent(context,router.rt_WebCognito);
+    PageNavigator.goToPermanent(context, router.rt_WebCognito);
   }
 
   Widget renderNextBtn() {
     return Text(
       variable.strNext,
       style: TextStyle(
-          color: Color(CommonUtil().getMyPrimaryColor()), fontSize: 18),
+          color: Color(CommonUtil().getMyPrimaryColor()), fontSize: 18.0.sp),
     );
   }
 
@@ -50,7 +49,7 @@ class _IntroSliderState extends State<IntroSliderPage> {
     return Text(
       variable.strDONE,
       style: TextStyle(
-          color: Color(CommonUtil().getMyPrimaryColor()), fontSize: 18),
+          color: Color(CommonUtil().getMyPrimaryColor()), fontSize: 18.0.sp),
     );
   }
 
@@ -58,7 +57,7 @@ class _IntroSliderState extends State<IntroSliderPage> {
     return Text(
       variable.strSKIP,
       style: TextStyle(
-          color: Color(CommonUtil().getMyPrimaryColor()), fontSize: 18),
+          color: Color(CommonUtil().getMyPrimaryColor()), fontSize: 18.0.sp),
     );
   }
 
@@ -98,16 +97,16 @@ class _IntroSliderState extends State<IntroSliderPage> {
       title: titleString,
       styleTitle: TextStyle(
         color: Colors.black,
-        fontSize: 24.0,
+        fontSize: 24.0.sp,
       ),
       description: descString,
       styleDescription: TextStyle(
         color: Colors.black,
-        fontSize: 16.0,
+        fontSize: 16.0.sp,
       ),
       pathImage: variable.slideIcons[index - 1],
-      heightImage: 150,
-      widthImage: 150,
+      heightImage: 150.0.h,
+      widthImage: 150.0.h,
       foregroundImageFit: BoxFit.scaleDown,
       colorBegin: Colors.white,
       colorEnd: Colors.white,

@@ -19,6 +19,7 @@ import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
@@ -77,7 +78,7 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,
-            size: 20,
+            size: 24.0.sp,
           ),
           onPressed: () {
             Navigator.of(context).pop();
@@ -88,7 +89,7 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
           style: TextStyle(
             fontWeight: FontWeight.w400,
             color: Colors.white,
-            fontSize: 18,
+            fontSize: 18.0.sp,
           ),
         ),
         bottom: TabBar(
@@ -108,7 +109,10 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
         ),
       ),
       floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
+          child: Icon(
+            Icons.add,
+            size: 24.0.sp,
+          ),
           onPressed: () {
             new FHBUtils().check().then((intenet) {
               if (intenet != null && intenet) {
@@ -167,7 +171,12 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
             ),
           );
         } else if (snapshot.hasError) {
-          return new Text('Error: ${snapshot.error}');
+          return new Text(
+            'Error: ${snapshot.error}',
+            style: TextStyle(
+              fontSize: 14.0.sp,
+            ),
+          );
         } else {
           return getHealthReportToDisplayInBody();
         }
@@ -193,8 +202,8 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
                 body: Center(
                     child: SizedBox(
                   child: CircularProgressIndicator(),
-                  width: 30,
-                  height: 30,
+                  width: 30.0.h,
+                  height: 30.0.h,
                 )),
               );
               break;
@@ -202,7 +211,10 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
             case Status.ERROR:
               return Center(
                   child: Text(Constants.STR_ERROR_LOADING_DATA,
-                      style: TextStyle(color: Colors.red)));
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 14.0.sp,
+                      )));
               break;
 
             case Status.COMPLETED:
@@ -212,7 +224,10 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
               break;
           }
         } else {
-          return Container(height: 0, color: Colors.white);
+          return Container(
+            height: 0.0.h,
+            color: Colors.white,
+          );
         }
       },
     );
@@ -255,8 +270,8 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
                 child: CircularProgressIndicator(
                   backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
                 ),
-                width: 30,
-                height: 30,
+                width: 30.0.h,
+                height: 30.0.h,
               ));
               break;
 
@@ -274,8 +289,8 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
                 return getHealthReportToDisplayInBody();
               } else {
                 return Container(
-                  width: 100,
-                  height: 100,
+                  width: 100.0.h,
+                  height: 100.0.h,
                   child: Text(''),
                 );
               }
@@ -284,8 +299,8 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
           }
         } else {
           return Container(
-            width: 100,
-            height: 100,
+            width: 100.0.h,
+            height: 100.0.h,
           );
         }
       },

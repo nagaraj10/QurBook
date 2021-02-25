@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:camera/camera.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -172,10 +172,10 @@ class TakePictureScreenForDevicesState
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Container(
-                            width: 220,
-                            height: 40,
+                            width: 220.0.w,
+                            height: 40.0.h,
                             margin: EdgeInsets.all(10),
-                            constraints: BoxConstraints(maxWidth: 220),
+                            constraints: BoxConstraints(maxWidth: 220.0.w),
                             child: GestureDetector(
                               child: DottedBorder(
                                 color: Colors.white,
@@ -207,7 +207,7 @@ class TakePictureScreenForDevicesState
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                           color: Colors.white,
-                                          fontSize: 14,
+                                          fontSize: 14.0.sp,
                                           fontWeight: FontWeight.w500),
                                     )),
                               ),
@@ -225,7 +225,7 @@ class TakePictureScreenForDevicesState
               child: isObjectDetecting == true
                   ? _recognitions == null
                       ? Container(
-                          height: 60,
+                          height: 60.0.h,
                           color: Color(new CommonUtil().getMyPrimaryColor()),
                           child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -236,8 +236,8 @@ class TakePictureScreenForDevicesState
                                         color: Colors.white,
                                         fontWeight: FontWeight.w400)),
                                 Container(
-                                    width: 25,
-                                    height: 25,
+                                    width: 25.0.h,
+                                    height: 25.0.h,
                                     child: CircularProgressIndicator(
                                         backgroundColor: Colors.white))
                               ]))
@@ -245,7 +245,7 @@ class TakePictureScreenForDevicesState
                               _recognitions[0][Constants.keyDetectedClass] ==
                                   variable.strOthers
                           ? Container(
-                              height: 80,
+                              height: 80.0.h,
                               color:
                                   Color(new CommonUtil().getMyPrimaryColor()),
                               child: Row(
@@ -253,7 +253,7 @@ class TakePictureScreenForDevicesState
                                       MainAxisAlignment.spaceEvenly,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: <Widget>[
-                                    SizedBox(width: 10),
+                                    SizedBox(width: 10.0.w),
                                     Flexible(
                                       child: Text(
                                           CommonConstants.not_finding_devices,
@@ -265,7 +265,7 @@ class TakePictureScreenForDevicesState
                                     _showChooseButton(context)
                                   ]))
                           : Container(
-                              height: 60,
+                              height: 60.0.h,
                               color:
                                   Color(new CommonUtil().getMyPrimaryColor()),
                               child: Row(
@@ -273,7 +273,7 @@ class TakePictureScreenForDevicesState
                                       MainAxisAlignment.spaceEvenly,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: <Widget>[
-                                    SizedBox(width: 10),
+                                    SizedBox(width: 10.0.w),
                                     Flexible(
                                       child: Text(
                                           variable.strDeviceFound +
@@ -286,7 +286,7 @@ class TakePictureScreenForDevicesState
                                   ]))
                   : isThumbnails
                       ? Container(
-                          height: 60,
+                          height: 60.0.h,
                           color: Colors.orange,
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -300,8 +300,8 @@ class TakePictureScreenForDevicesState
                                   children: <Widget>[
                                     Image.file(
                                       File(imagePaths[imagePaths.length - 1]),
-                                      width: 30,
-                                      height: 40,
+                                      width: 30.0.w,
+                                      height: 40.0.h,
                                       fit: BoxFit.cover,
                                     ),
                                     new Container(
@@ -311,14 +311,14 @@ class TakePictureScreenForDevicesState
                                         borderRadius: BorderRadius.circular(6),
                                       ),
                                       constraints: BoxConstraints(
-                                        minWidth: 14,
-                                        minHeight: 14,
+                                        minWidth: 14.0.h,
+                                        minHeight: 14.0.h,
                                       ),
                                       child: Text(
                                         (imagePaths.length).toString(),
                                         style: TextStyle(
                                           color: Colors.white,
-                                          fontSize: 8,
+                                          fontSize: 8.0.sp,
                                         ),
                                         textAlign: TextAlign.center,
                                       ),
@@ -410,7 +410,7 @@ class TakePictureScreenForDevicesState
                           ),
                         )
                       : Container(
-                          height: 60,
+                          height: 60.0.h,
                           color: Color(new CommonUtil().getMyPrimaryColor()),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -466,7 +466,8 @@ class TakePictureScreenForDevicesState
                                             callDisplayPictureScreen(context);
                                           }
                                         } catch (e) {
-                                          (await getTemporaryDirectory()).delete(recursive: true);
+                                          (await getTemporaryDirectory())
+                                              .delete(recursive: true);
                                           toast.getToast(
                                               'Something went wrong..Try again',
                                               Colors.red);
@@ -574,8 +575,8 @@ class TakePictureScreenForDevicesState
     final GestureDetector chooseButtonWithGesture = new GestureDetector(
       onTap: _chooseBtnTapped,
       child: new Container(
-        width: 100,
-        height: 40.0,
+        width: 100.0.w,
+        height: 40.0.h,
         decoration: new BoxDecoration(
           color: Color(CommonUtil().getMyPrimaryColor()),
           borderRadius: new BorderRadius.all(Radius.circular(25.0)),
@@ -593,7 +594,7 @@ class TakePictureScreenForDevicesState
             variable.strChoose,
             style: new TextStyle(
               color: Colors.white,
-              fontSize: 14.0,
+              fontSize: 14.0.sp,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -618,8 +619,8 @@ class TakePictureScreenForDevicesState
     final GestureDetector addButtonWithGesture = new GestureDetector(
       onTap: _confirmBtnTapped,
       child: new Container(
-        width: 100,
-        height: 40.0,
+        width: 100.0.w,
+        height: 40.0.h,
         decoration: new BoxDecoration(
           color: Color(CommonUtil().getMyPrimaryColor()),
           borderRadius: new BorderRadius.all(Radius.circular(25.0)),
@@ -637,7 +638,7 @@ class TakePictureScreenForDevicesState
             variable.strConfirm,
             style: new TextStyle(
               color: Colors.white,
-              fontSize: 14.0,
+              fontSize: 14.0.sp,
               fontWeight: FontWeight.w500,
             ),
           ),

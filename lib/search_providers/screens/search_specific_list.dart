@@ -19,6 +19,7 @@ import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 import '../bloc/doctors_list_block.dart';
 import '../bloc/hospital_list_block.dart';
@@ -88,7 +89,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              size: 20,
+              size: 24.0.sp,
             ),
             onPressed: () {
               Navigator.pop(context, [1]);
@@ -180,8 +181,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               child: CircularProgressIndicator(
                 backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
               ),
-              width: 30,
-              height: 30,
+              width: 30.0.h,
+              height: 30.0.h,
             ));
 
             break;
@@ -239,8 +240,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             return Center(
                 child: SizedBox(
               child: CircularProgressIndicator(),
-              width: 30,
-              height: 30,
+              width: 30.0.h,
+              height: 30.0.h,
             ));
 
             break;
@@ -293,8 +294,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             return Center(
                 child: SizedBox(
               child: CircularProgressIndicator(),
-              width: 30,
-              height: 30,
+              width: 30.0.h,
+              height: 30.0.h,
             ));
 
             break;
@@ -350,40 +351,40 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   Widget getEmptyCard(Diagnostics diagnostics) {
     /*return SingleChildScrollView(
         child: Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
+      width: 1.sw,
+      height: 1.sh,
       child: Center(
         child:
             */ /* Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          SizedBox(height: 50),
-          Image.asset(ImageUrlUtils.fileImg, width: 65, height: 90),
-          SizedBox(height: 30),
+          SizedBox(height: 50.0.h),
+          Image.asset(ImageUrlUtils.fileImg, width: 65.0.w, height: 90.0.h),
+          SizedBox(height: 30.0.h),
           Text(
               "Looks like the Doctor you're searching is not available in the system,please check the spelling or",
               style: new TextStyle(
                 color: ColorUtils.blackcolor,
-                fontSize: 15.0,
+                fontSize: 15.0.sp,
                 fontWeight: FontWeight.w500,
               )),
           _showAddButton(diagnostics),
           Text('to add the Doctor as',
               style: new TextStyle(
                 color: Theme.of(context).primaryColor,
-                fontSize: 15.0,
+                fontSize: 15.0.sp,
                 fontWeight: FontWeight.w500,
               )),
           Text('Unknown Doctor ',
               style: new TextStyle(
                 color: Theme.of(context).primaryColor,
-                fontSize: 15.0,
+                fontSize: 15.0.sp,
                 fontWeight: FontWeight.bold,
               )),
           Text('temporarily',
               style: new TextStyle(
                 color: Theme.of(context).primaryColor,
-                fontSize: 15.0,
+                fontSize: 15.0.sp,
                 fontWeight: FontWeight.bold,
               )),
 
@@ -402,7 +403,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                   'Looks like the Doctor you\'re searching is not available in the system,please check the spelling or ',
               style: new TextStyle(
                 color: ColorUtils.blackcolor,
-                fontSize: 15.0,
+                fontSize: 15.0.sp,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -426,7 +427,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               text: ' to add the Doctor as ',
               style: new TextStyle(
                 color: ColorUtils.blackcolor,
-                fontSize: 15.0,
+                fontSize: 15.0.sp,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -434,7 +435,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               text: ' Unknown Doctor ',
               style: new TextStyle(
                 color: ColorUtils.blackcolor,
-                fontSize: 18.0,
+                fontSize: 18.0.sp,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -442,7 +443,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               text: ' temporarily',
               style: new TextStyle(
                 color: ColorUtils.blackcolor,
-                fontSize: 15.0,
+                fontSize: 15.0.sp,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -469,8 +470,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         }
       },
       child: new Container(
-        width: 100,
-        height: 40.0,
+        width: 100.0.w,
+        height: 40.0.h,
         decoration: new BoxDecoration(
           color: Theme.of(context).primaryColor,
           borderRadius: new BorderRadius.all(Radius.circular(25.0)),
@@ -487,7 +488,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             'Click Here',
             style: new TextStyle(
               color: Colors.white,
-              fontSize: 14.0,
+              fontSize: 14.0.sp,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -658,19 +659,19 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                     borderRadius: BorderRadius.circular(10)),
                 child: Row(children: <Widget>[
                   SizedBox(
-                    width: 10,
+                    width: 10.0.w,
                   ),
                   ClipOval(
                       child: Container(
-                    height: 50,
-                    width: 50,
+                    height: 50.0.h,
+                    width: 50.0.h,
                     color: Color(fhbColors.bgColorContainer),
                     child:
                         widget.arguments.searchWord == CommonConstants.doctors
                             ? getHospitalLogoImage(logo)
                             : getHospitalLogoImage(logo),
                   )),
-                  SizedBox(width: 10),
+                  SizedBox(width: 10.0.w),
                   Expanded(
                       flex: 5,
                       child: Padding(
@@ -729,17 +730,17 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         Text(
           name != null ? name : '',
           style: TextStyle(
-              fontSize: 14.0,
+              fontSize: 14.0.sp,
               fontWeight: FontWeight.w500,
               color: ColorUtils.blackcolor),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
-        SizedBox(height: 10),
+        SizedBox(height: 10.0.h),
         Text(
           address != null ? address : '',
           style: TextStyle(
-              fontSize: 13.0,
+              fontSize: 13.0.sp,
               fontWeight: FontWeight.w400,
               color: ColorUtils.lightgraycolor),
           maxLines: 2,
@@ -751,14 +752,14 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                     toBeginningOfSentenceCase(
                         data.specialty != null ? data.specialty : ''),
                     style: TextStyle(
-                        fontSize: 13.0,
+                        fontSize: 13.0.sp,
                         fontWeight: FontWeight.w400,
                         color: ColorUtils.lightgraycolor),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   )
-                : SizedBox(height: 10)
-            : SizedBox(height: 10),
+                : SizedBox(height: 10.0.h)
+            : SizedBox(height: 10.0.h),
       ],
     );
   }
@@ -770,14 +771,14 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         if (snapshot.hasData) {
           return Image.memory(
             snapshot.data,
-            height: 50,
-            width: 50,
+            height: 50.0.h,
+            width: 50.0.h,
             fit: BoxFit.cover,
           );
         } else {
           return ImageIcon(
             AssetImage(variable.icon_stetho),
-            size: 40,
+            size: 40.0.sp,
             color: Color(CommonUtil().getMyPrimaryColor()),
           );
         }

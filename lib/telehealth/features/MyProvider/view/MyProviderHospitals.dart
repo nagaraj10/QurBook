@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/DatePicker/date_picker_widget.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -202,8 +203,8 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
                   child: hospitals != null
                       ? hospitals[i] != null
                           ? Container(
-                              height: 50,
-                              width: 50,
+                              height: 50.0.h,
+                              width: 50.0.h,
                               color: Color(fhbColors.bgColorContainer),
                               child: Center(
                                 child: Text(
@@ -211,23 +212,25 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
                                       ? hospitals[i].name[0].toUpperCase()
                                       : '',
                                   style: TextStyle(
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor())),
+                                    color:
+                                        Color(CommonUtil().getMyPrimaryColor()),
+                                    fontSize: 14.0.sp,
+                                  ),
                                 ),
                               ))
                           : Container(
-                              height: 50,
-                              width: 50,
+                              height: 50.0.h,
+                              width: 50.0.h,
                               color: Color(fhbColors.bgColorContainer),
                             )
                       : Container(
-                          height: 50,
-                          width: 50,
+                          height: 50.0.h,
+                          width: 50.0.h,
                           color: Color(fhbColors.bgColorContainer),
                         )),
             ),
             SizedBox(
-              width: 20,
+              width: 20.0.w,
             ),
             Expanded(
               flex: 6,
@@ -235,19 +238,19 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  SizedBox(height: 5),
+                  SizedBox(height: 5.0.h),
                   AutoSizeText(
                     hospitals[i].name != null
                         ? toBeginningOfSentenceCase(hospitals[i].name)
                         : '',
                     maxLines: 1,
                     style: TextStyle(
-                      fontSize: 14.0,
+                      fontSize: 14.0.sp,
                       fontWeight: FontWeight.w500,
                     ),
                     textAlign: TextAlign.start,
                   ),
-                  SizedBox(height: 5),
+                  SizedBox(height: 5.0.h),
                   /*AutoSizeText(
                     (doctors.doctorProfessionalDetailCollection !=
                         null &&
@@ -266,22 +269,22 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
                         : '',
                     maxLines: 1,
                     style: TextStyle(
-                        fontSize: 13.0,
+                        fontSize: 13.0.sp,
                         fontWeight: FontWeight.w400,
                         color: ColorUtils.lightgraycolor),
                   ),*/
-                  SizedBox(height: 5),
+                  SizedBox(height: 5.0.h),
                   AutoSizeText(
                     commonWidgets.getCityHospital(hospitals[i]) == ''
                         ? ''
                         : '' + commonWidgets.getCityHospital(hospitals[i]),
                     maxLines: 1,
                     style: TextStyle(
-                        fontSize: 13.0,
+                        fontSize: 13.0.sp,
                         fontWeight: FontWeight.w400,
                         color: ColorUtils.lightgraycolor),
                   ),
-                  SizedBox(height: 5),
+                  SizedBox(height: 5.0.h),
                 ],
               ),
             ),

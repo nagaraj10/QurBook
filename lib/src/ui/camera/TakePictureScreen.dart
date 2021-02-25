@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:camera/camera.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flashlight/flashlight.dart';
@@ -196,7 +197,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                     (imagePaths.length).toString(),
                                     style: TextStyle(
                                       color: Colors.white,
-                                      fontSize: 8,
+                                      fontSize: 8.0.sp,
                                     ),
                                     textAlign: TextAlign.center,
                                   ),
@@ -211,7 +212,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                 icon: new ImageIcon(
                                   AssetImage(variable.icon_attach),
                                   color: Colors.white,
-                                  size: 32,
+                                  size: 32.0.sp,
                                 ),
                                 onPressed: () async {
                                   // Take the Picture in a try / catch block. If anything goes wrong,
@@ -241,7 +242,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                 icon: Icon(
                                   Icons.camera,
                                   color: Colors.white,
-                                  size: 40,
+                                  size: 40.0.sp,
                                 ),
                                 onPressed: () async {
                                   // Take the Picture in a try / catch block. If anything goes wrong,
@@ -281,7 +282,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                             icon: Icon(
                               Icons.done,
                               color: Colors.white,
-                              size: 40,
+                              size: 40.0.sp,
                             ),
                             onPressed: () {
                               Navigator.push(
@@ -318,7 +319,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                     icon: Icon(
                                       Icons.photo_library,
                                       color: Colors.white,
-                                      size: 32,
+                                      size: 32.0.sp,
                                     ),
                                     onPressed: () async {
                                       // Take the Picture in a try / catch block. If anything goes wrong,
@@ -354,7 +355,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                     icon: new ImageIcon(
                                       AssetImage(variable.icon_attach),
                                       color: Colors.white,
-                                      size: 32,
+                                      size: 32.0.sp,
                                     ),
                                     onPressed: () async {
                                       // Take the Picture in a try / catch block. If anything goes wrong,
@@ -384,7 +385,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                 icon: Icon(
                                   Icons.camera,
                                   color: Colors.white,
-                                  size: 40,
+                                  size: 40.0.sp,
                                 ),
                                 onPressed: () async {
                                   // Take the Picture in a try / catch block. If anything goes wrong,

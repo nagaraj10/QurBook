@@ -81,7 +81,7 @@ class _MyCheckboxState extends State<MyCheckbox> {
         borderRadius: BorderRadius.circular(2),
         border: Border.all(
           color: Colors.grey,
-          width: 1,
+          width: 1.0,
         ),
       ),
       child: Icon(iconData, color: iconColor),

@@ -10,6 +10,7 @@ import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'package:myfhb/video_call/utils/callstatus.dart';
 import 'package:myfhb/video_call/utils/hideprovider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class MyControllers extends StatefulWidget {
   CallStatus callStatus;
@@ -148,10 +149,8 @@ class _MyControllersState extends State<MyControllers> {
                 child: IconButton(
                   onPressed: _onToggleMute,
                   icon: widget.muted
-                      ? Image.asset(
-                          'assets/icons/ic_mic_mute_white.png')
-                      : Image.asset(
-                          'assets/icons/ic_mic_unmute_white.png'),
+                      ? Image.asset('assets/icons/ic_mic_mute_white.png')
+                      : Image.asset('assets/icons/ic_mic_unmute_white.png'),
                   //color: Colors.white,
                   //iconSize: 13.0,
                 ),
@@ -160,21 +159,30 @@ class _MyControllersState extends State<MyControllers> {
                 padding: const EdgeInsets.all(8.0),
                 child: IconButton(
                   onPressed: () {
-                   chatViewModel.storePatientDetailsToFCM(widget.doctorId,
-                  widget.doctorName, widget.doctorPicUrl,widget.patientId,widget.patientName,widget.patientPicUrl,context,true);
+                    chatViewModel.storePatientDetailsToFCM(
+                        widget.doctorId,
+                        widget.doctorName,
+                        widget.doctorPicUrl,
+                        widget.patientId,
+                        widget.patientName,
+                        widget.patientPicUrl,
+                        context,
+                        true);
                   },
                   icon: Image.asset('assets/icons/ic_chat.png'),
                   //iconSize: 33,
                 ),
               ),
               SizedBox(
-                width: 10,
+                width: 10.0.w,
               ),
               Container(
                 padding: EdgeInsets.only(top: 8, bottom: 8),
                 decoration: BoxDecoration(
                   color: Colors.red,
-                  borderRadius: BorderRadius.only(topRight: Radius.circular(8),bottomRight: Radius.circular(8)),
+                  borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(8),
+                      bottomRight: Radius.circular(8)),
                 ),
                 //color: Colors.red,
                 child: IconButton(

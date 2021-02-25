@@ -11,8 +11,7 @@ import 'package:random_color/random_color.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/router_variable.dart' as router;
-
-
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class MyAppointment extends StatefulWidget {
   static _MyAppointmentState of(BuildContext context) =>
@@ -103,7 +102,7 @@ class _MyAppointmentState extends State<MyAppointment> {
                                               style: TextStyle(
                                                 color: Color(CommonUtil()
                                                     .getMyPrimaryColor()),
-                                                fontSize: 24.0,
+                                                fontSize: 24.0.sp,
                                               ),
                                             ),
                                           )
@@ -111,7 +110,7 @@ class _MyAppointmentState extends State<MyAppointment> {
                                   ),
                                 ),
                                 SizedBox(
-                                  width: 20,
+                                  width: 20.0.w,
                                 ),
                                 Expanded(
                                   flex: 6,
@@ -124,26 +123,28 @@ class _MyAppointmentState extends State<MyAppointment> {
                                           toBeginningOfSentenceCase(
                                               model.hName),
                                           style: TextStyle(
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.black)),
-                                      SizedBox(height: 5),
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.black,
+                                            fontSize: 14.0.sp,
+                                          )),
+                                      SizedBox(height: 5.0.h),
                                       Text(
                                         variable.strDr +
                                             toBeginningOfSentenceCase(
                                                 model.dName),
                                         style: TextStyle(
-                                            fontSize: 13,
+                                            fontSize: 13.0.sp,
                                             color: Colors.grey,
                                             fontWeight: FontWeight.w500),
                                       ),
-                                      SizedBox(height: 5),
+                                      SizedBox(height: 5.0.h),
                                       Text(
                                         toBeginningOfSentenceCase(
                                             model.appDate +
                                                 ',' +
                                                 model.appTime),
                                         style: TextStyle(
-                                            fontSize: 12,
+                                            fontSize: 12.0.sp,
                                             color: Colors.grey[400]),
                                       )
                                     ],
@@ -154,12 +155,12 @@ class _MyAppointmentState extends State<MyAppointment> {
                                     child: Row(
                                       children: <Widget>[
                                         Container(
-                                          width: 1,
-                                          height: 30,
+                                          width: 1.0.w,
+                                          height: 30.0.h,
                                           color: Color(CommonUtil()
                                               .getMyGredientColor()),
                                         ),
-                                        SizedBox(width: 10),
+                                        SizedBox(width: 10.0.w),
                                         InkWell(
                                           onTap: () {
                                             FHBUtils()
@@ -184,7 +185,10 @@ class _MyAppointmentState extends State<MyAppointment> {
                           child: Text(
                             Constants.NO_DATA_SCHEDULES,
                             textAlign: TextAlign.center,
-                            style: TextStyle(fontFamily: variable.font_poppins),
+                            style: TextStyle(
+                              fontFamily: variable.font_poppins,
+                              fontSize: 14.0.sp,
+                            ),
                           ),
                         ),
                       ),
@@ -196,7 +200,6 @@ class _MyAppointmentState extends State<MyAppointment> {
       },
       future: getProjectDetails(),
     );
-   
   }
 
   getProjectDetails() async {
