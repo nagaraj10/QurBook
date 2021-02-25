@@ -1353,6 +1353,7 @@ class ChatScreenState extends State<ChatScreen> {
           child: Container(
             height: 45.0.h,
             child: TextField(
+              style: TextStyle(fontSize: 14.0.sp),
               decoration: InputDecoration(
                   suffixIcon: IconButton(
                     onPressed: () {
@@ -1374,7 +1375,7 @@ class ChatScreenState extends State<ChatScreen> {
                     ),
                   ),
                   filled: true,
-                  hintStyle: new TextStyle(color: Colors.grey[800]),
+                  hintStyle: new TextStyle(color: Colors.grey[800],fontSize: 14.0.sp,),
                   fillColor: Colors.white70),
               onChanged: _onSearch,
             ),
@@ -1686,6 +1687,7 @@ class ChatScreenState extends State<ChatScreen> {
                   alignment: Alignment.centerRight,
                   children: [
                     TextField(
+                      style: TextStyle(fontSize: 14.0.sp),
                       focusNode: focusNode,
                       onTap: () {
                         //isSearchVisible = false;

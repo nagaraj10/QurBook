@@ -1335,7 +1335,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               labelText: CommonConstants.date_of_birthWithStar,
               hintText: CommonConstants.date_of_birth,
               labelStyle: TextStyle(
-                  fontSize: 12.0.sp,
+                  fontSize: 13.0.sp,
                   fontWeight: FontWeight.w400,
                   color: ColorUtils.myFamilyGreyColor),
               hintStyle: TextStyle(
@@ -1366,7 +1366,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               keyboardType: TextInputType.streetAddress,
               decoration: InputDecoration(
                 hintStyle: TextStyle(
-                  fontSize: 12.0.sp,
+                  fontSize: 14.0.sp,
                 ),
                 labelText: CommonConstants.addr_line_1,
               ),
@@ -1385,7 +1385,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               keyboardType: TextInputType.streetAddress,
               decoration: InputDecoration(
                 hintStyle: TextStyle(
-                  fontSize: 12.0.sp,
+                  fontSize: 14.0.sp,
                 ),
                 labelText: CommonConstants.addr_line_2,
               ),
@@ -1497,7 +1497,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 hintStyle: TextStyle(
-                  fontSize: 12.0.sp,
+                  fontSize: 14.0.sp,
                 ),
                 labelText: CommonConstants.addr_zip,
               ),

@@ -62,7 +62,7 @@ class SearchWdigetState extends State<SearchWidget> {
                       border: InputBorder.none,
                       hintStyle: TextStyle(
                         color: Colors.black45,
-                        fontSize: 12.0.sp,
+                        fontSize: 14.0.sp,
                       ),
                     ),
                     style: TextStyle(

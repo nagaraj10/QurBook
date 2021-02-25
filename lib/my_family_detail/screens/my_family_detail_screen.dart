@@ -575,7 +575,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                 fontWeight: FontWeight.w400,
                 color: ColorUtils.myFamilyGreyColor),
             hintStyle: TextStyle(
-              fontSize: 12.0.sp,
+              fontSize: 14.0.sp,
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
@@ -611,7 +611,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                 fontWeight: FontWeight.w400,
                 color: ColorUtils.myFamilyGreyColor),
             hintStyle: TextStyle(
-              fontSize: 12.0.sp,
+              fontSize: 14.0.sp,
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
@@ -647,7 +647,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                 fontWeight: FontWeight.w400,
                 color: ColorUtils.myFamilyGreyColor),
             hintStyle: TextStyle(
-              fontSize: 12.0.sp,
+              fontSize: 14.0.sp,
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
@@ -683,7 +683,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                 fontWeight: FontWeight.w400,
                 color: ColorUtils.myFamilyGreyColor),
             hintStyle: TextStyle(
-              fontSize: 12.0.sp,
+              fontSize: 14.0.sp,
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
@@ -719,7 +719,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                 fontWeight: FontWeight.w400,
                 color: ColorUtils.myFamilyGreyColor),
             hintStyle: TextStyle(
-              fontSize: 12.0.sp,
+              fontSize: 14.0.sp,
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
@@ -754,7 +754,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                 fontWeight: FontWeight.w400,
                 color: ColorUtils.myFamilyGreyColor),
             hintStyle: TextStyle(
-              fontSize: 12.0.sp,
+              fontSize: 14.0.sp,
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
@@ -790,7 +790,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                 fontWeight: FontWeight.w400,
                 color: ColorUtils.myFamilyGreyColor),
             hintStyle: TextStyle(
-              fontSize: 12.0.sp,
+              fontSize: 14.0.sp,
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
@@ -826,7 +826,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                 fontWeight: FontWeight.w400,
                 color: ColorUtils.myFamilyGreyColor),
             hintStyle: TextStyle(
-              fontSize: 12.0.sp,
+              fontSize: 14.0.sp,
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
@@ -864,7 +864,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                     fontWeight: FontWeight.w400,
                     color: ColorUtils.myFamilyGreyColor),
                 hintStyle: TextStyle(
-                  fontSize: 12.0.sp,
+                  fontSize: 14.0.sp,
                   color: ColorUtils.myFamilyGreyColor,
                   fontWeight: FontWeight.w400,
                 ),
@@ -903,7 +903,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                     fontWeight: FontWeight.w400,
                     color: ColorUtils.myFamilyGreyColor),
                 hintStyle: TextStyle(
-                  fontSize: 12.0.sp,
+                  fontSize: 14.0.sp,
                   color: ColorUtils.myFamilyGreyColor,
                   fontWeight: FontWeight.w400,
                 ),
@@ -942,7 +942,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                     fontWeight: FontWeight.w400,
                     color: ColorUtils.myFamilyGreyColor),
                 hintStyle: TextStyle(
-                  fontSize: 12.0.sp,
+                  fontSize: 14.0.sp,
                   color: ColorUtils.myFamilyGreyColor,
                   fontWeight: FontWeight.w400,
                 ),
@@ -981,7 +981,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                     fontWeight: FontWeight.w400,
                     color: ColorUtils.myFamilyGreyColor),
                 hintStyle: TextStyle(
-                  fontSize: 12.0.sp,
+                  fontSize: 14.0.sp,
                   color: ColorUtils.myFamilyGreyColor,
                   fontWeight: FontWeight.w400,
                 ),
@@ -1025,7 +1025,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                   fontWeight: FontWeight.w400,
                   color: ColorUtils.myFamilyGreyColor),
               hintStyle: TextStyle(
-                fontSize: 12.0.sp,
+                fontSize: 14.0.sp,
                 color: ColorUtils.myFamilyGreyColor,
                 fontWeight: FontWeight.w400,
               ),
@@ -1281,7 +1281,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               enabled: false,
               keyboardType: TextInputType.streetAddress,
               decoration: InputDecoration(
-                hintStyle: TextStyle(fontSize: 12.0.sp),
+                hintStyle: TextStyle(fontSize: 14.0.sp),
                 labelText: CommonConstants.addr_line_1
                     .substring(0, CommonConstants.addr_line_1.length - 1),
               ),
@@ -1299,7 +1299,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               enabled: false,
               keyboardType: TextInputType.streetAddress,
               decoration: InputDecoration(
-                hintStyle: TextStyle(fontSize: 12.0.sp),
+                hintStyle: TextStyle(fontSize: 14.0.sp),
                 labelText: CommonConstants.addr_line_2
                     .substring(0, CommonConstants.addr_line_2.length - 1),
               ),
@@ -1312,7 +1312,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               enabled: false,
               keyboardType: TextInputType.streetAddress,
               decoration: InputDecoration(
-                hintStyle: TextStyle(fontSize: 12.0.sp),
+                hintStyle: TextStyle(fontSize: 14.0.sp),
                 labelText: CommonConstants.addr_city
                     .substring(0, CommonConstants.addr_city.length - 1),
               ),
@@ -1325,7 +1325,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               enabled: false,
               keyboardType: TextInputType.streetAddress,
               decoration: InputDecoration(
-                hintStyle: TextStyle(fontSize: 12.0.sp),
+                hintStyle: TextStyle(fontSize: 14.0.sp),
                 labelText: CommonConstants.addr_state
                     .substring(0, CommonConstants.addr_state.length - 1),
               ),
@@ -1338,7 +1338,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               enabled: false,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
-                hintStyle: TextStyle(fontSize: 12.0.sp),
+                hintStyle: TextStyle(fontSize: 14.0.sp),
                 labelText: CommonConstants.addr_zip
                     .substring(0, CommonConstants.addr_zip.length - 1),
               ),

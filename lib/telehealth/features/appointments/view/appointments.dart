@@ -100,7 +100,7 @@ class _AppointmentsState extends State<Appointments> {
                       border: InputBorder.none,
                       hintStyle: TextStyle(
                         color: Colors.black45,
-                        fontSize: 12.0.sp,
+                        fontSize: 14.0.sp,
                       ),
                     ),
                     style: TextStyle(
@@ -348,7 +348,7 @@ class _AppointmentsState extends State<Appointments> {
           ),
         ),
         CommonUtil().getNotificationIcon(context),
-        SwitchProfile().buildActions(context, _key, callBackToRefresh,false),
+        SwitchProfile().buildActions(context, _key, callBackToRefresh, false),
         // IconWidget(
         //   icon: Icons.more_vert,
         //   colors: Colors.white,

@@ -108,6 +108,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               decoration: BoxDecoration(
                   color: Colors.white, borderRadius: BorderRadius.circular(30)),
               child: TextField(
+                style: TextStyle(fontSize: 14.0.sp,),
                 controller: _textFieldController,
                 autofocus: true,
                 onChanged: (editedValue) {
@@ -127,7 +128,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                     color: Colors.black54,
                   ),
                   hintText: variable.strSearch,
-                  hintStyle: TextStyle(color: Colors.black54),
+                  hintStyle: TextStyle(color: Colors.black54,fontSize: 14.0.sp),
                   border: InputBorder.none,
                 ),
               ),
