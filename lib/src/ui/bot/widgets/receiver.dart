@@ -12,8 +12,12 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class ReceiverLayout extends StatefulWidget {
   final Conversation c;
+  final int index;
 
-  ReceiverLayout(this.c);
+  ReceiverLayout(
+    this.c,
+    this.index,
+  );
 
   @override
   _ReceiverLayoutState createState() => _ReceiverLayoutState();
@@ -80,8 +84,8 @@ class _ReceiverLayoutState extends State<ReceiverLayout> {
                   ),
                 ),
                 child: FutureBuilder(
-                  future: Future.delayed(
-                      Duration(seconds: 3), () => MayaConvUI(widget.c)),
+                  future: Future.delayed(Duration(seconds: 3),
+                      () => MayaConvUI(widget.c, widget.index)),
                   builder: (BuildContext context, snapshot) {
                     return snapshot.hasData
                         ? snapshot.data

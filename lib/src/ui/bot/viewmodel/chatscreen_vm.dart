@@ -34,12 +34,15 @@ class ChatScreenViewModel extends ChangeNotifier {
   var isLoading = false;
   var isRedirect = false;
   var screenValue;
+  bool isButtonResponse = false;
 
   List<Conversation> get getMyConversations => conversations;
 
   int get getisMayaSpeaks => isMayaSpeaks;
   AudioPlayer newAudioPlay = AudioPlayer();
   bool isAudioPlayerPlaying = false;
+
+  bool get getIsButtonResponse => isButtonResponse;
 
   void clearMyConversation() {
     conversations = List();
@@ -62,6 +65,61 @@ class ChatScreenViewModel extends ChangeNotifier {
     Conversation model = new Conversation(
         isMayaSaid: false,
         text: variable.strhiMaya,
+        name: prof.result != null
+            ? prof.result.firstName + prof.result.lastName
+            : '',
+        timeStamp: date,
+        redirect: isRedirect,
+        screen: parameters.strSheela);
+
+    conversations.add(model);
+    notifyListeners();
+  }
+
+  Future<void> stopTTSEngine({int index}) async {
+    if (index != null) {
+      conversations[index].isSpeaking = false;
+      notifyListeners();
+    }
+    await variable.tts_platform.invokeMethod(variable.strtts, {
+      parameters.strMessage: "",
+      parameters.strIsClose: true,
+      parameters.strLanguage: Utils.getCurrentLanCode()
+    });
+  }
+
+  Future<bool> startTTSEngine({String textToSpeak, int index}) async {
+    if (index != null) {
+      conversations[index].isSpeaking = true;
+      notifyListeners();
+    }
+    await variable.tts_platform.invokeMethod(variable.strtts, {
+      parameters.strMessage: textToSpeak,
+      parameters.strIsClose: false,
+      parameters.strLanguage: Utils.getCurrentLanCode(),
+    }).then((response) async {
+      if (response == 1) {
+        if (index != null) {
+          conversations[index].isSpeaking = false;
+          notifyListeners();
+        }
+      }
+    });
+  }
+
+  startSheelaFromButton({
+    String buttonText,
+    String payload,
+  }) async {
+    stopTTSEngine();
+    Future.delayed(Duration(seconds: 1), () {
+      sendToMaya(payload, screen: parameters.strSheela);
+    });
+
+    var date = new FHBUtils().getFormattedDateString(DateTime.now().toString());
+    Conversation model = new Conversation(
+        isMayaSaid: false,
+        text: buttonText,
         name: prof.result != null
             ? prof.result.firstName + prof.result.lastName
             : '',
@@ -172,11 +230,20 @@ class ChatScreenViewModel extends ChangeNotifier {
               searchURL: res.searchURL,
               videoLinks: res.videoLinks,
               redirect: isRedirect,
-              screen: screenValue);
+              screen: screenValue,
+              isSpeaking: true);
           conversations.add(model);
+          if ((res?.buttons?.length ?? 0) > 0) {
+            isButtonResponse = true;
+          } else {
+            isButtonResponse = false;
+          }
           isLoading = true;
           notifyListeners();
-          Future.delayed(Duration(seconds: 4), () {
+          Future.delayed(
+              Duration(
+                seconds: 4,
+              ), () {
             isLoading = false;
             notifyListeners();
             isMayaSpeaks = 0;
@@ -197,14 +264,24 @@ class ChatScreenViewModel extends ChangeNotifier {
                   parameters.strMessage: res.text,
                   parameters.strIsClose: false,
                   parameters.strLanguage: res.lang
-                }).then((res) {
-                  if (res == 1) {
+                }).then((response) async {
+                  conversations[conversations.length - 1].isSpeaking = false;
+                  notifyListeners();
+                  if (response == 1) {
                     isMayaSpeaks = 1;
                   }
-                  if (!isEndOfConv) {
-                    gettingReposnseFromNative();
+                  if ((res?.buttons?.length ?? 0) > 0) {
+                    await Future.forEach(res.buttons, (button) async {
+                      await startTTSEngine(
+                        textToSpeak: button.title,
+                      );
+                    });
                   } else {
-                    refreshData();
+                    if (!isEndOfConv) {
+                      gettingReposnseFromNative();
+                    } else {
+                      refreshData();
+                    }
                   }
                 });
               } else {

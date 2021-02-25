@@ -17,8 +17,12 @@ import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
 class ReceiverLayoutWithIntroVideo extends StatelessWidget {
   final Conversation c;
+  final int index;
 
-  ReceiverLayoutWithIntroVideo(this.c);
+  ReceiverLayoutWithIntroVideo(
+    this.c,
+    this.index,
+  );
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -64,8 +68,8 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                   ),
                 ),
                 child: FutureBuilder(
-                  future:
-                      Future.delayed(Duration(seconds: 3), () => MayaConvUI(c)),
+                  future: Future.delayed(
+                      Duration(seconds: 3), () => MayaConvUI(c, index)),
                   builder: (BuildContext context, snapshot) {
                     return snapshot.hasData
                         ? snapshot.data
