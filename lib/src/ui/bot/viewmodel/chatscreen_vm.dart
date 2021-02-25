@@ -179,8 +179,19 @@ class ChatScreenViewModel extends ChangeNotifier {
             isLoading = false;
             notifyListeners();
             isMayaSpeaks = 0;
+            final lan = Utils.getCurrentLanCode();
+            String langCodeForRequest;
+            if (lan != "undef") {
+              final langCode = lan.split("-").first;
+              langCodeForRequest = langCode;
+              print(langCode);
+            }
+
             if (!stopTTSNow) {
-              if (Platform.isIOS) {
+              if (Platform.isIOS ||
+                  lan == "undef" ||
+                  lan.toLowerCase() == "en-IN".toLowerCase() ||
+                  lan.toLowerCase() == "en-US".toLowerCase()) {
                 variable.tts_platform.invokeMethod(variable.strtts, {
                   parameters.strMessage: res.text,
                   parameters.strIsClose: false,
@@ -197,7 +208,8 @@ class ChatScreenViewModel extends ChangeNotifier {
                 });
               } else {
                 print(res.text);
-                getNewResponse(res.text);
+                getNewResponse(res.text,
+                    langCodeForRequest != null ? langCodeForRequest : "en");
                 newAudioPlay.onPlayerStateChanged.listen((event) {
                   print(event);
                   if (event == AudioPlayerState.COMPLETED && !isEndOfConv)
@@ -216,10 +228,12 @@ class ChatScreenViewModel extends ChangeNotifier {
     }
   }
 
-  getNewResponse(String dataForVoice) async {
+  getNewResponse(String dataForVoice, String langCode) async {
     try {
       final str =
-          "https://heyr2.com/tts/ws_tts.php?key=67ca0bad-83a8-4f1b-a31b-5a1f2380b385&Action=GetSpeech&json=1&lang=en&ttsdata=" +
+          "https://heyr2.com/tts/ws_tts.php?key=67ca0bad-83a8-4f1b-a31b-5a1f2380b385&Action=GetSpeech&json=1&lang=" +
+              langCode +
+              "&ttsdata=" +
               dataForVoice;
       final response = await http.get(
         str,
