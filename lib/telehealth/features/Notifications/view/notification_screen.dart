@@ -342,8 +342,8 @@ class _NotificationScreen extends State<NotificationScreen> {
                                                           ?.result[index]
                                                           ?.isActionDone
                                                       ? BorderSide(
-                                                          color: Color(CommonUtil
-                                                              .secondaryGrey))
+                                                          color: Color(CommonUtil()
+                                                              .getMyPrimaryColor()))
                                                       : BorderSide(
                                                           color: Colors.grey),
                                                   child: TextWidget(
@@ -653,9 +653,12 @@ class _NotificationScreen extends State<NotificationScreen> {
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(12.0),
-                                          side: BorderSide(color: Colors.grey)),
+                                          side: BorderSide(
+                                              color: Color(CommonUtil()
+                                                  .getMyPrimaryColor()))),
                                       color: Colors.transparent,
-                                      textColor: Colors.grey,
+                                      textColor: Color(
+                                          CommonUtil().getMyPrimaryColor()),
                                       padding: EdgeInsets.all(8.0),
                                       onPressed: () {
                                         Navigator.pop(context);
