@@ -855,7 +855,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
               ),
             ),
           ),*/
-          Container(
+          /*Container(
             width: circleRadius,
             height: circleRadius,
             decoration:
@@ -867,6 +867,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           ),
           SizedBox(
             width: 15.0.w,
+          ),*/
+          SizedBox(
+            width: 5.0.w,
           ),
           Expanded(
             child: Container(
