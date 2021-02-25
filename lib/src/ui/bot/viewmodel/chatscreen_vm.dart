@@ -39,6 +39,7 @@ class ChatScreenViewModel extends ChangeNotifier {
 
   int get getisMayaSpeaks => isMayaSpeaks;
   AudioPlayer newAudioPlay = AudioPlayer();
+  bool isAudioPlayerPlaying = false;
 
   void clearMyConversation() {
     conversations = List();
@@ -184,7 +185,7 @@ class ChatScreenViewModel extends ChangeNotifier {
             if (lan != "undef") {
               final langCode = lan.split("-").first;
               langCodeForRequest = langCode;
-              print(langCode);
+              //print(langCode);
             }
 
             if (!stopTTSNow) {
@@ -207,13 +208,21 @@ class ChatScreenViewModel extends ChangeNotifier {
                   }
                 });
               } else {
-                print(res.text);
+                //print(res.text);
                 getNewResponse(res.text,
                     langCodeForRequest != null ? langCodeForRequest : "en");
                 newAudioPlay.onPlayerStateChanged.listen((event) {
                   print(event);
-                  if (event == AudioPlayerState.COMPLETED && !isEndOfConv)
+                  if (event == AudioPlayerState.PLAYING) {
+                    isAudioPlayerPlaying = true;
+                  }
+                  if (event == AudioPlayerState.COMPLETED ||
+                      event == AudioPlayerState.PAUSED ||
+                      event == AudioPlayerState.STOPPED)
+                    isAudioPlayerPlaying = false;
+                  if (event == AudioPlayerState.COMPLETED && !isEndOfConv) {
                     gettingReposnseFromNative();
+                  }
                 });
               }
             }
@@ -256,6 +265,12 @@ class ChatScreenViewModel extends ChangeNotifier {
 
       //print(dir.path);
     } catch (foundError) {}
+  }
+
+  stopAudioPlayer() {
+    if (isAudioPlayerPlaying) {
+      newAudioPlay.stop();
+    }
   }
 
   Future<void> gettingReposnseFromNative() async {
