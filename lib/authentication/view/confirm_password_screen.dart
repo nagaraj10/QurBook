@@ -73,7 +73,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                           _changepasswordTextFields(
                             TextFormField(
                               style: TextStyle(
-                                fontSize: 14.0.sp,
+                                fontSize: 16.0.sp,
                               ),
                               decoration: InputDecoration(
                                 hintText: strCodeHintText,
@@ -106,7 +106,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                           _changepasswordTextFields(
                             TextFormField(
                               style: TextStyle(
-                                fontSize: 14.0.sp,
+                                fontSize: 16.0.sp,
                               ),
                               autovalidate: _autoValidateBool,
                               obscureText: _isHidden,
@@ -150,7 +150,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                           _changepasswordTextFields(
                             TextFormField(
                               style: TextStyle(
-                                fontSize: 14.0.sp,
+                                fontSize: 16.0.sp,
                               ),
                               autovalidate: _autoValidateBool,
                               obscureText: _isHiddenSecondary,

@@ -107,14 +107,14 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
                               prescriptionName,
                               style: TextStyle(
                                   color: Colors.grey,
-                                  fontSize: 12.0.sp,
+                                  fontSize: 14.0.sp,
                                   fontWeight: FontWeight.w400),
                             ),
                             Text(
                               prescriptionname,
                               style: TextStyle(
                                   color: Colors.black,
-                                  fontSize: 13.0.sp,
+                                  fontSize: 15.0.sp,
                                   fontWeight: FontWeight.w400),
                             )
                           ],
@@ -123,7 +123,7 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
                           prescriptionDate,
                           style: TextStyle(
                               color: Colors.black,
-                              fontSize: 12.0.sp,
+                              fontSize: 14.0.sp,
                               fontWeight: FontWeight.w400),
                         )
                       ],
@@ -151,13 +151,13 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
                               prescriptionGender,
                               style: TextStyle(
                                   color: Colors.grey,
-                                  fontSize: 12.0.sp,
+                                  fontSize: 14.0.sp,
                                   fontWeight: FontWeight.w400),
                             ),
                             Text(prescriptiongender,
                                 style: TextStyle(
                                     color: Colors.black,
-                                    fontSize: 13.0.sp,
+                                    fontSize: 15.0.sp,
                                     fontWeight: FontWeight.w400))
                           ],
                         ),
@@ -168,13 +168,13 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
                               prescriptionAge,
                               style: TextStyle(
                                   color: Colors.grey,
-                                  fontSize: 12.0.sp,
+                                  fontSize: 14.0.sp,
                                   fontWeight: FontWeight.w400),
                             ),
                             Text(prescriptionage,
                                 style: TextStyle(
                                     color: Colors.black,
-                                    fontSize: 13.0.sp,
+                                    fontSize: 15.0.sp,
                                     fontWeight: FontWeight.w400))
                           ],
                         ),
@@ -184,13 +184,13 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
                             Text(prescriptionMobile,
                                 style: TextStyle(
                                     color: Colors.grey,
-                                    fontSize: 12.0.sp,
+                                    fontSize: 14.0.sp,
                                     fontWeight: FontWeight.w400)),
                             SizedBox(),
                             Text(prescriptionmobile,
                                 style: TextStyle(
                                     color: Colors.black,
-                                    fontSize: 13.0.sp,
+                                    fontSize: 15.0.sp,
                                     fontWeight: FontWeight.w400))
                           ],
                         )
@@ -218,7 +218,7 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
                             prescriptionName,
                             style: TextStyle(
                                 color: Colors.grey,
-                                fontSize: 12.0.sp,
+                                fontSize: 14.0.sp,
                                 fontWeight: FontWeight.w400),
                           ),
                         ),
@@ -228,7 +228,7 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
                           bfaf,
                           style: TextStyle(
                               color: Colors.grey,
-                              fontSize: 12.0.sp,
+                              fontSize: 14.0.sp,
                               fontWeight: FontWeight.w400),
                         ),
 //                      SizedBoxWidget(
@@ -237,21 +237,21 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
                           days,
                           style: TextStyle(
                               color: Colors.grey,
-                              fontSize: 12.0.sp,
+                              fontSize: 14.0.sp,
                               fontWeight: FontWeight.w400),
                         ),
                         Text(
                           schedule,
                           style: TextStyle(
                               color: Colors.grey,
-                              fontSize: 12.0.sp,
+                              fontSize: 14.0.sp,
                               fontWeight: FontWeight.w400),
                         ),
                         Text(
                           qty,
                           style: TextStyle(
                               color: Colors.grey,
-                              fontSize: 12.0.sp,
+                              fontSize: 14.0.sp,
                               fontWeight: FontWeight.w400),
                         )
                       ],
@@ -278,7 +278,7 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
                             prescriptionNotes,
                             style: TextStyle(
                                 color: Colors.grey,
-                                fontSize: 13.0.sp,
+                                fontSize: 15.0.sp,
                                 fontWeight: FontWeight.w400),
                             textAlign: TextAlign.start,
                           ),
@@ -289,7 +289,7 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
                         Text(prescriptiondescription,
                             style: TextStyle(
                                 color: Colors.black,
-                                fontSize: 13.0.sp,
+                                fontSize: 15.0.sp,
                                 fontWeight: FontWeight.w400)),
                       ],
                     ),
@@ -349,7 +349,7 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
                   medsList[pos].medicineName,
                   style: TextStyle(
                       color: Colors.black,
-                      fontSize: 13.0.sp,
+                      fontSize: 15.0.sp,
                       fontWeight: FontWeight.w400),
                 )),
 //      SizedBoxWidget(
@@ -364,7 +364,7 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
               textAlign: TextAlign.end,
               style: TextStyle(
                   color: Colors.black,
-                  fontSize: 13.0.sp,
+                  fontSize: 15.0.sp,
                   fontWeight: FontWeight.w400),
             ),
 //      SizedBoxWidget(
@@ -389,7 +389,7 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
                         medsList[pos].schedule.morning,
                         style: TextStyle(
                             color: Colors.black87,
-                            fontSize: 10.0.sp,
+                            fontSize: 12.0.sp,
                             fontWeight: FontWeight.w400),
                       ),
                       alignment: Alignment.center),
@@ -411,7 +411,7 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
                         medsList[pos].schedule.morning,
                         style: TextStyle(
                             color: Colors.black,
-                            fontSize: 10.0.sp,
+                            fontSize: 12.0.sp,
                             fontWeight: FontWeight.w400),
                       ),
                       alignment: Alignment.center),
@@ -433,7 +433,7 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
                         medsList[pos].schedule.morning,
                         style: TextStyle(
                             color: Colors.black,
-                            fontSize: 10.0.sp,
+                            fontSize: 12.0.sp,
                             fontWeight: FontWeight.w400),
                       ),
                       alignment: Alignment.center),
@@ -446,7 +446,7 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
               medsList[pos].quantity,
               style: TextStyle(
                   color: Colors.black,
-                  fontSize: 13.0.sp,
+                  fontSize: 15.0.sp,
                   fontWeight: FontWeight.w400),
             ),
           ]),
@@ -462,7 +462,7 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
         buttonText,
         style: TextStyle(
           color: Color(CommonUtil().getMyPrimaryColor()),
-          fontSize: 14.0.sp,
+          fontSize: 16.0.sp,
         ),
       ),
       onPressed: () {
@@ -489,7 +489,7 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
       ),
       style: TextStyle(
         color: Colors.black,
-        fontSize: 14.0.sp,
+        fontSize: 16.0.sp,
       ),
     );
   }
@@ -515,8 +515,8 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
             inactiveText: "$afterFoodSwitchText",
             value: status,
             inactiveColor: Colors.grey.withOpacity(0.4),
-            toggleSize: 10.0.sp,
-            valueFontSize: 10.0.sp,
+            toggleSize: 12.0.sp,
+            valueFontSize: 12.0.sp,
             borderRadius: 30.0.sp,
             showOnOff: true,
             activeTextColor: Colors.black,
@@ -549,8 +549,8 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
   //       inactiveText: "AF",
   //       value: status,
   //       inactiveColor: Colors.grey.withOpacity(0.4),
-  //       toggleSize: 10.0.sp,
-  //       valueFontSize: 10.0.sp,
+  //       toggleSize: 12.0.sp,
+  //       valueFontSize: 12.0.sp,
   //       borderRadius: 30.0.sp,
   //       showOnOff: true,
   //       activeTextColor: Colors.black,
@@ -600,7 +600,7 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
                   '$testPatientName',
                   style: TextStyle(
                       fontFamily: 'Poppins',
-                      fontSize: 14.0.sp,
+                      fontSize: 16.0.sp,
                       fontWeight: FontWeight.w500,
                       color: Colors.white),
                 ),
@@ -608,7 +608,7 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
                   '$testPatientID',
                   style: TextStyle(
                       fontFamily: 'Poppins',
-                      fontSize: 13.0.sp,
+                      fontSize: 15.0.sp,
                       fontWeight: FontWeight.w400,
                       color: Colors.white),
                 ),

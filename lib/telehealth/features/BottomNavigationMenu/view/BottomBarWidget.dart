@@ -54,7 +54,7 @@ class BottomBarWidget extends StatelessWidget {
                 : Text(
                     name,
                     style: TextStyle(
-                      fontSize: 10.0.sp,
+                      fontSize: 12.0.sp,
                     ),
                   )
           ],

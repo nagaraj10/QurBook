@@ -430,7 +430,7 @@ class _MyFamilyState extends State<MyFamily> {
                               : '',
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
-                        fontSize: 14.0.sp,
+                        fontSize: 16.0.sp,
                       ),
                       softWrap: false,
                       overflow: TextOverflow.ellipsis,
@@ -503,7 +503,7 @@ class _MyFamilyState extends State<MyFamily> {
                       style: TextStyle(
                         fontWeight: FontWeight.w400,
                         color: ColorUtils.greycolor1,
-                        fontSize: 14.0.sp,
+                        fontSize: 16.0.sp,
                       ),
                       softWrap: false,
                       overflow: TextOverflow.ellipsis,
@@ -523,7 +523,7 @@ class _MyFamilyState extends State<MyFamily> {
                       softWrap: false,
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
-                          fontSize: 14.0.sp,
+                          fontSize: 16.0.sp,
                           color: Color(new CommonUtil().getMyPrimaryColor())),
                     ),
                   ],
@@ -622,7 +622,7 @@ class _MyFamilyState extends State<MyFamily> {
                             child: Text(
                               variable.DeLink,
                               style: TextStyle(
-                                  fontSize: 14.0.sp,
+                                  fontSize: 16.0.sp,
                                   fontWeight: FontWeight.w500,
                                   color: Color(
                                       new CommonUtil().getMyPrimaryColor())),
@@ -747,7 +747,7 @@ class _MyFamilyState extends State<MyFamily> {
                                 SizedBox(width: 5.0.w),
                                 Text(CommonConstants.primary_number,
                                     style: TextStyle(
-                                        fontSize: 13.0.sp,
+                                        fontSize: 15.0.sp,
                                         fontWeight: FontWeight.w400,
                                         color: ColorUtils.myFamilyGreyColor))
                               ],
@@ -835,7 +835,7 @@ class _MyFamilyState extends State<MyFamily> {
                   child: Text(Constants.STR_ERROR_LOADING_DATA,
                       style: TextStyle(
                         color: Colors.red,
-                        fontSize: 14.0.sp,
+                        fontSize: 16.0.sp,
                       )));
               break;
 
@@ -909,11 +909,11 @@ class _MyFamilyState extends State<MyFamily> {
           decoration: InputDecoration(
             hintText: CommonConstants.mobile_numberWithStar,
             labelStyle: TextStyle(
-                fontSize: 12.0.sp,
+                fontSize: 14.0.sp,
                 fontWeight: FontWeight.w400,
                 color: ColorUtils.myFamilyGreyColor),
             hintStyle: TextStyle(
-              fontSize: 14.0.sp,
+              fontSize: 16.0.sp,
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
@@ -942,11 +942,11 @@ class _MyFamilyState extends State<MyFamily> {
           decoration: InputDecoration(
             hintText: CommonConstants.name,
             labelStyle: TextStyle(
-                fontSize: 12.0.sp,
+                fontSize: 14.0.sp,
                 fontWeight: FontWeight.w400,
                 color: ColorUtils.myFamilyGreyColor),
             hintStyle: TextStyle(
-              fontSize: 14.0.sp,
+              fontSize: 16.0.sp,
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
@@ -976,11 +976,11 @@ class _MyFamilyState extends State<MyFamily> {
         labelText: CommonConstants.firstNameWithStar,
         hintText: CommonConstants.firstName,
         labelStyle: TextStyle(
-            fontSize: 13.0.sp,
+            fontSize: 15.0.sp,
             fontWeight: FontWeight.w400,
             color: ColorUtils.myFamilyGreyColor),
         hintStyle: TextStyle(
-          fontSize: 14.0.sp,
+          fontSize: 16.0.sp,
           color: ColorUtils.myFamilyGreyColor,
           fontWeight: FontWeight.w400,
         ),
@@ -1010,11 +1010,11 @@ class _MyFamilyState extends State<MyFamily> {
         labelText: CommonConstants.middleName,
         hintText: CommonConstants.middleName,
         labelStyle: TextStyle(
-            fontSize: 13.0.sp,
+            fontSize: 15.0.sp,
             fontWeight: FontWeight.w400,
             color: ColorUtils.myFamilyGreyColor),
         hintStyle: TextStyle(
-          fontSize: 14.0.sp,
+          fontSize: 16.0.sp,
           color: ColorUtils.myFamilyGreyColor,
           fontWeight: FontWeight.w400,
         ),
@@ -1044,11 +1044,11 @@ class _MyFamilyState extends State<MyFamily> {
         labelText: CommonConstants.lastNameWithStar,
         hintText: CommonConstants.lastName,
         labelStyle: TextStyle(
-            fontSize: 13.0.sp,
+            fontSize: 15.0.sp,
             fontWeight: FontWeight.w400,
             color: ColorUtils.myFamilyGreyColor),
         hintStyle: TextStyle(
-          fontSize: 14.0.sp,
+          fontSize: 16.0.sp,
           color: ColorUtils.myFamilyGreyColor,
           fontWeight: FontWeight.w400,
         ),
@@ -1082,7 +1082,7 @@ class _MyFamilyState extends State<MyFamily> {
                 : CommonConstants.send_otp,
             style: new TextStyle(
               color: Colors.white,
-              fontSize: 14.0.sp,
+              fontSize: 16.0.sp,
               fontWeight: FontWeight.w400,
             ),
           ),

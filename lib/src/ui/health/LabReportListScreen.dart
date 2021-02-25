@@ -100,7 +100,7 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: variable.font_poppins,
-                      fontSize: 14.0.sp,
+                      fontSize: 16.0.sp,
                     ),
                   ),
                 ),
@@ -258,7 +258,7 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
                     style: TextStyle(
                         color: Colors.grey[400],
                         fontWeight: FontWeight.w200,
-                        fontSize: 12.0.sp),
+                        fontSize: 14.0.sp),
                   )
                 ],
               ),

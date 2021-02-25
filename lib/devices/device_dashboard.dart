@@ -263,7 +263,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                       CommonConstants.STR_BP_MONITOR,
                       style: TextStyle(
                           fontWeight: FontWeight.w500,
-                          fontSize: 14.0.sp,
+                          fontSize: 16.0.sp,
                           color: Color(CommonConstants.bpDarkColor)),
                       softWrap: true,
                     ),
@@ -290,7 +290,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                                   'Sys',
                                   style: TextStyle(
                                       fontWeight: FontWeight.w500,
-                                      fontSize: 12.0.sp,
+                                      fontSize: 14.0.sp,
                                       color:
                                           Color(CommonConstants.bplightColor)),
                                   softWrap: true,
@@ -316,7 +316,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                                 'Dia',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500,
-                                    fontSize: 12.0.sp,
+                                    fontSize: 14.0.sp,
                                     color: Color(CommonConstants.bplightColor)),
                                 softWrap: true,
                               ),
@@ -342,7 +342,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                                   'Pul',
                                   style: TextStyle(
                                       fontWeight: FontWeight.w500,
-                                      fontSize: 12.0.sp,
+                                      fontSize: 14.0.sp,
                                       color:
                                           Color(CommonConstants.bplightColor)),
                                   softWrap: true,
@@ -660,7 +660,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                     CommonConstants.STR_THERMOMETER,
                     style: TextStyle(
                         fontWeight: FontWeight.w500,
-                        fontSize: 14.0.sp,
+                        fontSize: 16.0.sp,
                         color: Color(CommonConstants.ThermoDarkColor)),
                     softWrap: true,
                   ),
@@ -684,7 +684,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                         'Temp',
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
-                            fontSize: 12.0.sp,
+                            fontSize: 14.0.sp,
                             color: Color(CommonConstants.ThermolightColor)),
                         softWrap: true,
                       ),
@@ -695,7 +695,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                             controller: deviceController,
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                                fontSize: 13.0.sp,
+                                fontSize: 15.0.sp,
                                 fontWeight: FontWeight.w500,
                                 color: Color(CommonConstants.ThermoDarkColor)),
                             decoration: InputDecoration(
@@ -707,7 +707,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                                 ),
                                 hintText: '0',
                                 hintStyle:
-                                    TextStyle(color: Colors.grey, fontSize: 13.0.sp),
+                                    TextStyle(color: Colors.grey, fontSize: 15.0.sp),
                                 contentPadding: EdgeInsets.zero),
                             cursorColor: Color(CommonConstants.ThermoDarkColor),
                             keyboardType: TextInputType.number,
@@ -732,7 +732,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                         '',
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
-                            fontSize: 12.0.sp,
+                            fontSize: 14.0.sp,
                             color: Color(CommonUtil().getMyPrimaryColor())),
                         softWrap: true,
                       ),
@@ -743,7 +743,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                           'F',
                           style: TextStyle(
                               fontWeight: FontWeight.w500,
-                              fontSize: 12.0.sp,
+                              fontSize: 14.0.sp,
                               color: Color(CommonConstants.ThermoDarkColor)),
                           softWrap: true,
                         ),
@@ -788,7 +788,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                     CommonConstants.STR_WEIGHING_SCALE,
                     style: TextStyle(
                         fontWeight: FontWeight.w500,
-                        fontSize: 14.0.sp,
+                        fontSize: 16.0.sp,
                         color: Color(CommonConstants.weightDarkColor)),
                     softWrap: true,
                   ),
@@ -812,7 +812,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                         'Kg',
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
-                            fontSize: 12.0.sp,
+                            fontSize: 14.0.sp,
                             color: Color(CommonConstants.weightlightColor)),
                         softWrap: true,
                       ),
@@ -868,7 +868,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                     deviceName,
                     style: TextStyle(
                         fontWeight: FontWeight.w500,
-                        fontSize: 14.0.sp,
+                        fontSize: 16.0.sp,
                         color: Color(CommonConstants.pulseDarkColor)),
                     softWrap: true,
                   ),
@@ -894,7 +894,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                             'SPO2',
                             style: TextStyle(
                                 fontWeight: FontWeight.w500,
-                                fontSize: 12.0.sp,
+                                fontSize: 14.0.sp,
                                 color: Color(CommonConstants.pulselightColor)),
                             softWrap: true,
                           ),
@@ -918,7 +918,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                             'PRBpm',
                             style: TextStyle(
                                 fontWeight: FontWeight.w500,
-                                fontSize: 12.0.sp,
+                                fontSize: 14.0.sp,
                                 color: Color(CommonConstants.pulselightColor)),
                             softWrap: true,
                           ),
@@ -929,7 +929,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                                 controller: pulse,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                    fontSize: 13.0.sp,
+                                    fontSize: 15.0.sp,
                                     fontWeight: FontWeight.w500,
                                     color:
                                         Color(CommonConstants.pulseDarkColor)),
@@ -942,7 +942,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                                     ),
                                     hintText: '0',
                                     hintStyle: TextStyle(
-                                        color: Colors.grey, fontSize: 13.0.sp),
+                                        color: Colors.grey, fontSize: 15.0.sp),
                                     contentPadding: EdgeInsets.zero),
                                 cursorColor:
                                     Color(CommonConstants.pulseDarkColor),
@@ -1002,7 +1002,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                     deviceName,
                     style: TextStyle(
                         fontWeight: FontWeight.w500,
-                        fontSize: 14.0.sp,
+                        fontSize: 16.0.sp,
                         color: Color(CommonConstants.GlucoDarkColor)),
                     softWrap: true,
                   ),
@@ -1022,7 +1022,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                       'mg/dl',
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
-                          fontSize: 12.0.sp,
+                          fontSize: 14.0.sp,
                           color: Color(CommonConstants.GlucolightColor)),
                       softWrap: true,
                     ),
@@ -1055,7 +1055,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                             'Fasting',
                             style: TextStyle(
                                 fontWeight: FontWeight.w500,
-                                fontSize: 12.0.sp,
+                                fontSize: 14.0.sp,
                                 color: Colors.grey),
                             softWrap: true,
                           ),
@@ -1084,7 +1084,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                             'PP',
                             style: TextStyle(
                                 fontWeight: FontWeight.w500,
-                                fontSize: 12.0.sp,
+                                fontSize: 14.0.sp,
                                 color: Colors.grey),
                             softWrap: true,
                           ),

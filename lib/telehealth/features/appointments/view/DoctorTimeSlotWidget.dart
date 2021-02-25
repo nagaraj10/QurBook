@@ -70,7 +70,7 @@ class DoctorTimeSlotWidgetState extends State<DoctorTimeSlotWidget> {
   Widget build(BuildContext context) {
     return days != Constants.ZERO && days != null
         ? TextWidget(
-            fontsize: 10.0.sp,
+            fontsize: 12.0.sp,
             text: days + Constants.Appointments_days,
             fontWeight: FontWeight.w500,
             colors: Colors.black,
@@ -96,13 +96,13 @@ class DoctorTimeSlotWidgetState extends State<DoctorTimeSlotWidget> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           TextWidget(
-                            fontsize: 10.0.sp,
+                            fontsize: 12.0.sp,
                             text: hour,
                             fontWeight: FontWeight.w500,
                             colors: Colors.grey,
                           ),
                           TextWidget(
-                            fontsize: 5.0.sp,
+                            fontsize: 7.0.sp,
                             text: Constants.Appointments_hours,
                             fontWeight: FontWeight.w500,
                             colors: Color(new CommonUtil().getMyPrimaryColor()),
@@ -126,13 +126,13 @@ class DoctorTimeSlotWidgetState extends State<DoctorTimeSlotWidget> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           TextWidget(
-                            fontsize: 10.0.sp,
+                            fontsize: 12.0.sp,
                             text: minutes,
                             fontWeight: FontWeight.w500,
                             colors: Colors.grey,
                           ),
                           TextWidget(
-                            fontsize: 5.0.sp,
+                            fontsize: 7.0.sp,
                             text: Constants.Appointments_minutes,
                             fontWeight: FontWeight.w500,
                             colors: Color(new CommonUtil().getMyPrimaryColor()),

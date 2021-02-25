@@ -60,7 +60,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                         width: 50.0.w,
                         timerTextStyle: TextStyle(
                           color: Colors.white,
-                          fontSize: 12.0.sp,
+                          fontSize: 14.0.sp,
                         ),
                         isRaised: false,
                         tracetime: (time) {},
@@ -71,7 +71,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                       //   running: _isTimerRun,
                       //   width: 50.0.w,
                       //   timerTextStyle:
-                      //       TextStyle(color: Colors.white, fontSize: 12.0.sp,),
+                      //       TextStyle(color: Colors.white, fontSize: 14.0.sp,),
                       //   isRaised: false,
                       //   tracetime: (time) {},
                       // ),

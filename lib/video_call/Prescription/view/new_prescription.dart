@@ -112,14 +112,14 @@ class NewPrescriptionState extends State<NewPrescription> {
                               prescriptionName,
                               style: TextStyle(
                                   color: Colors.grey,
-                                  fontSize: 12.0.sp,
+                                  fontSize: 14.0.sp,
                                   fontWeight: FontWeight.w400),
                             ),
                             Text(
                               prescriptionname,
                               style: TextStyle(
                                   color: Colors.black,
-                                  fontSize: 13.0.sp,
+                                  fontSize: 15.0.sp,
                                   fontWeight: FontWeight.w400),
                             )
                           ],
@@ -128,7 +128,7 @@ class NewPrescriptionState extends State<NewPrescription> {
                           prescriptionDate,
                           style: TextStyle(
                               color: Colors.black,
-                              fontSize: 12.0.sp,
+                              fontSize: 14.0.sp,
                               fontWeight: FontWeight.w400),
                         )
                       ],
@@ -156,13 +156,13 @@ class NewPrescriptionState extends State<NewPrescription> {
                               prescriptionGender,
                               style: TextStyle(
                                   color: Colors.grey,
-                                  fontSize: 12.0.sp,
+                                  fontSize: 14.0.sp,
                                   fontWeight: FontWeight.w400),
                             ),
                             Text(prescriptiongender,
                                 style: TextStyle(
                                     color: Colors.black,
-                                    fontSize: 13.0.sp,
+                                    fontSize: 15.0.sp,
                                     fontWeight: FontWeight.w400))
                           ],
                         ),
@@ -173,13 +173,13 @@ class NewPrescriptionState extends State<NewPrescription> {
                               prescriptionAge,
                               style: TextStyle(
                                   color: Colors.grey,
-                                  fontSize: 12.0.sp,
+                                  fontSize: 14.0.sp,
                                   fontWeight: FontWeight.w400),
                             ),
                             Text(prescriptionage,
                                 style: TextStyle(
                                     color: Colors.black,
-                                    fontSize: 13.0.sp,
+                                    fontSize: 15.0.sp,
                                     fontWeight: FontWeight.w400))
                           ],
                         ),
@@ -189,13 +189,13 @@ class NewPrescriptionState extends State<NewPrescription> {
                             Text(prescriptionMobile,
                                 style: TextStyle(
                                     color: Colors.grey,
-                                    fontSize: 12.0.sp,
+                                    fontSize: 14.0.sp,
                                     fontWeight: FontWeight.w400)),
                             SizedBox(),
                             Text(prescriptionmobile,
                                 style: TextStyle(
                                     color: Colors.black,
-                                    fontSize: 13.0.sp,
+                                    fontSize: 15.0.sp,
                                     fontWeight: FontWeight.w400))
                           ],
                         )
@@ -267,7 +267,7 @@ class NewPrescriptionState extends State<NewPrescription> {
                             prescriptionNotes,
                             style: TextStyle(
                                 color: Colors.grey,
-                                fontSize: 12.0.sp,
+                                fontSize: 14.0.sp,
                                 fontWeight: FontWeight.w400),
                             textAlign: TextAlign.start,
                           ),
@@ -278,11 +278,11 @@ class NewPrescriptionState extends State<NewPrescription> {
                               maxLines: 10,
                               minLines: 1,
                               style: TextStyle(
-                                  fontSize: 12.0.sp, color: Colors.black),
+                                  fontSize: 14.0.sp, color: Colors.black),
                               decoration: InputDecoration(
                                   border: InputBorder.none,
                                   hintStyle: TextStyle(
-                                      fontSize: 12.0.sp, color: Colors.grey),
+                                      fontSize: 14.0.sp, color: Colors.grey),
                                   hintText: '$addNoteHint')),
                         )
                       ],
@@ -345,7 +345,7 @@ class NewPrescriptionState extends State<NewPrescription> {
                           medicineList[pos].schedule.morning ?? "",
                           style: TextStyle(
                               color: Colors.black87,
-                              fontSize: 10.0.sp,
+                              fontSize: 12.0.sp,
                               fontWeight: FontWeight.w400),
                         ),
                         alignment: Alignment.center),
@@ -371,7 +371,7 @@ class NewPrescriptionState extends State<NewPrescription> {
                           medicineList[pos].schedule.afternoon ?? "",
                           style: TextStyle(
                               color: Colors.black,
-                              fontSize: 10.0.sp,
+                              fontSize: 12.0.sp,
                               fontWeight: FontWeight.w400),
                         ),
                         alignment: Alignment.center),
@@ -397,7 +397,7 @@ class NewPrescriptionState extends State<NewPrescription> {
                           medicineList[pos].schedule.evening ?? "",
                           style: TextStyle(
                               color: Colors.black,
-                              fontSize: 10.0.sp,
+                              fontSize: 12.0.sp,
                               fontWeight: FontWeight.w400),
                         ),
                         alignment: Alignment.center),
@@ -437,10 +437,10 @@ class NewPrescriptionState extends State<NewPrescription> {
               controller: textEditingController,
               maxLines: null,
               expands: true,
-              style: TextStyle(fontSize: 13.0.sp, color: Colors.black),
+              style: TextStyle(fontSize: 15.0.sp, color: Colors.black),
               decoration: InputDecoration(
                   border: InputBorder.none,
-                  hintStyle: TextStyle(fontSize: 13.0.sp, color: Colors.grey),
+                  hintStyle: TextStyle(fontSize: 15.0.sp, color: Colors.grey),
                   hintText: '$addMedicineNoteHint'))),
     );
   }
@@ -454,14 +454,14 @@ class NewPrescriptionState extends State<NewPrescription> {
           textAlign: TextAlign.center,
           style: TextStyle(
             color: Colors.black,
-            fontSize: 13.0.sp,
+            fontSize: 15.0.sp,
           ),
           decoration: InputDecoration(
               border: InputBorder.none,
               hintText: '$medicineQuantityHint',
               hintStyle: TextStyle(
                 color: Colors.grey,
-                fontSize: 13.0.sp,
+                fontSize: 15.0.sp,
               ),
               contentPadding: EdgeInsets.only(bottom: 5)),
         ));
@@ -475,14 +475,14 @@ class NewPrescriptionState extends State<NewPrescription> {
           controller: textEditingController,
           style: TextStyle(
             color: Colors.black,
-            fontSize: 13.0.sp,
+            fontSize: 15.0.sp,
           ),
           decoration: InputDecoration(
               border: InputBorder.none,
               hintText: '$numberOfDaysHint',
               hintStyle: TextStyle(
                 color: Colors.grey,
-                fontSize: 13.0.sp,
+                fontSize: 15.0.sp,
               ),
               contentPadding: EdgeInsets.only(bottom: 5)),
         ));
@@ -497,7 +497,7 @@ class NewPrescriptionState extends State<NewPrescription> {
               GestureDetector(
                 child: Text(
                   '$scheduleOptionOne',
-                  style: TextStyle(color: Colors.white, fontSize: 14.0.sp),
+                  style: TextStyle(color: Colors.white, fontSize: 16.0.sp),
                 ),
                 onTap: () {
                   setState(() {
@@ -526,7 +526,7 @@ class NewPrescriptionState extends State<NewPrescription> {
                   '$scheduleOptionTwo',
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 14.0.sp,
+                    fontSize: 16.0.sp,
                   ),
                 ),
                 onTap: () {
@@ -558,7 +558,7 @@ class NewPrescriptionState extends State<NewPrescription> {
                   '$scheduleOptionThree',
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 14.0.sp,
+                    fontSize: 16.0.sp,
                   ),
                 ),
                 onTap: () {
@@ -597,7 +597,7 @@ class NewPrescriptionState extends State<NewPrescription> {
         buttonText,
         style: TextStyle(
           color: Color(CommonUtil().getMyPrimaryColor()),
-          fontSize: 14.0.sp,
+          fontSize: 16.0.sp,
         ),
       ),
       onPressed: () {},
@@ -618,12 +618,12 @@ class NewPrescriptionState extends State<NewPrescription> {
         hintText: hint,
         hintStyle: TextStyle(
           color: Colors.grey,
-          fontSize: 13.0.sp,
+          fontSize: 15.0.sp,
         ),
       ),
       style: TextStyle(
         color: Colors.black,
-        fontSize: 13.0.sp,
+        fontSize: 15.0.sp,
       ),
     );
   }
@@ -646,8 +646,8 @@ class NewPrescriptionState extends State<NewPrescription> {
           inactiveColor: Colors.grey.withOpacity(0.4),
           inactiveText: "$afterFoodSwitchText",
           value: status,
-          toggleSize: 10.0.sp,
-          valueFontSize: 8.0.sp,
+          toggleSize: 12.0.sp,
+          valueFontSize: 10.0.sp,
           borderRadius: 30.0.sp,
           showOnOff: true,
           activeTextColor: Colors.black,
@@ -697,7 +697,7 @@ class NewPrescriptionState extends State<NewPrescription> {
                   '$testPatientName',
                   style: TextStyle(
                       fontFamily: 'Poppins',
-                      fontSize: 14.0.sp,
+                      fontSize: 16.0.sp,
                       fontWeight: FontWeight.w500,
                       color: Colors.white),
                 ),
@@ -705,7 +705,7 @@ class NewPrescriptionState extends State<NewPrescription> {
                   '$testPatientID',
                   style: TextStyle(
                       fontFamily: 'Poppins',
-                      fontSize: 13.0.sp,
+                      fontSize: 15.0.sp,
                       fontWeight: FontWeight.w400,
                       color: Colors.white),
                 ),

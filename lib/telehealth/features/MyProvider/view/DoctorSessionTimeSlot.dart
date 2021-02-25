@@ -231,7 +231,7 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
                           new Text(
                             slotsAreNotAvailable,
                             style: TextStyle(
-                              fontSize: 10.0.sp,
+                              fontSize: 12.0.sp,
                             ),
                           ),
                           SizedBoxWidget(
@@ -247,7 +247,7 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
                       new Text(
                         slotsAreNotAvailable,
                         style: TextStyle(
-                          fontSize: 10.0.sp,
+                          fontSize: 12.0.sp,
                         ),
                       ),
                       SizedBoxWidget(
@@ -265,7 +265,7 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
               new Text(
                 slotsAreNotAvailable,
                 style: TextStyle(
-                  fontSize: 10.0.sp,
+                  fontSize: 12.0.sp,
                 ),
               ),
               SizedBoxWidget(

@@ -268,7 +268,7 @@ class AddProvidersState extends State<AddProviders> {
                     Text(
                       variable.strAssociateMember,
                       style: TextStyle(
-                          fontSize: 14.0.sp,
+                          fontSize: 16.0.sp,
                           fontWeight: FontWeight.w400,
                           color: ColorUtils.greycolor1),
                     ),
@@ -310,7 +310,7 @@ class AddProvidersState extends State<AddProviders> {
                       child: Text(
                         variable.Switch_User,
                         style: TextStyle(
-                          fontSize: 14.0.sp,
+                          fontSize: 16.0.sp,
                           fontWeight: FontWeight.w400,
                           //color: Color(new CommonUtil().getMyPrimaryColor())
                         ),
@@ -334,7 +334,7 @@ class AddProvidersState extends State<AddProviders> {
                         Text(
                           variable.Set_as_Preferred,
                           style: TextStyle(
-                              fontSize: 14.0.sp,
+                              fontSize: 16.0.sp,
                               fontWeight: FontWeight.w400,
                               color: ColorUtils.blackcolor),
                         ),
@@ -653,7 +653,7 @@ class AddProvidersState extends State<AddProviders> {
                                     ? myProfile.result.lastName.toUpperCase()
                                     : selectedFamilyMemberName[0].toUpperCase(),
                                 style: TextStyle(
-                                    fontSize: 14.0.sp,
+                                    fontSize: 16.0.sp,
                                     color: Color(
                                         CommonUtil().getMyPrimaryColor())),
                               ),
@@ -671,7 +671,7 @@ class AddProvidersState extends State<AddProviders> {
                                             : selectedFamilyMemberName[0]
                                                 .toUpperCase(),
                                         style: TextStyle(
-                                            fontSize: 14.0.sp,
+                                            fontSize: 16.0.sp,
                                             color: Color(CommonUtil()
                                                 .getMyPrimaryColor())),
                                       ),
@@ -687,7 +687,7 @@ class AddProvidersState extends State<AddProviders> {
                                         : selectedFamilyMemberName[0]
                                             .toUpperCase(),
                                     style: TextStyle(
-                                        fontSize: 14.0.sp,
+                                        fontSize: 16.0.sp,
                                         color: Color(
                                             CommonUtil().getMyPrimaryColor())),
                                   ),
@@ -696,7 +696,7 @@ class AddProvidersState extends State<AddProviders> {
                               child: Text(
                                 '',
                                 style: TextStyle(
-                                    fontSize: 14.0.sp,
+                                    fontSize: 16.0.sp,
                                     color: Color(
                                         CommonUtil().getMyPrimaryColor())),
                               ),
@@ -716,7 +716,7 @@ class AddProvidersState extends State<AddProviders> {
                     style: TextStyle(
                       color: Color.fromARGB(255, 85, 92, 89),
                       fontWeight: FontWeight.w500,
-                      fontSize: 14.0.sp,
+                      fontSize: 16.0.sp,
                     ),
                   ),
                 ),
@@ -787,7 +787,7 @@ class AddProvidersState extends State<AddProviders> {
                 : variable.Add,
             style: new TextStyle(
               color: Colors.white,
-              fontSize: 14.0.sp,
+              fontSize: 16.0.sp,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -822,7 +822,7 @@ class AddProvidersState extends State<AddProviders> {
             variable.Cancel,
             style: new TextStyle(
               color: ColorUtils.blackcolor,
-              fontSize: 14.0.sp,
+              fontSize: 16.0.sp,
               fontWeight: FontWeight.w500,
             ),
           ),

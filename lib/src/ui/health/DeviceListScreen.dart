@@ -196,7 +196,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                       style: TextStyle(
                           color: Color(new CommonUtil().getMyPrimaryColor()),
                           fontWeight: FontWeight.w200,
-                          fontSize: 8.0.sp),
+                          fontSize: 10.0.sp),
                     )
                   ],
                 ),
@@ -225,7 +225,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                             : '',
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
-                          fontSize: 10.0.sp,
+                          fontSize: 12.0.sp,
                           color: Color(new CommonUtil().getMyPrimaryColor()),
                         ),
                         maxLines: 2,
@@ -318,7 +318,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                   ? toBeginningOfSentenceCase(
                       deviceReadings[i].parameter.toLowerCase())
                   : '',
-              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 10.0.sp),
+              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 12.0.sp),
               maxLines: 2,
               softWrap: true,
             ),
@@ -329,11 +329,11 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                   style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.w500,
-                      fontSize: 10.0.sp),
+                      fontSize: 12.0.sp),
                 ),
                 Text(deviceReadings[i].unit.toString(),
                     maxLines: 2,
-                    style: TextStyle(color: Colors.black54, fontSize: 8.0.sp))
+                    style: TextStyle(color: Colors.black54, fontSize: 10.0.sp))
               ],
             ),
           ],

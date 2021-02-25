@@ -71,7 +71,7 @@ class FamilyListDialogState extends State<FamilyListDialog> {
                         child: Text(variable.strSomethingWrong,
                             style: TextStyle(
                               color: Colors.red,
-                              fontSize: 14.0.sp,
+                              fontSize: 16.0.sp,
                             )));
                     break;
 
@@ -221,7 +221,7 @@ class FamilyListDialogState extends State<FamilyListDialog> {
                                   softWrap: false,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
-                                    fontSize: 10.0.sp,
+                                    fontSize: 12.0.sp,
                                   ),
                                 )
                               ],
@@ -249,7 +249,7 @@ class FamilyListDialogState extends State<FamilyListDialog> {
                     variable.strAddFamily,
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 14.0.sp,
+                      fontSize: 16.0.sp,
                     ),
                   ),
                   onPressed: () {},

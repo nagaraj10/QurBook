@@ -31,13 +31,13 @@ class _CountryCodePickerState extends State<CountryCodePickerPage> {
               searchInputDecoration: InputDecoration(
                   hintText: constants.strSearchCountry,
                   hintStyle: TextStyle(
-                      fontSize: 13.0.sp,
+                      fontSize: 15.0.sp,
                       fontWeight: FontWeight.w400,
                       color: Colors.black)),
               isSearchable: true,
               title: Text(
                 constants.strSearchCountryLabel,
-                style: TextStyle(color: Colors.black, fontSize: 13.0.sp),
+                style: TextStyle(color: Colors.black, fontSize: 15.0.sp),
               ),
               onValuePicked: widget.onValuePicked,
               itemBuilder: _buildDialogItem,
@@ -59,7 +59,7 @@ class _CountryCodePickerState extends State<CountryCodePickerPage> {
           Text(
             "${'+'}(${country.phoneCode}) ",
             style: TextStyle(
-                fontSize: 13.0.sp,
+                fontSize: 15.0.sp,
                 fontWeight: FontWeight.w600,
                 color: Colors.black),
           ),
@@ -78,14 +78,14 @@ class _CountryCodePickerState extends State<CountryCodePickerPage> {
           SizedBox(width: 10.0.w),
           Text("${'+'}${country.phoneCode}",
               style: TextStyle(
-                  fontSize: 13.0.sp,
+                  fontSize: 15.0.sp,
                   fontWeight: FontWeight.w600,
                   color: Colors.black)),
           SizedBox(width: 10.0.w),
           Flexible(
               child: Text(country.name,
                   style: TextStyle(
-                      fontSize: 13.0.sp,
+                      fontSize: 15.0.sp,
                       fontWeight: FontWeight.w400,
                       color: Colors.black)))
         ],

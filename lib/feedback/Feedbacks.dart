@@ -462,11 +462,11 @@ class _FeedbacksState extends State<Feedbacks> {
         errorText: isFeedBackEmptied ? variable.strFeedbackEmpty : null,
         hintText: variable.strFeedBack,
         labelStyle: TextStyle(
-            fontSize: 12.0.sp,
+            fontSize: 14.0.sp,
             fontWeight: FontWeight.w400,
             color: ColorUtils.myFamilyGreyColor),
         hintStyle: TextStyle(
-          fontSize: 14.0.sp,
+          fontSize: 16.0.sp,
           color: ColorUtils.myFamilyGreyColor,
           fontWeight: FontWeight.w400,
         ),

@@ -65,7 +65,7 @@ class CommonComponents {
                         softWrap: true,
                         style: TextStyle(
                             color: Colors.white,
-                            fontSize: 14.0.sp,
+                            fontSize: 16.0.sp,
                             fontFamily: variable.font_roboto,
                             fontWeight: FontWeight.w300),
                       ),

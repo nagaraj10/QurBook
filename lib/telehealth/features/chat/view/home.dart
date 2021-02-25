@@ -163,7 +163,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                       EXIT_APP_TO_EXIT,
                       style: TextStyle(
                         color: Colors.white70,
-                        fontSize: 14.0.sp,
+                        fontSize: 16.0.sp,
                       ),
                     ),
                   ],
@@ -187,7 +187,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                       style: TextStyle(
                         color: primaryColor,
                         fontWeight: FontWeight.bold,
-                        fontSize: 14.0.sp,
+                        fontSize: 16.0.sp,
                       ),
                     )
                   ],
@@ -211,7 +211,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                       style: TextStyle(
                         color: primaryColor,
                         fontWeight: FontWeight.bold,
-                        fontSize: 14.0.sp,
+                        fontSize: 16.0.sp,
                       ),
                     )
                   ],
@@ -247,7 +247,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
           CHAT,
           style: TextStyle(
             color: Colors.white,
-            fontSize: 14.0.sp,
+            fontSize: 16.0.sp,
           ),
         ),
         centerTitle: true,
@@ -277,7 +277,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
           return new Text(
             'Error: ${snapshot.error}',
             style: TextStyle(
-              fontSize: 14.0.sp,
+              fontSize: 16.0.sp,
             ),
           );
         } else {
@@ -440,7 +440,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                         children: [
                                           Icon(
                                             Icons.photo,
-                                            size: 14.0.sp,
+                                            size: 16.0.sp,
                                             color: Colors.black54,
                                           ),
                                           SizedBoxWidget(
@@ -451,7 +451,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                             overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
                                                 color: Colors.grey[600],
-                                                fontSize: 12.0.sp,
+                                                fontSize: 14.0.sp,
                                                 fontFamily:
                                                     variable.font_poppins),
                                           )
@@ -463,7 +463,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.grey[600],
-                                            fontSize: 12.0.sp,
+                                            fontSize: 14.0.sp,
                                             fontFamily: variable.font_poppins),
                                       )
                                 : '',
@@ -485,7 +485,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                               style: TextStyle(
                                   fontWeight: FontWeight.w300,
                                   color: Colors.grey[600],
-                                  fontSize: 10.0.sp,
+                                  fontSize: 12.0.sp,
                                   fontFamily: variable.font_poppins),
                             ),
                           ),
@@ -547,7 +547,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                                             : '')
                                                         : '',
                                                     style: TextStyle(
-                                                      fontSize: 10.0.sp,
+                                                      fontSize: 12.0.sp,
                                                     ),
                                                   ),
                                                   backgroundColor:

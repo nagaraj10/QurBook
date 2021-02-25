@@ -94,7 +94,7 @@ class AddAddressListState extends State<AddAddressList> {
                         eachPlaceModel.title,
                         maxLines: 1,
                         style: TextStyle(
-                          fontSize: 14.0.sp,
+                          fontSize: 16.0.sp,
                           fontWeight: FontWeight.w400,
                           color: ColorUtils.blackcolor,
                         ),
@@ -107,7 +107,7 @@ class AddAddressListState extends State<AddAddressList> {
                         eachPlaceModel.description,
                         maxLines: 1,
                         style: TextStyle(
-                          fontSize: 13.0.sp,
+                          fontSize: 15.0.sp,
                           fontWeight: FontWeight.w400,
                           color: ColorUtils.adddescripcolor,
                         ),

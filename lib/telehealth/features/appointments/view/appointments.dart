@@ -100,7 +100,7 @@ class _AppointmentsState extends State<Appointments> {
                       border: InputBorder.none,
                       hintStyle: TextStyle(
                         color: Colors.black45,
-                        fontSize: 14.0.sp,
+                        fontSize: 16.0.sp,
                       ),
                     ),
                     style: TextStyle(
@@ -278,7 +278,7 @@ class _AppointmentsState extends State<Appointments> {
                         child: Text(
                           variable.strNoAppointments,
                           style: TextStyle(
-                            fontSize: 14.0.sp,
+                            fontSize: 16.0.sp,
                           ),
                         ),
                       ),
@@ -301,7 +301,7 @@ class _AppointmentsState extends State<Appointments> {
             child: Text(
               variable.strNoAppointments,
               style: TextStyle(
-                fontSize: 14.0.sp,
+                fontSize: 16.0.sp,
               ),
             ),
           ),

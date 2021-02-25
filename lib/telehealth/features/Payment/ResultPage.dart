@@ -51,7 +51,7 @@ class _ResultPage extends State<ResultPage> {
                     SizedBox(height: 10.0.h),
                     Text(status ? APPOINTMENT_CONFIRM : UNABLE_PROCESS,
                         style: TextStyle(
-                            fontSize: 14.0.sp,
+                            fontSize: 16.0.sp,
                             color: Colors.white,
                             fontWeight: FontWeight.bold)),
                     status
@@ -60,7 +60,7 @@ class _ResultPage extends State<ResultPage> {
                                 ? 'Ref.no: ' + widget.refNo
                                 : '',
                             style: TextStyle(
-                                fontSize: 14.0.sp,
+                                fontSize: 16.0.sp,
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold))
                         : SizedBox(),
@@ -89,7 +89,7 @@ class _ResultPage extends State<ResultPage> {
                       child: Text(
                         STR_DONE.toUpperCase(),
                         style: TextStyle(
-                          fontSize: 14.0.sp,
+                          fontSize: 16.0.sp,
                         ),
                       ),
                     ),

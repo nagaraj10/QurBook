@@ -1417,7 +1417,7 @@ class _CustomTabsState extends State<CustomTabView>
         Container(
             child: Text(
           dataObj.categoryName,
-          style: TextStyle(fontSize: 12.0.sp),
+          style: TextStyle(fontSize: 14.0.sp),
         )),
         Padding(padding: EdgeInsets.only(top: 10)),
       ]));

@@ -233,7 +233,7 @@ class _IDDocsListState extends State<IDDocsList> {
                       new FHBUtils()
                           .getFormattedDateString(mediaMetaInfoObj.createdOn),
                       style: TextStyle(
-                          fontSize: 12.0.sp,
+                          fontSize: 14.0.sp,
                           color: Colors.grey[400],
                           fontWeight: FontWeight.w200),
                     )

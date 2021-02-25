@@ -255,7 +255,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           return Text(
             'Error: ${snapshot.error}',
             style: TextStyle(
-              fontSize: 14.0.sp,
+              fontSize: 16.0.sp,
             ),
           );
         } else {
@@ -272,7 +272,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           getMealText(deviceMealContext.toString()),
           style: TextStyle(
             color: Colors.black,
-            fontSize: 8.0.sp,
+            fontSize: 10.0.sp,
             fontWeight: FontWeight.w400,
           ),
         );
@@ -281,7 +281,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           '-',
           style: TextStyle(
             color: Colors.black,
-            fontSize: 8.0.sp,
+            fontSize: 10.0.sp,
             fontWeight: FontWeight.w400,
           ),
         );
@@ -291,7 +291,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
         '-',
         style: TextStyle(
           color: Colors.black,
-          fontSize: 8.0.sp,
+          fontSize: 10.0.sp,
           fontWeight: FontWeight.w400,
         ),
       );
@@ -336,7 +336,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           return new Text(
             'Error: ${snapshot.error}',
             style: TextStyle(
-              fontSize: 14.0.sp,
+              fontSize: 16.0.sp,
             ),
           );
         } else {
@@ -1062,10 +1062,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                   decoration: BoxDecoration(
                     borderRadius: new BorderRadius.only(
                       topLeft: Radius.circular(
-                        10.0.sp,
+                        12.0.sp,
                       ),
                       topRight: Radius.circular(
-                        10.0.sp,
+                        12.0.sp,
                       ),
                     ),
                     color: Colors.white,
@@ -1074,7 +1074,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                     children: [
                       Padding(
                         padding: EdgeInsets.all(
-                          10.0.sp,
+                          12.0.sp,
                         ),
                         child: IntrinsicHeight(
                           child: Row(
@@ -1096,7 +1096,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                               ? dateForBp + ', '
                                               : '',
                                           style: TextStyle(
-                                            fontSize: 8.0.sp,
+                                            fontSize: 10.0.sp,
                                             color: Colors.black,
                                           ),
                                         ),
@@ -1105,7 +1105,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                               ? timeForBp
                                               : '',
                                           style: TextStyle(
-                                            fontSize: 8.0.sp,
+                                            fontSize: 10.0.sp,
                                             color: Colors.black,
                                           ),
                                         )
@@ -1169,7 +1169,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                             Text(
                                               'Sys',
                                               style: TextStyle(
-                                                fontSize: 14.0.sp,
+                                                fontSize: 16.0.sp,
                                                 fontWeight: FontWeight.w400,
                                                 color: hexToColor('#39c5c2'),
                                               ),
@@ -1194,7 +1194,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                             Text(
                                               'Dia',
                                               style: TextStyle(
-                                                fontSize: 14.0.sp,
+                                                fontSize: 16.0.sp,
                                                 fontWeight: FontWeight.w400,
                                                 color: hexToColor('#39c5c2'),
                                               ),
@@ -1219,7 +1219,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                             Text(
                                               'Pul',
                                               style: TextStyle(
-                                                fontSize: 14.0.sp,
+                                                fontSize: 16.0.sp,
                                                 fontWeight: FontWeight.w400,
                                                 color: hexToColor('#39c5c2'),
                                               ),
@@ -1247,7 +1247,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                         Text(
                                           '7 Days Avg',
                                           style: TextStyle(
-                                            fontSize: 8.0.sp,
+                                            fontSize: 10.0.sp,
                                             fontWeight: FontWeight.w400,
                                             color: hexToColor('#afafaf'),
                                           ),
@@ -1263,7 +1263,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                             Text(
                                               'Sys',
                                               style: TextStyle(
-                                                fontSize: 10.0.sp,
+                                                fontSize: 12.0.sp,
                                                 fontWeight: FontWeight.w400,
                                                 color: hexToColor('#afafaf'),
                                               ),
@@ -1274,7 +1274,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                   ? averageForSys.toString()
                                                   : '-',
                                               style: TextStyle(
-                                                fontSize: 14.0.sp,
+                                                fontSize: 16.0.sp,
                                                 fontWeight: FontWeight.w500,
                                                 color: hexToColor('#afafaf'),
                                               ),
@@ -1289,7 +1289,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                             Text(
                                               'Dia',
                                               style: TextStyle(
-                                                fontSize: 10.0.sp,
+                                                fontSize: 12.0.sp,
                                                 fontWeight: FontWeight.w400,
                                                 color: hexToColor('#afafaf'),
                                               ),
@@ -1300,7 +1300,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                   ? averageForDia.toString()
                                                   : '-',
                                               style: TextStyle(
-                                                fontSize: 14.0.sp,
+                                                fontSize: 16.0.sp,
                                                 fontWeight: FontWeight.w500,
                                                 color: hexToColor('#afafaf'),
                                               ),
@@ -1315,7 +1315,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                             Text(
                                               'Pul',
                                               style: TextStyle(
-                                                fontSize: 10.0.sp,
+                                                fontSize: 12.0.sp,
                                                 fontWeight: FontWeight.w400,
                                                 color: hexToColor('#afafaf'),
                                               ),
@@ -1327,7 +1327,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                       .toString()
                                                   : '-',
                                               style: TextStyle(
-                                                fontSize: 14.0.sp,
+                                                fontSize: 16.0.sp,
                                                 fontWeight: FontWeight.w500,
                                                 color: hexToColor('#afafaf'),
                                               ),
@@ -1361,7 +1361,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                     textColor: Colors.white,
                                     child: Icon(
                                       Icons.add,
-                                      size: 14.0.sp,
+                                      size: 16.0.sp,
                                     ),
                                     padding: EdgeInsets.all(
                                       2.0.sp,
@@ -1428,10 +1428,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                             decoration: BoxDecoration(
                               borderRadius: new BorderRadius.only(
                                   topLeft: Radius.circular(
-                                    10.0.sp,
+                                    12.0.sp,
                                   ),
                                   topRight: Radius.circular(
-                                    10.0.sp,
+                                    12.0.sp,
                                   )),
                               color: Colors.white,
                             ),
@@ -1441,9 +1441,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                   Expanded(
                                     child: Padding(
                                       padding: EdgeInsets.fromLTRB(
-                                        10.0.sp,
-                                        10.0.sp,
-                                        10.0.sp,
+                                        12.0.sp,
+                                        12.0.sp,
+                                        12.0.sp,
                                         0.0.sp,
                                       ),
                                       child: Column(
@@ -1467,7 +1467,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                                   ', '
                                                               : '',
                                                           style: TextStyle(
-                                                            fontSize: 8.0.sp,
+                                                            fontSize: 10.0.sp,
                                                             color: Colors.black,
                                                           ),
                                                         ),
@@ -1479,7 +1479,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                               ? timeForGulcose
                                                               : '',
                                                           style: TextStyle(
-                                                            fontSize: 8.0.sp,
+                                                            fontSize: 10.0.sp,
                                                             color: Colors.black,
                                                           ),
                                                         ),
@@ -1545,7 +1545,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                       child: Text(
                                                         '7 Days Avg',
                                                         style: TextStyle(
-                                                          fontSize: 8.0.sp,
+                                                          fontSize: 10.0.sp,
                                                           fontWeight:
                                                               FontWeight.w400,
                                                           color: hexToColor(
@@ -1592,7 +1592,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                           textAlign:
                                                               TextAlign.end,
                                                           style: TextStyle(
-                                                            fontSize: 8.0.sp,
+                                                            fontSize: 10.0.sp,
                                                             color: hexToColor(
                                                                 '#b70a80'),
                                                           ),
@@ -1618,7 +1618,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                           child: Text(
                                                             'Fasting',
                                                             style: TextStyle(
-                                                              fontSize: 10.0.sp,
+                                                              fontSize: 12.0.sp,
                                                               fontWeight:
                                                                   FontWeight
                                                                       .w400,
@@ -1641,7 +1641,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                                 style:
                                                                     TextStyle(
                                                                   fontSize:
-                                                                      12.0.sp,
+                                                                      14.0.sp,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w400,
@@ -1662,7 +1662,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                                 style:
                                                                     TextStyle(
                                                                   fontSize:
-                                                                      6.0.sp,
+                                                                      8.0.sp,
                                                                   color: hexToColor(
                                                                       '#afafaf'),
                                                                 ),
@@ -1684,7 +1684,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                           child: Text(
                                                             'PP',
                                                             style: TextStyle(
-                                                              fontSize: 10.0.sp,
+                                                              fontSize: 12.0.sp,
                                                               fontWeight:
                                                                   FontWeight
                                                                       .w400,
@@ -1707,7 +1707,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                                 style:
                                                                     TextStyle(
                                                                   fontSize:
-                                                                      12.0.sp,
+                                                                      14.0.sp,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w400,
@@ -1728,7 +1728,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                                 style:
                                                                     TextStyle(
                                                                   fontSize:
-                                                                      6.0.sp,
+                                                                      8.0.sp,
                                                                   color: hexToColor(
                                                                       '#afafaf'),
                                                                 ),
@@ -1758,7 +1758,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                     textColor: Colors.white,
                                                     child: Icon(
                                                       Icons.add,
-                                                      size: 14.0.sp,
+                                                      size: 16.0.sp,
                                                     ),
                                                     padding: EdgeInsets.all(
                                                       2.0.sp,
@@ -1818,10 +1818,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                             decoration: BoxDecoration(
                               borderRadius: new BorderRadius.only(
                                 topLeft: Radius.circular(
-                                  10.0.sp,
+                                  12.0.sp,
                                 ),
                                 topRight: Radius.circular(
-                                  10.0.sp,
+                                  12.0.sp,
                                 ),
                               ),
                               color: Colors.white,
@@ -1832,9 +1832,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                   Expanded(
                                     child: Padding(
                                       padding: EdgeInsets.fromLTRB(
-                                        10.0.sp,
-                                        10.0.sp,
-                                        10.0.sp,
+                                        12.0.sp,
+                                        12.0.sp,
+                                        12.0.sp,
                                         0.0.sp,
                                       ),
                                       child: Column(
@@ -1857,7 +1857,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                                   ', '
                                                               : '',
                                                           style: TextStyle(
-                                                            fontSize: 8.0.sp,
+                                                            fontSize: 10.0.sp,
                                                             color: Colors.black,
                                                           ),
                                                         ),
@@ -1868,7 +1868,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                               ? timeForTemp
                                                               : '',
                                                           style: TextStyle(
-                                                            fontSize: 8.0.sp,
+                                                            fontSize: 10.0.sp,
                                                             color: Colors.black,
                                                           ),
                                                         ),
@@ -1936,7 +1936,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                       child: Text(
                                                         '7 Days Avg',
                                                         style: TextStyle(
-                                                          fontSize: 8.0.sp,
+                                                          fontSize: 10.0.sp,
                                                           fontWeight:
                                                               FontWeight.w400,
                                                           color: hexToColor(
@@ -1955,7 +1955,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                     child: Text(
                                                       'Temp',
                                                       style: TextStyle(
-                                                        fontSize: 9.0.sp,
+                                                        fontSize: 11.0.sp,
                                                         color: hexToColor(
                                                             '#d95523'),
                                                       ),
@@ -1986,7 +1986,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                               ? 'F'
                                                               : '-',
                                                           style: TextStyle(
-                                                            fontSize: 10.0.sp,
+                                                            fontSize: 12.0.sp,
                                                             fontWeight:
                                                                 FontWeight.w400,
                                                             color: hexToColor(
@@ -2016,7 +2016,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                           child: Text(
                                                             'Temp',
                                                             style: TextStyle(
-                                                              fontSize: 10.0.sp,
+                                                              fontSize: 12.0.sp,
                                                               fontWeight:
                                                                   FontWeight
                                                                       .w400,
@@ -2039,7 +2039,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                                 style:
                                                                     TextStyle(
                                                                   fontSize:
-                                                                      12.0.sp,
+                                                                      14.0.sp,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w400,
@@ -2057,7 +2057,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                                 style:
                                                                     TextStyle(
                                                                   fontSize:
-                                                                      8.0.sp,
+                                                                      10.0.sp,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w400,
@@ -2093,7 +2093,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                     textColor: Colors.white,
                                                     child: Icon(
                                                       Icons.add,
-                                                      size: 14.0.sp,
+                                                      size: 16.0.sp,
                                                     ),
                                                     padding: EdgeInsets.all(
                                                       2.0.sp,
@@ -2152,10 +2152,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(
-                                  10.0.sp,
+                                  12.0.sp,
                                 ),
                                 topRight: Radius.circular(
-                                  10.0.sp,
+                                  12.0.sp,
                                 ),
                               ),
                               color: Colors.white,
@@ -2166,9 +2166,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                   Expanded(
                                     child: Padding(
                                       padding: EdgeInsets.fromLTRB(
-                                        10.0.sp,
-                                        10.0.sp,
-                                        10.0.sp,
+                                        12.0.sp,
+                                        12.0.sp,
+                                        12.0.sp,
                                         0.0.sp,
                                       ),
                                       child: Column(
@@ -2190,7 +2190,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                               ? dateForOs + ', '
                                                               : '',
                                                           style: TextStyle(
-                                                            fontSize: 8.0.sp,
+                                                            fontSize: 10.0.sp,
                                                             color: Colors.black,
                                                           ),
                                                         ),
@@ -2201,7 +2201,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                               ? timeForOs
                                                               : '',
                                                           style: TextStyle(
-                                                            fontSize: 8.0.sp,
+                                                            fontSize: 10.0.sp,
                                                             color: Colors.black,
                                                           ),
                                                         ),
@@ -2266,7 +2266,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                       child: Text(
                                                         '7 Days Avg',
                                                         style: TextStyle(
-                                                          fontSize: 8.0.sp,
+                                                          fontSize: 10.0.sp,
                                                           fontWeight:
                                                               FontWeight.w400,
                                                           color: hexToColor(
@@ -2285,7 +2285,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                     child: Text(
                                                       'SPO2',
                                                       style: TextStyle(
-                                                        fontSize: 9.0.sp,
+                                                        fontSize: 11.0.sp,
                                                         color: hexToColor(
                                                             '#8600bd'),
                                                       ),
@@ -2321,7 +2321,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                     child: Text(
                                                       'PRBpm',
                                                       style: TextStyle(
-                                                        fontSize: 9.0.sp,
+                                                        fontSize: 11.0.sp,
                                                         color: hexToColor(
                                                             '#8600bd'),
                                                       ),
@@ -2360,7 +2360,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                           child: Text(
                                                             'SPO2',
                                                             style: TextStyle(
-                                                              fontSize: 10.0.sp,
+                                                              fontSize: 12.0.sp,
                                                               fontWeight:
                                                                   FontWeight
                                                                       .w400,
@@ -2379,7 +2379,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                                     .toString()
                                                                 : '-',
                                                             style: TextStyle(
-                                                              fontSize: 12.0.sp,
+                                                              fontSize: 14.0.sp,
                                                               fontWeight:
                                                                   FontWeight
                                                                       .w400,
@@ -2402,7 +2402,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                           child: Text(
                                                             'PRBpm',
                                                             style: TextStyle(
-                                                              fontSize: 10.0.sp,
+                                                              fontSize: 12.0.sp,
                                                               fontWeight:
                                                                   FontWeight
                                                                       .w400,
@@ -2421,7 +2421,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                                     .toString()
                                                                 : '-',
                                                             style: TextStyle(
-                                                              fontSize: 12.0.sp,
+                                                              fontSize: 14.0.sp,
                                                               fontWeight:
                                                                   FontWeight
                                                                       .w400,
@@ -2452,7 +2452,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                     textColor: Colors.white,
                                                     child: Icon(
                                                       Icons.add,
-                                                      size: 14.0.sp,
+                                                      size: 16.0.sp,
                                                     ),
                                                     padding: EdgeInsets.all(
                                                       2.0.sp,
@@ -2511,10 +2511,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                             decoration: BoxDecoration(
                               borderRadius: new BorderRadius.only(
                                 topLeft: Radius.circular(
-                                  10.0.sp,
+                                  12.0.sp,
                                 ),
                                 topRight: Radius.circular(
-                                  10.0.sp,
+                                  12.0.sp,
                                 ),
                               ),
                               color: Colors.white,
@@ -2525,9 +2525,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                   Expanded(
                                     child: Padding(
                                       padding: EdgeInsets.fromLTRB(
-                                        10.0.sp,
-                                        10.0.sp,
-                                        10.0.sp,
+                                        12.0.sp,
+                                        12.0.sp,
+                                        12.0.sp,
                                         0.0.sp,
                                       ),
                                       child: Column(
@@ -2551,7 +2551,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                                   ', '
                                                               : '',
                                                           style: TextStyle(
-                                                            fontSize: 8.0.sp,
+                                                            fontSize: 10.0.sp,
                                                             color: Colors.black,
                                                           ),
                                                         ),
@@ -2563,7 +2563,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                               ? timeForWeight
                                                               : '',
                                                           style: TextStyle(
-                                                            fontSize: 8.0.sp,
+                                                            fontSize: 10.0.sp,
                                                             color: Colors.black,
                                                           ),
                                                         ),
@@ -2631,7 +2631,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                       child: Text(
                                                         '7 Days Avg',
                                                         style: TextStyle(
-                                                          fontSize: 8.0.sp,
+                                                          fontSize: 10.0.sp,
                                                           fontWeight:
                                                               FontWeight.w400,
                                                           color: hexToColor(
@@ -2650,7 +2650,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                     child: Text(
                                                       'Weight',
                                                       style: TextStyle(
-                                                        fontSize: 9.0.sp,
+                                                        fontSize: 11.0.sp,
                                                         color: hexToColor(
                                                             '#1abadd'),
                                                       ),
@@ -2683,7 +2683,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                               ? 'Kg'
                                                               : '',
                                                           style: TextStyle(
-                                                            fontSize: 8.0.sp,
+                                                            fontSize: 10.0.sp,
                                                             color: hexToColor(
                                                                 '#1abadd'),
                                                           ),
@@ -2709,7 +2709,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                           child: Text(
                                                             'Weight',
                                                             style: TextStyle(
-                                                              fontSize: 10.0.sp,
+                                                              fontSize: 12.0.sp,
                                                               fontWeight:
                                                                   FontWeight
                                                                       .w400,
@@ -2732,7 +2732,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                                 style:
                                                                     TextStyle(
                                                                   fontSize:
-                                                                      12.0.sp,
+                                                                      14.0.sp,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w400,
@@ -2750,7 +2750,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                                 style:
                                                                     TextStyle(
                                                                   fontSize:
-                                                                      8.0.sp,
+                                                                      10.0.sp,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w400,
@@ -2783,7 +2783,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                     textColor: Colors.white,
                                                     child: Icon(
                                                       Icons.add,
-                                                      size: 14.0.sp,
+                                                      size: 16.0.sp,
                                                     ),
                                                     padding: EdgeInsets.all(
                                                       2.0.sp,
@@ -2828,7 +2828,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                   textColor: Colors.white,
                   child: Icon(
                     Icons.add,
-                    size: 14.0.sp,
+                    size: 16.0.sp,
                   ),
                   padding: EdgeInsets.all(
                     2.0.sp,

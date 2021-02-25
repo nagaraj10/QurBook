@@ -202,7 +202,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                           ),
                           commonWidget.count(widget.doc.slotNumber),
                           TextWidget(
-                            fontsize: 10.0.sp,
+                            fontsize: 12.0.sp,
                             text: DateFormat(Constants.Appointments_time_format)
                                     .format(DateTime.parse(
                                         widget.doc.plannedStartDateTime))
@@ -212,7 +212,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                             colors: Color(new CommonUtil().getMyPrimaryColor()),
                           ),
                           TextWidget(
-                            fontsize: 10.0.sp,
+                            fontsize: 12.0.sp,
                             text: DateFormat.yMMMEd()
                                     .format(DateTime.parse(
                                         widget.doc.plannedStartDateTime))
@@ -313,7 +313,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                               TextWidget(
                                   text: parameters
                                       .cancellationAppointmentConfirmation,
-                                  fontsize: 13.0.sp,
+                                  fontsize: 15.0.sp,
                                   fontWeight: FontWeight.w500,
                                   colors: Colors.grey[600]),
                               widget.doc?.feeDetails == null
@@ -327,7 +327,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                                               text:
                                                   Constants.CANCELLATION_CHARGE,
                                               style: TextStyle(
-                                                  fontSize: 12.0.sp,
+                                                  fontSize: 14.0.sp,
                                                   fontFamily: Constants.poppins,
                                                   fontWeight: FontWeight.w500,
                                                   color: Colors.black),
@@ -336,7 +336,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                                                   text:
                                                       ' ${Constants.inrLabel} ${widget.doc.feeDetails.doctorCancellationCharge}',
                                                   style: TextStyle(
-                                                      fontSize: 12.0.sp,
+                                                      fontSize: 14.0.sp,
                                                       fontFamily:
                                                           Constants.poppins,
                                                       fontWeight:
@@ -367,7 +367,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                                       },
                                       child: TextWidget(
                                           text: parameters.no,
-                                          fontsize: 12.0.sp),
+                                          fontsize: 14.0.sp),
                                     ),
                                   ),
                                   SizedBoxWithChild(
@@ -390,7 +390,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                                       },
                                       child: TextWidget(
                                           text: parameters.yes,
-                                          fontsize: 12.0.sp),
+                                          fontsize: 14.0.sp),
                                     ),
                                   ),
                                 ],

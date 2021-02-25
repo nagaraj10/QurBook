@@ -62,12 +62,12 @@ class SearchWdigetState extends State<SearchWidget> {
                       border: InputBorder.none,
                       hintStyle: TextStyle(
                         color: Colors.black45,
-                        fontSize: 14.0.sp,
+                        fontSize: 16.0.sp,
                       ),
                     ),
                     style: TextStyle(
                       color: Colors.black54,
-                      fontSize: 14.0.sp,
+                      fontSize: 16.0.sp,
                     ),
                     onChanged: (editedValue) {
                       widget.onChanged(editedValue);

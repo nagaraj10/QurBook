@@ -119,7 +119,7 @@ class AudioWidgetState extends State<AudioWidget> {
                 child: Text(
               this._playerTxt,
               style: TextStyle(
-                fontSize: 12.0.sp,
+                fontSize: 14.0.sp,
                 color: Colors.black,
               ),
             )),

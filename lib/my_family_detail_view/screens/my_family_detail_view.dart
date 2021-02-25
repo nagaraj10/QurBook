@@ -174,7 +174,7 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
           return new Text(
             'Error: ${snapshot.error}',
             style: TextStyle(
-              fontSize: 14.0.sp,
+              fontSize: 16.0.sp,
             ),
           );
         } else {
@@ -213,7 +213,7 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
                   child: Text(Constants.STR_ERROR_LOADING_DATA,
                       style: TextStyle(
                         color: Colors.red,
-                        fontSize: 14.0.sp,
+                        fontSize: 16.0.sp,
                       )));
               break;
 

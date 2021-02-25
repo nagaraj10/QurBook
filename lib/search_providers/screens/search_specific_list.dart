@@ -108,7 +108,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               decoration: BoxDecoration(
                   color: Colors.white, borderRadius: BorderRadius.circular(30)),
               child: TextField(
-                style: TextStyle(fontSize: 14.0.sp,),
+                style: TextStyle(fontSize: 16.0.sp,),
                 controller: _textFieldController,
                 autofocus: true,
                 onChanged: (editedValue) {
@@ -128,7 +128,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                     color: Colors.black54,
                   ),
                   hintText: variable.strSearch,
-                  hintStyle: TextStyle(color: Colors.black54,fontSize: 14.0.sp),
+                  hintStyle: TextStyle(color: Colors.black54,fontSize: 16.0.sp),
                   border: InputBorder.none,
                 ),
               ),
@@ -489,7 +489,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             'Click Here',
             style: new TextStyle(
               color: Colors.white,
-              fontSize: 14.0.sp,
+              fontSize: 16.0.sp,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -731,7 +731,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         Text(
           name != null ? name : '',
           style: TextStyle(
-              fontSize: 14.0.sp,
+              fontSize: 16.0.sp,
               fontWeight: FontWeight.w500,
               color: ColorUtils.blackcolor),
           maxLines: 1,
@@ -741,7 +741,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         Text(
           address != null ? address : '',
           style: TextStyle(
-              fontSize: 13.0.sp,
+              fontSize: 15.0.sp,
               fontWeight: FontWeight.w400,
               color: ColorUtils.lightgraycolor),
           maxLines: 2,
@@ -753,7 +753,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                     toBeginningOfSentenceCase(
                         data.specialty != null ? data.specialty : ''),
                     style: TextStyle(
-                        fontSize: 13.0.sp,
+                        fontSize: 15.0.sp,
                         fontWeight: FontWeight.w400,
                         color: ColorUtils.lightgraycolor),
                     maxLines: 2,

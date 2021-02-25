@@ -230,7 +230,7 @@ class _OtherDocsState extends State<OtherDocsList> {
                                   .metadata.healthRecordType.createdOn),
                       style: TextStyle(
                         color: Colors.grey[400],
-                        fontSize: 12.0.sp,
+                        fontSize: 14.0.sp,
                       ),
                     )
                   ],

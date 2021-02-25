@@ -214,7 +214,7 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
                                   style: TextStyle(
                                     color:
                                         Color(CommonUtil().getMyPrimaryColor()),
-                                    fontSize: 14.0.sp,
+                                    fontSize: 16.0.sp,
                                   ),
                                 ),
                               ))
@@ -245,7 +245,7 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
                         : '',
                     maxLines: 1,
                     style: TextStyle(
-                      fontSize: 14.0.sp,
+                      fontSize: 16.0.sp,
                       fontWeight: FontWeight.w500,
                     ),
                     textAlign: TextAlign.start,
@@ -269,7 +269,7 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
                         : '',
                     maxLines: 1,
                     style: TextStyle(
-                        fontSize: 13.0.sp,
+                        fontSize: 15.0.sp,
                         fontWeight: FontWeight.w400,
                         color: ColorUtils.lightgraycolor),
                   ),*/
@@ -280,7 +280,7 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
                         : '' + commonWidgets.getCityHospital(hospitals[i]),
                     maxLines: 1,
                     style: TextStyle(
-                        fontSize: 13.0.sp,
+                        fontSize: 15.0.sp,
                         fontWeight: FontWeight.w400,
                         color: ColorUtils.lightgraycolor),
                   ),

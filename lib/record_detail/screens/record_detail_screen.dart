@@ -408,7 +408,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
             SizedBox(width: 10.0.w),
             Text(variable.strAddVoiceNote,
                 style: TextStyle(
-                  fontSize: 14.0.sp,
+                  fontSize: 16.0.sp,
                   color: Color(new CommonUtil().getMyPrimaryColor()),
                 ))
           ],

@@ -91,7 +91,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
             autofocus: false,
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 14.0.sp,
+              fontSize: 16.0.sp,
               color: Colors.black,
             ),
           ),
@@ -114,7 +114,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
             keyboardType: TextInputType.number,
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 14.0.sp,
+              fontSize: 16.0.sp,
               color: Colors.black,
             ),
           ),
@@ -137,7 +137,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
             autofocus: false,
             enabled: false,
             style: TextStyle(
-              fontSize: 14.0.sp,
+              fontSize: 16.0.sp,
               color: Colors.black,
             ),
           ),
@@ -159,7 +159,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
             autofocus: false,
             enabled: false,
             style: TextStyle(
-              fontSize: 14.0.sp,
+              fontSize: 16.0.sp,
               color: Colors.black,
             ),
           ),
@@ -199,7 +199,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                 style: TextStyle(
                   color: Color(new CommonUtil().getMyPrimaryColor()),
                   fontWeight: FontWeight.w500,
-                  fontSize: 14.0.sp,
+                  fontSize: 16.0.sp,
                 ),
               ),
             ),
@@ -212,7 +212,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                 style: TextStyle(
                   color: Colors.black38,
                   fontWeight: FontWeight.w400,
-                  fontSize: 14.0.sp,
+                  fontSize: 16.0.sp,
                 ),
               ),
             ),
@@ -247,7 +247,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                   Text(
                     variable.strdidtReceive,
                     style: TextStyle(
-                      fontSize: 11.0.sp,
+                      fontSize: 13.0.sp,
                       color: Colors.grey,
                     ),
                     textAlign: TextAlign.center,

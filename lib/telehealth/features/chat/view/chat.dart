@@ -527,7 +527,7 @@ class ChatScreenState extends State<ChatScreen> {
               child: Text(
                 'Download',
                 style: TextStyle(
-                  fontSize: 14.0.sp,
+                  fontSize: 16.0.sp,
                 ),
               ),
             ),
@@ -557,7 +557,7 @@ class ChatScreenState extends State<ChatScreen> {
       content: Text(
         variable.strDownloadStart,
         style: TextStyle(
-          fontSize: 14.0.sp,
+          fontSize: 16.0.sp,
         ),
       ),
       backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
@@ -582,7 +582,7 @@ class ChatScreenState extends State<ChatScreen> {
               content: Text(
                 variable.strFileDownloaded,
                 style: TextStyle(
-                  fontSize: 14.0.sp,
+                  fontSize: 16.0.sp,
                 ),
               ),
               backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
@@ -682,7 +682,7 @@ class ChatScreenState extends State<ChatScreen> {
                       text: TextSpan(
                           style: TextStyle(
                             color: Color(CommonUtil().getMyPrimaryColor()),
-                            fontSize: 14.0.sp,
+                            fontSize: 16.0.sp,
                           ),
                           children: textSpanList),
                     ),
@@ -792,7 +792,7 @@ class ChatScreenState extends State<ChatScreen> {
                                     style: TextStyle(
                                       color: Color(
                                           CommonUtil().getMyPrimaryColor()),
-                                      fontSize: 14.0.sp,
+                                      fontSize: 16.0.sp,
                                     ),
                                   ),
                                 ],
@@ -818,7 +818,7 @@ class ChatScreenState extends State<ChatScreen> {
                                           child: Text(
                                         patientName.substring(0, 1),
                                         style: TextStyle(
-                                          fontSize: 14.0.sp,
+                                          fontSize: 16.0.sp,
                                         ),
                                       )),
                                       IconButton(
@@ -1088,7 +1088,7 @@ class ChatScreenState extends State<ChatScreen> {
                               .toString()),
                       style: TextStyle(
                           color: greyColor,
-                          fontSize: 12.0.sp,
+                          fontSize: 14.0.sp,
                           fontStyle: FontStyle.italic),
                     ),
                     margin: EdgeInsets.only(left: 50.0, top: 5.0, bottom: 5.0),
@@ -1310,7 +1310,7 @@ class ChatScreenState extends State<ChatScreen> {
               child: Text(
                 '$popUpChoiceOne',
                 style: TextStyle(
-                  fontSize: 14.0.sp,
+                  fontSize: 16.0.sp,
                 ),
               ),
             ),
@@ -1353,7 +1353,7 @@ class ChatScreenState extends State<ChatScreen> {
           child: Container(
             height: 45.0.h,
             child: TextField(
-              style: TextStyle(fontSize: 14.0.sp),
+              style: TextStyle(fontSize: 16.0.sp),
               decoration: InputDecoration(
                   suffixIcon: IconButton(
                     onPressed: () {
@@ -1375,7 +1375,7 @@ class ChatScreenState extends State<ChatScreen> {
                     ),
                   ),
                   filled: true,
-                  hintStyle: new TextStyle(color: Colors.grey[800],fontSize: 14.0.sp,),
+                  hintStyle: new TextStyle(color: Colors.grey[800],fontSize: 16.0.sp,),
                   fillColor: Colors.white70),
               onChanged: _onSearch,
             ),
@@ -1412,7 +1412,7 @@ class ChatScreenState extends State<ChatScreen> {
                         maxLines: 1,
                         style: TextStyle(
                             fontFamily: variable.font_poppins,
-                            fontSize: 10.0.sp,
+                            fontSize: 12.0.sp,
                             color: Colors.white)),
                     Text(
                         'Next Appointment: ' +
@@ -1422,7 +1422,7 @@ class ChatScreenState extends State<ChatScreen> {
                         maxLines: 1,
                         style: TextStyle(
                             fontFamily: variable.font_poppins,
-                            fontSize: 10.0.sp,
+                            fontSize: 12.0.sp,
                             color: Colors.white)),
                     Text(
                         toBeginningOfSentenceCase('Last Appointment: ' +
@@ -1432,7 +1432,7 @@ class ChatScreenState extends State<ChatScreen> {
                         maxLines: 1,
                         style: TextStyle(
                             fontFamily: variable.font_poppins,
-                            fontSize: 10.0.sp,
+                            fontSize: 12.0.sp,
                             color: Colors.white)),
                     Text(
                       widget.lastDate != null
@@ -1442,7 +1442,7 @@ class ChatScreenState extends State<ChatScreen> {
                       maxLines: 1,
                       style: TextStyle(
                           fontFamily: variable.font_poppins,
-                          fontSize: 10.0.sp,
+                          fontSize: 12.0.sp,
                           color: Colors.white),
                     ),
                   ],
@@ -1687,7 +1687,7 @@ class ChatScreenState extends State<ChatScreen> {
                   alignment: Alignment.centerRight,
                   children: [
                     TextField(
-                      style: TextStyle(fontSize: 14.0.sp),
+                      style: TextStyle(fontSize: 16.0.sp),
                       focusNode: focusNode,
                       onTap: () {
                         //isSearchVisible = false;
@@ -1702,7 +1702,7 @@ class ChatScreenState extends State<ChatScreen> {
                         hintText: "$chatTextFieldHintText",
                         hintStyle: TextStyle(
                           color: Colors.grey,
-                          fontSize: 14.0.sp,
+                          fontSize: 16.0.sp,
                         ),
                         filled: true,
                         fillColor: Colors.white70,
@@ -1893,7 +1893,7 @@ class ChatScreenState extends State<ChatScreen> {
         content: Text(
           'Send to Dr. ' + peerName,
           style: TextStyle(
-            fontSize: 14.0.sp,
+            fontSize: 16.0.sp,
           ),
         ),
         actions: <Widget>[
@@ -1902,7 +1902,7 @@ class ChatScreenState extends State<ChatScreen> {
             child: Text(
               'Cancel',
               style: TextStyle(
-                fontSize: 14.0.sp,
+                fontSize: 16.0.sp,
               ),
             ),
           ),
@@ -1914,7 +1914,7 @@ class ChatScreenState extends State<ChatScreen> {
             child: Text(
               'Send',
               style: TextStyle(
-                fontSize: 14.0.sp,
+                fontSize: 16.0.sp,
               ),
             ),
           ),

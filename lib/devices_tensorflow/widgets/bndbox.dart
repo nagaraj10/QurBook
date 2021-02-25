@@ -60,7 +60,7 @@ class BndBox extends StatelessWidget {
               "${re["detectedClass"]} ${(re["confidenceInClass"] * 100).toStringAsFixed(0)}%",
               style: TextStyle(
                 color: Color.fromRGBO(37, 213, 253, 1.0),
-                fontSize: 14.0.sp,
+                fontSize: 16.0.sp,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -82,7 +82,7 @@ class BndBox extends StatelessWidget {
             "${re["label"]} ${(re["confidence"] * 100).toStringAsFixed(0)}%",
             style: TextStyle(
               color: Color.fromRGBO(37, 213, 253, 1.0),
-              fontSize: 14.0.sp,
+              fontSize: 16.0.sp,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -121,7 +121,7 @@ class BndBox extends StatelessWidget {
                 "● ${k["part"]}",
                 style: TextStyle(
                   color: Color.fromRGBO(37, 213, 253, 1.0),
-                  fontSize: 12.0.sp,
+                  fontSize: 14.0.sp,
                 ),
               ),
             ),

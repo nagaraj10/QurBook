@@ -160,7 +160,7 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                         Text(
                           c?.videoLinks[0]?.title,
                           style:
-                              TextStyle(color: Colors.white, fontSize: 13.0.sp),
+                              TextStyle(color: Colors.white, fontSize: 15.0.sp),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -239,7 +239,7 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                         Text(
                           c?.videoLinks[1]?.title,
                           style:
-                              TextStyle(color: Colors.white, fontSize: 13.0.sp),
+                              TextStyle(color: Colors.white, fontSize: 15.0.sp),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -318,7 +318,7 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                         Text(
                           c?.videoLinks[2]?.title,
                           style:
-                              TextStyle(color: Colors.white, fontSize: 13.0.sp),
+                              TextStyle(color: Colors.white, fontSize: 15.0.sp),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -397,7 +397,7 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                         Text(
                           c?.videoLinks[3]?.title,
                           style:
-                              TextStyle(color: Colors.white, fontSize: 13.0.sp),
+                              TextStyle(color: Colors.white, fontSize: 15.0.sp),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),

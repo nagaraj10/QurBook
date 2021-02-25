@@ -78,7 +78,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       SizedBox(height: height * .015),
                       Text(
                         strsupportEmail,
-                        style: TextStyle(fontSize: 13.0.sp),
+                        style: TextStyle(fontSize: 15.0.sp),
                       ),
                       // RichText(
                       //   softWrap: true,
@@ -119,7 +119,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         margin: EdgeInsets.symmetric(vertical: 2),
         child: TextFormField(
           style: TextStyle(
-            fontSize: 14.0.sp,
+            fontSize: 16.0.sp,
           ),
           autovalidate: _autoValidateBool,
           obscureText: isPassword,
@@ -169,7 +169,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           children: <Widget>[
             Text(
               strBackTo,
-              style: TextStyle(fontSize: 13.0.sp, fontWeight: FontWeight.w600),
+              style: TextStyle(fontSize: 15.0.sp, fontWeight: FontWeight.w600),
             ),
             SizedBox(
               width: 10.0.w,
@@ -178,7 +178,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               strSignIn,
               style: TextStyle(
                   color: Color(CommonUtil().getMyPrimaryColor()),
-                  fontSize: 13.0.sp,
+                  fontSize: 15.0.sp,
                   fontWeight: FontWeight.w600),
             ),
           ],
