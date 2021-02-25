@@ -128,22 +128,26 @@ class _ChatScreenState extends State<ChatScreen>
             return ChatData(conversations: model.getMyConversations);
           },
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            if (getMyViewModel().isLoading) {
-              //do nothing
-            } else if (getMyViewModel().getisMayaSpeaks <= 0) {
-              stopTTSEngine();
-              getMyViewModel().gettingReposnseFromNative();
-            } else {
-              getMyViewModel().gettingReposnseFromNative();
-            }
-          },
-          child: Icon(
-            Icons.mic,
-            color: Colors.white,
+        floatingActionButton: Visibility(
+          visible:
+              !Provider.of<ChatScreenViewModel>(context).getIsButtonResponse,
+          child: FloatingActionButton(
+            onPressed: () {
+              if (getMyViewModel().isLoading) {
+                //do nothing
+              } else if (getMyViewModel().getisMayaSpeaks <= 0) {
+                stopTTSEngine();
+                getMyViewModel().gettingReposnseFromNative();
+              } else {
+                getMyViewModel().gettingReposnseFromNative();
+              }
+            },
+            child: Icon(
+              Icons.mic,
+              color: Colors.white,
+            ),
+            backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
           ),
-          backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),

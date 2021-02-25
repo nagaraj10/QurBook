@@ -29,9 +29,11 @@ class ChatData extends StatelessWidget with ChangeNotifier {
                 itemBuilder: (BuildContext ctxt, int index) => Padding(
                     padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
                     child: conversations[index].isMayaSaid
-                        ? (conversations[index]?.videoLinks != null && conversations[index]?.videoLinks?.length > 0)
-                            ? ReceiverLayoutWithIntroVideo(conversations[index])
-                            : ReceiverLayout(conversations[index])
+                        ? (conversations[index]?.videoLinks != null &&
+                                conversations[index]?.videoLinks?.length > 0)
+                            ? ReceiverLayoutWithIntroVideo(
+                                conversations[index], index)
+                            : ReceiverLayout(conversations[index], index)
                         : SenderLayout(conversations[index]))),
           )
         : PleaseWait();

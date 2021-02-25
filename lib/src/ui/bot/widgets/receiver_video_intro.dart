@@ -17,8 +17,12 @@ import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
 class ReceiverLayoutWithIntroVideo extends StatelessWidget {
   final Conversation c;
+  final int index;
 
-  ReceiverLayoutWithIntroVideo(this.c);
+  ReceiverLayoutWithIntroVideo(
+    this.c,
+    this.index,
+  );
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -64,8 +68,8 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                   ),
                 ),
                 child: FutureBuilder(
-                  future:
-                      Future.delayed(Duration(seconds: 3), () => MayaConvUI(c)),
+                  future: Future.delayed(
+                      Duration(seconds: 3), () => MayaConvUI(c, index)),
                   builder: (BuildContext context, snapshot) {
                     return snapshot.hasData
                         ? snapshot.data
@@ -122,11 +126,13 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                                   alignment: Alignment.center,
                                   children: [
                                     FadeInImage.assetNetwork(
-                                      placeholder: 'assets/icons/placeholder.jpg',
+                                      placeholder:
+                                          'assets/icons/placeholder.jpg',
                                       image: videoThumbnail(0),
                                     ),
                                     IconButton(
-                                      icon: Icon(Icons.play_circle_fill_rounded),
+                                      icon:
+                                          Icon(Icons.play_circle_fill_rounded),
                                       color: Colors.black54,
                                       iconSize: 75,
                                       onPressed: () {
@@ -137,7 +143,8 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) => MyYoutubePlayer(
+                                            builder: (context) =>
+                                                MyYoutubePlayer(
                                               videoId: videoId,
                                             ),
                                           ),
@@ -197,11 +204,13 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                                   alignment: Alignment.center,
                                   children: [
                                     FadeInImage.assetNetwork(
-                                      placeholder: 'assets/icons/placeholder.jpg',
+                                      placeholder:
+                                          'assets/icons/placeholder.jpg',
                                       image: videoThumbnail(1),
                                     ),
                                     IconButton(
-                                      icon: Icon(Icons.play_circle_fill_rounded),
+                                      icon:
+                                          Icon(Icons.play_circle_fill_rounded),
                                       color: Colors.black54,
                                       iconSize: 75,
                                       onPressed: () {
@@ -212,7 +221,8 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) => MyYoutubePlayer(
+                                            builder: (context) =>
+                                                MyYoutubePlayer(
                                               videoId: videoId,
                                             ),
                                           ),
@@ -272,11 +282,13 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                                   alignment: Alignment.center,
                                   children: [
                                     FadeInImage.assetNetwork(
-                                      placeholder: 'assets/icons/placeholder.jpg',
+                                      placeholder:
+                                          'assets/icons/placeholder.jpg',
                                       image: videoThumbnail(2),
                                     ),
                                     IconButton(
-                                      icon: Icon(Icons.play_circle_fill_rounded),
+                                      icon:
+                                          Icon(Icons.play_circle_fill_rounded),
                                       color: Colors.black54,
                                       iconSize: 75,
                                       onPressed: () {
@@ -287,7 +299,8 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) => MyYoutubePlayer(
+                                            builder: (context) =>
+                                                MyYoutubePlayer(
                                               videoId: videoId,
                                             ),
                                           ),
@@ -347,11 +360,13 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                                   alignment: Alignment.center,
                                   children: [
                                     FadeInImage.assetNetwork(
-                                      placeholder: 'assets/icons/placeholder.jpg',
+                                      placeholder:
+                                          'assets/icons/placeholder.jpg',
                                       image: videoThumbnail(3),
                                     ),
                                     IconButton(
-                                      icon: Icon(Icons.play_circle_fill_rounded),
+                                      icon:
+                                          Icon(Icons.play_circle_fill_rounded),
                                       color: Colors.black54,
                                       iconSize: 75,
                                       onPressed: () {
@@ -362,7 +377,8 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) => MyYoutubePlayer(
+                                            builder: (context) =>
+                                                MyYoutubePlayer(
                                               videoId: videoId,
                                             ),
                                           ),

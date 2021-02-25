@@ -15,19 +15,21 @@ class Conversation {
   List<VideoLinks> videoLinks;
   String screen;
   bool redirect;
-  Conversation(
-      {@required this.isMayaSaid,
-      @required this.text,
-      this.imageUrl,
-      @required this.name,
-      this.timeStamp,
-      this.buttons,
-      this.langCode,
-      this.searchURL,
-      this.videoLinks,
-      this.screen,
-      this.redirect
-      });
+  bool isSpeaking;
+  Conversation({
+    @required this.isMayaSaid,
+    @required this.text,
+    this.imageUrl,
+    @required this.name,
+    this.timeStamp,
+    this.buttons,
+    this.langCode,
+    this.searchURL,
+    this.videoLinks,
+    this.screen,
+    this.redirect,
+    this.isSpeaking: false,
+  });
 
   Conversation.fromJson(Map<String, dynamic> json) {
     isMayaSaid = json[parameters.strIsMayaSaid];
@@ -49,8 +51,9 @@ class Conversation {
         videoLinks.add(new VideoLinks.fromJson(v));
       });
     }
-    screen= json[parameters.strScreen];
-    redirect= json[parameters.strRedirect];
+    screen = json[parameters.strScreen];
+    redirect = json[parameters.strRedirect];
+    isSpeaking = false;
   }
 
   Map<String, dynamic> toJson() {
@@ -62,11 +65,13 @@ class Conversation {
     data[parameters.strTimeStamp] = this.timeStamp;
     data[parameters.strLanguage] = this.langCode;
     if (this.buttons != null) {
-      data[parameters.strButtons] = this.buttons.map((v) => v.toJson()).toList();
+      data[parameters.strButtons] =
+          this.buttons.map((v) => v.toJson()).toList();
     }
     data[parameters.strSearchUrl] = this.searchURL;
     if (this.videoLinks != null) {
-      data[parameters.strVideoLinks] = this.videoLinks.map((v) => v.toJson()).toList();
+      data[parameters.strVideoLinks] =
+          this.videoLinks.map((v) => v.toJson()).toList();
     }
     data[parameters.strScreen] = this.screen;
     data[parameters.strRedirect] = this.redirect;
