@@ -993,7 +993,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                   ),
                                   isFamilyAvail
                                       ? SwitchProfile().buildActions(
-                                          context, _key, callBackToRefresh)
+                                          context, _key, callBackToRefresh,true)
                                       : getMaterialPlusIcon(context),
                                 ],
                               ),

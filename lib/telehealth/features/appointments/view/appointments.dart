@@ -348,7 +348,7 @@ class _AppointmentsState extends State<Appointments> {
           ),
         ),
         CommonUtil().getNotificationIcon(context),
-        SwitchProfile().buildActions(context, _key, callBackToRefresh),
+        SwitchProfile().buildActions(context, _key, callBackToRefresh,false),
         // IconWidget(
         //   icon: Icons.more_vert,
         //   colors: Colors.white,

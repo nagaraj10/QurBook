@@ -110,7 +110,7 @@ class _TabBarDemoState extends State<MyProvidersMain>
         ),
         new CommonUtil().getNotificationIcon(context),
         new SwitchProfile()
-            .buildActions(context, _keyLoader, callBackToRefresh),
+            .buildActions(context, _keyLoader, callBackToRefresh,false),
         // Icon(Icons.more_vert),
       ],
     );
