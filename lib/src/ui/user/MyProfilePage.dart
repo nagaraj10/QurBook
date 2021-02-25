@@ -87,7 +87,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
           } else {
             //todo proper error msg to users
             toast.getToast('something went wrong!', Colors.red);
-            return getProfileWidget(null);
+            return getProfileWidget(null, errorMsg: 'something went wrong!');
           }
         } else if (snapshot.connectionState == ConnectionState.waiting) {
           //* its fetching the data from remote
@@ -108,7 +108,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
           );
         } else {
           toast.getToast('${snapshot.error.toString()}', Colors.red);
-          return getProfileWidget(null);
+          return getProfileWidget(null, errorMsg: snapshot.error.toString());
         }
       },
     );
@@ -149,7 +149,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
     }
   }
 
-  Widget getProfileWidget(MyProfileResult data) {
+  Widget getProfileWidget(MyProfileResult data, {String errorMsg}) {
     if (data != null) {
       if (data.userContactCollection3 != null) {
         if (data.userContactCollection3.length > 0) {
@@ -214,271 +214,278 @@ class _MyProfilePageState extends State<MyProfilePage> {
       if (profileImageFile != null) {
         profileImage = File(profileImageFile);
       }
-    } catch (e) {}
-
-    return Container(
-        color: Colors.white,
-        padding: EdgeInsets.all(20),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Container(
-                  height: 100.0.h,
-                  width: 100.0.h,
-                  decoration: ShapeDecoration(
-                    shape: CircleBorder(
-                        side: BorderSide(
-                            width: 1.5.w,
-                            color:
-                                Color(new CommonUtil().getMyPrimaryColor()))),
-                  ),
-                  child: ClipOval(
-                    child: profileImage != null
-                        ? Image.file(
-                            profileImage,
-                            fit: BoxFit.cover,
-                          )
-                        : FHBBasicWidget().getProfilePicWidgeUsingUrl(
-                            data.profilePicThumbnailUrl),
+      return Container(
+          color: Colors.white,
+          padding: EdgeInsets.all(20),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Container(
+                    height: 100.0.h,
+                    width: 100.0.h,
+                    decoration: ShapeDecoration(
+                      shape: CircleBorder(
+                          side: BorderSide(
+                              width: 1.5.w,
+                              color:
+                                  Color(new CommonUtil().getMyPrimaryColor()))),
+                    ),
+                    child: ClipOval(
+                      child: profileImage != null
+                          ? Image.file(
+                              profileImage,
+                              fit: BoxFit.cover,
+                            )
+                          : data.profilePicThumbnailUrl != null
+                              ? FHBBasicWidget().getProfilePicWidgeUsingUrl(
+                                  data.profilePicThumbnailUrl)
+                              : Container(),
+                    ),
                   ),
                 ),
-              ),
-              Padding(
-                  padding: EdgeInsets.all(10),
-                  child: TextField(
-                    controller: mobile,
-                    enabled: false,
-                    decoration: InputDecoration(
-                      hintText: variable.strMobileNum,
-                      hintStyle: TextStyle(fontSize: 12.0.sp),
-                      labelText: variable.strMobileNum,
-                    ),
-                  )),
-
-              Padding(
-                  padding: EdgeInsets.all(10),
-                  child: TextField(
-                    controller: firstName,
-                    enabled: false,
-                    decoration: InputDecoration(
-                      hintText: CommonConstants.firstName,
-                      hintStyle: TextStyle(fontSize: 12.0.sp),
-                      labelText: CommonConstants.firstName,
-                    ),
-                  )),
-              Padding(
-                  padding: EdgeInsets.all(10),
-                  child: TextField(
-                    controller: middleName,
-                    enabled: false,
-                    decoration: InputDecoration(
-                      hintText: CommonConstants.middleName,
-                      hintStyle: TextStyle(fontSize: 12.0.sp),
-                      labelText: CommonConstants.middleName,
-                    ),
-                  )),
-              // _showMiddleNameTextField(),
-              Padding(
-                  padding: EdgeInsets.all(10),
-                  child: TextField(
-                    controller: lastName,
-                    enabled: false,
-                    decoration: InputDecoration(
-                      hintText: CommonConstants.lastName,
-                      hintStyle: TextStyle(fontSize: 12.0.sp),
-                      labelText: CommonConstants.lastName,
-                    ),
-                  )),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
+                Padding(
                     padding: EdgeInsets.all(10),
                     child: TextField(
-                      controller: email,
+                      controller: mobile,
                       enabled: false,
                       decoration: InputDecoration(
-                        hintText: variable.strEmailAddress,
+                        hintText: variable.strMobileNum,
                         hintStyle: TextStyle(fontSize: 12.0.sp),
-                        labelText: variable.strEmailAddress,
-                        //suffix: Text('Tap to verify')
+                        labelText: variable.strMobileNum,
+                      ),
+                    )),
+
+                Padding(
+                    padding: EdgeInsets.all(10),
+                    child: TextField(
+                      controller: firstName,
+                      enabled: false,
+                      decoration: InputDecoration(
+                        hintText: CommonConstants.firstName,
+                        hintStyle: TextStyle(fontSize: 12.0.sp),
+                        labelText: CommonConstants.firstName,
+                      ),
+                    )),
+                Padding(
+                    padding: EdgeInsets.all(10),
+                    child: TextField(
+                      controller: middleName,
+                      enabled: false,
+                      decoration: InputDecoration(
+                        hintText: CommonConstants.middleName,
+                        hintStyle: TextStyle(fontSize: 12.0.sp),
+                        labelText: CommonConstants.middleName,
+                      ),
+                    )),
+                // _showMiddleNameTextField(),
+                Padding(
+                    padding: EdgeInsets.all(10),
+                    child: TextField(
+                      controller: lastName,
+                      enabled: false,
+                      decoration: InputDecoration(
+                        hintText: CommonConstants.lastName,
+                        hintStyle: TextStyle(fontSize: 12.0.sp),
+                        labelText: CommonConstants.lastName,
+                      ),
+                    )),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.all(10),
+                      child: TextField(
+                        controller: email,
+                        enabled: false,
+                        decoration: InputDecoration(
+                          hintText: variable.strEmailAddress,
+                          hintStyle: TextStyle(fontSize: 12.0.sp),
+                          labelText: variable.strEmailAddress,
+                          //suffix: Text('Tap to verify')
+                        ),
                       ),
                     ),
-                  ),
-                  // ((data.generalInfo.isEmailVerified == null &&
-                  //             data.generalInfo.email != '') ||
-                  //         (data.generalInfo.isEmailVerified == false &&
-                  //             data.generalInfo.email != ''))
-                  //     ? GestureDetector(
-                  //         child: Padding(
-                  //             padding: EdgeInsets.all(10),
-                  //             child: Text(Constants.VerifyEmail,
-                  //                 style: TextStyle(
-                  //                     fontSize: 13.0.sp,
-                  //                     fontWeight: FontWeight.w400,
-                  //                     color: Color(new CommonUtil()
-                  //                         .getMyPrimaryColor())))),
-                  //         onTap: () {
-                  //           new FHBUtils().check().then((intenet) {
-                  //             if (intenet != null && intenet) {
-                  //               verifyEmail();
-                  //             } else {
-                  //               new FHBBasicWidget().showInSnackBar(
-                  //                   Constants.STR_NO_CONNECTIVITY,
-                  //                   scaffold_state);
-                  //             }
-                  //           });
-                  //         },
-                  //       )
-                  //     : Text('')
-                ],
-              ),
-
-              Padding(
-                padding: EdgeInsets.all(10),
-                child: TextField(
-                  controller: gender,
-                  enabled: false,
-                  decoration: InputDecoration(
-                    hintText: CommonConstants.gender,
-                    hintStyle: TextStyle(fontSize: 12.0.sp),
-                    labelText: CommonConstants.gender,
-                  ),
+                    // ((data.generalInfo.isEmailVerified == null &&
+                    //             data.generalInfo.email != '') ||
+                    //         (data.generalInfo.isEmailVerified == false &&
+                    //             data.generalInfo.email != ''))
+                    //     ? GestureDetector(
+                    //         child: Padding(
+                    //             padding: EdgeInsets.all(10),
+                    //             child: Text(Constants.VerifyEmail,
+                    //                 style: TextStyle(
+                    //                     fontSize: 13.0.sp,
+                    //                     fontWeight: FontWeight.w400,
+                    //                     color: Color(new CommonUtil()
+                    //                         .getMyPrimaryColor())))),
+                    //         onTap: () {
+                    //           new FHBUtils().check().then((intenet) {
+                    //             if (intenet != null && intenet) {
+                    //               verifyEmail();
+                    //             } else {
+                    //               new FHBBasicWidget().showInSnackBar(
+                    //                   Constants.STR_NO_CONNECTIVITY,
+                    //                   scaffold_state);
+                    //             }
+                    //           });
+                    //         },
+                    //       )
+                    //     : Text('')
+                  ],
                 ),
-              ),
-              Row(
-                children: <Widget>[
-                  Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Container(
-                        width: 1.sw / 2 - 40,
-                        child: TextField(
-                          controller: bloodGroupController,
-                          enabled: false,
-                          decoration: InputDecoration(
-                              hintText: CommonConstants.blood_group,
-                              hintStyle: TextStyle(fontSize: 12.0.sp),
-                              labelText: CommonConstants.blood_group),
-                        ),
-                      )),
-                  Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Container(
-                        width: 1.sw / 2 - 40,
-                        child: TextField(
-                          controller: bloodRangeController,
-                          enabled: false,
-                          decoration: InputDecoration(
-                              hintText: CommonConstants.STR_RHTYPE,
-                              hintStyle: TextStyle(fontSize: 12.0.sp),
-                              labelText: CommonConstants.STR_RHTYPE),
-                        ),
-                      )),
-                ],
-              ),
-              Row(
-                children: <Widget>[
-                  Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Container(
-                        width: 1.sw / 2 - 40,
-                        child: TextField(
-                          controller: heightController,
-                          enabled: false,
-                          decoration: InputDecoration(
-                              hintText: CommonConstants.height,
-                              hintStyle: TextStyle(fontSize: 12.0.sp),
-                              labelText: CommonConstants.height),
-                        ),
-                      )),
-                  Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Container(
-                        width: 1.sw / 2 - 40,
-                        child: TextField(
-                          controller: weightController,
-                          enabled: false,
-                          decoration: InputDecoration(
-                              hintText: CommonConstants.weight,
-                              hintStyle: TextStyle(fontSize: 12.0.sp),
-                              labelText: CommonConstants.weight),
-                        ),
-                      )),
-                ],
-              ),
 
-              Padding(
-                padding: EdgeInsets.all(10),
-                child: TextField(
-                  controller: dob,
-                  enabled: false,
-                  decoration: InputDecoration(
-                      hintText: CommonConstants.date_of_birth,
+                Padding(
+                  padding: EdgeInsets.all(10),
+                  child: TextField(
+                    controller: gender,
+                    enabled: false,
+                    decoration: InputDecoration(
+                      hintText: CommonConstants.gender,
                       hintStyle: TextStyle(fontSize: 12.0.sp),
-                      labelText: CommonConstants.date_of_birth),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(10),
-                child: TextField(
-                  controller: cntrlr_addr_one,
-                  enabled: false,
-                  decoration: InputDecoration(
-                    hintStyle: TextStyle(fontSize: 12.0.sp),
-                    labelText: CommonConstants.addr_line_1,
+                      labelText: CommonConstants.gender,
+                    ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(10),
-                child: TextField(
-                  controller: cntrlr_addr_two,
-                  enabled: false,
-                  decoration: InputDecoration(
-                    hintStyle: TextStyle(fontSize: 12.0.sp),
-                    labelText: CommonConstants.addr_line_2,
+                Row(
+                  children: <Widget>[
+                    Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Container(
+                          width: 1.sw / 2 - 40,
+                          child: TextField(
+                            controller: bloodGroupController,
+                            enabled: false,
+                            decoration: InputDecoration(
+                                hintText: CommonConstants.blood_group,
+                                hintStyle: TextStyle(fontSize: 12.0.sp),
+                                labelText: CommonConstants.blood_group),
+                          ),
+                        )),
+                    Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Container(
+                          width: 1.sw / 2 - 40,
+                          child: TextField(
+                            controller: bloodRangeController,
+                            enabled: false,
+                            decoration: InputDecoration(
+                                hintText: CommonConstants.STR_RHTYPE,
+                                hintStyle: TextStyle(fontSize: 12.0.sp),
+                                labelText: CommonConstants.STR_RHTYPE),
+                          ),
+                        )),
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Container(
+                          width: 1.sw / 2 - 40,
+                          child: TextField(
+                            controller: heightController,
+                            enabled: false,
+                            decoration: InputDecoration(
+                                hintText: CommonConstants.height,
+                                hintStyle: TextStyle(fontSize: 12.0.sp),
+                                labelText: CommonConstants.height),
+                          ),
+                        )),
+                    Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Container(
+                          width: 1.sw / 2 - 40,
+                          child: TextField(
+                            controller: weightController,
+                            enabled: false,
+                            decoration: InputDecoration(
+                                hintText: CommonConstants.weight,
+                                hintStyle: TextStyle(fontSize: 12.0.sp),
+                                labelText: CommonConstants.weight),
+                          ),
+                        )),
+                  ],
+                ),
+
+                Padding(
+                  padding: EdgeInsets.all(10),
+                  child: TextField(
+                    controller: dob,
+                    enabled: false,
+                    decoration: InputDecoration(
+                        hintText: CommonConstants.date_of_birth,
+                        hintStyle: TextStyle(fontSize: 12.0.sp),
+                        labelText: CommonConstants.date_of_birth),
                   ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(10),
-                child: TextField(
-                  controller: cntrlr_addr_city,
-                  enabled: false,
-                  decoration: InputDecoration(
-                    hintStyle: TextStyle(fontSize: 12.0.sp),
-                    labelText: CommonConstants.addr_city,
+                Padding(
+                  padding: EdgeInsets.all(10),
+                  child: TextField(
+                    controller: cntrlr_addr_one,
+                    enabled: false,
+                    decoration: InputDecoration(
+                      hintStyle: TextStyle(fontSize: 12.0.sp),
+                      labelText: CommonConstants.addr_line_1,
+                    ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(10),
-                child: TextField(
-                  controller: cntrlr_addr_state,
-                  enabled: false,
-                  decoration: InputDecoration(
-                    hintStyle: TextStyle(fontSize: 12.0.sp),
-                    labelText: CommonConstants.addr_state,
+                Padding(
+                  padding: EdgeInsets.all(10),
+                  child: TextField(
+                    controller: cntrlr_addr_two,
+                    enabled: false,
+                    decoration: InputDecoration(
+                      hintStyle: TextStyle(fontSize: 12.0.sp),
+                      labelText: CommonConstants.addr_line_2,
+                    ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(10),
-                child: TextField(
-                  controller: cntrlr_addr_zip,
-                  enabled: false,
-                  decoration: InputDecoration(
-                    hintStyle: TextStyle(fontSize: 12.0.sp),
-                    labelText: CommonConstants.addr_zip,
+                Padding(
+                  padding: EdgeInsets.all(10),
+                  child: TextField(
+                    controller: cntrlr_addr_city,
+                    enabled: false,
+                    decoration: InputDecoration(
+                      hintStyle: TextStyle(fontSize: 12.0.sp),
+                      labelText: CommonConstants.addr_city,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ));
+                Padding(
+                  padding: EdgeInsets.all(10),
+                  child: TextField(
+                    controller: cntrlr_addr_state,
+                    enabled: false,
+                    decoration: InputDecoration(
+                      hintStyle: TextStyle(fontSize: 12.0.sp),
+                      labelText: CommonConstants.addr_state,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(10),
+                  child: TextField(
+                    controller: cntrlr_addr_zip,
+                    enabled: false,
+                    decoration: InputDecoration(
+                      hintStyle: TextStyle(fontSize: 12.0.sp),
+                      labelText: CommonConstants.addr_zip,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ));
+    } catch (e) {
+      return Container(
+        child: Center(
+          child: Text(errorMsg != null ? errorMsg : 'Something Went Wrong!'),
+        ),
+      );
+    }
   }
 
   void verifyEmail() {

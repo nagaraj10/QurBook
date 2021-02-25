@@ -119,7 +119,7 @@ Future<void> main() async {
 
   Map appsFlyerOptions = {
     "afDevKey": 'UJdqFKHff633D3TcaZ5d55',
-    "afAppId": '',
+    "afAppId": 'wAZtv6sqho7WqLGgTAAqFV',
     "isDebug": true
   };
 
@@ -129,7 +129,6 @@ Future<void> main() async {
     registerConversionDataCallback: true,
     registerOnAppOpenAttributionCallback: true,
   );
-
   runApp(
     MyFHB(),
   );
@@ -169,6 +168,7 @@ void setValues(List<dynamic> values) {
   CommonUtil.GOOGLE_STATIC_MAP_URL = values[6];
   CommonUtil.BASE_URL_FROM_RES = values[7];
   CommonUtil.BASEURL_DEVICE_READINGS = values[8];
+  CommonUtil.FIREBASE_CHAT_NOTIFY_TOKEN = values[9];
 }
 
 Widget buildError(BuildContext context, FlutterErrorDetails error) {

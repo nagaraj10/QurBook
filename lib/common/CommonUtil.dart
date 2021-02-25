@@ -6,6 +6,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,6 +24,7 @@ import 'package:myfhb/bookmark_record/bloc/bookmarkRecordBloc.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
@@ -68,13 +70,16 @@ import 'package:myfhb/src/ui/user/UserAccounts.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
+import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:myfhb/telehealth/features/chat/view/BadgeIcon.dart';
+import 'package:package_info/package_info.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:showcaseview/showcase.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:url_launcher/url_launcher.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class CommonUtil {
@@ -87,10 +92,13 @@ class CommonUtil {
   static String GOOGLE_STATIC_MAP_URL = "";
   static String BASE_URL_FROM_RES = "";
   static String BASEURL_DEVICE_READINGS = '';
+  static String FIREBASE_CHAT_NOTIFY_TOKEN = '';
 
   static const secondaryGrey = 0xFF545454;
 
   CategoryResult categoryDataObjClone = new CategoryResult();
+
+  static bool audioPage = false;
 
   static List<String> recordIds = new List();
   static List<String> notesId = new List();
@@ -332,7 +340,10 @@ class CommonUtil {
                         ),
                         Text(
                           msgToDisplay,
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14.0.sp,
+                          ),
                         )
                       ]),
                     )
@@ -1134,10 +1145,10 @@ class CommonUtil {
     try {
       if (PreferenceUtil.getMediaType() != null) {
       } else {
-        _mediaTypeBlock.getMediTypes().then(() {});
+        _mediaTypeBlock.getMediTypesList().then((value) {});
       }
     } catch (e) {
-      _mediaTypeBlock.getMediTypes().then(() {});
+      _mediaTypeBlock.getMediTypesList().then((value) {});
     }
   }
 
@@ -1513,6 +1524,122 @@ class CommonUtil {
             badgeColor: ColorUtils.countColor,
             badgeCount: 0),
       );
+    }
+  }
+
+  versionCheck(context) async {
+    //Get Current installed version of app
+    final PackageInfo info = await PackageInfo.fromPlatform();
+    double currentVersion =
+        double.parse(info.version.trim().replaceAll(".", ""));
+
+    //Get Latest version info from firebase config
+    final RemoteConfig remoteConfig = await RemoteConfig.instance;
+
+    try {
+      // Using default duration to force fetching from remote server.
+      await remoteConfig.fetch(expiration: const Duration(seconds: 0));
+      await remoteConfig.activateFetched();
+      remoteConfig.getString(Platform.isIOS
+          ? STR_FIREBASE_REMOTE_KEY_IOS
+          : STR_FIREBASE_REMOTE_KEY);
+      double newVersion = double.parse(remoteConfig
+          .getString(Platform.isIOS
+              ? STR_FIREBASE_REMOTE_KEY_IOS
+              : STR_FIREBASE_REMOTE_KEY)
+          .trim()
+          .replaceAll(".", ""));
+      if (newVersion > currentVersion) {
+        _showVersionDialog(context);
+      }
+    } on FetchThrottledException catch (exception) {
+      // Fetch throttled.
+      print(exception);
+    } catch (exception) {
+      print('Unable to fetch remote config. Cached or default values will be '
+          'used');
+    }
+  }
+
+  _showVersionDialog(context) async {
+    await showDialog<String>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        String title = STR_UPDATE_AVAIL;
+        String message = STR_UPDATE_CONTENT;
+        String btnLabel = STR_UPDATE_NOW;
+        String btnLabelCancel = STR_LATER;
+        return Platform.isIOS
+            ? new CupertinoAlertDialog(
+                title: Text(
+                  title,
+                  style: TextStyle(fontSize: 16),
+                ),
+                content: Text(
+                  message,
+                  style: TextStyle(fontSize: 14),
+                ),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text(
+                      btnLabel,
+                      style: TextStyle(
+                        color: Color(getMyPrimaryColor()),
+                      ),
+                    ),
+                    onPressed: () => _launchURL(APP_STORE_URL),
+                  ),
+                  FlatButton(
+                    child: Text(
+                      btnLabelCancel,
+                      style: TextStyle(
+                        color: Color(getMyPrimaryColor()),
+                      ),
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
+              )
+            : new AlertDialog(
+                title: Text(
+                  title,
+                  style: TextStyle(fontSize: 16),
+                ),
+                content: Text(
+                  message,
+                  style: TextStyle(fontSize: 14),
+                ),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text(
+                      btnLabel,
+                      style: TextStyle(
+                        color: Color(getMyPrimaryColor()),
+                      ),
+                    ),
+                    onPressed: () => _launchURL(PLAY_STORE_URL),
+                  ),
+                  FlatButton(
+                    child: Text(
+                      btnLabelCancel,
+                      style: TextStyle(
+                        color: Color(getMyPrimaryColor()),
+                      ),
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
+              );
+      },
+    );
+  }
+
+  _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
     }
   }
 }

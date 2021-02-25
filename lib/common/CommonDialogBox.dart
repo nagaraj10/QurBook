@@ -16,6 +16,7 @@ import 'package:myfhb/search_providers/models/hospital_data.dart';
 import 'package:myfhb/search_providers/models/lab_data.dart';
 import 'package:myfhb/search_providers/models/search_arguments.dart';
 import 'package:myfhb/search_providers/screens/search_specific_list.dart';
+import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
 import 'package:myfhb/src/blocs/Media/MediaTypeBlock.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/Category/CategoryData.dart';
@@ -25,6 +26,7 @@ import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/model/Media/MediaData.dart';
 import 'package:myfhb/src/model/Media/media_data_list.dart';
 import 'package:myfhb/src/model/Media/media_result.dart';
+import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
@@ -42,6 +44,9 @@ class CommonDialogBox {
   TextEditingController pulse = new TextEditingController();
   TextEditingController memoController = new TextEditingController();
   TextEditingController diaStolicPressure = new TextEditingController();
+
+  List<CategoryResult> filteredCategoryData = new List();
+  CategoryListBlock _categoryListBlock = new CategoryListBlock();
 
   String errForbpSp = '',
       errFForbpDp = '',
@@ -1811,7 +1816,9 @@ class CommonDialogBox {
             .createHealtRecords(params.toString(), imagePath, audioPathMain)
             .then((value) {
           if (value != null && value.isSuccess) {
-            _healthReportListForUserBlock.getHelthReportLists().then((value) {
+            _healthReportListForUserBlock
+                .getHelthReportLists()
+                .then((value) async {
               PreferenceUtil.saveCompleteData(
                   Constants.KEY_COMPLETE_DATA, value);
               if (categoryName == Constants.STR_VOICERECORDS) {
@@ -1820,6 +1827,27 @@ class CommonDialogBox {
 
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
+
+                List<String> recordIds = new List();
+                recordIds.add(value.result[0].id);
+                CommonUtil.audioPage = true;
+                await Navigator.of(context)
+                    .push(MaterialPageRoute(
+                      builder: (context) => MyRecords(
+                        categoryPosition:
+                            getCategoryPosition(Constants.STR_VOICERECORDS),
+                        allowSelect: false,
+                        isAudioSelect: true,
+                        isNotesSelect: false,
+                        selectedMedias: recordIds,
+                        isFromChat: false,
+                        showDetails: false,
+                        isAssociateOrChat: false,
+                        userID: userID,
+                        fromClass: 'audio',
+                      ),
+                    ))
+                    .then((results) {});
               } else if (categoryName == Constants.STR_NOTES) {
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
@@ -2102,7 +2130,7 @@ class CommonDialogBox {
       Function(bool, String) deleteAudioFunction,
       Function(bool, String) updateAudioUI,
       bool modeOfSaveClone,
-      TextEditingController fileNameClone) {
+      TextEditingController fileNameClone) async {
     modeOfSave = modeOfSaveClone;
     containsAudioMain = containsAudio;
     audioPathMain = audioPath;
@@ -2110,6 +2138,9 @@ class CommonDialogBox {
     deviceName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
     categoryID = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYID);
     setFileName(fileNameClone.text, null);
+
+    filteredCategoryData = await PreferenceUtil.getCategoryTypeDisplay(
+        Constants.KEY_CATEGORYLIST_VISIBLE);
     StatefulBuilder dialog = new StatefulBuilder(builder: (context, setState) {
       return new AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -2426,5 +2457,66 @@ class CommonDialogBox {
 
     return showDialog(
         context: context, builder: (BuildContext context) => dialog);
+  }
+
+  getCategoryPosition(String categoryName) {
+    int categoryPosition;
+    switch (categoryName) {
+      case Constants.STR_NOTES:
+        categoryPosition = pickPosition(categoryName);
+        return categoryPosition;
+        break;
+
+      case Constants.STR_PRESCRIPTION:
+        categoryPosition = pickPosition(categoryName);
+        return categoryPosition;
+        break;
+
+      case Constants.STR_VOICERECORDS:
+        categoryPosition = pickPosition(categoryName);
+        return categoryPosition;
+        break;
+      case Constants.STR_BILLS:
+        categoryPosition = pickPosition(categoryName);
+        return categoryPosition;
+        break;
+      default:
+        categoryPosition = 0;
+        return categoryPosition;
+
+        break;
+    }
+  }
+
+  int pickPosition(String categoryName) {
+    int position = 0;
+    List<CategoryResult> categoryDataList = List();
+    categoryDataList = getCategoryList();
+    for (int i = 0;
+        i < (categoryDataList == null ? 0 : categoryDataList.length);
+        i++) {
+      if (categoryName == categoryDataList[i].categoryName) {
+        print(categoryName + ' ****' + categoryDataList[i].categoryName);
+        position = i;
+      }
+    }
+    if (categoryName == Constants.STR_PRESCRIPTION) {
+      return position;
+    } else {
+      return position;
+    }
+  }
+
+  List<CategoryResult> getCategoryList() {
+    if (filteredCategoryData == null || filteredCategoryData.length == 0) {
+      _categoryListBlock.getCategoryLists().then((value) {
+        filteredCategoryData = new CommonUtil().fliterCategories(value.result);
+
+        //filteredCategoryData.add(categoryDataObjClone);
+        return filteredCategoryData;
+      });
+    } else {
+      return filteredCategoryData;
+    }
   }
 }

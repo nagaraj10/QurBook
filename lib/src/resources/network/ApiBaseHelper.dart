@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:myfhb/add_family_user_info/models/address_type_list.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
+import 'package:myfhb/authentication/view/login_screen.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonDialogBox.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -27,6 +28,7 @@ import 'package:myfhb/src/resources/network/AppException.dart';
 import 'package:myfhb/src/ui/authentication/SignInScreen.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/appointmentsModel.dart';
 import 'package:myfhb/telehealth/features/chat/model/GetRecordIdsFilter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'AppException.dart';
 import 'package:http_parser/http_parser.dart';
@@ -434,11 +436,14 @@ class ApiBaseHelper {
 
       case 201:
         var responseJson = convert.jsonDecode(response.body.toString());
+        exitFromApp();
 
         return responseJson;
 
       case 400:
         var responseJson = convert.jsonDecode(response.body.toString());
+
+        exitFromApp();
 
         return responseJson;
       case 401:
@@ -456,11 +461,13 @@ class ApiBaseHelper {
         if (responseJson[parameters.strMessage] ==
             Constants.STR_OTPMISMATCHEDFOREMAIL) {
           return responseJson;
-        } else {}
+        } else {
+          exitFromApp();
+        }
         break;
       case 404:
-        var responseJson = convert.jsonDecode(response.body.toString());
-        return responseJson;
+        exitFromApp();
+
         break;
       case 500:
         try {
@@ -1418,6 +1425,12 @@ class ApiBaseHelper {
     }
     return responseJson;
   }
+}
+
+void exitFromApp() async {
+  PreferenceUtil.clearAllData().then((value) {
+    Get.offAll(PatientSignInScreen());
+  });
 }
 
 abstract class InnerException {

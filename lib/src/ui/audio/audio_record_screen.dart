@@ -9,6 +9,8 @@ import 'dart:async';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:myfhb/common/CommonConstants.dart';
+import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
+import 'package:myfhb/src/model/Category/catergory_result.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/common/CommonDialogBox.dart';
@@ -52,6 +54,9 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
   t_CODEC _codec = t_CODEC.CODEC_AAC;
 
   FlutterToast toast = new FlutterToast();
+
+  List<CategoryResult> filteredCategoryData = new List();
+  CategoryListBlock _categoryListBlock = new CategoryListBlock();
 
   @override
   void initState() {

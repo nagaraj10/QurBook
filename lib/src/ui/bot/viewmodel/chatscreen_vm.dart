@@ -50,20 +50,19 @@ class ChatScreenViewModel extends ChangeNotifier {
 
   startMayaAutomatically() {
     Future.delayed(Duration(seconds: 1), () {
-      sendToMaya(variable.strhiMaya,screen: parameters.strSheela);
+      sendToMaya(variable.strhiMaya, screen: parameters.strSheela);
     });
 
     var date = new FHBUtils().getFormattedDateString(DateTime.now().toString());
     Conversation model = new Conversation(
-      isMayaSaid: false,
-      text: variable.strhiMaya,
-      name: prof.result != null
-          ? prof.result.firstName + prof.result.lastName
-          : '',
-      timeStamp: date,
-      redirect: isRedirect,
-      screen: parameters.strSheela
-    );
+        isMayaSaid: false,
+        text: variable.strhiMaya,
+        name: prof.result != null
+            ? prof.result.firstName + prof.result.lastName
+            : '',
+        timeStamp: date,
+        redirect: isRedirect,
+        screen: parameters.strSheela);
 
     conversations.add(model);
     notifyListeners();
@@ -72,7 +71,7 @@ class ChatScreenViewModel extends ChangeNotifier {
   startSheelaFromDashboard(String inputs) async {
     Future.delayed(Duration(seconds: 1), () {
       if (inputs != null && inputs != '') {
-        sendToMaya(inputs,screen: parameters.strDashboard);
+        sendToMaya(inputs, screen: parameters.strDashboard);
       } else {
         FlutterToast()
             .getToast('Invalid inputs for sheela from dashboard', Colors.red);
@@ -82,15 +81,14 @@ class ChatScreenViewModel extends ChangeNotifier {
       var date =
           new FHBUtils().getFormattedDateString(DateTime.now().toString());
       Conversation model = new Conversation(
-        isMayaSaid: false,
-        text: inputs,
-        name: prof.result != null
-            ? prof.result.firstName + prof.result.lastName
-            : '',
-        timeStamp: date,
-        redirect: isRedirect,
-        screen: parameters.strDashboard
-      );
+          isMayaSaid: false,
+          text: inputs,
+          name: prof.result != null
+              ? prof.result.firstName + prof.result.lastName
+              : '',
+          timeStamp: date,
+          redirect: isRedirect,
+          screen: parameters.strDashboard);
 
       conversations.add(model);
       notifyListeners();
@@ -99,26 +97,29 @@ class ChatScreenViewModel extends ChangeNotifier {
 
   askUserForLanguage() {
     Future.delayed(Duration(seconds: 1), () {
-      sendToMaya(variable.strhiMaya,screen: parameters.strSheela);
+      sendToMaya(variable.strhiMaya, screen: parameters.strSheela);
     });
 
     var date = new FHBUtils().getFormattedDateString(DateTime.now().toString());
     Conversation model = new Conversation(
-      isMayaSaid: false,
-      text: variable.strhiMaya,
-      name: prof.result != null
-          ? prof.result.firstName + prof.result.lastName
-          : '',
-      timeStamp: date,
-      redirect: isRedirect,
-      screen: parameters.strSheela
-    );
+        isMayaSaid: false,
+        text: variable.strhiMaya,
+        name: prof.result != null
+            ? prof.result.firstName + prof.result.lastName
+            : '',
+        timeStamp: date,
+        redirect: isRedirect,
+        screen: parameters.strSheela);
 
     conversations.add(model);
     notifyListeners();
   }
 
-  sendToMaya(String msg,{String screen}) async {
+  sendToMaya(String msg, {String screen}) async {
+    prof = await PreferenceUtil.getProfileData(constants.KEY_PROFILE);
+    user_name =
+        prof.result != null ? prof.result.firstName + prof.result.lastName : '';
+
     String uuidString = uuid;
     String tzOffset = DateTime.now().timeZoneOffset.toString();
     var user_id = await PreferenceUtil.getStringValue(constants.KEY_USERID);
@@ -205,19 +206,18 @@ class ChatScreenViewModel extends ChangeNotifier {
     try {
       await variable.voice_platform.invokeMethod(variable.strspeakAssistant,
           {'langcode': Utils.getCurrentLanCode()}).then((response) {
-        sendToMaya(response,screen: screenValue);
+        sendToMaya(response, screen: screenValue);
         var date =
             new FHBUtils().getFormattedDateString(DateTime.now().toString());
         Conversation model = new Conversation(
-          isMayaSaid: false,
-          text: response,
-          name: prof.result != null
-              ? prof.result.firstName + prof.result.lastName
-              : '',
-          timeStamp: date,
-          redirect: isRedirect,
-          screen: screenValue
-        );
+            isMayaSaid: false,
+            text: response,
+            name: prof.result != null
+                ? prof.result.firstName + prof.result.lastName
+                : '',
+            timeStamp: date,
+            redirect: isRedirect,
+            screen: screenValue);
         conversations.add(model);
         notifyListeners();
       });

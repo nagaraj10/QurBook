@@ -28,6 +28,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   var _ChangePasswordKey = GlobalKey<FormState>();
   bool _autoValidateBool = false;
   AuthViewModel authViewModel;
+  bool _isHidden = true;
+  bool _isHiddenSecondary = true;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -106,10 +109,19 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                 fontSize: 14.0.sp,
                               ),
                               autovalidate: _autoValidateBool,
-                              obscureText: true,
+                              obscureText: _isHidden,
                               decoration: InputDecoration(
                                 hintText: strNewPasswordHintTxt,
                                 labelText: strNewPasswordHintTxt,
+                                suffix: InkWell(
+                                  onTap: _togglePasswordView,
+                                  child: Icon(
+                                    _isHidden
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                    size: 18,
+                                  ),
+                                ),
                                 focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10.0),
                                     borderSide: BorderSide(
@@ -141,10 +153,19 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                 fontSize: 14.0.sp,
                               ),
                               autovalidate: _autoValidateBool,
-                              obscureText: true,
+                              obscureText: _isHiddenSecondary,
                               decoration: InputDecoration(
                                 hintText: strNewPasswordAgainHintText,
                                 labelText: strNewPasswordAgainHintText,
+                                suffix: InkWell(
+                                  onTap: _togglePasswordViewSecodary,
+                                  child: Icon(
+                                    _isHiddenSecondary
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                    size: 18,
+                                  ),
+                                ),
                                 errorMaxLines: 2,
                                 focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10.0),
@@ -186,6 +207,18 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         ),
       ),
     );
+  }
+
+  void _togglePasswordView() {
+    setState(() {
+      _isHidden = !_isHidden;
+    });
+  }
+
+  void _togglePasswordViewSecodary() {
+    setState(() {
+      _isHiddenSecondary = !_isHiddenSecondary;
+    });
   }
 
   Widget _changePassword() {

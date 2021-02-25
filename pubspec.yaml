@@ -21,7 +21,7 @@ dependencies:
     sdk: flutter
   
   gmiwidgetspackage:
-    path: /Users/venkateshnchitrali/fhb/myfhbfluttercommon
+    path: D:\commonWidget
 
   # The following adds the Cupertino Icons font to your application.
   flutter_launcher_icons: ^0.7.0
@@ -106,6 +106,8 @@ dependencies:
   youtube_player_flutter: ^7.0.0+7
   scrollable_positioned_list: ^0.1.8
   appsflyer_sdk: ^6.2.0+1
+  package_info: ^0.4.3+4
+  firebase_remote_config: ^0.2.1
 
 
 
