@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:myfhb/src/utils/alert.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 import 'package:flutter/material.dart';
@@ -26,6 +27,17 @@ class FHBBasicWidget {
 
   DateTime dateTime = DateTime.now();
   String authToken;
+
+  var commonConstants = new CommonConstants();
+
+  UnitsMesurements unitsMesurements;
+  setValues(String unitsTosearch) {
+    commonConstants
+        .getValuesForUnit(unitsTosearch)
+        .then((unitsMesurementsClone) {
+      unitsMesurements = unitsMesurementsClone;
+    });
+  }
 
   Widget getSaveButton(Function onSavedPressed) {
     return RaisedGradientButton(
@@ -231,15 +243,6 @@ class FHBBasicWidget {
       Function(String) onTextChanged,
       String error,
       String unitsTosearch) {
-    var commonConstants = new CommonConstants();
-
-    UnitsMesurements unitsMesurements;
-    commonConstants
-        .getValuesForUnit(unitsTosearch)
-        .then((unitsMesurementsClone) {
-      unitsMesurements = unitsMesurementsClone;
-    });
-
     String errorValue = error;
     return Container(
         width: 1.sw - 60,
@@ -570,15 +573,11 @@ class FHBBasicWidget {
       String error,
       String unitsTosearch,
       String deviceName) {
-    var commonConstants = new CommonConstants();
+    final node = FocusScope.of(context);
 
-    UnitsMesurements unitsMesurements;
-    commonConstants
-        .getValuesForUnit(unitsTosearch)
-        .then((unitsMesurementsClone) {
-      unitsMesurements = unitsMesurementsClone;
-    });
+    setValues(unitsTosearch);
 
+    String valueEnterd = '';
     String errorValue = error;
     return Container(
         width: 50.0.w,
@@ -589,61 +588,182 @@ class FHBBasicWidget {
           style: TextStyle(
               fontSize: 13.0.sp,
               fontWeight: FontWeight.w500,
-              color: getColorBasedOnDevice(deviceName)),
+              color: getColorBasedOnDevice(
+                  deviceName, unitsTosearch, controllerValue.text)),
           onTap: () {},
           controller: controllerValue,
+          onEditingComplete: () {
+            if (checkifValueisInRange(controllerValue.text, deviceName)) {
+              Alert.displayConfirmProceed(context,
+                  title: 'Confirmation',
+                  content: CommonConstants.strErrorStringForDevices +
+                      ' ' +
+                      unitsMesurements.minValue.toString() +
+                      variable.strAnd +
+                      unitsMesurements.maxValue.toString(),
+                  confirm: 'Confirm', onPressedConfirm: () {
+                Navigator.pop(context);
+                node.nextFocus();
+              }, onPressedCancel: () {
+                controllerValue.text = '';
+                Navigator.pop(context);
+              });
+            }else{
+              node.nextFocus();
+
+            }
+          }, // Move focus to next
           decoration: InputDecoration(
               counterText: "",
               border: UnderlineInputBorder(
                 borderSide: BorderSide(
-                    color: getColorBasedOnDevice(deviceName), width: 0.5.w),
+                    color: getColorBasedOnDevice(deviceName, unitsTosearch, ''),
+                    width: 0.5.w),
               ),
               hintText: '0',
               hintStyle: TextStyle(color: Colors.grey, fontSize: 13.0.sp),
               contentPadding: EdgeInsets.zero),
-          cursorColor: getColorBasedOnDevice(deviceName),
+          cursorColor: getColorBasedOnDevice(deviceName, unitsTosearch, ''),
           keyboardType: TextInputType.number,
           cursorWidth: 0.5.w,
           onChanged: (value) {
-            var number = int.parse(value);
-            if (number < unitsMesurements.minValue ||
-                number > unitsMesurements.maxValue) {
-              errorValue = CommonConstants.strErrorStringForDevices +
-                  ' ' +
-                  unitsMesurements.minValue.toString() +
-                  variable.strAnd +
-                  unitsMesurements.maxValue.toString();
+            if (value.length < 3) {
+              valueEnterd = value;
+              var number = int.parse(value);
+              if (number < unitsMesurements.minValue ||
+                  number > unitsMesurements.maxValue) {
+                errorValue = CommonConstants.strErrorStringForDevices +
+                    ' ' +
+                    unitsMesurements.minValue.toString() +
+                    variable.strAnd +
+                    unitsMesurements.maxValue.toString();
 
-              onTextChanged(errorValue);
+                onTextChanged(errorValue);
+              } else {
+                onTextChanged('');
+              }
             } else {
-              onTextChanged('');
+              if (checkifValueisInRange(controllerValue.text, deviceName)) {
+                Alert.displayConfirmProceed(context,
+                    title: 'Confirmation',
+                    content: CommonConstants.strErrorStringForDevices +
+                        ' ' +
+                        unitsMesurements.minValue.toString() +
+                        variable.strAnd +
+                        unitsMesurements.maxValue.toString(),
+                    confirm: 'Confirm', onPressedConfirm: () {
+                  Navigator.pop(context);
+                  node.nextFocus();
+                }, onPressedCancel: () {
+                  controllerValue.text = '';
+                  Navigator.pop(context);
+                });
+              }else{
+                node.nextFocus();
+
+              }
             }
           },
         ));
   }
 
-  getColorBasedOnDevice(String deviceName) {
+  getColorBasedOnDevice(String deviceName, String unitsTosearch, String text) {
+    /* var commonConstants = new CommonConstants();
+
+    UnitsMesurements unitsMesurements;
+    commonConstants
+        .getValuesForUnit(unitsTosearch)
+        .then((unitsMesurementsClone) {
+      unitsMesurements = unitsMesurementsClone;
+    });*/
     switch (deviceName) {
       case Constants.STR_BP_MONITOR:
-        return Color(CommonConstants.bpDarkColor);
+        if (text != null && text != '') {
+          var number = int.parse(text);
+          if (number < unitsMesurements.minValue ||
+              number > unitsMesurements.maxValue) {
+            return Colors.red;
+          } else
+            return Color(CommonConstants.bpDarkColor);
+        } else {
+          return Color(CommonConstants.bpDarkColor);
+        }
         break;
       case Constants.STR_GLUCOMETER:
-        return Color(CommonConstants.GlucoDarkColor);
+        if (text != null && text != '') {
+          var number = int.parse(text);
+          if (number < unitsMesurements.minValue ||
+              number > unitsMesurements.maxValue) {
+            return Colors.red;
+          } else
+            return Color(CommonConstants.GlucoDarkColor);
+        } else {
+          return Color(CommonConstants.GlucoDarkColor);
+        }
         break;
       case Constants.STR_WEIGHING_SCALE:
-        return Color(CommonConstants.weightDarkColor);
+        if (text != null && text != '') {
+          var number = int.parse(text);
+          if (number < unitsMesurements.minValue ||
+              number > unitsMesurements.maxValue) {
+            return Colors.red;
+          } else
+            return Color(CommonConstants.weightDarkColor);
+        } else {
+          return Color(CommonConstants.weightDarkColor);
+        }
         break;
 
       case Constants.STR_THERMOMETER:
-        return Color(CommonConstants.ThermoDarkColor);
+        if (text != null && text != '') {
+          var number = int.parse(text);
+          if (number < unitsMesurements.minValue ||
+              number > unitsMesurements.maxValue) {
+            return Colors.red;
+          } else
+            return Color(CommonConstants.ThermoDarkColor);
+        } else {
+          return Color(CommonConstants.ThermoDarkColor);
+        }
         break;
 
       case Constants.STR_PULSE_OXIMETER:
-        return Color(CommonConstants.pulseDarkColor);
+        if (text != null && text != '') {
+          var number = int.parse(text);
+          if (number < unitsMesurements.minValue ||
+              number > unitsMesurements.maxValue) {
+            return Colors.red;
+          } else
+            return Color(CommonConstants.pulseDarkColor);
+        } else {
+          return Color(CommonConstants.pulseDarkColor);
+        }
         break;
       default:
-        return Color(CommonConstants.pulseDarkColor);
+        if (text != null && text != '') {
+          var number = int.parse(text);
+          if (number < unitsMesurements.minValue ||
+              number > unitsMesurements.maxValue) {
+            return Colors.red;
+          } else
+            return Color(CommonConstants.pulseDarkColor);
+        } else {
+          return Color(CommonConstants.pulseDarkColor);
+        }
         break;
+    }
+  }
+
+  bool checkifValueisInRange(String text, String deviceName) {
+    if (text != null && text != '') {
+      var number = int.parse(text);
+      if (number < unitsMesurements.minValue ||
+          number > unitsMesurements.maxValue) {
+        return true;
+      } else
+        return false;
+    } else {
+      return false;
     }
   }
 }

@@ -232,25 +232,25 @@ class DatabaseUtil {
   static void insertUnitsForDevices() async {
     var db = new DatabaseHelper();
 
-    var faren = new UnitsMesurements(1, "F", 90, 110);
+    var faren = new UnitsMesurements(1, "F", 95, 99);
     await db.saveUnitMeasurements(faren);
 
-    var thermo = new UnitsMesurements(2, "C", 35, 42);
+    var thermo = new UnitsMesurements(2, "C", 35, 38);
     await db.saveUnitMeasurements(thermo);
 
-    var gluco = new UnitsMesurements(3, "mgdl", 20, 600);
+    var gluco = new UnitsMesurements(3, "mgdl", 60, 160);
     await db.saveUnitMeasurements(gluco);
-    var bp = new UnitsMesurements(4, "mmHg", 20, 280);
+    var bp = new UnitsMesurements(4, "mmHg", 90, 130);
     await db.saveUnitMeasurements(bp);
-    var pul = new UnitsMesurements(5, "%spo2", 35, 100);
+    var pul = new UnitsMesurements(5, "%spo2", 90, 100);
     await db.saveUnitMeasurements(pul);
-    var pr = new UnitsMesurements(6, "PR bpm", 30, 250);
+    var pr = new UnitsMesurements(6, "PR bpm", 70, 120);
     await db.saveUnitMeasurements(pr);
     var kg = new UnitsMesurements(7, "kgs", 0, 250);
     await db.saveUnitMeasurements(kg);
     var gram = new UnitsMesurements(8, "g", 0, 25000);
     await db.saveUnitMeasurements(gram);
-    var dp = new UnitsMesurements(9, "dp", 60, 140);
+    var dp = new UnitsMesurements(9, "dp", 60, 80);
     await db.saveUnitMeasurements(dp);
     var pulse = new UnitsMesurements(10, "pulse", 60, 100);
     await db.saveUnitMeasurements(pulse);

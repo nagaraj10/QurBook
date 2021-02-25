@@ -118,13 +118,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      MaterialButton(
-                        onPressed: () {},
-                        child: Text('',
-                            style: TextStyle(
-                                fontSize: 22.0.sp, fontWeight: FontWeight.w400),
-                            textAlign: TextAlign.center),
-                      ),
+                      SizedBox(width: 50),
                       OutlineButton(
                         onPressed: onOkClicked
                             ? () {}
