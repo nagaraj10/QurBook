@@ -26,6 +26,7 @@ import 'package:myfhb/src/model/user/MyProfileResult.dart';
 import 'package:myfhb/src/model/user/UserAddressCollection.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
+import 'package:myfhb/src/ui/MyRecordsArguments.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/telehealth/features/MyProvider/model/DoctorsFromHospitalModel.dart';
@@ -1336,15 +1337,17 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     await Navigator.of(context)
         .push(MaterialPageRoute(
       builder: (context) => MyRecords(
-        categoryPosition: position,
-        allowSelect: allowSelect,
-        isAudioSelect: isAudioSelect,
-        isNotesSelect: isNotesSelect,
-        selectedMedias: mediaIds,
-        isFromChat: false,
-        showDetails: false,
-        isAssociateOrChat: true,
-        userID: selectedId,
+        argument: MyRecordsArgument(
+            categoryPosition: position,
+            allowSelect: allowSelect,
+            isAudioSelect: isAudioSelect,
+            isNotesSelect: isNotesSelect,
+            selectedMedias: mediaIds,
+            isFromChat: false,
+            showDetails: false,
+            isAssociateOrChat: true,
+            userID: selectedId,
+            fromClass: 'appointments'),
       ),
     ))
         .then((results) {

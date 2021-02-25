@@ -35,6 +35,8 @@ import 'package:myfhb/src/model/Media/media_data_list.dart';
 import 'package:myfhb/src/model/Media/media_result.dart';
 import 'package:myfhb/src/model/TabModel.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
+import 'package:myfhb/src/ui/MyRecordsArguments.dart';
+import 'package:myfhb/src/ui/audio/AudioScreenArguments.dart';
 import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
 import 'package:myfhb/src/ui/health/BillsList.dart';
 import 'package:myfhb/src/ui/health/DeviceListScreen.dart';
@@ -57,34 +59,9 @@ export 'package:myfhb/common/CommonUtil.dart';
 export 'package:myfhb/src/model/Media/MediaTypeResponse.dart';
 
 class MyRecords extends StatefulWidget {
-  int categoryPosition;
-  bool allowSelect;
-  bool isNotesSelect;
-  bool isAudioSelect;
-  List<String> selectedMedias;
-  bool isFromChat;
-  bool showDetails;
-  List<HealthRecordCollection> selectedRecordIds;
-  bool isAssociateOrChat;
-  bool isFromBills;
-  String userID;
-  bool fromAppointments;
-  String fromClass;
+  MyRecordsArgument argument;
 
-  MyRecords(
-      {this.categoryPosition,
-      this.allowSelect,
-      this.isAudioSelect,
-      this.isNotesSelect,
-      this.selectedMedias,
-      this.isFromChat,
-      this.showDetails,
-      this.selectedRecordIds,
-      this.isAssociateOrChat,
-      this.isFromBills,
-      this.userID,
-      this.fromAppointments,
-      this.fromClass});
+  MyRecords({this.argument});
 
   @override
   _MyRecordsState createState() => _MyRecordsState();
@@ -124,7 +101,7 @@ class _MyRecordsState extends State<MyRecords> {
 
   @override
   void initState() {
-    initPosition = widget.categoryPosition;
+    initPosition = widget.argument.categoryPosition;
     rebuildAllBlocks();
     searchQuery = _searchQueryController.text.toString();
     if (searchQuery != '') {
@@ -350,15 +327,16 @@ class _MyRecordsState extends State<MyRecords> {
       initPosition: initPosition,
       itemCount: categoryData.length,
       fromSearch: fromSearch,
-      allowSelect: widget.allowSelect ?? false,
-      allowSelectVoice: widget.isAudioSelect ?? false,
-      allowSelectNotes: widget.isNotesSelect ?? false,
-      selectedMedia: widget.selectedMedias,
-      isFromChat: widget.isFromChat ?? false,
-      showDetails: widget.showDetails ?? false,
-      selectedRecordsId: widget.selectedRecordIds,
-      isAssociateOrChat: widget.isAssociateOrChat ?? false,
-      isFromBills: widget.isFromBills ?? false,
+      argument: widget.argument,
+      allowSelect: widget.argument.allowSelect ?? false,
+      allowSelectVoice: widget.argument.isAudioSelect ?? false,
+      allowSelectNotes: widget.argument.isNotesSelect ?? false,
+      selectedMedia: widget.argument.selectedMedias,
+      isFromChat: widget.argument.isFromChat ?? false,
+      showDetails: widget.argument.showDetails ?? false,
+      selectedRecordsId: widget.argument.selectedRecordIds,
+      isAssociateOrChat: widget.argument.isAssociateOrChat ?? false,
+      isFromBills: widget.argument.isFromBills ?? false,
       onPositionChange: (index) {
         try {
           initPosition = index;
@@ -393,9 +371,9 @@ class _MyRecordsState extends State<MyRecords> {
       scaffold_state: scaffold_state,
       completeData: completeData,
       recordsState: this,
-      userID: widget.userID ?? '',
-      fromAppointments: widget.fromAppointments ?? false,
-      fromClass: widget.fromClass,
+      userID: widget.argument.userID ?? '',
+      fromAppointments: widget.argument.fromAppointments ?? false,
+      fromClass: widget.argument.fromClass,
     );
   }
 
@@ -597,6 +575,7 @@ class CustomTabView extends StatefulWidget {
   String userID;
   bool fromAppointments;
   String fromClass;
+  MyRecordsArgument argument;
   CustomTabView(
       {@required this.itemCount,
       this.tabBuilder,
@@ -624,7 +603,8 @@ class CustomTabView extends StatefulWidget {
       this.isFromBills,
       this.userID,
       this.fromAppointments,
-      this.fromClass});
+      this.fromClass,
+      this.argument});
 
   @override
   _CustomTabsState createState() => _CustomTabsState();
@@ -1547,13 +1527,23 @@ class _CustomTabsState extends State<CustomTabView>
         PreferenceUtil.saveString(Constants.KEY_CATEGORYID,
                 PreferenceUtil.getStringValue(Constants.KEY_VOICE_ID))
             .then((value) {
-          Navigator.of(context)
-              .push(MaterialPageRoute(
-                builder: (context) => AudioRecordScreen(
-                  fromVoice: true,
-                ),
-              ))
-              .then((results) {});
+          if (widget.argument.fromClass == 'audio' ||
+              widget.argument.fromClass == null) {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => AudioRecordScreen(
+                        arguments: AudioScreenArguments(
+                            fromVoice: true,
+                            fromClass: widget.argument.fromClass ??
+                                'audio')))).then((results) {});
+          } else {
+            Navigator.pushNamed(context, router.rt_AudioScreen,
+                    arguments: AudioScreenArguments(
+                        fromVoice: true,
+                        fromClass: widget.argument.fromClass ?? 'audio'))
+                .then((results) {});
+          }
         });
       });
     }

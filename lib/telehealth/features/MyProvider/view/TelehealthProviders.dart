@@ -3,6 +3,7 @@ import 'package:myfhb/authentication/service/authservice.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
+import 'package:myfhb/src/ui/MyRecordsArguments.dart';
 //import 'package:myfhb/src/ui/MyRecords.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/src/ui/bot/SuperMaya.dart';
@@ -50,7 +51,9 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
     MyProvidersMain(),
     SuperMaya(),
     ChatHomeScreen(),
-    MyRecords()
+    MyRecords(
+      argument: MyRecordsArgument(),
+    ),
   ];
 
   void _onItemTapped(int index) {

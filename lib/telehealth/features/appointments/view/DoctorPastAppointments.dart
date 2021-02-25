@@ -10,6 +10,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
 import 'package:myfhb/src/model/Category/catergory_result.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
+import 'package:myfhb/src/ui/MyRecordsArguments.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/healthRecord.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
@@ -267,15 +268,16 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
 
                       await Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => MyRecords(
-                          categoryPosition: position,
-                          allowSelect: false,
-                          isAudioSelect: false,
-                          isNotesSelect: true,
-                          selectedMedias: recordIds,
-                          isFromChat: false,
-                          showDetails: true,
-                          isAssociateOrChat: false,
-                        ),
+                            argument: MyRecordsArgument(
+                                categoryPosition: position,
+                                allowSelect: false,
+                                isAudioSelect: false,
+                                isNotesSelect: true,
+                                selectedMedias: recordIds,
+                                isFromChat: false,
+                                showDetails: true,
+                                isAssociateOrChat: false,
+                                fromClass: 'appointments')),
                       ));
                     }
                   }, healthRecord.toString()),
@@ -337,14 +339,16 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
     int position = getCategoryPosition(Constants.STR_BILLS);
     await Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => MyRecords(
-          categoryPosition: position,
-          allowSelect: true,
-          isAudioSelect: false,
-          isNotesSelect: false,
-          selectedMedias: paymentID,
-          isFromChat: false,
-          showDetails: true,
-          isAssociateOrChat: false),
+          argument: MyRecordsArgument(
+              categoryPosition: position,
+              allowSelect: true,
+              isAudioSelect: false,
+              isNotesSelect: false,
+              selectedMedias: paymentID,
+              isFromChat: false,
+              showDetails: true,
+              isAssociateOrChat: false,
+              fromClass: 'appointments')),
     ));
   }
 

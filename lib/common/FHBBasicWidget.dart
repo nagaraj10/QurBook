@@ -8,6 +8,7 @@ import 'package:myfhb/common/AudioWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/database/model/UnitsMesurement.dart';
 import 'package:myfhb/src/model/user/ProfilePicThumbnail.dart';
+import 'package:myfhb/src/ui/audio/AudioScreenArguments.dart';
 import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/widgets/RaisedGradientButton.dart';
@@ -306,7 +307,8 @@ class FHBBasicWidget {
       onTap: () async {
         await Navigator.of(context)
             .push(MaterialPageRoute(
-          builder: (context) => AudioRecordScreen(fromVoice: false),
+          builder: (context) => AudioRecordScreen(
+              arguments: AudioScreenArguments(fromVoice: false)),
         ))
             .then((results) {
           if (results != null) {

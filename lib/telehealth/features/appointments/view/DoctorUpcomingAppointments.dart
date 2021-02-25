@@ -7,6 +7,7 @@ import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/src/ui/MyRecordsArguments.dart';
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/my_providers/bloc/providers_block.dart';
@@ -444,16 +445,17 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
     int position = getCategoryPosition(Constants.STR_BILLS);
     await Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => MyRecords(
-        categoryPosition: position,
-        allowSelect: true,
-        isAudioSelect: false,
-        isNotesSelect: false,
-        selectedMedias: paymentID,
-        isFromChat: false,
-        showDetails: true,
-        isAssociateOrChat: false,
-        isFromBills: true,
-      ),
+          argument: MyRecordsArgument(
+              categoryPosition: position,
+              allowSelect: true,
+              isAudioSelect: false,
+              isNotesSelect: false,
+              selectedMedias: paymentID,
+              isFromChat: false,
+              showDetails: true,
+              isAssociateOrChat: false,
+              isFromBills: true,
+              fromClass: 'appointments')),
     ));
   }
 

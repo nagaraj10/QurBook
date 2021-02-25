@@ -7,6 +7,7 @@ import 'package:myfhb/schedules/my_schedules.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
+import 'package:myfhb/src/ui/MyRecordsArguments.dart';
 //import 'package:myfhb/src/ui/MyRecords.dart';
 import 'package:myfhb/src/ui/bot/SuperMaya.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
@@ -37,7 +38,9 @@ class _HomeScreenState extends State<HomeScreen> {
       TextStyle(fontSize: 30.0.sp, fontWeight: FontWeight.bold);
   var _widgetOptions = [
     MyFhbNotifications(),
-    MyRecords(),
+    MyRecords(
+      argument: MyRecordsArgument(),
+    ),
     SuperMaya(),
     UserAccounts(arguments: UserAccountsArguments(selectedIndex: 0)),
     MoreMenuScreen()
@@ -76,6 +79,16 @@ class _HomeScreenState extends State<HomeScreen> {
   void _myFunc(int index) {
     if (index == 0) {
       Navigator.of(context).pop();
+    }
+    if (index == 1) {
+      Navigator.pushNamed(
+        context,
+        router.rt_MyRecords,
+        arguments: MyRecordsArgument(),
+      ).then((value) {
+        _selectedIndex = 1;
+        setState(() {});
+      });
     }
     if (index == 3) {
       Navigator.pushNamed(

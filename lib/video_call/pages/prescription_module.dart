@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import 'package:myfhb/src/ui/MyRecordsArguments.dart';
 
 class PrescriptionModule extends StatelessWidget {
   const PrescriptionModule();
@@ -74,13 +75,15 @@ class PrescriptionModule extends StatelessWidget {
     await Navigator.of(context)
         .push(MaterialPageRoute(
       builder: (context) => MyRecords(
-          categoryPosition: position,
-          allowSelect: allowSelect,
-          isAudioSelect: isAudioSelect,
-          isNotesSelect: isNotesSelect,
-          selectedMedias: mediaIds,
-          isFromChat: false,
-          isAssociateOrChat: false),
+          argument: MyRecordsArgument(
+              categoryPosition: position,
+              allowSelect: allowSelect,
+              isAudioSelect: isAudioSelect,
+              isNotesSelect: isNotesSelect,
+              selectedMedias: mediaIds,
+              isFromChat: false,
+              isAssociateOrChat: false,
+              fromClass: 'appointments')),
     ))
         .then((results) {
       if (results != null) {

@@ -52,7 +52,9 @@ setRouter(List<CameraDescription> listOfCameras) async {
           create: (context) => DevicesViewModel(),
           child: MySettings(),
         ),
-    router.rt_MyRecords: (BuildContext context) => MyRecords(),
+    router.rt_MyRecords: (BuildContext context) => MyRecords(
+          argument: ModalRoute.of(context).settings.arguments,
+        ),
     router.rt_MyFamily: (BuildContext context) => MyFamily(),
     router.rt_myprovider: (BuildContext context) => MyProvider(),
     router.rt_th_myprovider: (BuildContext context) => MyProvidersMain(),
@@ -90,7 +92,9 @@ setRouter(List<CameraDescription> listOfCameras) async {
     router.rt_TelehealthProvider: (BuildContext context) => TelehealthProviders(
         arguments: ModalRoute.of(context).settings.arguments),
     router.rt_CallMain: (BuildContext context) =>
-        CallMain(arguments: ModalRoute.of(context).settings.arguments)
+        CallMain(arguments: ModalRoute.of(context).settings.arguments),
+    router.rt_AudioScreen: (BuildContext context) =>
+        AudioRecordScreen(arguments: ModalRoute.of(context).settings.arguments)
   };
 
   return fhb_router;

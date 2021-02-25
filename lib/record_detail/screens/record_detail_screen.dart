@@ -39,6 +39,7 @@ import 'package:myfhb/src/model/Health/PostImageResponse.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
+import 'package:myfhb/src/ui/audio/AudioScreenArguments.dart';
 import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
 import 'package:myfhb/src/ui/imageSlider.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
@@ -361,8 +362,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         Navigator.of(context)
             .push(MaterialPageRoute(
           builder: (context) => AudioRecordScreen(
+            arguments:AudioScreenArguments(
             fromVoice: false,
-          ),
+          )),
         ))
             .then((results) {
           if (results != null) {

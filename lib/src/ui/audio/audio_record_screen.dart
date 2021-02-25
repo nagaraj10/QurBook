@@ -11,6 +11,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
 import 'package:myfhb/src/model/Category/catergory_result.dart';
+import 'package:myfhb/src/ui/audio/AudioScreenArguments.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/common/CommonDialogBox.dart';
@@ -28,9 +29,9 @@ enum t_MEDIA {
 }
 
 class AudioRecordScreen extends StatefulWidget {
-  final bool fromVoice;
+  AudioScreenArguments arguments;
 
-  AudioRecordScreen({this.fromVoice});
+  AudioRecordScreen({this.arguments});
   @override
   _AudioRecordScreenState createState() => new _AudioRecordScreenState();
 }
@@ -135,7 +136,7 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
     this.setState(() {
       this._isRecording = false;
     });
-    if (widget.fromVoice) {
+    if (widget.arguments.fromVoice) {
       PreferenceUtil.saveString(
               Constants.KEY_CATEGORYNAME, Constants.STR_VOICERECORDS)
           .then((value) {
@@ -156,7 +157,7 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
             audioPathMain = audioPath;
             containsAudioMain = containsAudio;
             setState(() {});
-          }, false, fileName);
+          }, false, fileName, fromClass: widget.arguments.fromClass);
         });
       });
     } else {
