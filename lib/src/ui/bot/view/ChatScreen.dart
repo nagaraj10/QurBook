@@ -8,6 +8,7 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/ui/bot/common/botutils.dart';
 import 'package:myfhb/src/ui/bot/widgets/chatdata.dart';
+import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'package:provider/provider.dart';
 import 'package:myfhb/src/model/bot/ConversationModel.dart';
 import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
@@ -75,6 +76,8 @@ class _ChatScreenState extends State<ChatScreen>
   }
 
   stopTTSEngine() async {
+    ChatScreenViewModel model = getMyViewModel();
+    model.newAudioPlay.stop();
     await variable.tts_platform.invokeMethod(variable.strtts, {
       parameters.strMessage: "",
       parameters.strIsClose: true,

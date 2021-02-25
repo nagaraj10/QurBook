@@ -8,6 +8,7 @@ import 'package:myfhb/constants/fhb_constants.dart' as constants;
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/ui/bot/common/botutils.dart';
 import 'package:myfhb/src/ui/bot/service/sheela_service.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 import '../../../../common/PreferenceUtil.dart';
 import '../../../blocs/health/HealthReportListForUserBlock.dart';
@@ -16,6 +17,8 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import '../../../model/bot/SpeechModelResponse.dart';
 import '../../../utils/FHBUtils.dart';
+import 'package:http/http.dart' as http;
+import 'package:audioplayer/audioplayer.dart';
 
 class ChatScreenViewModel extends ChangeNotifier {
   static MyProfileModel prof =
@@ -35,6 +38,8 @@ class ChatScreenViewModel extends ChangeNotifier {
   List<Conversation> get getMyConversations => conversations;
 
   int get getisMayaSpeaks => isMayaSpeaks;
+  AudioPlayer newAudioPlay = AudioPlayer();
+  bool isAudioPlayerPlaying = false;
 
   void clearMyConversation() {
     conversations = List();
@@ -175,21 +180,51 @@ class ChatScreenViewModel extends ChangeNotifier {
             isLoading = false;
             notifyListeners();
             isMayaSpeaks = 0;
+            final lan = Utils.getCurrentLanCode();
+            String langCodeForRequest;
+            if (lan != "undef") {
+              final langCode = lan.split("-").first;
+              langCodeForRequest = langCode;
+              //print(langCode);
+            }
+
             if (!stopTTSNow) {
-              variable.tts_platform.invokeMethod(variable.strtts, {
-                parameters.strMessage: res.text,
-                parameters.strIsClose: false,
-                parameters.strLanguage: res.lang
-              }).then((res) {
-                if (res == 1) {
-                  isMayaSpeaks = 1;
-                }
-                if (!isEndOfConv) {
-                  gettingReposnseFromNative();
-                } else {
-                  refreshData();
-                }
-              });
+              if (Platform.isIOS ||
+                  lan == "undef" ||
+                  lan.toLowerCase() == "en-IN".toLowerCase() ||
+                  lan.toLowerCase() == "en-US".toLowerCase()) {
+                variable.tts_platform.invokeMethod(variable.strtts, {
+                  parameters.strMessage: res.text,
+                  parameters.strIsClose: false,
+                  parameters.strLanguage: res.lang
+                }).then((res) {
+                  if (res == 1) {
+                    isMayaSpeaks = 1;
+                  }
+                  if (!isEndOfConv) {
+                    gettingReposnseFromNative();
+                  } else {
+                    refreshData();
+                  }
+                });
+              } else {
+                //print(res.text);
+                getNewResponse(res.text,
+                    langCodeForRequest != null ? langCodeForRequest : "en");
+                newAudioPlay.onPlayerStateChanged.listen((event) {
+                  print(event);
+                  if (event == AudioPlayerState.PLAYING) {
+                    isAudioPlayerPlaying = true;
+                  }
+                  if (event == AudioPlayerState.COMPLETED ||
+                      event == AudioPlayerState.PAUSED ||
+                      event == AudioPlayerState.STOPPED)
+                    isAudioPlayerPlaying = false;
+                  if (event == AudioPlayerState.COMPLETED && !isEndOfConv) {
+                    gettingReposnseFromNative();
+                  }
+                });
+              }
             }
           });
           return jsonResponse;
@@ -199,6 +234,42 @@ class ChatScreenViewModel extends ChangeNotifier {
       FlutterToast().getToast(
           'There is some issue with sheela,\n Please try after some time',
           Colors.black54);
+    }
+  }
+
+  getNewResponse(String dataForVoice, String langCode) async {
+    try {
+      final str =
+          "https://heyr2.com/tts/ws_tts.php?key=67ca0bad-83a8-4f1b-a31b-5a1f2380b385&Action=GetSpeech&json=1&lang=" +
+              langCode +
+              "&ttsdata=" +
+              dataForVoice;
+      final response = await http.get(
+        str,
+      );
+      print(response.body);
+      final data = jsonDecode(response.body);
+      final audioContent = data["audio"];
+      if (audioContent == null) return;
+      final bytes = Base64Decoder().convert(audioContent);
+      if (bytes == null) return;
+      // if (Platform.isIOS) {
+      final dir = await getTemporaryDirectory();
+      final file = File('${dir.path}/wavenet.mp3');
+      await file.writeAsBytes(bytes);
+      final path = dir.path + "/wavenet.mp3";
+      newAudioPlay.play(path, isLocal: true);
+      // } else if (Platform.isAndroid) {
+      //   newAudioPlay.playBytes(bytes);
+      // }
+
+      //print(dir.path);
+    } catch (foundError) {}
+  }
+
+  stopAudioPlayer() {
+    if (isAudioPlayerPlaying) {
+      newAudioPlay.stop();
     }
   }
 
