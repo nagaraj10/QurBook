@@ -900,7 +900,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
             },
           ),
         ),
-        new SwitchProfile().buildActions(context, _keyLoader, callBackToRefresh)
+        new SwitchProfile().buildActions(context, _keyLoader, callBackToRefresh,false)
       ],
     );
   }

@@ -81,7 +81,7 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
             },
           ),
         ),
-        new SwitchProfile().buildActions(context, _keyLoader, callBackToRefresh)
+        new SwitchProfile().buildActions(context, _keyLoader, callBackToRefresh,false)
       ],
     );
   }
