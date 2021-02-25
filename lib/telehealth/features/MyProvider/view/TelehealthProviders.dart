@@ -3,7 +3,9 @@ import 'package:myfhb/authentication/service/authservice.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
+import 'package:myfhb/src/ui/MyRecordsArguments.dart';
 //import 'package:myfhb/src/ui/MyRecords.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/src/ui/bot/SuperMaya.dart';
 import 'package:myfhb/telehealth/features/BottomNavigationMenu/model/BottomNavigationArguments.dart';
 import 'package:myfhb/telehealth/features/BottomNavigationMenu/view/BottomNavigation.dart';
@@ -41,15 +43,17 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
   String _bookingId;
   String date;
   GlobalKey _bottomNavigationKey = GlobalKey();
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  static TextStyle optionStyle =
+      TextStyle(fontSize: 30.0.sp, fontWeight: FontWeight.bold);
   List<BottomNavigationArguments> bottomNavigationArgumentsList = new List();
   var _widgetOptions = [
     AppointmentsMain(),
     MyProvidersMain(),
     SuperMaya(),
     ChatHomeScreen(),
-    MyRecords()
+    MyRecords(
+      argument: MyRecordsArgument(),
+    ),
   ];
 
   void _onItemTapped(int index) {
@@ -107,7 +111,7 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
               child: Text(
                 'Confirmation',
                 style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 20.0.sp,
                     fontWeight: FontWeight.bold,
                     color: Colors.black.withOpacity(0.8)),
               ),
@@ -120,7 +124,7 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
                     parameters.cancel_appointment,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 20.0.sp,
                         fontWeight: FontWeight.w600,
                         color: Colors.black.withOpacity(0.5)),
                   ),

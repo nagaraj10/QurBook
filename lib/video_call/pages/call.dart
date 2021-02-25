@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:io';
-
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
@@ -619,8 +619,8 @@ class _CallPageState extends State<CallPage> {
               //color: Color(CommonUtil.primaryColor).withOpacity(0.3),
               borderRadius: BorderRadius.all(Radius.circular(8)),
             ),
-            height: 125,
-            width: 125,
+            height: 125.0.h,
+            width: 125.0.w,
             margin: EdgeInsets.symmetric(vertical: 120, horizontal: 10),
             child: attendees[0]),
       ],
@@ -663,7 +663,10 @@ class _CallPageState extends State<CallPage> {
                         ),
                         child: Text(
                           _infoStrings[index],
-                          style: TextStyle(color: Color(new CommonUtil().getMyPrimaryColor())),
+                          style: TextStyle(
+                            color: Color(new CommonUtil().getMyPrimaryColor()),
+                            fontSize: 14.0.sp,
+                          ),
                         ),
                       ),
                     )
@@ -693,7 +696,9 @@ class _CallPageState extends State<CallPage> {
               children: [
                 Text(
                   message,
-                  style: TextStyle(fontSize: 14),
+                  style: TextStyle(
+                    fontSize: 14.0.sp,
+                  ),
                 ),
               ],
             ),
@@ -723,7 +728,10 @@ class _CallPageState extends State<CallPage> {
                   }
                 },
                 child: Text('Ok',
-                    style: TextStyle(color: Color(CommonUtil().getMyPrimaryColor()), fontSize: 18)),
+                    style: TextStyle(
+                      color: Color(CommonUtil().getMyPrimaryColor()),
+                      fontSize: 18.0.sp,
+                    )),
               ),
             ],
           );
@@ -733,24 +741,27 @@ class _CallPageState extends State<CallPage> {
   Widget tryingToConnect() {
     return Container(
       color: Colors.black.withOpacity(0.3),
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
+      width: 1.sw,
+      height: 1.sh,
       child: Center(
         child: Column(
           //mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
-              height: 30,
-              width: 30,
+              height: 30.0.h,
+              width: 30.0.h,
               child: CircularProgressIndicator(),
             ),
             SizedBox(
-              height: 10,
+              height: 10.0.h,
             ),
             Text(
               'Trying to Reconnect..',
-              style: TextStyle(color: Colors.white, fontSize: 20),
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20.0.sp,
+              ),
             ),
           ],
         ),

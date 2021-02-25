@@ -20,28 +20,27 @@ class AppointmentsMain extends StatefulWidget {
 }
 
 class _AppointmentsMainState extends State<AppointmentsMain> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         /*appBar: appBar(),*/
         body: MultiProvider(
-          providers: [
-            ChangeNotifierProvider(
-              create: (context) => AppointmentsListViewModel(),
-            ),
-            ChangeNotifierProvider<CancelAppointmentViewModel>(
-              create: (_) => CancelAppointmentViewModel(),
-            ),
-            ChangeNotifierProvider<ResheduleAppointmentViewModel>(
-              create: (_) => ResheduleAppointmentViewModel(),
-            ),
-          ],
-          child: Appointments(),
-        ));
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => AppointmentsListViewModel(),
+        ),
+        ChangeNotifierProvider<CancelAppointmentViewModel>(
+          create: (_) => CancelAppointmentViewModel(),
+        ),
+        ChangeNotifierProvider<ResheduleAppointmentViewModel>(
+          create: (_) => ResheduleAppointmentViewModel(),
+        ),
+      ],
+      child: Appointments(),
+    ));
   }
 
- /* Widget appBar() {
+  /* Widget appBar() {
     return AppBar(
         flexibleSpace: GradientAppBar(),
         leading: Row(
@@ -74,7 +73,7 @@ class _AppointmentsMainState extends State<AppointmentsMain> {
             colors: Colors.white,
             overflow: TextOverflow.visible,
             fontWeight: FontWeight.w600,
-            fontsize: 18,
+            fontsize: 18.0.sp,
             softwrap: true,
           ),
         ),

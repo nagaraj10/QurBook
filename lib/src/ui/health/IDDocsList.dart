@@ -13,6 +13,7 @@ import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class IDDocsList extends StatefulWidget {
   final HealthRecordList completeData;
@@ -142,9 +143,8 @@ class _IDDocsListState extends State<IDDocsList> {
                 } else {
                   toast.getToast('No Image Attached ', Colors.red);
                 }
-              }else{
+              } else {
                 toast.getToast('No Image Attached ', Colors.red);
-
               }
             } else {
               bool condition;
@@ -193,9 +193,9 @@ class _IDDocsListState extends State<IDDocsList> {
                         ? mediaMetaInfoObj.metaInfo.mediaTypeInfo.url
                         :
                   Constants.BASE_URL +*/
-                      mediaMetaInfoObj.metadata.healthRecordCategory.logo,
-                  height: 25,
-                  width: 25,
+                  mediaMetaInfoObj.metadata.healthRecordCategory.logo,
+                  height: 25.0.h,
+                  width: 25.0.h,
                   color: Color(new CommonUtil().getMyPrimaryColor()),
                 ),
               ),
@@ -233,7 +233,7 @@ class _IDDocsListState extends State<IDDocsList> {
                       new FHBUtils()
                           .getFormattedDateString(mediaMetaInfoObj.createdOn),
                       style: TextStyle(
-                          fontSize: 12,
+                          fontSize: 12.0.sp,
                           color: Colors.grey[400],
                           fontWeight: FontWeight.w200),
                     )
@@ -292,8 +292,8 @@ class _IDDocsListState extends State<IDDocsList> {
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           return Container(
-            width: 40,
-            height: 60,
+            width: 40.0.h,
+            height: 60.0.h,
             decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
             child: Image.memory(snapshot.data),
           );
@@ -302,8 +302,8 @@ class _IDDocsListState extends State<IDDocsList> {
               baseColor: Colors.grey[300],
               highlightColor: Colors.grey[100],
               child: Container(
-                width: 50,
-                height: 50,
+                width: 50.0.h,
+                height: 50.0.h,
               ));
         }
 

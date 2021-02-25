@@ -1,5 +1,5 @@
 import 'dart:typed_data';
-
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -118,13 +118,14 @@ class FamilyListView {
                   children: <Widget>[
                     Text(
                       variable.Switch_User,
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                      style: TextStyle(
+                          fontSize: 18.0.sp, fontWeight: FontWeight.w500),
                     ),
                     IconButton(
                       icon: Icon(
                         Icons.close,
                         color: Colors.black54,
+                        size: 24.0.sp,
                       ),
                       onPressed: () {
                         Navigator.of(context).pop();
@@ -137,7 +138,9 @@ class FamilyListView {
                 ),
               ),
               Container(
-                constraints: BoxConstraints(maxHeight: 440),
+                constraints: BoxConstraints(
+                  maxHeight: 440.0.h,
+                ),
                 child: ListView.builder(
                   shrinkWrap: true,
                   itemCount: sharedByMe.length,
@@ -164,8 +167,8 @@ class FamilyListView {
                                                   myProfile.result
                                                       .profilePicThumbnailUrl)
                                           : Container(
-                                              height: 50,
-                                              width: 50,
+                                              height: 50.0.h,
+                                              width: 50.0.h,
                                               child: Center(
                                                   child: Text(
                                                       myProfile.result != null
@@ -180,7 +183,7 @@ class FamilyListView {
                                                       style: TextStyle(
                                                           color: Color(CommonUtil()
                                                               .getMyPrimaryColor()),
-                                                          fontSize: 22))),
+                                                          fontSize: 22.0.sp))),
                                               color: const Color(
                                                   fhbColors.bgColorContainer),
                                             )
@@ -192,13 +195,13 @@ class FamilyListView {
                                               sharedByMe[index]
                                                   .child
                                                   .profilePicThumbnailUrl,
-                                              height: 50,
-                                              width: 50,
+                                              height: 50.0.h,
+                                              width: 50.0.h,
                                               fit: BoxFit.cover,
                                             )
                                           : Container(
-                                              height: 50,
-                                              width: 50,
+                                              height: 50.0.h,
+                                              width: 50.0.h,
                                               child: Center(
                                                 child: Text(
                                                   sharedByMe[index]
@@ -213,13 +216,13 @@ class FamilyListView {
                                                   style: TextStyle(
                                                       color: Color(CommonUtil()
                                                           .getMyPrimaryColor()),
-                                                      fontSize: 22),
+                                                      fontSize: 22.0.sp),
                                                 ),
                                               ),
                                               color: const Color(
                                                   fhbColors.bgColorContainer),
                                             )),
-                              SizedBox(width: 20),
+                              SizedBox(width: 20.0.w),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -241,7 +244,7 @@ class FamilyListView {
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 2,
                                         style: TextStyle(
-                                            fontSize: 16,
+                                            fontSize: 16.0.sp,
                                             fontWeight: FontWeight.w500),
                                       ),
                                     ),
@@ -261,7 +264,7 @@ class FamilyListView {
                                             : '',
                                         softWrap: false,
                                         overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(fontSize: 10),
+                                        style: TextStyle(fontSize: 10.0.sp),
                                       ),
                                     )
                                   ],

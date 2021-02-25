@@ -11,6 +11,7 @@ import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/confirm_location/models/confirm_location_arguments.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class ConfirmLocationScreen extends StatefulWidget {
   ConfirmLocationArguments arguments;
@@ -61,7 +62,6 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
         body: Stack(children: <Widget>[
       GoogleMap(
@@ -80,39 +80,39 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
                 color: Colors.white,
                 border: Border.all(
                   color: ColorUtils.blackcolor.withOpacity(0.1),
-                  width: 1,
+                  width: 1.0.w,
                 )),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                SizedBox(width: 10),
+                SizedBox(width: 10.0.w),
                 InkWell(
                     onTap: () {
                       Navigator.pop(context);
                     },
                     child: Image.asset(ImageUrlUtils.backImg,
-                        width: 16, height: 16, fit: BoxFit.cover)),
-                SizedBox(width: 10),
+                        width: 16.0.h, height: 16.0.h, fit: BoxFit.cover)),
+                SizedBox(width: 10.0.w),
                 _ShowSearchTextField(),
               ],
             ),
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 10.0.h),
           Container(
-            height: 40,
+            height: 40.0.h,
             color: ColorUtils.darkbluecolor,
             child: Center(
               child: Text(
                   CommonConstants.locate_your + widget.arguments.providerType,
                   style: TextStyle(
-                      fontSize: 15.0,
+                      fontSize: 15.0.sp,
                       fontWeight: FontWeight.w400,
                       color: ColorUtils.lightwhitecolor.withOpacity(0.7))),
             ),
           ),
           Spacer(),
           _showConfirmLocationButton(),
-          SizedBox(height: 30),
+          SizedBox(height: 30.0.h),
         ],
       )
     ]));
@@ -128,7 +128,7 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
 
   Widget _ShowSearchTextField() {
     return Container(
-      width: MediaQuery.of(context).size.width - 70,
+      width: 1.sw - 70,
       padding: const EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 0.0),
       child: new TextField(
         cursorColor: Theme.of(context).primaryColor,
@@ -142,7 +142,7 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
         },
         style: new TextStyle(
             fontWeight: FontWeight.w400,
-            fontSize: 15.0,
+            fontSize: 15.0.sp,
             color: ColorUtils.blackcolor),
         decoration: InputDecoration(
             suffixIcon: IconButton(
@@ -151,11 +151,11 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
             ),
             hintText: CommonConstants.searchPlaces,
             labelStyle: TextStyle(
-                fontSize: 14.0,
+                fontSize: 14.0.sp,
                 fontWeight: FontWeight.w400,
                 color: ColorUtils.greycolor1),
             hintStyle: TextStyle(
-              fontSize: 14.0,
+              fontSize: 14.0.sp,
               color: ColorUtils.greycolor1,
               fontWeight: FontWeight.w400,
             ),
@@ -168,8 +168,8 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
     final GestureDetector addButtonWithGesture = new GestureDetector(
       onTap: confirmBtnTapped,
       child: new Container(
-        width: 200,
-        height: 40.0,
+        width: 200.0.w,
+        height: 40.0.h,
         decoration: new BoxDecoration(
           color: Theme.of(context).primaryColor,
           borderRadius: new BorderRadius.all(Radius.circular(25.0)),
@@ -186,7 +186,7 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
             CommonConstants.confirm_location,
             style: new TextStyle(
               color: Colors.white,
-              fontSize: 14.0,
+              fontSize: 14.0.sp,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -233,8 +233,6 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
           ),
           icon: descriptor,
           onDragEnd: ((value) {
-          
-
             if (googleMapControll != null) {
               getAddressesFromCoordinates(value.latitude, value.longitude);
 
@@ -264,5 +262,5 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
         await Geocoder.local.findAddressesFromCoordinates(coordinates);
     address = addresses.first;
     searchController.text = address.addressLine;
-     }
+  }
 }

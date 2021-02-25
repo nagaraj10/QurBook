@@ -17,7 +17,7 @@ import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
-
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/my_providers/models/Doctors.dart';
 import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
 import 'package:myfhb/src/model/Category/catergory_result.dart';
@@ -26,6 +26,7 @@ import 'package:myfhb/src/model/user/MyProfileResult.dart';
 import 'package:myfhb/src/model/user/UserAddressCollection.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
+import 'package:myfhb/src/ui/MyRecordsArguments.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/telehealth/features/MyProvider/model/DoctorsFromHospitalModel.dart';
@@ -289,7 +290,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           hint: Row(
             children: <Widget>[
               SizedBoxWidget(width: 20),
-              Text(parameters.self, style: TextStyle(fontSize: 12)),
+              Text(parameters.self,
+                  style: TextStyle(
+                    fontSize: 12.0.sp,
+                  )),
             ],
           ),
           items: _familyNames
@@ -298,7 +302,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       children: <Widget>[
                         SizedBoxWidget(width: 20),
                         Text(user.nickName == null ? 'Self' : user.nickName,
-                            style: TextStyle(fontSize: 12)),
+                            style: TextStyle(
+                              fontSize: 12.0.sp,
+                            )),
                       ],
                     ),
                     value: user,
@@ -337,7 +343,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             child: Row(
               children: <Widget>[
                 Text(parameters.theAppointmentIsFor,
-                    style: TextStyle(fontSize: 10, color: Colors.grey)),
+                    style: TextStyle(fontSize: 10.0.sp, color: Colors.grey)),
               ],
             ),
           ),
@@ -353,7 +359,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
               children: <Widget>[
                 TextWidget(
                   text: parameters.dateAndTime,
-                  fontsize: 10,
+                  fontsize: 10.0.sp,
                   colors: Colors.grey,
                 ),
               ],
@@ -383,14 +389,14 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                               .dateConversionToDayMonthYear(widget.selectedDate)
                               .toString()
                           : '',
-                      fontsize: 12,
+                      fontsize: 12.0.sp,
                     ),
                     SizedBoxWidget(
                       width: 5.0,
                     ),
                     TextWidget(
                       text: slotTime != null ? slotTime : '0.00',
-                      fontsize: 12,
+                      fontsize: 12.0.sp,
                     ),
                   ],
                 ),
@@ -414,7 +420,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       child: Center(
                         child: TextWidget(
                             text: slotNumber != null ? slotNumber : '0',
-                            fontsize: 18,
+                            fontsize: 18.0.sp,
                             fontWeight: FontWeight.w900,
                             colors: Colors.white),
                       ), // inner content
@@ -447,9 +453,13 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         progress: 0.0,
         maxProgress: 100.0,
         progressTextStyle: TextStyle(
-            color: Colors.black, fontSize: 10.0, fontWeight: FontWeight.w400),
+            color: Colors.black,
+            fontSize: 10.0.sp,
+            fontWeight: FontWeight.w400),
         messageTextStyle: TextStyle(
-            color: Colors.black, fontSize: 14.0, fontWeight: FontWeight.w600));
+            color: Colors.black,
+            fontSize: 14.0.sp,
+            fontWeight: FontWeight.w600));
 
     return WillPopScope(
       onWillPop: () {
@@ -466,6 +476,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             },
             child: Icon(
               Icons.arrow_back_ios, // add custom icons also
+              size: 24.0.sp,
             ),
           ),
           title: getTitle(parameters.confirmDetails),
@@ -504,7 +515,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                             children: <Widget>[
                               Text(parameters.preConsultingDetails,
                                   style: TextStyle(
-                                      fontSize: 10, color: Colors.grey)),
+                                      fontSize: 10.0.sp, color: Colors.grey)),
                             ],
                           ),
                           SizedBoxWidget(
@@ -557,7 +568,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                   SizedBoxWidget(height: 2.0),
                                   TextWidget(
                                       text: parameters.addNotes,
-                                      fontsize: 8.0,
+                                      fontsize: 8.0.sp,
                                       colors: Colors.grey),
                                 ],
                               ),
@@ -605,7 +616,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                   SizedBoxWidget(height: 2.0),
                                   TextWidget(
                                       text: parameters.addVoice,
-                                      fontsize: 8.0,
+                                      fontsize: 8.0.sp,
                                       colors: Colors.grey),
                                 ],
                               ),
@@ -649,7 +660,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                   SizedBoxWidget(height: 2.0),
                                   TextWidget(
                                       text: parameters.records,
-                                      fontsize: 8.0,
+                                      fontsize: 8.0.sp,
                                       colors: Colors.grey),
                                 ],
                               ),
@@ -681,7 +692,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                           widget.doctorListIndex])
                                   : getFees(widget
                                       .healthOrganizationResult[widget.i])),
-                      fontsize: 22.0,
+                      fontsize: 22.0.sp,
                       fontWeight: FontWeight.w500,
                       colors: Color(new CommonUtil().getMyPrimaryColor())),
                 ),
@@ -706,12 +717,15 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                           widget.refresh();
                           Navigator.pop(context);
                         },
-                        child: TextWidget(text: Constants.Cancel, fontsize: 12),
+                        child: TextWidget(
+                          text: Constants.Cancel,
+                          fontsize: 12.0.sp,
+                        ),
                       ),
                     ),
                     SizedBoxWithChild(
-                      width: 130,
-                      height: 40,
+                      width: 130.0.w,
+                      height: 40.0.h,
                       child: FlatButton(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12.0),
@@ -731,7 +745,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                             }
                           });
                         },
-                        child: TextWidget(text: payNow, fontsize: 12),
+                        child: TextWidget(
+                          text: payNow,
+                          fontsize: 12.0.sp,
+                        ),
                       ),
                     ),
                   ],
@@ -805,7 +822,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                             children: <Widget>[
                               TextWidget(
                                   text: redirectedToPaymentMessage,
-                                  fontsize: 14,
+                                  fontsize: 14.0.sp,
                                   fontWeight: FontWeight.w500,
                                   colors: Colors.grey[600]),
                               SizedBoxWidget(
@@ -830,7 +847,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                         Navigator.pop(context);
                                       },
                                       child: TextWidget(
-                                          text: 'Cancel', fontsize: 12),
+                                        text: 'Cancel',
+                                        fontsize: 12.0.sp,
+                                      ),
                                     ),
                                   ),
                                   SizedBoxWithChild(
@@ -869,7 +888,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                                 ? widget.doctorsData
                                                 : null);
                                       },
-                                      child: TextWidget(text: ok, fontsize: 12),
+                                      child: TextWidget(
+                                        text: ok,
+                                        fontsize: 12.0.sp,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -1062,7 +1084,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         Expanded(
           child: Text(
             title,
-            style: TextStyle(fontSize: 18),
+            style: TextStyle(
+              fontSize: 18.0.sp,
+            ),
           ),
         ),
         new CommonUtil().getNotificationIcon(context),
@@ -1313,15 +1337,17 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     await Navigator.of(context)
         .push(MaterialPageRoute(
       builder: (context) => MyRecords(
-        categoryPosition: position,
-        allowSelect: allowSelect,
-        isAudioSelect: isAudioSelect,
-        isNotesSelect: isNotesSelect,
-        selectedMedias: mediaIds,
-        isFromChat: false,
-        showDetails: false,
-        isAssociateOrChat: true,
-        userID: selectedId,
+        argument: MyRecordsArgument(
+            categoryPosition: position,
+            allowSelect: allowSelect,
+            isAudioSelect: isAudioSelect,
+            isNotesSelect: isNotesSelect,
+            selectedMedias: mediaIds,
+            isFromChat: false,
+            showDetails: false,
+            isAssociateOrChat: true,
+            userID: selectedId,
+            fromClass: 'appointments'),
       ),
     ))
         .then((results) {

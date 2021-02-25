@@ -7,7 +7,7 @@ import 'package:myfhb/confirm_location/models/confirm_location_arguments.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:uuid/uuid.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
-
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class AddAddressList extends StatefulWidget {
   List<Place> placesListArray;
@@ -55,7 +55,6 @@ class AddAddressListState extends State<AddAddressList> {
             );
 
             futurePlaceDetail.then((value) {
-
               Navigator.pushNamed(
                 context,
                 router.rt_ConfirmLocation,
@@ -69,46 +68,64 @@ class AddAddressListState extends State<AddAddressList> {
             sessionToken = null;
           },
           child: Container(
-              child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              SizedBox(width: 10),
-              Image.asset(ImageUrlUtils.locationImg, width: 20, height: 20),
-              SizedBox(width: 10),
-              Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                SizedBox(
+                  width: 10.0.w,
+                ),
+                Image.asset(
+                  ImageUrlUtils.locationImg,
+                  width: 20.0.h,
+                  height: 20.0.h,
+                ),
+                SizedBox(
+                  width: 10.0.w,
+                ),
+                Expanded(
                   child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  SizedBox(height: 10),
-                  AutoSizeText(
-                    eachPlaceModel.title,
-                    maxLines: 1,
-                    style: TextStyle(
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.w400,
-                        color: ColorUtils.blackcolor),
-                    textAlign: TextAlign.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      SizedBox(
+                        height: 10.0.h,
+                      ),
+                      AutoSizeText(
+                        eachPlaceModel.title,
+                        maxLines: 1,
+                        style: TextStyle(
+                          fontSize: 14.0.sp,
+                          fontWeight: FontWeight.w400,
+                          color: ColorUtils.blackcolor,
+                        ),
+                        textAlign: TextAlign.start,
+                      ),
+                      SizedBox(
+                        height: 3.0.h,
+                      ),
+                      AutoSizeText(
+                        eachPlaceModel.description,
+                        maxLines: 1,
+                        style: TextStyle(
+                          fontSize: 13.0.sp,
+                          fontWeight: FontWeight.w400,
+                          color: ColorUtils.adddescripcolor,
+                        ),
+                        textAlign: TextAlign.start,
+                      ),
+                      SizedBox(
+                        height: 5.0.h,
+                      ),
+                      Divider(
+                        height: 2.0.h,
+                        color: ColorUtils.adddescripcolor,
+                      ),
+                    ],
                   ),
-                  SizedBox(height: 3),
-                  AutoSizeText(
-                    eachPlaceModel.description,
-                    maxLines: 1,
-                    style: TextStyle(
-                        fontSize: 13.0,
-                        fontWeight: FontWeight.w400,
-                        color: ColorUtils.adddescripcolor),
-                    textAlign: TextAlign.start,
-                  ),
-                  SizedBox(height: 5),
-                  Divider(
-                    height: 2.0,
-                    color: ColorUtils.adddescripcolor,
-                  ),
-                ],
-              )),
-            ],
-          )),
+                ),
+              ],
+            ),
+          ),
         );
       },
       itemCount: widget.placesListArray.length,

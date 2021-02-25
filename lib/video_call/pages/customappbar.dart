@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myfhb/video_call/widgets/custom_timer.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class CustomAppBar extends StatefulWidget {
   final String userName;
@@ -44,18 +45,23 @@ class _CustomAppBarState extends State<CustomAppBar> {
                             (widget.userName.isEmpty || widget.userName != null)
                                 ? widget.userName
                                 : '',
-                            style: TextStyle(color: Colors.white, fontSize: 20),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20.0.sp,
+                            ),
                           ),
                           //todo this has to be uncomment in future
                         ],
                       ),
-                       CustomTimer(
+                      CustomTimer(
                         backgroundColor: Colors.transparent,
                         initialDate: DateTime.now(),
                         running: _isTimerRun,
-                        width: 50,
-                        timerTextStyle:
-                            TextStyle(color: Colors.white, fontSize: 12),
+                        width: 50.0.w,
+                        timerTextStyle: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12.0.sp,
+                        ),
                         isRaised: false,
                         tracetime: (time) {},
                       ),
@@ -63,9 +69,9 @@ class _CustomAppBarState extends State<CustomAppBar> {
                       //   backgroundColor: Colors.transparent,
                       //   initialDate: DateTime.now(),
                       //   running: _isTimerRun,
-                      //   width: 50,
+                      //   width: 50.0.w,
                       //   timerTextStyle:
-                      //       TextStyle(color: Colors.white, fontSize: 12),
+                      //       TextStyle(color: Colors.white, fontSize: 12.0.sp,),
                       //   isRaised: false,
                       //   tracetime: (time) {},
                       // ),

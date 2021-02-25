@@ -13,6 +13,7 @@ import 'package:myfhb/authentication/view/verifypatient_screen.dart';
 import 'package:myfhb/authentication/view_model/patientauth_view_model.dart';
 import 'package:myfhb/authentication/model/patientsignup_model.dart'
     as signuplModel;
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/authentication/widgets/country_code_picker.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/variable_constant.dart';
@@ -54,7 +55,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
+    final height = 1.sh;
     return Scaffold(
       body: Form(
         key: _SignupKey,
@@ -72,11 +73,11 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                       SizedBox(height: height * .1),
                       AssetImageWidget(
                         icon: myFHB_logo,
-                        height: 120,
-                        width: 120,
+                        height: 120.0.h,
+                        width: 120.0.h,
                       ),
                       SizedBox(
-                        height: 10,
+                        height: 10.0.h,
                       ),
                       Text(strSignUpText),
                       Column(
@@ -95,9 +96,13 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                   borderSide: BorderSide(
-                                    color: Color(CommonUtil().getMyPrimaryColor()),
+                                    color:
+                                        Color(CommonUtil().getMyPrimaryColor()),
                                   ),
                                 ),
+                              ),
+                              style: TextStyle(
+                                fontSize: 14.0.sp,
                               ),
                               controller: firstNameController,
                               autovalidate: _autoValidateBool,
@@ -108,9 +113,12 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                               onSaved: (value) {},
                             ),
                           ),
-                          SizedBox(height: 10),
+                          SizedBox(height: 10.0.h),
                           _signupTextFields(
                             TextFormField(
+                              style: TextStyle(
+                                fontSize: 14.0.sp,
+                              ),
                               autovalidate: _autoValidateBool,
                               decoration: InputDecoration(
                                 hintText: strLastNameHint,
@@ -124,7 +132,8 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                   borderSide: BorderSide(
-                                    color: Color(CommonUtil().getMyPrimaryColor()),
+                                    color:
+                                        Color(CommonUtil().getMyPrimaryColor()),
                                   ),
                                 ),
                               ),
@@ -136,16 +145,19 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                               onSaved: (value) {},
                             ),
                           ),
-                          SizedBox(height: 10),
+                          SizedBox(height: 10.0.h),
                           _signupTextFields(
                             TextFormField(
+                              style: TextStyle(
+                                fontSize: 14.0.sp,
+                              ),
                               autovalidate: _autoValidateBool,
                               decoration: InputDecoration(
                                 hintText: strNewPhoneHint,
                                 labelText: strNumberHint,
                                 prefixIcon: Container(
                                   constraints: BoxConstraints(
-                                      maxWidth: 100, minWidth: 50),
+                                      maxWidth: 100.0.w, minWidth: 50.0.w),
                                   child: CountryCodePickerPage(
                                       onValuePicked: (Country country) =>
                                           setState(() =>
@@ -162,7 +174,8 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                   borderSide: BorderSide(
-                                    color: Color(CommonUtil().getMyPrimaryColor()),
+                                    color:
+                                        Color(CommonUtil().getMyPrimaryColor()),
                                   ),
                                 ),
                               ),
@@ -176,9 +189,12 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                               keyboardType: TextInputType.number,
                             ),
                           ),
-                          SizedBox(height: 10),
+                          SizedBox(height: 10.0.h),
                           _signupTextFields(
                             TextFormField(
+                              style: TextStyle(
+                                fontSize: 14.0.sp,
+                              ),
                               autovalidate: _autoValidateBool,
                               decoration: InputDecoration(
                                 hintText: strEmailHintText,
@@ -192,7 +208,8 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                   borderSide: BorderSide(
-                                    color: Color(CommonUtil().getMyPrimaryColor()),
+                                    color:
+                                        Color(CommonUtil().getMyPrimaryColor()),
                                   ),
                                 ),
                               ),
@@ -206,9 +223,12 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                               onSaved: (value) {},
                             ),
                           ),
-                          SizedBox(height: 10),
+                          SizedBox(height: 10.0.h),
                           _signupTextFields(
                             TextFormField(
+                              style: TextStyle(
+                                fontSize: 14.0.sp,
+                              ),
                               autovalidate: _autoValidateBool,
                               obscureText: _isHidden,
                               decoration: InputDecoration(
@@ -233,7 +253,8 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                   borderSide: BorderSide(
-                                    color: Color(CommonUtil().getMyPrimaryColor()),
+                                    color:
+                                        Color(CommonUtil().getMyPrimaryColor()),
                                   ),
                                 ),
                               ),
@@ -248,11 +269,11 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                         ],
                       ),
                       SizedBox(
-                        height: 10,
+                        height: 10.0.h,
                       ),
                       _termsAndCondtionsView(),
                       SizedBox(
-                        height: 10,
+                        height: 10.0.h,
                       ),
                       _saveUser(),
                       _accountToSign(),
@@ -289,7 +310,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
         });
       },
       child: Container(
-        width: MediaQuery.of(context).size.width,
+        width: 1.sw,
         padding: EdgeInsets.symmetric(vertical: 15),
         alignment: Alignment.center,
         decoration: BoxDecoration(
@@ -312,7 +333,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                 ])),
         child: Text(
           strSignup,
-          style: TextStyle(fontSize: 16, color: Colors.white),
+          style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
         ),
       ),
     );
@@ -386,16 +407,16 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
           children: <Widget>[
             Text(
               strAccount,
-              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+              style: TextStyle(fontSize: 13.0.sp, fontWeight: FontWeight.w600),
             ),
             SizedBox(
-              width: 10,
+              width: 10.0.w,
             ),
             Text(
               strSignIn,
               style: TextStyle(
                   color: Color(CommonUtil().getMyPrimaryColor()),
-                  fontSize: 13,
+                  fontSize: 13.0.sp,
                   fontWeight: FontWeight.w600),
             ),
           ],

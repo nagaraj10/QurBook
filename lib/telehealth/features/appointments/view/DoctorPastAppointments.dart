@@ -10,12 +10,14 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
 import 'package:myfhb/src/model/Category/catergory_result.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
+import 'package:myfhb/src/ui/MyRecordsArguments.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/healthRecord.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
 import 'package:myfhb/telehealth/features/appointments/view/appointmentsCommonWidget.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart'
     as Constants;
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/appointments/view/resheduleMain.dart';
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/telehealth/features/appointments/viewModel/appointmentsListViewModel.dart';
@@ -88,7 +90,7 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                       children: [
                         commonWidget.docPhotoView(doc),
                         SizedBoxWidget(
-                          width: 10,
+                          width: 10.0.w,
                         ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -99,12 +101,11 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                                 widget.doc.doctor.user.firstName +
                                     ' ' +
                                     widget.doc.doctor.user.lastName),
-                            SizedBoxWidget(height: 3.0, width: 0),
+                            SizedBoxWidget(height: 3.0.h, width: 0.0.h),
                             widget.doc?.doctor?.specialization == null
                                 ? Container()
                                 : Container(
-                                    width:
-                                        MediaQuery.of(context).size.width / 2,
+                                    width: 1.sw / 2,
                                     child: Text(
                                       toBeginningOfSentenceCase((widget
                                                       .doc
@@ -151,7 +152,7 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                                   ),
                             widget.doc.doctor.specialization == null
                                 ? Container()
-                                : SizedBox(height: 3.0),
+                                : SizedBox(height: 3.0.h),
                             commonWidget.docLoc(
                                 context,
                                 widget
@@ -162,8 +163,8 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                                         ?.city
                                         ?.name ??
                                     ''),
-                            SizedBoxWidget(height: 5.0),
-                            SizedBoxWidget(height: 15.0),
+                            SizedBoxWidget(height: 5.0.h),
+                            SizedBoxWidget(height: 15.0.h),
                             commonWidget.docIcons(false, doc, context, () {})
                           ],
                         ),
@@ -176,13 +177,13 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                           //joinCallIcon(doc),
                           SizedBoxWidget(
                             height: widget.doc?.doctor?.specialization == null
-                                ? 30
-                                : 40,
+                                ? 30.0.h
+                                : 40.0.h,
                           ),
                           commonWidget.count(doc.slotNumber),
                           doc.plannedFollowupDate == null
                               ? TextWidget(
-                                  fontsize: 10,
+                                  fontsize: 10.0.sp,
                                   text: doc.plannedStartDateTime == null
                                       ? ''
                                       : DateFormat(Constants
@@ -196,14 +197,14 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                                       new CommonUtil().getMyPrimaryColor()),
                                 )
                               : TextWidget(
-                                  fontsize: 9,
+                                  fontsize: 9.0.sp,
                                   text: Constants.Appointments_followUpStatus,
                                   overflow: TextOverflow.visible,
                                   fontWeight: FontWeight.w400,
                                   colors: Colors.black38,
                                 ),
                           TextWidget(
-                            fontsize: 10,
+                            fontsize: 10.0.sp,
                             text: doc.plannedFollowupDate == null
                                 ? doc.plannedStartDateTime == null
                                     ? ""
@@ -222,7 +223,7 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                             colors: Colors.black,
                           ),
                           TextWidget(
-                            fontsize: 15,
+                            fontsize: 15.0.sp,
                             text: doc.plannedFollowupDate == null
                                 ? ''
                                 : 'INR ' +
@@ -238,8 +239,8 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                     )
                   ],
                 )),
-            SizedBoxWidget(height: 5.0),
-            Container(height: 1, color: Colors.black26),
+            SizedBoxWidget(height: 5.0.h),
+            Container(height: 1.0.h, color: Colors.black26),
 //            SizedBoxWidget(height: 10.0),
             Container(
               alignment: Alignment.center,
@@ -267,15 +268,16 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
 
                       await Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => MyRecords(
-                          categoryPosition: position,
-                          allowSelect: false,
-                          isAudioSelect: false,
-                          isNotesSelect: true,
-                          selectedMedias: recordIds,
-                          isFromChat: false,
-                          showDetails: true,
-                          isAssociateOrChat: false,
-                        ),
+                            argument: MyRecordsArgument(
+                                categoryPosition: position,
+                                allowSelect: false,
+                                isAudioSelect: false,
+                                isNotesSelect: true,
+                                selectedMedias: recordIds,
+                                isFromChat: false,
+                                showDetails: true,
+                                isAssociateOrChat: false,
+                                fromClass: 'appointments')),
                       ));
                     }
                   }, healthRecord.toString()),
@@ -322,7 +324,7 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
     String doctorName = doc.doctor.user.name;
     String doctorPic = doc.doctor.user.profilePicThumbnailUrl;
     chatViewModel.storePatientDetailsToFCM(
-        doctorId, doctorName, doctorPic,'','','', context,false);
+        doctorId, doctorName, doctorPic, '', '', '', context, false);
   }
 
   void moveToBilsPage(HealthRecord healthRecord) async {
@@ -337,14 +339,16 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
     int position = getCategoryPosition(Constants.STR_BILLS);
     await Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => MyRecords(
-          categoryPosition: position,
-          allowSelect: true,
-          isAudioSelect: false,
-          isNotesSelect: false,
-          selectedMedias: paymentID,
-          isFromChat: false,
-          showDetails: true,
-          isAssociateOrChat: false),
+          argument: MyRecordsArgument(
+              categoryPosition: position,
+              allowSelect: true,
+              isAudioSelect: false,
+              isNotesSelect: false,
+              selectedMedias: paymentID,
+              isFromChat: false,
+              showDetails: true,
+              isAssociateOrChat: false,
+              fromClass: 'appointments')),
     ));
   }
 
@@ -379,9 +383,11 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
 
   int pickPosition(String categoryName) {
     int position = 0;
-    List<CategoryResult> categoryDataList =List();
+    List<CategoryResult> categoryDataList = List();
     categoryDataList = getCategoryList();
-    for (int i = 0; i < (categoryDataList==null?0:categoryDataList.length); i++) {
+    for (int i = 0;
+        i < (categoryDataList == null ? 0 : categoryDataList.length);
+        i++) {
       if (categoryName == categoryDataList[i].categoryName) {
         print(categoryName + ' ****' + categoryDataList[i].categoryName);
         position = i;

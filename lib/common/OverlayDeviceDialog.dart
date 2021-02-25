@@ -4,6 +4,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/src/model/Media/DeviceModel.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class OverlayDeviceDialog extends ModalRoute<void> {
   @override
@@ -48,7 +49,7 @@ class OverlayDeviceDialog extends ModalRoute<void> {
           Expanded(
             flex: 1,
             child: Container(
-              height: 50,
+              height: 50.0.h,
             ),
           ),
           getCustomGridView(context),
@@ -59,6 +60,7 @@ class OverlayDeviceDialog extends ModalRoute<void> {
               child: Icon(
                 Icons.close,
                 color: Color(new CommonUtil().getMyPrimaryColor()),
+                size: 24.0.sp,
               ),
               onPressed: () => Navigator.pop(context),
             ),
@@ -111,8 +113,8 @@ class OverlayDeviceDialog extends ModalRoute<void> {
           children: <Widget>[
             GestureDetector(
               child: SizedBox(
-                width: 25,
-                height: 25,
+                width: 25.0.h,
+                height: 25.0.h,
                 child: CachedNetworkImage(
                   imageUrl: /*Constants.BASE_URL +*/ mediaDataForDevice[i]
                       .imageUrl,

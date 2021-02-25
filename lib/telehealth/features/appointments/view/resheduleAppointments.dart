@@ -10,6 +10,7 @@ import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/my_providers/bloc/providers_block.dart';
 import 'package:myfhb/my_providers/models/Doctors.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/healthOrganization/HealthOrganizationResult.dart';
@@ -35,7 +36,11 @@ class ResheduleAppointments extends StatefulWidget {
   Function(String) closePage;
   dynamic body;
   ResheduleAppointments(
-      {this.doc, this.isReshedule, this.closePage, this.isFromNotification,this.body});
+      {this.doc,
+      this.isReshedule,
+      this.closePage,
+      this.isFromNotification,
+      this.body});
 
   @override
   _ResheduleAppointmentsState createState() => _ResheduleAppointmentsState();
@@ -77,8 +82,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-          preferredSize:
-              Size.fromHeight(MediaQuery.of(context).size.height * 0.12),
+          preferredSize: Size.fromHeight(1.sh * 0.12),
           child: getAppBar(doctors)),
       body: Container(
           child: Column(
@@ -120,6 +124,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                         child: Icon(
                           Icons.arrow_back_ios,
                           color: Colors.white,
+                          size: 24.0.sp,
                         ),
                         onTap: () {
                           //Add code for tapping back
@@ -154,7 +159,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                               maxLines: 1,
                               style: TextStyle(
                                   fontFamily: variable.font_poppins,
-                                  fontSize: 16,
+                                  fontSize: 16.0.sp,
                                   color: Colors.white)),
                           Text(
                             (doctors?.doctorProfessionalDetailCollection !=
@@ -174,7 +179,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                                 : '',
                             style: TextStyle(
                                 fontFamily: variable.font_poppins,
-                                fontSize: 12,
+                                fontSize: 12.0.sp,
                                 color: Colors.white),
                           ),
                           Text(
@@ -183,7 +188,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                             maxLines: 1,
                             style: TextStyle(
                                 fontFamily: variable.font_poppins,
-                                fontSize: 12,
+                                fontSize: 12.0.sp,
                                 color: Colors.white),
                           ),
                         ],
@@ -253,7 +258,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
       BuildContext ctx, int i, List<HealthOrganizationResult> docs) {
     return Container(
       padding: EdgeInsets.all(10.0),
-      width: MediaQuery.of(context).size.width,
+      width: 1.sw,
       child: ExpandableButton(
         child: Column(
           children: [
@@ -273,7 +278,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
               closePage: (value) {
                 widget.closePage(value);
               },
-              refresh: (){
+              refresh: () {
                 setState(() {});
               },
               onChanged: (value) {
@@ -310,8 +315,8 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
               child: eachHospitalModel != null
                   ? eachHospitalModel[i] != null
                       ? Container(
-                          height: 50,
-                          width: 50,
+                          height: 50.0.h,
+                          width: 50.0.h,
                           color: Color(fhbColors.bgColorContainer),
                           child: Center(
                             child: Text(
@@ -332,13 +337,13 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                             ),
                           ))
                       : Container(
-                          height: 50,
-                          width: 50,
+                          height: 50.0.h,
+                          width: 50.0.h,
                           color: Color(fhbColors.bgColorContainer),
                         )
                   : Container(
-                      height: 50,
-                      width: 50,
+                      height: 50.0.h,
+                      width: 50.0.h,
                       color: Color(fhbColors.bgColorContainer),
                     )),
         ),
@@ -351,7 +356,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              SizedBox(height: 5),
+              SizedBox(height: 5.0.h),
               AutoSizeText(
                 eachHospitalModel[i].healthOrganization.name != null
                     ? toBeginningOfSentenceCase(
@@ -359,12 +364,12 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                     : '',
                 maxLines: 1,
                 style: TextStyle(
-                  fontSize: 14.0,
+                  fontSize: 14.0.sp,
                   fontWeight: FontWeight.w500,
                 ),
                 textAlign: TextAlign.start,
               ),
-              SizedBox(height: 5),
+              SizedBox(height: 5.0.h),
               AutoSizeText(
                 (doctors.doctorProfessionalDetailCollection != null &&
                         doctors.doctorProfessionalDetailCollection.length > 0)
@@ -380,22 +385,22 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                     : '',
                 maxLines: 1,
                 style: TextStyle(
-                    fontSize: 13.0,
+                    fontSize: 13.0.sp,
                     fontWeight: FontWeight.w400,
                     color: ColorUtils.lightgraycolor),
               ),
-              SizedBox(height: 5),
+              SizedBox(height: 5.0.h),
               AutoSizeText(
                 '' + commonWidgets.getCity(eachHospitalModel[i]) == ''
                     ? getCity(doctors)
                     : '',
                 maxLines: 1,
                 style: TextStyle(
-                    fontSize: 13.0,
+                    fontSize: 13.0.sp,
                     fontWeight: FontWeight.w400,
                     color: ColorUtils.lightgraycolor),
               ),
-              SizedBox(height: 5),
+              SizedBox(height: 5.0.h),
             ],
           ),
         ),
@@ -421,7 +426,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
 //                                          : widget.doc.doctorFollowUpFee != null
 //                                              ? widget.doc.doctorFollowUpFee
 //                                              : getFees(eachHospitalModel[i])),
-                          fontsize: 14.0,
+                          fontsize: 14.0.sp,
                           fontWeight: FontWeight.w400,
                           colors: Color(new CommonUtil().getMyPrimaryColor())),
                     ),

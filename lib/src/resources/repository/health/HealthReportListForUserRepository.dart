@@ -282,7 +282,9 @@ class HealthReportListForUserRepository {
       bool gluco,
       bool pulseOximeter,
       bool thermo,
-      bool weighScale) async {
+      bool weighScale,
+      String preferred_language,
+      String qa_subscription) async {
     var body = jsonEncode({
       'id': userMappingId,
       'profileSetting': {
@@ -294,7 +296,9 @@ class HealthReportListForUserRepository {
         'glucoMeter': gluco,
         'pulseOximeter': pulseOximeter,
         'thermoMeter': thermo,
-        'weighScale': weighScale
+        'weighScale': weighScale,
+        'preferred_language':preferred_language,
+        'qa-subscription':qa_subscription
       }
     });
     final response = await _helper.updateDeviceSelection(

@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
@@ -31,7 +32,9 @@ class _TabBarDemoState extends State<MyProvidersMain>
     // TODO: implement initState
     super.initState();
     // Create TabController for getting the index of current tab
-    _controller = new TabController(length: 2, vsync: this,
+    _controller = new TabController(
+      length: 2,
+      vsync: this,
     );
 
     _controller.addListener(() {
@@ -44,50 +47,53 @@ class _TabBarDemoState extends State<MyProvidersMain>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-            bottom: TabBar(
-              onTap: (index) {
-                // Should not used it as it only called when tab options are clicked,
-                // not when user swapped
-              },
-              controller: _controller,
-              tabs: const <Tab>[
-                const Tab(text: 'Doctors'),
-                const Tab(text: 'Hospitals')
-              ],
+      appBar: AppBar(
+          bottom: TabBar(
+            onTap: (index) {
+              // Should not used it as it only called when tab options are clicked,
+              // not when user swapped
+            },
+            controller: _controller,
+            tabs: const <Tab>[
+              const Tab(text: 'Doctors'),
+              const Tab(text: 'Hospitals')
+            ],
+          ),
+          flexibleSpace: GradientAppBar(),
+          leading: GestureDetector(
+            onTap: () => Navigator.pop(context),
+            child: Icon(
+              Icons.arrow_back_ios, // add custom icons also
+              size: 24.0.sp,
             ),
-            flexibleSpace: GradientAppBar(),
-            leading: GestureDetector(
-              onTap: () => Navigator.pop(context),
-              child: Icon(
-                Icons.arrow_back_ios, // add custom icons also
-              ),
-            ),
-            // you can put Icon as well, it accepts any widget.
-            title: getTitle()),
-        body: TabBarView(
-          controller: _controller,
-          children: [
-            Scaffold(
-              body: ChangeNotifierProvider(
-                create: (context) => MyProviderViewModel(),
-                child: MyProviders(
-                  closePage: (value) {
-                    Navigator.pop(context);
-                  },
-                ),
-              ),
-            ),
-            Scaffold(
-              body: ChangeNotifierProvider(
-                create: (context) => MyProviderViewModel(),
-                child: MyProvidersHospitals(closePage: (value) {
+          ),
+          // you can put Icon as well, it accepts any widget.
+          title: getTitle()),
+      body: TabBarView(
+        controller: _controller,
+        children: [
+          Scaffold(
+            body: ChangeNotifierProvider(
+              create: (context) => MyProviderViewModel(),
+              child: MyProviders(
+                closePage: (value) {
                   Navigator.pop(context);
-                },),
+                },
               ),
             ),
-          ],
-        ),
+          ),
+          Scaffold(
+            body: ChangeNotifierProvider(
+              create: (context) => MyProviderViewModel(),
+              child: MyProvidersHospitals(
+                closePage: (value) {
+                  Navigator.pop(context);
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -104,7 +110,7 @@ class _TabBarDemoState extends State<MyProvidersMain>
         ),
         new CommonUtil().getNotificationIcon(context),
         new SwitchProfile()
-            .buildActions(context, _keyLoader, callBackToRefresh),
+            .buildActions(context, _keyLoader, callBackToRefresh,false),
         // Icon(Icons.more_vert),
       ],
     );
@@ -114,11 +120,7 @@ class _TabBarDemoState extends State<MyProvidersMain>
     //myProvidersResponseList = null;
     (context as Element).markNeedsBuild();
   }
-
-
 }
-
-
 
 /*class MyProvidersMain extends StatefulWidget {
   @override

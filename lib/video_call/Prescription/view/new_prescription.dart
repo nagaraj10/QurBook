@@ -1,6 +1,6 @@
 import 'dart:core';
 import 'dart:ui';
-
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_switch/flutter_switch.dart';
@@ -58,7 +58,7 @@ class NewPrescriptionState extends State<NewPrescription> {
         child: Scaffold(
             backgroundColor: Colors.white,
             appBar: PreferredSize(
-                preferredSize: Size.fromHeight(80),
+                preferredSize: Size.fromHeight(80.0.h),
                 child: prescriptionAppBar()),
             body: SingleChildScrollView(
               child: Column(
@@ -68,14 +68,14 @@ class NewPrescriptionState extends State<NewPrescription> {
                       visible: status.isCallAlive ? true : false,
                       child: InkWell(
                         child: Container(
-                          height: 40,
+                          height: 40.0.h,
                           color: Colors.green.withOpacity(0.9),
                           child: Center(
                             child: Text(
                               'Tap return to call',
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 20.0,
+                                fontSize: 20.0.sp,
                               ),
                             ),
                           ),
@@ -89,7 +89,7 @@ class NewPrescriptionState extends State<NewPrescription> {
                     );
                   }),
                   Container(
-                    height: 20,
+                    height: 20.0.h,
                     color: Colors.grey.withOpacity(0.1),
                   ),
                   Padding(
@@ -97,7 +97,7 @@ class NewPrescriptionState extends State<NewPrescription> {
                     child: Image.asset(prescriptionImage),
                   ),
                   Container(
-                    height: 5,
+                    height: 5.0.h,
                   ),
                   Container(
                     padding: EdgeInsets.only(left: 30, right: 30),
@@ -112,14 +112,14 @@ class NewPrescriptionState extends State<NewPrescription> {
                               prescriptionName,
                               style: TextStyle(
                                   color: Colors.grey,
-                                  fontSize: 12,
+                                  fontSize: 12.0.sp,
                                   fontWeight: FontWeight.w400),
                             ),
                             Text(
                               prescriptionname,
                               style: TextStyle(
                                   color: Colors.black,
-                                  fontSize: 13,
+                                  fontSize: 13.0.sp,
                                   fontWeight: FontWeight.w400),
                             )
                           ],
@@ -128,21 +128,21 @@ class NewPrescriptionState extends State<NewPrescription> {
                           prescriptionDate,
                           style: TextStyle(
                               color: Colors.black,
-                              fontSize: 12,
+                              fontSize: 12.0.sp,
                               fontWeight: FontWeight.w400),
                         )
                       ],
                     ),
                   ),
                   SizedBox(
-                    height: 20,
+                    height: 20.0.h,
                   ),
                   Container(
                     color: Colors.grey,
-                    height: 1,
+                    height: 1.0.h,
                   ),
                   SizedBox(
-                    height: 15,
+                    height: 15.0.h,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 30, right: 30),
@@ -156,13 +156,13 @@ class NewPrescriptionState extends State<NewPrescription> {
                               prescriptionGender,
                               style: TextStyle(
                                   color: Colors.grey,
-                                  fontSize: 12,
+                                  fontSize: 12.0.sp,
                                   fontWeight: FontWeight.w400),
                             ),
                             Text(prescriptiongender,
                                 style: TextStyle(
                                     color: Colors.black,
-                                    fontSize: 13,
+                                    fontSize: 13.0.sp,
                                     fontWeight: FontWeight.w400))
                           ],
                         ),
@@ -173,13 +173,13 @@ class NewPrescriptionState extends State<NewPrescription> {
                               prescriptionAge,
                               style: TextStyle(
                                   color: Colors.grey,
-                                  fontSize: 12,
+                                  fontSize: 12.0.sp,
                                   fontWeight: FontWeight.w400),
                             ),
                             Text(prescriptionage,
                                 style: TextStyle(
                                     color: Colors.black,
-                                    fontSize: 13,
+                                    fontSize: 13.0.sp,
                                     fontWeight: FontWeight.w400))
                           ],
                         ),
@@ -189,13 +189,13 @@ class NewPrescriptionState extends State<NewPrescription> {
                             Text(prescriptionMobile,
                                 style: TextStyle(
                                     color: Colors.grey,
-                                    fontSize: 12,
+                                    fontSize: 12.0.sp,
                                     fontWeight: FontWeight.w400)),
                             SizedBox(),
                             Text(prescriptionmobile,
                                 style: TextStyle(
                                     color: Colors.black,
-                                    fontSize: 13,
+                                    fontSize: 13.0.sp,
                                     fontWeight: FontWeight.w400))
                           ],
                         )
@@ -203,15 +203,15 @@ class NewPrescriptionState extends State<NewPrescription> {
                     ),
                   ),
                   SizedBox(
-                    height: 10,
+                    height: 10.0.h,
                   ),
                   Container(
                     color: Colors.grey,
                     width: double.infinity,
-                    height: 1,
+                    height: 1.0.h,
                   ),
                   SizedBox(
-                    height: 10,
+                    height: 10.0.h,
                   ),
                   Container(
                     padding: EdgeInsets.only(left: 20, right: 20),
@@ -243,7 +243,10 @@ class NewPrescriptionState extends State<NewPrescription> {
                             },
                             child: Icon(
                               Icons.add_circle_outline,
-                              color: Color(CommonUtil().getMyPrimaryColor()),
+                              color: Color(
+                                CommonUtil().getMyPrimaryColor(),
+                              ),
+                              size: 24.0.sp,
                             ),
                           ),
                         ),
@@ -251,7 +254,7 @@ class NewPrescriptionState extends State<NewPrescription> {
                     ),
                   ),
                   SizedBox(
-                    height: 30,
+                    height: 30.0.h,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 30.0, right: 30.0),
@@ -264,32 +267,32 @@ class NewPrescriptionState extends State<NewPrescription> {
                             prescriptionNotes,
                             style: TextStyle(
                                 color: Colors.grey,
-                                fontSize: 12,
+                                fontSize: 12.0.sp,
                                 fontWeight: FontWeight.w400),
                             textAlign: TextAlign.start,
                           ),
                         ),
                         Container(
-                          width: MediaQuery.of(context).size.width,
+                          width: 1.sw,
                           child: TextField(
                               maxLines: 10,
                               minLines: 1,
-                              style:
-                                  TextStyle(fontSize: 12, color: Colors.black),
+                              style: TextStyle(
+                                  fontSize: 12.0.sp, color: Colors.black),
                               decoration: InputDecoration(
                                   border: InputBorder.none,
                                   hintStyle: TextStyle(
-                                      fontSize: 12, color: Colors.grey),
+                                      fontSize: 12.0.sp, color: Colors.grey),
                                   hintText: '$addNoteHint')),
                         )
                       ],
                     ),
                   ),
                   SizedBox(
-                    height: 20,
+                    height: 20.0.h,
                   ),
                   Container(
-                      height: 45,
+                      height: 45.0.h,
                       alignment: Alignment.centerRight,
                       padding: EdgeInsets.only(right: 20),
                       child: Image.asset(
@@ -297,7 +300,7 @@ class NewPrescriptionState extends State<NewPrescription> {
                         fit: BoxFit.contain,
                       )),
                   SizedBox(
-                    height: 30,
+                    height: 30.0.h,
                   ),
                   prescriptionButton('$prescribeButtonText'),
                 ],
@@ -314,105 +317,110 @@ class NewPrescriptionState extends State<NewPrescription> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         SizedBox(
-          height: 20,
+          height: 20.0.h,
         ),
         tabletTextField('$medicineNameHint', medicineList[pos].medicineName),
-        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <
-            Widget>[
-          tabletIntakeSwitch(medicineList[pos].beforeOrAfterFood),
-          daysField(medicineList[pos].days),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
+        Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              SizedBox(
-                width: 10,
+              tabletIntakeSwitch(medicineList[pos].beforeOrAfterFood),
+              daysField(medicineList[pos].days),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(
+                    width: 10.0.w,
+                  ),
+                  GestureDetector(
+                    key: key,
+                    child: Container(
+                        width: 20.0.w,
+                        height: 15.0.h,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(2),
+                            border: Border.all(
+                                color: Color(CommonUtil().getMyPrimaryColor()),
+                                width: 0.5.w)),
+                        child: Text(
+                          medicineList[pos].schedule.morning ?? "",
+                          style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 10.0.sp,
+                              fontWeight: FontWeight.w400),
+                        ),
+                        alignment: Alignment.center),
+                    onTap: () {
+                      showMoreText(
+                          pos, 0, medicineList[pos].schedule.morning, key);
+                    },
+                  ),
+                  SizedBox(
+                    width: 5.0.w,
+                  ),
+                  GestureDetector(
+                    key: key1,
+                    child: Container(
+                        width: 20.0.h,
+                        height: 15.0.h,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(2),
+                            border: Border.all(
+                                color: Color(CommonUtil().getMyPrimaryColor()),
+                                width: 0.5.w)),
+                        child: Text(
+                          medicineList[pos].schedule.afternoon ?? "",
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 10.0.sp,
+                              fontWeight: FontWeight.w400),
+                        ),
+                        alignment: Alignment.center),
+                    onTap: () {
+                      showMoreText(
+                          pos, 1, medicineList[pos].schedule.afternoon, key1);
+                    },
+                  ),
+                  SizedBox(
+                    width: 5.0.w,
+                  ),
+                  GestureDetector(
+                    key: key2,
+                    child: Container(
+                        width: 20.0.w,
+                        height: 15.0.h,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(2),
+                            border: Border.all(
+                                color: Color(CommonUtil().getMyPrimaryColor()),
+                                width: 0.5.w)),
+                        child: Text(
+                          medicineList[pos].schedule.evening ?? "",
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 10.0.sp,
+                              fontWeight: FontWeight.w400),
+                        ),
+                        alignment: Alignment.center),
+                    onTap: () {
+                      showMoreText(
+                          pos, 2, medicineList[pos].schedule.evening, key2);
+                    },
+                  ),
+                ],
               ),
-              GestureDetector(
-                key: key,
-                child: Container(
-                    width: 20,
-                    height: 15,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(2),
-                        border:
-                            Border.all(color: Color(CommonUtil().getMyPrimaryColor()), width: 0.5)),
-                    child: Text(
-                      medicineList[pos].schedule.morning ?? "",
-                      style: TextStyle(
-                          color: Colors.black87,
-                          fontSize: 10,
-                          fontWeight: FontWeight.w400),
-                    ),
-                    alignment: Alignment.center),
-                onTap: () {
-                  showMoreText(pos, 0, medicineList[pos].schedule.morning, key);
-                },
-              ),
-              SizedBox(
-                width: 5,
-              ),
-              GestureDetector(
-                key: key1,
-                child: Container(
-                    width: 20,
-                    height: 15,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(2),
-                        border:
-                            Border.all(color: Color(CommonUtil().getMyPrimaryColor()), width: 0.5)),
-                    child: Text(
-                      medicineList[pos].schedule.afternoon ?? "",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 10,
-                          fontWeight: FontWeight.w400),
-                    ),
-                    alignment: Alignment.center),
-                onTap: () {
-                  showMoreText(
-                      pos, 1, medicineList[pos].schedule.afternoon, key1);
-                },
-              ),
-              SizedBox(
-                width: 5,
-              ),
-              GestureDetector(
-                key: key2,
-                child: Container(
-                    width: 20,
-                    height: 15,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(2),
-                        border:
-                            Border.all(color: Color(CommonUtil().getMyPrimaryColor()), width: 0.5)),
-                    child: Text(
-                      medicineList[pos].schedule.evening ?? "",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 10,
-                          fontWeight: FontWeight.w400),
-                    ),
-                    alignment: Alignment.center),
-                onTap: () {
-                  showMoreText(
-                      pos, 2, medicineList[pos].schedule.evening, key2);
-                },
-              ),
-            ],
-          ),
-          quantityField(medicineList[pos].quantity),
-          FlatButton(
-              onPressed: () {
-                setState(() {
-                  medicineList.removeAt(pos);
-                });
-              },
-              child: Icon(
-                Icons.remove_circle_outline,
-                color: Colors.red,
-                size: 20,
-              ))
-        ]),
+              quantityField(medicineList[pos].quantity),
+              FlatButton(
+                  onPressed: () {
+                    setState(() {
+                      medicineList.removeAt(pos);
+                    });
+                  },
+                  child: Icon(
+                    Icons.remove_circle_outline,
+                    color: Colors.red,
+                    size: 20.0.sp,
+                  ))
+            ]),
         medicationNotesField(medicineList[pos].notes),
       ],
     );
@@ -423,16 +431,16 @@ class NewPrescriptionState extends State<NewPrescription> {
     return Padding(
       padding: const EdgeInsets.only(left: 10, right: 10),
       child: Container(
-          height: 70,
-          width: MediaQuery.of(context).size.width * 0.9,
+          height: 70.0.h,
+          width: 1.sw * 0.9,
           child: TextField(
               controller: textEditingController,
               maxLines: null,
               expands: true,
-              style: TextStyle(fontSize: 13, color: Colors.black),
+              style: TextStyle(fontSize: 13.0.sp, color: Colors.black),
               decoration: InputDecoration(
                   border: InputBorder.none,
-                  hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
+                  hintStyle: TextStyle(fontSize: 13.0.sp, color: Colors.grey),
                   hintText: '$addMedicineNoteHint'))),
     );
   }
@@ -440,15 +448,21 @@ class NewPrescriptionState extends State<NewPrescription> {
   Widget quantityField(text) {
     var textEditingController = TextEditingController(text: text);
     return Container(
-        width: 40,
+        width: 40.0.w,
         child: TextField(
           controller: textEditingController,
           textAlign: TextAlign.center,
-          style: TextStyle(color: Colors.black, fontSize: 13),
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 13.0.sp,
+          ),
           decoration: InputDecoration(
               border: InputBorder.none,
               hintText: '$medicineQuantityHint',
-              hintStyle: TextStyle(color: Colors.grey, fontSize: 13),
+              hintStyle: TextStyle(
+                color: Colors.grey,
+                fontSize: 13.0.sp,
+              ),
               contentPadding: EdgeInsets.only(bottom: 5)),
         ));
   }
@@ -456,14 +470,20 @@ class NewPrescriptionState extends State<NewPrescription> {
   Widget daysField(text) {
     var textEditingController = TextEditingController(text: text);
     return Container(
-        width: 40,
+        width: 40.0.w,
         child: TextField(
           controller: textEditingController,
-          style: TextStyle(color: Colors.black, fontSize: 13),
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 13.0.sp,
+          ),
           decoration: InputDecoration(
               border: InputBorder.none,
               hintText: '$numberOfDaysHint',
-              hintStyle: TextStyle(color: Colors.grey, fontSize: 13),
+              hintStyle: TextStyle(
+                color: Colors.grey,
+                fontSize: 13.0.sp,
+              ),
               contentPadding: EdgeInsets.only(bottom: 5)),
         ));
   }
@@ -477,7 +497,7 @@ class NewPrescriptionState extends State<NewPrescription> {
               GestureDetector(
                 child: Text(
                   '$scheduleOptionOne',
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.white, fontSize: 14.0.sp),
                 ),
                 onTap: () {
                   setState(() {
@@ -491,20 +511,23 @@ class NewPrescriptionState extends State<NewPrescription> {
                 },
               ),
               SizedBox(
-                width: 8,
+                width: 8.0.w,
               ),
               Container(
                 color: Colors.black,
-                height: 15,
-                width: 1,
+                height: 15.0.h,
+                width: 1.0.w,
               ),
               SizedBox(
-                width: 8,
+                width: 8.0.w,
               ),
               GestureDetector(
                 child: Text(
                   '$scheduleOptionTwo',
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14.0.sp,
+                  ),
                 ),
                 onTap: () {
                   setState(() {
@@ -520,20 +543,23 @@ class NewPrescriptionState extends State<NewPrescription> {
                 },
               ),
               SizedBox(
-                width: 8,
+                width: 8.0.w,
               ),
               Container(
                 color: Colors.black,
-                height: 15,
-                width: 1,
+                height: 15.0.h,
+                width: 1.0.w,
               ),
               SizedBox(
-                width: 8,
+                width: 8.0.w,
               ),
               GestureDetector(
                 child: Text(
                   '$scheduleOptionThree',
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14.0.sp,
+                  ),
                 ),
                 onTap: () {
                   setState(() {
@@ -550,8 +576,8 @@ class NewPrescriptionState extends State<NewPrescription> {
           ),
         ),
         textStyle: TextStyle(color: Colors.black),
-        height: 25,
-        width: 96,
+        height: 25.0.h,
+        width: 96.0.w,
         backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
         padding: EdgeInsets.all(4.0),
         borderRadius: BorderRadius.circular(5.0));
@@ -569,7 +595,10 @@ class NewPrescriptionState extends State<NewPrescription> {
           side: BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))),
       child: Text(
         buttonText,
-        style: TextStyle(color: Color(CommonUtil().getMyPrimaryColor())),
+        style: TextStyle(
+          color: Color(CommonUtil().getMyPrimaryColor()),
+          fontSize: 14.0.sp,
+        ),
       ),
       onPressed: () {},
     );
@@ -587,14 +616,21 @@ class NewPrescriptionState extends State<NewPrescription> {
         fillColor: Colors.transparent,
         border: InputBorder.none,
         hintText: hint,
-        hintStyle: TextStyle(color: Colors.grey, fontSize: 13),
+        hintStyle: TextStyle(
+          color: Colors.grey,
+          fontSize: 13.0.sp,
+        ),
       ),
-      style: TextStyle(color: Colors.black, fontSize: 13),
+      style: TextStyle(
+        color: Colors.black,
+        fontSize: 13.0.sp,
+      ),
     );
   }
 
   Widget tabletTextField(hintText, text) {
-    return Container(height: 40, child: noUnderLineTextField(hintText, text));
+    return Container(
+        height: 40.0.h, child: noUnderLineTextField(hintText, text));
   }
 
   Widget tabletIntakeSwitch(beforeOrAfter) {
@@ -602,17 +638,17 @@ class NewPrescriptionState extends State<NewPrescription> {
     return Padding(
       padding: EdgeInsets.only(left: 10),
       child: Container(
-        width: 40,
-        height: 18,
+        width: 40.0.w,
+        height: 18.0.h,
         child: FlutterSwitch(
           activeColor: Colors.grey.withOpacity(0.4),
           activeText: "$beforeFoodSwitchText",
           inactiveColor: Colors.grey.withOpacity(0.4),
           inactiveText: "$afterFoodSwitchText",
           value: status,
-          toggleSize: 10,
-          valueFontSize: 8.0,
-          borderRadius: 30.0,
+          toggleSize: 10.0.sp,
+          valueFontSize: 8.0.sp,
+          borderRadius: 30.0.sp,
           showOnOff: true,
           activeTextColor: Colors.black,
           inactiveTextColor: Colors.black,
@@ -635,7 +671,7 @@ class NewPrescriptionState extends State<NewPrescription> {
             child: Row(
           children: <Widget>[
             SizedBox(
-              width: 15,
+              width: 15.0.w,
             ),
             GestureDetector(
               onTap: () {
@@ -643,25 +679,25 @@ class NewPrescriptionState extends State<NewPrescription> {
               },
               child: Icon(
                 Icons.arrow_back_ios,
-                size: 20,
+                size: 24.0.sp,
                 color: Colors.white,
               ),
             ),
             SizedBox(
-              width: 20,
+              width: 20.0.w,
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 SizedBox(
-                  height: 20,
+                  height: 20.0.h,
                 ),
                 Text(
                   '$testPatientName',
                   style: TextStyle(
                       fontFamily: 'Poppins',
-                      fontSize: 14,
+                      fontSize: 14.0.sp,
                       fontWeight: FontWeight.w500,
                       color: Colors.white),
                 ),
@@ -669,7 +705,7 @@ class NewPrescriptionState extends State<NewPrescription> {
                   '$testPatientID',
                   style: TextStyle(
                       fontFamily: 'Poppins',
-                      fontSize: 13,
+                      fontSize: 13.0.sp,
                       fontWeight: FontWeight.w400,
                       color: Colors.white),
                 ),

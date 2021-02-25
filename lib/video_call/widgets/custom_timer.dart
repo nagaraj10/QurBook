@@ -3,6 +3,7 @@ library flutter_timer;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 typedef TimeCallback = Function(TimerProvider object);
 
@@ -50,7 +51,6 @@ class TimerProvider with ChangeNotifier {
   }
 }
 
-
 ///timer widget
 
 class CustomTimer extends StatelessWidget {
@@ -83,20 +83,21 @@ class CustomTimer extends StatelessWidget {
 
   ///- if set true then shows little shadow
   ///  below the timer widget
-  final bool isRaised ;
+  final bool isRaised;
 
   ///border radius of widget:
   /// -applies to all four corner border radius
   final double borderRadius;
   CustomTimer(
       {this.backgroundColor,
-        @required this.height,
-        @required this.width,
-        this.running,
-        this.timerTextStyle,
-        this.borderRadius,
-        @required this.initialDate,
-        this.tracetime,this.isRaised=false});
+      @required this.height,
+      @required this.width,
+      this.running,
+      this.timerTextStyle,
+      this.borderRadius,
+      @required this.initialDate,
+      this.tracetime,
+      this.isRaised = false});
 
   ///for hour mminute second
   String hour = '00', minute = '00', second = '00';
@@ -154,13 +155,12 @@ class CustomTimer extends StatelessWidget {
           decoration: BoxDecoration(
               boxShadow: isRaised
                   ? [
-                BoxShadow(
-                    color: Colors.grey,
-                    blurRadius: 0.5,
-                    spreadRadius: 0.3,
-                    offset: Offset(1, 1)),
-
-              ]
+                      BoxShadow(
+                          color: Colors.grey,
+                          blurRadius: 0.5,
+                          spreadRadius: 0.3,
+                          offset: Offset(1, 1)),
+                    ]
                   : [],
               color: backgroundColor != null ? backgroundColor : Colors.black,
               borderRadius: BorderRadius.circular(
@@ -170,9 +170,10 @@ class CustomTimer extends StatelessWidget {
                   style: timerTextStyle != null
                       ? timerTextStyle
                       : new TextStyle(
-                      color: Colors.grey[200],
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18))),
+                          color: Colors.grey[200],
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18.0.sp,
+                        ))),
           height: height,
           width: width,
         );

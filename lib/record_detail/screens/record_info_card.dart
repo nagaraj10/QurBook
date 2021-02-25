@@ -15,6 +15,7 @@ import 'package:myfhb/src/model/Health/CompleteData.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class RecordInfoCard {
   Widget getCardForPrescription(Metadata metaInfo, String createdDate) {
@@ -31,7 +32,8 @@ class RecordInfoCard {
                 Text(
                   FHBUtils().getMonthDateYear(createdDate),
                   textAlign: TextAlign.end,
-                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
+                  style:
+                      TextStyle(fontSize: 11.0.sp, fontWeight: FontWeight.w500),
                 )
               ],
             ),
@@ -44,8 +46,8 @@ class RecordInfoCard {
                             .doctor
                             .profilePicThumbnailUrl) //getDoctorProfileImageWidget(metaInfo)
                         : Container(
-                            width: 50,
-                            height: 50,
+                            width: 50.0.h,
+                            height: 50.0.h,
                             color: Color(fhbColors.bgColorContainer))),
                 Expanded(
                   child: Padding(
@@ -65,12 +67,14 @@ class RecordInfoCard {
                                                 metaInfo.doctor.lastName
                                         : ''),
                                 style: TextStyle(
-                                    fontWeight: FontWeight.w500, fontSize: 14),
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14.0.sp,
+                                ),
                                 softWrap: false,
                                 overflow: TextOverflow.ellipsis,
                               )
                             : SizedBox(
-                                height: 0,
+                                height: 0.0.h,
                               ),
                         metaInfo.hospital != null
                             ? Text(
@@ -78,15 +82,21 @@ class RecordInfoCard {
                                     metaInfo.hospital.healthOrganizationName),
                                 softWrap: false,
                                 overflow: TextOverflow.ellipsis,
-                                style: TextStyle(fontSize: 13),
+                                style: TextStyle(
+                                  fontSize: 13.0.sp,
+                                ),
                               )
                             //Text('')
-                            : SizedBox(height: 0),
+                            : SizedBox(
+                                height: 0.0.h,
+                              ),
                         Text(
                           metaInfo.dateOfVisit != null
                               ? variable.strDateOfVisit + metaInfo.dateOfVisit
                               : '',
-                          style: TextStyle(fontSize: 11),
+                          style: TextStyle(
+                            fontSize: 11.0.sp,
+                          ),
                         ),
                       ],
                     ),
@@ -95,7 +105,7 @@ class RecordInfoCard {
               ],
             ),
             SizedBox(
-              height: 10,
+              height: 10.0.h,
             ),
             Container(
               alignment: Alignment.centerLeft,
@@ -103,12 +113,14 @@ class RecordInfoCard {
                   ? Text(
                       toBeginningOfSentenceCase(metaInfo.memoText),
                       textAlign: TextAlign.start,
-                      style: TextStyle(fontSize: 12),
+                      style: TextStyle(
+                        fontSize: 12.0.sp,
+                      ),
                     )
                   : Text(''),
             ),
             SizedBox(
-              height: 20,
+              height: 20.0.h,
             ),
           ],
         ));
@@ -128,7 +140,8 @@ class RecordInfoCard {
                 Text(
                   FHBUtils().getMonthDateYear(createdDate),
                   textAlign: TextAlign.end,
-                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
+                  style:
+                      TextStyle(fontSize: 11.0.sp, fontWeight: FontWeight.w500),
                 )
               ],
             ),
@@ -159,16 +172,17 @@ class RecordInfoCard {
                                     toBeginningOfSentenceCase(metaInfo
                                         .hospital.healthOrganizationName),
                                     style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 14),
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 14.0.sp,
+                                    ),
                                     softWrap: false,
                                     overflow: TextOverflow.ellipsis,
                                   )
                                 : SizedBox(
-                                    height: 0,
+                                    height: 0.0.h,
                                   )
                             : SizedBox(
-                                height: 0,
+                                height: 0.0.h,
                               ),
                         metaInfo.doctor != null
                             ? Text(
@@ -182,12 +196,18 @@ class RecordInfoCard {
                                                     ' ' +
                                                     metaInfo.doctor.lastName
                                             : '')),
-                                style: TextStyle(fontSize: 13),
+                                style: TextStyle(
+                                  fontSize: 13.0.sp,
+                                ),
                               )
-                            : SizedBox(height: 0),
+                            : SizedBox(
+                                height: 0.0.h,
+                              ),
                         Text(
                           variable.strDateOfVisit + metaInfo.dateOfVisit,
-                          style: TextStyle(fontSize: 11),
+                          style: TextStyle(
+                            fontSize: 11.0.sp,
+                          ),
                         ),
                       ],
                     ),
@@ -196,7 +216,7 @@ class RecordInfoCard {
               ],
             ),
             SizedBox(
-              height: 10,
+              height: 10.0.h,
             ),
             Container(
               alignment: Alignment.centerLeft,
@@ -204,12 +224,14 @@ class RecordInfoCard {
                   ? Text(
                       toBeginningOfSentenceCase(metaInfo.memoText),
                       textAlign: TextAlign.start,
-                      style: TextStyle(fontSize: 12),
+                      style: TextStyle(
+                        fontSize: 12.0.sp,
+                      ),
                     )
                   : Text(''),
             ),
             SizedBox(
-              height: 20,
+              height: 20.0.h,
             ),
           ],
         ));
@@ -229,7 +251,8 @@ class RecordInfoCard {
                 Text(
                   FHBUtils().getMonthDateYear(createdDate),
                   textAlign: TextAlign.end,
-                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
+                  style:
+                      TextStyle(fontSize: 11.0.sp, fontWeight: FontWeight.w500),
                 )
               ],
             ),
@@ -261,16 +284,17 @@ class RecordInfoCard {
                                     toBeginningOfSentenceCase(metaInfo
                                         .laboratory.healthOrganizationName),
                                     style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 14),
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 14.0.sp,
+                                    ),
                                     softWrap: false,
                                     overflow: TextOverflow.ellipsis,
                                   )
                                 : SizedBox(
-                                    height: 0,
+                                    height: 0.0.h,
                                   )
                             : SizedBox(
-                                height: 0,
+                                height: 0.0.h,
                               ),
                         metaInfo.doctor != null
                             ? Text(
@@ -284,12 +308,18 @@ class RecordInfoCard {
                                                     ' ' +
                                                     metaInfo.doctor.lastName
                                             : '')),
-                                style: TextStyle(fontSize: 13),
+                                style: TextStyle(
+                                  fontSize: 13.0.sp,
+                                ),
                               )
-                            : SizedBox(height: 0),
+                            : SizedBox(
+                                height: 0.0.h,
+                              ),
                         Text(
                           variable.strDateOfVisit + metaInfo.dateOfVisit,
-                          style: TextStyle(fontSize: 11),
+                          style: TextStyle(
+                            fontSize: 11.0.sp,
+                          ),
                         ),
                       ],
                     ),
@@ -298,7 +328,7 @@ class RecordInfoCard {
               ],
             ),
             SizedBox(
-              height: 10,
+              height: 10.0.h,
             ),
             Container(
               alignment: Alignment.centerLeft,
@@ -306,12 +336,14 @@ class RecordInfoCard {
                   ? Text(
                       toBeginningOfSentenceCase(metaInfo.memoText),
                       textAlign: TextAlign.start,
-                      style: TextStyle(fontSize: 12),
+                      style: TextStyle(
+                        fontSize: 12.0.sp,
+                      ),
                     )
                   : Text(''),
             ),
             SizedBox(
-              height: 20,
+              height: 20.0.h,
             ),
           ],
         ));
@@ -332,34 +364,37 @@ class RecordInfoCard {
                 Text(
                   FHBUtils().getMonthDateYear(createdOn),
                   textAlign: TextAlign.end,
-                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
+                  style:
+                      TextStyle(fontSize: 11.0.sp, fontWeight: FontWeight.w500),
                 )
               ],
             ),
             Text(
               metaInfo.healthRecordType.name,
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+              style: TextStyle(fontSize: 14.0.sp, fontWeight: FontWeight.w500),
             ),
             /* metaInfo.memoText != null
                 ? Text(
                     toBeginningOfSentenceCase(metaInfo.memoText),
-                    style: TextStyle(fontSize: 12),
+                    style: TextStyle(fontSize: 12.0.sp),
                   )
                 : Text(''),*/
             SizedBox(
-              height: 10,
+              height: 10.0.h,
             ),
             metaInfo.deviceReadings != null
                 ? getDeviceReadings(metaInfo.deviceReadings)
                 : Container(
-                    height: 0,
+                    height: 0.0.h,
                   ),
             Text(
               metaInfo.memoText != null ? metaInfo.memoText : '',
-              style: TextStyle(fontSize: 13),
+              style: TextStyle(
+                fontSize: 13.0.sp,
+              ),
             ),
             SizedBox(
-              height: 60,
+              height: 60.0.h,
             ),
           ],
         ));
@@ -382,32 +417,37 @@ class RecordInfoCard {
                     ? FHBUtils().getMonthDateYear(createdDate)
                     : '',
                 textAlign: TextAlign.end,
-                style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
+                style:
+                    TextStyle(fontSize: 11.0.sp, fontWeight: FontWeight.w500),
               )
             ],
           ),
           Text(
             metaInfo.fileName != null ? metaInfo.fileName : '',
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+            style: TextStyle(fontSize: 14.0.sp, fontWeight: FontWeight.w500),
           ),
           /*metaInfo.memoText != null
               ? Text(toBeginningOfSentenceCase(metaInfo.memoText))
               : Text(''),*/
           SizedBox(
-            height: 10,
+            height: 10.0.h,
           ),
           metaInfo.doctor != null
               ? Text(
                   metaInfo.doctor.name,
-                  style: TextStyle(fontSize: 13),
+                  style: TextStyle(
+                    fontSize: 13.0.sp,
+                  ),
                 )
-              : SizedBox(height: 0),
+              : SizedBox(height: 0.0.h),
           metaInfo.memoText != null
               ? Text(
                   metaInfo.memoText,
-                  style: TextStyle(fontSize: 13),
+                  style: TextStyle(
+                    fontSize: 13.0.sp,
+                  ),
                 )
-              : SizedBox(height: 0),
+              : SizedBox(height: 0.0.h),
         ],
       ),
     );
@@ -438,32 +478,33 @@ class RecordInfoCard {
                     ? FHBUtils().getMonthDateYear(createdDate)
                     : '',
                 textAlign: TextAlign.end,
-                style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
+                style:
+                    TextStyle(fontSize: 11.0.sp, fontWeight: FontWeight.w500),
               )
             ],
           ),
           Text(
             metaInfo.fileName != null ? metaInfo.fileName : '',
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+            style: TextStyle(fontSize: 14.0.sp, fontWeight: FontWeight.w500),
           ),
           /*metaInfo.memoText != null
               ? Text(toBeginningOfSentenceCase(metaInfo.memoText))
               : Text(''),*/
           SizedBox(
-            height: 10,
+            height: 10.0.h,
           ),
           metaInfo.doctor != null
               ? Text(
                   metaInfo.doctor.name,
-                  style: TextStyle(fontSize: 13),
+                  style: TextStyle(fontSize: 13.0.sp),
                 )
-              : SizedBox(height: 0),
+              : SizedBox(height: 0.0.h),
           metaInfo.memoText != null
               ? Text(
                   metaInfo.memoText,
-                  style: TextStyle(fontSize: 13),
+                  style: TextStyle(fontSize: 13.0.sp),
                 )
-              : SizedBox(height: 0),
+              : SizedBox(height: 0.0.h),
         ],
       ),
     );
@@ -484,25 +525,26 @@ class RecordInfoCard {
                 Text(
                   FHBUtils().getMonthDateYear(createdDate),
                   textAlign: TextAlign.end,
-                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
+                  style:
+                      TextStyle(fontSize: 11.0.sp, fontWeight: FontWeight.w500),
                 )
               ],
             ),
             Text(
               metaInfo.fileName,
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+              style: TextStyle(fontSize: 14.0.sp, fontWeight: FontWeight.w500),
             ),
             metaInfo.dateOfVisit != null
                 ? Text(
                     variable.strValidThru + metaInfo.dateOfVisit,
-                    style: TextStyle(fontSize: 13),
+                    style: TextStyle(fontSize: 13.0.sp),
                   )
-                : SizedBox(height: 0),
+                : SizedBox(height: 0.0.h),
             metaInfo.memoText != null
                 ? Text(metaInfo.memoText)
-                : SizedBox(height: 0),
+                : SizedBox(height: 0.0.h),
             SizedBox(
-              height: 20,
+              height: 20.0.h,
             ),
           ],
         ));
@@ -522,7 +564,8 @@ class RecordInfoCard {
                 Text(
                   FHBUtils().getMonthDateYear(createdDate),
                   textAlign: TextAlign.end,
-                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
+                  style:
+                      TextStyle(fontSize: 11.0.sp, fontWeight: FontWeight.w500),
                 )
               ],
             ),
@@ -554,28 +597,28 @@ class RecordInfoCard {
                                         .hospital.healthOrganizationName),
                                     style: TextStyle(
                                         fontWeight: FontWeight.w500,
-                                        fontSize: 14),
+                                        fontSize: 14.0.sp),
                                     softWrap: false,
                                     overflow: TextOverflow.ellipsis,
                                   )
                                 : SizedBox(
-                                    height: 0,
+                                    height: 0.0.h,
                                   )
                             : SizedBox(
-                                height: 0,
+                                height: 0.0.h,
                               ),
                         metaInfo.doctor != null
                             ? Text(
                                 toBeginningOfSentenceCase(metaInfo.doctor.name),
-                                style: TextStyle(fontSize: 13),
+                                style: TextStyle(fontSize: 13.0.sp),
                               )
-                            : SizedBox(height: 0),
+                            : SizedBox(height: 0.0.h),
                         Text(
                           new FHBUtils().getFormattedDateString(createdDate),
                           style: TextStyle(
                               color: Colors.grey[400],
                               fontWeight: FontWeight.w200,
-                              fontSize: 12),
+                              fontSize: 12.0.sp),
                         ),
                       ],
                     ),
@@ -584,7 +627,7 @@ class RecordInfoCard {
               ],
             ),
             SizedBox(
-              height: 10,
+              height: 10.0.h,
             ),
             Container(
               alignment: Alignment.centerLeft,
@@ -592,12 +635,12 @@ class RecordInfoCard {
                   ? Text(
                       toBeginningOfSentenceCase(metaInfo.memoText),
                       textAlign: TextAlign.start,
-                      style: TextStyle(fontSize: 12),
+                      style: TextStyle(fontSize: 12.0.sp),
                     )
                   : Text(''),
             ),
             SizedBox(
-              height: 20,
+              height: 20.0.h,
             ),
           ],
         ));
@@ -630,10 +673,11 @@ Widget getDeviceReadings(List<DeviceReadings> deviceReadings) {
                       style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.w500,
-                          fontSize: 16),
+                          fontSize: 16.0.sp),
                     ),
                     Text(deviceReadings[i].unit.toString(),
-                        style: TextStyle(color: Colors.black54, fontSize: 12)),
+                        style: TextStyle(
+                            color: Colors.black54, fontSize: 12.0.sp)),
                   ],
                 ),
               )
@@ -671,18 +715,19 @@ getDoctorProfileImageWidget(MetaInfo data) {
       if (snapshot.hasData) {
         return Image.memory(
           snapshot.data,
-          height: 50,
-          width: 50,
+          height: 50.0.h,
+          width: 50.0.h,
           fit: BoxFit.cover,
         );
       } else {
         return new SizedBox(
-          width: 50.0,
-          height: 50.0,
+          width: 50.0.h,
+          height: 50.0.h,
           child: Shimmer.fromColors(
               baseColor: Colors.grey[200],
               highlightColor: Colors.grey[550],
-              child: Container(width: 50, height: 50, color: Colors.grey[200])),
+              child: Container(
+                  width: 50.0.h, height: 50.0.h, color: Colors.grey[200])),
         );
       }
 
@@ -700,10 +745,10 @@ getCardForBillsAndOthers(MetaInfo metaInfo, String createdDate) {
         children: <Widget>[
           Text(
             metaInfo.fileName,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            style: TextStyle(fontSize: 16.0.sp, fontWeight: FontWeight.w500),
           ),
           SizedBox(
-            height: 10,
+            height: 10.0.h,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -712,13 +757,13 @@ getCardForBillsAndOthers(MetaInfo metaInfo, String createdDate) {
                   ? Text(
                       metaInfo.doctor.name,
                     )
-                  : SizedBox(height: 0),
+                  : SizedBox(height: 0.0.h),
               Text(FHBUtils().getFormattedDateString(createdDate))
             ],
           ),
           Text(metaInfo.memoText),
           SizedBox(
-            height: 60,
+            height: 60.0.h,
           ),
         ],
       ));
@@ -733,10 +778,10 @@ getCardForIDDocs(MetaInfo metaInfo, String createdDate) {
         children: <Widget>[
           Text(
             metaInfo.fileName,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            style: TextStyle(fontSize: 16.0.sp, fontWeight: FontWeight.w500),
           ),
           SizedBox(
-            height: 10,
+            height: 10.0.h,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -745,13 +790,13 @@ getCardForIDDocs(MetaInfo metaInfo, String createdDate) {
                   ? Text(
                       metaInfo.doctor.name,
                     )
-                  : SizedBox(height: 0),
+                  : SizedBox(height: 0.0.h),
               Text(FHBUtils().getFormattedDateString(createdDate))
             ],
           ),
           Text(metaInfo.memoText),
           SizedBox(
-            height: 60,
+            height: 60.0.h,
           ),
         ],
       ));

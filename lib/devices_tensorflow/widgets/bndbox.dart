@@ -1,5 +1,5 @@
 import 'dart:math' as math;
-
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/material.dart';
 
 class BndBox extends StatelessWidget {
@@ -53,14 +53,14 @@ class BndBox extends StatelessWidget {
             decoration: BoxDecoration(
               border: Border.all(
                 color: Color.fromRGBO(37, 213, 253, 1.0),
-                width: 3.0,
+                width: 3.0.w,
               ),
             ),
             child: Text(
               "${re["detectedClass"]} ${(re["confidenceInClass"] * 100).toStringAsFixed(0)}%",
               style: TextStyle(
                 color: Color.fromRGBO(37, 213, 253, 1.0),
-                fontSize: 14.0,
+                fontSize: 14.0.sp,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -82,7 +82,7 @@ class BndBox extends StatelessWidget {
             "${re["label"]} ${(re["confidence"] * 100).toStringAsFixed(0)}%",
             style: TextStyle(
               color: Color.fromRGBO(37, 213, 253, 1.0),
-              fontSize: 14.0,
+              fontSize: 14.0.sp,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -114,14 +114,14 @@ class BndBox extends StatelessWidget {
           return Positioned(
             left: x - 6,
             top: y - 6,
-            width: 100,
-            height: 12,
+            width: 100.0.w,
+            height: 12.0.h,
             child: Container(
               child: Text(
                 "● ${k["part"]}",
                 style: TextStyle(
                   color: Color.fromRGBO(37, 213, 253, 1.0),
-                  fontSize: 12.0,
+                  fontSize: 12.0.sp,
                 ),
               ),
             ),

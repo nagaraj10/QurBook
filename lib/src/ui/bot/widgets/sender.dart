@@ -6,6 +6,7 @@ import '../../../../common/FHBBasicWidget.dart';
 import '../../../../common/PreferenceUtil.dart';
 import '../../../model/bot/ConversationModel.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as constants;
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class SenderLayout extends StatelessWidget {
   final Conversation c;
@@ -36,7 +37,7 @@ class SenderLayout extends StatelessWidget {
                       bottomRight: Radius.circular(25))),
               child: Container(
                 constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width * .6,
+                  maxWidth: 1.sw * .6,
                 ),
                 padding: const EdgeInsets.all(15.0),
                 decoration: BoxDecoration(
@@ -64,12 +65,12 @@ class SenderLayout extends StatelessWidget {
         ),
         ClipOval(
             child: Container(
-          height: 40,
-          width: 40,
+          height: 40.0.h,
+          width: 40.0.h,
           child: FHBBasicWidget().getProfilePicWidgeUsingUrl(
               myProfile.result.profilePicThumbnailUrl),
         )),
-        SizedBox(width: 20),
+        SizedBox(width: 20.0.w),
       ],
     );
   }

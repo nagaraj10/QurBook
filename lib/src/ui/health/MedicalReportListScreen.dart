@@ -15,6 +15,7 @@ import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class MedicalReportListScreen extends StatefulWidget {
   final HealthRecordList completeData;
@@ -97,7 +98,10 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                   child: Text(
                     Constants.NO_DATA_MEDICAL_REPORT,
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontFamily: variable.font_poppins),
+                    style: TextStyle(
+                      fontFamily: variable.font_poppins,
+                      fontSize: 14.0.sp,
+                    ),
                   ),
                 ),
               ),
@@ -139,9 +143,8 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                 } else {
                   toast.getToast('No Image Attached ', Colors.red);
                 }
-              }else{
+              } else {
                 toast.getToast('No Image Attached ', Colors.red);
-
               }
             } else {
               bool condition;
@@ -229,7 +232,10 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                                 ? toBeginningOfSentenceCase(data
                                     .metadata.hospital.healthOrganizationName)
                                 : '',
-                            style: TextStyle(fontWeight: FontWeight.w500),
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14.0.sp,
+                            ),
                           )
                         : Text(''),
                     Text(
@@ -242,14 +248,17 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                                       ' ' +
                                       data.metadata.doctor.lastName)
                           : '',
-                      style: TextStyle(color: Colors.grey),
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 14.0.sp,
+                      ),
                     ),
                     Text(
                       new FHBUtils().getFormattedDateString(data.createdOn),
                       style: TextStyle(
                           color: Colors.grey[400],
                           fontWeight: FontWeight.w200,
-                          fontSize: 12),
+                          fontSize: 12.0.sp),
                     )
                   ],
                 ),

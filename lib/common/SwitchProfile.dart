@@ -14,7 +14,11 @@ import 'package:myfhb/my_family/screens/FamilyListView.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
+import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
+import 'package:myfhb/src/ui/user/UserAccounts.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
+import 'package:myfhb/src/utils/colors_utils.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class SwitchProfile {
   FamilyListBloc _familyListBloc;
@@ -23,15 +27,20 @@ class SwitchProfile {
   BuildContext context;
   GlobalKey<State> keyLoader = new GlobalKey<State>();
   Function callBackToRefresh;
+  bool isFromDashborad;
 
   FlutterToast toast = new FlutterToast();
 
+  static const double ActionWidgetSize = 55.0;
+  static const double PlusIconSize = 14.0;
+
   Widget buildActions(BuildContext _context, GlobalKey<State> _keyLoader,
-      Function _callBackToRefresh,
+      Function _callBackToRefresh, bool isFromDashborad,
       {GlobalKey<ScaffoldState> scaffold_state}) {
     context = _context;
     keyLoader = _keyLoader;
     callBackToRefresh = _callBackToRefresh;
+    isFromDashborad = isFromDashborad;
     String profileImage;
     MyProfileModel myProfile;
     try {
@@ -60,7 +69,7 @@ class SwitchProfile {
 
               //return new FamilyListDialog();
             },
-            child: CircleAvatar(
+            child: isFromDashborad?getCirleAvatarWithBorderIcon(myProfile):CircleAvatar(
               radius: 15,
               child: ClipOval(
                   child: myProfile != null
@@ -69,8 +78,8 @@ class SwitchProfile {
                               ? new FHBBasicWidget().getProfilePicWidgeUsingUrl(
                                   myProfile.result.profilePicThumbnailUrl)
                               : Container(
-                                  height: 50,
-                                  width: 50,
+                                  height: 50.0.h,
+                                  width: 50.0.h,
                                   color: Color(fhbColors.bgColorContainer),
                                   child: Center(
                                     child: Text(
@@ -84,13 +93,13 @@ class SwitchProfile {
                                     ),
                                   ))
                           : Container(
-                              height: 50,
-                              width: 50,
+                              height: 50.0.h,
+                              width: 50.0.h,
                               color: Color(fhbColors.bgColorContainer),
                             )
                       : Container(
-                          height: 50,
-                          width: 50,
+                          height: 50.0.h,
+                          width: 50.0.h,
                           color: Color(fhbColors.bgColorContainer),
                         )),
             )));
@@ -170,5 +179,78 @@ class SwitchProfile {
         toast.getToast(Constants.STR_NO_CONNECTIVITY, Colors.black54);
       }
     });
+  }
+
+  Widget getCirleAvatarWithBorderIcon(MyProfileModel myProfile) {
+    return Stack(
+      children: [
+        CircleAvatar(
+          radius: 18,
+          child: ClipOval(
+              child: myProfile != null
+                  ? myProfile.result != null
+                      ? myProfile.result.profilePicThumbnailUrl != null
+                          ? new FHBBasicWidget().getProfilePicWidgeUsingUrl(
+                              myProfile.result.profilePicThumbnailUrl)
+                          : Container(
+                              height: 50,
+                              width: 50,
+                              color: Color(fhbColors.bgColorContainer),
+                              child: Center(
+                                child: Text(
+                                  myProfile.result.firstName != null
+                                      ? myProfile.result.firstName[0]
+                                          .toUpperCase()
+                                      : '',
+                                  style: TextStyle(
+                                      color: Color(
+                                          CommonUtil().getMyPrimaryColor())),
+                                ),
+                              ))
+                      : Container(
+                          height: 50,
+                          width: 50,
+                          color: Color(fhbColors.bgColorContainer),
+                        )
+                  : Container(
+                      height: 50,
+                      width: 50,
+                      color: Color(fhbColors.bgColorContainer),
+                    )),
+        ),
+        _getPlusIcon(),
+      ],
+    );
+  }
+
+  Widget _getPlusIcon() {
+    return Positioned(
+      bottom: 0,
+      left: ((ActionWidgetSize / 2) - (PlusIconSize / 2)),
+      child: InkWell(
+        onTap: () {
+          navigateToAddFamily();
+        },
+        child: Container(
+            width: PlusIconSize, // PlusIconSize = 20.0;
+
+            height: PlusIconSize, // PlusIconSize = 20.0;
+
+            decoration: BoxDecoration(
+                color: ColorUtils.countColor,
+                borderRadius: BorderRadius.circular(15.0)),
+            child: Icon(
+              Icons.add,
+              color: Colors.white,
+              size: 12.0,
+            )),
+      ),
+    );
+  }
+
+  navigateToAddFamily() {
+    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
+      return UserAccounts(arguments: UserAccountsArguments(selectedIndex: 1));
+    }));
   }
 }

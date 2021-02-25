@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class AddReminder extends StatefulWidget {
   final ReminderModel model;
@@ -75,7 +76,10 @@ class _AddReminderState extends State<AddReminder> {
             ? Text(variable.strUpdateRemainder)
             : Text(variable.strAddRemainder),
         leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios),
+            icon: Icon(
+              Icons.arrow_back_ios,
+              size: 24.0.sp,
+            ),
             onPressed: () {
               Navigator.of(context).pop();
             }),
@@ -91,6 +95,9 @@ class _AddReminderState extends State<AddReminder> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         TextFormField(
+                          style: TextStyle(
+                            fontSize: 14.0.sp,
+                          ),
                           controller: tileContoller,
                           decoration: InputDecoration(
                               labelText: variable.strTitle,
@@ -99,6 +106,9 @@ class _AddReminderState extends State<AddReminder> {
                                   : null),
                         ),
                         TextFormField(
+                          style: TextStyle(
+                            fontSize: 14.0.sp,
+                          ),
                           controller: notesController,
                           decoration: InputDecoration(
                               labelText: variable.strNote,
@@ -123,10 +133,10 @@ class _AddReminderState extends State<AddReminder> {
                                 children: <Widget>[
                                   Text(FHBUtils().getFormattedDateOnly(
                                       selectedDate.toString())),
-                                  SizedBox(width: 10),
+                                  SizedBox(width: 10.0.w),
                                   Icon(
                                     Icons.calendar_today,
-                                    size: 18,
+                                    size: 18.0.sp,
                                     color: Colors.grey,
                                   )
                                 ],
@@ -140,10 +150,10 @@ class _AddReminderState extends State<AddReminder> {
                                 children: <Widget>[
                                   Text(
                                       FHBUtils().formatTimeOfDay(selectedTime)),
-                                  SizedBox(width: 10),
+                                  SizedBox(width: 10.0.w),
                                   Icon(
                                     Icons.alarm,
-                                    size: 18,
+                                    size: 18.0.sp,
                                     color: Colors.grey,
                                   )
                                 ],
@@ -151,7 +161,9 @@ class _AddReminderState extends State<AddReminder> {
                             ),
                           ],
                         ),
-                        SizedBox(height: 10),
+                        SizedBox(
+                          height: 10.0.h,
+                        ),
                         Align(
                             alignment: Alignment.centerRight,
                             child: Opacity(
@@ -159,11 +171,15 @@ class _AddReminderState extends State<AddReminder> {
                               child: Text(
                                 Constants.WrongTime,
                                 style: TextStyle(
-                                    color: Colors.red[500], fontSize: 14.0),
+                                  color: Colors.red[500],
+                                  fontSize: 14.0.sp,
+                                ),
                               ),
                             )),
                         Text(variable.strRepeatedInterval),
-                        SizedBox(height: 10),
+                        SizedBox(
+                          height: 10.0.h,
+                        ),
                         Center(
                           child: ToggleButtons(
                             borderColor: Colors.black,
@@ -177,28 +193,40 @@ class _AddReminderState extends State<AddReminder> {
                               Container(
                                 alignment: Alignment.center,
                                 constraints: BoxConstraints(
-                                    minWidth: 100, maxHeight: 40),
+                                  minWidth: 100.0.w,
+                                  maxHeight: 40.0.h,
+                                ),
                                 child: Text(
                                   variable.strDaily,
-                                  style: TextStyle(fontSize: 14),
+                                  style: TextStyle(
+                                    fontSize: 14.0.sp,
+                                  ),
                                 ),
                               ),
                               Container(
                                 alignment: Alignment.center,
                                 constraints: BoxConstraints(
-                                    minWidth: 100, maxHeight: 40),
+                                  minWidth: 100.0.w,
+                                  maxHeight: 40.0.h,
+                                ),
                                 child: Text(
                                   variable.strWeekly,
-                                  style: TextStyle(fontSize: 14),
+                                  style: TextStyle(
+                                    fontSize: 14.0.sp,
+                                  ),
                                 ),
                               ),
                               Container(
                                 alignment: Alignment.center,
                                 constraints: BoxConstraints(
-                                    minWidth: 100, maxHeight: 40),
+                                  minWidth: 100.0.w,
+                                  maxHeight: 40.0.h,
+                                ),
                                 child: Text(
                                   variable.strMonthly,
-                                  style: TextStyle(fontSize: 14),
+                                  style: TextStyle(
+                                    fontSize: 14.0.sp,
+                                  ),
                                 ),
                               ),
                             ],
@@ -221,10 +249,13 @@ class _AddReminderState extends State<AddReminder> {
                   Color(new CommonUtil().getMyPrimaryColor()),
                   Color(new CommonUtil().getMyGredientColor()),
                 ]),
-                width: 200,
+                width: 200.0.w,
                 child: Text(
                   isUpdate ? variable.strUpate : variable.strSave,
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14.0.sp,
+                  ),
                 ),
                 onPressed: () {
                   setReminder();

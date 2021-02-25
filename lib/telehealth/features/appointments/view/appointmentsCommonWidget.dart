@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -12,6 +12,7 @@ import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/model/Category/catergory_result.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
+import 'package:myfhb/src/ui/MyRecordsArguments.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/associaterecords/associate_success_response.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/associaterecords/associate_update_success_response.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
@@ -37,7 +38,7 @@ class AppointmentsCommonWidget {
       children: [
         Container(
 //          constraints:
-//              BoxConstraints(maxWidth: MediaQuery.of(context).size.width / 2.5),
+//              BoxConstraints(maxWidth: 1.sw / 2.5),
           child: Row(
             children: [
               TextWidget(
@@ -51,7 +52,7 @@ class AppointmentsCommonWidget {
               IconWidget(
                   colors: Color(new CommonUtil().getMyPrimaryColor()),
                   icon: Icons.info,
-                  size: 10,
+                  size: 10.0.sp,
                   onTap: () {}),
             ],
           ),
@@ -64,7 +65,7 @@ class AppointmentsCommonWidget {
     return TextWidget(
       text: doc == null ? '' : doc,
       colors: Colors.black26,
-      fontsize: 10.5,
+      fontsize: 10.5.sp,
       //fhbStyles.fnt_doc_specialist,
       softwrap: false,
       overflow: TextOverflow.ellipsis,
@@ -73,8 +74,7 @@ class AppointmentsCommonWidget {
 
   Widget docLoc(BuildContext context, doc) {
     return Container(
-      constraints:
-          BoxConstraints(maxWidth: MediaQuery.of(context).size.width / 2.5),
+      constraints: BoxConstraints(maxWidth: 1.sw / 2.5),
       child: TextWidget(
         text: doc == null ? '' : doc,
         overflow: TextOverflow.ellipsis,
@@ -144,16 +144,17 @@ class AppointmentsCommonWidget {
           await Navigator.of(context)
               .push(MaterialPageRoute(
             builder: (context) => MyRecords(
-              categoryPosition: position,
-              allowSelect: false,
-              isAudioSelect: false,
-              isNotesSelect: isUpcoming ? true : false,
-              selectedMedias: notesId,
-              isFromChat: false,
-              showDetails: false,
-              isAssociateOrChat: isUpcoming ? true : false,
-              fromAppointments: true,
-            ),
+                argument: MyRecordsArgument(
+                    categoryPosition: position,
+                    allowSelect: false,
+                    isAudioSelect: false,
+                    isNotesSelect: isUpcoming ? true : false,
+                    selectedMedias: notesId,
+                    isFromChat: false,
+                    showDetails: false,
+                    isAssociateOrChat: isUpcoming ? true : false,
+                    fromAppointments: true,
+                    fromClass: 'appointments')),
           ))
               .then((results) {
             try {
@@ -179,7 +180,7 @@ class AppointmentsCommonWidget {
             } catch (e) {}
           });
         }, notesCount),
-        SizedBoxWidget(width: 15.0),
+        SizedBoxWidget(width: 15.0.w),
         iconWithText(
             Constants.Appointments_voiceNotesImage,
             Color(new CommonUtil().getMyPrimaryColor()),
@@ -189,16 +190,17 @@ class AppointmentsCommonWidget {
           await Navigator.of(context)
               .push(MaterialPageRoute(
             builder: (context) => MyRecords(
-              categoryPosition: position,
-              allowSelect: false,
-              isAudioSelect: isUpcoming ? true : false,
-              isNotesSelect: false,
-              selectedMedias: voiceIds,
-              isFromChat: false,
-              showDetails: false,
-              isAssociateOrChat: isUpcoming ? true : false,
-              fromAppointments: true,
-            ),
+                argument: MyRecordsArgument(
+                    categoryPosition: position,
+                    allowSelect: false,
+                    isAudioSelect: isUpcoming ? true : false,
+                    isNotesSelect: false,
+                    selectedMedias: voiceIds,
+                    isFromChat: false,
+                    showDetails: false,
+                    isAssociateOrChat: isUpcoming ? true : false,
+                    fromAppointments: true,
+                    fromClass: 'appointments')),
           ))
               .then((results) {
             try {
@@ -224,7 +226,7 @@ class AppointmentsCommonWidget {
             } catch (e) {}
           });
         }, voiceNotesCount),
-        SizedBoxWidget(width: 15.0),
+        SizedBoxWidget(width: 15.0.w),
         iconWithText(
             Constants.Appointments_recordsImage,
             Color(new CommonUtil().getMyPrimaryColor()),
@@ -234,16 +236,18 @@ class AppointmentsCommonWidget {
 
             await Navigator.of(context)
                 .push(MaterialPageRoute(
-              builder: (context) => MyRecords(
-                  categoryPosition: position,
-                  allowSelect: isUpcoming ? true : false,
-                  isAudioSelect: false,
-                  isNotesSelect: false,
-                  selectedMedias: recordIds,
-                  isFromChat: false,
-                  showDetails: false,
-                  isAssociateOrChat: isUpcoming ? true : false),
-            ))
+                    builder: (context) => MyRecords(
+                          argument: MyRecordsArgument(
+                              categoryPosition: position,
+                              allowSelect: isUpcoming ? true : false,
+                              isAudioSelect: false,
+                              isNotesSelect: false,
+                              selectedMedias: recordIds,
+                              isFromChat: false,
+                              showDetails: false,
+                              isAssociateOrChat: isUpcoming ? true : false,
+                              fromClass: 'appointments'),
+                        )))
                 .then((results) {
               try {
                 if (results.containsKey('metaId')) {
@@ -292,8 +296,8 @@ class AppointmentsCommonWidget {
             overflow: Overflow.visible,
             children: <Widget>[
               Container(
-                height: 20,
-                width: 20,
+                height: 20.0.h,
+                width: 20.0.h,
                 child: Image.asset(
                   imageText,
                   color: color,
@@ -308,10 +312,10 @@ class AppointmentsCommonWidget {
             ],
           ),
           SizedBoxWidget(
-            height: 5.0,
+            height: 5.0.h,
           ),
           TextWidget(
-            fontsize: 8,
+            fontsize: 8.0.sp,
             text: text,
             fontWeight: FontWeight.w400,
             colors: color,
@@ -325,17 +329,17 @@ class AppointmentsCommonWidget {
     return Column(
       children: [
         Container(
-            height: 20,
-            width: 20,
+            height: 20.0.h,
+            width: 20.0.h,
             child: SvgPicture.asset(
               imageText,
               color: color,
             )),
         SizedBoxWidget(
-          height: 5.0,
+          height: 5.0.h,
         ),
         TextWidget(
-          fontsize: 8,
+          fontsize: 8.0.sp,
           text: text,
           fontWeight: FontWeight.w400,
           colors: color,
@@ -348,8 +352,8 @@ class AppointmentsCommonWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 10),
       child: Container(
-        height: 20,
-        width: 70,
+        height: 20.0.h,
+        width: 70.0.h,
         child: OutlineButton(
           shape: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
           borderSide:
@@ -358,7 +362,7 @@ class AppointmentsCommonWidget {
           child: TextWidget(
             text: Constants.Appointments_joinCall,
             colors: Color(new CommonUtil().getMyPrimaryColor()),
-            fontsize: 8,
+            fontsize: 8.0.sp,
           ),
           color: Color(new CommonUtil().getMyPrimaryColor()),
         ),
@@ -372,7 +376,7 @@ class AppointmentsCommonWidget {
         decoration: BoxDecoration(
             border: Border.all(
               color: Color(new CommonUtil().getMyPrimaryColor()),
-              width: 3,
+              width: 3.0.w,
             ),
             borderRadius: BorderRadius.circular(50.0),
             gradient: LinearGradient(
@@ -381,11 +385,11 @@ class AppointmentsCommonWidget {
                 Color(new CommonUtil().getMyGredientColor())
               ],
             )),
-        height: 40,
-        width: 40,
+        height: 40.0.h,
+        width: 40.0.h,
         alignment: Alignment.center,
         child: TextWidget(
-          fontsize: 20,
+          fontsize: 20.0.sp,
           text: doc.toString(),
           fontWeight: FontWeight.w600,
           colors: Colors.white,
@@ -401,14 +405,14 @@ class AppointmentsCommonWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(50),
         side: BorderSide(
-            width: 2, color: Color(new CommonUtil().getMyPrimaryColor())),
+            width: 2.0.w, color: Color(new CommonUtil().getMyPrimaryColor())),
       ),
       elevation: 0.0,
       onPressed: () {},
       child: IconWidget(
         icon: Icons.add,
         colors: Color(new CommonUtil().getMyPrimaryColor()),
-        size: 24,
+        size: 24.0.sp,
         onTap: () {
           Navigator.of(context).pop();
           Navigator.pushNamed(
@@ -429,7 +433,7 @@ class AppointmentsCommonWidget {
           colors: Color(CommonUtil().getMyPrimaryColor()),
           overflow: TextOverflow.visible,
           fontWeight: FontWeight.w500,
-          fontsize: 14,
+          fontsize: 14.0.sp,
           softwrap: true,
         ));
   }
@@ -464,7 +468,9 @@ class AppointmentsCommonWidget {
     int position = 0;
     List<CategoryResult> categoryDataList = List();
     categoryDataList = getCategoryList();
-    for (int i = 0; i < (categoryDataList==null?0:categoryDataList.length); i++) {
+    for (int i = 0;
+        i < (categoryDataList == null ? 0 : categoryDataList.length);
+        i++) {
       if (categoryName == categoryDataList[i].categoryName) {
         print(categoryName + ' ****' + categoryDataList[i].categoryName);
         position = i;
@@ -517,12 +523,12 @@ class AppointmentsCommonWidget {
                     : Image.network(
                         doc.doctor.user.profilePicThumbnailUrl,
                         fit: BoxFit.cover,
-                        height: 40,
-                        width: 40,
+                        height: 40.0.h,
+                        width: 40.0.h,
                       ),
             color: Color(fhbColors.bgColorContainer),
-            height: 50,
-            width: 50,
+            height: 50.0.h,
+            width: 50.0.h,
           ),
         ));
   }

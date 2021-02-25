@@ -10,6 +10,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class SignUpScreen extends StatefulWidget {
   final String enteredMobNumber;
@@ -28,7 +29,7 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  final double circleRadius = 100.0;
+  final double circleRadius = 100.0.h;
   final double circleBorderWidth = 2.0;
 
   LoginBloc _loginBloc;
@@ -61,7 +62,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
         appBar: AppBar(
             elevation: 0,
             leading: IconButton(
-              icon: Icon(Icons.arrow_back_ios),
+              icon: Icon(
+                Icons.arrow_back_ios,
+                size: 24.0.sp,
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -94,7 +98,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                           Colors.grey[200].withOpacity(0.5)))),
                         ),
                       ),
-                   
                       Padding(
                         padding: EdgeInsets.all(5),
                         child: TextField(
@@ -147,7 +150,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: 10.0.h),
                   Center(
                     child: Container(
                       constraints: BoxConstraints(maxWidth: 200),
@@ -176,7 +179,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   padding: EdgeInsets.only(bottom: circleRadius / 2.0),
                   child: Container(
                     color: Color(new CommonUtil().getMyPrimaryColor()),
-                    height: 160.0,
+                    height: 160.0.h,
                   ),
                 ),
                 Container(
@@ -194,10 +197,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 fit: BoxFit.cover,
                                 image: imageURI != null
                                     ? FileImage(imageURI)
-                                    : AssetImage(variable.icon_fhb)
-
-                               
-                                )),
+                                    : AssetImage(variable.icon_fhb))),
                       ),
                       onTap: () {
                         saveMediaDialog(context);
@@ -216,11 +216,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
       isExpanded: true,
       value: dropDownValue,
       icon: Icon(Icons.expand_more),
-      iconSize: 24,
+      iconSize: 24.0.sp,
       elevation: 16,
       style: TextStyle(color: Colors.black),
       underline: Container(
-        height: 1,
+        height: 1.0.h,
         color: Colors.grey,
       ),
       onChanged: (String newValue) {
@@ -228,8 +228,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           dropDownValue = newValue;
         });
       },
-      items: variable.genderList
-          .map<DropdownMenuItem<String>>((String value) {
+      items: variable.genderList.map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,
           child: Text(value),
@@ -264,7 +263,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         });
         PreferenceUtil.saveString(
             CommonConstants.KEY_COUNTRYNAME, widget.selectedCountry);
-     
+
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) {
@@ -294,12 +293,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
     if (phoneNumber.text == '') {
       isValid = false;
       strErrorMsg = variable.strEnterMobileNum;
-    }
-    else if (firstName.text == '') {
+    } else if (firstName.text == '') {
       isValid = false;
       strErrorMsg = variable.strEnterFirstname;
-    } 
-    else if (lastName.text == '') {
+    } else if (lastName.text == '') {
       isValid = false;
       strErrorMsg = variable.strEnterLastName;
     } else {

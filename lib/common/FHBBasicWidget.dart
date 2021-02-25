@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -7,6 +8,7 @@ import 'package:myfhb/common/AudioWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/database/model/UnitsMesurement.dart';
 import 'package:myfhb/src/model/user/ProfilePicThumbnail.dart';
+import 'package:myfhb/src/ui/audio/AudioScreenArguments.dart';
 import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/widgets/RaisedGradientButton.dart';
@@ -27,12 +29,14 @@ class FHBBasicWidget {
 
   Widget getSaveButton(Function onSavedPressed) {
     return RaisedGradientButton(
-      width: 120,
-      height: 40,
+      width: 120.0.w,
+      height: 40.0.h,
       child: Text(
         variable.strSave,
         style: TextStyle(
-            color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
+            color: Colors.white,
+            fontSize: 16.0.sp,
+            fontWeight: FontWeight.w500),
       ),
       borderRadius: 30,
       gradient: LinearGradient(
@@ -53,7 +57,7 @@ class FHBBasicWidget {
       TextEditingController searchController,
       String searchParam) {
     return Container(
-        width: MediaQuery.of(context).size.width - 60,
+        width: 1.sw - 60,
         child: TextField(
           autofocus: false,
           onTap: () {
@@ -66,7 +70,7 @@ class FHBBasicWidget {
   Widget getTextFieldWithNoCallbacks(
       BuildContext context, TextEditingController searchController) {
     return Container(
-        width: MediaQuery.of(context).size.width - 60,
+        width: 1.sw - 60,
         child: TextField(
           autofocus: false,
           controller: searchController,
@@ -76,7 +80,7 @@ class FHBBasicWidget {
   Widget getTextFieldWithNoCallbacksForMemo(
       BuildContext context, TextEditingController searchController) {
     return Container(
-        width: MediaQuery.of(context).size.width - 60,
+        width: 1.sw - 60,
         child: TextField(
           maxLength: 500,
           autofocus: false,
@@ -86,10 +90,10 @@ class FHBBasicWidget {
 
   Widget getTextForAlertDialog(BuildContext context, String hintText) {
     return Container(
-        width: MediaQuery.of(context).size.width - 60,
+        width: 1.sw - 60,
         child: Text(
           hintText,
-          style: TextStyle(fontSize: 14),
+          style: TextStyle(fontSize: 14.0.sp),
         ));
   }
 
@@ -103,7 +107,7 @@ class FHBBasicWidget {
       TextEditingController dateController,
       Function(DateTime dateTime, String selectedDate) onDateSelected) {
     return Container(
-        width: MediaQuery.of(context).size.width - 60,
+        width: 1.sw - 60,
         child: TextField(
           autofocus: false,
           onTap: () {},
@@ -138,7 +142,7 @@ class FHBBasicWidget {
 
   Widget getTextFiledWithNoHInt(BuildContext context) {
     return Container(
-        width: MediaQuery.of(context).size.width - 60,
+        width: 1.sw - 60,
         child: TextField(
           autofocus: false,
           onTap: () {},
@@ -173,14 +177,14 @@ class FHBBasicWidget {
     return profilePicThumbnail != null
         ? Image.memory(
             Uint8List.fromList(profilePicThumbnail.data),
-            height: 50,
-            width: 50,
+            height: 50.0.h,
+            width: 50.0.h,
             fit: BoxFit.cover,
           )
         : Container(
             color: Color(fhbColors.bgColorContainer),
-            height: 50,
-            width: 50,
+            height: 50.0.h,
+            width: 50.0.h,
           );
   }
 
@@ -191,16 +195,16 @@ class FHBBasicWidget {
     if (profilePicThumbnailUrl != '') {
       return Image.network(
         profilePicThumbnailUrl,
-        height: 50,
-        width: 50,
+        height: 50.0.h,
+        width: 50.0.h,
         fit: BoxFit.cover,
         headers: {HttpHeaders.authorizationHeader: authToken},
       );
     } else {
       return Container(
         color: Color(fhbColors.bgColorContainer),
-        height: 50,
-        width: 50,
+        height: 50.0.h,
+        width: 50.0.h,
       );
     }
     /* });*/
@@ -214,8 +218,8 @@ class FHBBasicWidget {
   Widget getDefaultProfileImage() {
     return Image.network(
       '',
-      height: 50,
-      width: 50,
+      height: 50.0.h,
+      width: 50.0.h,
     );
   }
 
@@ -238,7 +242,7 @@ class FHBBasicWidget {
 
     String errorValue = error;
     return Container(
-        width: MediaQuery.of(context).size.width - 60,
+        width: 1.sw - 60,
         child: TextField(
           autofocus: false,
           onTap: () {},
@@ -270,7 +274,7 @@ class FHBBasicWidget {
   Widget getTextFiledWithHint(BuildContext context, String hintTextValue,
       TextEditingController memoController) {
     return Container(
-        width: MediaQuery.of(context).size.width - 60,
+        width: 1.sw - 60,
         child: TextField(
             autofocus: false,
             onTap: () {},
@@ -284,8 +288,8 @@ class FHBBasicWidget {
       Function(bool containsAudio, String audioPath) updateUI) {
     return GestureDetector(
       child: Container(
-        height: 80,
-        width: 80,
+        height: 80.0.h,
+        width: 80.0.h,
         padding: EdgeInsets.all(10),
         child: Material(
           color: Colors.transparent,
@@ -295,15 +299,16 @@ class FHBBasicWidget {
             //backgroundColor: Colors.transparent,
             backgroundColor: ColorUtils.greycolor,
             child: Icon(Icons.mic,
-                size: 40, color: Color(CommonUtil().getMyPrimaryColor())),
-            radius: 30.0,
+                size: 40.0.sp, color: Color(CommonUtil().getMyPrimaryColor())),
+            radius: 30.0.sp,
           ),
         ),
       ),
       onTap: () async {
         await Navigator.of(context)
             .push(MaterialPageRoute(
-          builder: (context) => AudioRecordScreen(fromVoice: false),
+          builder: (context) => AudioRecordScreen(
+              arguments: AudioScreenArguments(fromVoice: false)),
         ))
             .then((results) {
           if (results != null) {
@@ -367,11 +372,12 @@ class FHBBasicWidget {
             title: Text(
               variable.strLogout,
               style: TextStyle(
-                  fontSize: 16, color: Color(CommonUtil().getMyPrimaryColor())),
+                  fontSize: 16.0.sp,
+                  color: Color(CommonUtil().getMyPrimaryColor())),
             ),
             content: Text(
               variable.strLogoutMsg,
-              style: TextStyle(fontSize: 14),
+              style: TextStyle(fontSize: 14.0.sp),
             ),
             actions: <Widget>[
               FlatButton(
@@ -410,7 +416,7 @@ class FHBBasicWidget {
         height: double.infinity,
         width: double.infinity,
         container: Container(
-            height: 120.0,
+            height: 120.0.h,
             margin: const EdgeInsets.symmetric(
               vertical: 16.0,
               horizontal: 24.0,
@@ -418,8 +424,8 @@ class FHBBasicWidget {
             child: new Stack(
               children: <Widget>[
                 Container(
-                  height: 110.0,
-                  width: 320,
+                  height: 110.0.h,
+                  width: 320.0.w,
                   margin: new EdgeInsets.only(left: 40.0),
                   child: Padding(
                       padding: EdgeInsets.only(left: 40, right: 10),
@@ -430,14 +436,16 @@ class FHBBasicWidget {
                           Text(
                             title,
                             textAlign: TextAlign.start,
-                            style: TextStyle(color: Colors.white, fontSize: 16),
+                            style: TextStyle(
+                                color: Colors.white, fontSize: 16.0.sp),
                             softWrap: true,
                           ),
-                          SizedBox(height: 5),
+                          SizedBox(height: 5.0.h),
                           Text(
                             desc,
                             textAlign: TextAlign.start,
-                            style: TextStyle(color: Colors.white, fontSize: 13),
+                            style: TextStyle(
+                                color: Colors.white, fontSize: 13.0.sp),
                             softWrap: true,
                           ),
                         ],
@@ -464,8 +472,8 @@ class FHBBasicWidget {
                   alignment: FractionalOffset.centerLeft,
                   child: new Image(
                     image: new AssetImage(variable.icon_mayaMain),
-                    height: 80.0,
-                    width: 80.0,
+                    height: 80.0.h,
+                    width: 80.0.h,
                   ),
                   decoration: BoxDecoration(
                       color: Colors.white, shape: BoxShape.circle),
@@ -485,7 +493,7 @@ class FHBBasicWidget {
         children: <Widget>[
           Text(errorMsg,
               style: TextStyle(
-                fontSize: 13,
+                fontSize: 13.0.sp,
               )),
         ],
       ),
@@ -500,11 +508,12 @@ class FHBBasicWidget {
             title: Text(
               title,
               style: TextStyle(
-                  fontSize: 16, color: Color(CommonUtil().getMyPrimaryColor())),
+                  fontSize: 16.0.sp,
+                  color: Color(CommonUtil().getMyPrimaryColor())),
             ),
             content: Text(
               msg,
-              style: TextStyle(fontSize: 14),
+              style: TextStyle(fontSize: 14.0.sp),
             ),
             actions: <Widget>[
               FlatButton(
@@ -532,17 +541,17 @@ class FHBBasicWidget {
   Widget getRichTextFieldWithNoCallbacks(
       BuildContext context, TextEditingController searchController) {
     return Container(
-      height: MediaQuery.of(context).size.height / 5,
+      height: 1.sh / 5,
       child: TextField(
         autofocus: false,
         decoration: InputDecoration(
             disabledBorder:
                 OutlineInputBorder(borderSide: BorderSide(width: 5)),
-            hintStyle: TextStyle(fontSize: 13),
+            hintStyle: TextStyle(fontSize: 13.0.sp),
             hintText:
                 'Provide details on existing illness, allergies, history of the disease and medication taken',
             border: OutlineInputBorder(
-                borderSide: BorderSide(width: 5),
+                borderSide: BorderSide(width: 5.0.w),
                 borderRadius: BorderRadius.circular(7))),
         controller: searchController,
         maxLength: 500,
@@ -572,13 +581,13 @@ class FHBBasicWidget {
 
     String errorValue = error;
     return Container(
-        width: 50,
+        width: 50.0.w,
         child: TextField(
           autofocus: false,
           textAlign: TextAlign.center,
           maxLength: 3,
           style: TextStyle(
-              fontSize: 13.0,
+              fontSize: 13.0.sp,
               fontWeight: FontWeight.w500,
               color: getColorBasedOnDevice(deviceName)),
           onTap: () {},
@@ -587,14 +596,14 @@ class FHBBasicWidget {
               counterText: "",
               border: UnderlineInputBorder(
                 borderSide: BorderSide(
-                    color: getColorBasedOnDevice(deviceName), width: 0.5),
+                    color: getColorBasedOnDevice(deviceName), width: 0.5.w),
               ),
               hintText: '0',
-              hintStyle: TextStyle(color: Colors.grey, fontSize: 13),
+              hintStyle: TextStyle(color: Colors.grey, fontSize: 13.0.sp),
               contentPadding: EdgeInsets.zero),
           cursorColor: getColorBasedOnDevice(deviceName),
           keyboardType: TextInputType.number,
-          cursorWidth: 0.5,
+          cursorWidth: 0.5.w,
           onChanged: (value) {
             var number = int.parse(value);
             if (number < unitsMesurements.minValue ||

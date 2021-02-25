@@ -5,6 +5,7 @@ import 'package:myfhb/video_call/Prescription/view/new_prescription.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import '../../utils/priscriptionConstants.dart';
 import '../constants/prescription_constants.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class ExistingPrescription extends StatefulWidget {
   @override
@@ -78,20 +79,20 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
     return SafeArea(
         child: Scaffold(
             appBar: PreferredSize(
-                preferredSize: Size.fromHeight(80),
+                preferredSize: Size.fromHeight(80.0.h),
                 child: prescriptionAppBar()),
             body: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
                   Container(
-                    height: 10,
+                    height: 10.0.h,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 30, right: 30),
                     child: Image.asset(prescriptionImage),
                   ),
                   Container(
-                    height: 5,
+                    height: 5.0.h,
                   ),
                   Container(
                     padding: EdgeInsets.only(left: 30, right: 30),
@@ -106,14 +107,14 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
                               prescriptionName,
                               style: TextStyle(
                                   color: Colors.grey,
-                                  fontSize: 12,
+                                  fontSize: 12.0.sp,
                                   fontWeight: FontWeight.w400),
                             ),
                             Text(
                               prescriptionname,
                               style: TextStyle(
                                   color: Colors.black,
-                                  fontSize: 13,
+                                  fontSize: 13.0.sp,
                                   fontWeight: FontWeight.w400),
                             )
                           ],
@@ -122,21 +123,21 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
                           prescriptionDate,
                           style: TextStyle(
                               color: Colors.black,
-                              fontSize: 12,
+                              fontSize: 12.0.sp,
                               fontWeight: FontWeight.w400),
                         )
                       ],
                     ),
                   ),
                   SizedBox(
-                    height: 15,
+                    height: 15.0.h,
                   ),
                   Container(
                     color: Colors.grey,
-                    height: 1,
+                    height: 1.0.h,
                   ),
                   SizedBox(
-                    height: 15,
+                    height: 15.0.h,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 30, right: 30),
@@ -150,13 +151,13 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
                               prescriptionGender,
                               style: TextStyle(
                                   color: Colors.grey,
-                                  fontSize: 12,
+                                  fontSize: 12.0.sp,
                                   fontWeight: FontWeight.w400),
                             ),
                             Text(prescriptiongender,
                                 style: TextStyle(
                                     color: Colors.black,
-                                    fontSize: 13,
+                                    fontSize: 13.0.sp,
                                     fontWeight: FontWeight.w400))
                           ],
                         ),
@@ -167,13 +168,13 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
                               prescriptionAge,
                               style: TextStyle(
                                   color: Colors.grey,
-                                  fontSize: 12,
+                                  fontSize: 12.0.sp,
                                   fontWeight: FontWeight.w400),
                             ),
                             Text(prescriptionage,
                                 style: TextStyle(
                                     color: Colors.black,
-                                    fontSize: 13,
+                                    fontSize: 13.0.sp,
                                     fontWeight: FontWeight.w400))
                           ],
                         ),
@@ -183,13 +184,13 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
                             Text(prescriptionMobile,
                                 style: TextStyle(
                                     color: Colors.grey,
-                                    fontSize: 12,
+                                    fontSize: 12.0.sp,
                                     fontWeight: FontWeight.w400)),
                             SizedBox(),
                             Text(prescriptionmobile,
                                 style: TextStyle(
                                     color: Colors.black,
-                                    fontSize: 13,
+                                    fontSize: 13.0.sp,
                                     fontWeight: FontWeight.w400))
                           ],
                         )
@@ -197,14 +198,14 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
                     ),
                   ),
                   SizedBox(
-                    height: 15,
+                    height: 15.0.h,
                   ),
                   Container(
                     color: Colors.grey,
-                    height: 1,
+                    height: 1.0.h,
                   ),
                   SizedBox(
-                    height: 15,
+                    height: 15.0.h,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 30, right: 30),
@@ -212,45 +213,45 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Container(
-                          width: 75,
+                          width: 75.0.w,
                           child: Text(
                             prescriptionName,
                             style: TextStyle(
                                 color: Colors.grey,
-                                fontSize: 12,
+                                fontSize: 12.0.sp,
                                 fontWeight: FontWeight.w400),
                           ),
                         ),
 //                      SizedBoxWidget(
-//                          width: MediaQuery.of(context).size.width * 0.12),
+//                          width: 1.sw * 0.12),
                         Text(
                           bfaf,
                           style: TextStyle(
                               color: Colors.grey,
-                              fontSize: 12,
+                              fontSize: 12.0.sp,
                               fontWeight: FontWeight.w400),
                         ),
 //                      SizedBoxWidget(
-//                          width: MediaQuery.of(context).size.width * 0.04),
+//                          width: 1.sw * 0.04),
                         Text(
                           days,
                           style: TextStyle(
                               color: Colors.grey,
-                              fontSize: 12,
+                              fontSize: 12.0.sp,
                               fontWeight: FontWeight.w400),
                         ),
                         Text(
                           schedule,
                           style: TextStyle(
                               color: Colors.grey,
-                              fontSize: 12,
+                              fontSize: 12.0.sp,
                               fontWeight: FontWeight.w400),
                         ),
                         Text(
                           qty,
                           style: TextStyle(
                               color: Colors.grey,
-                              fontSize: 12,
+                              fontSize: 12.0.sp,
                               fontWeight: FontWeight.w400),
                         )
                       ],
@@ -265,7 +266,7 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
                     physics: NeverScrollableScrollPhysics(),
                   ),
                   SizedBox(
-                    height: 50,
+                    height: 50.0.h,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 30.0, right: 30.0),
@@ -277,27 +278,27 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
                             prescriptionNotes,
                             style: TextStyle(
                                 color: Colors.grey,
-                                fontSize: 13,
+                                fontSize: 13.0.sp,
                                 fontWeight: FontWeight.w400),
                             textAlign: TextAlign.start,
                           ),
                         ),
                         SizedBox(
-                          height: 5,
+                          height: 5.0.h,
                         ),
                         Text(prescriptiondescription,
                             style: TextStyle(
                                 color: Colors.black,
-                                fontSize: 13,
+                                fontSize: 13.0.sp,
                                 fontWeight: FontWeight.w400)),
                       ],
                     ),
                   ),
                   SizedBox(
-                    height: 20,
+                    height: 20.0.h,
                   ),
                   Container(
-                      height: 45,
+                      height: 45.0.h,
                       alignment: Alignment.centerRight,
                       padding: EdgeInsets.only(right: 20),
                       child: Image.asset(
@@ -305,7 +306,7 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
                         fit: BoxFit.contain,
                       )),
                   SizedBox(
-                    height: 40,
+                    height: 40.0.h,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -316,7 +317,7 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
                             isDuplicatedPrescription: false,
                           )),
                       SizedBox(
-                        width: 20,
+                        width: 20.0.w,
                       ),
                       prescriptionButton(
                           '$duplicateButtonText',
@@ -335,109 +336,120 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
       List<PrescriptionMedicines> medsList, int pos, BuildContext ctxt) {
     return Padding(
       padding: const EdgeInsets.only(left: 30, right: 30, bottom: 5, top: 5),
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <
-          Widget>[
+      child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
 //      SizedBoxWidget(
-//        width: MediaQuery.of(context).size.width * 0.08,
+//        width: 1.sw * 0.08,
 //      ),
-        // Text(''),
-        Container(
-            width: 75, //MediaQuery.of(context).size.width * 0.2,
-            child: Text(
-              medsList[pos].medicineName,
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w400),
-            )),
+            // Text(''),
+            Container(
+                width: 75.0.w, //1.sw * 0.2,
+                child: Text(
+                  medsList[pos].medicineName,
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 13.0.sp,
+                      fontWeight: FontWeight.w400),
+                )),
 //      SizedBoxWidget(
 //        width: 8,
 //      ),
-        tabletIntakeSwitch(meds[pos].beforeOrAfterFood),
+            tabletIntakeSwitch(meds[pos].beforeOrAfterFood),
 //      SizedBoxWidget(
 //        width: 20,
 //      ),
-        Text(
-          meds[pos].days,
-          textAlign: TextAlign.end,
-          style: TextStyle(
-              color: Colors.black, fontSize: 13, fontWeight: FontWeight.w400),
-        ),
+            Text(
+              meds[pos].days,
+              textAlign: TextAlign.end,
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 13.0.sp,
+                  fontWeight: FontWeight.w400),
+            ),
 //      SizedBoxWidget(
 //        width: 15,
 //      ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            SizedBox(
-              width: 10,
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                SizedBox(
+                  width: 10.0.w,
+                ),
+                GestureDetector(
+                  child: Container(
+                      width: 20.0.w,
+                      height: 15.0.h,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(2),
+                          border: Border.all(
+                              color: Color(CommonUtil().getMyPrimaryColor()),
+                              width: 0.5.w)),
+                      child: Text(
+                        medsList[pos].schedule.morning,
+                        style: TextStyle(
+                            color: Colors.black87,
+                            fontSize: 10.0.sp,
+                            fontWeight: FontWeight.w400),
+                      ),
+                      alignment: Alignment.center),
+                  onTap: () {},
+                ),
+                SizedBox(
+                  width: 5.0.w,
+                ),
+                GestureDetector(
+                  child: Container(
+                      width: 20.0.w,
+                      height: 15.0.h,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(2),
+                          border: Border.all(
+                              color: Color(CommonUtil().getMyPrimaryColor()),
+                              width: 0.5.w)),
+                      child: Text(
+                        medsList[pos].schedule.morning,
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 10.0.sp,
+                            fontWeight: FontWeight.w400),
+                      ),
+                      alignment: Alignment.center),
+                  onTap: () {},
+                ),
+                SizedBox(
+                  width: 5.0.w,
+                ),
+                GestureDetector(
+                  child: Container(
+                      width: 20.0.w,
+                      height: 15.0.h,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(2),
+                          border: Border.all(
+                              color: Color(CommonUtil().getMyPrimaryColor()),
+                              width: 0.5.w)),
+                      child: Text(
+                        medsList[pos].schedule.morning,
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 10.0.sp,
+                            fontWeight: FontWeight.w400),
+                      ),
+                      alignment: Alignment.center),
+                  onTap: () {},
+                ),
+              ],
             ),
-            GestureDetector(
-              child: Container(
-                  width: 20,
-                  height: 15,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(2),
-                      border: Border.all(color: Color(CommonUtil().getMyPrimaryColor()), width: 0.5)),
-                  child: Text(
-                    medsList[pos].schedule.morning,
-                    style: TextStyle(
-                        color: Colors.black87,
-                        fontSize: 10,
-                        fontWeight: FontWeight.w400),
-                  ),
-                  alignment: Alignment.center),
-              onTap: () {},
-            ),
-            SizedBox(
-              width: 5,
-            ),
-            GestureDetector(
-              child: Container(
-                  width: 20,
-                  height: 15,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(2),
-                      border: Border.all(color: Color(CommonUtil().getMyPrimaryColor()), width: 0.5)),
-                  child: Text(
-                    medsList[pos].schedule.morning,
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 10,
-                        fontWeight: FontWeight.w400),
-                  ),
-                  alignment: Alignment.center),
-              onTap: () {},
-            ),
-            SizedBox(
-              width: 5,
-            ),
-            GestureDetector(
-              child: Container(
-                  width: 20,
-                  height: 15,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(2),
-                      border: Border.all(color: Color(CommonUtil().getMyPrimaryColor()), width: 0.5)),
-                  child: Text(
-                    medsList[pos].schedule.morning,
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 10,
-                        fontWeight: FontWeight.w400),
-                  ),
-                  alignment: Alignment.center),
-              onTap: () {},
-            ),
-          ],
-        ),
 
-        Text(
-          medsList[pos].quantity,
-          style: TextStyle(
-              color: Colors.black, fontSize: 13, fontWeight: FontWeight.w400),
-        ),
-      ]),
+            Text(
+              medsList[pos].quantity,
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 13.0.sp,
+                  fontWeight: FontWeight.w400),
+            ),
+          ]),
     );
   }
 
@@ -448,7 +460,10 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
           side: BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))),
       child: Text(
         buttonText,
-        style: TextStyle(color: Color(CommonUtil().getMyPrimaryColor())),
+        style: TextStyle(
+          color: Color(CommonUtil().getMyPrimaryColor()),
+          fontSize: 14.0.sp,
+        ),
       ),
       onPressed: () {
         // Navigator.of(context).
@@ -472,14 +487,17 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
         errorBorder: InputBorder.none,
         disabledBorder: InputBorder.none,
       ),
-      style: TextStyle(color: Colors.black),
+      style: TextStyle(
+        color: Colors.black,
+        fontSize: 14.0.sp,
+      ),
     );
   }
 
   Widget tabletTextField(medName) {
     return Container(
-        height: 30,
-        width: MediaQuery.of(context).size.width * 0.3,
+        height: 30.0.h,
+        width: 1.sw * 0.3,
         child: noUnderLineTextField(medName));
   }
 
@@ -489,17 +507,17 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
     return Stack(
       children: <Widget>[
         Container(
-          width: 40,
-          height: 23,
+          width: 40.0.w,
+          height: 23.0.h,
           child: FlutterSwitch(
             activeColor: Colors.grey.withOpacity(0.4),
             activeText: "$beforeFoodSwitchText",
             inactiveText: "$afterFoodSwitchText",
             value: status,
             inactiveColor: Colors.grey.withOpacity(0.4),
-            toggleSize: 10,
-            valueFontSize: 10.0,
-            borderRadius: 30.0,
+            toggleSize: 10.0.sp,
+            valueFontSize: 10.0.sp,
+            borderRadius: 30.0.sp,
             showOnOff: true,
             activeTextColor: Colors.black,
             inactiveTextColor: Colors.black,
@@ -512,8 +530,8 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
           ),
         ),
         Container(
-          width: 50,
-          height: 23,
+          width: 50.0.w,
+          height: 23.0.h,
           color: Colors.transparent,
         )
       ],
@@ -531,9 +549,9 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
   //       inactiveText: "AF",
   //       value: status,
   //       inactiveColor: Colors.grey.withOpacity(0.4),
-  //       toggleSize: 10,
-  //       valueFontSize: 10.0,
-  //       borderRadius: 30.0,
+  //       toggleSize: 10.0.sp,
+  //       valueFontSize: 10.0.sp,
+  //       borderRadius: 30.0.sp,
   //       showOnOff: true,
   //       activeTextColor: Colors.black,
   //       inactiveTextColor: Colors.black,
@@ -556,7 +574,7 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
             child: Row(
           children: <Widget>[
             SizedBox(
-              width: 15,
+              width: 15.0.w,
             ),
             GestureDetector(
               onTap: () {
@@ -564,25 +582,25 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
               },
               child: Icon(
                 Icons.arrow_back_ios,
-                size: 20,
+                size: 24.0.sp,
                 color: Colors.white,
               ),
             ),
             SizedBox(
-              width: 20,
+              width: 20.0.w,
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 SizedBox(
-                  height: 20,
+                  height: 20.0.h,
                 ),
                 Text(
                   '$testPatientName',
                   style: TextStyle(
                       fontFamily: 'Poppins',
-                      fontSize: 14,
+                      fontSize: 14.0.sp,
                       fontWeight: FontWeight.w500,
                       color: Colors.white),
                 ),
@@ -590,7 +608,7 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
                   '$testPatientID',
                   style: TextStyle(
                       fontFamily: 'Poppins',
-                      fontSize: 13,
+                      fontSize: 13.0.sp,
                       fontWeight: FontWeight.w400,
                       color: Colors.white),
                 ),

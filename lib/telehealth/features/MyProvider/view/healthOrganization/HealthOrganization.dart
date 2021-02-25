@@ -3,6 +3,7 @@ import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonUtil.dart';
@@ -68,8 +69,7 @@ class _HealthOrganizationState extends State<HealthOrganization> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-          preferredSize:
-              Size.fromHeight(MediaQuery.of(context).size.height * 0.12),
+          preferredSize: Size.fromHeight(1.sh * 0.12),
           child: getDoctorBar(widget.doctors, widget.index)),
       body: Container(
           child: Column(
@@ -117,6 +117,7 @@ class _HealthOrganizationState extends State<HealthOrganization> {
                         child: Icon(
                           Icons.arrow_back_ios,
                           color: Colors.white,
+                          size: 24.0.sp,
                         ),
                         onTap: () {
                           //Add code for tapping back
@@ -142,7 +143,8 @@ class _HealthOrganizationState extends State<HealthOrganization> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          commonWidgets.setDoctornameForTabBar(doctors[index].user),
+                          commonWidgets
+                              .setDoctornameForTabBar(doctors[index].user),
                           Text(
                             (doctors[index].doctorProfessionalDetailCollection !=
                                         null &&
@@ -167,7 +169,7 @@ class _HealthOrganizationState extends State<HealthOrganization> {
                                 : '',
                             style: TextStyle(
                                 fontFamily: variable.font_poppins,
-                                fontSize: 12,
+                                fontSize: 12.0.sp,
                                 color: Colors.white),
                           ),
                           Text(
@@ -178,7 +180,7 @@ class _HealthOrganizationState extends State<HealthOrganization> {
                             maxLines: 1,
                             style: TextStyle(
                                 fontFamily: variable.font_poppins,
-                                fontSize: 12,
+                                fontSize: 12.0.sp,
                                 color: Colors.white),
                           ),
                         ],
@@ -236,7 +238,7 @@ class _HealthOrganizationState extends State<HealthOrganization> {
       BuildContext ctx, int i, List<HealthOrganizationResult> docs) {
     return Container(
       padding: EdgeInsets.all(10.0),
-      width: MediaQuery.of(context).size.width,
+      width: 1.sw,
       child: ExpandableButton(
         child: Column(
           children: [
@@ -253,12 +255,12 @@ class _HealthOrganizationState extends State<HealthOrganization> {
               healthOrganizationResult: docs,
               resultFromHospitalList: [],
               doctorListPos: widget.index,
-              onChanged: (value){},
+              onChanged: (value) {},
               closePage: (value) {
                 widget.closePage(value);
                 Navigator.pop(context);
               },
-              refresh: (){
+              refresh: () {
                 print('okok');
                 setState(() {});
               },
@@ -287,8 +289,8 @@ class _HealthOrganizationState extends State<HealthOrganization> {
               child: eachHospitalModel != null
                   ? eachHospitalModel[i] != null
                       ? Container(
-                          height: 50,
-                          width: 50,
+                          height: 50.0.h,
+                          width: 50.0.h,
                           color: Color(fhbColors.bgColorContainer),
                           child: Center(
                             child: Text(
@@ -309,18 +311,18 @@ class _HealthOrganizationState extends State<HealthOrganization> {
                             ),
                           ))
                       : Container(
-                          height: 50,
-                          width: 50,
+                          height: 50.0.h,
+                          width: 50.0.h,
                           color: Color(fhbColors.bgColorContainer),
                         )
                   : Container(
-                      height: 50,
-                      width: 50,
+                      height: 50.0.h,
+                      width: 50.0.h,
                       color: Color(fhbColors.bgColorContainer),
                     )),
         ),
         SizedBox(
-          width: 20,
+          width: 20.0.w,
         ),
         Expanded(
           flex: 6,
@@ -328,7 +330,7 @@ class _HealthOrganizationState extends State<HealthOrganization> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              SizedBox(height: 5),
+              SizedBox(height: 5.0.h),
               AutoSizeText(
                 eachHospitalModel[i].healthOrganization.name != null
                     ? toBeginningOfSentenceCase(
@@ -336,12 +338,12 @@ class _HealthOrganizationState extends State<HealthOrganization> {
                     : '',
                 maxLines: 1,
                 style: TextStyle(
-                  fontSize: 14.0,
+                  fontSize: 14.0.sp,
                   fontWeight: FontWeight.w500,
                 ),
                 textAlign: TextAlign.start,
               ),
-              SizedBox(height: 5),
+              SizedBox(height: 5.0.h),
               AutoSizeText(
                 (doctors.doctorProfessionalDetailCollection != null &&
                         doctors.doctorProfessionalDetailCollection.length > 0)
@@ -357,11 +359,11 @@ class _HealthOrganizationState extends State<HealthOrganization> {
                     : '',
                 maxLines: 1,
                 style: TextStyle(
-                    fontSize: 13.0,
+                    fontSize: 13.0.sp,
                     fontWeight: FontWeight.w400,
                     color: ColorUtils.lightgraycolor),
               ),
-              SizedBox(height: 5),
+              SizedBox(height: 5.0.h),
               AutoSizeText(
                 '' + commonWidgets.getCity(eachHospitalModel[i]) == ''
                     ? commonWidgets
@@ -369,11 +371,11 @@ class _HealthOrganizationState extends State<HealthOrganization> {
                     : '',
                 maxLines: 1,
                 style: TextStyle(
-                    fontSize: 13.0,
+                    fontSize: 13.0.sp,
                     fontWeight: FontWeight.w400,
                     color: ColorUtils.lightgraycolor),
               ),
-              SizedBox(height: 5),
+              SizedBox(height: 5.0.h),
             ],
           ),
         ),
@@ -390,7 +392,7 @@ class _HealthOrganizationState extends State<HealthOrganization> {
                           text: INR +
                               commonWidgets.getMoneyWithForamt(
                                   getFees(eachHospitalModel[i])),
-                          fontsize: 14.0,
+                          fontsize: 14.0.sp,
                           fontWeight: FontWeight.w400,
                           colors: Color(new CommonUtil().getMyPrimaryColor())),
                     ),
@@ -436,9 +438,7 @@ class _HealthOrganizationState extends State<HealthOrganization> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return new Center(
             child: new CircularProgressIndicator(
-                backgroundColor:
-                Color(new CommonUtil().getMyPrimaryColor())
-            ),
+                backgroundColor: Color(new CommonUtil().getMyPrimaryColor())),
           );
         } else if (snapshot.hasError) {
           return new Text('Error: ${snapshot.error}');

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/add_family_otp/models/add_family_otp_response.dart';
 import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
@@ -73,8 +74,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-          preferredSize:
-              Size.fromHeight(MediaQuery.of(context).size.height * 0.12),
+          preferredSize: Size.fromHeight(1.sh * 0.12),
           child: getDoctorBar(widget.hospitals, widget.index)),
       body: Container(
           child: Column(
@@ -122,6 +122,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
                         child: Icon(
                           Icons.arrow_back_ios,
                           color: Colors.white,
+                          size: 24.0.sp,
                         ),
                         onTap: () {
                           //Add code for tapping back
@@ -130,40 +131,42 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
                       ),
                     ),
                     SizedBox(
-                      width: 2,
+                      width: 2.0.w,
                     ),
                     CircleAvatar(
-                      radius: 20,
+                      radius: 20.0.sp,
                       child: ClipOval(
                           child: hospitals != null
                               ? hospitals[index] != null
-                              ? Container(
-                              height: 50,
-                              width: 50,
-                              color: Color(fhbColors.bgColorContainer),
-                              child: Center(
-                                child: Text(
-                                  hospitals[index].name != null
-                                      ? hospitals[index].name[0].toUpperCase()
-                                      : '',
-                                  style: TextStyle(
-                                      color:
-                                      Color(CommonUtil().getMyPrimaryColor())),
-                                ),
-                              ))
+                                  ? Container(
+                                      height: 50.0.h,
+                                      width: 50.0.h,
+                                      color: Color(fhbColors.bgColorContainer),
+                                      child: Center(
+                                        child: Text(
+                                          hospitals[index].name != null
+                                              ? hospitals[index]
+                                                  .name[0]
+                                                  .toUpperCase()
+                                              : '',
+                                          style: TextStyle(
+                                              color: Color(CommonUtil()
+                                                  .getMyPrimaryColor())),
+                                        ),
+                                      ))
+                                  : Container(
+                                      height: 50.0.h,
+                                      width: 50.0.h,
+                                      color: Color(fhbColors.bgColorContainer),
+                                    )
                               : Container(
-                            height: 50,
-                            width: 50,
-                            color: Color(fhbColors.bgColorContainer),
-                          )
-                              : Container(
-                            height: 50,
-                            width: 50,
-                            color: Color(fhbColors.bgColorContainer),
-                          )),
+                                  height: 50.0.h,
+                                  width: 50.0.h,
+                                  color: Color(fhbColors.bgColorContainer),
+                                )),
                     ),
                     SizedBoxWidget(
-                      width: 10,
+                      width: 10.0.w,
                     ),
                     Container(
                         child: Expanded(
@@ -179,7 +182,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
                               maxLines: 1,
                               style: TextStyle(
                                   fontFamily: variable.font_poppins,
-                                  fontSize: 16,
+                                  fontSize: 16.0.sp,
                                   color: Colors.white)),
                           /*Text(
                                 (doctors[index].doctorProfessionalDetailCollection !=
@@ -205,7 +208,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
                                     : '',
                                 style: TextStyle(
                                     fontFamily: variable.font_poppins,
-                                    fontSize: 12,
+                                    fontSize: 12.0.sp,
                                     color: Colors.white),
                               ),*/
                           commonWidgets.getCityHospital(hospitals[index]) != ''
@@ -216,7 +219,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
                                   maxLines: 1,
                                   style: TextStyle(
                                       fontFamily: variable.font_poppins,
-                                      fontSize: 12,
+                                      fontSize: 12.0.sp,
                                       color: Colors.white),
                                 )
                               : Container(),
@@ -274,7 +277,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
       BuildContext ctx, int i, List<ResultFromHospital> docs) {
     return Container(
       padding: EdgeInsets.all(10.0),
-      width: MediaQuery.of(context).size.width,
+      width: 1.sw,
       child: ExpandableButton(
         child: Column(
           children: [
@@ -295,7 +298,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
                   widget.closePage(value);
                   Navigator.pop(context);
                 },
-                refresh: (){
+                refresh: () {
                   setState(() {});
                 },
                 isFromHospital: true),
@@ -330,7 +333,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
             )
           ],
         ),
-        commonWidgets.getSizeBoxWidth(10.0),
+        commonWidgets.getSizeBoxWidth(10.0.w),
         Expanded(
           flex: 4,
           child: Column(
@@ -343,7 +346,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
                       child: Row(
                     children: [
                       commonWidgets.setDoctornameForHos(docs[i].doctor.user),
-                      commonWidgets.getSizeBoxWidth(10.0),
+                      commonWidgets.getSizeBoxWidth(10.0.w),
                       commonWidgets.getIcon(
                           width: fhbStyles.imageWidth,
                           height: fhbStyles.imageHeight,
@@ -376,9 +379,10 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
                                 text: INR +
                                     commonWidgets
                                         .getMoneyWithForamt(getFees(docs[i])),
-                                fontsize: 14.0,
+                                fontsize: 14.0.sp,
                                 fontWeight: FontWeight.w400,
-                                colors: Color(new CommonUtil().getMyPrimaryColor())),
+                                colors: Color(
+                                    new CommonUtil().getMyPrimaryColor())),
                           ),
                         ),
                       ],

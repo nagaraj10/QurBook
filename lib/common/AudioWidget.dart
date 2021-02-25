@@ -8,6 +8,7 @@ import 'package:flutter_sound/flutter_sound.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 enum t_MEDIA {
   FILE,
@@ -70,7 +71,7 @@ class AudioWidgetState extends State<AudioWidget> {
 
   Widget getAudioWidgetWithPlayer() {
     return Container(
-      width: MediaQuery.of(context).size.width,
+      width: 1.sw,
       color: Colors.grey[200],
       padding: EdgeInsets.all(5),
       child: Row(
@@ -78,8 +79,8 @@ class AudioWidgetState extends State<AudioWidget> {
           Expanded(
             flex: 1,
             child: Container(
-              width: 56.0,
-              height: 50.0,
+              width: 56.0.w,
+              height: 50.0.h,
               child: ClipOval(
                 child: FlatButton(
                   onPressed: isPlaying
@@ -100,7 +101,7 @@ class AudioWidgetState extends State<AudioWidget> {
           Expanded(
             flex: 7,
             child: Container(
-                height: 30.0,
+                height: 30.0.h,
                 child: Slider(
                     activeColor: Color(new CommonUtil().getMyPrimaryColor()),
                     inactiveColor: Colors.grey,
@@ -118,7 +119,7 @@ class AudioWidgetState extends State<AudioWidget> {
                 child: Text(
               this._playerTxt,
               style: TextStyle(
-                fontSize: 12.0,
+                fontSize: 12.0.sp,
                 color: Colors.black,
               ),
             )),
@@ -126,7 +127,8 @@ class AudioWidgetState extends State<AudioWidget> {
           Expanded(
               flex: 1,
               child: IconButton(
-                  icon: Icon(Icons.delete, size: 20, color: Colors.red[600]),
+                  icon:
+                      Icon(Icons.delete, size: 20.0.sp, color: Colors.red[600]),
                   onPressed: () {
                     widget.audioFile = '';
 

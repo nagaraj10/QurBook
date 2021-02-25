@@ -7,10 +7,12 @@ import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/src/ui/MyRecordsArguments.dart';
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/my_providers/bloc/providers_block.dart';
 import 'package:myfhb/my_providers/models/Doctors.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
 import 'package:myfhb/src/model/Category/catergory_result.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
@@ -87,7 +89,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                         children: [
                           commonWidget.docPhotoView(widget.doc),
                           SizedBoxWidget(
-                            width: 10,
+                            width: 10.0.w,
                           ),
                           Column(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -98,12 +100,11 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                                   widget.doc.doctor.user.firstName +
                                       ' ' +
                                       widget.doc.doctor.user.lastName),
-                              SizedBoxWidget(height: 3.0, width: 0),
+                              SizedBoxWidget(height: 3.0.h, width: 0.0.h),
                               widget.doc?.doctor?.specialization == null
                                   ? Container()
                                   : Container(
-                                      width:
-                                          MediaQuery.of(context).size.width / 2,
+                                      width: 1.sw / 2,
                                       child: Text(
                                         toBeginningOfSentenceCase((widget
                                                         .doc
@@ -201,7 +202,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                           ),
                           commonWidget.count(widget.doc.slotNumber),
                           TextWidget(
-                            fontsize: 10,
+                            fontsize: 10.0.sp,
                             text: DateFormat(Constants.Appointments_time_format)
                                     .format(DateTime.parse(
                                         widget.doc.plannedStartDateTime))
@@ -211,7 +212,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                             colors: Color(new CommonUtil().getMyPrimaryColor()),
                           ),
                           TextWidget(
-                            fontsize: 10,
+                            fontsize: 10.0.sp,
                             text: DateFormat.yMMMEd()
                                     .format(DateTime.parse(
                                         widget.doc.plannedStartDateTime))
@@ -237,7 +238,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                       Colors.black38, Constants.Appointments_receipt, () {
                     moveToBilsPage(widget.doc.healthRecord);
                   }, null),
-                  SizedBoxWidget(width: 15.0),
+                  SizedBoxWidget(width: 15.0.w),
                   commonWidget.iconWithText(
                       Constants.Appointments_resheduleImage,
                       Colors.black38,
@@ -247,7 +248,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                         ? toast.getToast(Constants.DNA_APPOINTMENT, Colors.red)
                         : navigateToProviderScreen(widget.doc, true);
                   }, null),
-                  SizedBoxWidget(width: 15.0),
+                  SizedBoxWidget(width: 15.0.w),
                   commonWidget.iconWithText(Constants.Appointments_cancelImage,
                       Colors.black38, Constants.Appointments_cancel, () {
                     (widget.doc.status != null &&
@@ -255,7 +256,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                         ? toast.getToast(Constants.DNA_APPOINTMENT, Colors.red)
                         : _displayDialog(context, [widget.doc]);
                   }, null),
-                  SizedBoxWidget(width: 15.0),
+                  SizedBoxWidget(width: 15.0.w),
                 ],
               ),
             )
@@ -312,7 +313,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                               TextWidget(
                                   text: parameters
                                       .cancellationAppointmentConfirmation,
-                                  fontsize: 13,
+                                  fontsize: 13.0.sp,
                                   fontWeight: FontWeight.w500,
                                   colors: Colors.grey[600]),
                               widget.doc?.feeDetails == null
@@ -326,7 +327,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                                               text:
                                                   Constants.CANCELLATION_CHARGE,
                                               style: TextStyle(
-                                                  fontSize: 12,
+                                                  fontSize: 12.0.sp,
                                                   fontFamily: Constants.poppins,
                                                   fontWeight: FontWeight.w500,
                                                   color: Colors.black),
@@ -335,7 +336,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                                                   text:
                                                       ' ${Constants.inrLabel} ${widget.doc.feeDetails.doctorCancellationCharge}',
                                                   style: TextStyle(
-                                                      fontSize: 12,
+                                                      fontSize: 12.0.sp,
                                                       fontFamily:
                                                           Constants.poppins,
                                                       fontWeight:
@@ -351,8 +352,8 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                                     MainAxisAlignment.spaceEvenly,
                                 children: <Widget>[
                                   SizedBoxWithChild(
-                                    width: 90,
-                                    height: 40,
+                                    width: 90.0.w,
+                                    height: 40.0.h,
                                     child: FlatButton(
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
@@ -365,27 +366,31 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                                         Navigator.pop(context);
                                       },
                                       child: TextWidget(
-                                          text: parameters.no, fontsize: 12),
+                                          text: parameters.no,
+                                          fontsize: 12.0.sp),
                                     ),
                                   ),
                                   SizedBoxWithChild(
-                                    width: 90,
-                                    height: 40,
+                                    width: 90.0.w,
+                                    height: 40.0.h,
                                     child: FlatButton(
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(12.0),
                                           side: BorderSide(
-                                              color: Color(new CommonUtil().getMyPrimaryColor()))),
+                                              color: Color(new CommonUtil()
+                                                  .getMyPrimaryColor()))),
                                       color: Colors.transparent,
-                                      textColor: Color(new CommonUtil().getMyPrimaryColor()),
+                                      textColor: Color(
+                                          new CommonUtil().getMyPrimaryColor()),
                                       padding: EdgeInsets.all(8.0),
                                       onPressed: () {
                                         Navigator.pop(context,
                                             getCancelAppoitment(appointments));
                                       },
                                       child: TextWidget(
-                                          text: parameters.yes, fontsize: 12),
+                                          text: parameters.yes,
+                                          fontsize: 12.0.sp),
                                     ),
                                   ),
                                 ],
@@ -440,16 +445,17 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
     int position = getCategoryPosition(Constants.STR_BILLS);
     await Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => MyRecords(
-        categoryPosition: position,
-        allowSelect: true,
-        isAudioSelect: false,
-        isNotesSelect: false,
-        selectedMedias: paymentID,
-        isFromChat: false,
-        showDetails: true,
-        isAssociateOrChat: false,
-        isFromBills: true,
-      ),
+          argument: MyRecordsArgument(
+              categoryPosition: position,
+              allowSelect: true,
+              isAudioSelect: false,
+              isNotesSelect: false,
+              selectedMedias: paymentID,
+              isFromChat: false,
+              showDetails: true,
+              isAssociateOrChat: false,
+              isFromBills: true,
+              fromClass: 'appointments')),
     ));
   }
 

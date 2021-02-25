@@ -8,6 +8,7 @@ import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
 import 'package:myfhb/my_providers/widgets/my_providers_appbar.dart';
 import 'package:myfhb/my_providers/widgets/my_providers_tab_bar.dart';
 import 'package:myfhb/search_providers/models/search_arguments.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class MyProvider extends StatefulWidget {
   @override
@@ -61,6 +62,7 @@ class MyProviderState extends State<MyProvider>
         child: Icon(
           Icons.add,
           color: Colors.white,
+          size: 24.0.sp,
         ),
         backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
         onPressed: () {
@@ -115,8 +117,8 @@ class MyProviderState extends State<MyProvider>
                 child: CircularProgressIndicator(
                   backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
                 ),
-                width: 30,
-                height: 30,
+                width: 30.0.h,
+                height: 30.0.h,
               )),
       ),
     );

@@ -18,6 +18,8 @@ import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+
 class SignInScreen extends StatefulWidget {
   @override
   _SignInScreenState createState() => _SignInScreenState();
@@ -28,7 +30,6 @@ class _SignInScreenState extends State<SignInScreen> {
   var _selected = Country.IN;
   TextEditingController phoneTextController = new TextEditingController();
   GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
-  
 
   @override
   void initState() {
@@ -44,7 +45,6 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        
         key: scaffold_state,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
@@ -62,7 +62,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   style: TextStyle(
                       //TODO chnage theme
                       color: Color(new CommonUtil().getMyPrimaryColor()),
-                      fontSize: 20,
+                      fontSize: 20.0.sp,
                       fontWeight: FontWeight.w500),
                 ),
               ),
@@ -72,7 +72,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   variable.strgetStart,
                   style: TextStyle(
                       color: Colors.black,
-                      fontSize: 14,
+                      fontSize: 14.0.sp,
                       fontWeight: FontWeight.w400),
                 ),
               ),
@@ -116,23 +116,22 @@ class _SignInScreenState extends State<SignInScreen> {
                         selectedCountry: _selected,
                       ),
                       Container(
-                        width: 1,
-                        height: 30,
+                        width: 1.0.w,
+                        height: 30.0.h,
                         color: Colors.grey.withOpacity(0.5),
                       ),
                       Expanded(
                           child: mobileNumberField(
                               _loginBloc, phoneTextController)),
-                    
                     ],
                   ),
                 ),
               ),
-              SizedBox(height: 20),
-              SizedBox(height: 20),
+              SizedBox(height: 20.0.h),
+              SizedBox(height: 20.0.h),
               submitButton(
                   _loginBloc, _selected.dialingCode, phoneTextController),
-              SizedBox(height: 20)
+              SizedBox(height: 20.0.h)
             ],
           ),
         ));
@@ -163,7 +162,7 @@ class _SignInScreenState extends State<SignInScreen> {
               border: InputBorder.none,
               contentPadding: EdgeInsets.only(left: 10, right: 10),
               hintText: Constants.ENTER_MOB_NUM,
-              hintStyle: TextStyle(fontSize: 12)),
+              hintStyle: TextStyle(fontSize: 12.0.sp)),
         );
       },
     );
@@ -180,7 +179,7 @@ class _SignInScreenState extends State<SignInScreen> {
           child: RaisedGradientButton(
               child: Text(
                 variable.strNext,
-                style: TextStyle(color: Colors.white, fontSize: 16),
+                style: TextStyle(color: Colors.white, fontSize: 16.0.sp),
               ),
               gradient: LinearGradient(
                 colors: <Color>[
@@ -195,7 +194,6 @@ class _SignInScreenState extends State<SignInScreen> {
                     bloc
                         .submit(phoneTextController.text, countryCode)
                         .then((signInResponse) {
-                      
                       if (signInResponse.message == Constants.STR_MSG_SIGNUP ||
                           signInResponse.message == Constants.STR_MSG_SIGNUP1 ||
                           signInResponse.message == Constants.STR_VERIFY_OTP ||
@@ -236,8 +234,6 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   void moveToNext(SignIn signIn, String phoneNumber, String countryCode) {
-    
-
     if (signIn.success) {
       Navigator.of(context).push(
         MaterialPageRoute(
@@ -255,6 +251,4 @@ class _SignInScreenState extends State<SignInScreen> {
       new FHBBasicWidget().getSnackBarWidget(context, signIn.message);
     }
   }
-
- 
 }

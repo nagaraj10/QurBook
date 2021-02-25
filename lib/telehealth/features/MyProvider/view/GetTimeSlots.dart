@@ -14,6 +14,7 @@ import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/model/user/UserAddressCollection.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DoctorsFromHospitalModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/SlotsResultModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/healthOrganization/HealthOrganizationResult.dart';
@@ -83,13 +84,13 @@ class GetTimeSlots extends StatelessWidget {
           },
         ),
         SizedBoxWidget(
-          height: 10,
+          height: 10.0.h,
         ),
         Align(
           alignment: Alignment.center,
           child: SizedBoxWithChild(
-            width: 85,
-            height: 35,
+            width: 85.0.w,
+            height: 35.0.h,
             child: FlatButton(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(18.0),
@@ -131,12 +132,15 @@ class GetTimeSlots extends StatelessWidget {
                   }
                 }
               },
-              child: TextWidget(text: bookNow, fontsize: 12),
+              child: TextWidget(
+                text: bookNow,
+                fontsize: 12.0.sp,
+              ),
             ),
           ),
         ),
         SizedBoxWidget(
-          height: 10,
+          height: 10.0.h,
         ),
       ],
     );

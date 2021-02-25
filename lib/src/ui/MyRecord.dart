@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
-
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
@@ -35,6 +35,8 @@ import 'package:myfhb/src/model/Media/media_data_list.dart';
 import 'package:myfhb/src/model/Media/media_result.dart';
 import 'package:myfhb/src/model/TabModel.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
+import 'package:myfhb/src/ui/MyRecordsArguments.dart';
+import 'package:myfhb/src/ui/audio/AudioScreenArguments.dart';
 import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
 import 'package:myfhb/src/ui/health/BillsList.dart';
 import 'package:myfhb/src/ui/health/DeviceListScreen.dart';
@@ -57,34 +59,9 @@ export 'package:myfhb/common/CommonUtil.dart';
 export 'package:myfhb/src/model/Media/MediaTypeResponse.dart';
 
 class MyRecords extends StatefulWidget {
-  int categoryPosition;
-  bool allowSelect;
-  bool isNotesSelect;
-  bool isAudioSelect;
-  List<String> selectedMedias;
-  bool isFromChat;
-  bool showDetails;
-  List<HealthRecordCollection> selectedRecordIds;
-  bool isAssociateOrChat;
-  bool isFromBills;
-  String userID;
-  bool fromAppointments;
-  String fromClass;
+  MyRecordsArgument argument;
 
-  MyRecords(
-      {this.categoryPosition,
-      this.allowSelect,
-      this.isAudioSelect,
-      this.isNotesSelect,
-      this.selectedMedias,
-      this.isFromChat,
-      this.showDetails,
-      this.selectedRecordIds,
-      this.isAssociateOrChat,
-      this.isFromBills,
-      this.userID,
-      this.fromAppointments,
-      this.fromClass});
+  MyRecords({this.argument});
 
   @override
   _MyRecordsState createState() => _MyRecordsState();
@@ -124,7 +101,7 @@ class _MyRecordsState extends State<MyRecords> {
 
   @override
   void initState() {
-    initPosition = widget.categoryPosition;
+    initPosition = widget.argument.categoryPosition;
     rebuildAllBlocks();
     searchQuery = _searchQueryController.text.toString();
     if (searchQuery != '') {
@@ -172,7 +149,7 @@ class _MyRecordsState extends State<MyRecords> {
         leading: IconWidget(
           icon: Icons.arrow_back_ios,
           colors: Colors.white,
-          size: 20,
+          size: 24.0.sp,
           onTap: () {
             Navigator.pop(context);
           },
@@ -209,8 +186,8 @@ class _MyRecordsState extends State<MyRecords> {
                       backgroundColor:
                           Color(new CommonUtil().getMyPrimaryColor()),
                     ),
-                    width: 30,
-                    height: 30,
+                    width: 30.0.h,
+                    height: 30.0.h,
                   ));
 
                   break;
@@ -272,8 +249,8 @@ class _MyRecordsState extends State<MyRecords> {
                 child: CircularProgressIndicator(
                   backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
                 ),
-                width: 30,
-                height: 30,
+                width: 30.0.h,
+                height: 30.0.h,
               ));
               break;
 
@@ -297,8 +274,8 @@ class _MyRecordsState extends State<MyRecords> {
                 return getMainWidgets(categoryDataList);
               } else {
                 return Container(
-                  width: 100,
-                  height: 100,
+                  width: 100.0.h,
+                  height: 100.0.h,
                   child: Text(''),
                 );
               }
@@ -307,8 +284,8 @@ class _MyRecordsState extends State<MyRecords> {
           }
         } else {
           return Container(
-            width: 100,
-            height: 100,
+            width: 100.0.h,
+            height: 100.0.h,
           );
         }
       },
@@ -350,15 +327,16 @@ class _MyRecordsState extends State<MyRecords> {
       initPosition: initPosition,
       itemCount: categoryData.length,
       fromSearch: fromSearch,
-      allowSelect: widget.allowSelect ?? false,
-      allowSelectVoice: widget.isAudioSelect ?? false,
-      allowSelectNotes: widget.isNotesSelect ?? false,
-      selectedMedia: widget.selectedMedias,
-      isFromChat: widget.isFromChat ?? false,
-      showDetails: widget.showDetails ?? false,
-      selectedRecordsId: widget.selectedRecordIds,
-      isAssociateOrChat: widget.isAssociateOrChat ?? false,
-      isFromBills: widget.isFromBills ?? false,
+      argument: widget.argument,
+      allowSelect: widget.argument.allowSelect ?? false,
+      allowSelectVoice: widget.argument.isAudioSelect ?? false,
+      allowSelectNotes: widget.argument.isNotesSelect ?? false,
+      selectedMedia: widget.argument.selectedMedias,
+      isFromChat: widget.argument.isFromChat ?? false,
+      showDetails: widget.argument.showDetails ?? false,
+      selectedRecordsId: widget.argument.selectedRecordIds,
+      isAssociateOrChat: widget.argument.isAssociateOrChat ?? false,
+      isFromBills: widget.argument.isFromBills ?? false,
       onPositionChange: (index) {
         try {
           initPosition = index;
@@ -393,9 +371,9 @@ class _MyRecordsState extends State<MyRecords> {
       scaffold_state: scaffold_state,
       completeData: completeData,
       recordsState: this,
-      userID: widget.userID ?? '',
-      fromAppointments: widget.fromAppointments ?? false,
-      fromClass: widget.fromClass,
+      userID: widget.argument.userID ?? '',
+      fromAppointments: widget.argument.fromAppointments ?? false,
+      fromClass: widget.argument.fromClass,
     );
   }
 
@@ -407,7 +385,7 @@ class _MyRecordsState extends State<MyRecords> {
         children: <Widget>[
           Expanded(
             child: Container(
-              constraints: BoxConstraints(maxHeight: 40),
+              constraints: BoxConstraints(maxHeight: 40.0.h),
               decoration: BoxDecoration(
                   color: Colors.white, borderRadius: BorderRadius.circular(30)),
               child: TextField(
@@ -441,9 +419,10 @@ class _MyRecordsState extends State<MyRecords> {
                     ),
                   ),
                   border: InputBorder.none,
-                  hintStyle: TextStyle(color: Colors.black45, fontSize: 10),
+                  hintStyle:
+                      TextStyle(color: Colors.black45, fontSize: 10.0.sp),
                 ),
-                style: TextStyle(color: Colors.black54, fontSize: 16.0),
+                style: TextStyle(color: Colors.black54, fontSize: 16.0.sp),
                 onChanged: (editedValue) {
                   _globalSearchBloc = null;
                   _globalSearchBloc = new GlobalSearchBloc();
@@ -475,11 +454,11 @@ class _MyRecordsState extends State<MyRecords> {
             ),
           ),
           SizedBoxWidget(
-            width: 2,
+            width: 2.0.w,
           ),
           new CommonUtil().getNotificationIcon(context),
           new SwitchProfile()
-              .buildActions(context, _keyLoader, callBackToRefresh),
+              .buildActions(context, _keyLoader, callBackToRefresh,false),
         ],
       ),
     );
@@ -596,6 +575,7 @@ class CustomTabView extends StatefulWidget {
   String userID;
   bool fromAppointments;
   String fromClass;
+  MyRecordsArgument argument;
   CustomTabView(
       {@required this.itemCount,
       this.tabBuilder,
@@ -623,7 +603,8 @@ class CustomTabView extends StatefulWidget {
       this.isFromBills,
       this.userID,
       this.fromAppointments,
-      this.fromClass});
+      this.fromClass,
+      this.argument});
 
   @override
   _CustomTabsState createState() => _CustomTabsState();
@@ -756,7 +737,7 @@ class _CustomTabsState extends State<CustomTabView>
               border: Border(
                 bottom: BorderSide(
                   color: Colors.white,
-                  width: 2,
+                  width: 2.0.w,
                 ),
               ),
             ),
@@ -784,7 +765,7 @@ class _CustomTabsState extends State<CustomTabView>
       getAllTabsToDisplayInBody(data),
       Container(
         margin: EdgeInsets.only(right: 10, bottom: 10),
-        constraints: BoxConstraints(maxHeight: 100),
+        constraints: BoxConstraints(maxHeight: 100.0.h),
         decoration: BoxDecoration(
             color: Color(new CommonUtil().getMyPrimaryColor()),
             borderRadius: BorderRadius.circular(30)),
@@ -817,8 +798,8 @@ class _CustomTabsState extends State<CustomTabView>
                       ),
                       Constants.CAMERA_TITLE),
                   Container(
-                    width: 20,
-                    height: 1,
+                    width: 20.0.w,
+                    height: 1.0.h,
                     color: Colors.white,
                   ),
                   FHBBasicWidget.customShowCase(
@@ -905,8 +886,8 @@ class _CustomTabsState extends State<CustomTabView>
                           backgroundColor:
                               Color(new CommonUtil().getMyPrimaryColor()),
                         ),
-                        width: 30,
-                        height: 30,
+                        width: 30.0.h,
+                        height: 30.0.h,
                       )),
                     );
                     break;
@@ -930,7 +911,7 @@ class _CustomTabsState extends State<CustomTabView>
                     break;
                 }
               } else {
-                return Container(height: 0, color: Colors.white);
+                return Container(height: 0.0.h, color: Colors.white);
               }
             },
           );
@@ -959,8 +940,8 @@ class _CustomTabsState extends State<CustomTabView>
                           backgroundColor:
                               Color(new CommonUtil().getMyPrimaryColor()),
                         ),
-                        width: 30,
-                        height: 30,
+                        width: 30.0.h,
+                        height: 30.0.h,
                       )),
                     );
                     break;
@@ -984,7 +965,7 @@ class _CustomTabsState extends State<CustomTabView>
                     break;
                 }
               } else {
-                return Container(height: 0, color: Colors.white);
+                return Container(height: 0.0.h, color: Colors.white);
               }
             },
           );
@@ -1057,8 +1038,8 @@ class _CustomTabsState extends State<CustomTabView>
                           backgroundColor:
                               Color(new CommonUtil().getMyPrimaryColor()),
                         ),
-                        width: 30,
-                        height: 30,
+                        width: 30.0.h,
+                        height: 30.0.h,
                       )),
                     );
 
@@ -1427,16 +1408,16 @@ class _CustomTabsState extends State<CustomTabView>
         dataObj.logo != null
             ? Image.network(
                 /*Constants.BASE_URL + */ dataObj.logo,
-                width: 20,
-                height: 20,
+                width: 20.0.h,
+                height: 20.0.h,
                 color: Colors.white,
               )
-            : Icon(Icons.calendar_today, size: 20, color: Colors.white),
+            : Icon(Icons.calendar_today, size: 20.0.sp, color: Colors.white),
         Padding(padding: EdgeInsets.only(top: 10)),
         Container(
             child: Text(
           dataObj.categoryName,
-          style: TextStyle(fontSize: 12),
+          style: TextStyle(fontSize: 12.0.sp),
         )),
         Padding(padding: EdgeInsets.only(top: 10)),
       ]));
@@ -1546,13 +1527,23 @@ class _CustomTabsState extends State<CustomTabView>
         PreferenceUtil.saveString(Constants.KEY_CATEGORYID,
                 PreferenceUtil.getStringValue(Constants.KEY_VOICE_ID))
             .then((value) {
-          Navigator.of(context)
-              .push(MaterialPageRoute(
-                builder: (context) => AudioRecordScreen(
-                  fromVoice: true,
-                ),
-              ))
-              .then((results) {});
+          if (widget.argument.fromClass == 'audio' ||
+              widget.argument.fromClass == null) {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => AudioRecordScreen(
+                        arguments: AudioScreenArguments(
+                            fromVoice: true,
+                            fromClass: widget.argument.fromClass ??
+                                'audio')))).then((results) {});
+          } else {
+            Navigator.pushNamed(context, router.rt_AudioScreen,
+                    arguments: AudioScreenArguments(
+                        fromVoice: true,
+                        fromClass: widget.argument.fromClass ?? 'audio'))
+                .then((results) {});
+          }
         });
       });
     }

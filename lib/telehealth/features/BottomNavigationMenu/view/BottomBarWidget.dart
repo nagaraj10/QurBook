@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
-
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/src/utils/colors_utils.dart';
@@ -34,26 +34,28 @@ class BottomBarWidget extends StatelessWidget {
                                 Constants.keyMayaAsset) +
                             variable.strExtImg
                         : variable.icon_mayaMain,
-                    height: 25,
-                    width: 25,
+                    height: 25.0.h,
+                    width: 25.0.h,
                   )
                 : name == 'Chats'
                     ? getChatIcon(icon)
                     : ImageIcon(
                         AssetImage(icon),
-                        size: 20,
+                        size: 20.0.sp,
                         color: selectedPageIndex == pageIndex
                             ? Colors.white
                             : Colors.black,
                       ),
             selectedPageIndex == pageIndex
                 ? Container(
-                    height: 0,
-                    width: 0,
+                    height: 0.0.h,
+                    width: 0.0.h,
                   )
                 : Text(
                     name,
-                    style: TextStyle(fontSize: 10),
+                    style: TextStyle(
+                      fontSize: 10.0.sp,
+                    ),
                   )
           ],
         ));
@@ -81,7 +83,7 @@ class BottomBarWidget extends StatelessWidget {
                 icon: GestureDetector(
                   child: ImageIcon(
                     AssetImage(icon),
-                    size: 20,
+                    size: 20.0.sp,
                     color: selectedPageIndex == pageIndex
                         ? Colors.white
                         : Colors.black,
@@ -94,7 +96,7 @@ class BottomBarWidget extends StatelessWidget {
                 icon: GestureDetector(
                   child: ImageIcon(
                     AssetImage(icon),
-                    size: 20,
+                    size: 20.0.sp,
                     color: selectedPageIndex == pageIndex
                         ? Colors.white
                         : Colors.black,

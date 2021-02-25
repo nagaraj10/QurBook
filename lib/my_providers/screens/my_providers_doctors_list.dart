@@ -14,6 +14,7 @@ import 'package:myfhb/my_providers/models/User.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 import 'my_provider.dart';
 
@@ -124,22 +125,22 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                                     null
                                 ? Image.network(
                                     eachDoctorModel.user.profilePicThumbnailUrl,
-                                    height: 50,
-                                    width: 50,
+                                    height: 50.0.h,
+                                    width: 50.0.h,
                                     fit: BoxFit.cover,
                                   )
                                 : Container(
-                                    width: 50,
-                                    height: 50,
+                                    width: 50.0.h,
+                                    height: 50.0.h,
                                     padding: EdgeInsets.all(12),
                                     color: Color(fhbColors.bgColorContainer))
                             : Container(
-                                width: 50,
-                                height: 50,
+                                width: 50.0.h,
+                                height: 50.0.h,
                                 padding: EdgeInsets.all(12),
                                 color: Color(fhbColors.bgColorContainer))),
                     SizedBox(
-                      width: 20,
+                      width: 20.0.w,
                     ),
                     Expanded(
                       flex: 6,
@@ -147,19 +148,19 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          SizedBox(height: 5),
+                          SizedBox(height: 5.0.h),
                           AutoSizeText(
                             eachDoctorModel.user != null
                                 ? getDoctorName(eachDoctorModel.user)
                                 : '',
                             maxLines: 1,
                             style: TextStyle(
-                              fontSize: 14.0,
+                              fontSize: 14.0.sp,
                               fontWeight: FontWeight.w500,
                             ),
                             textAlign: TextAlign.start,
                           ),
-                          SizedBox(height: 5),
+                          SizedBox(height: 5.0.h),
                           specialization != null
                               ? AutoSizeText(
                                   specialization != null
@@ -168,13 +169,13 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                                       : '',
                                   maxLines: 1,
                                   style: TextStyle(
-                                      fontSize: 13.0,
+                                      fontSize: 13.0.sp,
                                       fontWeight: FontWeight.w400,
                                       color: ColorUtils.lightgraycolor),
                                   textAlign: TextAlign.start,
                                 )
-                              : SizedBox(height: 0, width: 0),
-                          SizedBox(height: 5),
+                              : SizedBox(height: 0.0.h, width: 0.0.h),
+                          SizedBox(height: 5.0.h),
                         ],
                       ),
                     ),
@@ -204,7 +205,7 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
       },
       separatorBuilder: (BuildContext context, index) {
         return Divider(
-          height: 0,
+          height: 0.0.h,
           color: Colors.transparent,
         );
       },

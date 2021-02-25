@@ -39,13 +39,14 @@ import 'package:myfhb/device_integration/viewModel/Device_model.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'dart:convert';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class EachDeviceValues extends StatefulWidget {
   EachDeviceValues(
       {this.device_name,
-        this.device_icon,
-        this.sheelaRequestString,
-        this.deviceNameForAdding});
+      this.device_icon,
+      this.sheelaRequestString,
+      this.deviceNameForAdding});
 
   final String device_name;
   final String device_icon;
@@ -80,7 +81,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   List<bool> isSelected = new List(2);
 
   HealthReportListForUserBlock _healthReportListForUserBlock =
-  new HealthReportListForUserBlock();
+      new HealthReportListForUserBlock();
 
   List<String> imagePathMain = new List();
 
@@ -91,7 +92,6 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   FHBBasicWidget fhbBasicWidget = new FHBBasicWidget();
 
   var commonConstants = new CommonConstants();
-
 
   @override
   void initState() {
@@ -116,16 +116,16 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
       appBar: AppBar(
         title: Text(
           getStringValue(),
-          style: TextStyle(fontSize: 18),
+          style: TextStyle(fontSize: 18.0.sp),
         ),
         actions: <Widget>[
           Image.asset(
             widget.device_icon,
-            height: 40.0,
-            width: 40.0,
+            height: 40.0.h,
+            width: 40.0.h,
           ),
           SizedBoxWidget(
-            width: 15,
+            width: 15.0.w,
           )
         ],
         flexibleSpace: GradientAppBar(),
@@ -134,10 +134,9 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         color: Colors.grey[200],
         child: Column(
           children: [
-            SizedBoxWidget(height: 5),
-            Container(
-                child: getAddDeviceReadings()),
-            SizedBoxWidget(height: 5),
+            SizedBoxWidget(height: 5.0.h),
+            Container(child: getAddDeviceReadings()),
+            SizedBoxWidget(height: 5.0.h),
             Expanded(
               child: getValues(context, _devicesmodel),
             ),
@@ -169,10 +168,13 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
       children: [
         getCardBasedOnDevices(widget.deviceNameForAdding),
         SizedBox(
-          height: 20,
+          height: 20.0.h,
         ),
-        Text(errorMsg,style: TextStyle(fontSize: 12),),
-        SizedBoxWidget(height: 5),
+        Text(
+          errorMsg,
+          style: TextStyle(fontSize: 12.0.sp),
+        ),
+        SizedBoxWidget(height: 5.0.h),
         new Container(
           child: Padding(
             padding: const EdgeInsets.only(
@@ -185,25 +187,25 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                   onPressed: () {},
                   child: Text('',
                       style: TextStyle(
-                          fontSize: 22.0, fontWeight: FontWeight.w400),
+                          fontSize: 22.0.sp, fontWeight: FontWeight.w400),
                       textAlign: TextAlign.center),
                 ),
                 OutlineButton(
                   onPressed: onOkClicked
                       ? () {}
                       : () async {
-                    onOkClicked = true;
+                          onOkClicked = true;
 
-                    new FHBUtils().check().then((intenet) {
-                      if (intenet != null && intenet) {
-                        createDeviceRecords(widget.deviceNameForAdding);
-                      } else {
-                        onOkClicked = false;
-                        new FHBBasicWidget().showInSnackBar(
-                            STR_NO_CONNECTIVITY, scaffold_state);
-                      }
-                    });
-                  } /*() {
+                          new FHBUtils().check().then((intenet) {
+                            if (intenet != null && intenet) {
+                              createDeviceRecords(widget.deviceNameForAdding);
+                            } else {
+                              onOkClicked = false;
+                              new FHBBasicWidget().showInSnackBar(
+                                  STR_NO_CONNECTIVITY, scaffold_state);
+                            }
+                          });
+                        } /*() {
                       new FHBUtils().check().then((intenet) {
                         if (intenet != null && intenet) {
                           createDeviceRecords(deviceName);
@@ -229,7 +231,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                   },
                   child: Text('',
                       style: TextStyle(
-                          fontSize: 22.0, fontWeight: FontWeight.w400),
+                          fontSize: 22.0.sp, fontWeight: FontWeight.w400),
                       textAlign: TextAlign.center),
                 ),
               ],
@@ -241,9 +243,8 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   }
 
   void deleteDeviceRecord(String deviceId) async {
-
     HealthReportListForUserRepository healthReportListForUserRepository =
-    HealthReportListForUserRepository();
+        HealthReportListForUserRepository();
 
     DeleteDeviceHealthRecord deviceHealthRecord;
 
@@ -256,7 +257,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
       if (deviceHealthRecord.isSuccess) {
         toast.getToast('Deleted Successfully', Colors.green);
         setState(() {});
-      }else{
+      } else {
         toast.getToast('Unable to delete the record', Colors.red);
       }
     });
@@ -519,7 +520,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
   Widget getCardForBPMonitor(String deviceName) {
     return Container(
-      //height: 70,
+        //height: 70.0.h,
         padding: EdgeInsets.all(10.0),
         margin: EdgeInsets.only(left: 15, right: 15, top: 10),
         decoration: BoxDecoration(
@@ -541,22 +542,22 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                   children: [
                     Image.asset(
                       Devices_BP,
-                      height: 30.0,
-                      width: 30.0,
+                      height: 30.0.h,
+                      width: 30.0.h,
                       color: Color(CommonConstants.bpDarkColor),
                     ),
                     Text(
                       CommonConstants.STR_BP_MONITOR,
                       style: TextStyle(
                           fontWeight: FontWeight.w500,
-                          fontSize: 14,
+                          fontSize: 14.0.sp,
                           color: Color(CommonConstants.bpDarkColor)),
                       softWrap: true,
                     ),
                   ],
                 ),
                 SizedBox(
-                  width: 5,
+                  width: 5.0.w,
                 ),
                 Expanded(
                   child: Row(
@@ -564,7 +565,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SizedBox(
-                        width: 15,
+                        width: 15.0.w,
                       ),
                       Expanded(
                           child: Padding(
@@ -576,9 +577,9 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                   'Sys',
                                   style: TextStyle(
                                       fontWeight: FontWeight.w500,
-                                      fontSize: 12,
+                                      fontSize: 12.0.sp,
                                       color:
-                                      Color(CommonConstants.bplightColor)),
+                                          Color(CommonConstants.bplightColor)),
                                   softWrap: true,
                                 ),
                                 /*Container(
@@ -586,7 +587,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                       textAlign: TextAlign.center,
                                       controller: deviceController,
                                       style: TextStyle(
-                                          fontSize: 13.0,
+                                          fontSize: 13.0.sp,
                                           fontWeight: FontWeight.w500,
                                           color: Color(
                                               CommonConstants.bpDarkColor)),
@@ -599,7 +600,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                           ),
                                           hintText: '0',
                                           hintStyle: TextStyle(
-                                              color: Colors.grey, fontSize: 13),
+                                              color: Colors.grey, fontSize: 13.0.sp),
                                           contentPadding: EdgeInsets.zero),
                                       cursorColor:
                                           Color(CommonConstants.bpDarkColor),
@@ -628,7 +629,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                 'Dia',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500,
-                                    fontSize: 12,
+                                    fontSize: 12.0.sp,
                                     color: Color(CommonConstants.bplightColor)),
                                 softWrap: true,
                               ),
@@ -638,7 +639,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                     controller: diaStolicPressure,
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontSize: 13.0,
+                                        fontSize: 13.0.sp,
                                         fontWeight: FontWeight.w500,
                                         color:
                                             Color(CommonConstants.bpDarkColor)),
@@ -649,7 +650,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                         ),
                                         hintText: '0',
                                         hintStyle: TextStyle(
-                                            color: Colors.grey, fontSize: 13),
+                                            color: Colors.grey, fontSize: 13.0.sp),
                                         contentPadding: EdgeInsets.zero),
                                     cursorColor:
                                         Color(CommonConstants.bpDarkColor),
@@ -679,9 +680,9 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                   'Pul',
                                   style: TextStyle(
                                       fontWeight: FontWeight.w500,
-                                      fontSize: 12,
+                                      fontSize: 12.0.sp,
                                       color:
-                                      Color(CommonConstants.bplightColor)),
+                                          Color(CommonConstants.bplightColor)),
                                   softWrap: true,
                                 ),
                                 /*Container(
@@ -690,7 +691,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                       textAlign: TextAlign.center,
                                       controller: pulse,
                                       style: TextStyle(
-                                          fontSize: 13.0,
+                                          fontSize: 13.0.sp,
                                           fontWeight: FontWeight.w500,
                                           color: Color(
                                               CommonConstants.bpDarkColor)),
@@ -703,7 +704,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                           ),
                                           hintText: '0',
                                           hintStyle: TextStyle(
-                                              color: Colors.grey, fontSize: 13),
+                                              color: Colors.grey, fontSize: 13.0.sp),
                                           contentPadding: EdgeInsets.zero),
                                       cursorColor:
                                           Color(CommonConstants.bpDarkColor),
@@ -725,7 +726,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                           ),
                           flex: 1),
                       SizedBox(
-                        width: 15,
+                        width: 15.0.w,
                       ),
                     ],
                   ),
@@ -738,7 +739,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
   Widget getCardForThermometer(String deviceName) {
     return Container(
-      //height: 70,
+        //height: 70.0.h,
         padding: EdgeInsets.all(10.0),
         margin: EdgeInsets.only(left: 15, right: 15, top: 10),
         decoration: BoxDecoration(
@@ -759,15 +760,15 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 children: [
                   Image.asset(
                     Devices_THM,
-                    height: 40.0,
-                    width: 40.0,
+                    height: 40.0.h,
+                    width: 40.0.h,
                     color: Color(CommonConstants.ThermoDarkColor),
                   ),
                   Text(
                     CommonConstants.STR_THERMOMETER,
                     style: TextStyle(
                         fontWeight: FontWeight.w500,
-                        fontSize: 14,
+                        fontSize: 14.0.sp,
                         color: Color(CommonConstants.ThermoDarkColor)),
                     softWrap: true,
                   ),
@@ -776,7 +777,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
               flex: 1,
             ),
             SizedBox(
-              width: 5,
+              width: 5.0.w,
             ),
             Expanded(
               flex: 1,
@@ -791,7 +792,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                         'Temp',
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
-                            fontSize: 12,
+                            fontSize: 12.0.sp,
                             color: Color(CommonConstants.ThermolightColor)),
                         softWrap: true,
                       ),
@@ -802,7 +803,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                             controller: deviceController,
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                                fontSize: 13.0,
+                                fontSize: 13.0.sp,
                                 fontWeight: FontWeight.w500,
                                 color: Color(CommonConstants.ThermoDarkColor)),
                             decoration: InputDecoration(
@@ -814,7 +815,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                 ),
                                 hintText: '0',
                                 hintStyle:
-                                    TextStyle(color: Colors.grey, fontSize: 13),
+                                    TextStyle(color: Colors.grey, fontSize: 13.0.sp),
                                 contentPadding: EdgeInsets.zero),
                             cursorColor: Color(CommonConstants.ThermoDarkColor),
                             keyboardType: TextInputType.number,
@@ -839,18 +840,18 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                         '',
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
-                            fontSize: 12,
+                            fontSize: 12.0.sp,
                             color: Color(CommonUtil().getMyPrimaryColor())),
                         softWrap: true,
                       ),
                       Container(
-                        width: 50,
-                        constraints: BoxConstraints(maxWidth: 100),
+                        width: 50.0.w,
+                        constraints: BoxConstraints(maxWidth: 100.0.w),
                         child: Text(
                           'F',
                           style: TextStyle(
                               fontWeight: FontWeight.w500,
-                              fontSize: 12,
+                              fontSize: 12.0.sp,
                               color: Color(CommonConstants.ThermoDarkColor)),
                           softWrap: true,
                         ),
@@ -866,7 +867,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
   Widget getCardForPulseOxidometer(String deviceName) {
     return Container(
-      //height: 70,
+        //height: 70.0.h,
         padding: EdgeInsets.all(10.0),
         margin: EdgeInsets.only(left: 15, right: 15, top: 10),
         decoration: BoxDecoration(
@@ -887,18 +888,18 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 children: [
                   Image.asset(
                     Devices_OxY,
-                    height: 30.0,
-                    width: 30.0,
+                    height: 30.0.h,
+                    width: 30.0.h,
                     color: Color(CommonConstants.pulseDarkColor),
                   ),
                   SizedBox(
-                    height: 10,
+                    height: 10.0.h,
                   ),
                   Text(
                     deviceName,
                     style: TextStyle(
                         fontWeight: FontWeight.w500,
-                        fontSize: 14,
+                        fontSize: 14.0.sp,
                         color: Color(CommonConstants.pulseDarkColor)),
                     softWrap: true,
                   ),
@@ -907,7 +908,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
               flex: 1,
             ),
             SizedBox(
-              width: 5,
+              width: 5.0.w,
             ),
             Expanded(
               flex: 1,
@@ -924,7 +925,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                             'SPO2',
                             style: TextStyle(
                                 fontWeight: FontWeight.w500,
-                                fontSize: 12,
+                                fontSize: 12.0.sp,
                                 color: Color(CommonConstants.pulselightColor)),
                             softWrap: true,
                           ),
@@ -948,7 +949,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                             'PRBpm',
                             style: TextStyle(
                                 fontWeight: FontWeight.w500,
-                                fontSize: 12,
+                                fontSize: 12.0.sp,
                                 color: Color(CommonConstants.pulselightColor)),
                             softWrap: true,
                           ),
@@ -959,7 +960,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                 controller: pulse,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                    fontSize: 13.0,
+                                    fontSize: 13.0.sp,
                                     fontWeight: FontWeight.w500,
                                     color:
                                         Color(CommonConstants.pulseDarkColor)),
@@ -972,7 +973,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                     ),
                                     hintText: '0',
                                     hintStyle: TextStyle(
-                                        color: Colors.grey, fontSize: 13),
+                                        color: Colors.grey, fontSize: 13.0.sp),
                                     contentPadding: EdgeInsets.zero),
                                 cursorColor:
                                     Color(CommonConstants.pulseDarkColor),
@@ -1000,7 +1001,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
   Widget getCardForWeighingScale(String deviceName) {
     return Container(
-      //height: 70,
+        //height: 70.0.h,
         padding: EdgeInsets.all(10.0),
         margin: EdgeInsets.only(left: 15, right: 15, top: 10),
         decoration: BoxDecoration(
@@ -1021,15 +1022,15 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 children: [
                   Image.asset(
                     Devices_WS,
-                    height: 30.0,
-                    width: 30.0,
+                    height: 30.0.h,
+                    width: 30.0.h,
                     color: Color(CommonConstants.weightDarkColor),
                   ),
                   Text(
                     CommonConstants.STR_WEIGHING_SCALE,
                     style: TextStyle(
                         fontWeight: FontWeight.w500,
-                        fontSize: 14,
+                        fontSize: 14.0.sp,
                         color: Color(CommonConstants.weightDarkColor)),
                     softWrap: true,
                   ),
@@ -1038,7 +1039,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
               flex: 1,
             ),
             SizedBox(
-              width: 5,
+              width: 5.0.w,
             ),
             Expanded(
               flex: 1,
@@ -1053,7 +1054,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                         'Kg',
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
-                            fontSize: 12,
+                            fontSize: 12.0.sp,
                             color: Color(CommonConstants.weightlightColor)),
                         softWrap: true,
                       ),
@@ -1077,7 +1078,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
   Widget getCardForGlucometer(String deviceName) {
     return Container(
-      //height: 70,
+        //height: 70.0.h,
         padding: EdgeInsets.all(10.0),
         margin: EdgeInsets.only(left: 15, right: 15, top: 10),
         decoration: BoxDecoration(
@@ -1098,18 +1099,18 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 children: [
                   Image.asset(
                     Devices_GL,
-                    height: 40.0,
-                    width: 40.0,
+                    height: 40.0.h,
+                    width: 40.0.h,
                     color: Color(CommonConstants.GlucoDarkColor),
                   ),
                   SizedBox(
-                    height: 10,
+                    height: 10.0.h,
                   ),
                   Text(
                     deviceName,
                     style: TextStyle(
                         fontWeight: FontWeight.w500,
-                        fontSize: 14,
+                        fontSize: 14.0.sp,
                         color: Color(CommonConstants.GlucoDarkColor)),
                     softWrap: true,
                   ),
@@ -1118,7 +1119,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
               flex: 1,
             ),
             SizedBox(
-              width: 5,
+              width: 5.0.w,
             ),
             Expanded(
                 flex: 1,
@@ -1129,7 +1130,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                       'mg/dl',
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
-                          fontSize: 12,
+                          fontSize: 12.0.sp,
                           color: Color(CommonConstants.GlucolightColor)),
                       softWrap: true,
                     ),
@@ -1145,7 +1146,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                   ],
                 )),
             SizedBox(
-              width: 5,
+              width: 5.0.w,
             ),
             Expanded(
               flex: 1,
@@ -1162,13 +1163,13 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                             'Fasting',
                             style: TextStyle(
                                 fontWeight: FontWeight.w500,
-                                fontSize: 12,
+                                fontSize: 12.0.sp,
                                 color: Colors.grey),
                             softWrap: true,
                           ),
                           Container(
-                              width: 50,
-                              constraints: BoxConstraints(maxWidth: 100),
+                              width: 50.0.w,
+                              constraints: BoxConstraints(maxWidth: 100.0.w),
                               child: MyCheckbox(
                                   value: isSelected[0],
                                   onChanged: (value) {
@@ -1180,7 +1181,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                         ],
                       )),
                   SizedBox(
-                    width: 5,
+                    width: 5.0.w,
                   ),
                   Expanded(
                       flex: 1,
@@ -1191,13 +1192,13 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                             'PP',
                             style: TextStyle(
                                 fontWeight: FontWeight.w500,
-                                fontSize: 12,
+                                fontSize: 12.0.sp,
                                 color: Colors.grey),
                             softWrap: true,
                           ),
                           Container(
-                              width: 50,
-                              constraints: BoxConstraints(maxWidth: 100),
+                              width: 50.0.w,
+                              constraints: BoxConstraints(maxWidth: 100.0.w),
                               child: MyCheckbox(
                                   value: isSelected[1],
                                   onChanged: (value) {
@@ -1239,7 +1240,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                   return new Center(
                     child: new CircularProgressIndicator(
                       backgroundColor:
-                      Color(new CommonUtil().getMyPrimaryColor()),
+                          Color(new CommonUtil().getMyPrimaryColor()),
                     ),
                   );
                 }
@@ -1248,53 +1249,62 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 List<DeviceIntervalData> deviceFullList = translis.last;
                 return !bpResult.isEmpty
                     ? GroupedListView<BPResult, String>(
-                  groupBy: (element) =>
-                      getFormattedDateTime(element.startDateTime),
-                  elements: bpResult,
-                  sort: false,
-                  groupSeparatorBuilder: (String value) => Padding(
-                    padding: const EdgeInsets.all(6.0),
-                    child: Row(
-                      children: [
-                        SizedBoxWidget(width: 15),
-                        Text(
-                          todayDate != value ? value : 'Today, ' + value,
-                          style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500),
+                        groupBy: (element) =>
+                            getFormattedDateTime(element.startDateTime),
+                        elements: bpResult,
+                        sort: false,
+                        groupSeparatorBuilder: (String value) => Padding(
+                          padding: const EdgeInsets.all(6.0),
+                          child: Row(
+                            children: [
+                              SizedBoxWidget(width: 15.0.w),
+                              Text(
+                                todayDate != value ? value : 'Today, ' + value,
+                                style: TextStyle(
+                                    fontSize: 12.0.sp,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ),
                         ),
-                      ],
-                    ),
-                  ),
-                  indexedItemBuilder: (context, i, index) {
-                    return buildRowForBp(
-                        bpResult[index].sourceType,
-                        getFormattedDateTime(
-                            bpResult[index].startDateTime),
-                        '${bpResult[index].systolic}',
-                        '${bpResult[index].diastolic}',
-                        '',
-                        'Systolic',
-                        'Diastolic',
-                        '',
-                        getFormattedTime(bpResult[index].startDateTime),deviceFullList[index].heartRateCollection[0].bpm!=null?deviceFullList[index].heartRateCollection[0].bpm.toString():''
-                        ,deviceFullList[index].deviceId);
-                  },
-                )
+                        indexedItemBuilder: (context, i, index) {
+                          return buildRowForBp(
+                              bpResult[index].sourceType,
+                              getFormattedDateTime(
+                                  bpResult[index].startDateTime),
+                              '${bpResult[index].systolic}',
+                              '${bpResult[index].diastolic}',
+                              '',
+                              'Systolic',
+                              'Diastolic',
+                              '',
+                              getFormattedTime(bpResult[index].startDateTime),
+                              deviceFullList[index]
+                                          .heartRateCollection[0]
+                                          .bpm !=
+                                      null
+                                  ? deviceFullList[index]
+                                      .heartRateCollection[0]
+                                      .bpm
+                                      .toString()
+                                  : '',
+                              deviceFullList[index].deviceId);
+                        },
+                      )
                     : Container(
-                  child: Center(
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 40, right: 40),
-                      child: Text(
-                        "No health record details available.",
-                        textAlign: TextAlign.center,
-                        style:
-                        TextStyle(fontFamily: variable.font_roboto),
-                      ),
-                    ),
-                  ),
-                );
+                        child: Center(
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 40, right: 40),
+                            child: Text(
+                              "No health record details available.",
+                              textAlign: TextAlign.center,
+                              style:
+                                  TextStyle(fontFamily: variable.font_roboto),
+                            ),
+                          ),
+                        ),
+                      );
               });
         }
         break;
@@ -1307,7 +1317,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                   return new Center(
                     child: new CircularProgressIndicator(
                       backgroundColor:
-                      Color(new CommonUtil().getMyPrimaryColor()),
+                          Color(new CommonUtil().getMyPrimaryColor()),
                     ),
                   );
                 }
@@ -1317,56 +1327,57 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 List<DeviceIntervalData> deviceFullList = translis.last;
                 return !translist.isEmpty
                     ? GroupedListView<GVResult, String>(
-                  groupBy: (element) =>
-                      getFormattedDateTime(element.startDateTime),
-                  elements: translist,
-                  sort: false,
-                  groupSeparatorBuilder: (String value) => Padding(
-                    padding: const EdgeInsets.all(6.0),
-                    child: Row(
-                      children: [
-                        SizedBoxWidget(width: 15),
-                        Text(
-                          todayDate != value ? value : 'Today, ' + value,
-                          style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500),
+                        groupBy: (element) =>
+                            getFormattedDateTime(element.startDateTime),
+                        elements: translist,
+                        sort: false,
+                        groupSeparatorBuilder: (String value) => Padding(
+                          padding: const EdgeInsets.all(6.0),
+                          child: Row(
+                            children: [
+                              SizedBoxWidget(width: 15.0.w),
+                              Text(
+                                todayDate != value ? value : 'Today, ' + value,
+                                style: TextStyle(
+                                    fontSize: 12.0.sp,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ),
                         ),
-                      ],
-                    ),
-                  ),
-                  indexedItemBuilder: (context, i, index) {
-                    return buildRowForGulcose(
-                        translist[index].sourceType,
-                        getFormattedDateTime(
-                            translist[index].startDateTime),
-                        '${translist[index].bloodGlucoseLevel}',
-                        translist[index].mealContext == null ||
-                            translist[index].mealContext == ''
-                            ? 'Random'
-                            : '${translist[index].mealContext}',
-                        '',
-                        'Blood Glucose',
-                        'Meal Type',
-                        '',
-                        getFormattedTime(translist[index].startDateTime),
-                        translist[index].bgUnit,deviceFullList[index].deviceId);
-                  },
-                )
+                        indexedItemBuilder: (context, i, index) {
+                          return buildRowForGulcose(
+                              translist[index].sourceType,
+                              getFormattedDateTime(
+                                  translist[index].startDateTime),
+                              '${translist[index].bloodGlucoseLevel}',
+                              translist[index].mealContext == null ||
+                                      translist[index].mealContext == ''
+                                  ? 'Random'
+                                  : '${translist[index].mealContext}',
+                              '',
+                              'Blood Glucose',
+                              'Meal Type',
+                              '',
+                              getFormattedTime(translist[index].startDateTime),
+                              translist[index].bgUnit,
+                              deviceFullList[index].deviceId);
+                        },
+                      )
                     : Container(
-                  child: Center(
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 40, right: 40),
-                      child: Text(
-                        "No health record details available.",
-                        textAlign: TextAlign.center,
-                        style:
-                        TextStyle(fontFamily: variable.font_roboto),
-                      ),
-                    ),
-                  ),
-                );
+                        child: Center(
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 40, right: 40),
+                            child: Text(
+                              "No health record details available.",
+                              textAlign: TextAlign.center,
+                              style:
+                                  TextStyle(fontFamily: variable.font_roboto),
+                            ),
+                          ),
+                        ),
+                      );
               });
         }
         break;
@@ -1379,7 +1390,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                   return new Center(
                     child: new CircularProgressIndicator(
                       backgroundColor:
-                      Color(new CommonUtil().getMyPrimaryColor()),
+                          Color(new CommonUtil().getMyPrimaryColor()),
                     ),
                   );
                 }
@@ -1388,54 +1399,63 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 List<DeviceIntervalData> deviceFullList = translis.last;
                 return !translist.isEmpty
                     ? GroupedListView<OxyResult, String>(
-                  groupBy: (element) =>
-                      getFormattedDateTime(element.startDateTime),
-                  elements: translist,
-                  sort: false,
-                  groupSeparatorBuilder: (String value) => Padding(
-                    padding: const EdgeInsets.all(6.0),
-                    child: Row(
-                      children: [
-                        SizedBoxWidget(width: 15),
-                        Text(
-                          todayDate != value ? value : 'Today, ' + value,
-                          style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500),
+                        groupBy: (element) =>
+                            getFormattedDateTime(element.startDateTime),
+                        elements: translist,
+                        sort: false,
+                        groupSeparatorBuilder: (String value) => Padding(
+                          padding: const EdgeInsets.all(6.0),
+                          child: Row(
+                            children: [
+                              SizedBoxWidget(width: 15.0.w),
+                              Text(
+                                todayDate != value ? value : 'Today, ' + value,
+                                style: TextStyle(
+                                    fontSize: 12.0.sp,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ),
                         ),
-                      ],
-                    ),
-                  ),
-                  indexedItemBuilder: (context, i, index) {
-                    return buildRowForOxygen(
-                        translist[index].sourceType,
-                        getFormattedDateTime(
-                            translist[index].startDateTime),
-                        '${translist[index].oxygenSaturation}',
-                        '',
-                        '',
-                        'SPO2',
-                        '',
-                        '',
-                        getFormattedTime(translist[index].startDateTime),
-                        '',deviceFullList[index].heartRateCollection[0].bpm!=null?deviceFullList[index].heartRateCollection[0].bpm.toString():''
-                        ,deviceFullList[index].deviceId);
-                  },
-                )
+                        indexedItemBuilder: (context, i, index) {
+                          return buildRowForOxygen(
+                              translist[index].sourceType,
+                              getFormattedDateTime(
+                                  translist[index].startDateTime),
+                              '${translist[index].oxygenSaturation}',
+                              '',
+                              '',
+                              'SPO2',
+                              '',
+                              '',
+                              getFormattedTime(translist[index].startDateTime),
+                              '',
+                              deviceFullList[index]
+                                          .heartRateCollection[0]
+                                          .bpm !=
+                                      null
+                                  ? deviceFullList[index]
+                                      .heartRateCollection[0]
+                                      .bpm
+                                      .toString()
+                                  : '',
+                              deviceFullList[index].deviceId);
+                        },
+                      )
                     : Container(
-                  child: Center(
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 40, right: 40),
-                      child: Text(
-                        "No health record details available.",
-                        textAlign: TextAlign.center,
-                        style:
-                        TextStyle(fontFamily: variable.font_roboto),
-                      ),
-                    ),
-                  ),
-                );
+                        child: Center(
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 40, right: 40),
+                            child: Text(
+                              "No health record details available.",
+                              textAlign: TextAlign.center,
+                              style:
+                                  TextStyle(fontFamily: variable.font_roboto),
+                            ),
+                          ),
+                        ),
+                      );
               });
         }
         break;
@@ -1448,7 +1468,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                   return new Center(
                     child: new CircularProgressIndicator(
                       backgroundColor:
-                      Color(new CommonUtil().getMyPrimaryColor()),
+                          Color(new CommonUtil().getMyPrimaryColor()),
                     ),
                   );
                 }
@@ -1458,53 +1478,54 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 List<DeviceIntervalData> deviceFullList = translis.last;
                 return !translist.isEmpty
                     ? GroupedListView<WVResult, String>(
-                  groupBy: (element) =>
-                      getFormattedDateTime(element.startDateTime),
-                  elements: translist,
-                  sort: false,
-                  groupSeparatorBuilder: (String value) => Padding(
-                    padding: const EdgeInsets.all(6.0),
-                    child: Row(
-                      children: [
-                        SizedBoxWidget(width: 15),
-                        Text(
-                          todayDate != value ? value : 'Today, ' + value,
-                          style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500),
+                        groupBy: (element) =>
+                            getFormattedDateTime(element.startDateTime),
+                        elements: translist,
+                        sort: false,
+                        groupSeparatorBuilder: (String value) => Padding(
+                          padding: const EdgeInsets.all(6.0),
+                          child: Row(
+                            children: [
+                              SizedBoxWidget(width: 15.0.w),
+                              Text(
+                                todayDate != value ? value : 'Today, ' + value,
+                                style: TextStyle(
+                                    fontSize: 12.0.sp,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ),
                         ),
-                      ],
-                    ),
-                  ),
-                  indexedItemBuilder: (context, i, index) {
-                    return buildRowForTempWeight(
-                        translist[index].sourceType,
-                        getFormattedDateTime(
-                            translist[index].startDateTime),
-                        '${translist[index].weight}',
-                        '',
-                        '',
-                        'Weight',
-                        '',
-                        '',
-                        getFormattedTime(translist[index].startDateTime),
-                        'Kg',deviceFullList[index].deviceId);
-                  },
-                )
+                        indexedItemBuilder: (context, i, index) {
+                          return buildRowForTempWeight(
+                              translist[index].sourceType,
+                              getFormattedDateTime(
+                                  translist[index].startDateTime),
+                              '${translist[index].weight}',
+                              '',
+                              '',
+                              'Weight',
+                              '',
+                              '',
+                              getFormattedTime(translist[index].startDateTime),
+                              'Kg',
+                              deviceFullList[index].deviceId);
+                        },
+                      )
                     : Container(
-                  child: Center(
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 40, right: 40),
-                      child: Text(
-                        "No health record details available.",
-                        textAlign: TextAlign.center,
-                        style:
-                        TextStyle(fontFamily: variable.font_roboto),
-                      ),
-                    ),
-                  ),
-                );
+                        child: Center(
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 40, right: 40),
+                            child: Text(
+                              "No health record details available.",
+                              textAlign: TextAlign.center,
+                              style:
+                                  TextStyle(fontFamily: variable.font_roboto),
+                            ),
+                          ),
+                        ),
+                      );
               });
         }
         break;
@@ -1517,7 +1538,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                   return new Center(
                     child: new CircularProgressIndicator(
                       backgroundColor:
-                      Color(new CommonUtil().getMyPrimaryColor()),
+                          Color(new CommonUtil().getMyPrimaryColor()),
                     ),
                   );
                 }
@@ -1527,53 +1548,54 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 List<DeviceIntervalData> deviceFullList = translis.last;
                 return !translist.isEmpty
                     ? GroupedListView<TMPResult, String>(
-                  groupBy: (element) =>
-                      getFormattedDateTime(element.startDateTime),
-                  elements: translist,
-                  sort: false,
-                  groupSeparatorBuilder: (String value) => Padding(
-                    padding: const EdgeInsets.all(6.0),
-                    child: Row(
-                      children: [
-                        SizedBoxWidget(width: 15),
-                        Text(
-                          todayDate != value ? value : 'Today, ' + value,
-                          style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500),
+                        groupBy: (element) =>
+                            getFormattedDateTime(element.startDateTime),
+                        elements: translist,
+                        sort: false,
+                        groupSeparatorBuilder: (String value) => Padding(
+                          padding: const EdgeInsets.all(6.0),
+                          child: Row(
+                            children: [
+                              SizedBoxWidget(width: 15.0.w),
+                              Text(
+                                todayDate != value ? value : 'Today, ' + value,
+                                style: TextStyle(
+                                    fontSize: 12.0.sp,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ),
                         ),
-                      ],
-                    ),
-                  ),
-                  indexedItemBuilder: (context, i, index) {
-                    return buildRowForTempWeight(
-                        translist[index].sourceType,
-                        getFormattedDateTime(
-                            translist[index].startDateTime),
-                        '${translist[index].temperature}',
-                        '',
-                        '',
-                        'Temperature',
-                        '',
-                        '',
-                        getFormattedTime(translist[index].startDateTime),
-                        'F',deviceFullList[index].deviceId);
-                  },
-                )
+                        indexedItemBuilder: (context, i, index) {
+                          return buildRowForTempWeight(
+                              translist[index].sourceType,
+                              getFormattedDateTime(
+                                  translist[index].startDateTime),
+                              '${translist[index].temperature}',
+                              '',
+                              '',
+                              'Temperature',
+                              '',
+                              '',
+                              getFormattedTime(translist[index].startDateTime),
+                              'F',
+                              deviceFullList[index].deviceId);
+                        },
+                      )
                     : Container(
-                  child: Center(
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 40, right: 40),
-                      child: Text(
-                        "No health record details available.",
-                        textAlign: TextAlign.center,
-                        style:
-                        TextStyle(fontFamily: variable.font_roboto),
-                      ),
-                    ),
-                  ),
-                );
+                        child: Center(
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 40, right: 40),
+                            child: Text(
+                              "No health record details available.",
+                              textAlign: TextAlign.center,
+                              style:
+                                  TextStyle(fontFamily: variable.font_roboto),
+                            ),
+                          ),
+                        ),
+                      );
               });
         }
         break;
@@ -1635,7 +1657,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     return Padding(
       padding: const EdgeInsets.only(top: 5.0),
       child: Container(
-        height: 60,
+        height: 60.0.h,
         color: Colors.white,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -1644,152 +1666,156 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 SizedBox(
-                  width: 10,
+                  width: 10.0.w,
                 ),
                 Column(
                   children: [
                     Center(
                       child: Text(time,
-                          style: TextStyle(color: Colors.grey, fontSize: 9)),
+                          style:
+                              TextStyle(color: Colors.grey, fontSize: 9.0.sp)),
                     ),
                     SizedBox(
-                      height: 2.0,
+                      height: 2.0.h,
                     ),
                     type == null ? Icons.device_unknown : TypeIcon(type),
                   ],
                 ),
                 SizedBox(
-                  width: 10,
+                  width: 10.0.w,
                 ),
                 valuename1 != ''
                     ? Expanded(
-                  flex: 1,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      SizedBox(height: 5),
-                      Text(
-                        valuename1,
-                        style: TextStyle(color: Colors.black, fontSize: 11),
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(height: 5),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            value1 == '' ? '' : value1,
-                            style: TextStyle(
-                                color: Color(
-                                    new CommonUtil().getMyPrimaryColor()),
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500),
-                          ),
-                          SizedBoxWidget(
-                            width: 2,
-                          ),
-                          Text(
-                            value1 == '' ? '' : 'mm Hg',
-                            style: TextStyle(
-                                color: Color(
-                                    new CommonUtil().getMyPrimaryColor()),
-                                fontSize: 9),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                )
+                        flex: 1,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            SizedBox(height: 5.0.h),
+                            Text(
+                              valuename1,
+                              style: TextStyle(
+                                  color: Colors.black, fontSize: 11.0.sp),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(height: 5.0.h),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  value1 == '' ? '' : value1,
+                                  style: TextStyle(
+                                      color: Color(
+                                          new CommonUtil().getMyPrimaryColor()),
+                                      fontSize: 13.0.sp,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                SizedBoxWidget(
+                                  width: 2.0.w,
+                                ),
+                                Text(
+                                  value1 == '' ? '' : 'mm Hg',
+                                  style: TextStyle(
+                                      color: Color(
+                                          new CommonUtil().getMyPrimaryColor()),
+                                      fontSize: 9.0.sp),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      )
                     : SizedBox(),
                 valuename2 != ''
                     ? Expanded(
-                  flex: 1,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      SizedBox(height: 5),
-                      Text(
-                        valuename2 == '' ? '' : valuename2,
-                        style: TextStyle(color: Colors.black, fontSize: 11),
-                      ),
-                      SizedBox(
-                        height: 5.0,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            value2,
-                            style: TextStyle(
-                                color: Color(
-                                    new CommonUtil().getMyPrimaryColor()),
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500),
-                          ),
-                          SizedBoxWidget(
-                            width: 2,
-                          ),
-                          Text(
-                            value1 == '' ? '' : 'mm Hg',
-                            style: TextStyle(
-                                color: Color(
-                                    new CommonUtil().getMyPrimaryColor()),
-                                fontSize: 9),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                )
+                        flex: 1,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            SizedBox(height: 5.0.h),
+                            Text(
+                              valuename2 == '' ? '' : valuename2,
+                              style: TextStyle(
+                                  color: Colors.black, fontSize: 11.0.sp),
+                            ),
+                            SizedBox(
+                              height: 5.0.h,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  value2,
+                                  style: TextStyle(
+                                      color: Color(
+                                          new CommonUtil().getMyPrimaryColor()),
+                                      fontSize: 13.0.sp,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                SizedBoxWidget(
+                                  width: 2,
+                                ),
+                                Text(
+                                  value1 == '' ? '' : 'mm Hg',
+                                  style: TextStyle(
+                                      color: Color(
+                                          new CommonUtil().getMyPrimaryColor()),
+                                      fontSize: 9.0.sp),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      )
                     : SizedBox(),
                 bpm != ''
                     ? Expanded(
-                  flex: 1,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      SizedBox(height: 5),
-                      Text(
-                        'Pulse',
-                        style: TextStyle(color: Colors.black, fontSize: 11),
-                      ),
-                      SizedBox(
-                        height: 5.0,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            bpm!=''?bpm:'',
-                            style: TextStyle(
-                                color: Color(
-                                    new CommonUtil().getMyPrimaryColor()),
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500),
-                          ),
-                          SizedBoxWidget(
-                            width: 2,
-                          ),
-                          Text(
-                            bpm == '' ? '' : 'mm Hg',
-                            style: TextStyle(
-                                color: Color(
-                                    new CommonUtil().getMyPrimaryColor()),
-                                fontSize: 9),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                )
+                        flex: 1,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            SizedBox(height: 5.0.h),
+                            Text(
+                              'Pulse',
+                              style: TextStyle(
+                                  color: Colors.black, fontSize: 11.0.sp),
+                            ),
+                            SizedBox(
+                              height: 5.0.h,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  bpm != '' ? bpm : '',
+                                  style: TextStyle(
+                                      color: Color(
+                                          new CommonUtil().getMyPrimaryColor()),
+                                      fontSize: 13.0.sp,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                SizedBoxWidget(
+                                  width: 2,
+                                ),
+                                Text(
+                                  bpm == '' ? '' : 'mm Hg',
+                                  style: TextStyle(
+                                      color: Color(
+                                          new CommonUtil().getMyPrimaryColor()),
+                                      fontSize: 9.0.sp),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      )
                     : SizedBox(),
-                getDeleteIcon(deviceId,type),
+                getDeleteIcon(deviceId, type),
                 SizedBoxWidget(width: 10)
                 /*Expanded(
                 flex: 1,
@@ -1808,13 +1834,13 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          SizedBox(height: 5),
+                          SizedBox(height: 5.0.h),
                           Text(
                             valuename3 == '' ? '' : valuename3,
                             style: TextStyle(color: Colors.black),
                           ),
                           SizedBox(
-                            height: 5.0,
+                            height: 5.0.h,
                           ),
                           Text(
                             value3,
@@ -1847,19 +1873,18 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     );
   }
 
-  Widget getDeleteIcon(String deviceId,String type){
-
-    if(type == strsourceHK || type == strsourceGoogle){
+  Widget getDeleteIcon(String deviceId, String type) {
+    if (type == strsourceHK || type == strsourceGoogle) {
       return SizedBox();
-    }else{
+    } else {
       return GestureDetector(
-        onTap: (){
+        onTap: () {
           deleteDeviceRecord(deviceId);
         },
         child: Image.asset(
           'assets/icons/delete_icon.png',
-          height: 16.0,
-          width: 16.0,
+          height: 16.0.h,
+          width: 16.0.h,
         ),
       );
     }
@@ -1880,7 +1905,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     return Padding(
       padding: const EdgeInsets.only(top: 5.0),
       child: Container(
-        height: 60,
+        height: 60.0.h,
         color: Colors.white,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -1897,16 +1922,17 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                     children: [
                       Center(
                         child: Text(time,
-                            style: TextStyle(color: Colors.grey, fontSize: 9)),
+                            style: TextStyle(
+                                color: Colors.grey, fontSize: 9.0.sp)),
                       ),
                       SizedBox(
-                        height: 2.0,
+                        height: 2.0.h,
                       ),
                       type == null ? Icons.device_unknown : TypeIcon(type),
                     ],
                   ),
                   SizedBox(
-                    width: 110.0,
+                    width: 110.0.w,
                   ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -1914,10 +1940,11 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                     children: [
                       Text(
                         getMealText(value2),
-                        style: TextStyle(color: Colors.black, fontSize: 11),
+                        style:
+                            TextStyle(color: Colors.black, fontSize: 11.0.sp),
                       ),
                       SizedBox(
-                        height: 5.0,
+                        height: 5.0.h,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -1927,8 +1954,8 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                             value1 == '' ? '' : value1,
                             style: TextStyle(
                                 color:
-                                Color(new CommonUtil().getMyPrimaryColor()),
-                                fontSize: 13,
+                                    Color(new CommonUtil().getMyPrimaryColor()),
+                                fontSize: 13.0.sp,
                                 fontWeight: FontWeight.w500),
                           ),
                           SizedBoxWidget(
@@ -1938,8 +1965,8 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                             value1 == '' ? '' : unit,
                             style: TextStyle(
                                 color:
-                                Color(new CommonUtil().getMyPrimaryColor()),
-                                fontSize: 9),
+                                    Color(new CommonUtil().getMyPrimaryColor()),
+                                fontSize: 9.0.sp),
                           ),
                         ],
                       )
@@ -1953,7 +1980,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        getDeleteIcon(deviceId,type),
+                        getDeleteIcon(deviceId, type),
                         SizedBoxWidget(width: 10)
                       ],
                     ),
@@ -1964,16 +1991,16 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                   children: [
                     Text(
                       valuename2 == '' ? '' : valuename2,
-                      style: TextStyle(color: Colors.black, fontSize: 11),
+                      style: TextStyle(color: Colors.black, fontSize: 11.0.sp),
                     ),
                     SizedBox(
-                      height: 5.0,
+                      height: 5.0.h,
                     ),
                     Text(
                       value2,
                       style: TextStyle(
                           color: Color(new CommonUtil().getMyPrimaryColor()),
-                          fontSize: 12),
+                          fontSize: 12.0.sp),
                     ),
                   ],
                 ),
@@ -1986,16 +2013,16 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                   children: [
                     Text(
                       valuename3 == '' ? '' : valuename3,
-                      style: TextStyle(color: Colors.black, fontSize: 11),
+                      style: TextStyle(color: Colors.black, fontSize: 11.0.sp),
                     ),
                     SizedBox(
-                      height: 5.0,
+                      height: 5.0.h,
                     ),
                     Text(
                       value3,
                       style: TextStyle(
                           color: Color(new CommonUtil().getMyPrimaryColor()),
-                          fontSize: 12),
+                          fontSize: 12.0.sp),
                     ),
                   ],
                 ),*/
@@ -2025,7 +2052,6 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     return mealText;
   }
 
-
   Widget buildRowForTempWeight(
       String type,
       String date,
@@ -2041,7 +2067,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     return Padding(
       padding: const EdgeInsets.only(top: 5.0),
       child: Container(
-        height: 60,
+        height: 60.0.h,
         color: Colors.white,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -2055,8 +2081,8 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 Column(
                   children: [
                     /*Container(
-                    width: 42,
-                    height: 14,
+                    width: 42.0.w,
+                    height: 14.0.h,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15),
                         gradient: LinearGradient(
@@ -2072,65 +2098,66 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                             ])),
                     child: Center(
                       child: Text(time,
-                          style: TextStyle(color: Colors.white, fontSize: 9)),
+                          style: TextStyle(color: Colors.white, fontSize: 9.0.sp)),
                     ),
                   ),*/
                     Center(
                       child: Text(time,
-                          style: TextStyle(color: Colors.grey, fontSize: 9)),
+                          style:
+                              TextStyle(color: Colors.grey, fontSize: 9.0.sp)),
                     ),
                     SizedBox(
-                      height: 2.0,
+                      height: 2.0.h,
                     ),
                     type == null ? Icons.device_unknown : TypeIcon(type),
                   ],
                 ),
                 valuename1 != ''
                     ? Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      SizedBox(height: 5),
-                      Column(
-                        children: [
-                          Text(
-                            valuename1,
-                            style: TextStyle(color: Colors.black, fontSize: 11),
-                            textAlign: TextAlign.center,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                value1 == '' ? '' : value1,
-                                style: TextStyle(
-                                    color: Color(
-                                        new CommonUtil().getMyPrimaryColor()),
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                              SizedBoxWidget(
-                                width: 2,
-                              ),
-                              Text(
-                                unit != '' ? unit : '',
-                                style: TextStyle(
-                                    color: Color(
-                                        new CommonUtil().getMyPrimaryColor()),
-                                    fontSize: 12),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-
-                    ],
-                  ),
-                )
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            SizedBox(height: 5.0.h),
+                            Column(
+                              children: [
+                                Text(
+                                  valuename1,
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 11.0.sp),
+                                  textAlign: TextAlign.center,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      value1 == '' ? '' : value1,
+                                      style: TextStyle(
+                                          color: Color(new CommonUtil()
+                                              .getMyPrimaryColor()),
+                                          fontSize: 13.0.sp,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                    SizedBoxWidget(
+                                      width: 2,
+                                    ),
+                                    Text(
+                                      unit != '' ? unit : '',
+                                      style: TextStyle(
+                                          color: Color(new CommonUtil()
+                                              .getMyPrimaryColor()),
+                                          fontSize: 12.0.sp),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
+                      )
                     : SizedBoxWidget(),
-                getDeleteIcon(deviceId,type),
+                getDeleteIcon(deviceId, type),
                 SizedBoxWidget(width: 10)
               ],
             ),
@@ -2156,7 +2183,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     return Padding(
       padding: const EdgeInsets.only(top: 5.0),
       child: Container(
-        height: 60,
+        height: 60.0.h,
         color: Colors.white,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -2170,8 +2197,8 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 Column(
                   children: [
                     /*Container(
-                    width: 42,
-                    height: 14,
+                    width: 42.0.w,
+                    height: 14.0.h,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15),
                         gradient: LinearGradient(
@@ -2187,91 +2214,93 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                             ])),
                     child: Center(
                       child: Text(time,
-                          style: TextStyle(color: Colors.white, fontSize: 9)),
+                          style: TextStyle(color: Colors.white, fontSize: 9.0.sp)),
                     ),
                   ),*/
                     Center(
                       child: Text(time,
-                          style: TextStyle(color: Colors.grey, fontSize: 9)),
+                          style:
+                              TextStyle(color: Colors.grey, fontSize: 9.0.sp)),
                     ),
                     SizedBox(
-                      height: 2.0,
+                      height: 2.0.h,
                     ),
                     type == null ? Icons.device_unknown : TypeIcon(type),
                   ],
                 ),
                 valuename1 != ''
                     ? Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      SizedBox(height: 5),
-                      Column(
-                        children: [
-                          Text(
-                            valuename1,
-                            style: TextStyle(color: Colors.black, fontSize: 11),
-                            textAlign: TextAlign.center,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                value1 == '' ? '' : value1,
-                                style: TextStyle(
-                                    color: Color(
-                                        new CommonUtil().getMyPrimaryColor()),
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                              SizedBoxWidget(
-                                width: 5,
-                              ),
-                              Text(
-                                unit != '' ? unit : '',
-                                style: TextStyle(
-                                    color: Color(
-                                        new CommonUtil().getMyPrimaryColor()),
-                                    fontSize: 12),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-
-                    ],
-                  ),
-                )
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            SizedBox(height: 5.0.h),
+                            Column(
+                              children: [
+                                Text(
+                                  valuename1,
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 11.0.sp),
+                                  textAlign: TextAlign.center,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      value1 == '' ? '' : value1,
+                                      style: TextStyle(
+                                          color: Color(new CommonUtil()
+                                              .getMyPrimaryColor()),
+                                          fontSize: 13.0.sp,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                    SizedBoxWidget(
+                                      width: 5,
+                                    ),
+                                    Text(
+                                      unit != '' ? unit : '',
+                                      style: TextStyle(
+                                          color: Color(new CommonUtil()
+                                              .getMyPrimaryColor()),
+                                          fontSize: 12.0.sp),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
+                      )
                     : SizedBoxWidget(),
                 bpm != ''
                     ? Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      SizedBox(height: 5),
-                      Column(
-                        children: [
-                          Text(
-                            'PRBpm',
-                            style: TextStyle(color: Colors.black, fontSize: 11),
-                            textAlign: TextAlign.center,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                bpm == '' ? '' : bpm,
-                                style: TextStyle(
-                                    color: Color(
-                                        new CommonUtil().getMyPrimaryColor()),
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                              /* SizedBoxWidget(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            SizedBox(height: 5.0.h),
+                            Column(
+                              children: [
+                                Text(
+                                  'PRBpm',
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 11.0.sp),
+                                  textAlign: TextAlign.center,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      bpm == '' ? '' : bpm,
+                                      style: TextStyle(
+                                          color: Color(new CommonUtil()
+                                              .getMyPrimaryColor()),
+                                          fontSize: 13.0.sp,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                    /* SizedBoxWidget(
                               width: 5,
                             ),
                             Text(
@@ -2279,18 +2308,17 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                               style: TextStyle(
                                   color: Color(
                                       new CommonUtil().getMyPrimaryColor()),
-                                  fontSize: 12),
+                                  fontSize: 12.0.sp),
                             ),*/
-                            ],
-                          )
-                        ],
-                      ),
-
-                    ],
-                  ),
-                )
+                                  ],
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
+                      )
                     : SizedBoxWidget(),
-                getDeleteIcon(deviceId,type),
+                getDeleteIcon(deviceId, type),
                 SizedBoxWidget(width: 10)
               ],
             ),
@@ -2304,29 +2332,28 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     if (type == strsourceHK) {
       return Image.asset(
         'assets/devices/fit.png',
-        height: 32.0,
-        width: 32.0,
+        height: 32.0.h,
+        width: 32.0.h,
       );
     } else if (type == strsourceGoogle) {
       return Image.asset(
         'assets/settings/googlefit.png',
-        height: 32.0,
-        width: 32.0,
+        height: 32.0.h,
+        width: 32.0.h,
       );
     } else if (type == strsourceSheela) {
       return Image.asset(
         'assets/maya/maya_us_main.png',
-        height: 32.0,
-        width: 32.0,
+        height: 32.0.h,
+        width: 32.0.h,
       );
     } else {
       return Image.asset(
         'assets/icons/myfhb_source.png',
-        height: 32.0,
-        width: 32.0,
+        height: 32.0.h,
+        width: 32.0.h,
         color: Color(new CommonUtil().getMyPrimaryColor()),
       );
     }
   }
-
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class MyProvidersAppBar extends StatelessWidget implements PreferredSizeWidget {
   TabController tabController;
@@ -35,13 +36,13 @@ class MyProvidersAppBar extends StatelessWidget implements PreferredSizeWidget {
         height: 0,
       ), */
       leading: Container(
-        height: 0,
-        width: 0,
+        height: 0.0.h,
+        width: 0.0.h,
       ),
       //title: Text('My Providers'),
       //centerTitle: false,
     );
   }
 
-  Size get preferredSize => new Size.fromHeight(30);
+  Size get preferredSize => new Size.fromHeight(30.0.h);
 }

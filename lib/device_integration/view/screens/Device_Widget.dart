@@ -356,8 +356,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
             return Image.network(
               snapshot.data.result,
               fit: BoxFit.cover,
-              width: 38,
-              height: 38,
+              width: 38.0.h,
+              height: 38.0.h,
               headers: {
                 HttpHeaders.authorizationHeader:
                     PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)
@@ -375,7 +375,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                     : '',
                 style: TextStyle(
                   color: Color(new CommonUtil().getMyPrimaryColor()),
-                  fontSize: 16.0,
+                  fontSize: 16.0.sp,
                   fontWeight: FontWeight.w200,
                 ),
               ),
@@ -384,10 +384,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
         } else if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
             child: SizedBox(
-              height: 20,
-              width: 20,
+              height: 20.0.h,
+              width: 20.0.h,
               child: CircularProgressIndicator(
-                strokeWidth: 1.0,
+                strokeWidth: 1.0.sp,
                 backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
               ),
             ),
@@ -404,7 +404,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                   : '',
               style: TextStyle(
                 color: Color(new CommonUtil().getMyPrimaryColor()),
-                fontSize: 16.0,
+                fontSize: 16.0.sp,
                 fontWeight: FontWeight.w200,
               ),
             ),
@@ -855,7 +855,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
               ),
             ),
           ),*/
-          Container(
+          /*Container(
             width: circleRadius,
             height: circleRadius,
             decoration:
@@ -867,6 +867,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           ),
           SizedBox(
             width: 15.0.w,
+          ),*/
+          SizedBox(
+            width: 5.0.w,
           ),
           Expanded(
             child: Container(
@@ -920,15 +923,15 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       value1ForTemp,
       String value2ForBp) {
     return Container(
-      //height: MediaQuery.of(context).size.height,
-      height: MediaQuery.of(context).size.width * 2.0,
+      //height: 1.sh,
+      height: 1.sw * 2.0,
       color: Colors.grey[200],
       child: Column(
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Container(
-            height: MediaQuery.of(context).size.width * 0.18,
+            height: 1.sw * 0.18,
             decoration: BoxDecoration(
                 gradient: LinearGradient(
                     begin: Alignment.centerLeft,
@@ -980,8 +983,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                     },
                                     child: Image.asset(
                                       'assets/icons/refresh_dash.png',
-                                      height: 26.0,
-                                      width: 26.0,
+                                      height: 26.0.h,
+                                      width: 26.0.h,
                                       color: Colors.white,
                                     ),
                                   ),
@@ -990,7 +993,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                   ),
                                   isFamilyAvail
                                       ? SwitchProfile().buildActions(
-                                          context, _key, callBackToRefresh)
+                                          context, _key, callBackToRefresh,true)
                                       : getMaterialPlusIcon(context),
                                 ],
                               ),
@@ -1050,7 +1053,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                 deviceNameForAdding: Constants.STR_BP_MONITOR,
                               ),
                             )),
-                  ).then((value){
+                  ).then((value) {
                     setState(() {});
                   });
                 },
@@ -1410,7 +1413,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                         variable.requestSheelaForglucose,
                                     device_name: strGlusoceLevel,
                                     device_icon: Devices_GL_Tool,
-                                    deviceNameForAdding: Constants.STR_GLUCOMETER,
+                                    deviceNameForAdding:
+                                        Constants.STR_GLUCOMETER,
                                   ),
                                 ),
                               ),
@@ -1765,7 +1769,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                               ),*/
                                             ],
                                           ),
-                                          SizedBoxWidget(height: 10,),
+                                          SizedBoxWidget(
+                                            height: 10.0.h,
+                                          ),
                                         ],
                                       ),
                                     ),
@@ -1797,7 +1803,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                         variable.requestSheelaFortemperature,
                                     device_name: strTemperature,
                                     device_icon: Devices_THM_Tool,
-                                    deviceNameForAdding: Constants.STR_THERMOMETER,
+                                    deviceNameForAdding:
+                                        Constants.STR_THERMOMETER,
                                   ),
                                 ),
                               ),
@@ -2097,7 +2104,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                               ),*/
                                             ],
                                           ),
-                                          SizedBoxWidget(height: 10,),
+                                          SizedBoxWidget(
+                                            height: 10.0.h,
+                                          ),
                                         ],
                                       ),
                                     ),
@@ -2129,7 +2138,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                               variable.requestSheelaForpo,
                                           device_name: strOxgenSaturation,
                                           device_icon: Devices_OxY_Tool,
-                                          deviceNameForAdding: Constants.STR_PULSE_OXIMETER,
+                                          deviceNameForAdding:
+                                              Constants.STR_PULSE_OXIMETER,
                                         ),
                                       )),
                             ).then((value) {
@@ -2453,7 +2463,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                               ),*/
                                             ],
                                           ),
-                                          SizedBoxWidget(height: 10,),
+                                          SizedBoxWidget(
+                                            height: 10.0.h,
+                                          ),
                                         ],
                                       ),
                                     ),
@@ -2485,7 +2497,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                               variable.requestSheelaForweight,
                                           device_name: strWeight,
                                           device_icon: Devices_WS_Tool,
-                                          deviceNameForAdding: Constants.STR_WEIGHING_SCALE,
+                                          deviceNameForAdding:
+                                              Constants.STR_WEIGHING_SCALE,
                                         ),
                                       )),
                             ).then((value) {
@@ -2781,7 +2794,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                               ),*/
                                             ],
                                           ),
-                                          SizedBoxWidget(height: 10,),
+                                          SizedBoxWidget(
+                                            height: 10,
+                                          ),
                                         ],
                                       ),
                                     ),
@@ -2854,8 +2869,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
 
   Widget getMaterialPlusIcon(BuildContext context) {
     return MaterialButton(
-      height: 28.0,
-      minWidth: 30.0,
+      height: 28.0.h,
+      minWidth: 30.0.w,
       onPressed: () {
         navigateToAddFamily();
       },
@@ -2873,11 +2888,11 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
 
 class Responsive {
   static width(double p, BuildContext context) {
-    return MediaQuery.of(context).size.width * (p / 100);
+    return 1.sw * (p / 100);
   }
 
   static height(double p, BuildContext context) {
-    return MediaQuery.of(context).size.height * (p / 100);
+    return 1.sh * (p / 100);
   }
 }
 
@@ -2885,26 +2900,26 @@ Widget TypeIcon(String type, Color color) {
   if (type == strsourceHK) {
     return Image.asset(
       'assets/devices/fit.png',
-      height: 20.0,
-      width: 20.0,
+      height: 20.0.h,
+      width: 20.0.h,
     );
   } else if (type == strsourceGoogle) {
     return Image.asset(
       'assets/settings/googlefit.png',
-      height: 20.0,
-      width: 20.0,
+      height: 20.0.h,
+      width: 20.0.h,
     );
   } else if (type == strsourceSheela) {
     return Image.asset(
       'assets/maya/maya_us_main.png',
-      height: 20.0,
-      width: 20.0,
+      height: 20.0.h,
+      width: 20.0.h,
     );
   } else {
     return Image.asset(
       'assets/icons/myfhb_source.png',
-      height: 18.0,
-      width: 18.0,
+      height: 18.0.h,
+      width: 18.0.h,
       color: color,
     );
   }

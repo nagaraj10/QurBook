@@ -8,11 +8,13 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/ui/bot/common/botutils.dart';
 import 'package:myfhb/src/ui/bot/widgets/chatdata.dart';
+import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'package:provider/provider.dart';
 import 'package:myfhb/src/model/bot/ConversationModel.dart';
 import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 // ignore: must_be_immutable
 class ChatScreen extends StatefulWidget {
@@ -74,6 +76,8 @@ class _ChatScreenState extends State<ChatScreen>
   }
 
   stopTTSEngine() async {
+    ChatScreenViewModel model = getMyViewModel();
+    model.newAudioPlay.stop();
     await variable.tts_platform.invokeMethod(variable.strtts, {
       parameters.strMessage: "",
       parameters.strIsClose: true,
@@ -113,6 +117,7 @@ class _ChatScreenState extends State<ChatScreen>
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
+              size: 24.0.sp,
               color: Colors.white,
             ),
             onPressed: () {

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import 'package:myfhb/src/ui/MyRecordsArguments.dart';
 
 class PrescriptionModule extends StatelessWidget {
   const PrescriptionModule();
@@ -14,14 +16,14 @@ class PrescriptionModule extends StatelessWidget {
             child: Column(
               children: [
                 SizedBox(
-                  height: 80,
+                  height: 80.0.h,
                 ),
                 Visibility(
                   //visible: (appntId != null && appntId != '') ? true : false,
                   child: Container(
                     margin: EdgeInsets.all(10),
-                    height: 50,
-                    width: 50,
+                    height: 50.0.h,
+                    width: 50.0.h,
                     decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10)),
@@ -38,8 +40,8 @@ class PrescriptionModule extends StatelessWidget {
                             }),*/
                         Container(
                             margin: EdgeInsets.all(10),
-                            height: 50,
-                            width: 50,
+                            height: 50.0.h,
+                            width: 50.0.h,
                             decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(10)),
@@ -49,10 +51,12 @@ class PrescriptionModule extends StatelessWidget {
                                 IconButton(
                                     icon: ImageIcon(
                                       AssetImage('assets/icons/rx.png'),
-                                      color: Color(new CommonUtil().getMyPrimaryColor()),
+                                      color: Color(
+                                          new CommonUtil().getMyPrimaryColor()),
                                     ),
                                     onPressed: () {
-                                      FetchRecords(0, false, false, false, [],context);
+                                      FetchRecords(
+                                          0, false, false, false, [], context);
                                     }),
                               ],
                             )),
@@ -67,17 +71,19 @@ class PrescriptionModule extends StatelessWidget {
   }
 
   void FetchRecords(int position, bool allowSelect, bool isAudioSelect,
-      bool isNotesSelect, List<String> mediaIds,BuildContext context) async {
+      bool isNotesSelect, List<String> mediaIds, BuildContext context) async {
     await Navigator.of(context)
         .push(MaterialPageRoute(
       builder: (context) => MyRecords(
-          categoryPosition: position,
-          allowSelect: allowSelect,
-          isAudioSelect: isAudioSelect,
-          isNotesSelect: isNotesSelect,
-          selectedMedias: mediaIds,
-          isFromChat: false,
-          isAssociateOrChat: false),
+          argument: MyRecordsArgument(
+              categoryPosition: position,
+              allowSelect: allowSelect,
+              isAudioSelect: isAudioSelect,
+              isNotesSelect: isNotesSelect,
+              selectedMedias: mediaIds,
+              isFromChat: false,
+              isAssociateOrChat: false,
+              fromClass: 'appointments')),
     ))
         .then((results) {
       if (results != null) {

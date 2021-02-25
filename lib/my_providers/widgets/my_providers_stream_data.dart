@@ -5,6 +5,7 @@ import 'package:myfhb/my_providers/bloc/providers_block.dart';
 import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
 import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 import 'my_providers_tab_bar.dart';
 
@@ -18,8 +19,8 @@ class MyProvidersStreamData extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamBuilder<ApiResponse<MyProvidersResponse>>(
       stream: providersBloc.providersListStream,
-      builder: (context,
-          AsyncSnapshot<ApiResponse<MyProvidersResponse>> snapshot) {
+      builder:
+          (context, AsyncSnapshot<ApiResponse<MyProvidersResponse>> snapshot) {
         if (snapshot.hasData) {
           switch (snapshot.data.status) {
             case Status.LOADING:
@@ -28,8 +29,8 @@ class MyProvidersStreamData extends StatelessWidget {
                 child: CircularProgressIndicator(
                   backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
                 ),
-                width: 30,
-                height: 30,
+                width: 30.0.h,
+                height: 30.0.h,
               ));
               break;
 
@@ -48,8 +49,8 @@ class MyProvidersStreamData extends StatelessWidget {
           }
         } else {
           return Container(
-            width: 100,
-            height: 100,
+            width: 100.0.h,
+            height: 100.0.h,
           );
         }
       },

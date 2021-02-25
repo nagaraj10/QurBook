@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 import 'package:flutter/material.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
@@ -74,7 +75,10 @@ class _PDFiOSViewerState extends State<PDFiOSViewer> {
             automaticallyImplyLeading: false,
             flexibleSpace: GradientAppBar(),
             leading: IconButton(
-                icon: Icon(Icons.arrow_back_ios),
+                icon: Icon(
+                  Icons.arrow_back_ios,
+                  size: 24.0.sp,
+                ),
                 onPressed: () {
                   Navigator.of(context).pop();
                 })),

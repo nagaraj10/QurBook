@@ -11,6 +11,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
 import 'package:myfhb/src/model/Category/catergory_result.dart';
+import 'package:myfhb/src/ui/audio/AudioScreenArguments.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/common/CommonDialogBox.dart';
@@ -18,6 +19,7 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 enum t_MEDIA {
   FILE,
@@ -27,9 +29,9 @@ enum t_MEDIA {
 }
 
 class AudioRecordScreen extends StatefulWidget {
-  final bool fromVoice;
+  AudioScreenArguments arguments;
 
-  AudioRecordScreen({this.fromVoice});
+  AudioRecordScreen({this.arguments});
   @override
   _AudioRecordScreenState createState() => new _AudioRecordScreenState();
 }
@@ -134,7 +136,7 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
     this.setState(() {
       this._isRecording = false;
     });
-    if (widget.fromVoice) {
+    if (widget.arguments.fromVoice) {
       PreferenceUtil.saveString(
               Constants.KEY_CATEGORYNAME, Constants.STR_VOICERECORDS)
           .then((value) {
@@ -155,7 +157,7 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
             audioPathMain = audioPath;
             containsAudioMain = containsAudio;
             setState(() {});
-          }, false, fileName);
+          }, false, fileName, fromClass: widget.arguments.fromClass);
         });
       });
     } else {
@@ -303,6 +305,7 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
       return Icon(
         Icons.mic_off,
         color: Colors.white54,
+        size: 24.0.sp,
       );
     return flutterSound.audioState == t_AUDIO_STATE.IS_STOPPED
         ? Text(
@@ -325,7 +328,10 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
         flexibleSpace: GradientAppBar(),
         backgroundColor: Colors.transparent,
         leading: InkWell(
-          child: Icon(Icons.arrow_back_ios),
+          child: Icon(
+            Icons.arrow_back_ios,
+            size: 24.0.sp,
+          ),
           onTap: () {
             Navigator.of(context).pop();
           },
@@ -340,8 +346,8 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
           children: <Widget>[
             _isRecording
                 ? Container(
-                    height: 120,
-                    width: 120,
+                    height: 120.0.h,
+                    width: 120.0.h,
                     child: AvatarGlow(
                       startDelay: Duration(milliseconds: 200),
                       glowColor: Color(new CommonUtil().getMyPrimaryColor()),
@@ -359,7 +365,7 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
                               ColorUtils.greycolor.withOpacity(0.5),
                           child: Icon(
                             Icons.mic,
-                            size: 40,
+                            size: 40.0.sp,
                             color: Colors.black,
                           ),
                           radius: 30.0,
@@ -371,8 +377,8 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
                     ),
                   )
                 : Container(
-                    height: 120,
-                    width: 120,
+                    height: 120.0.h,
+                    width: 120.0.h,
                     padding: EdgeInsets.all(10),
                     child: Material(
                       color: Colors.transparent,
@@ -382,7 +388,7 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
                         backgroundColor: ColorUtils.greycolor,
                         child: Icon(
                           Icons.mic,
-                          size: 40,
+                          size: 40.0.sp,
                           color: Colors.black,
                         ),
                         radius: 30.0,
@@ -390,7 +396,7 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
                     ),
                   ),
             Container(
-                height: 60,
+                height: 60.0.h,
                 child: Center(
                   child: Visibility(
                       visible: _isRecording ? true : false,
@@ -399,7 +405,7 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
                         child: Text(
                           this._recorderTxt,
                           style: TextStyle(
-                            fontSize: 22.0,
+                            fontSize: 22.0.sp,
                             color: Colors.black54,
                           ),
                         ),
@@ -408,7 +414,7 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
             Align(
               alignment: Alignment.center,
               child: Container(
-                constraints: BoxConstraints(minWidth: 160),
+                constraints: BoxConstraints(minWidth: 160.0.w),
                 decoration: BoxDecoration(
                     color: _isRecording ? Colors.red : Colors.green,
                     borderRadius: BorderRadius.circular(30)),
@@ -420,7 +426,7 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
                 ),
               ),
             ),
-            SizedBox(height: 40),
+            SizedBox(height: 40.0.h),
           ],
         ),
       ),

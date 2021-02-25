@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/DatePicker/date_picker_widget.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -105,6 +106,7 @@ class _MyProvidersState extends State<MyProviders> {
           child: Icon(
             Icons.add,
             color: Color(new CommonUtil().getMyPrimaryColor()),
+            size: 24.0.sp,
           ),
         ));
   }
@@ -121,7 +123,7 @@ class _MyProvidersState extends State<MyProviders> {
   Widget expandedListItem(BuildContext ctx, int i, List<DoctorIds> docs) {
     return Container(
       padding: EdgeInsets.all(10.0),
-      width: MediaQuery.of(context).size.width,
+      width: 1.sw,
       child: ExpandableButton(
         child: Column(
           children: [
@@ -308,7 +310,7 @@ class _MyProvidersState extends State<MyProviders> {
             index, isSearch ? doctors : copyOfdoctorsModel),
         separatorBuilder: (BuildContext context, index) {
           return Divider(
-            height: 0,
+            height: 0.0.h,
             color: Colors.transparent,
           );
         },
@@ -365,7 +367,7 @@ class _MyProvidersState extends State<MyProviders> {
                 )
               ],
             ),
-            commonWidgets.getSizeBoxWidth(10.0),
+            commonWidgets.getSizeBoxWidth(10.0.w),
             Expanded(
               flex: 4,
               child: Column(
@@ -378,7 +380,7 @@ class _MyProvidersState extends State<MyProviders> {
                           child: Row(
                         children: [
                           commonWidgets.setDoctorname(docs[i].user),
-                          commonWidgets.getSizeBoxWidth(10.0),
+                          commonWidgets.getSizeBoxWidth(10.0.w),
                           commonWidgets.getIcon(
                               width: fhbStyles.imageWidth,
                               height: fhbStyles.imageHeight,
@@ -389,7 +391,7 @@ class _MyProvidersState extends State<MyProviders> {
                               }),
                         ],
                       )),
-                      commonWidgets.getSizeBoxWidth(10.0),
+                      commonWidgets.getSizeBoxWidth(10.0.w),
                       commonWidgets.getBookMarkedIconNew(docs[i], () {
                         providerViewModel
                             .bookMarkDoctor(docs[i], false, 'ListItem')
@@ -399,7 +401,7 @@ class _MyProvidersState extends State<MyProviders> {
                           }
                         });
                       }),
-                      commonWidgets.getSizeBoxWidth(15.0),
+                      commonWidgets.getSizeBoxWidth(15.0.w),
                       docs[i].isTelehealthEnabled
                           ? commonWidgets.getIcon(
                               width: fhbStyles.imageWidth,
@@ -436,9 +438,9 @@ class _MyProvidersState extends State<MyProviders> {
                                     : SizedBox()
                                 : SizedBox()
                             : SizedBox()),
-                    commonWidgets.getSizeBoxWidth(10.0),
+                    commonWidgets.getSizeBoxWidth(10.0.w),
                   ]),
-                  commonWidgets.getSizedBox(5.0),
+                  commonWidgets.getSizedBox(5.0.w),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -457,7 +459,7 @@ class _MyProvidersState extends State<MyProviders> {
                               docs[i].isMciVerified, STR_MY_VERIFIED)
                           : commonWidgets.getMCVerified(
                               docs[i].isMciVerified, STR_NOT_VERIFIED),
-                      commonWidgets.getSizeBoxWidth(10.0),
+                      commonWidgets.getSizeBoxWidth(10.0.w),
                     ],
                   )
                 ],
