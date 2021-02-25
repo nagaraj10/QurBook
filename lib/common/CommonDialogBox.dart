@@ -27,6 +27,8 @@ import 'package:myfhb/src/model/Media/MediaData.dart';
 import 'package:myfhb/src/model/Media/media_data_list.dart';
 import 'package:myfhb/src/model/Media/media_result.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
+import 'package:myfhb/src/ui/MyRecordsArguments.dart';
+import 'package:myfhb/src/ui/audio/AudioScreenArguments.dart';
 import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
@@ -86,6 +88,8 @@ class CommonDialogBox {
 
   FocusNode dateOfBirthFocus = FocusNode();
   FlutterToast toast = new FlutterToast();
+
+  String fromClassNew = '';
 
   Future<Widget> getDialogBoxForPrescription(
       BuildContext context,
@@ -1609,8 +1613,9 @@ class CommonDialogBox {
         await Navigator.of(context)
             .push(MaterialPageRoute(
           builder: (context) => AudioRecordScreen(
+              arguments: AudioScreenArguments(
             fromVoice: false,
-          ),
+          )),
         ))
             .then((results) {
           if (results != null) {
@@ -1812,28 +1817,32 @@ class CommonDialogBox {
                     .pop();
 
                 Navigator.of(context).pop();
-                Navigator.of(context).pop();
 
                 List<String> recordIds = new List();
                 recordIds.add(value.result[0].id);
                 CommonUtil.audioPage = true;
-                await Navigator.of(context)
-                    .push(MaterialPageRoute(
-                      builder: (context) => MyRecords(
-                        categoryPosition:
-                            getCategoryPosition(Constants.STR_VOICERECORDS),
-                        allowSelect: false,
-                        isAudioSelect: true,
-                        isNotesSelect: false,
-                        selectedMedias: recordIds,
-                        isFromChat: false,
-                        showDetails: false,
-                        isAssociateOrChat: false,
-                        userID: userID,
-                        fromClass: 'audio',
-                      ),
-                    ))
-                    .then((results) {});
+                if (fromClassNew == 'audio') {
+                  await Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MyRecords(
+                            argument: MyRecordsArgument(
+                          categoryPosition:
+                              getCategoryPosition(Constants.STR_VOICERECORDS),
+                          allowSelect: false,
+                          isAudioSelect: true,
+                          isNotesSelect: false,
+                          selectedMedias: recordIds,
+                          isFromChat: false,
+                          showDetails: true,
+                          isAssociateOrChat: false,
+                          userID: userID,
+                          fromClass: 'audio',
+                        )),
+                      )).then((results) {});
+                } else {
+                  Navigator.of(context).pop();
+                }
               } else if (categoryName == Constants.STR_NOTES) {
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
@@ -2116,7 +2125,8 @@ class CommonDialogBox {
       Function(bool, String) deleteAudioFunction,
       Function(bool, String) updateAudioUI,
       bool modeOfSaveClone,
-      TextEditingController fileNameClone) async {
+      TextEditingController fileNameClone,
+      {String fromClass}) async {
     modeOfSave = modeOfSaveClone;
     containsAudioMain = containsAudio;
     audioPathMain = audioPath;
@@ -2127,6 +2137,7 @@ class CommonDialogBox {
 
     filteredCategoryData = await PreferenceUtil.getCategoryTypeDisplay(
         Constants.KEY_CATEGORYLIST_VISIBLE);
+    fromClassNew = fromClass;
     StatefulBuilder dialog = new StatefulBuilder(builder: (context, setState) {
       return new AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),

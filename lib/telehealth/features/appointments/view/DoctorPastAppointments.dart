@@ -10,6 +10,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
 import 'package:myfhb/src/model/Category/catergory_result.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
+import 'package:myfhb/src/ui/MyRecordsArguments.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/healthRecord.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
@@ -267,15 +268,16 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
 
                       await Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => MyRecords(
-                          categoryPosition: position,
-                          allowSelect: false,
-                          isAudioSelect: false,
-                          isNotesSelect: true,
-                          selectedMedias: recordIds,
-                          isFromChat: false,
-                          showDetails: true,
-                          isAssociateOrChat: false,
-                        ),
+                            argument: MyRecordsArgument(
+                                categoryPosition: position,
+                                allowSelect: false,
+                                isAudioSelect: false,
+                                isNotesSelect: true,
+                                selectedMedias: recordIds,
+                                isFromChat: false,
+                                showDetails: true,
+                                isAssociateOrChat: false,
+                                fromClass: 'appointments')),
                       ));
                     }
                   }, healthRecord.toString()),
@@ -322,7 +324,7 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
     String doctorName = doc.doctor.user.name;
     String doctorPic = doc.doctor.user.profilePicThumbnailUrl;
     chatViewModel.storePatientDetailsToFCM(
-        doctorId, doctorName, doctorPic,'','','', context,false);
+        doctorId, doctorName, doctorPic, '', '', '', context, false);
   }
 
   void moveToBilsPage(HealthRecord healthRecord) async {
@@ -337,14 +339,16 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
     int position = getCategoryPosition(Constants.STR_BILLS);
     await Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => MyRecords(
-          categoryPosition: position,
-          allowSelect: true,
-          isAudioSelect: false,
-          isNotesSelect: false,
-          selectedMedias: paymentID,
-          isFromChat: false,
-          showDetails: true,
-          isAssociateOrChat: false),
+          argument: MyRecordsArgument(
+              categoryPosition: position,
+              allowSelect: true,
+              isAudioSelect: false,
+              isNotesSelect: false,
+              selectedMedias: paymentID,
+              isFromChat: false,
+              showDetails: true,
+              isAssociateOrChat: false,
+              fromClass: 'appointments')),
     ));
   }
 
@@ -379,9 +383,11 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
 
   int pickPosition(String categoryName) {
     int position = 0;
-    List<CategoryResult> categoryDataList =List();
+    List<CategoryResult> categoryDataList = List();
     categoryDataList = getCategoryList();
-    for (int i = 0; i < (categoryDataList==null?0:categoryDataList.length); i++) {
+    for (int i = 0;
+        i < (categoryDataList == null ? 0 : categoryDataList.length);
+        i++) {
       if (categoryName == categoryDataList[i].categoryName) {
         print(categoryName + ' ****' + categoryDataList[i].categoryName);
         position = i;

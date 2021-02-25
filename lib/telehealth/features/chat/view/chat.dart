@@ -22,6 +22,8 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
+import 'package:myfhb/src/ui/MyRecordsArguments.dart';
+import 'package:myfhb/src/ui/audio/AudioScreenArguments.dart';
 import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
@@ -1021,10 +1023,11 @@ class ChatScreenState extends State<ChatScreen> {
                                                     peerName.substring(0, 1))),
                                             IconButton(
                                               icon: Icon(currentPlayedVoiceURL ==
-                                                  document[STR_CONTENT]
+                                                      document[STR_CONTENT]
                                                   ? isPlaying
-                                                  ? Icons.pause_circle_filled
-                                                  : Icons.play_circle_filled
+                                                      ? Icons
+                                                          .pause_circle_filled
+                                                      : Icons.play_circle_filled
                                                   : Icons.play_circle_filled),
                                               onPressed: () {
                                                 isPlaying
@@ -1728,8 +1731,9 @@ class ChatScreenState extends State<ChatScreen> {
                           Navigator.of(context)
                               .push(MaterialPageRoute(
                             builder: (context) => AudioRecordScreen(
+                                arguments: AudioScreenArguments(
                               fromVoice: false,
-                            ),
+                            )),
                           ))
                               .then((results) {
                             String audioPath = results[Constants.keyAudioFile];
@@ -1811,14 +1815,16 @@ class ChatScreenState extends State<ChatScreen> {
     await Navigator.of(context)
         .push(MaterialPageRoute(
       builder: (context) => MyRecords(
-          categoryPosition: position,
-          allowSelect: allowSelect,
-          isAudioSelect: isAudioSelect,
-          isNotesSelect: isNotesSelect,
-          selectedMedias: mediaIds,
-          showDetails: false,
-          isFromChat: true,
-          isAssociateOrChat: true),
+          argument: MyRecordsArgument(
+              categoryPosition: position,
+              allowSelect: allowSelect,
+              isAudioSelect: isAudioSelect,
+              isNotesSelect: isNotesSelect,
+              selectedMedias: mediaIds,
+              showDetails: false,
+              isFromChat: true,
+              isAssociateOrChat: true,
+              fromClass: 'chats')),
     ))
         .then((results) {
       if (results != null) {

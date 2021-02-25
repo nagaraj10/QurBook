@@ -12,6 +12,7 @@ import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/model/Category/catergory_result.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
+import 'package:myfhb/src/ui/MyRecordsArguments.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/associaterecords/associate_success_response.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/associaterecords/associate_update_success_response.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
@@ -144,16 +145,17 @@ class AppointmentsCommonWidget {
           await Navigator.of(context)
               .push(MaterialPageRoute(
             builder: (context) => MyRecords(
-              categoryPosition: position,
-              allowSelect: false,
-              isAudioSelect: false,
-              isNotesSelect: isUpcoming ? true : false,
-              selectedMedias: notesId,
-              isFromChat: false,
-              showDetails: false,
-              isAssociateOrChat: isUpcoming ? true : false,
-              fromAppointments: true,
-            ),
+                argument: MyRecordsArgument(
+                    categoryPosition: position,
+                    allowSelect: false,
+                    isAudioSelect: false,
+                    isNotesSelect: isUpcoming ? true : false,
+                    selectedMedias: notesId,
+                    isFromChat: false,
+                    showDetails: false,
+                    isAssociateOrChat: isUpcoming ? true : false,
+                    fromAppointments: true,
+                    fromClass: 'appointments')),
           ))
               .then((results) {
             try {
@@ -189,16 +191,17 @@ class AppointmentsCommonWidget {
           await Navigator.of(context)
               .push(MaterialPageRoute(
             builder: (context) => MyRecords(
-              categoryPosition: position,
-              allowSelect: false,
-              isAudioSelect: isUpcoming ? true : false,
-              isNotesSelect: false,
-              selectedMedias: voiceIds,
-              isFromChat: false,
-              showDetails: false,
-              isAssociateOrChat: isUpcoming ? true : false,
-              fromAppointments: true,
-            ),
+                argument: MyRecordsArgument(
+                    categoryPosition: position,
+                    allowSelect: false,
+                    isAudioSelect: isUpcoming ? true : false,
+                    isNotesSelect: false,
+                    selectedMedias: voiceIds,
+                    isFromChat: false,
+                    showDetails: false,
+                    isAssociateOrChat: isUpcoming ? true : false,
+                    fromAppointments: true,
+                    fromClass: 'appointments')),
           ))
               .then((results) {
             try {
@@ -234,16 +237,18 @@ class AppointmentsCommonWidget {
 
             await Navigator.of(context)
                 .push(MaterialPageRoute(
-              builder: (context) => MyRecords(
-                  categoryPosition: position,
-                  allowSelect: isUpcoming ? true : false,
-                  isAudioSelect: false,
-                  isNotesSelect: false,
-                  selectedMedias: recordIds,
-                  isFromChat: false,
-                  showDetails: false,
-                  isAssociateOrChat: isUpcoming ? true : false),
-            ))
+                    builder: (context) => MyRecords(
+                          argument: MyRecordsArgument(
+                              categoryPosition: position,
+                              allowSelect: isUpcoming ? true : false,
+                              isAudioSelect: false,
+                              isNotesSelect: false,
+                              selectedMedias: recordIds,
+                              isFromChat: false,
+                              showDetails: false,
+                              isAssociateOrChat: isUpcoming ? true : false,
+                              fromClass: 'appointments'),
+                        )))
                 .then((results) {
               try {
                 if (results.containsKey('metaId')) {
@@ -464,7 +469,9 @@ class AppointmentsCommonWidget {
     int position = 0;
     List<CategoryResult> categoryDataList = List();
     categoryDataList = getCategoryList();
-    for (int i = 0; i < (categoryDataList==null?0:categoryDataList.length); i++) {
+    for (int i = 0;
+        i < (categoryDataList == null ? 0 : categoryDataList.length);
+        i++) {
       if (categoryName == categoryDataList[i].categoryName) {
         print(categoryName + ' ****' + categoryDataList[i].categoryName);
         position = i;
