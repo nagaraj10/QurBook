@@ -548,7 +548,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           Navigator.of(context).pop();
           Navigator.of(context).pop();
           toast.getToast(
-              'Record deleted successfully, Delete functionality can be performed from Sheela as well.',
+              'Record deleted successfully. Latest record added through Sheela G can be updated/deleted through Sheela G itself',
               Colors.green);
         });
       } else {
