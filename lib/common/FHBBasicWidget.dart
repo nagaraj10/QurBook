@@ -608,9 +608,8 @@ class FHBBasicWidget {
                 controllerValue.text = '';
                 Navigator.pop(context);
               });
-            }else{
+            } else {
               node.nextFocus();
-
             }
           }, // Move focus to next
           decoration: InputDecoration(
@@ -627,7 +626,7 @@ class FHBBasicWidget {
           keyboardType: TextInputType.number,
           cursorWidth: 0.5.w,
           onChanged: (value) {
-            if (value.length < 3) {
+            if (value.length < 4) {
               valueEnterd = value;
               var number = int.parse(value);
               if (number < unitsMesurements.minValue ||
@@ -658,9 +657,8 @@ class FHBBasicWidget {
                   controllerValue.text = '';
                   Navigator.pop(context);
                 });
-              }else{
+              } else {
                 node.nextFocus();
-
               }
             }
           },
@@ -668,14 +666,6 @@ class FHBBasicWidget {
   }
 
   getColorBasedOnDevice(String deviceName, String unitsTosearch, String text) {
-    /* var commonConstants = new CommonConstants();
-
-    UnitsMesurements unitsMesurements;
-    commonConstants
-        .getValuesForUnit(unitsTosearch)
-        .then((unitsMesurementsClone) {
-      unitsMesurements = unitsMesurementsClone;
-    });*/
     switch (deviceName) {
       case Constants.STR_BP_MONITOR:
         if (text != null && text != '') {
