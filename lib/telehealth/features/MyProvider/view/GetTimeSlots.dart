@@ -89,7 +89,7 @@ class GetTimeSlots extends StatelessWidget {
         Align(
           alignment: Alignment.center,
           child: SizedBoxWithChild(
-            width: 85.0.w,
+            width: 95.0.w,
             height: 35.0.h,
             child: FlatButton(
               shape: RoundedRectangleBorder(
@@ -98,7 +98,9 @@ class GetTimeSlots extends StatelessWidget {
                       color: Color(new CommonUtil().getMyPrimaryColor()))),
               color: Colors.transparent,
               textColor: Color(new CommonUtil().getMyPrimaryColor()),
-              padding: EdgeInsets.all(8.0),
+              padding: EdgeInsets.all(
+                8.0.sp,
+              ),
               onPressed: () {
                 if (isReshedule == true) {
                   String docSesstionID =

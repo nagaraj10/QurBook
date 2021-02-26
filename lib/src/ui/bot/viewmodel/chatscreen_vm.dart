@@ -41,6 +41,7 @@ class ChatScreenViewModel extends ChangeNotifier {
 
   int get getisMayaSpeaks => isMayaSpeaks;
   AudioPlayer newAudioPlay = AudioPlayer();
+  AudioPlayer newAudioPlay1 = AudioPlayer();
   bool isAudioPlayerPlaying = false;
 
   bool get getIsButtonResponse => isButtonResponse;
@@ -91,6 +92,7 @@ class ChatScreenViewModel extends ChangeNotifier {
       });
       notifyListeners();
     }
+    stopAudioPlayer();
     await variable.tts_platform.invokeMethod(variable.strtts, {
       parameters.strMessage: "",
       parameters.strIsClose: true,
@@ -104,18 +106,45 @@ class ChatScreenViewModel extends ChangeNotifier {
       conversations[index].isSpeaking = true;
       notifyListeners();
     }
-    await variable.tts_platform.invokeMethod(variable.strtts, {
-      parameters.strMessage: textToSpeak,
-      parameters.strIsClose: false,
-      parameters.strLanguage: Utils.getCurrentLanCode(),
-    }).then((response) async {
-      if (response == 1) {
-        if (index != null) {
-          conversations[index].isSpeaking = false;
-          notifyListeners();
+    final lan = Utils.getCurrentLanCode();
+    if (Platform.isIOS ||
+        lan == "undef" ||
+        lan.toLowerCase() == "en-IN".toLowerCase() ||
+        lan.toLowerCase() == "en-US".toLowerCase()) {
+      await variable.tts_platform.invokeMethod(variable.strtts, {
+        parameters.strMessage: textToSpeak,
+        parameters.strIsClose: false,
+        parameters.strLanguage: Utils.getCurrentLanCode(),
+      }).then((response) async {
+        if (response == 1) {
+          if (index != null) {
+            conversations[index].isSpeaking = false;
+            notifyListeners();
+          }
         }
+      });
+    } else {
+      String langCodeForRequest;
+      if (lan != "undef") {
+        final langCode = lan.split("-").first;
+        langCodeForRequest = langCode;
+        //print(langCode);
       }
-    });
+      AudioPlayer newAudioPlay1 = AudioPlayer();
+      getNewResponse(textToSpeak,
+          langCodeForRequest != null ? langCodeForRequest : "en", true);
+      newAudioPlay1.onPlayerStateChanged.listen((event) async {
+        print(event);
+        if (event == AudioPlayerState.COMPLETED ||
+            event == AudioPlayerState.PAUSED ||
+            event == AudioPlayerState.STOPPED) {
+          if (index != null) {
+            conversations[index].isSpeaking = false;
+            notifyListeners();
+          }
+        }
+      });
+    }
   }
 
   startSheelaFromButton({
@@ -174,19 +203,19 @@ class ChatScreenViewModel extends ChangeNotifier {
       sendToMaya(variable.strhiMaya, screen: parameters.strSheela);
     });
 
-    var date = new FHBUtils().getFormattedDateString(DateTime.now().toString());
-    Conversation model = new Conversation(
-        isMayaSaid: false,
-        text: variable.strhiMaya,
-        name: prof.result != null
-            ? prof.result.firstName + prof.result.lastName
-            : '',
-        timeStamp: date,
-        redirect: isRedirect,
-        screen: parameters.strSheela);
-
-    conversations.add(model);
-    notifyListeners();
+    // var date = new FHBUtils().getFormattedDateString(DateTime.now().toString());
+    // Conversation model = new Conversation(
+    //     isMayaSaid: false,
+    //     text: variable.strhiMaya,
+    //     name: prof.result != null
+    //         ? prof.result.firstName + prof.result.lastName
+    //         : '',
+    //     timeStamp: date,
+    //     redirect: isRedirect,
+    //     screen: parameters.strSheela);
+    //
+    // conversations.add(model);
+    // notifyListeners();
   }
 
   sendToMaya(String msg, {String screen}) async {
@@ -254,7 +283,7 @@ class ChatScreenViewModel extends ChangeNotifier {
           Future.delayed(
               Duration(
                 seconds: 4,
-              ), () {
+              ), () async {
             isLoading = false;
             notifyListeners();
             isMayaSpeaks = 0;
@@ -271,8 +300,14 @@ class ChatScreenViewModel extends ChangeNotifier {
                   lan == "undef" ||
                   lan.toLowerCase() == "en-IN".toLowerCase() ||
                   lan.toLowerCase() == "en-US".toLowerCase()) {
+                String textToSpeak = '.';
+                if ((res?.buttons?.length ?? 0) > 0) {
+                  await Future.forEach(res.buttons, (button) async {
+                    textToSpeak = textToSpeak + button.title + '.';
+                  });
+                }
                 variable.tts_platform.invokeMethod(variable.strtts, {
-                  parameters.strMessage: res.text,
+                  parameters.strMessage: res.text + textToSpeak,
                   parameters.strIsClose: false,
                   parameters.strLanguage: res.lang
                 }).then((response) async {
@@ -281,13 +316,7 @@ class ChatScreenViewModel extends ChangeNotifier {
                   if (response == 1) {
                     isMayaSpeaks = 1;
                   }
-                  if ((res?.buttons?.length ?? 0) > 0) {
-                    await Future.forEach(res.buttons, (button) async {
-                      await startTTSEngine(
-                        textToSpeak: button.title,
-                      );
-                    });
-                  } else {
+                  if (!isButtonResponse) {
                     if (!isEndOfConv) {
                       gettingReposnseFromNative();
                     } else {
@@ -297,19 +326,29 @@ class ChatScreenViewModel extends ChangeNotifier {
                 });
               } else {
                 //print(res.text);
-                getNewResponse(res.text,
-                    langCodeForRequest != null ? langCodeForRequest : "en");
-                newAudioPlay.onPlayerStateChanged.listen((event) {
-                  print(event);
+                String textToSpeak = '.';
+                if ((res?.buttons?.length ?? 0) > 0) {
+                  await Future.forEach(res.buttons, (button) async {
+                    textToSpeak = textToSpeak + button.title + '.';
+                  });
+                }
+                newAudioPlay = AudioPlayer();
+                getNewResponse(
+                    res.text + textToSpeak,
+                    langCodeForRequest != null ? langCodeForRequest : "en",
+                    false);
+                newAudioPlay.onPlayerStateChanged.listen((event) async {
                   if (event == AudioPlayerState.PLAYING) {
                     isAudioPlayerPlaying = true;
                   }
                   if (event == AudioPlayerState.COMPLETED ||
                       event == AudioPlayerState.PAUSED ||
-                      event == AudioPlayerState.STOPPED)
-                    isAudioPlayerPlaying = false;
-                  if (event == AudioPlayerState.COMPLETED && !isEndOfConv) {
-                    gettingReposnseFromNative();
+                      event == AudioPlayerState.STOPPED) {
+                    conversations[conversations.length - 1].isSpeaking = false;
+                    notifyListeners();
+                    if (!isButtonResponse) {
+                      gettingReposnseFromNative();
+                    }
                   }
                 });
               }
@@ -325,7 +364,7 @@ class ChatScreenViewModel extends ChangeNotifier {
     }
   }
 
-  getNewResponse(String dataForVoice, String langCode) async {
+  getNewResponse(String dataForVoice, String langCode, bool isTTS) async {
     try {
       final str =
           "https://heyr2.com/tts/ws_tts.php?key=67ca0bad-83a8-4f1b-a31b-5a1f2380b385&Action=GetSpeech&json=1&lang=" +
@@ -346,7 +385,11 @@ class ChatScreenViewModel extends ChangeNotifier {
       final file = File('${dir.path}/wavenet.mp3');
       await file.writeAsBytes(bytes);
       final path = dir.path + "/wavenet.mp3";
-      newAudioPlay.play(path, isLocal: true);
+      if (isTTS) {
+        newAudioPlay1.play(path, isLocal: true);
+      } else {
+        newAudioPlay.play(path, isLocal: true);
+      }
       // } else if (Platform.isAndroid) {
       //   newAudioPlay.playBytes(bytes);
       // }
@@ -356,9 +399,8 @@ class ChatScreenViewModel extends ChangeNotifier {
   }
 
   stopAudioPlayer() {
-    if (isAudioPlayerPlaying) {
-      newAudioPlay.stop();
-    }
+    newAudioPlay?.stop();
+    newAudioPlay1?.stop();
   }
 
   Future<void> gettingReposnseFromNative() async {

@@ -104,20 +104,17 @@ class MayaConvUI extends StatelessWidget {
           child: InkWell(
             onTap: () async {
               if (!c.isSpeaking) {
-                await Provider.of<ChatScreenViewModel>(context, listen: false)
-                    .startTTSEngine(
-                  textToSpeak: c.text,
-                  index: index,
-                );
+                String textToSpeak = '.';
                 if ((c?.buttons?.length ?? 0) > 0) {
                   await Future.forEach(c.buttons, (button) async {
-                    await Provider.of<ChatScreenViewModel>(context,
-                            listen: false)
-                        .startTTSEngine(
-                      textToSpeak: button.title,
-                    );
+                    textToSpeak = textToSpeak + button.title + '.';
                   });
                 }
+                await Provider.of<ChatScreenViewModel>(context, listen: false)
+                    .startTTSEngine(
+                  textToSpeak: c.text + textToSpeak,
+                  index: index,
+                );
               } else {
                 Provider.of<ChatScreenViewModel>(context, listen: false)
                     .stopTTSEngine(
