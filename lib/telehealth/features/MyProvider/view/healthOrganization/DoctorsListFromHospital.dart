@@ -276,13 +276,13 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
   Widget expandedListItem(
       BuildContext ctx, int i, List<ResultFromHospital> docs) {
     return Container(
-      padding: EdgeInsets.all(10.0),
+      padding: EdgeInsets.all(10.0.sp),
       width: 1.sw,
       child: ExpandableButton(
         child: Column(
           children: [
             getDoctorWidget(i, docs),
-            commonWidgets.getSizedBox(20.0),
+            commonWidgets.getSizedBox(20.0.h),
             DoctorSessionTimeSlot(
                 date: _selectedValue.toString(),
                 doctorId: docs[i].doctor.id,

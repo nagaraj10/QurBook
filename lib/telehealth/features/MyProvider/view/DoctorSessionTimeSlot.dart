@@ -100,7 +100,7 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
     return Column(
       children: <Widget>[
         Container(
-          height: 65.0.h,
+          height: 75.0.h,
           color: Colors.grey[200],
           child: DatePicker(
             DateTime.now().add(Duration(days: -0)),
