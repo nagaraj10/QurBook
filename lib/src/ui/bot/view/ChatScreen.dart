@@ -78,11 +78,7 @@ class _ChatScreenState extends State<ChatScreen>
   stopTTSEngine() async {
     ChatScreenViewModel model = getMyViewModel();
     model.newAudioPlay.stop();
-    await variable.tts_platform.invokeMethod(variable.strtts, {
-      parameters.strMessage: "",
-      parameters.strIsClose: true,
-      parameters.strLanguage: Utils.getCurrentLanCode()
-    });
+    Provider.of<ChatScreenViewModel>(context, listen: false).stopTTSEngine();
   }
 
   // dynamic getMyViewModel() {

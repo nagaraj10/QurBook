@@ -126,7 +126,10 @@ class MayaConvUI extends StatelessWidget {
               }
             },
             child: Icon(
-              c.isSpeaking ? Icons.pause : Icons.play_arrow,
+              c.isSpeaking &&
+                      (!Provider.of<ChatScreenViewModel>(context).getStopTTS)
+                  ? Icons.pause
+                  : Icons.play_arrow,
               size: 24.0.sp,
               color: Colors.white,
             ),

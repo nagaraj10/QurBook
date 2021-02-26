@@ -35,6 +35,7 @@ class ChatScreenViewModel extends ChangeNotifier {
   var isRedirect = false;
   var screenValue;
   bool isButtonResponse = false;
+  bool stopTTS = false;
 
   List<Conversation> get getMyConversations => conversations;
 
@@ -43,6 +44,8 @@ class ChatScreenViewModel extends ChangeNotifier {
   bool isAudioPlayerPlaying = false;
 
   bool get getIsButtonResponse => isButtonResponse;
+
+  bool get getStopTTS => stopTTS;
 
   void clearMyConversation() {
     conversations = List();
@@ -61,24 +64,31 @@ class ChatScreenViewModel extends ChangeNotifier {
       sendToMaya(variable.strhiMaya, screen: parameters.strSheela);
     });
 
-    var date = new FHBUtils().getFormattedDateString(DateTime.now().toString());
-    Conversation model = new Conversation(
-        isMayaSaid: false,
-        text: variable.strhiMaya,
-        name: prof.result != null
-            ? prof.result.firstName + prof.result.lastName
-            : '',
-        timeStamp: date,
-        redirect: isRedirect,
-        screen: parameters.strSheela);
-
-    conversations.add(model);
-    notifyListeners();
+    // var date = new FHBUtils().getFormattedDateString(DateTime.now().toString());
+    // // Conversation model = new Conversation(
+    // //     isMayaSaid: false,
+    // //     text: variable.strhiMaya,
+    // //     name: prof.result != null
+    // //         ? prof.result.firstName + prof.result.lastName
+    // //         : '',
+    // //     timeStamp: date,
+    // //     redirect: isRedirect,
+    // //     screen: parameters.strSheela);
+    // //
+    // // conversations.add(model);
+    // notifyListeners();
   }
 
   Future<void> stopTTSEngine({int index}) async {
+    stopTTS = false;
+    notifyListeners();
     if (index != null) {
       conversations[index].isSpeaking = false;
+      notifyListeners();
+    } else {
+      conversations.forEach((conversation) {
+        conversation.isSpeaking = false;
+      });
       notifyListeners();
     }
     await variable.tts_platform.invokeMethod(variable.strtts, {
@@ -89,6 +99,7 @@ class ChatScreenViewModel extends ChangeNotifier {
   }
 
   Future<bool> startTTSEngine({String textToSpeak, int index}) async {
+    stopTTSEngine();
     if (index != null) {
       conversations[index].isSpeaking = true;
       notifyListeners();
