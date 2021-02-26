@@ -69,9 +69,9 @@ class _MyCheckboxState extends State<MyCheckbox> {
         iconData = widget.checkedIcon;
         break;
       case CheckStatus.unchecked:
-        fillColor = widget.uncheckedFillColor;
+        /* fillColor = widget.uncheckedFillColor;
         iconColor = widget.uncheckedIconColor;
-        iconData = widget.uncheckedIcon;
+        iconData = widget.uncheckedIcon;*/
         break;
     }
 
