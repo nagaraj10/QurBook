@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:flutter/services.dart';
 import 'package:myfhb/src/utils/alert.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
@@ -21,6 +22,7 @@ import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 import 'CommonConstants.dart';
+import 'dart:math' as math;
 
 class FHBBasicWidget {
   FHBBasicWidget();
@@ -584,7 +586,7 @@ class FHBBasicWidget {
         child: TextField(
           autofocus: false,
           textAlign: TextAlign.center,
-          maxLength: 3,
+          maxLength: deviceName == Constants.STR_THERMOMETER ? 4 : 3,
           style: TextStyle(
               fontSize: 15.0.sp,
               fontWeight: FontWeight.w500,
@@ -623,10 +625,29 @@ class FHBBasicWidget {
               hintStyle: TextStyle(color: Colors.grey, fontSize: 15.0.sp),
               contentPadding: EdgeInsets.zero),
           cursorColor: getColorBasedOnDevice(deviceName, unitsTosearch, ''),
-          keyboardType: TextInputType.number,
+          inputFormatters: [DecimalTextInputFormatter(decimalRange: 1)],
+          keyboardType: deviceName == Constants.STR_THERMOMETER
+              ? TextInputType.numberWithOptions(decimal: true)
+              : TextInputType.number,
           cursorWidth: 0.5.w,
           onChanged: (value) {
             if (value.length < 4) {
+              valueEnterd = value;
+              var number = int.parse(value);
+              if (number < unitsMesurements.minValue ||
+                  number > unitsMesurements.maxValue) {
+                errorValue = CommonConstants.strErrorStringForDevices +
+                    ' ' +
+                    unitsMesurements.minValue.toString() +
+                    variable.strAnd +
+                    unitsMesurements.maxValue.toString();
+
+                onTextChanged(errorValue);
+              } else {
+                onTextChanged('');
+              }
+            } else if (deviceName == Constants.STR_THERMOMETER &&
+                value.length < 5) {
               valueEnterd = value;
               var number = int.parse(value);
               if (number < unitsMesurements.minValue ||
@@ -706,7 +727,7 @@ class FHBBasicWidget {
 
       case Constants.STR_THERMOMETER:
         if (text != null && text != '') {
-          var number = int.parse(text);
+          var number = double.parse(text);
           if (number < unitsMesurements.minValue ||
               number > unitsMesurements.maxValue) {
             return Colors.red;
@@ -755,5 +776,45 @@ class FHBBasicWidget {
     } else {
       return false;
     }
+  }
+}
+
+class DecimalTextInputFormatter extends TextInputFormatter {
+  DecimalTextInputFormatter({this.decimalRange})
+      : assert(decimalRange == null || decimalRange > 0);
+
+  final int decimalRange;
+
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue, // unused.
+    TextEditingValue newValue,
+  ) {
+    TextSelection newSelection = newValue.selection;
+    String truncated = newValue.text;
+
+    if (decimalRange != null) {
+      String value = newValue.text;
+
+      if (value.contains(".") &&
+          value.substring(value.indexOf(".") + 1).length > decimalRange) {
+        truncated = oldValue.text;
+        newSelection = oldValue.selection;
+      } else if (value == ".") {
+        truncated = "0.";
+
+        newSelection = newValue.selection.copyWith(
+          baseOffset: math.min(truncated.length, truncated.length + 1),
+          extentOffset: math.min(truncated.length, truncated.length + 1),
+        );
+      }
+
+      return TextEditingValue(
+        text: truncated,
+        selection: newSelection,
+        composing: TextRange.empty,
+      );
+    }
+    return newValue;
   }
 }
