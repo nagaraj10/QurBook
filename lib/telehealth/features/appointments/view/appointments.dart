@@ -325,8 +325,8 @@ class _AppointmentsState extends State<Appointments> {
               colors: Colors.white,
               size: 24.0.sp,
               onTap: () {
-                //Navigator.pop(context);
-                PageNavigator.goToPermanent(context, router.rt_Dashboard);
+                Navigator.pop(context);
+                //PageNavigator.goToPermanent(context, router.rt_Dashboard);
               },
             ),
           ],
