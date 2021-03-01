@@ -36,6 +36,7 @@ class ChatScreenViewModel extends ChangeNotifier {
   var screenValue;
   bool isButtonResponse = false;
   bool stopTTS = false;
+  String _screen = parameters.strSheela;
 
   List<Conversation> get getMyConversations => conversations;
 
@@ -62,7 +63,8 @@ class ChatScreenViewModel extends ChangeNotifier {
 
   startMayaAutomatically() {
     Future.delayed(Duration(seconds: 1), () {
-      sendToMaya(variable.strhiMaya, screen: parameters.strSheela);
+      _screen = parameters.strSheela;
+      sendToMaya(variable.strhiMaya, screen: _screen);
     });
 
     // var date = new FHBUtils().getFormattedDateString(DateTime.now().toString());
@@ -153,7 +155,7 @@ class ChatScreenViewModel extends ChangeNotifier {
   }) async {
     stopTTSEngine();
     Future.delayed(Duration(seconds: 1), () {
-      sendToMaya(payload, screen: parameters.strSheela);
+      sendToMaya(payload, screen: _screen);
     });
 
     var date = new FHBUtils().getFormattedDateString(DateTime.now().toString());
@@ -165,7 +167,7 @@ class ChatScreenViewModel extends ChangeNotifier {
             : '',
         timeStamp: date,
         redirect: isRedirect,
-        screen: parameters.strSheela);
+        screen: _screen);
 
     conversations.add(model);
     notifyListeners();
@@ -174,13 +176,15 @@ class ChatScreenViewModel extends ChangeNotifier {
   startSheelaFromDashboard(String inputs) async {
     Future.delayed(Duration(seconds: 1), () {
       if (inputs != null && inputs != '') {
-        sendToMaya(inputs, screen: parameters.strDashboard);
+        _screen = parameters.strDashboard;
+        sendToMaya(inputs, screen: _screen);
       } else {
         FlutterToast()
             .getToast('Invalid inputs for sheela from dashboard', Colors.red);
       }
     });
     if (inputs != null && inputs != '') {
+      _screen = parameters.strDashboard;
       var date =
           new FHBUtils().getFormattedDateString(DateTime.now().toString());
       Conversation model = new Conversation(
@@ -191,7 +195,7 @@ class ChatScreenViewModel extends ChangeNotifier {
               : '',
           timeStamp: date,
           redirect: isRedirect,
-          screen: parameters.strDashboard);
+          screen: _screen);
 
       conversations.add(model);
       notifyListeners();
@@ -200,7 +204,8 @@ class ChatScreenViewModel extends ChangeNotifier {
 
   askUserForLanguage() {
     Future.delayed(Duration(seconds: 1), () {
-      sendToMaya(variable.strhiMaya, screen: parameters.strSheela);
+      _screen = parameters.strSheela;
+      sendToMaya(variable.strhiMaya, screen: _screen);
     });
 
     // var date = new FHBUtils().getFormattedDateString(DateTime.now().toString());
