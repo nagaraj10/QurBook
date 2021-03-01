@@ -274,17 +274,41 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
                         color: ColorUtils.lightgraycolor),
                   ),*/
                   SizedBox(height: 5.0.h),
-                  AutoSizeText(
-                    commonWidgets.getCityHospital(hospitals[i]) == ''
-                        ? ''
-                        : '' + commonWidgets.getCityHospital(hospitals[i]),
-                    maxLines: 1,
-                    style: TextStyle(
-                        fontSize: 15.0.sp,
-                        fontWeight: FontWeight.w400,
-                        color: ColorUtils.lightgraycolor),
-                  ),
-                  SizedBox(height: 5.0.h),
+                  if (commonWidgets
+                          .getCityHospitalAddress(hospitals[i])
+                          .length >
+                      1)
+                    Column(
+                      children: [
+                        AutoSizeText(
+                          commonWidgets.getCityHospitalAddress(hospitals[i]),
+                          maxLines: 2,
+                          style: TextStyle(
+                              fontSize: 15.0.sp,
+                              fontWeight: FontWeight.w400,
+                              color: ColorUtils.lightgraycolor),
+                        ),
+                        SizedBox(height: 5.0.h),
+                      ],
+                    )
+                  else
+                    Container(),
+                  if (commonWidgets.getCityHospital(hospitals[i]).length > 1)
+                    Column(
+                      children: [
+                        AutoSizeText(
+                          commonWidgets.getCityHospital(hospitals[i]),
+                          maxLines: 1,
+                          style: TextStyle(
+                              fontSize: 15.0.sp,
+                              fontWeight: FontWeight.w400,
+                              color: ColorUtils.lightgraycolor),
+                        ),
+                        SizedBox(height: 5.0.h),
+                      ],
+                    )
+                  else
+                    Container(),
                 ],
               ),
             ),
