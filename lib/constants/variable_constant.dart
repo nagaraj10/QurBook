@@ -585,6 +585,8 @@ const String c_chat_with_whatsapp_begin_conv = 'Hi';
 const String c_qurhealth_helpline = '919566200555';
 const String icon_whatsapp = 'assets/icons/ic_whatsapp.png';
 
+const String strAdd = 'Add';
+
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {
   final parts = token.split('.');

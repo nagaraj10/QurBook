@@ -159,6 +159,25 @@ class AddProvidersState extends State<AddProviders> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: GestureDetector(
+          onTap: () => Navigator.pop(context),
+          child: Icon(
+            Icons.arrow_back_ios, // add custom icons also
+            size: 24.0.sp,
+          ),
+        ),
+        title: Text(
+          widget.arguments?.searchKeyWord != null &&
+                  widget.arguments.searchKeyWord.isNotEmpty
+              ? 'Add ${widget.arguments.searchKeyWord.substring(0, widget.arguments.searchKeyWord.length - 1)}'
+              : '',
+          style: TextStyle(
+            fontSize: 18.0.sp,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ),
       body: Container(
         constraints: BoxConstraints.expand(),
         child: SingleChildScrollView(
