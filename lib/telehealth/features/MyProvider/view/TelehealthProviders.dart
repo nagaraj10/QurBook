@@ -1,9 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/widgets/bottomnavigation_item.dart';
 import 'package:myfhb/authentication/service/authservice.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/ui/MyRecordsArguments.dart';
+import 'package:myfhb/src/utils/colors_utils.dart';
 //import 'package:myfhb/src/ui/MyRecords.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/src/ui/bot/SuperMaya.dart';
@@ -16,6 +20,7 @@ import 'package:myfhb/telehealth/features/MyProvider/view/MyProvidersMain.dart';
 import 'package:myfhb/telehealth/features/appointments/model/cancelAppointments/cancelModel.dart';
 import 'package:myfhb/telehealth/features/appointments/view/appointmentsMain.dart';
 import 'package:myfhb/telehealth/features/appointments/viewModel/cancelAppointmentViewModel.dart';
+import 'package:myfhb/telehealth/features/chat/view/BadgeIcon.dart';
 import 'package:myfhb/telehealth/features/chat/view/home.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import '../../../../src/ui/MyRecord.dart';
@@ -88,17 +93,144 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
       });
     }
     return Scaffold(
-      backgroundColor: const Color(0xFFf7f6f5),
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
-      ),
-      bottomNavigationBar: BottomNavigationWidget(
-        selectedPageIndex: _selectedIndex,
-        myFunc: _myFunc,
-        bottomNavigationArgumentsList: bottomNavigationArgumentsList,
-      ),
-      //bottomNavigationBar: BottomNavigationMain(),
-    );
+        backgroundColor: const Color(0xFFf7f6f5),
+        body: Center(
+          child: _widgetOptions.elementAt(_selectedIndex),
+        ),
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                color: Colors.black54,
+                blurRadius: 1,
+              ),
+            ],
+          ),
+          child: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            selectedFontSize: 12.0.sp,
+            unselectedFontSize: 12.0.sp,
+            items: [
+              BottomNavigationBarItem(
+                  icon: ImageIcon(
+                    AssetImage(variable.icon_th),
+                    color: _selectedIndex == 0
+                        ? Color(CommonUtil().getMyPrimaryColor())
+                        : Colors.black54,
+                  ),
+                  title: Text(
+                    'TeleHealth',
+                    style: TextStyle(
+                      color: _selectedIndex == 0
+                          ? Color(CommonUtil().getMyPrimaryColor())
+                          : Colors.black54,
+                    ),
+                  )),
+              BottomNavigationBarItem(
+                  icon: ImageIcon(
+                    AssetImage('assets/navicons/my_providers.png'),
+                    color: _selectedIndex == 1
+                        ? Color(CommonUtil().getMyPrimaryColor())
+                        : Colors.black54,
+                  ),
+                  title: Text(
+                    'My Providers',
+                    style: TextStyle(
+                        color: _selectedIndex == 1
+                            ? Color(CommonUtil().getMyPrimaryColor())
+                            : Colors.black54),
+                  )),
+              BottomNavigationBarItem(
+                  icon: Image.asset(
+                    ('assets/maya/maya_us_main.png'),
+                    height: 25,
+                    width: 25,
+                  ),
+                  title: Text(variable.strMaya,
+                      style: TextStyle(
+                          fontSize: 12.sp,
+                          color: _selectedIndex == 2
+                              ? Color(CommonUtil().getMyPrimaryColor())
+                              : Colors.black54))),
+              BottomNavigationBarItem(
+                  icon: getChatIcon('assets/navicons/chat.png'),
+                  title: Text('Chats',
+                      style: TextStyle(
+                          color: _selectedIndex == 3
+                              ? Color(CommonUtil().getMyPrimaryColor())
+                              : Colors.black54))),
+              BottomNavigationBarItem(
+                  icon: ImageIcon(
+                    AssetImage('assets/navicons/records.png'),
+                    color: _selectedIndex == 4
+                        ? Color(CommonUtil().getMyPrimaryColor())
+                        : Colors.black54,
+                  ),
+                  title: Text('My Records',
+                      style: TextStyle(
+                          color: _selectedIndex == 4
+                              ? Color(CommonUtil().getMyPrimaryColor())
+                              : Colors.black54))),
+            ],
+            //backgroundColor: Colors.grey[200],
+            onTap: (index) {
+              _myFunc(index);
+            },
+          ),
+        )
+        // BottomNavigationWidget(
+        //   selectedPageIndex: _selectedIndex,
+        //   myFunc: _myFunc,
+        //   bottomNavigationArgumentsList: bottomNavigationArgumentsList,
+        // ),
+        //bottomNavigationBar: BottomNavigationMain(),
+        );
+  }
+
+  Widget getChatIcon(String icon) {
+    int count = 0;
+    String targetID = PreferenceUtil.getStringValue(KEY_USERID);
+    return StreamBuilder<QuerySnapshot>(
+        stream: Firestore.instance
+            .collection(STR_CHAT_LIST)
+            .document(targetID)
+            .collection(STR_USER_LIST)
+            .snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasData) {
+            count = 0;
+            snapshot.data.documents.toList().forEach((element) {
+              if (element.data[STR_IS_READ_COUNT] != null &&
+                  element.data[STR_IS_READ_COUNT] != '') {
+                count = count + element.data[STR_IS_READ_COUNT];
+              }
+            });
+            return BadgeIcon(
+                icon: GestureDetector(
+                  child: ImageIcon(
+                    AssetImage(icon),
+                    //size: 20.0.sp,
+                    color: _selectedIndex == 3
+                        ? Color(CommonUtil().getMyPrimaryColor())
+                        : Colors.black54,
+                  ),
+                ),
+                badgeColor: ColorUtils.countColor,
+                badgeCount: count);
+          } else {
+            return BadgeIcon(
+                icon: GestureDetector(
+                  child: ImageIcon(
+                    AssetImage(icon),
+                    //size: 20.0.sp,
+                    color: _selectedIndex == 3
+                        ? Color(CommonUtil().getMyPrimaryColor())
+                        : Colors.black54,
+                  ),
+                ),
+                badgeCount: 0);
+          }
+        });
   }
 
   Future showCanelAppointmentPromptToUser(BuildContext context) {
