@@ -185,6 +185,30 @@ class CommonWidgets {
     return city;
   }
 
+  String getCityHospitalAddress(Hospitals hospital) {
+    String address;
+
+    if (hospital != null) {
+      if (hospital.healthOrganizationAddressCollection.isNotEmpty) {
+        if (hospital.healthOrganizationAddressCollection.length > 0) {
+          if (hospital.healthOrganizationAddressCollection[0].addressLine1 !=
+              null) {
+            address =
+                hospital.healthOrganizationAddressCollection[0].addressLine1;
+          } else {
+            address = '';
+          }
+        } else {
+          address = '';
+        }
+      } else {
+        address = '';
+      }
+    }
+
+    return address;
+  }
+
   String getCityHospital(Hospitals hospital) {
     String city;
 
@@ -201,6 +225,16 @@ class CommonWidgets {
         }
       } else {
         city = '';
+      }
+    }
+
+    if (hospital != null &&
+        hospital.healthOrganizationContactCollection.isNotEmpty &&
+        hospital.healthOrganizationContactCollection.length > 0) {
+      if (hospital.healthOrganizationAddressCollection[0].state != null) {
+        city = city +
+            "," +
+            hospital.healthOrganizationAddressCollection[0].state.name;
       }
     }
 

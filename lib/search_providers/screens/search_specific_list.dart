@@ -108,7 +108,9 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               decoration: BoxDecoration(
                   color: Colors.white, borderRadius: BorderRadius.circular(30)),
               child: TextField(
-                style: TextStyle(fontSize: 16.0.sp,),
+                style: TextStyle(
+                  fontSize: 16.0.sp,
+                ),
                 controller: _textFieldController,
                 autofocus: true,
                 onChanged: (editedValue) {
@@ -128,7 +130,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                     color: Colors.black54,
                   ),
                   hintText: variable.strSearch,
-                  hintStyle: TextStyle(color: Colors.black54,fontSize: 16.0.sp),
+                  hintStyle:
+                      TextStyle(color: Colors.black54, fontSize: 16.0.sp),
                   border: InputBorder.none,
                 ),
               ),
@@ -594,7 +597,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                       null,
                       DoctorsListResult(),
                       data[i],
-                      LabListResult()),
+                      LabListResult(),
+                      cityAndState: getHospitalCityAndState(data[i])),
                 ),
                 itemCount: data.length,
               ))
@@ -647,7 +651,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       String logo,
       DoctorsListResult data,
       HospitalsListResult hospitalData,
-      LabListResult labData) {
+      LabListResult labData,
+      {String cityAndState}) {
     return GestureDetector(
         child: Padding(
             padding:
@@ -722,8 +727,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     Navigator.of(context).pop({Constants.keyLab: json.encode(laboratoryData)});
   }
 
-  getDataToView(
-      String name, String address, String id, DoctorsListResult data) {
+  getDataToView(String name, String address, String id, DoctorsListResult data,
+      {String cityAndState}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -738,15 +743,24 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           overflow: TextOverflow.ellipsis,
         ),
         SizedBox(height: 10.0.h),
-        Text(
-          address != null ? address : '',
-          style: TextStyle(
-              fontSize: 15.0.sp,
-              fontWeight: FontWeight.w400,
-              color: ColorUtils.lightgraycolor),
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-        ),
+        if (address != null)
+          Text(
+            address,
+            style: TextStyle(
+                fontSize: 15.0.sp,
+                fontWeight: FontWeight.w400,
+                color: ColorUtils.lightgraycolor),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        if (cityAndState != null)
+          Text(
+            cityAndState,
+            style: TextStyle(
+                fontSize: 15.0.sp,
+                fontWeight: FontWeight.w400,
+                color: ColorUtils.lightgraycolor),
+          ),
         widget.arguments.searchWord == CommonConstants.doctors
             ? (data.specialty != null && data.specialty != '')
                 ? Text(
@@ -918,7 +932,18 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     if (data.state != '' && data.state != null) {
       address = address + ',' + toBeginningOfSentenceCase(data.state);
     }
-
     return address;
+  }
+
+  String getHospitalCityAndState(HospitalsListResult data) {
+    String city = '';
+
+    if (data.cityName != '' && data.cityName != null) {
+      city = toBeginningOfSentenceCase(data.cityName);
+    }
+    if (data.stateName != '' && data.stateName != null) {
+      city = city + ',' + toBeginningOfSentenceCase(data.stateName);
+    }
+    return city;
   }
 }

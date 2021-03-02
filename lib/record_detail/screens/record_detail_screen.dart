@@ -322,7 +322,13 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                               onPressed: () {
                                 new FHBBasicWidget()
                                     .showDialogWithTwoButtons(context, () {
-                                  deleteRecord(widget.data.id);
+                                  deleteRecord(widget.data.id,
+                                      isDeviceReadings: widget
+                                              .data
+                                              .metadata
+                                              .healthRecordCategory
+                                              .categoryName ==
+                                          "Devices");
                                 }, 'Confirmation',
                                         'Are you sure you want to delete');
                               })
@@ -362,7 +368,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         Navigator.of(context)
             .push(MaterialPageRoute(
           builder: (context) => AudioRecordScreen(
-            arguments:AudioScreenArguments(
+              arguments: AudioScreenArguments(
             fromVoice: false,
           )),
         ))
@@ -551,7 +557,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     }
   }
 
-  deleteRecord(String metaId) {
+  deleteRecord(String metaId, {bool isDeviceReadings = false}) {
     _deleteRecordBloc.deleteRecord(metaId).then((deleteRecordResponse) {
       if (deleteRecordResponse.success) {
         _healthReportListForUserBlock.getHelthReportLists().then((value) {
@@ -559,7 +565,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           Navigator.of(context).pop();
           Navigator.of(context).pop();
           toast.getToast(
-              'Record deleted successfully. Latest record added through Sheela G can be updated/deleted through Sheela G itself',
+              isDeviceReadings
+                  ? 'Record deleted successfully. Latest record added through Sheela G can be updated/deleted through Sheela G itself'
+                  : 'Record Deleted Successfully',
               Colors.green);
         });
       } else {
