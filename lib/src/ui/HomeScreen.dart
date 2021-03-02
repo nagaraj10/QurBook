@@ -65,15 +65,101 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFf7f6f5),
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
-      ),
-      bottomNavigationBar: BottomNavigationWidget(
-        selectedPageIndex: _selectedIndex,
-        myFunc: _myFunc,
-      ),
-    );
+        backgroundColor: const Color(0xFFf7f6f5),
+        body: Center(
+          child: _widgetOptions.elementAt(_selectedIndex),
+        ),
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                color: Colors.black54,
+                blurRadius: 1,
+              ),
+            ],
+          ),
+          child: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            selectedFontSize: 12.0.sp,
+            unselectedFontSize: 12.0.sp,
+            items: [
+              BottomNavigationBarItem(
+                  icon: ImageIcon(
+                    AssetImage(
+                      variable.icon_home,
+                    ),
+                    color: _selectedIndex == 0
+                        ? Color(CommonUtil().getMyPrimaryColor())
+                        : Colors.black54,
+                  ),
+                  title: Text(
+                    variable.strhome,
+                    style: TextStyle(
+                      color: _selectedIndex == 0
+                          ? Color(CommonUtil().getMyPrimaryColor())
+                          : Colors.black54,
+                    ),
+                  )),
+              BottomNavigationBarItem(
+                  icon: ImageIcon(
+                    AssetImage(variable.icon_records),
+                    color: _selectedIndex == 1
+                        ? Color(CommonUtil().getMyPrimaryColor())
+                        : Colors.black54,
+                  ),
+                  title: Text(
+                    variable.strMyRecords,
+                    style: TextStyle(
+                        color: _selectedIndex == 1
+                            ? Color(CommonUtil().getMyPrimaryColor())
+                            : Colors.black54),
+                  )),
+              BottomNavigationBarItem(
+                  icon: Image.asset(
+                    variable.icon_mayaMain,
+                    height: 25,
+                    width: 25,
+                  ),
+                  title: Text(variable.strMaya,
+                      style: TextStyle(
+                          fontSize: 12.sp,
+                          color: _selectedIndex == 2
+                              ? Color(CommonUtil().getMyPrimaryColor())
+                              : Colors.black54))),
+              BottomNavigationBarItem(
+                  icon: ImageIcon(AssetImage(variable.icon_provider),
+                      color: _selectedIndex == 3
+                          ? Color(CommonUtil().getMyPrimaryColor())
+                          : Colors.black54),
+                  title: Text(variable.strMyProvider,
+                      style: TextStyle(
+                          color: _selectedIndex == 3
+                              ? Color(CommonUtil().getMyPrimaryColor())
+                              : Colors.black54))),
+              BottomNavigationBarItem(
+                  icon: ImageIcon(
+                    AssetImage(variable.icon_more),
+                    color: _selectedIndex == 4
+                        ? Color(CommonUtil().getMyPrimaryColor())
+                        : Colors.black54,
+                  ),
+                  title: Text(variable.strMore,
+                      style: TextStyle(
+                          color: _selectedIndex == 4
+                              ? Color(CommonUtil().getMyPrimaryColor())
+                              : Colors.black54)))
+            ],
+            //backgroundColor: Colors.grey[200],
+            onTap: (index) {
+              _myFunc(index);
+            },
+          ),
+        )
+        // BottomNavigationWidget(
+        //   selectedPageIndex: _selectedIndex,
+        //   myFunc: _myFunc,
+        // ),
+        );
   }
 
   void _myFunc(int index) {
