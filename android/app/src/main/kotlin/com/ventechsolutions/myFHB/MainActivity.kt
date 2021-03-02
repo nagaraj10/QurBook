@@ -374,6 +374,7 @@ class MainActivity : FlutterActivity() {
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, langCode) //todo this has to be uncomment
         intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
         intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT)
+        intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, 50000000)
         //intent.putExtra(RecognizerIntent.EXTRA_PROMPT, Constants.VOICE_ASST_PROMPT)
 
         //Timer().schedule(100){
@@ -404,8 +405,10 @@ class MainActivity : FlutterActivity() {
                 override fun onBufferReceived(bytes: ByteArray) {}
                 override fun onEndOfSpeech() {
                     Log.d("SHEELA", "onEndOfSpeech invoked")
-                    if (finalWords != null && finalWords?.length!! > 0) {
+                    if (finalWords != null && finalWords?.length!! > 0 && finalWords != "") {
                         //dialog.dismiss()
+                    } else if (finalWords == "") {
+                        //do nothing
                     } else {
                         this@MainActivity.runOnUiThread(
                                 object : Runnable {
@@ -456,6 +459,7 @@ class MainActivity : FlutterActivity() {
                     this@MainActivity.runOnUiThread(
                             object : Runnable {
                                 override fun run() {
+                                    //Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
                                 }
                             }
                     )
@@ -466,10 +470,12 @@ class MainActivity : FlutterActivity() {
                     val data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
                     finalWords = data!![0].toString()
                     _result.success(finalWords)
-                    if (finalWords != null && finalWords?.length!! > 0) {
-                        handler.postDelayed(runnable,1000)
+                    if (finalWords != null && finalWords?.length!! > 0 && finalWords != "") {
+                        handler.postDelayed(runnable, 1000)
                         //dialog.dismiss()
                         finalWords = null
+                    } else if (finalWords == "") {
+                        //do nothing
                     } else {
                         this@MainActivity.runOnUiThread(
                                 object : Runnable {

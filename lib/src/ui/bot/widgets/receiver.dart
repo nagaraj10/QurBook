@@ -9,6 +9,8 @@ import '../../../../common/PreferenceUtil.dart';
 import '../../../model/bot/ConversationModel.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import 'package:provider/provider.dart';
+import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 
 class ReceiverLayout extends StatefulWidget {
   final Conversation c;
@@ -34,6 +36,9 @@ class _ReceiverLayoutState extends State<ReceiverLayout> {
   void closeIfByeSaid() async {
     if (widget?.c?.redirect != null && widget?.c?.screen != null) {
       if (widget?.c?.screen == parameters.strDashboard && widget?.c?.redirect) {
+        Provider.of<ChatScreenViewModel>(context, listen: false).stopTTSEngine(
+          index: widget.index,
+        );
         Future.delayed(Duration(seconds: 9), () => Navigator.pop(context));
       }
     }
