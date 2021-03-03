@@ -80,6 +80,7 @@ class MainActivity : FlutterActivity() {
     private var patId: String? = null
     private var patName: String? = null
     private var patPic: String? = null
+    private var isPartialResultInvoked: Boolean? = false
     private var speechRecognizer: SpeechRecognizer? = null
     private lateinit var dialog: Dialog
 
@@ -375,6 +376,8 @@ class MainActivity : FlutterActivity() {
         intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
         intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT)
         intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, 50000000)
+        intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, 50000000)
+        intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, 50000000)
         //intent.putExtra(RecognizerIntent.EXTRA_PROMPT, Constants.VOICE_ASST_PROMPT)
 
         //Timer().schedule(100){
@@ -408,6 +411,8 @@ class MainActivity : FlutterActivity() {
                     if (finalWords != null && finalWords?.length!! > 0 && finalWords != "") {
                         //dialog.dismiss()
                     } else if (finalWords == "") {
+                        //do nothing
+                    }else if (isPartialResultInvoked == true) {
                         //do nothing
                     } else {
                         this@MainActivity.runOnUiThread(
@@ -469,6 +474,7 @@ class MainActivity : FlutterActivity() {
                     Log.d("SHEELA", "onResults invoked")
                     val data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
                     finalWords = data!![0].toString()
+                    isPartialResultInvoked = false
                     _result.success(finalWords)
                     if (finalWords != null && finalWords?.length!! > 0 && finalWords != "") {
                         handler.postDelayed(runnable, 1000)
@@ -509,6 +515,7 @@ class MainActivity : FlutterActivity() {
                     Log.d("SHEELA", "onPartialResults invoked")
                     val data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
                     finalWords = data!![0].toString()
+                    isPartialResultInvoked = true
                     Log.d("SHEELA", finalWords)
                     this@MainActivity.runOnUiThread(
                             object : Runnable {
