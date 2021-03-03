@@ -108,8 +108,8 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
           ),
           child: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
-            selectedFontSize: 12.0.sp,
-            unselectedFontSize: 12.0.sp,
+            selectedFontSize: 10.sp,
+            unselectedFontSize: 10.sp,
             items: [
               BottomNavigationBarItem(
                   icon: ImageIcon(
@@ -121,6 +121,7 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
                   title: Text(
                     'TeleHealth',
                     style: TextStyle(
+                      fontSize: 10.sp,
                       color: _selectedIndex == 0
                           ? Color(CommonUtil().getMyPrimaryColor())
                           : Colors.black54,
@@ -136,6 +137,7 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
                   title: Text(
                     'My Providers',
                     style: TextStyle(
+                        fontSize: 10.sp,
                         color: _selectedIndex == 1
                             ? Color(CommonUtil().getMyPrimaryColor())
                             : Colors.black54),
@@ -148,7 +150,7 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
                   ),
                   title: Text(variable.strMaya,
                       style: TextStyle(
-                          fontSize: 12.sp,
+                          fontSize: 10.sp,
                           color: _selectedIndex == 2
                               ? Color(CommonUtil().getMyPrimaryColor())
                               : Colors.black54))),
@@ -156,6 +158,7 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
                   icon: getChatIcon('assets/navicons/chat.png'),
                   title: Text('Chats',
                       style: TextStyle(
+                          fontSize: 10.sp,
                           color: _selectedIndex == 3
                               ? Color(CommonUtil().getMyPrimaryColor())
                               : Colors.black54))),
@@ -168,6 +171,7 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
                   ),
                   title: Text('My Records',
                       style: TextStyle(
+                          fontSize: 10.sp,
                           color: _selectedIndex == 4
                               ? Color(CommonUtil().getMyPrimaryColor())
                               : Colors.black54))),

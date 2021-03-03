@@ -113,8 +113,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
                 child: BottomNavigationBar(
                   type: BottomNavigationBarType.fixed,
-                  selectedFontSize: 12.0.sp,
-                  unselectedFontSize: 12.0.sp,
+                  selectedFontSize: 10.sp,
+                  unselectedFontSize: 10.sp,
                   items: <BottomNavigationBarItem>[
                     BottomNavigationBarItem(
                         icon: InkWell(
