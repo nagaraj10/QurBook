@@ -311,6 +311,9 @@ class ChatScreenViewModel extends ChangeNotifier {
                     textToSpeak = textToSpeak + button.title + '.';
                   });
                 }
+                if (res.lang == null || res.lang == "undef") {
+                  res.lang = "en-IN";
+                }
                 variable.tts_platform.invokeMethod(variable.strtts, {
                   parameters.strMessage: res.text + textToSpeak,
                   parameters.strIsClose: false,
@@ -327,6 +330,12 @@ class ChatScreenViewModel extends ChangeNotifier {
                     } else {
                       refreshData();
                     }
+                  }
+                }).catchError((error) {
+                  conversations[conversations.length - 1].isSpeaking = false;
+                  notifyListeners();
+                  if (!isEndOfConv) {
+                    gettingReposnseFromNative();
                   }
                 });
               } else {
@@ -346,14 +355,20 @@ class ChatScreenViewModel extends ChangeNotifier {
                   if (event == AudioPlayerState.PLAYING) {
                     isAudioPlayerPlaying = true;
                   }
-                  if (event == AudioPlayerState.COMPLETED ||
-                      event == AudioPlayerState.PAUSED ||
-                      event == AudioPlayerState.STOPPED) {
+                  if (event == AudioPlayerState.COMPLETED) {
                     conversations[conversations.length - 1].isSpeaking = false;
                     notifyListeners();
                     if (!isButtonResponse) {
                       gettingReposnseFromNative();
                     }
+                  }
+                  if (event == AudioPlayerState.PAUSED ||
+                      event == AudioPlayerState.STOPPED) {
+                    conversations[conversations.length - 1].isSpeaking = false;
+                    notifyListeners();
+                    // if (!isButtonResponse) {
+                    //   gettingReposnseFromNative();
+                    // }
                   }
                 });
               }
