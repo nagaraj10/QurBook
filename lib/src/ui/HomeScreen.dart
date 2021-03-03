@@ -80,8 +80,8 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           child: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
-            selectedFontSize: 12.0.sp,
-            unselectedFontSize: 12.0.sp,
+            selectedFontSize: 10.sp,
+            unselectedFontSize: 10.sp,
             items: [
               BottomNavigationBarItem(
                   icon: ImageIcon(
@@ -95,6 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   title: Text(
                     variable.strhome,
                     style: TextStyle(
+                      fontSize: 10.sp,
                       color: _selectedIndex == 0
                           ? Color(CommonUtil().getMyPrimaryColor())
                           : Colors.black54,
@@ -110,6 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   title: Text(
                     variable.strMyRecords,
                     style: TextStyle(
+                        fontSize: 10.sp,
                         color: _selectedIndex == 1
                             ? Color(CommonUtil().getMyPrimaryColor())
                             : Colors.black54),
@@ -122,7 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   title: Text(variable.strMaya,
                       style: TextStyle(
-                          fontSize: 12.sp,
+                          fontSize: 10.sp,
                           color: _selectedIndex == 2
                               ? Color(CommonUtil().getMyPrimaryColor())
                               : Colors.black54))),
@@ -133,6 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           : Colors.black54),
                   title: Text(variable.strMyProvider,
                       style: TextStyle(
+                          fontSize: 10.sp,
                           color: _selectedIndex == 3
                               ? Color(CommonUtil().getMyPrimaryColor())
                               : Colors.black54))),
@@ -145,6 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   title: Text(variable.strMore,
                       style: TextStyle(
+                          fontSize: 10.sp,
                           color: _selectedIndex == 4
                               ? Color(CommonUtil().getMyPrimaryColor())
                               : Colors.black54)))
