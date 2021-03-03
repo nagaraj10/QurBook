@@ -3,11 +3,13 @@ import 'dart:convert';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/HeaderRequest.dart';
 import 'package:http/http.dart' as http;
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/fhb_query.dart' as variable;
 
-class Service{
+class Service {
   String mayaUrl = CommonUtil.SHEELA_URL;
 
-  Future<dynamic> sendMetaToMaya(Map<String,dynamic> reqJson) async {
+  Future<dynamic> sendMetaToMaya(Map<String, dynamic> reqJson) async {
     try {
       String jsonString = jsonEncode(reqJson);
 
@@ -17,6 +19,24 @@ class Service{
         mayaUrl,
         body: jsonString,
         headers: await headerRequest.getRequesHeaderWithoutToken(),
+      );
+
+      return response;
+    } catch (e) {
+      throw Exception('$e was thrown');
+    }
+  }
+
+  Future<dynamic> getAudioFileTTS(Map<String, dynamic> reqJson) async {
+    final urlForTTS = Constants.BASE_URL + variable.qr_Google_TTS_Proxy_URL;
+    try {
+      final jsonString = jsonEncode(reqJson);
+      final headerRequest =
+          await HeaderRequest().getRequestHeadersAuthContent();
+      final response = await http.post(
+        urlForTTS,
+        body: jsonString,
+        headers: headerRequest,
       );
 
       return response;

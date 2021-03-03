@@ -41,12 +41,10 @@ class ChatScreenViewModel extends ChangeNotifier {
   List<Conversation> get getMyConversations => conversations;
 
   int get getisMayaSpeaks => isMayaSpeaks;
-  AudioPlayer newAudioPlay = AudioPlayer();
+  AudioPlayer audioPlayerForTTS = AudioPlayer();
   AudioPlayer newAudioPlay1 = AudioPlayer();
   bool isAudioPlayerPlaying = false;
-
   bool get getIsButtonResponse => isButtonResponse;
-
   bool get getStopTTS => stopTTS;
 
   void clearMyConversation() {
@@ -133,8 +131,9 @@ class ChatScreenViewModel extends ChangeNotifier {
         //print(langCode);
       }
       AudioPlayer newAudioPlay1 = AudioPlayer();
-      getNewResponse(textToSpeak,
-          langCodeForRequest != null ? langCodeForRequest : "en", true);
+      final languageForTTS = Utils.getCurrentLanCode();
+      getGoogleTTSResponse(
+          textToSpeak, languageForTTS != null ? languageForTTS : "en", true);
       newAudioPlay1.onPlayerStateChanged.listen((event) async {
         print(event);
         if (event == AudioPlayerState.COMPLETED ||
@@ -337,12 +336,11 @@ class ChatScreenViewModel extends ChangeNotifier {
                     textToSpeak = textToSpeak + button.title + '.';
                   });
                 }
-                newAudioPlay = AudioPlayer();
-                getNewResponse(
-                    res.text + textToSpeak,
-                    langCodeForRequest != null ? langCodeForRequest : "en",
-                    false);
-                newAudioPlay.onPlayerStateChanged.listen((event) async {
+                audioPlayerForTTS = AudioPlayer();
+                final languageForTTS = Utils.getCurrentLanCode();
+                getGoogleTTSResponse(res.text + textToSpeak,
+                    languageForTTS != null ? languageForTTS : "en", false);
+                audioPlayerForTTS.onPlayerStateChanged.listen((event) async {
                   if (event == AudioPlayerState.PLAYING) {
                     isAudioPlayerPlaying = true;
                   }
@@ -369,42 +367,65 @@ class ChatScreenViewModel extends ChangeNotifier {
     }
   }
 
-  getNewResponse(String dataForVoice, String langCode, bool isTTS) async {
-    try {
-      final str =
-          "https://heyr2.com/tts/ws_tts.php?key=67ca0bad-83a8-4f1b-a31b-5a1f2380b385&Action=GetSpeech&json=1&lang=" +
-              langCode +
-              "&ttsdata=" +
-              dataForVoice;
-      final response = await http.get(
-        str,
-      );
-      print(response.body);
-      final data = jsonDecode(response.body);
-      final audioContent = data["audio"];
-      if (audioContent == null) return;
-      final bytes = Base64Decoder().convert(audioContent);
-      if (bytes == null) return;
-      // if (Platform.isIOS) {
-      final dir = await getTemporaryDirectory();
-      final file = File('${dir.path}/wavenet.mp3');
-      await file.writeAsBytes(bytes);
-      final path = dir.path + "/wavenet.mp3";
-      if (isTTS) {
-        newAudioPlay1.play(path, isLocal: true);
-      } else {
-        newAudioPlay.play(path, isLocal: true);
-      }
-      // } else if (Platform.isAndroid) {
-      //   newAudioPlay.playBytes(bytes);
-      // }
+  getGoogleTTSResponse(String dataForVoice, String langCode, bool isTTS) async {
+    // final str =
+    //     "https://heyr2.com/tts/ws_tts.php?key=67ca0bad-83a8-4f1b-a31b-5a1f2380b385&Action=GetSpeech&json=1&lang=" +
+    //         langCode +
+    //         "&ttsdata=" +
+    //         dataForVoice;
+    // final response = await http.get(
+    //   str,
+    // );
+    Map<String, dynamic> reqJson = {};
+    Map<String, dynamic> input = {};
+    Map<String, dynamic> voice = {};
+    Map<String, dynamic> audioConfig = {};
+    input[parameters.text] = dataForVoice;
+    voice[parameters.languageCode] = langCode;
+    audioConfig[parameters.audioEncoding] = parameters.MP3;
+    reqJson[parameters.input] = input;
+    reqJson[parameters.voice] = voice;
+    reqJson[parameters.audioConfig] = audioConfig;
+    Service mService = Service();
+    final response = await mService.getAudioFileTTS(reqJson);
 
-      //print(dir.path);
-    } catch (foundError) {}
+    if (response.statusCode == 200) {
+      if (response.body != null) {
+        final data = jsonDecode(response.body);
+        final result = data["result"];
+        if (result != null) {
+          final audioContent = result["audioContent"];
+          if (audioContent != null) {
+            final bytes = Base64Decoder().convert(audioContent);
+            if (bytes != null) {
+              final dir = await getTemporaryDirectory();
+              final file = File('${dir.path}/wavenet.mp3');
+              await file.writeAsBytes(bytes);
+              final path = dir.path + "/wavenet.mp3";
+              if (isTTS) {
+                newAudioPlay1.play(path, isLocal: true);
+              } else {
+                audioPlayerForTTS.play(path, isLocal: true);
+              }
+            }
+          }
+        }
+      }
+    } else {
+      FlutterToast().getToast(
+          'There is some issue with sheela,\n Please try after some time',
+          Colors.black54);
+    }
+
+    // } else if (Platform.isAndroid) {
+    //   newAudioPlay.playBytes(bytes);
+    // }
+
+    //print(dir.path);
   }
 
   stopAudioPlayer() {
-    newAudioPlay?.stop();
+    audioPlayerForTTS?.stop();
     newAudioPlay1?.stop();
   }
 

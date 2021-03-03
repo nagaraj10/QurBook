@@ -180,7 +180,14 @@ const String strsharedToMe = 'sharedToMe';
 const String strvirtualUserParent = 'virtualUserParent';
 const String strMappedDoctorId = 'mappedDoctorId';
 const String strProfilePicThumbnailURL = 'profilePicThumbnailURL';
+const String input = 'input';
+const String text = 'text';
+const String voice = 'voice';
+const String languageCode = 'languageCode';
+const String audioConfig = 'audioConfig';
+const String MP3 = 'MP3';
 
+const String audioEncoding = 'audioEncoding';
 const String strmedicalPreferences = 'medicalPreferences';
 const String strpreferences = 'preferences';
 const String strdoctorIds = 'doctorIds';

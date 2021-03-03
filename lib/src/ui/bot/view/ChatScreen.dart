@@ -77,7 +77,7 @@ class _ChatScreenState extends State<ChatScreen>
 
   stopTTSEngine() async {
     ChatScreenViewModel model = getMyViewModel();
-    model.newAudioPlay.stop();
+    model.audioPlayerForTTS.stop();
     Provider.of<ChatScreenViewModel>(context, listen: false).stopTTSEngine();
   }
 
