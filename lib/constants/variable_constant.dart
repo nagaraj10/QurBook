@@ -165,6 +165,7 @@ const String icon_home = 'assets/navicons/home.png';
 const String icon_schedule = 'assets/navicons/schedule.png';
 const String icon_profile = 'assets/navicons/ic_profile_two.png';
 const String icon_more = 'assets/navicons/more.png';
+const String icon_no_internet = 'assets/no_internet.png';
 
 //For Apple Health Settings Info
 const String apple_health_settings_info = 'assets/settings/health.jpg';
@@ -211,6 +212,7 @@ const String strFeedThank = 'Thank  you for your feedback';
 //for global search
 const String strSearching = 'Searching';
 const String strNoInternet = 'No internet connection';
+const String strCheckConnection = 'Check your connection or try again';
 const String strBackOnline = 'back to online';
 const String strNoConnection = 'no connection';
 const String strve = 've';
