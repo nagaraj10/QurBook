@@ -645,6 +645,7 @@ class FHBBasicWidget {
                 onTextChanged(errorValue);
               } else {
                 onTextChanged('');
+                node.nextFocus();
               }
             } else if (deviceName == Constants.STR_THERMOMETER &&
                 value.length < 5) {
@@ -661,6 +662,7 @@ class FHBBasicWidget {
                 onTextChanged(errorValue);
               } else {
                 onTextChanged('');
+                node.nextFocus();
               }
             } else {
               if (checkifValueisInRange(controllerValue.text, deviceName)) {
@@ -685,6 +687,8 @@ class FHBBasicWidget {
           },
         ));
   }
+
+  showPopupForNotInRange() {}
 
   getColorBasedOnDevice(String deviceName, String unitsTosearch, String text) {
     switch (deviceName) {
