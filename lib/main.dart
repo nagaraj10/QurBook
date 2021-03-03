@@ -24,6 +24,7 @@ import 'package:myfhb/schedules/add_reminders.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/ui/SplashScreen.dart';
+import 'package:myfhb/src/ui/NetworkScreen.dart';
 import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
@@ -198,7 +199,7 @@ class _MyFHBState extends State<MyFHB> {
   bool isAlreadyLoaded = false;
   final Connectivity _connectivity = Connectivity();
   StreamSubscription<ConnectivityResult> _connectivitySubscription;
-  bool _internetconnection = false;
+  bool _internetconnection = true;
   var _connectionStatus = '';
   FlutterToast toast = new FlutterToast();
 
@@ -536,6 +537,10 @@ class _MyFHBState extends State<MyFHB> {
       case ConnectivityResult.wifi:
         String wifiName, wifiBSSID, wifiIP;
 
+        if (!_internetconnection) {
+          Navigator.pop(Get.context);
+        }
+
         try {
           if (!kIsWeb && Platform.isIOS) {
             LocationAuthorizationStatus status =
@@ -597,16 +602,20 @@ class _MyFHBState extends State<MyFHB> {
         });
         break;
       case ConnectivityResult.mobile:
+        if (!_internetconnection) {
+          Navigator.pop(Get.context);
+        }
         setState(() {
           _internetconnection = true;
           //toast.getToast(data_connected, Colors.green);
         });
         break;
       case ConnectivityResult.none:
+        Get.to(NetworkScreen());
         setState(() {
           _internetconnection = false;
           _connectionStatus = no_internet_conn;
-          toast.getToast(no_internet_conn, Colors.red);
+          // toast.getToast(no_internet_conn, Colors.red);
         });
         break;
       default:
