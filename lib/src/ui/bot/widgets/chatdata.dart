@@ -18,24 +18,22 @@ class ChatData extends StatelessWidget with ChangeNotifier {
   Widget build(BuildContext context) {
     Timer(Duration(milliseconds: 1000),
         () => _controller.jumpTo(_controller.position.maxScrollExtent));
-    return conversations.length > 0
-        ? Container(
-            padding: EdgeInsets.only(bottom: 50),
-            color: Colors.white70,
-            child: ListView.builder(
-                controller: _controller,
-                reverse: false,
-                itemCount: conversations.length,
-                itemBuilder: (BuildContext ctxt, int index) => Padding(
-                    padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
-                    child: conversations[index].isMayaSaid
-                        ? (conversations[index]?.videoLinks != null &&
-                                conversations[index]?.videoLinks?.length > 0)
-                            ? ReceiverLayoutWithIntroVideo(
-                                conversations[index], index)
-                            : ReceiverLayout(conversations[index], index)
-                        : SenderLayout(conversations[index]))),
-          )
-        : PleaseWait();
+    return Container(
+      padding: EdgeInsets.only(bottom: 50),
+      color: Colors.white70,
+      child: ListView.builder(
+          controller: _controller,
+          reverse: false,
+          itemCount: conversations.length,
+          itemBuilder: (BuildContext ctxt, int index) => Padding(
+              padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+              child: conversations[index].isMayaSaid
+                  ? (conversations[index]?.videoLinks != null &&
+                          conversations[index]?.videoLinks?.length > 0)
+                      ? ReceiverLayoutWithIntroVideo(
+                          conversations[index], index)
+                      : ReceiverLayout(conversations[index], index)
+                  : SenderLayout(conversations[index]))),
+    );
   }
 }
