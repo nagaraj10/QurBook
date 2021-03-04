@@ -393,34 +393,36 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
   }
 
   Widget _accountToSign() {
-    return InkWell(
-      onTap: () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => PatientSignInScreen()));
-      },
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: 20),
-        padding: EdgeInsets.all(15),
-        alignment: Alignment.bottomCenter,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              strAccount,
-              style: TextStyle(fontSize: 15.0.sp, fontWeight: FontWeight.w600),
-            ),
-            SizedBox(
-              width: 10.0.w,
-            ),
-            Text(
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 20),
+      padding: EdgeInsets.all(15),
+      alignment: Alignment.bottomCenter,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            strAccount,
+            style: TextStyle(fontSize: 15.0.sp, fontWeight: FontWeight.w600),
+          ),
+          SizedBox(
+            width: 10.0.w,
+          ),
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => PatientSignInScreen()));
+            },
+            child: Text(
               strSignIn,
               style: TextStyle(
                   color: Color(CommonUtil().getMyPrimaryColor()),
                   fontSize: 15.0.sp,
                   fontWeight: FontWeight.w600),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
