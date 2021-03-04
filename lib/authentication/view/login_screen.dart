@@ -55,7 +55,7 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
     // TODO: implement initState
     super.initState();
     authViewModel = new AuthViewModel();
-   /* try {
+    /* try {
       commonUtil.versionCheck(context);
     } catch (e) {
     }*/
@@ -182,17 +182,17 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                           ),
                         ],
                       ),
-                      InkWell(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      ForgotPasswordScreen()));
-                        },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(vertical: 10),
-                          alignment: Alignment.centerLeft,
+                      Container(
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        alignment: Alignment.centerLeft,
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        ForgotPasswordScreen()));
+                          },
                           child: Text(strForgotTxt,
                               style: TextStyle(
                                   fontSize: 14.0.sp,
@@ -225,34 +225,36 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
   }
 
   Widget _gotoregistertap() {
-    return InkWell(
-      onTap: () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => PatientSignUpScreen()));
-      },
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: 20),
-        padding: EdgeInsets.all(15),
-        alignment: Alignment.bottomCenter,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              strNeedAcoount,
-              style: TextStyle(fontSize: 15.0.sp, fontWeight: FontWeight.w600),
-            ),
-            SizedBox(
-              width: 10.0.w,
-            ),
-            Text(
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 20),
+      padding: EdgeInsets.all(15),
+      alignment: Alignment.bottomCenter,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            strNeedAcoount,
+            style: TextStyle(fontSize: 15.0.sp, fontWeight: FontWeight.w600),
+          ),
+          SizedBox(
+            width: 10.0.w,
+          ),
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => PatientSignUpScreen()));
+            },
+            child: Text(
               strSignUpTxt,
               style: TextStyle(
                   color: Color(CommonUtil().getMyPrimaryColor()),
                   fontSize: 15.0.sp,
                   fontWeight: FontWeight.w600),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
