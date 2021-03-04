@@ -787,14 +787,7 @@ class ChatScreenState extends State<ChatScreen> {
                                   SizedBoxWidget(
                                     width: 5.0.w,
                                   ),
-                                  Text(
-                                    'Click to view PDF',
-                                    style: TextStyle(
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
-                                      fontSize: 16.0.sp,
-                                    ),
-                                  ),
+                                  getPdfViewLabel(document),
                                 ],
                               ),
                             ),
@@ -1100,6 +1093,32 @@ class ChatScreenState extends State<ChatScreen> {
         margin: EdgeInsets.only(bottom: 10.0),
       );
     }
+  }
+
+  Widget getPdfViewLabel(DocumentSnapshot document){
+
+    if(document[STR_TIME_STAMP]!=null && document[STR_TIME_STAMP]!=''){
+      DateTime dateTimeFromServerTimeStamp =
+      (document[STR_TIME_STAMP] as Timestamp).toDate();
+      return Text(
+        'File '+dateTimeFromServerTimeStamp.millisecondsSinceEpoch.toString(),
+        style: TextStyle(
+          color: Color(
+              CommonUtil().getMyPrimaryColor()),
+          fontSize: 16.0.sp,
+        ),
+      );
+    }else{
+      return Text(
+        'Click to View Pdf',
+        style: TextStyle(
+          color: Color(
+              CommonUtil().getMyPrimaryColor()),
+          fontSize: 16.0.sp,
+        ),
+      );
+    }
+
   }
 
   goToPDFViewBasedonURL(String url) {
