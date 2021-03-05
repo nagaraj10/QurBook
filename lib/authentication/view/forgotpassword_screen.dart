@@ -63,7 +63,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         width: 120.0.h,
                       ),
                       SizedBox(height: 20.0.h),
-                      Text(strOtpShowText),
+                      Text(
+                        strOtpShowText,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 14.0.sp,
+                        ),
+                      ),
                       SizedBox(
                         height: 10.0.h,
                       ),
@@ -78,6 +84,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       SizedBox(height: height * .015),
                       Text(
                         strsupportEmail,
+                        textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 15.0.sp),
                       ),
                       // RichText(
@@ -188,56 +195,63 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 
   Widget _resetbutton() {
-    return InkWell(
-      onTap: () async {
-        FocusScope.of(context).unfocus();
-        if (_ForgetPassKey.currentState.validate()) {
-          _ForgetPassKey.currentState.save();
-          LoaderClass.showLoadingDialog(context);
-          PatientForgotPasswordModel logInModel =
-              new PatientForgotPasswordModel(
-            //userName: mobileController.text,
-            userName:
-                '${strPlusSymbol}${_selectedDialogCountry.phoneCode}${mobileController.text}',
-            source: strSource,
-          );
-          Map<String, dynamic> map = logInModel.toJson();
-          forgotPasswordModel.PatientForgotPasswordModel response =
-              await authViewModel.resetPassword(map);
-          _checkResponse(response);
-        } else {
-          setState(() {
-            _autoValidateBool = true;
-          });
-        }
-      },
-      child: Container(
-        width: 1.sw,
-        padding: EdgeInsets.symmetric(vertical: 15),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(5)),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                  color: Colors.grey.shade200,
-                  offset: Offset(2, 4),
-                  blurRadius: 5,
-                  spreadRadius: 2)
-            ],
-            gradient: LinearGradient(
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                colors: [
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        InkWell(
+          onTap: () async {
+            FocusScope.of(context).unfocus();
+            if (_ForgetPassKey.currentState.validate()) {
+              _ForgetPassKey.currentState.save();
+              LoaderClass.showLoadingDialog(context);
+              PatientForgotPasswordModel logInModel =
+                  new PatientForgotPasswordModel(
+                //userName: mobileController.text,
+                userName:
+                    '${strPlusSymbol}${_selectedDialogCountry.phoneCode}${mobileController.text}',
+                source: strSource,
+              );
+              Map<String, dynamic> map = logInModel.toJson();
+              forgotPasswordModel.PatientForgotPasswordModel response =
+                  await authViewModel.resetPassword(map);
+              _checkResponse(response);
+            } else {
+              setState(() {
+                _autoValidateBool = true;
+              });
+            }
+          },
+          child: Container(
+            padding: EdgeInsets.symmetric(
+              vertical: 15.0.sp,
+              horizontal: 15.0.sp,
+            ),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(5)),
+                boxShadow: <BoxShadow>[
+                  BoxShadow(
+                      color: Colors.grey.shade200,
+                      offset: Offset(2, 4),
+                      blurRadius: 5,
+                      spreadRadius: 2)
+                ],
+                gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: [
 //                  Color(0xff138fcf),
 //                  Color(0xff138fcf),
-                  Color(new CommonUtil().getMyPrimaryColor()),
-                  Color(new CommonUtil().getMyGredientColor())
-                ])),
-        child: Text(
-          strResetButton,
-          style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
+                      Color(new CommonUtil().getMyPrimaryColor()),
+                      Color(new CommonUtil().getMyGredientColor())
+                    ])),
+            child: Text(
+              strResetButton,
+              style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
+            ),
+          ),
         ),
-      ),
+      ],
     );
   }
 

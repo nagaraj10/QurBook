@@ -79,7 +79,12 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                       SizedBox(
                         height: 10.0.h,
                       ),
-                      Text(strSignUpText),
+                      Text(
+                        strSignUpText,
+                        style: TextStyle(
+                          fontSize: 14.0.sp,
+                        ),
+                      ),
                       Column(
                         children: [
                           _signupTextFields(
@@ -295,47 +300,54 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
   }
 
   Widget _saveUser() {
-    return InkWell(
-      onTap: () {
-        AuthenticationValidator().checkNetwork().then((intenet) {
-          if (intenet != null && intenet) {
-            checkedValue
-                ? null
-                : FlutterToast().getToast(
-                    'Please accept terms and conditions', Colors.black54);
-            _savePatientDetails();
-          } else {
-            toast.getToast(strNetworkIssue, Colors.red);
-          }
-        });
-      },
-      child: Container(
-        width: 1.sw,
-        padding: EdgeInsets.symmetric(vertical: 15),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(5)),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                  color: Colors.grey.shade200,
-                  offset: Offset(2, 4),
-                  blurRadius: 5,
-                  spreadRadius: 2)
-            ],
-            gradient: LinearGradient(
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                colors: [
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        InkWell(
+          onTap: () {
+            AuthenticationValidator().checkNetwork().then((intenet) {
+              if (intenet != null && intenet) {
+                checkedValue
+                    ? null
+                    : FlutterToast().getToast(
+                        'Please accept terms and conditions', Colors.black54);
+                _savePatientDetails();
+              } else {
+                toast.getToast(strNetworkIssue, Colors.red);
+              }
+            });
+          },
+          child: Container(
+            padding: EdgeInsets.symmetric(
+              vertical: 15.0.sp,
+              horizontal: 15.0.sp,
+            ),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(5)),
+                boxShadow: <BoxShadow>[
+                  BoxShadow(
+                      color: Colors.grey.shade200,
+                      offset: Offset(2, 4),
+                      blurRadius: 5,
+                      spreadRadius: 2)
+                ],
+                gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: [
 //                  Color(0xff138fcf),
 //                  Color(0xff138fcf),
-                  Color(new CommonUtil().getMyPrimaryColor()),
-                  Color(new CommonUtil().getMyGredientColor())
-                ])),
-        child: Text(
-          strSignup,
-          style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
+                      Color(new CommonUtil().getMyPrimaryColor()),
+                      Color(new CommonUtil().getMyGredientColor())
+                    ])),
+            child: Text(
+              strSignup,
+              style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
+            ),
+          ),
         ),
-      ),
+      ],
     );
   }
 
@@ -394,7 +406,6 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
 
   Widget _accountToSign() {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 20),
       padding: EdgeInsets.all(15),
       alignment: Alignment.bottomCenter,
       child: Row(
