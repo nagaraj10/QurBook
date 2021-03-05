@@ -6,18 +6,29 @@ import 'package:myfhb/src/ui/bot/widgets/receiver_video_intro.dart';
 import 'package:myfhb/src/ui/bot/widgets/sender.dart';
 import '../../../model/bot/ConversationModel.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 
 import '../../../model/bot/ConversationModel.dart';
 
 class ChatData extends StatelessWidget with ChangeNotifier {
   final List<Conversation> conversations;
   ScrollController _controller = new ScrollController();
+
   ChatData({this.conversations});
 
   @override
   Widget build(BuildContext context) {
-    Timer(Duration(milliseconds: 1000),
-        () => _controller.jumpTo(_controller.position.maxScrollExtent));
+    if ((conversations?.length ?? 0) > 0 &&
+        conversations[conversations.length - 1].loadingDots) {
+      Timer(Duration(milliseconds: 1000),
+          () => _controller.jumpTo(_controller.position.maxScrollExtent));
+      if (conversations[conversations.length - 1].isSpeaking) {
+        Provider.of<ChatScreenViewModel>(context, listen: false)
+            .conversations[conversations.length - 1]
+            .loadingDots = false;
+      }
+    }
     return Container(
       padding: EdgeInsets.only(bottom: 50),
       color: Colors.white70,

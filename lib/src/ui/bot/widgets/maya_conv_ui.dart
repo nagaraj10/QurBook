@@ -104,8 +104,9 @@ class MayaConvUI extends StatelessWidget {
           child: InkWell(
             onTap: () async {
               if (!c.isSpeaking) {
-                String textToSpeak = '.';
+                String textToSpeak = '';
                 if ((c?.buttons?.length ?? 0) > 0) {
+                  textToSpeak = '.';
                   await Future.forEach(c.buttons, (button) async {
                     textToSpeak = textToSpeak + button.title + '.';
                   });
