@@ -41,7 +41,8 @@ import 'package:myfhb/video_call/utils/callstatus.dart';
 import 'package:myfhb/video_call/utils/hideprovider.dart';
 import 'package:provider/provider.dart' as provider;
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:myfhb/src/ui/bot/SuperMaya.dart';
+import 'package:myfhb/constants/router_variable.dart' as router;
 import 'common/CommonConstants.dart';
 import 'common/CommonUtil.dart';
 import 'my_family/viewmodel/my_family_view_model.dart';
@@ -51,6 +52,7 @@ import 'telehealth/features/appointments/model/fetchAppointments/city.dart';
 import 'telehealth/features/appointments/model/fetchAppointments/past.dart';
 import 'package:myfhb/src/utils/screenutils/screenutil.dart';
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
+import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 
 var firstCamera;
 List<CameraDescription> listOfCameras;
@@ -292,9 +294,28 @@ class _MyFHBState extends State<MyFHB> {
     if (c_msg.isNotEmpty || c_msg != null) {
       var passedValArr = c_msg.split('&');
       if (passedValArr[0] == 'ack') {
-        Get.to(TelehealthProviders(
-          arguments: HomeScreenArguments(selectedIndex: 0),
-        ));
+        if (passedValArr[1] == 'sheela') {
+          Get.to(SuperMaya());
+        } else if (passedValArr[1] == 'profile_page') {
+          Get.toNamed(router.rt_UserAccounts,
+                  arguments: UserAccountsArguments(selectedIndex: 0))
+              .then((value) => setState(() {}));
+        } else if (passedValArr[1] == 'googlefit') {
+          Get.toNamed(router.rt_AppSettings);
+        } else if (passedValArr[1] == 'th_provider') {
+          Get.toNamed(router.rt_TelehealthProvider,
+                  arguments: HomeScreenArguments(selectedIndex: 1))
+              .then((value) => setState(() {}));
+        } else if (passedValArr[1] == 'my_record') {
+          getProfileData();
+          Get.toNamed(router.rt_HomeScreen,
+                  arguments: HomeScreenArguments(selectedIndex: 1))
+              .then((value) => setState(() {}));
+        } else {
+          Get.to(TelehealthProviders(
+            arguments: HomeScreenArguments(selectedIndex: 0),
+          ));
+        }
       } else if (passedValArr[1] == 'appointmentList') {
         Get.to(SplashScreen(
           nsRoute: 'appointmentList',
@@ -379,6 +400,12 @@ class _MyFHBState extends State<MyFHB> {
     }
   }
 
+  void getProfileData() async {
+    try {
+      await new CommonUtil().getUserProfileData();
+    } catch (e) {}
+  }
+
   @override
   Widget build(BuildContext context) {
     var nsSettingsForAndroid =
@@ -458,6 +485,25 @@ class _MyFHBState extends State<MyFHB> {
         return SplashScreen(
           nsRoute: 'appointmentList',
         );
+      } else if (parsedData[0] == 'ack') {
+        if (parsedData[1] == 'sheela') {
+          return SplashScreen(nsRoute: 'sheela',);
+          
+        } else if (parsedData[1] == 'profile_page') {
+          return SplashScreen(nsRoute: 'profile_page',);
+         
+        } else if (parsedData[1] == 'googlefit') {
+          return SplashScreen(nsRoute: 'googlefit',);
+          
+        } else if (parsedData[1] == 'th_provider') {
+          return SplashScreen(nsRoute: 'th_provider',);
+          
+        } else if (parsedData[1] == 'my_record') {
+          return SplashScreen(nsRoute: 'my_record',);
+          
+        } else {
+          return SplashScreen(nsRoute: '',);
+        }
       } else if (navRoute.split('&')[0] == 'DoctorRescheduling') {
         return SplashScreen(
             nsRoute: 'DoctorRescheduling',
