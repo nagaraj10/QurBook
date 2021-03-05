@@ -16,6 +16,7 @@ class Conversation {
   String screen;
   bool redirect;
   bool isSpeaking;
+  bool loadingDots;
   Conversation({
     @required this.isMayaSaid,
     @required this.text,
@@ -29,6 +30,7 @@ class Conversation {
     this.screen,
     this.redirect,
     this.isSpeaking: false,
+    this.loadingDots: true,
   });
 
   Conversation.fromJson(Map<String, dynamic> json) {
@@ -54,6 +56,7 @@ class Conversation {
     screen = json[parameters.strScreen];
     redirect = json[parameters.strRedirect];
     isSpeaking = false;
+    loadingDots = true;
   }
 
   Map<String, dynamic> toJson() {

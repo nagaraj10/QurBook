@@ -89,7 +89,10 @@ class _ReceiverLayoutState extends State<ReceiverLayout> {
                   ),
                 ),
                 child: FutureBuilder(
-                  future: Future.delayed(Duration(seconds: 3),
+                  future: Future.delayed(
+                      Duration(
+                        seconds: (widget.c.loadingDots ?? false) ? 3 : 0,
+                      ),
                       () => MayaConvUI(widget.c, widget.index)),
                   builder: (BuildContext context, snapshot) {
                     return snapshot.hasData

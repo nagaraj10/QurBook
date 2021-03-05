@@ -304,8 +304,9 @@ class ChatScreenViewModel extends ChangeNotifier {
                   lan == "undef" ||
                   lan.toLowerCase() == "en-IN".toLowerCase() ||
                   lan.toLowerCase() == "en-US".toLowerCase()) {
-                String textToSpeak = '.';
+                String textToSpeak = '';
                 if ((res?.buttons?.length ?? 0) > 0) {
+                  textToSpeak = '.';
                   await Future.forEach(res.buttons, (button) async {
                     textToSpeak = textToSpeak + button.title + '.';
                   });
@@ -339,8 +340,9 @@ class ChatScreenViewModel extends ChangeNotifier {
                 });
               } else {
                 //print(res.text);
-                String textToSpeak = '.';
+                String textToSpeak = '';
                 if ((res?.buttons?.length ?? 0) > 0) {
+                  textToSpeak = '.';
                   await Future.forEach(res.buttons, (button) async {
                     textToSpeak = textToSpeak + button.title + '.';
                   });
