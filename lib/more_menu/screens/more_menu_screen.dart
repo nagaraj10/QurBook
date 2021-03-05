@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:myfhb/device_integration/viewModel/Device_model.dart';
+import 'package:myfhb/src/ui/settings/MySettings.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
@@ -46,6 +48,21 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   int preColor = 0xff5e1fe0;
   int greColor = 0xff753aec;
   var userMappingId = '';
+
+  bool _isdigitRecognition = true;
+  bool _isdeviceRecognition = true;
+  bool _isGFActive;
+  DevicesViewModel _deviceModel;
+  bool _isHKActive = false;
+  bool _firstTym = true;
+  bool _isBPActive = true;
+  bool _isGLActive = true;
+  bool _isOxyActive = true;
+  bool _isTHActive = true;
+  bool _isWSActive = true;
+  bool _isHealthFirstTime = false;
+  String preferred_language;
+  String qa_subscription;
 
   String selectedMaya =
       PreferenceUtil.getStringValue(Constants.keyMayaAsset) != null
@@ -199,7 +216,17 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             size: 16.0.sp,
           ),
           onTap: () {
-            PageNavigator.goTo(context, router.rt_AppSettings);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MySettings(priColor: preColor,greColor: greColor),
+              ),
+            ).then((value) {
+              if(value){
+                getAppColorValues();
+              }
+            });
+            //PageNavigator.goTo(context, router.rt_AppSettings);
           },
         ),
         Divider(),
@@ -436,6 +463,15 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
           userMappingId = '';
           preColor = 0xff5e1fe0;
           greColor = 0xff753aec;
+          _isdeviceRecognition = true;
+          _isHKActive = false;
+          _firstTym = true;
+          _isBPActive = true;
+          _isGLActive = true;
+          _isOxyActive = true;
+          _isTHActive = true;
+          _isWSActive = true;
+          _isHealthFirstTime = false;
 
           selectedPrimaryColor = 0xff5f0cf9;
         }
@@ -455,7 +491,84 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
       preColor = getDeviceSelectionModel.result[0].profileSetting.preColor;
       greColor = getDeviceSelectionModel.result[0].profileSetting.greColor;
 
-      selectedPrimaryColor = preColor;
+      _isdeviceRecognition = getDeviceSelectionModel
+          .result[0].profileSetting.allowDevice !=
+          null &&
+          getDeviceSelectionModel.result[0].profileSetting.allowDevice != ''
+          ? getDeviceSelectionModel.result[0].profileSetting.allowDevice
+          : true;
+      _isdigitRecognition =
+      getDeviceSelectionModel.result[0].profileSetting.allowDigit != null &&
+          getDeviceSelectionModel.result[0].profileSetting.allowDigit !=
+              ''
+          ? getDeviceSelectionModel.result[0].profileSetting.allowDigit
+          : true;
+      _isGFActive =
+      getDeviceSelectionModel.result[0].profileSetting.googleFit != null &&
+          getDeviceSelectionModel.result[0].profileSetting.googleFit !=
+              ''
+          ? getDeviceSelectionModel.result[0].profileSetting.googleFit
+          : false;
+      _isHKActive =
+      getDeviceSelectionModel.result[0].profileSetting.healthFit != null &&
+          getDeviceSelectionModel.result[0].profileSetting.healthFit !=
+              ''
+          ? getDeviceSelectionModel.result[0].profileSetting.healthFit
+          : false;
+      _isBPActive =
+      getDeviceSelectionModel.result[0].profileSetting.bpMonitor != null &&
+          getDeviceSelectionModel.result[0].profileSetting.bpMonitor !=
+              ''
+          ? getDeviceSelectionModel.result[0].profileSetting.bpMonitor
+          : true;
+      _isGLActive =
+      getDeviceSelectionModel.result[0].profileSetting.glucoMeter != null &&
+          getDeviceSelectionModel.result[0].profileSetting.glucoMeter !=
+              ''
+          ? getDeviceSelectionModel.result[0].profileSetting.glucoMeter
+          : true;
+      _isOxyActive = getDeviceSelectionModel
+          .result[0].profileSetting.pulseOximeter !=
+          null &&
+          getDeviceSelectionModel.result[0].profileSetting.pulseOximeter !=
+              ''
+          ? getDeviceSelectionModel.result[0].profileSetting.pulseOximeter
+          : true;
+      _isWSActive =
+      getDeviceSelectionModel.result[0].profileSetting.weighScale != null &&
+          getDeviceSelectionModel.result[0].profileSetting.weighScale !=
+              ''
+          ? getDeviceSelectionModel.result[0].profileSetting.weighScale
+          : true;
+      _isTHActive = getDeviceSelectionModel
+          .result[0].profileSetting.thermoMeter !=
+          null &&
+          getDeviceSelectionModel.result[0].profileSetting.thermoMeter != ''
+          ? getDeviceSelectionModel.result[0].profileSetting.thermoMeter
+          : true;
+
+      preferred_language = getDeviceSelectionModel
+          .result[0].profileSetting.preferred_language !=
+          null &&
+          getDeviceSelectionModel
+              .result[0].profileSetting.preferred_language !=
+              ''
+          ? getDeviceSelectionModel.result[0].profileSetting.preferred_language
+          : 'undef';
+
+      qa_subscription =
+      getDeviceSelectionModel.result[0].profileSetting.qa_subscription !=
+          null &&
+          getDeviceSelectionModel
+              .result[0].profileSetting.qa_subscription !=
+              ''
+          ? getDeviceSelectionModel.result[0].profileSetting.qa_subscription
+          : 'Y';
+
+      selectedPrimaryColor = PreferenceUtil.getSavedTheme(Constants.keyPriColor) != null
+          ? PreferenceUtil.getSavedTheme(Constants.keyPriColor)
+          : preColor;
+
     });
   }
 
@@ -463,7 +576,18 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
       int priColor, int greColor) async {
     var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     await healthReportListForUserRepository
-        .createAppColorSelection(priColor, greColor, userId)
+        .createDeviceSelection(_isdigitRecognition,
+        _isdeviceRecognition,
+        _isGFActive,
+        _isHKActive,
+        _isBPActive,
+        _isGLActive,
+        _isOxyActive,
+        _isTHActive,
+        _isWSActive,
+        userId,
+        preferred_language,
+        qa_subscription,priColor, greColor)
         .then((value) {
       createDeviceSelectionModel = value;
       if (createDeviceSelectionModel.isSuccess) {
@@ -480,7 +604,17 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   Future<UpdateDeviceModel> updateDeviceSelectionModel(
       int priColor, int greColor) async {
     await healthReportListForUserRepository
-        .updateAppColorModel(userMappingId, priColor, greColor)
+        .updateDeviceModel(userMappingId,_isdigitRecognition,
+        _isdeviceRecognition,
+        _isGFActive,
+        _isHKActive,
+        _isBPActive,
+        _isGLActive,
+        _isOxyActive,
+        _isTHActive,
+        _isWSActive,
+        preferred_language,
+        qa_subscription ,priColor, greColor)
         .then((value) {
       updateDeviceModel = value;
       if (updateDeviceModel.isSuccess) {

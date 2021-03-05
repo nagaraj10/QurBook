@@ -204,7 +204,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                   : true;
           if (selectionResult.result[0].profileSetting != null) {
             if (selectionResult.result[0].profileSetting.preColor != null &&
-                selectionResult.result[0].profileSetting.preColor != null) {
+                selectionResult.result[0].profileSetting.greColor != null) {
               PreferenceUtil.saveTheme(Constants.keyPriColor,
                   selectionResult.result[0].profileSetting.preColor);
               PreferenceUtil.saveTheme(Constants.keyGreyColor,
@@ -212,12 +212,16 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
               //HomeScreen.of(context).refresh();
               //setState(() {});
             } else {
-              PreferenceUtil.saveTheme(Constants.keyPriColor, 0xff5f0cf9);
-              PreferenceUtil.saveTheme(Constants.keyGreyColor, 0xff9929ea);
+              PreferenceUtil.saveTheme(Constants.keyPriColor, PreferenceUtil.getSavedTheme(Constants.keyPriColor) != null
+                  ? PreferenceUtil.getSavedTheme(Constants.keyPriColor):0xff5f0cf9);
+              PreferenceUtil.saveTheme(Constants.keyGreyColor, PreferenceUtil.getSavedTheme(Constants.keyGreyColor) != null
+                  ? PreferenceUtil.getSavedTheme(Constants.keyGreyColor):0xff9929ea);
             }
           } else {
-            PreferenceUtil.saveTheme(Constants.keyPriColor, 0xff5f0cf9);
-            PreferenceUtil.saveTheme(Constants.keyGreyColor, 0xff9929ea);
+            PreferenceUtil.saveTheme(Constants.keyPriColor,  PreferenceUtil.getSavedTheme(Constants.keyPriColor) != null
+                ? PreferenceUtil.getSavedTheme(Constants.keyPriColor):0xff5f0cf9);
+            PreferenceUtil.saveTheme(Constants.keyGreyColor, PreferenceUtil.getSavedTheme(Constants.keyGreyColor) != null
+                ? PreferenceUtil.getSavedTheme(Constants.keyGreyColor):0xff9929ea);
           }
         } else {
           bpMonitor = true;

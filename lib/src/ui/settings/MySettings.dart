@@ -21,6 +21,14 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 class MySettings extends StatefulWidget {
   @override
   _MySettingsState createState() => _MySettingsState();
+
+  final int priColor;
+  final int greColor;
+
+  MySettings(
+      {Key key,this.priColor,this.greColor})
+      : super(key: key);
+
 }
 
 class _MySettingsState extends State<MySettings> {
@@ -38,6 +46,9 @@ class _MySettingsState extends State<MySettings> {
   bool _isHealthFirstTime = false;
   String preferred_language;
   String qa_subscription;
+
+  int priColor;
+  int greColor;
 
   List<DeviceData> selectedList;
   DeviceDataHelper _deviceDataHelper = DeviceDataHelper();
@@ -57,6 +68,9 @@ class _MySettingsState extends State<MySettings> {
     super.initState();
     getDeviceSelectionValues();
     PreferenceUtil.init();
+
+    priColor = widget.priColor;
+    greColor = widget.greColor;
 
     _firstTym =
         PreferenceUtil.getStringValue(Constants.isFirstTym) == variable.strFalse
@@ -129,7 +143,9 @@ class _MySettingsState extends State<MySettings> {
             _isOxyActive,
             _isTHActive,
             _isWSActive,
-            userId)
+            userId,
+        preferred_language,
+        qa_subscription,priColor, greColor)
         .then((value) {
       createDeviceSelectionModel = value;
       if (createDeviceSelectionModel.isSuccess) {
@@ -158,7 +174,7 @@ class _MySettingsState extends State<MySettings> {
             _isTHActive,
             _isWSActive,
             preferred_language,
-            qa_subscription)
+            qa_subscription,priColor, greColor)
         .then((value) {
       updateDeviceModel = value;
       if (updateDeviceModel.isSuccess) {
@@ -191,7 +207,7 @@ class _MySettingsState extends State<MySettings> {
 
   closeDialog() {
     Navigator.of(context).pop();
-    Navigator.of(context).pop();
+    Navigator.of(context).pop(true);
   }
 
   setValues(GetDeviceSelectionModel getDeviceSelectionModel) {

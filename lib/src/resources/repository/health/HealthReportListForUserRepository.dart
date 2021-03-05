@@ -250,7 +250,11 @@ class HealthReportListForUserRepository {
       bool pulseOximeter,
       bool thermo,
       bool weighScale,
-      String userId
+      String userId,
+      String preferred_language,
+      String qa_subscription,
+      int priColor,
+      int greColor,
       ) async {
     var body = jsonEncode({
       "userId": userId,
@@ -263,7 +267,11 @@ class HealthReportListForUserRepository {
         'glucoMeter': gluco,
         'pulseOximeter': pulseOximeter,
         'thermoMeter': thermo,
-        'weighScale': weighScale
+        'weighScale': weighScale,
+        "greColor": greColor,
+        "priColor": priColor,
+        'preferred_language':preferred_language,
+        'qa-subscription':qa_subscription
       }
     });
 
@@ -284,7 +292,10 @@ class HealthReportListForUserRepository {
       bool thermo,
       bool weighScale,
       String preferred_language,
-      String qa_subscription) async {
+      String qa_subscription,
+      int priColor,
+      int greColor
+      ) async {
     var body = jsonEncode({
       'id': userMappingId,
       'profileSetting': {
@@ -297,6 +308,8 @@ class HealthReportListForUserRepository {
         'pulseOximeter': pulseOximeter,
         'thermoMeter': thermo,
         'weighScale': weighScale,
+        "greColor": greColor,
+        "priColor": priColor,
         'preferred_language':preferred_language,
         'qa-subscription':qa_subscription
       }
@@ -306,7 +319,7 @@ class HealthReportListForUserRepository {
     return UpdateDeviceModel.fromJson(response);
   }
 
-  Future<CreateDeviceSelectionModel> createAppColorSelection(
+ /* Future<CreateDeviceSelectionModel> createAppColorSelection(
       int priColor,
       int greColor,String userId) async {
     var body = jsonEncode({
@@ -336,7 +349,7 @@ class HealthReportListForUserRepository {
     final response = await _helper.updateDeviceSelection(
         query.qr_user_profile_no_slash, body);
     return UpdateDeviceModel.fromJson(response);
-  }
+  }*/
 
   Future<DeleteDeviceHealthRecord> deleteDeviceRecords(
       String deviceId) async {
