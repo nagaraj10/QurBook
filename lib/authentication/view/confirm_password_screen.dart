@@ -64,7 +64,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       SizedBox(
                         height: 10.0.h,
                       ),
-                      Text(strChangePasswordText),
+                      Text(
+                        strChangePasswordText,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 14.0.sp,
+                        ),
+                      ),
                       SizedBox(
                         height: 10.0.h,
                       ),
@@ -222,37 +228,44 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   }
 
   Widget _changePassword() {
-    return InkWell(
-      onTap: () {
-        _verifyDetails();
-      },
-      child: Container(
-        width: 1.sw,
-        padding: EdgeInsets.symmetric(vertical: 15),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(5)),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                  color: Colors.grey.shade200,
-                  offset: Offset(2, 4),
-                  blurRadius: 5,
-                  spreadRadius: 2)
-            ],
-            gradient: LinearGradient(
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                colors: [
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        InkWell(
+          onTap: () {
+            _verifyDetails();
+          },
+          child: Container(
+            padding: EdgeInsets.symmetric(
+              vertical: 15.0.sp,
+              horizontal: 15.0.sp,
+            ),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(5)),
+                boxShadow: <BoxShadow>[
+                  BoxShadow(
+                      color: Colors.grey.shade200,
+                      offset: Offset(2, 4),
+                      blurRadius: 5,
+                      spreadRadius: 2)
+                ],
+                gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: [
 //                  Color(0xff138fcf),
 //                  Color(0xff138fcf),
-                  Color(new CommonUtil().getMyPrimaryColor()),
-                  Color(new CommonUtil().getMyGredientColor())
-                ])),
-        child: Text(
-          strChangeButtonText,
-          style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
+                      Color(new CommonUtil().getMyPrimaryColor()),
+                      Color(new CommonUtil().getMyGredientColor())
+                    ])),
+            child: Text(
+              strChangeButtonText,
+              style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
+            ),
+          ),
         ),
-      ),
+      ],
     );
   }
 

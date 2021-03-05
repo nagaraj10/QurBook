@@ -87,6 +87,7 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                       SizedBox(height: 20.0.h),
                       Text(
                         strPhoneandPass,
+                        textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 16.0.sp,
                         ),
@@ -201,7 +202,7 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                       ),
                       SizedBox(height: 10.0.h),
                       _loginsavebutton(),
-                      SizedBox(height: height * .015),
+                      SizedBox(height: 10.0.h),
                       _gotoregistertap(),
                     ],
                   ),
@@ -226,8 +227,7 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
 
   Widget _gotoregistertap() {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 20),
-      padding: EdgeInsets.all(15),
+      padding: EdgeInsets.all(15.0.sp),
       alignment: Alignment.bottomCenter,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -319,43 +319,48 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
   }
 
   Widget _loginsavebutton() {
-    return InkWell(
-      onTap: () {
-        AuthenticationValidator().checkNetwork().then((intenet) {
-          if (intenet != null && intenet) {
-            _savepatientdetails();
-          } else {
-            toast.getToast(strNetworkIssue, Colors.red);
-          }
-        });
-      },
-      child: Container(
-        width: 1.sw,
-        padding: EdgeInsets.symmetric(vertical: 15),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(5)),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                  color: Colors.grey.shade200,
-                  offset: Offset(2, 4),
-                  blurRadius: 5,
-                  spreadRadius: 2)
-            ],
-            gradient: LinearGradient(
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                colors: [
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        InkWell(
+          onTap: () {
+            AuthenticationValidator().checkNetwork().then((intenet) {
+              if (intenet != null && intenet) {
+                _savepatientdetails();
+              } else {
+                toast.getToast(strNetworkIssue, Colors.red);
+              }
+            });
+          },
+          child: Container(
+            padding:
+                EdgeInsets.symmetric(vertical: 15.0.sp, horizontal: 15.0.sp),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(5)),
+                boxShadow: <BoxShadow>[
+                  BoxShadow(
+                      color: Colors.grey.shade200,
+                      offset: Offset(2, 4),
+                      blurRadius: 5,
+                      spreadRadius: 2)
+                ],
+                gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: [
 //                  Color(0xff138fcf),
 //                  Color(0xff138fcf),
-                  Color(new CommonUtil().getMyPrimaryColor()),
-                  Color(new CommonUtil().getMyGredientColor())
-                ])),
-        child: Text(
-          strSignInText,
-          style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
+                      Color(new CommonUtil().getMyPrimaryColor()),
+                      Color(new CommonUtil().getMyGredientColor())
+                    ])),
+            child: Text(
+              strSignInText,
+              style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
+            ),
+          ),
         ),
-      ),
+      ],
     );
   }
 
