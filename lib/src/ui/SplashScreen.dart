@@ -24,6 +24,8 @@ import 'package:myfhb/telehealth/features/chat/view/home.dart';
 import '../utils/PageNavigator.dart';
 import 'package:connectivity/connectivity.dart';
 import 'NetworkScreen.dart';
+import 'package:myfhb/src/ui/bot/SuperMaya.dart';
+import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 
 class SplashScreen extends StatefulWidget {
   final String nsRoute;
@@ -141,6 +143,33 @@ class _SplashScreenState extends State<SplashScreen> {
                               date: widget.appointmentDate,
                               templateName: widget.templateName),
                         ));
+                      } else if (widget.nsRoute == 'sheela') {
+                        Get.to(SuperMaya()).then((value) =>
+                            PageNavigator.goToPermanent(
+                                context, router.rt_Dashboard));
+                      } else if (widget.nsRoute == 'profile_page') {
+                        Get.toNamed(router.rt_UserAccounts,
+                                arguments:
+                                    UserAccountsArguments(selectedIndex: 0))
+                            .then((value) => PageNavigator.goToPermanent(
+                                context, router.rt_Dashboard));
+                      } else if (widget.nsRoute == 'googlefit') {
+                        Get.toNamed(router.rt_AppSettings).then((value) =>
+                            PageNavigator.goToPermanent(
+                                context, router.rt_Dashboard));
+                      } else if (widget.nsRoute == 'th_provider') {
+                        Get.toNamed(router.rt_TelehealthProvider,
+                                arguments:
+                                    HomeScreenArguments(selectedIndex: 1))
+                            .then((value) => PageNavigator.goToPermanent(
+                                context, router.rt_Dashboard));
+                      } else if (widget.nsRoute == 'my_record') {
+                        getProfileData();
+                        Get.toNamed(router.rt_HomeScreen,
+                                arguments:
+                                    HomeScreenArguments(selectedIndex: 1))
+                            .then((value) => PageNavigator.goToPermanent(
+                                context, router.rt_Dashboard));
                       } else {
                         PageNavigator.goToPermanent(
                             context, router.rt_Dashboard);
@@ -195,5 +224,11 @@ class _SplashScreenState extends State<SplashScreen> {
             )),
           );
         });
+  }
+
+  void getProfileData() async {
+    try {
+      await new CommonUtil().getUserProfileData();
+    } catch (e) {}
   }
 }
