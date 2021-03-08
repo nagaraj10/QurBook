@@ -193,8 +193,7 @@ class FamilyListDialogState extends State<FamilyListDialog> {
                                 child: sharedByMe[index].linkedData.nickName ==
                                         variable.Self
                                     ? new FHBBasicWidget()
-                                        .getProfilePicWidgeUsingUrl(myProfile
-                                            .result.profilePicThumbnailUrl)
+                                        .getProfilePicWidgeUsingUrl(myProfile)
                                     : Image.memory(
                                         Uint8List.fromList(sharedByMe[index]
                                             .profileData

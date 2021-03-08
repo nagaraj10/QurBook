@@ -68,7 +68,7 @@ class SenderLayout extends StatelessWidget {
           height: 40.0.h,
           width: 40.0.h,
           child: FHBBasicWidget().getProfilePicWidgeUsingUrl(
-              myProfile.result.profilePicThumbnailUrl),
+              myProfile),
         )),
         SizedBox(width: 20.0.w),
       ],

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/services.dart';
+import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/utils/alert.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
@@ -202,25 +203,85 @@ class FHBBasicWidget {
           );
   }
 
-  Widget getProfilePicWidgeUsingUrl(String profilePicThumbnailUrl) {
+  Widget getProfilePicWidgeUsingUrl(MyProfileModel myProfile) {
 /*
     setAuthToken().then((authToken) {
 */
-    if (profilePicThumbnailUrl != '') {
-      return Image.network(
-        profilePicThumbnailUrl,
-        height: 50.0.h,
-        width: 50.0.h,
-        fit: BoxFit.cover,
-        headers: {HttpHeaders.authorizationHeader: authToken},
-      );
-    } else {
+    if(myProfile!=null && myProfile.result!=null){
+      if (myProfile.result.profilePicThumbnailUrl != '') {
+        return Image.network(
+          myProfile.result.profilePicThumbnailUrl,
+          height: 50.0.h,
+          width: 50.0.h,
+          fit: BoxFit.cover,
+          headers: {HttpHeaders.authorizationHeader: authToken},
+          errorBuilder: (BuildContext context, Object exception, StackTrace stackTrace) {
+            return Container(
+              height: 50.0.h,
+              width: 50.0.h,
+              color: Colors.grey[200],
+              child: Center(
+                child: getFirstLastNameText(myProfile),
+              ),
+            );
+          },
+        );
+      } else {
+        return Container(
+          color: Color(fhbColors.bgColorContainer),
+          height: 50.0.h,
+          width: 50.0.h,
+        );
+      }
+    }else{
       return Container(
         color: Color(fhbColors.bgColorContainer),
         height: 50.0.h,
         width: 50.0.h,
       );
     }
+
+    /* });*/
+  }
+
+  Widget getProfilePicWidgeUsingUrlForProfile(MyProfileModel myProfile) {
+/*
+    setAuthToken().then((authToken) {
+*/
+    if(myProfile!=null && myProfile.result!=null){
+      if (myProfile.result.profilePicThumbnailUrl != '') {
+        return Image.network(
+          myProfile.result.profilePicThumbnailUrl,
+          height: 50.0.h,
+          width: 50.0.h,
+          fit: BoxFit.cover,
+          headers: {HttpHeaders.authorizationHeader: authToken},
+          errorBuilder: (BuildContext context, Object exception, StackTrace stackTrace) {
+            return Container(
+              height: 50.0.h,
+              width: 50.0.h,
+              color: Color(new CommonUtil().getMyPrimaryColor()),
+              child: Center(
+                child: getFirstLastNameTextForProfile(myProfile),
+              ),
+            );
+          },
+        );
+      } else {
+        return Container(
+          color: Color(fhbColors.bgColorContainer),
+          height: 50.0.h,
+          width: 50.0.h,
+        );
+      }
+    }else{
+      return Container(
+        color: Color(fhbColors.bgColorContainer),
+        height: 50.0.h,
+        width: 50.0.h,
+      );
+    }
+
     /* });*/
   }
 
@@ -821,4 +882,72 @@ class DecimalTextInputFormatter extends TextInputFormatter {
     }
     return newValue;
   }
+}
+
+Widget getFirstLastNameText(MyProfileModel myProfile){
+  if(myProfile.result!=null && myProfile.result.firstName!=null && myProfile.result.lastName!=null){
+    return Text(
+      myProfile.result.firstName[0].toUpperCase()+myProfile.result.lastName[0].toUpperCase(),
+      style: TextStyle(
+        color: Color(new CommonUtil().getMyPrimaryColor()),
+        fontSize: 16.0.sp,
+        fontWeight: FontWeight.w400,
+      ),
+    );
+  }else if (myProfile.result!=null && myProfile.result.firstName!=null){
+    return Text(
+      myProfile.result.firstName[0].toUpperCase(),
+      style: TextStyle(
+        color: Color(new CommonUtil().getMyPrimaryColor()),
+        fontSize: 16.0.sp,
+        fontWeight: FontWeight.w400,
+      ),
+    );
+
+  }else{
+    return Text(
+      '',
+      style: TextStyle(
+        color: Color(new CommonUtil().getMyPrimaryColor()),
+        fontSize: 16.0.sp,
+        fontWeight: FontWeight.w200,
+      ),
+    );
+
+  }
+
+}
+
+Widget getFirstLastNameTextForProfile(MyProfileModel myProfile){
+  if(myProfile.result!=null && myProfile.result.firstName!=null && myProfile.result.lastName!=null){
+    return Text(
+      myProfile.result.firstName[0].toUpperCase()+myProfile.result.lastName[0].toUpperCase(),
+      style: TextStyle(
+        color: Colors.white,
+        fontSize: 28.0.sp,
+        fontWeight: FontWeight.w500,
+      ),
+    );
+  }else if (myProfile.result!=null && myProfile.result.firstName!=null){
+    return Text(
+      myProfile.result.firstName[0].toUpperCase(),
+      style: TextStyle(
+        color: Colors.white,
+        fontSize: 28.0.sp,
+        fontWeight: FontWeight.w500,
+      ),
+    );
+
+  }else{
+    return Text(
+      '',
+      style: TextStyle(
+        color: Color(new CommonUtil().getMyPrimaryColor()),
+        fontSize: 16.0.sp,
+        fontWeight: FontWeight.w200,
+      ),
+    );
+
+  }
+
 }

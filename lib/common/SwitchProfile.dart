@@ -74,34 +74,34 @@ class SwitchProfile {
               child: ClipOval(
                   child: myProfile != null
                       ? myProfile.result != null
-                          ? myProfile.result.profilePicThumbnailUrl != null
-                              ? new FHBBasicWidget().getProfilePicWidgeUsingUrl(
-                                  myProfile.result.profilePicThumbnailUrl)
-                              : Container(
-                                  height: 50.0.h,
-                                  width: 50.0.h,
-                                  color: Color(fhbColors.bgColorContainer),
-                                  child: Center(
-                                    child: Text(
-                                      myProfile.result.firstName != null
-                                          ? myProfile.result.firstName[0]
-                                              .toUpperCase()
-                                          : '',
-                                      style: TextStyle(
-                                          color: Color(CommonUtil()
-                                              .getMyPrimaryColor())),
-                                    ),
-                                  ))
-                          : Container(
-                              height: 50.0.h,
-                              width: 50.0.h,
-                              color: Color(fhbColors.bgColorContainer),
-                            )
+                      ? myProfile.result.profilePicThumbnailUrl != null
+                      ? new FHBBasicWidget().getProfilePicWidgeUsingUrl(
+                      myProfile)
                       : Container(
-                          height: 50.0.h,
-                          width: 50.0.h,
-                          color: Color(fhbColors.bgColorContainer),
-                        )),
+                      height: 50.0.h,
+                      width: 50.0.h,
+                      color: Color(fhbColors.bgColorContainer),
+                      child: Center(
+                        child: Text(
+                          myProfile.result.firstName != null
+                              ? myProfile.result.firstName[0]
+                              .toUpperCase()
+                              : '',
+                          style: TextStyle(
+                              color: Color(CommonUtil()
+                                  .getMyPrimaryColor())),
+                        ),
+                      ))
+                      : Container(
+                    height: 50.0.h,
+                    width: 50.0.h,
+                    color: Color(fhbColors.bgColorContainer),
+                  )
+                      : Container(
+                    height: 50.0.h,
+                    width: 50.0.h,
+                    color: Color(fhbColors.bgColorContainer),
+                  )),
             )));
   }
 
@@ -113,9 +113,9 @@ class SwitchProfile {
         if (PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME) ==
             Constants.STR_IDDOCS) {
           if (PreferenceUtil.getStringValue(Constants.KEY_FAMILYMEMBERID) !=
-                  null &&
+              null &&
               PreferenceUtil.getStringValue(Constants.KEY_FAMILYMEMBERID)
-                      .length >
+                  .length >
                   0) {
             PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID, userId);
           } else {
@@ -141,7 +141,7 @@ class SwitchProfile {
       _myProfileBloc = new MyProfileBloc();
     }
     HealthReportListForUserBlock _healthReportListForUserBlock =
-        new HealthReportListForUserBlock();
+    new HealthReportListForUserBlock();
 
     _myProfileBloc.getMyProfileData(Constants.KEY_USERID).then((profileData) {
       PreferenceUtil.saveProfileData(Constants.KEY_PROFILE, profileData)
@@ -189,34 +189,34 @@ class SwitchProfile {
           child: ClipOval(
               child: myProfile != null
                   ? myProfile.result != null
-                      ? myProfile.result.profilePicThumbnailUrl != null
-                          ? new FHBBasicWidget().getProfilePicWidgeUsingUrl(
-                              myProfile.result.profilePicThumbnailUrl)
-                          : Container(
-                              height: 50,
-                              width: 50,
-                              color: Color(fhbColors.bgColorContainer),
-                              child: Center(
-                                child: Text(
-                                  myProfile.result.firstName != null
-                                      ? myProfile.result.firstName[0]
-                                          .toUpperCase()
-                                      : '',
-                                  style: TextStyle(
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor())),
-                                ),
-                              ))
-                      : Container(
-                          height: 50,
-                          width: 50,
-                          color: Color(fhbColors.bgColorContainer),
-                        )
+                  ? myProfile.result.profilePicThumbnailUrl != null
+                  ? new FHBBasicWidget().getProfilePicWidgeUsingUrl(
+                  myProfile)
                   : Container(
-                      height: 50,
-                      width: 50,
-                      color: Color(fhbColors.bgColorContainer),
-                    )),
+                  height: 50,
+                  width: 50,
+                  color: Color(fhbColors.bgColorContainer),
+                  child: Center(
+                    child: Text(
+                      myProfile.result.firstName != null
+                          ? myProfile.result.firstName[0]
+                          .toUpperCase()
+                          : '',
+                      style: TextStyle(
+                          color: Color(
+                              CommonUtil().getMyPrimaryColor())),
+                    ),
+                  ))
+                  : Container(
+                height: 50,
+                width: 50,
+                color: Color(fhbColors.bgColorContainer),
+              )
+                  : Container(
+                height: 50,
+                width: 50,
+                color: Color(fhbColors.bgColorContainer),
+              )),
         ),
         _getPlusIcon(),
       ],

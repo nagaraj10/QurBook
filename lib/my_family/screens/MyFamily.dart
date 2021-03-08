@@ -345,14 +345,38 @@ class _MyFamilyState extends State<MyFamily> {
                                   PreferenceUtil.getStringValue(
                                       Constants.KEY_AUTHTOKEN)
                             },
+                            errorBuilder: (BuildContext context,
+                                Object exception, StackTrace stackTrace) {
+                              return Container(
+                                height: 60.0.h,
+                                width: 60.0.h,
+                                color:
+                                    Color(new CommonUtil().getMyPrimaryColor()),
+                                child: Center(
+                                    child: Text(
+                                  data.child.firstName != null &&
+                                          data.child.lastName != null
+                                      ? data.child.firstName[0].toUpperCase() +
+                                          data.child.lastName[0].toUpperCase()
+                                      : data.child.firstName != null
+                                          ? data.child.firstName[0]
+                                              .toUpperCase()
+                                          : '',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 22.0.sp,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                )),
+                              );
+                            },
                           )
                     //!add condition for login user data
                     : myProfile != null
                         ? myProfile.result != null
                             ? myProfile.result.profilePicThumbnailUrl != null
                                 ? new FHBBasicWidget()
-                                    .getProfilePicWidgeUsingUrl(
-                                        myProfile.result.profilePicThumbnailUrl)
+                                    .getProfilePicWidgeUsingUrl(myProfile)
                                 :
                                 /* ? Image.file(
                             File(parentProfilePic),

@@ -83,11 +83,11 @@ class _MyProfilePageState extends State<MyProfilePage> {
         if (snapshot.hasData) {
           //* its done with fetching the data from remote
           if (snapshot.hasData && snapshot.data != null) {
-            return getProfileWidget(snapshot.data.result);
+            return getProfileWidget(snapshot.data,snapshot.data.result);
           } else {
             //todo proper error msg to users
             toast.getToast('something went wrong!', Colors.red);
-            return getProfileWidget(null, errorMsg: 'something went wrong!');
+            return getProfileWidget(snapshot.data,null, errorMsg: 'something went wrong!');
           }
         } else if (snapshot.connectionState == ConnectionState.waiting) {
           //* its fetching the data from remote
@@ -108,7 +108,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
           );
         } else {
           toast.getToast('${snapshot.error.toString()}', Colors.red);
-          return getProfileWidget(null, errorMsg: snapshot.error.toString());
+          return getProfileWidget(snapshot.data,null, errorMsg: snapshot.error.toString());
         }
       },
     );
@@ -149,7 +149,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
     }
   }
 
-  Widget getProfileWidget(MyProfileResult data, {String errorMsg}) {
+  Widget getProfileWidget(MyProfileModel myProfile,MyProfileResult data, {String errorMsg}) {
     if (data != null) {
       if (data.userContactCollection3 != null) {
         if (data.userContactCollection3.length > 0) {
@@ -240,8 +240,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
                               fit: BoxFit.cover,
                             )
                           : data.profilePicThumbnailUrl != null
-                              ? FHBBasicWidget().getProfilePicWidgeUsingUrl(
-                                  data.profilePicThumbnailUrl)
+                              ? FHBBasicWidget().getProfilePicWidgeUsingUrlForProfile(
+                                  myProfile)
                               : Container(),
                     ),
                   ),
