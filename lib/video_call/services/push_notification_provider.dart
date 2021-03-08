@@ -44,6 +44,7 @@ class PushNotificationsProvider {
   Stream<String> get pushNotificationController =>
       _pushNotificationStreamController.stream;
 
+  String redirect;
   var callArguments = CallArguments();
 
   static Future<dynamic> onBackgroundMessage(
@@ -234,6 +235,8 @@ class PushNotificationsProvider {
       _pushNotificationStreamController.add(parameters.doctorCancellation);
     } else if (templateName != null && templateName == parameters.chat) {
       _pushNotificationStreamController.add(parameters.chat);
+    } else if (redirect != null) {
+      _pushNotificationStreamController.add(redirect);
     } else {
       _pushNotificationStreamController.add("normal");
     }
@@ -243,12 +246,16 @@ class PushNotificationsProvider {
     // if (message[parameters.strtype] == parameters.ack) {
     //   title = message[parameters.title];
     //   body = message[parameters.body];
-    // } else if (message[parameters.strtype] == parameters.appointment) {
+    // } else if (message[parameters.strtype] == parameters.appointment)
+    title = null;
+    body = null;
+    redirect = null;
     if (message[parameters.notification] != null) {
       title = message[parameters.notification][parameters.title];
       body = message[parameters.notification][parameters.body];
       ringtone = message[parameters.notification][parameters.sound];
       templateName = message[parameters.notification][parameters.templateName];
+      redirect = message[parameters.notification][parameters.redirectTo];
     } else if (message[parameters.aps] != null) {
       final aps = message[parameters.aps];
       final alert = aps[parameters.alert];
@@ -256,11 +263,16 @@ class PushNotificationsProvider {
       body = alert[parameters.body];
       ringtone = aps[parameters.sound];
       templateName = aps[parameters.templateName];
+      redirect = aps[parameters.redirectTo];
     } else {
       title = message[parameters.title];
       body = message[parameters.body];
       ringtone = message[parameters.sound];
       templateName = message[parameters.templateName];
+      redirect = message[parameters.redirectTo];
+    }
+    if (redirect == null && message[parameters.redirectTo] != null) {
+      redirect = message[parameters.redirectTo];
     }
 
     if (title == null) {
