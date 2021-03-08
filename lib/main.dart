@@ -120,11 +120,20 @@ Future<void> main() async {
 //     }
 //   });
 
-  Map appsFlyerOptions = {
-    "afDevKey": 'UJdqFKHff633D3TcaZ5d55',
-    "afAppId": 'wAZtv6sqho7WqLGgTAAqFV',
-    "isDebug": true
-  };
+  Map appsFlyerOptions;
+  if (Platform.isIOS) {
+    appsFlyerOptions = {
+      "afDevKey": 'wAZtv6sqho7WqLGgTAAqFV',
+      "afAppId": '1526444520',
+      "isDebug": true
+    };
+  } else {
+    appsFlyerOptions = {
+      "afDevKey": 'UJdqFKHff633D3TcaZ5d55',
+      "afAppId": '',
+      "isDebug": true
+    };
+  }
 
   AppsflyerSdk appsflyerSdk = AppsflyerSdk(appsFlyerOptions);
 
