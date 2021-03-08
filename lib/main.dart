@@ -251,6 +251,29 @@ class _MyFHBState extends State<MyFHB> {
             Get.to(NotificationMain());
           } else if (event == parameters.chat) {
             Get.to(ChatHomeScreen());
+          } else {
+            if (event == 'sheela') {
+              Get.to(SuperMaya());
+            } else if (event == 'profile_page') {
+              Get.toNamed(router.rt_UserAccounts,
+                      arguments: UserAccountsArguments(selectedIndex: 0))
+                  .then((value) => setState(() {}));
+            } else if (event == 'googlefit') {
+              Get.toNamed(router.rt_AppSettings);
+            } else if (event == 'th_provider') {
+              Get.toNamed(router.rt_TelehealthProvider,
+                      arguments: HomeScreenArguments(selectedIndex: 1))
+                  .then((value) => setState(() {}));
+            } else if (event == 'my_record') {
+              getProfileData();
+              Get.toNamed(router.rt_HomeScreen,
+                      arguments: HomeScreenArguments(selectedIndex: 1))
+                  .then((value) => setState(() {}));
+            } else {
+              Get.to(TelehealthProviders(
+                arguments: HomeScreenArguments(selectedIndex: 0),
+              ));
+            }
           }
         } else {
           if (event == parameters.doctorCancellation) {
@@ -263,6 +286,32 @@ class _MyFHBState extends State<MyFHB> {
             Get.to(SplashScreen(
               nsRoute: parameters.chat,
             ));
+          } else {
+            if (event == 'sheela') {
+              Get.to(SplashScreen(
+                nsRoute: 'sheela',
+              ));
+            } else if (event == 'profile_page') {
+              Get.to(SplashScreen(
+                nsRoute: 'profile_page',
+              ));
+            } else if (event == 'googlefit') {
+              Get.to(SplashScreen(
+                nsRoute: 'googlefit',
+              ));
+            } else if (event == 'th_provider') {
+              Get.to(SplashScreen(
+                nsRoute: 'th_provider',
+              ));
+            } else if (event == 'my_record') {
+              Get.to(SplashScreen(
+                nsRoute: 'my_record',
+              ));
+            } else {
+              Get.to(SplashScreen(
+                nsRoute: '',
+              ));
+            }
           }
         }
       });
@@ -497,22 +546,29 @@ class _MyFHBState extends State<MyFHB> {
         );
       } else if (parsedData[0] == 'ack') {
         if (parsedData[1] == 'sheela') {
-          return SplashScreen(nsRoute: 'sheela',);
-          
+          return SplashScreen(
+            nsRoute: 'sheela',
+          );
         } else if (parsedData[1] == 'profile_page') {
-          return SplashScreen(nsRoute: 'profile_page',);
-         
+          return SplashScreen(
+            nsRoute: 'profile_page',
+          );
         } else if (parsedData[1] == 'googlefit') {
-          return SplashScreen(nsRoute: 'googlefit',);
-          
+          return SplashScreen(
+            nsRoute: 'googlefit',
+          );
         } else if (parsedData[1] == 'th_provider') {
-          return SplashScreen(nsRoute: 'th_provider',);
-          
+          return SplashScreen(
+            nsRoute: 'th_provider',
+          );
         } else if (parsedData[1] == 'my_record') {
-          return SplashScreen(nsRoute: 'my_record',);
-          
+          return SplashScreen(
+            nsRoute: 'my_record',
+          );
         } else {
-          return SplashScreen(nsRoute: '',);
+          return SplashScreen(
+            nsRoute: '',
+          );
         }
       } else if (navRoute.split('&')[0] == 'DoctorRescheduling') {
         return SplashScreen(

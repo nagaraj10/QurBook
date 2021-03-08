@@ -564,7 +564,7 @@ const String doctorRescheduling = 'DoctorRescheduling';
 const String reschedule = 'Reschedule';
 const String cancel = 'Cancel';
 const String templateName = 'templateName';
-
+const String redirectTo = 'redirectTo';
 const String accept = 'Accept';
 const String decline = 'Decline';
 const String meetingId = 'meeting_id';
