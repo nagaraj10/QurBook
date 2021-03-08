@@ -164,8 +164,7 @@ class FamilyListView {
                                               null
                                           ? new FHBBasicWidget()
                                               .getProfilePicWidgeUsingUrl(
-                                                  myProfile.result
-                                                      .profilePicThumbnailUrl)
+                                                  myProfile)
                                           : Container(
                                               height: 50.0.h,
                                               width: 50.0.h,
@@ -198,6 +197,29 @@ class FamilyListView {
                                               height: 50.0.h,
                                               width: 50.0.h,
                                               fit: BoxFit.cover,
+                                    errorBuilder: (BuildContext context, Object exception, StackTrace stackTrace) {
+                                      return Container(
+                                        height: 50.0.h,
+                                        width: 50.0.h,
+                                        color: Color(new CommonUtil().getMyPrimaryColor()),
+                                        child: Center(
+                                          child: Text(
+                                            sharedByMe[index]
+                                                .child.firstName!=null && sharedByMe[index]
+                                                .child.lastName!=null?sharedByMe[index]
+                                                .child.firstName[0].toUpperCase()+sharedByMe[index]
+                                                .child.lastName[0].toUpperCase():sharedByMe[index]
+                                                .child.firstName!=null?sharedByMe[index]
+                                                .child.firstName[0].toUpperCase():'',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 22.0.sp,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          )
+                                        ),
+                                      );
+                                    },
                                             )
                                           : Container(
                                               height: 50.0.h,

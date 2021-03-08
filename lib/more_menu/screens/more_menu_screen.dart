@@ -156,7 +156,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                   ? Image.file(profileImage,
                       width: 50.0.h, height: 50.0.h, fit: BoxFit.cover)
                   : FHBBasicWidget().getProfilePicWidgeUsingUrl(
-                      myProfile.result.profilePicThumbnailUrl),
+                      myProfile),
             ),
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
