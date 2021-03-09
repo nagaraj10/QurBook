@@ -33,6 +33,7 @@ import 'package:get/get.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/src/utils/PageNavigator.dart';
 
 class NotificationScreen extends StatefulWidget {
   @override
@@ -771,34 +772,37 @@ class _NotificationScreen extends State<NotificationScreen> {
       case "AppointmentReminder1440":
       case "AppointmentReminder30":
       case "AppointmentReminderPost10":
-        Get.offAll(TelehealthProviders(
+        Get.to(TelehealthProviders(
           arguments: HomeScreenArguments(
               selectedIndex: 0,
               bookingId: result?.messageDetails?.payload?.bookingId,
               date: result?.messageDetails?.payload?.appointmentDate,
               templateName: result?.messageDetails?.content?.templateName),
-        ));
+        )).then((value) =>
+            PageNavigator.goToPermanent(context, router.rt_Dashboard));
         readUnreadAction(result);
         break;
       case "PaymentReceipt":
       case "PaymentConfirmation":
-        Get.offAll(TelehealthProviders(
+        Get.to(TelehealthProviders(
           arguments: HomeScreenArguments(
               selectedIndex: 0,
               bookingId: result?.messageDetails?.payload?.bookingId,
               date: result?.messageDetails?.payload?.appointmentDate,
               templateName: result?.messageDetails?.content?.templateName),
-        ));
+        )).then((value) =>
+            PageNavigator.goToPermanent(context, router.rt_Dashboard));
         readUnreadAction(result);
         break;
       case "SlotsFull":
-        Get.offAll(TelehealthProviders(
+        Get.to(TelehealthProviders(
           arguments: HomeScreenArguments(
               selectedIndex: 0,
               bookingId: result?.messageDetails?.payload?.bookingId,
               date: result?.messageDetails?.payload?.appointmentDate,
               templateName: result?.messageDetails?.content?.templateName),
-        ));
+        )).then((value) =>
+            PageNavigator.goToPermanent(context, router.rt_Dashboard));
         readUnreadAction(result);
         break;
       case "PatientPrescription":
