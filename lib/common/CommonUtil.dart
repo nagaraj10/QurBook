@@ -1543,14 +1543,19 @@ class CommonUtil {
       remoteConfig.getString(Platform.isIOS
           ? STR_FIREBASE_REMOTE_KEY_IOS
           : STR_FIREBASE_REMOTE_KEY);
+      remoteConfig.getBool(Platform.isIOS ? STR_IS_FORCE_IOS : STR_IS_FORCE);
       double newVersion = double.parse(remoteConfig
           .getString(Platform.isIOS
               ? STR_FIREBASE_REMOTE_KEY_IOS
               : STR_FIREBASE_REMOTE_KEY)
           .trim()
           .replaceAll(".", ""));
+
+      bool isForceUpdate = remoteConfig
+          .getBool(Platform.isIOS ? STR_IS_FORCE_IOS : STR_IS_FORCE);
+
       if (newVersion > currentVersion) {
-        _showVersionDialog(context);
+        _showVersionDialog(context, isForceUpdate);
       }
     } on FetchThrottledException catch (exception) {
       // Fetch throttled.
@@ -1561,7 +1566,7 @@ class CommonUtil {
     }
   }
 
-  _showVersionDialog(context) async {
+  _showVersionDialog(context, bool isForceUpdate) async {
     await showDialog<String>(
       context: context,
       barrierDismissible: false,
@@ -1590,15 +1595,17 @@ class CommonUtil {
                     ),
                     onPressed: () => _launchURL(APP_STORE_URL),
                   ),
-                  FlatButton(
-                    child: Text(
-                      btnLabelCancel,
-                      style: TextStyle(
-                        color: Color(getMyPrimaryColor()),
-                      ),
-                    ),
-                    onPressed: () => Navigator.pop(context),
-                  ),
+                  !isForceUpdate
+                      ? FlatButton(
+                          child: Text(
+                            btnLabelCancel,
+                            style: TextStyle(
+                              color: Color(getMyPrimaryColor()),
+                            ),
+                          ),
+                          onPressed: () => Navigator.pop(context),
+                        )
+                      : Container(),
                 ],
               )
             : new AlertDialog(
@@ -1620,15 +1627,17 @@ class CommonUtil {
                     ),
                     onPressed: () => _launchURL(PLAY_STORE_URL),
                   ),
-                  FlatButton(
-                    child: Text(
-                      btnLabelCancel,
-                      style: TextStyle(
-                        color: Color(getMyPrimaryColor()),
-                      ),
-                    ),
-                    onPressed: () => Navigator.pop(context),
-                  ),
+                  !isForceUpdate
+                      ? FlatButton(
+                          child: Text(
+                            btnLabelCancel,
+                            style: TextStyle(
+                              color: Color(getMyPrimaryColor()),
+                            ),
+                          ),
+                          onPressed: () => Navigator.pop(context),
+                        )
+                      : Container(),
                 ],
               );
       },
