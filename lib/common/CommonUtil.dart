@@ -422,7 +422,7 @@ class CommonUtil {
     });
   }
 
-  void logout(Function(SignOutResponse) moveToLoginPage) async {
+  void logout(Function() moveToLoginPage) async {
     LoginBloc loginBloc = new LoginBloc();
 
     MyProfileModel myProfile =
@@ -431,23 +431,24 @@ class CommonUtil {
     FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
     final token = await _firebaseMessaging.getToken();
-    loginBloc.logout().then((signOutResponse) {
-      // moveToLoginPage(signOutResponse);
-      try {
-        CommonUtil()
-            .sendDeviceToken(
-                PreferenceUtil.getStringValue(Constants.KEY_USERID),
-                profileResult.userContactCollection3[0].email,
-                profileResult.userContactCollection3[0].phoneNumber,
-                token,
-                false)
-            .then((value) {
-          moveToLoginPage(signOutResponse);
-        });
-      } catch (e) {
-        moveToLoginPage(signOutResponse);
-      }
-    });
+    //loginBloc.logout().then((signOutResponse) {
+    // moveToLoginPage(signOutResponse);
+    try {
+      CommonUtil()
+          .sendDeviceToken(
+              PreferenceUtil.getStringValue(Constants.KEY_USERID),
+              profileResult.userContactCollection3[0].email,
+              profileResult.userContactCollection3[0].phoneNumber,
+              token,
+              false)
+          .then((value) {
+        moveToLoginPage();
+      });
+    } catch (e) {
+      moveToLoginPage();
+    }
+    //}
+    //);
   }
 
   Sharedbyme getProfileDetails() {
