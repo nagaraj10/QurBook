@@ -49,7 +49,7 @@ class ChatScreenViewModel extends ChangeNotifier {
 
   void clearMyConversation() {
     conversations = List();
-    notifyListeners();
+    // notifyListeners();
   }
 
   ChatScreenViewModel() {
@@ -197,7 +197,7 @@ class ChatScreenViewModel extends ChangeNotifier {
           screen: _screen);
 
       conversations.add(model);
-      notifyListeners();
+      // notifyListeners();
     }
   }
 
