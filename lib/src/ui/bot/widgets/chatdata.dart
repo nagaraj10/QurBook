@@ -21,8 +21,11 @@ class ChatData extends StatelessWidget with ChangeNotifier {
   Widget build(BuildContext context) {
     if ((conversations?.length ?? 0) > 0 &&
         conversations[conversations.length - 1].loadingDots) {
-      Timer(Duration(milliseconds: 1000),
-          () => _controller.jumpTo(_controller.position.maxScrollExtent));
+      Timer(Duration(milliseconds: 1000), () {
+        if (_controller.hasClients) {
+          _controller.jumpTo(_controller.position.maxScrollExtent);
+        }
+      });
       if (conversations[conversations.length - 1].isSpeaking) {
         Provider.of<ChatScreenViewModel>(context, listen: false)
             .conversations[conversations.length - 1]

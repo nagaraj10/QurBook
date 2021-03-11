@@ -30,7 +30,7 @@ class _ReceiverLayoutState extends State<ReceiverLayout> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    closeIfByeSaid();
+    // closeIfByeSaid();
   }
 
   void closeIfByeSaid() async {

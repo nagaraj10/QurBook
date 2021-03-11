@@ -126,6 +126,7 @@ class _ChatScreenState extends State<ChatScreen>
         body: Consumer<ChatScreenViewModel>(
           builder: (contxt, model, child) {
             isLoading = model.isLoading;
+            closeIfByeSaid(model.conversations);
             return ChatData(conversations: model.getMyConversations);
           },
         ),
@@ -153,6 +154,21 @@ class _ChatScreenState extends State<ChatScreen>
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
     );
+  }
+
+  void closeIfByeSaid(conversations) async {
+    if (conversations.length > 0) {
+      Conversation conversation = conversations[conversations.length - 1];
+      if (conversation?.redirect != null &&
+          conversation?.screen != null &&
+          !conversation.isSpeaking &&
+          !conversation.loadingDots) {
+        if (conversation?.screen == parameters.strDashboard &&
+            conversation?.redirect) {
+          Future.delayed(Duration(seconds: 1), () => _backToPrevious());
+        }
+      }
+    }
   }
 
   _backToPrevious() async {

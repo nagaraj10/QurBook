@@ -49,7 +49,7 @@ class ChatScreenViewModel extends ChangeNotifier {
 
   void clearMyConversation() {
     conversations = List();
-    notifyListeners();
+    // notifyListeners();
   }
 
   ChatScreenViewModel() {
@@ -197,7 +197,7 @@ class ChatScreenViewModel extends ChangeNotifier {
           screen: _screen);
 
       conversations.add(model);
-      notifyListeners();
+      // notifyListeners();
     }
   }
 
@@ -275,7 +275,7 @@ class ChatScreenViewModel extends ChangeNotifier {
               videoLinks: res.videoLinks,
               redirect: isRedirect,
               screen: screenValue,
-              isSpeaking: true);
+              isSpeaking: false);
           conversations.add(model);
           if ((res?.buttons?.length ?? 0) > 0) {
             isButtonResponse = true;
@@ -314,6 +314,8 @@ class ChatScreenViewModel extends ChangeNotifier {
                 if (res.lang == null || res.lang == "undef") {
                   res.lang = "en-IN";
                 }
+                conversations[conversations.length - 1].isSpeaking = true;
+                notifyListeners();
                 variable.tts_platform.invokeMethod(variable.strtts, {
                   parameters.strMessage: res.text + textToSpeak,
                   parameters.strIsClose: false,
@@ -353,6 +355,8 @@ class ChatScreenViewModel extends ChangeNotifier {
                     languageForTTS != null ? languageForTTS : "en", false);
                 audioPlayerForTTS.onPlayerStateChanged.listen((event) async {
                   if (event == AudioPlayerState.PLAYING) {
+                    conversations[conversations.length - 1].isSpeaking = true;
+                    notifyListeners();
                     isAudioPlayerPlaying = true;
                   }
                   if (event == AudioPlayerState.COMPLETED) {
