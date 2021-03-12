@@ -167,12 +167,12 @@ const String strIndianPhoneCode = 'IN';
 const String strContextId = 'contextId';
 const String strIsSkipMFA = 'isSkipMFA';
 const String strsupportEmail =
-    'If OTP is not received within 5mins, please contact to support at docsupport@qurhealth.in';
+    'If OTP is not received within 5mins, please contact to support at support@qurhealth.in';
 
 void openEmail({String sub = 'App Feedback', String body = ''}) async {
   final Uri params = Uri(
     scheme: 'mailto',
-    path: 'docsupport@qurhealth.in',
+    path: 'support@qurhealth.in',
     query: 'subject=$sub&body=$body', //add subject and body here
   );
 
