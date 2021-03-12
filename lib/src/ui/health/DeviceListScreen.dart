@@ -328,14 +328,17 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
     List<Widget> list = new List<Widget>();
     for (var i = 0; i < deviceReadings.length; i++) {
       list.add(Padding(
-        padding: EdgeInsets.all(3),
+        padding: EdgeInsets.all(5.0.sp),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Text(
               deviceReadings[i].parameter != null
                   ? toBeginningOfSentenceCase(
-                      deviceReadings[i].parameter.toLowerCase())
+                      deviceReadings[i].parameter.toLowerCase() ==
+                              CommonConstants.strOxygenParams.toLowerCase()
+                          ? CommonConstants.strOxygenParamsName.toLowerCase()
+                          : deviceReadings[i].parameter.toLowerCase())
                   : '',
               style: TextStyle(fontWeight: FontWeight.w500, fontSize: 12.0.sp),
               maxLines: 2,
@@ -350,7 +353,11 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                       fontWeight: FontWeight.w500,
                       fontSize: 12.0.sp),
                 ),
-                Text(deviceReadings[i].unit.toString(),
+                Text(
+                    deviceReadings[i].unit.toLowerCase() ==
+                            CommonConstants.strOxygenUnits.toLowerCase()
+                        ? CommonConstants.strOxygenUnitsName
+                        : deviceReadings[i].unit.toString(),
                     maxLines: 2,
                     style: TextStyle(color: Colors.black54, fontSize: 10.0.sp))
               ],
@@ -361,7 +368,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
     }
 
     return Container(
-      height: 55.0.h,
+      height: 58.0.h,
       child: new ListView(
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
