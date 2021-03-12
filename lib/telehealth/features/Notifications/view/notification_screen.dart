@@ -33,6 +33,9 @@ import 'package:get/get.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/src/utils/PageNavigator.dart';
+import 'package:myfhb/src/ui/bot/SuperMaya.dart';
+import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 
 class NotificationScreen extends StatefulWidget {
   @override
@@ -771,34 +774,37 @@ class _NotificationScreen extends State<NotificationScreen> {
       case "AppointmentReminder1440":
       case "AppointmentReminder30":
       case "AppointmentReminderPost10":
-        Get.offAll(TelehealthProviders(
+        Get.to(TelehealthProviders(
           arguments: HomeScreenArguments(
               selectedIndex: 0,
               bookingId: result?.messageDetails?.payload?.bookingId,
               date: result?.messageDetails?.payload?.appointmentDate,
               templateName: result?.messageDetails?.content?.templateName),
-        ));
+        )).then((value) =>
+            PageNavigator.goToPermanent(context, router.rt_Dashboard));
         readUnreadAction(result);
         break;
       case "PaymentReceipt":
       case "PaymentConfirmation":
-        Get.offAll(TelehealthProviders(
+        Get.to(TelehealthProviders(
           arguments: HomeScreenArguments(
               selectedIndex: 0,
               bookingId: result?.messageDetails?.payload?.bookingId,
               date: result?.messageDetails?.payload?.appointmentDate,
               templateName: result?.messageDetails?.content?.templateName),
-        ));
+        )).then((value) =>
+            PageNavigator.goToPermanent(context, router.rt_Dashboard));
         readUnreadAction(result);
         break;
       case "SlotsFull":
-        Get.offAll(TelehealthProviders(
+        Get.to(TelehealthProviders(
           arguments: HomeScreenArguments(
               selectedIndex: 0,
               bookingId: result?.messageDetails?.payload?.bookingId,
               date: result?.messageDetails?.payload?.appointmentDate,
               templateName: result?.messageDetails?.content?.templateName),
-        ));
+        )).then((value) =>
+            PageNavigator.goToPermanent(context, router.rt_Dashboard));
         readUnreadAction(result);
         break;
       case "PatientPrescription":
@@ -813,6 +819,38 @@ class _NotificationScreen extends State<NotificationScreen> {
         readUnreadAction(result);
         break;
       case "AppointmentTransactionCancelledMidway":
+        readUnreadAction(result);
+        break;
+      case "sheela":
+        Get.to(SuperMaya()).then((value) =>
+            PageNavigator.goToPermanent(context, router.rt_Dashboard));
+        readUnreadAction(result);
+        break;
+      case "profile_page":
+        Get.toNamed(router.rt_UserAccounts,
+                arguments: UserAccountsArguments(selectedIndex: 0))
+            .then((value) =>
+                PageNavigator.goToPermanent(context, router.rt_Dashboard));
+        readUnreadAction(result);
+        break;
+      case "googlefit":
+        Get.toNamed(router.rt_AppSettings).then((value) =>
+            PageNavigator.goToPermanent(context, router.rt_Dashboard));
+        readUnreadAction(result);
+        break;
+      case "th_provider":
+        Get.toNamed(router.rt_TelehealthProvider,
+                arguments: HomeScreenArguments(selectedIndex: 1))
+            .then((value) =>
+                PageNavigator.goToPermanent(context, router.rt_Dashboard));
+        readUnreadAction(result);
+        break;
+      case "my_record":
+        getProfileData();
+        Get.toNamed(router.rt_HomeScreen,
+                arguments: HomeScreenArguments(selectedIndex: 1))
+            .then((value) =>
+                PageNavigator.goToPermanent(context, router.rt_Dashboard));
         readUnreadAction(result);
         break;
       default:
@@ -832,5 +870,11 @@ class _NotificationScreen extends State<NotificationScreen> {
         ..clearNotifications()
         ..fetchNotifications();
     });
+  }
+
+  void getProfileData() async {
+    try {
+      await new CommonUtil().getUserProfileData();
+    } catch (e) {}
   }
 }
