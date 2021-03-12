@@ -159,94 +159,114 @@ class AddProvidersState extends State<AddProviders> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: GestureDetector(
+          onTap: () => Navigator.pop(context),
+          child: Icon(
+            Icons.arrow_back_ios, // add custom icons also
+            size: 24.0.sp,
+          ),
+        ),
+        title: Text(
+          widget.arguments?.searchKeyWord != null &&
+                  widget.arguments.searchKeyWord.isNotEmpty
+              ? 'Add ${widget.arguments.searchKeyWord.substring(0, widget.arguments.searchKeyWord.length - 1)}'
+              : '',
+          style: TextStyle(
+            fontSize: 18.0.sp,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ),
       body: Container(
         constraints: BoxConstraints.expand(),
         child: SingleChildScrollView(
             child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Container(
-              width: 1.sw,
-              height: 1.sh / 2,
-              child: Stack(
-                children: <Widget>[
-                  GoogleMap(
-                    scrollGesturesEnabled: false,
-                    mapType: MapType.normal,
-                    initialCameraPosition: kGooglePlex,
-                    onCameraMove: _onCameraMove,
-                    markers: Set.from(_markers),
-                    onMapCreated: _onMapCreated,
-                  ),
-                  Column(
-                    children: <Widget>[
-                      InkWell(
-                          onTap: () {
-                            if (widget.arguments.hasData == false) {
-                              Navigator.pushNamed(
-                                context,
-                                router.rt_AddAddress,
-                                arguments: AddAddressArguments(
-                                    providerType:
-                                        widget.arguments.searchKeyWord),
-                              ).then((value) {
-                                buildUI();
-                                getAddressesFromCoordinates();
-                              });
-                            }
-                          },
-                          child: Container(
-                            height: 40.0.h,
-                            color: Colors.white,
-                            margin:
-                                EdgeInsets.only(left: 10, right: 10, top: 40),
-                            child: Row(
-                              children: <Widget>[
-                                SizedBox(width: 10.0.w),
-                                InkWell(
-                                    onTap: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: Image.asset(ImageUrlUtils.backImg,
-                                        width: 16.0.h,
-                                        height: 16.0.h,
-                                        fit: BoxFit.cover)),
-                                SizedBox(width: 10.0.w),
-                                Text(CommonConstants.searchPlaces,
-                                    style: TextStyle(
-                                        fontSize: 16.0.sp,
-                                        fontWeight: FontWeight.w400,
-                                        color: ColorUtils.greycolor1)),
-                              ],
-                            ),
-                          )),
-                      Visibility(
-                          visible: widget.arguments.hasData == true
-                              ? latitude == 0.0
-                                  ? true
-                                  : false
-                              : false,
-                          child: Container(
-                            height: 1.sh / 2 - 80,
-                            color: ColorUtils.blackcolor.withOpacity(0.7),
-                            child: Center(
-                              child: Text(
-                                CommonConstants.comingSoon,
-                                style: TextStyle(
-                                    fontSize: 16.0.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color: Colors.white),
-                              ),
-                            ),
-                          ))
-                    ],
-                  )
-                ],
-              ),
-            ),
+            // Container(
+            //   width: 1.sw,
+            //   height: 1.sh / 2,
+            //   child: Stack(
+            //     children: <Widget>[
+            //       GoogleMap(
+            //         scrollGesturesEnabled: false,
+            //         mapType: MapType.normal,
+            //         initialCameraPosition: kGooglePlex,
+            //         onCameraMove: _onCameraMove,
+            //         markers: Set.from(_markers),
+            //         onMapCreated: _onMapCreated,
+            //       ),
+            //       Column(
+            //         children: <Widget>[
+            //           InkWell(
+            //               onTap: () {
+            //                 if (widget.arguments.hasData == false) {
+            //                   Navigator.pushNamed(
+            //                     context,
+            //                     router.rt_AddAddress,
+            //                     arguments: AddAddressArguments(
+            //                         providerType:
+            //                             widget.arguments.searchKeyWord),
+            //                   ).then((value) {
+            //                     buildUI();
+            //                     getAddressesFromCoordinates();
+            //                   });
+            //                 }
+            //               },
+            //               child: Container(
+            //                 height: 40.0.h,
+            //                 color: Colors.white,
+            //                 margin:
+            //                     EdgeInsets.only(left: 10, right: 10, top: 40),
+            //                 child: Row(
+            //                   children: <Widget>[
+            //                     SizedBox(width: 10.0.w),
+            //                     InkWell(
+            //                         onTap: () {
+            //                           Navigator.pop(context);
+            //                         },
+            //                         child: Image.asset(ImageUrlUtils.backImg,
+            //                             width: 16.0.h,
+            //                             height: 16.0.h,
+            //                             fit: BoxFit.cover)),
+            //                     SizedBox(width: 10.0.w),
+            //                     Text(CommonConstants.searchPlaces,
+            //                         style: TextStyle(
+            //                             fontSize: 16.0.sp,
+            //                             fontWeight: FontWeight.w400,
+            //                             color: ColorUtils.greycolor1)),
+            //                   ],
+            //                 ),
+            //               )),
+            //           Visibility(
+            //               visible: widget.arguments.hasData == true
+            //                   ? latitude == 0.0
+            //                       ? true
+            //                       : false
+            //                   : false,
+            //               child: Container(
+            //                 height: 1.sh / 2 - 80,
+            //                 color: ColorUtils.blackcolor.withOpacity(0.7),
+            //                 child: Center(
+            //                   child: Text(
+            //                     CommonConstants.comingSoon,
+            //                     style: TextStyle(
+            //                         fontSize: 16.0.sp,
+            //                         fontWeight: FontWeight.w400,
+            //                         color: Colors.white),
+            //                   ),
+            //                 ),
+            //               ))
+            //         ],
+            //       )
+            //     ],
+            //   ),
+            // ),
+
             SingleChildScrollView(
               child: Container(
-                padding: EdgeInsets.only(left: 10, top: 20, right: 10),
+                padding: EdgeInsets.only(left: 20, top: 20, right: 20),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.start,
