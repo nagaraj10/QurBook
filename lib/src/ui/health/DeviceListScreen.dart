@@ -185,95 +185,114 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                 )
               ],
             ),
-            child: Column(
+            child: Row(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      new FHBUtils().getFormattedDateString(data.createdOn),
-                      style: TextStyle(
-                          color: Color(new CommonUtil().getMyPrimaryColor()),
-                          fontWeight: FontWeight.w200,
-                          fontSize: 10.0.sp),
-                    )
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    CircleAvatar(
-                      radius: 25,
-                      backgroundColor: const Color(fhbColors.bgColorContainer),
-                      child: Image.network(
-                        data.metadata.healthRecordType.logo,
-                        height: 25.0.h,
-                        width: 25.0.h,
-                        color: Color(new CommonUtil().getMyPrimaryColor()),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 3.0.w,
-                    ),
-                    Container(
-                      width: 70,
-                      child: Text(
-                        data.metadata.healthRecordType.name != null
-                            ? toBeginningOfSentenceCase(
-                                data.metadata.healthRecordType.name)
-                            : '',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 12.0.sp,
+                Container(
+                  width: 120.0.w,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CircleAvatar(
+                        backgroundColor:
+                            const Color(fhbColors.transparentColor),
+                        child: Image.network(
+                          data.metadata.healthRecordType.logo,
+                          height: 25.0.h,
+                          width: 25.0.h,
                           color: Color(new CommonUtil().getMyPrimaryColor()),
                         ),
-                        maxLines: 2,
-                        softWrap: true,
                       ),
-                    ),
-                    Expanded(
-                      child:
-                          getDeviceReadings(data, data.metadata.deviceReadings),
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        IconButton(
-                            icon: data.isBookmarked
-                                ? ImageIcon(
-                                    AssetImage(variable.icon_record_fav_active),
-                                    //TODO chnage theme
-                                    color: Color(
-                                        new CommonUtil().getMyPrimaryColor()),
-                                    size: 20,
-                                  )
-                                : ImageIcon(
-                                    AssetImage(variable.icon_record_fav),
-                                    color: Colors.black,
-                                    size: 20,
-                                  ),
-                            onPressed: () {
-                              new CommonUtil().bookMarkRecord(data, _refresh);
-                            }),
-                        (data.metadata.hasVoiceNotes != null &&
-                                data.metadata.hasVoiceNotes)
-                            ? Icon(
-                                Icons.mic,
-                                color: Colors.black54,
-                              )
-                            : Container(),
-                        widget.mediaMeta.contains(data.id)
-                            ? Icon(
-                                Icons.done,
+                      Row(
+                        children: [
+                          Flexible(
+                            child: Text(
+                              data.metadata.healthRecordType.name != null
+                                  ? toBeginningOfSentenceCase(
+                                      data.metadata.healthRecordType.name)
+                                  : '',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 12.0.sp,
                                 color:
                                     Color(new CommonUtil().getMyPrimaryColor()),
-                              )
-                            : SizedBox(),
-                      ],
-                    ),
-                  ],
+                              ),
+                              maxLines: 2,
+                              softWrap: true,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            new FHBUtils()
+                                .getFormattedDateString(data.createdOn),
+                            style: TextStyle(
+                                color:
+                                    Color(new CommonUtil().getMyPrimaryColor()),
+                                fontWeight: FontWeight.w200,
+                                fontSize: 10.0.sp),
+                          )
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Expanded(
+                            child: getDeviceReadings(
+                                data, data.metadata.deviceReadings),
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              IconButton(
+                                  icon: data.isBookmarked
+                                      ? ImageIcon(
+                                          AssetImage(
+                                              variable.icon_record_fav_active),
+                                          //TODO chnage theme
+                                          color: Color(new CommonUtil()
+                                              .getMyPrimaryColor()),
+                                          size: 20,
+                                        )
+                                      : ImageIcon(
+                                          AssetImage(variable.icon_record_fav),
+                                          color: Colors.black,
+                                          size: 20,
+                                        ),
+                                  onPressed: () {
+                                    new CommonUtil()
+                                        .bookMarkRecord(data, _refresh);
+                                  }),
+                              (data.metadata.hasVoiceNotes != null &&
+                                      data.metadata.hasVoiceNotes)
+                                  ? Icon(
+                                      Icons.mic,
+                                      color: Colors.black54,
+                                    )
+                                  : Container(),
+                              widget.mediaMeta.contains(data.id)
+                                  ? Icon(
+                                      Icons.done,
+                                      color: Color(
+                                          new CommonUtil().getMyPrimaryColor()),
+                                    )
+                                  : SizedBox(),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ],
             )));
@@ -341,8 +360,14 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
       ));
     }
 
-    return new Row(
-        crossAxisAlignment: CrossAxisAlignment.center, children: list);
+    return Container(
+      height: 55.0.h,
+      child: new ListView(
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        children: list,
+      ),
+    );
     //return new Row(children: list);
   }
 }
