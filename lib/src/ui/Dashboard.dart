@@ -87,7 +87,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
     try {
       commonUtil.versionCheck(context);
-    } catch (e) {}
+    } catch (e) {
+    }
   }
 
   @override
