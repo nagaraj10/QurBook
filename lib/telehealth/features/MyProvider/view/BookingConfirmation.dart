@@ -709,9 +709,11 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       child: FlatButton(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12.0),
-                            side: BorderSide(color: Colors.grey)),
+                            side: BorderSide(
+                                color: Color(
+                                    new CommonUtil().getMyPrimaryColor()))),
                         color: Colors.transparent,
-                        textColor: Colors.grey,
+                        textColor: Color(new CommonUtil().getMyPrimaryColor()),
                         padding: EdgeInsets.all(8.0),
                         onPressed: () {
                           widget.refresh();
@@ -839,9 +841,12 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(12.0),
-                                          side: BorderSide(color: Colors.grey)),
+                                          side: BorderSide(
+                                              color: Color(new CommonUtil()
+                                                  .getMyPrimaryColor()))),
                                       color: Colors.transparent,
-                                      textColor: Colors.grey,
+                                      textColor: Color(
+                                          new CommonUtil().getMyPrimaryColor()),
                                       padding: EdgeInsets.all(8.0),
                                       onPressed: () {
                                         Navigator.pop(context);

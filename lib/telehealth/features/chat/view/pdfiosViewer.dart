@@ -68,6 +68,7 @@ class _PDFiOSViewerState extends State<PDFiOSViewer> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
             title: Text(widget.title ?? "PDF Viewer"),
