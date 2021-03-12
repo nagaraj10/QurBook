@@ -1051,7 +1051,7 @@ class CommonUtil {
         .getMyProfileData(Constants.KEY_USERID_MAIN)
         .then((profileData) {
       if (profileData != null &&
-          profileData.isSuccess &&
+          (profileData.isSuccess ?? false) &&
           profileData.result != null) {
         PreferenceUtil.saveProfileData(Constants.KEY_PROFILE_MAIN, profileData)
             .then((value) {
@@ -1071,6 +1071,8 @@ class CommonUtil {
 
           myProfileModel = profileData;
         });
+      } else {
+        logout(moveToLoginPage);
       }
       return profileData;
     });
