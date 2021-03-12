@@ -197,10 +197,16 @@ class _SplashScreenState extends State<SplashScreen> {
                     }
                   } else {
                     //PageNavigator.goToPermanent(context, router.rt_WebCognito);
-                    Navigator.push(
+                    // Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //         builder: (context) => PatientSignInScreen()));
+                    Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => PatientSignInScreen()));
+                            builder: (BuildContext context) =>
+                                PatientSignInScreen()),
+                        (route) => false);
                   }
                 }
               });

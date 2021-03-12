@@ -1422,6 +1422,10 @@ class _CustomTabsState extends State<CustomTabView>
       /* }*/
     }
 
+    if (widget.fromAppointments) {
+      widget.onScroll(widget.initPosition?.toDouble() ?? 0.0);
+    }
+
     return tabWidgetList;
   }
 
