@@ -8,8 +8,9 @@ class DeviceInfoSucess {
   DeviceInfoSucess.fromJson(Map<String, dynamic> json) {
     if (json != null) {
       isSuccess = json['isSuccess'] != null ? json['isSuccess'] : false;
-      message = json['message'];
-      result = json['result'] != null ? json['result'] : null;
+      if (json.containsKey('message')) message = json['message'];
+      if (json.containsKey('result'))
+        result = json['result'] != null ? json['result'] : null;
     } else {
       isSuccess = false;
       message = '';

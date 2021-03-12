@@ -662,7 +662,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     );
   }
 
-  void moveToLoginPage(SignOutResponse signOutResponse) {
+  void moveToLoginPage() {
     print('inside loout');
     PreferenceUtil.clearAllData().then((value) {
       // PageNavigator.goToPermanent(context,router.rt_SignIn);
