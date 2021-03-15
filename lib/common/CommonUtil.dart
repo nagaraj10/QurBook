@@ -81,6 +81,7 @@ import 'package:showcaseview/showcase.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import 'package:myfhb/authentication/view/login_screen.dart';
 
 class CommonUtil {
   static String SHEELA_URL = "";
@@ -1003,6 +1004,17 @@ class CommonUtil {
     }
   }
 
+  void moveToLoginPage() {
+    PreferenceUtil.clearAllData().then((value) {
+      // PageNavigator.goToPermanent(context,router.rt_SignIn);
+      Navigator.pushAndRemoveUntil(
+          Get.context,
+          MaterialPageRoute(
+              builder: (BuildContext context) => PatientSignInScreen()),
+          (route) => false);
+    });
+  }
+
   Future<MyProfileModel> getUserProfileData() async {
     MyProfileBloc _myProfileBloc = new MyProfileBloc();
 
@@ -1010,7 +1022,7 @@ class CommonUtil {
 
     _myProfileBloc.getMyProfileData(Constants.KEY_USERID).then((profileData) {
       if (profileData != null &&
-          profileData.isSuccess &&
+          (profileData.isSuccess ?? false) &&
           profileData.result != null) {
         PreferenceUtil.saveProfileData(Constants.KEY_PROFILE, profileData)
             .then((value) {
@@ -1029,6 +1041,8 @@ class CommonUtil {
 
           myProfileModel = profileData;
         });
+      } else {
+        logout(moveToLoginPage);
       }
       //return profileData;
     });
@@ -1037,7 +1051,7 @@ class CommonUtil {
         .getMyProfileData(Constants.KEY_USERID_MAIN)
         .then((profileData) {
       if (profileData != null &&
-          profileData.isSuccess &&
+          (profileData.isSuccess ?? false) &&
           profileData.result != null) {
         PreferenceUtil.saveProfileData(Constants.KEY_PROFILE_MAIN, profileData)
             .then((value) {
@@ -1057,6 +1071,8 @@ class CommonUtil {
 
           myProfileModel = profileData;
         });
+      } else {
+        logout(moveToLoginPage);
       }
       return profileData;
     });
