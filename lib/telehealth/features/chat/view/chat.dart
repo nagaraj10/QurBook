@@ -1881,7 +1881,7 @@ class ChatScreenState extends State<ChatScreen> {
         if (results.containsKey(STR_META_ID)) {
           healthRecordList = results[STR_META_ID] as List;
           if (healthRecordList != null) {
-            getMediaURL(healthRecordList);
+            getAlertForFileSend(healthRecordList);
           }
           setState(() {});
         }
@@ -1896,16 +1896,19 @@ class ChatScreenState extends State<ChatScreen> {
       if ((fileType == STR_JPG) ||
           (fileType == STR_PNG) ||
           (fileType == STR_JPEG)) {
-        getAlertForFileSend(fileURL, 1);
+        //getAlertForFileSend(fileURL, 1);
+        onSendMessage(fileURL, 1);
       } else if ((fileType == STR_PDF)) {
-        getAlertForFileSend(fileURL, 2);
+        //getAlertForFileSend(fileURL, 2);
+        onSendMessage(fileURL, 2);
       } else if ((fileType == STR_AAC)) {
-        getAlertForFileSend(fileURL, 3);
+        //getAlertForFileSend(fileURL, 3);
+        onSendMessage(fileURL, 3);
       }
     }
   }
 
-  getAlertForFileSend(String content, int type) {
+  getAlertForFileSend(var healthRecordList) {
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -1928,7 +1931,7 @@ class ChatScreenState extends State<ChatScreen> {
           FlatButton(
             onPressed: () {
               closeDialog();
-              onSendMessage(content, type);
+              getMediaURL(healthRecordList);
             },
             child: Text(
               'Send',
