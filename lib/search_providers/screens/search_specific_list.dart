@@ -674,8 +674,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                     color: Color(fhbColors.bgColorContainer),
                     child:
                         widget.arguments.searchWord == CommonConstants.doctors
-                            ? getHospitalLogoImage(logo)
-                            : getHospitalLogoImage(logo),
+                            ? getHospitalLogoImage(logo,data)
+                            : getHospitalLogoImage(logo,data),
                   )),
                   SizedBox(width: 10.0.w),
                   Expanded(
@@ -801,12 +801,57 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     );
   }
 
-  Widget getHospitalLogoImage(String logo) {
+  Widget getHospitalLogoImage(String logo,DoctorsListResult docs) {
     if (logo == null || logo == '') {
       return Container();
     } else {
       return Image.network(
         logo,
+          errorBuilder:
+              (BuildContext context, Object exception, StackTrace stackTrace) {
+            return Container(
+              height: 50.0.h,
+              width: 50.0.h,
+              color: Colors.grey[200],
+              child: Center(
+                child: getFirstLastNameText(docs),
+              ),
+            );
+          }
+      );
+    }
+  }
+
+  Widget getFirstLastNameText(DoctorsListResult myProfile) {
+    if (myProfile != null &&
+        myProfile.firstName != null &&
+        myProfile.lastName != null) {
+      return Text(
+        myProfile.firstName[0].toUpperCase() +
+            myProfile.lastName[0].toUpperCase(),
+        style: TextStyle(
+          color: Color(new CommonUtil().getMyPrimaryColor()),
+          fontSize: 16.0.sp,
+          fontWeight: FontWeight.w400,
+        ),
+      );
+    } else if (myProfile != null && myProfile.firstName != null) {
+      return Text(
+        myProfile.firstName[0].toUpperCase(),
+        style: TextStyle(
+          color: Color(new CommonUtil().getMyPrimaryColor()),
+          fontSize: 16.0.sp,
+          fontWeight: FontWeight.w400,
+        ),
+      );
+    } else {
+      return Text(
+        '',
+        style: TextStyle(
+          color: Color(new CommonUtil().getMyPrimaryColor()),
+          fontSize: 16.0.sp,
+          fontWeight: FontWeight.w200,
+        ),
       );
     }
   }

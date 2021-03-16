@@ -321,9 +321,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
           children: <Widget>[
             Container(
               alignment: Alignment.center,
-              child: commonWidgets.getClipOvalImageNew(
-                  docs[i].doctor.user.profilePicThumbnailUrl,
-                  fhbStyles.cardClipImage),
+              child: commonWidgets.getClipOvalImageForHos(docs[i].doctor),
             ),
             new Positioned(
               bottom: 0.0,

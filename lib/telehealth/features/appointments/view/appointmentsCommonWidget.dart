@@ -525,12 +525,57 @@ class AppointmentsCommonWidget {
                         fit: BoxFit.cover,
                         height: 40.0.h,
                         width: 40.0.h,
+                    errorBuilder:
+                        (BuildContext context, Object exception, StackTrace stackTrace) {
+                      return Container(
+                        height: 50.0.h,
+                        width: 50.0.h,
+                        color: Colors.grey[200],
+                        child: Center(
+                          child: getFirstLastNameText(doc),
+                        ),
+                      );
+                    }
                       ),
             color: Color(fhbColors.bgColorContainer),
             height: 50.0.h,
             width: 50.0.h,
           ),
         ));
+  }
+
+  Widget getFirstLastNameText(Past doc) {
+    if (doc != null &&
+        doc.doctor.user.firstName != null &&
+        doc.doctor.user.lastName != null) {
+      return Text(
+        doc.doctor.user.firstName[0].toUpperCase() +
+            doc.doctor.user.lastName[0].toUpperCase(),
+        style: TextStyle(
+          color: Color(new CommonUtil().getMyPrimaryColor()),
+          fontSize: 16.0.sp,
+          fontWeight: FontWeight.w400,
+        ),
+      );
+    } else if (doc != null && doc.doctor.user.firstName != null) {
+      return Text(
+        doc.doctor.user.firstName[0].toUpperCase(),
+        style: TextStyle(
+          color: Color(new CommonUtil().getMyPrimaryColor()),
+          fontSize: 16.0.sp,
+          fontWeight: FontWeight.w400,
+        ),
+      );
+    } else {
+      return Text(
+        '',
+        style: TextStyle(
+          color: Color(new CommonUtil().getMyPrimaryColor()),
+          fontSize: 16.0.sp,
+          fontWeight: FontWeight.w200,
+        ),
+      );
+    }
   }
 
   Future<AssociateUpdateSuccessResponse> associateUpdateRecords(

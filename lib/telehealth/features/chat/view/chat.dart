@@ -873,6 +873,22 @@ class ChatScreenState extends State<ChatScreen> {
                           width: 35.0.h,
                           height: 35.0.h,
                           fit: BoxFit.cover,
+                            errorWidget: (context, url, error) =>
+                                Container(
+                                  height: 35.0.h,
+                                  width: 35.0.h,
+                                  color: Colors.grey[200],
+                                  child: Center(
+                                      child: Text(
+                                        peerName[0].toString().toUpperCase(),
+                                        style: TextStyle(
+                                          color: Color(new CommonUtil().getMyPrimaryColor()),
+                                          fontSize: 16.0.sp,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      )
+                                  ),
+                                )
                         ),
                         borderRadius: BorderRadius.all(
                           Radius.circular(18.0),
@@ -1405,9 +1421,31 @@ class ChatScreenState extends State<ChatScreen> {
           duration: Duration(milliseconds: 10),
           child: Row(
             children: <Widget>[
-              CircleAvatar(
-                backgroundImage: NetworkImage(widget.peerAvatar),
-                radius: 18.0.sp,
+              ClipOval(
+                child: Image.network(
+                    widget.peerAvatar,
+                    height: 40.0.h,
+                    width: 40.0.h,
+                    fit: BoxFit.cover,
+                    errorBuilder:
+                        (BuildContext context, Object exception, StackTrace stackTrace) {
+                      return Container(
+                        height: 50.0.h,
+                        width: 50.0.h,
+                        color: Colors.grey[200],
+                        child: Center(
+                          child: Text(
+                            widget.peerName[0].toString().toUpperCase(),
+                            style: TextStyle(
+                              color: Color(new CommonUtil().getMyPrimaryColor()),
+                              fontSize: 16.0.sp,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          )
+                        ),
+                      );
+                    }
+                ),
               ),
               SizedBox(
                 width: 15.0.w,
@@ -1944,7 +1982,6 @@ class ChatScreenState extends State<ChatScreen> {
       ),
     );
   }
-
   closeDialog() {
     Navigator.of(context).pop();
   }
