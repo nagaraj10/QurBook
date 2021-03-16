@@ -6,6 +6,7 @@ import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/record_detail/screens/device_info_card.dart';
 import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
@@ -357,7 +358,10 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                     deviceReadings[i].unit.toLowerCase() ==
                             CommonConstants.strOxygenUnits.toLowerCase()
                         ? CommonConstants.strOxygenUnitsName
-                        : deviceReadings[i].unit.toString(),
+                        : (deviceReadings[i].unit.toLowerCase() ==
+                                strParamUnitFarenheit.toLowerCase()
+                            ? CommonConstants.strTemperatureValue
+                            : deviceReadings[i].unit.toString()),
                     maxLines: 2,
                     style: TextStyle(color: Colors.black54, fontSize: 10.0.sp))
               ],
