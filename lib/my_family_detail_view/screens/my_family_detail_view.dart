@@ -27,6 +27,7 @@ import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/model/Health/CompleteData.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/fhb_query.dart' as query;
+import 'package:myfhb/common/errors_widget.dart';
 
 class MyFamilyDetailView extends StatefulWidget {
   MyFamilyDetailViewArguments arguments;
@@ -171,12 +172,7 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
             ),
           );
         } else if (snapshot.hasError) {
-          return new Text(
-            'Error: ${snapshot.error}',
-            style: TextStyle(
-              fontSize: 16.0.sp,
-            ),
-          );
+          return ErrorsWidget();
         } else {
           return getHealthReportToDisplayInBody();
         }

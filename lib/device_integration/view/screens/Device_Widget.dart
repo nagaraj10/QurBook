@@ -1,6 +1,6 @@
 // ignore: file_names
 import 'dart:io';
-
+import 'package:myfhb/common/errors_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
@@ -256,12 +256,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
             ),
           );
         } else if (snapshot.hasError) {
-          return Text(
-            'Error: ${snapshot.error}',
-            style: TextStyle(
-              fontSize: 16.0.sp,
-            ),
-          );
+          return ErrorsWidget();
         } else {
           return getValuesFromSharedPrefernce(context);
         }
@@ -337,12 +332,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
             ),
           );
         } else if (snapshot.hasError) {
-          return new Text(
-            'Error: ${snapshot.error}',
-            style: TextStyle(
-              fontSize: 16.0.sp,
-            ),
-          );
+          return ErrorsWidget();
         } else {
           return getBody(context);
         }

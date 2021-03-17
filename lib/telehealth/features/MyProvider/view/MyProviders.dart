@@ -30,6 +30,7 @@ import 'package:myfhb/widgets/GradientAppBar.dart';
 
 import '../../SearchWidget/view/SearchWidget.dart';
 import 'healthOrganization/HealthOrganization.dart';
+import 'package:myfhb/common/errors_widget.dart';
 
 class MyProviders extends StatefulWidget {
   Function(String) closePage;
@@ -281,7 +282,7 @@ class _MyProvidersState extends State<MyProviders> {
                 backgroundColor: Color(new CommonUtil().getMyPrimaryColor())),
           );
         } else if (snapshot.hasError) {
-          return new Text('Error: ${snapshot.error}');
+          return ErrorsWidget();
         } else {
           final items = snapshot.data ??
               <MyProvidersResponseData>[]; // handle the case that data is null

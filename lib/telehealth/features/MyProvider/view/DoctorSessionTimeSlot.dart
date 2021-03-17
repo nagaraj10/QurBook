@@ -14,6 +14,7 @@ import 'package:myfhb/telehealth/features/MyProvider/view/GetTimeSlots.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/SlotsAvailabilityViewModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import 'package:myfhb/common/errors_widget.dart';
 
 class DoctorSessionTimeSlot extends StatefulWidget {
   final String doctorId;
@@ -192,7 +193,7 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
               ],
             ));
           } else if (snapshot.hasError) {
-            return new Text('Error: ${snapshot.error}');
+            return ErrorsWidget();
           } else {
             return snapshot.data.sessionCounts != null &&
                     snapshot.data.sessions != null

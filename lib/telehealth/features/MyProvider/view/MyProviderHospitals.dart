@@ -33,6 +33,7 @@ import 'package:path/path.dart';
 
 import '../../SearchWidget/view/SearchWidget.dart';
 import 'healthOrganization/HealthOrganization.dart';
+import 'package:myfhb/common/errors_widget.dart';
 
 class MyProvidersHospitals extends StatefulWidget {
   Function(String) closePage;
@@ -138,7 +139,7 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
                 backgroundColor: Color(new CommonUtil().getMyPrimaryColor())),
           );
         } else if (snapshot.hasError) {
-          return new Text('Error: ${snapshot.error}');
+          return ErrorsWidget();
         } else {
           final items = snapshot.data ??
               <MyProvidersResponseData>[]; // handle the case that data is null
