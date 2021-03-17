@@ -426,15 +426,16 @@ class CommonUtil {
   void logout(Function() moveToLoginPage) async {
     LoginBloc loginBloc = new LoginBloc();
 
-    MyProfileModel myProfile =
-        PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
-    MyProfileResult profileResult = myProfile.result;
-    FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-
-    final token = await _firebaseMessaging.getToken();
     //loginBloc.logout().then((signOutResponse) {
     // moveToLoginPage(signOutResponse);
     try {
+      MyProfileModel myProfile =
+          PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+      MyProfileResult profileResult = myProfile.result;
+      FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+
+      final token = await _firebaseMessaging.getToken();
+
       CommonUtil()
           .sendDeviceToken(
               PreferenceUtil.getStringValue(Constants.KEY_USERID),
