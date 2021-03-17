@@ -356,9 +356,7 @@ class _MyProvidersState extends State<MyProviders> {
               children: <Widget>[
                 Container(
                   alignment: Alignment.center,
-                  child: commonWidgets.getClipOvalImageNew(
-                      docs[i].user.profilePicThumbnailUrl,
-                      fhbStyles.cardClipImage),
+                  child: commonWidgets.getClipOvalImageNew(docs[i]),
                 ),
                 new Positioned(
                   bottom: 0.0,

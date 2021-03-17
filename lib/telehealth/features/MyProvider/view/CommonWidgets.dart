@@ -371,23 +371,124 @@ class CommonWidgets {
     ));
   }
 
-  Widget getClipOvalImageNew(String profilePicThumbnailURL, double imageSize) {
-    return ClipOval(child: getProfilePicWidget(profilePicThumbnailURL));
+  Widget getClipOvalImageNew(Doctors docs) {
+    return ClipOval(child: getProfilePicWidget(docs));
   }
 
-  Widget getProfilePicWidget(String profilePicThumbnail) {
-    return profilePicThumbnail != null
+  Widget getClipOvalImageForDoctorIds(DoctorIds docs) {
+    return ClipOval(child: getProfilePicWidgetForDoctorIds(docs));
+  }
+
+  Widget getClipOvalImageForHos(DoctorFromHos docs) {
+    return ClipOval(child: getProfilePicWidgetForHos(docs));
+  }
+
+  Widget getClipOvalImageBookConfirm(String url) {
+    return ClipOval(child: getProfilePic(url));
+  }
+
+  Widget getProfilePicWidgetForHos(DoctorFromHos docs) {
+    return docs.user.profilePicThumbnailUrl != null
         ? Image.network(
-            profilePicThumbnail,
-            height: 40.0.h,
-            width: 40.0.h,
-            fit: BoxFit.cover,
-          )
-        : Container(
-            color: Color(fhbColors.bgColorContainer),
-            height: 40.0.h,
-            width: 40.0.h,
+        docs.user.profilePicThumbnailUrl,
+        height: 40.0.h,
+        width: 40.0.h,
+        fit: BoxFit.cover,
+        errorBuilder:
+            (BuildContext context, Object exception, StackTrace stackTrace) {
+          return Container(
+            height: 50.0.h,
+            width: 50.0.h,
+            color: Colors.grey[200],
+            child: Center(
+              child: getFirstLastNameTextDoctorFromHos(docs),
+            ),
           );
+        }
+    )
+        : Container(
+      color: Color(fhbColors.bgColorContainer),
+      height: 40.0.h,
+      width: 40.0.h,
+    );
+  }
+
+  Widget getProfilePicWidgetForDoctorIds(DoctorIds docs) {
+    return docs.profilePicThumbnailURL != null
+        ? Image.network(
+        docs.profilePicThumbnailURL,
+        height: 40.0.h,
+        width: 40.0.h,
+        fit: BoxFit.cover,
+        errorBuilder:
+            (BuildContext context, Object exception, StackTrace stackTrace) {
+          return Container(
+            height: 50.0.h,
+            width: 50.0.h,
+            color: Colors.grey[200],
+            child: Center(
+              child: getFirstLastNameTextDoctorIds(docs),
+            ),
+          );
+        }
+    )
+        : Container(
+      color: Color(fhbColors.bgColorContainer),
+      height: 40.0.h,
+      width: 40.0.h,
+    );
+  }
+
+  Widget getProfilePic(String url) {
+    return url != null
+        ? Image.network(
+        url,
+        height: 40.0.h,
+        width: 40.0.h,
+        fit: BoxFit.cover,
+        /*errorBuilder:
+            (BuildContext context, Object exception, StackTrace stackTrace) {
+          return Container(
+            height: 50.0.h,
+            width: 50.0.h,
+            color: Colors.grey[200],
+            child: Center(
+              child: Container(),
+            ),
+          );
+        }*/
+    )
+        : Container(
+      color: Color(fhbColors.bgColorContainer),
+      height: 40.0.h,
+      width: 40.0.h,
+    );
+  }
+
+  Widget getProfilePicWidget(Doctors docs) {
+    return docs.user.profilePicThumbnailUrl != null
+        ? Image.network(
+        docs.user.profilePicThumbnailUrl,
+        height: 40.0.h,
+        width: 40.0.h,
+        fit: BoxFit.cover,
+        errorBuilder:
+            (BuildContext context, Object exception, StackTrace stackTrace) {
+          return Container(
+            height: 40.0.h,
+            width: 40.0.h,
+            color: Colors.grey[200],
+            child: Center(
+              child: getFirstLastNameText(docs),
+            ),
+          );
+        }
+    )
+        : Container(
+      color: Color(fhbColors.bgColorContainer),
+      height: 40.0.h,
+      width: 40.0.h,
+    );
   }
 
   Widget showDoctorDetailView(DoctorIds docs, BuildContext context) {
@@ -424,9 +525,7 @@ class CommonWidgets {
                         children: <Widget>[
                           Align(
                             alignment: Alignment.bottomCenter,
-                            child: getClipOvalImageNew(
-                                docs.profilePicThumbnailURL,
-                                fhbStyles.detailClipImage),
+                            child: getClipOvalImageForDoctorIds(docs),
                           ),
                           getSizeBoxWidth(10.0),
                           Expanded(
@@ -698,9 +797,7 @@ class CommonWidgets {
                         children: <Widget>[
                           Align(
                             alignment: Alignment.bottomCenter,
-                            child: getClipOvalImageNew(
-                                docs.user.profilePicThumbnailUrl,
-                                fhbStyles.detailClipImage),
+                            child: getClipOvalImageNew(docs),
                           ),
                           getSizeBoxWidth(10.0),
                           Expanded(
@@ -817,9 +914,7 @@ class CommonWidgets {
                         children: <Widget>[
                           Align(
                             alignment: Alignment.bottomCenter,
-                            child: getClipOvalImageNew(
-                                docs.user.profilePicThumbnailUrl,
-                                fhbStyles.detailClipImage),
+                            child: getClipOvalImageForHos(docs),
                           ),
                           getSizeBoxWidth(10.0),
                           Expanded(
@@ -1057,5 +1152,107 @@ class CommonWidgets {
       softWrap: true,
       overflow: TextOverflow.ellipsis,
     );
+  }
+
+  Widget getFirstLastNameText(Doctors myProfile) {
+    if (myProfile.user != null &&
+        myProfile.user.firstName != null &&
+        myProfile.user.lastName != null) {
+      return Text(
+        myProfile.user.firstName[0].toUpperCase() +
+            myProfile.user.lastName[0].toUpperCase(),
+        style: TextStyle(
+          color: Color(new CommonUtil().getMyPrimaryColor()),
+          fontSize: 16.0.sp,
+          fontWeight: FontWeight.w400,
+        ),
+      );
+    } else if (myProfile.user != null && myProfile.user.firstName != null) {
+      return Text(
+        myProfile.user.firstName[0].toUpperCase(),
+        style: TextStyle(
+          color: Color(new CommonUtil().getMyPrimaryColor()),
+          fontSize: 16.0.sp,
+          fontWeight: FontWeight.w400,
+        ),
+      );
+    } else {
+      return Text(
+        '',
+        style: TextStyle(
+          color: Color(new CommonUtil().getMyPrimaryColor()),
+          fontSize: 16.0.sp,
+          fontWeight: FontWeight.w200,
+        ),
+      );
+    }
+  }
+
+  Widget getFirstLastNameTextDoctorIds(DoctorIds myProfile) {
+    if (myProfile != null &&
+        myProfile.firstName != null &&
+        myProfile.lastName != null) {
+      return Text(
+        myProfile.firstName[0].toUpperCase() +
+            myProfile.lastName[0].toUpperCase(),
+        style: TextStyle(
+          color: Color(new CommonUtil().getMyPrimaryColor()),
+          fontSize: 16.0.sp,
+          fontWeight: FontWeight.w400,
+        ),
+      );
+    } else if (myProfile != null && myProfile.firstName != null) {
+      return Text(
+        myProfile.firstName[0].toUpperCase(),
+        style: TextStyle(
+          color: Color(new CommonUtil().getMyPrimaryColor()),
+          fontSize: 16.0.sp,
+          fontWeight: FontWeight.w400,
+        ),
+      );
+    } else {
+      return Text(
+        '',
+        style: TextStyle(
+          color: Color(new CommonUtil().getMyPrimaryColor()),
+          fontSize: 16.0.sp,
+          fontWeight: FontWeight.w200,
+        ),
+      );
+    }
+  }
+
+  Widget getFirstLastNameTextDoctorFromHos(DoctorFromHos myProfile) {
+    if (myProfile.user != null &&
+        myProfile.user.firstName != null &&
+        myProfile.user.lastName != null) {
+      return Text(
+        myProfile.user.firstName[0].toUpperCase() +
+            myProfile.user.lastName[0].toUpperCase(),
+        style: TextStyle(
+          color: Color(new CommonUtil().getMyPrimaryColor()),
+          fontSize: 16.0.sp,
+          fontWeight: FontWeight.w400,
+        ),
+      );
+    } else if (myProfile.user != null && myProfile.user.firstName != null) {
+      return Text(
+        myProfile.user.firstName[0].toUpperCase(),
+        style: TextStyle(
+          color: Color(new CommonUtil().getMyPrimaryColor()),
+          fontSize: 16.0.sp,
+          fontWeight: FontWeight.w400,
+        ),
+      );
+    } else {
+      return Text(
+        '',
+        style: TextStyle(
+          color: Color(new CommonUtil().getMyPrimaryColor()),
+          fontSize: 16.0.sp,
+          fontWeight: FontWeight.w200,
+        ),
+      );
+    }
   }
 }

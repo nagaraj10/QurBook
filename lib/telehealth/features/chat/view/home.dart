@@ -396,6 +396,22 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                     width: 50.0,
                                     height: 50.0,
                                     fit: BoxFit.cover,
+                                    errorWidget: (context, url, error) =>
+                                        Container(
+                                          height: 50.0.h,
+                                          width: 50.0.h,
+                                          color: Colors.grey[200],
+                                          child: Center(
+                                            child: Text(
+                                              document[STR_NICK_NAME][0].toString().toUpperCase(),
+                                              style: TextStyle(
+                                                color: Color(new CommonUtil().getMyPrimaryColor()),
+                                                fontSize: 16.0.sp,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            )
+                                          ),
+                                        )
                                   )
                                 : Icon(
                                     Icons.account_circle,

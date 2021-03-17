@@ -128,12 +128,25 @@ class _HealthOrganizationState extends State<HealthOrganization> {
                     SizedBox(
                       width: 5,
                     ),
-                    CircleAvatar(
-                      backgroundImage: NetworkImage(
+                    ClipOval(
+                      child:  Image.network(
                           doctors[index].user.profilePicThumbnailUrl != null
                               ? doctors[index].user.profilePicThumbnailUrl
-                              : ''),
-                      radius: 20,
+                              : '',
+                          height: 40.0.h,
+                          width: 40.0.h,
+                          fit: BoxFit.cover,
+                          errorBuilder:
+                              (BuildContext context, Object exception, StackTrace stackTrace) {
+                            return Container(
+                              height: 40.0.h,
+                              width: 40.0.h,
+                              color: Colors.grey[200],
+                              child: Center(
+                                child: commonWidgets.getFirstLastNameText(doctors[index]),
+                              ),
+                            );
+                          }),
                     ),
                     SizedBox(
                       width: 15,

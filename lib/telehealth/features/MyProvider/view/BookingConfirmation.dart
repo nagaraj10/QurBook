@@ -1113,14 +1113,18 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           children: <Widget>[
             Container(
               alignment: Alignment.center,
-              child: commonWidgets.getClipOvalImageNew(
+              child: commonWidgets.getClipOvalImageBookConfirm(
                   widget.isFromHospital
                       ? widget.resultFromHospitalList[widget.doctorListIndex]
                           .doctor.user.profilePicThumbnailUrl
                       : widget.docs[widget.doctorListPos].user
-                          .profilePicThumbnailUrl,
-                  fhbStyles.cardClipImage),
+                          .profilePicThumbnailUrl),
             ),
+           /* Container(
+              alignment: Alignment.center,
+              child: widget.isFromHospital?commonWidgets.getClipOvalImageForHos(widget.resultFromHospitalList[widget.doctorListIndex]
+                  .doctor):commonWidgets.getClipOvalImageNew(widget.docs[widget.doctorListPos]),
+            ),*/
             new Positioned(
               bottom: 0.0,
               right: 2.0,
