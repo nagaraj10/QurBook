@@ -39,6 +39,7 @@ import 'package:myfhb/device_integration/model/LastMeasureSync.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import 'package:myfhb/authentication/view/login_screen.dart';
 
 class ShowDevicesNew extends StatefulWidget {
   @override
@@ -165,10 +166,26 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
 
   Future<MyProfileModel> getMyProfile() async {
     var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    await addFamilyUserInfoRepository.getMyProfileInfoNew(userId).then((value) {
-      myProfile = value;
-    });
+    if (userId != null && userId.isNotEmpty) {
+      await addFamilyUserInfoRepository
+          .getMyProfileInfoNew(userId)
+          .then((value) {
+        myProfile = value;
+      });
+    } else {
+      CommonUtil().logout(moveToLoginPage);
+    }
     return myProfile;
+  }
+
+  void moveToLoginPage() {
+    PreferenceUtil.clearAllData().then((value) {
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+              builder: (BuildContext context) => PatientSignInScreen()),
+          (route) => false);
+    });
   }
 
   Future<GetDeviceSelectionModel> getDeviceSelectionValues() async {
@@ -212,16 +229,28 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
               //HomeScreen.of(context).refresh();
               //setState(() {});
             } else {
-              PreferenceUtil.saveTheme(Constants.keyPriColor, PreferenceUtil.getSavedTheme(Constants.keyPriColor) != null
-                  ? PreferenceUtil.getSavedTheme(Constants.keyPriColor):0xff5f0cf9);
-              PreferenceUtil.saveTheme(Constants.keyGreyColor, PreferenceUtil.getSavedTheme(Constants.keyGreyColor) != null
-                  ? PreferenceUtil.getSavedTheme(Constants.keyGreyColor):0xff9929ea);
+              PreferenceUtil.saveTheme(
+                  Constants.keyPriColor,
+                  PreferenceUtil.getSavedTheme(Constants.keyPriColor) != null
+                      ? PreferenceUtil.getSavedTheme(Constants.keyPriColor)
+                      : 0xff5f0cf9);
+              PreferenceUtil.saveTheme(
+                  Constants.keyGreyColor,
+                  PreferenceUtil.getSavedTheme(Constants.keyGreyColor) != null
+                      ? PreferenceUtil.getSavedTheme(Constants.keyGreyColor)
+                      : 0xff9929ea);
             }
           } else {
-            PreferenceUtil.saveTheme(Constants.keyPriColor,  PreferenceUtil.getSavedTheme(Constants.keyPriColor) != null
-                ? PreferenceUtil.getSavedTheme(Constants.keyPriColor):0xff5f0cf9);
-            PreferenceUtil.saveTheme(Constants.keyGreyColor, PreferenceUtil.getSavedTheme(Constants.keyGreyColor) != null
-                ? PreferenceUtil.getSavedTheme(Constants.keyGreyColor):0xff9929ea);
+            PreferenceUtil.saveTheme(
+                Constants.keyPriColor,
+                PreferenceUtil.getSavedTheme(Constants.keyPriColor) != null
+                    ? PreferenceUtil.getSavedTheme(Constants.keyPriColor)
+                    : 0xff5f0cf9);
+            PreferenceUtil.saveTheme(
+                Constants.keyGreyColor,
+                PreferenceUtil.getSavedTheme(Constants.keyGreyColor) != null
+                    ? PreferenceUtil.getSavedTheme(Constants.keyGreyColor)
+                    : 0xff9929ea);
           }
         } else {
           bpMonitor = true;
@@ -996,8 +1025,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                     width: 0.03.sw,
                                   ),
                                   isFamilyAvail
-                                      ? SwitchProfile().buildActions(
-                                          context, _key, callBackToRefresh,true)
+                                      ? SwitchProfile().buildActions(context,
+                                          _key, callBackToRefresh, true)
                                       : getMaterialPlusIcon(context),
                                 ],
                               ),
