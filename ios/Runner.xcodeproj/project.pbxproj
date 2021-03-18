@@ -805,6 +805,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ventechsolutions.myFHB;
 				PRODUCT_NAME = myFHB;
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
@@ -942,6 +943,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ventechsolutions.myFHB;
 				PRODUCT_NAME = myFHB;
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
@@ -974,6 +976,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ventechsolutions.myFHB;
 				PRODUCT_NAME = myFHB;
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";

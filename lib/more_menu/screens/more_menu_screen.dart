@@ -458,7 +458,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
         Divider(),
         Center(
             child: Text(
-          version != '' ? 'v' + version : '',
+          version != null ? 'v' + version : '',
           style: TextStyle(color: Colors.grey),
         )),
       ],
