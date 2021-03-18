@@ -363,7 +363,9 @@ class ChatScreenViewModel extends ChangeNotifier {
                     conversations[conversations.length - 1].isSpeaking = false;
                     notifyListeners();
                     if (!isButtonResponse) {
-                      gettingReposnseFromNative();
+                      if (!isEndOfConv) {
+                        gettingReposnseFromNative();
+                      }
                     }
                   }
                   if (event == AudioPlayerState.PAUSED ||
