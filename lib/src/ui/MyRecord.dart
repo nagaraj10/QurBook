@@ -1283,8 +1283,12 @@ class _CustomTabsState extends State<CustomTabView>
             addHealthRecords));
       } else if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionVoiceRecord) {
-        if (CommonUtil.audioPage == false && widget.fromClass == 'audio') {
+        if (CommonUtil.audioPage == false && widget.fromClass == '') {
           widget.selectedMedia = new List();
+        }
+
+        if (CommonUtil.audioPage == false && widget.fromClass == 'audio') {
+          widget.fromClass = '';
         }
         tabWidgetList.add(new VoiceRecordList(
             completeData,
@@ -1422,10 +1426,6 @@ class _CustomTabsState extends State<CustomTabView>
       /* }*/
     }
 
-    if (widget.fromAppointments) {
-      widget.onScroll(widget.initPosition?.toDouble() ?? 0.0);
-    }
-
     return tabWidgetList;
   }
 
@@ -1532,13 +1532,16 @@ class _CustomTabsState extends State<CustomTabView>
           if (widget.argument.fromClass == 'audio' ||
               widget.argument.fromClass == null) {
             Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => AudioRecordScreen(
-                        arguments: AudioScreenArguments(
-                            fromVoice: true,
-                            fromClass: widget.argument.fromClass ??
-                                'audio')))).then((results) {});
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AudioRecordScreen(
+                            arguments: AudioScreenArguments(
+                                fromVoice: true,
+                                fromClass: categoryName ==
+                                        Constants.STR_VOICERECORDS
+                                    ? ''
+                                    : widget.argument.fromClass ?? 'audio'))))
+                .then((results) {});
           } else {
             Navigator.pushNamed(context, router.rt_AudioScreen,
                     arguments: AudioScreenArguments(
