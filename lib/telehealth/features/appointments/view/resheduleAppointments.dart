@@ -28,6 +28,7 @@ import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
 
 import 'package:myfhb/constants/fhb_constants.dart' as prefKey;
+import 'package:myfhb/common/errors_widget.dart';
 
 class ResheduleAppointments extends StatefulWidget {
   Past doc;
@@ -518,7 +519,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
               widget.doc.healthOrganization.id);
           return providerListWidget(healthOrganizationResult);
         } else if (snapshot.hasError) {
-          return Container();
+          return ErrorsWidget();
         } else {
           return Center(
             child: new CircularProgressIndicator(

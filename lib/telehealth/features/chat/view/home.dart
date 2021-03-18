@@ -24,6 +24,7 @@ import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 
 import '../../../../common/CommonUtil.dart';
+import 'package:myfhb/common/errors_widget.dart';
 
 class ChatHomeScreen extends StatefulWidget {
   ChatHomeScreen({Key key}) : super(key: key);
@@ -274,12 +275,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
             body: Center(child: new CircularProgressIndicator()),
           );
         } else if (snapshot.hasError) {
-          return new Text(
-            'Error: ${snapshot.error}',
-            style: TextStyle(
-              fontSize: 16.0.sp,
-            ),
-          );
+          return ErrorsWidget();
         } else {
           return getChatList();
         }

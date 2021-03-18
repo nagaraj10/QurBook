@@ -310,6 +310,7 @@ const String no_internet_conn = "No internet connection";
 const String failed_get_conn = "Failed to get connectivity.";
 const String failed_get_connectivity = "Failed to get internet connectivity.";
 const String NOT_FILE_IMAGE = "Something went wrong";
+const String TRY_AGAIN = "Please try again or report the issue to support";
 const String EXIT_APP = "Exit app";
 const String EXIT_APP_TO_EXIT = "Are you sure to exit app?";
 const String CANCEL = "CANCEL";
@@ -380,15 +381,16 @@ const String STR_USER_PROFILE_SETTING_ALREADY =
 const String STR_ARE_SURE = 'Are you sure?';
 const String STR_SURE_CANCEL_PAY = 'Do you want to cancel the payment';
 const String STR_UPDATE_AVAIL = 'New Update Available';
-const String STR_UPDATE_CONTENT = 'There is a newer version of app available please update it now.';
+const String STR_UPDATE_CONTENT =
+    'There is a newer version of app available please update it now.';
 const String STR_UPDATE_NOW = 'Update Now';
 const String STR_LATER = 'Later';
 const String STR_FIREBASE_REMOTE_KEY = 'force_update_current_version_myfhb';
-const String STR_FIREBASE_REMOTE_KEY_IOS = 'force_update_current_version_myfhb_ios';
+const String STR_FIREBASE_REMOTE_KEY_IOS =
+    'force_update_current_version_myfhb_ios';
 const String STR_IS_FORCE = 'is_force_update_myfhb';
 const String STR_IS_FORCE_IOS = 'is_force_update_myfhb_ios';
 
-const APP_STORE_URL =
-    'https://apps.apple.com/in/app/qurbook/id1526444520';
+const APP_STORE_URL = 'https://apps.apple.com/in/app/qurbook/id1526444520';
 const PLAY_STORE_URL =
     'https://play.google.com/store/apps/details?id=com.ventechsolutions.myFHB';

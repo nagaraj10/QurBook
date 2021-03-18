@@ -166,6 +166,7 @@ const String icon_schedule = 'assets/navicons/schedule.png';
 const String icon_profile = 'assets/navicons/ic_profile_two.png';
 const String icon_more = 'assets/navicons/more.png';
 const String icon_no_internet = 'assets/no_internet.png';
+const String icon_something_wrong = 'assets/something-wrong.png';
 
 //For Apple Health Settings Info
 const String apple_health_settings_info = 'assets/settings/health.jpg';

@@ -50,6 +50,7 @@ import 'package:shimmer/shimmer.dart';
 
 export 'package:myfhb/my_family/models/relationship_response_list.dart';
 import 'package:http/http.dart' as http;
+import 'package:myfhb/common/errors_widget.dart';
 
 typedef void OnError(Exception exception);
 
@@ -1403,7 +1404,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
             backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
           );
         } else if (snapshot.hasError) {
-          return new Text('Error: ${snapshot.error}');
+          return ErrorsWidget();
         } else {
           return getAudioIconWithFile();
         }

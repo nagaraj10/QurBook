@@ -27,6 +27,7 @@ import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:myfhb/common/errors_widget.dart';
 
 class MoreMenuScreen extends StatefulWidget {
   final Function refresh;
@@ -654,7 +655,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             ),
           );
         } else if (snapshot.hasError) {
-          return new Text('Error: ${snapshot.error}');
+          return ErrorsWidget();
         } else {
           return getBody();
         }

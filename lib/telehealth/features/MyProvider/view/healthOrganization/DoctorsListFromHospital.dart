@@ -32,6 +32,7 @@ import 'package:myfhb/telehealth/features/MyProvider/view/DoctorSessionTimeSlot.
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
+import 'package:myfhb/common/errors_widget.dart';
 
 class DoctorListFromHospital extends StatefulWidget {
   final List<Hospitals> hospitals;
@@ -496,7 +497,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
                 backgroundColor: Color(new CommonUtil().getMyPrimaryColor())),
           );
         } else if (snapshot.hasError) {
-          return new Text('Error: ${snapshot.error}');
+          return ErrorsWidget();
         } else {
           final items = snapshot.data ??
               <DoctorIds>[]; // handle the case that data is null

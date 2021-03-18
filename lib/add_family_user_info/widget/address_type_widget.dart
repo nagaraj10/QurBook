@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myfhb/add_family_user_info/models/address_result.dart';
 import 'package:myfhb/add_family_user_info/viewmodel/doctor_personal_viewmodel.dart';
+import 'package:myfhb/common/errors_widget.dart';
 
 class AddressTypeWidget extends StatefulWidget {
   AddressResult addressResult;
@@ -77,7 +78,7 @@ class AddressTypeWidgetState extends State<AddressTypeWidget> {
             body: Center(child: new CircularProgressIndicator()),
           );
         } else if (snapshot.hasError) {
-          return new Text('Error: ${snapshot.error}');
+          return ErrorsWidget();
         } else {
           return snapshot.data != null ? getDropDownAddress() : reloadWidget();
         }
