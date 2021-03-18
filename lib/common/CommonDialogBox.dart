@@ -1854,6 +1854,27 @@ class CommonDialogBox {
                           fromClass: 'audio',
                         )),
                       )).then((results) {});
+                } else if (fromClassNew == '') {
+                  CommonUtil.audioPage = false;
+
+                  await Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MyRecords(
+                            argument: MyRecordsArgument(
+                          categoryPosition:
+                              getCategoryPosition(Constants.STR_VOICERECORDS),
+                          allowSelect: false,
+                          isAudioSelect: true,
+                          isNotesSelect: false,
+                          selectedMedias: new List(),
+                          isFromChat: false,
+                          showDetails: true,
+                          isAssociateOrChat: false,
+                          userID: userID,
+                          fromClass: fromClassNew,
+                        )),
+                      )).then((results) {});
                 } else {
                   Navigator.of(context).pop();
                 }
