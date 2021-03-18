@@ -17,6 +17,9 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
+import 'package:myfhb/common/CommonConstants.dart';
+import 'package:myfhb/constants/fhb_parameters.dart';
+
 class RecordInfoCard {
   Widget getCardForPrescription(Metadata metaInfo, String createdDate) {
     return Container(
@@ -660,7 +663,10 @@ Widget getDeviceReadings(List<DeviceReadings> deviceReadings) {
                 flex: 6,
                 child: Text(deviceReadings[i].parameter != null
                     ? toBeginningOfSentenceCase(
-                        deviceReadings[i].parameter.toLowerCase())
+                        deviceReadings[i].parameter.toLowerCase() ==
+                                CommonConstants.strOxygenParams.toLowerCase()
+                            ? CommonConstants.strOxygenParamsName.toLowerCase()
+                            : deviceReadings[i].parameter.toLowerCase())
                     : ''),
               ),
               Expanded(
@@ -675,7 +681,14 @@ Widget getDeviceReadings(List<DeviceReadings> deviceReadings) {
                           fontWeight: FontWeight.w500,
                           fontSize: 16.0.sp),
                     ),
-                    Text(deviceReadings[i].unit.toString(),
+                    Text(
+                        deviceReadings[i].unit.toLowerCase() ==
+                                CommonConstants.strOxygenUnits.toLowerCase()
+                            ? CommonConstants.strOxygenUnitsName
+                            : (deviceReadings[i].unit.toLowerCase() ==
+                                    strParamUnitFarenheit.toLowerCase()
+                                ? CommonConstants.strTemperatureValue
+                                : deviceReadings[i].unit.toString()),
                         style: TextStyle(
                             color: Colors.black54, fontSize: 14.0.sp)),
                   ],

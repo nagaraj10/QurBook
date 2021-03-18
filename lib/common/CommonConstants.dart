@@ -105,7 +105,7 @@ class CommonConstants {
   static String strWeightParam = 'weight';
   static String strWeightUnit = 'kgs';
 
-  static String strOxygenSaturation = 'Oxygen Saturation';
+  static String strOxygenSaturation = 'Spo2';
   static String strOxygenValue = '%spo2';
   static String strOxygenParams = 'oxygenSaturation';
   static String strOxygenParamsName = 'spo2';
