@@ -428,13 +428,12 @@ class CommonUtil {
 
     //loginBloc.logout().then((signOutResponse) {
     // moveToLoginPage(signOutResponse);
+    FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+    final token = await _firebaseMessaging.getToken();
     try {
       MyProfileModel myProfile =
           PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
       MyProfileResult profileResult = myProfile.result;
-      FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-
-      final token = await _firebaseMessaging.getToken();
 
       CommonUtil()
           .sendDeviceToken(
@@ -444,9 +443,15 @@ class CommonUtil {
               token,
               false)
           .then((value) {
+        if (Platform.isIOS) {
+          _firebaseMessaging.deleteInstanceID();
+        }
         moveToLoginPage();
       });
     } catch (e) {
+      if (Platform.isIOS) {
+        _firebaseMessaging.deleteInstanceID();
+      }
       moveToLoginPage();
     }
     //}
