@@ -95,7 +95,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       //     style: TextStyle(color: Colors.black, fontSize: 15.0.sp),
                       //     children: [
                       //       TextSpan(
-                      //           text: 'docsupport@qurhealth.in',
+                      //           text: 'support@qurhealth.in',
                       //           style: TextStyle(
                       //               color: Colors.blue,
                       //               fontSize: 15.0.sp,
