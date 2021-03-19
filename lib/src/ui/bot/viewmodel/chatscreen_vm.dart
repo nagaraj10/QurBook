@@ -409,13 +409,14 @@ class ChatScreenViewModel extends ChangeNotifier {
     reqJson[parameters.input] = input;
     reqJson[parameters.voice] = voice;
     reqJson[parameters.audioConfig] = audioConfig;
+    reqJson[parameters.isAudioFile] = false;
     Service mService = Service();
     final response = await mService.getAudioFileTTS(reqJson);
 
     if (response.statusCode == 200) {
       if (response.body != null) {
         final data = jsonDecode(response.body);
-        final result = data["result"];
+        final result = data["payload"];
         if (result != null) {
           final audioContent = result["audioContent"];
           if (audioContent != null) {

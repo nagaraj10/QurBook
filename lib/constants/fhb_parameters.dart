@@ -185,6 +185,7 @@ const String text = 'text';
 const String voice = 'voice';
 const String languageCode = 'languageCode';
 const String audioConfig = 'audioConfig';
+const String isAudioFile = 'isAudioFile';
 const String MP3 = 'MP3';
 
 const String audioEncoding = 'audioEncoding';
