@@ -371,10 +371,10 @@ class _CallPageState extends State<CallPage> {
       if (reason == 0) {
         //FlutterToast().getToast('Remote User Went to OFFLINE', Colors.yellow);
       } else if (reason == 6) {
-        FlutterToast().getToast('Video is resumed', Colors.green);
+        FlutterToast().getToast('Doctor Video is resumed', Colors.green);
         videoPauseResumeState = 1;
       } else if (reason == 5) {
-        FlutterToast().getToast('Video is paused', Colors.red);
+        FlutterToast().getToast('Doctor Video is paused', Colors.red);
         videoPauseResumeState = 2;
       } else {
         videoPauseResumeState = 0;
@@ -390,12 +390,15 @@ class _CallPageState extends State<CallPage> {
     };
 
     AgoraRtcEngine.onRemoteAudioStateChanged = (uid, state, reason, elapsed) {
-      if (state == 0) {
-        //FlutterToast().getToast('Doctor is on Mute', Colors.red);
-      } else if (reason == 5) {
-        FlutterToast().getToast('Doctor is on Mute', Colors.red);
-      } else if (reason == 6) {
-        FlutterToast().getToast('Doctor is on UnMute', Colors.green);
+      switch (reason) {
+        case 6:
+          FlutterToast().getToast('Doctor is on UnMute', Colors.green);
+          break;
+        case 5:
+          FlutterToast().getToast('Doctor is on Mute', Colors.red);
+          break;
+        default:
+          break;
       }
       //uid is ID of the user whose audio state changes.
       /* if (reason == 1) {
