@@ -66,6 +66,7 @@ class _MySettingsState extends State<MySettings> {
     selectedList = List();
     _deviceModel = new DevicesViewModel();
     super.initState();
+
     getDeviceSelectionValues();
     PreferenceUtil.init();
 
@@ -82,11 +83,17 @@ class _MySettingsState extends State<MySettings> {
             ? false
             : true;
 
+    _isGFActive =
+    PreferenceUtil.getStringValue(Constants.activateGF) ==
+        variable.strFalse
+        ? false
+        : true;
+
     if (_firstTym) {
       _firstTym = false;
       _isGFActive = false;
-      //PreferenceUtil.saveString(Constants.activateGF, _firstTym.toString());
-      PreferenceUtil.saveString(Constants.isFirstTym, _firstTym.toString());
+      PreferenceUtil.saveString(Constants.activateGF, _firstTym.toString());
+      PreferenceUtil.saveString(Constants.isFirstTym, _isGFActive.toString());
     }
     if (_isHealthFirstTime) {
       _isHKActive = false;
@@ -225,12 +232,12 @@ class _MySettingsState extends State<MySettings> {
                       ''
               ? getDeviceSelectionModel.result[0].profileSetting.allowDigit
               : true;
-      _isGFActive =
+      /*_isGFActive =
           getDeviceSelectionModel.result[0].profileSetting.googleFit != null &&
                   getDeviceSelectionModel.result[0].profileSetting.googleFit !=
                       ''
               ? getDeviceSelectionModel.result[0].profileSetting.googleFit
-              : false;
+              : false;*/
       _isHKActive =
           getDeviceSelectionModel.result[0].profileSetting.healthFit != null &&
                   getDeviceSelectionModel.result[0].profileSetting.healthFit !=
@@ -425,7 +432,7 @@ class _MySettingsState extends State<MySettings> {
                                               .getMyPrimaryColor()),
                                           onChanged: (bool newValue) {
                                             setState(() {
-                                              isTouched = true;
+                                              //isTouched = true;
                                               _isGFActive = newValue;
                                             });
                                           },
@@ -641,7 +648,7 @@ class _MySettingsState extends State<MySettings> {
         _isGFActive = !await _deviceDataHelper.deactivateGoogleFit();
       }
     }
-    //PreferenceUtil.saveString(Constants.activateGF, _isGFActive.toString());
+    PreferenceUtil.saveString(Constants.activateGF, _isGFActive.toString());
     return ret;
   }
 }
