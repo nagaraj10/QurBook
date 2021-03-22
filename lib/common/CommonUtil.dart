@@ -38,6 +38,7 @@ import 'package:myfhb/my_providers/models/ProfilePicThumbnail.dart';
 import 'package:myfhb/myfhb_weview/myfhb_webview.dart';
 import 'package:myfhb/record_detail/model/DoctorImageResponse.dart';
 import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
+import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
 import 'package:myfhb/src/blocs/Media/MediaTypeBlock.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
@@ -66,6 +67,9 @@ import 'package:myfhb/src/model/user/MyProfileResult.dart';
 import 'package:myfhb/src/model/user/ProfileCompletedata.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
+import 'package:myfhb/src/resources/repository/CategoryRepository/CategoryResponseListRepository.dart';
+import 'package:myfhb/src/ui/MyRecord.dart';
+import 'package:myfhb/src/ui/MyRecordsArguments.dart';
 import 'package:myfhb/src/ui/user/UserAccounts.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
@@ -98,6 +102,7 @@ class CommonUtil {
   static const secondaryGrey = 0xFF545454;
 
   CategoryResult categoryDataObjClone = new CategoryResult();
+  CategoryResponseListRepository _categoryResponseListRepository;
 
   static bool audioPage = false;
 
@@ -1666,6 +1671,169 @@ class CommonUtil {
       await launch(url);
     } else {
       throw 'Could not launch $url';
+    }
+  }
+
+  Future<int> getCategoryPosition(String categoryName) async {
+    int categoryPosition = 0;
+    switch (categoryName) {
+      case Constants.STR_NOTES:
+        categoryPosition = await getCategoryListPos(categoryName);
+        return categoryPosition;
+        break;
+      case Constants.STR_PRESCRIPTION:
+        categoryPosition = await getCategoryListPos(categoryName);
+        return categoryPosition;
+        break;
+      case Constants.STR_VOICERECORDS:
+        categoryPosition = await getCategoryListPos(categoryName);
+        return categoryPosition;
+        break;
+      case Constants.STR_BILLS:
+        categoryPosition = await getCategoryListPos(categoryName);
+        return categoryPosition;
+        break;
+      case Constants.STR_LABREPORT:
+        categoryPosition = await getCategoryListPos(categoryName);
+        return categoryPosition;
+        break;
+      case Constants.STR_OTHERS:
+        categoryPosition = await getCategoryListPos(categoryName);
+        return categoryPosition;
+        break;
+      case Constants.STR_HOSPITALDOCUMENT:
+        categoryPosition = await getCategoryListPos(categoryName);
+        return categoryPosition;
+        break;
+      case Constants.STR_MEDICALREPORT:
+        categoryPosition = await getCategoryListPos(categoryName);
+        return categoryPosition;
+        break;
+      case Constants.STR_IDDOCS:
+      case Constants.STR_HOS_ID:
+      case Constants.STR_OTHER_ID:
+      case Constants.STR_INSURE_ID:
+        categoryPosition = await getCategoryListPos(categoryName);
+        //return categoryPosition;
+        return 5;
+        break;
+      default:
+        categoryPosition = 0;
+        return categoryPosition;
+        break;
+    }
+  }
+/* 
+  int pickPosition(String categoryName) {
+    int position = 0;
+    List<CategoryResult> categoryDataList = List();
+    categoryDataList = getCategoryList();
+    for (int i = 0;
+        i < (categoryDataList == null ? 0 : categoryDataList.length);
+        i++) {
+      if (categoryName == categoryDataList[i].categoryName) {
+        print(categoryName + ' ****' + categoryDataList[i].categoryName);
+        position = i;
+      }
+    }
+    if (categoryName == Constants.STR_PRESCRIPTION) {
+      return position;
+    } else if (categoryName == Constants.STR_IDDOCS ||
+        categoryName == Constants.STR_HOS_ID ||
+        categoryName == Constants.STR_OTHER_ID ||
+        categoryName == Constants.STR_INSURE_ID) {
+      var pos = categoryDataList
+          .indexOf(CategoryResult(categoryName: Constants.STR_IDDOCS));
+      return pos > 0 ? pos : 0;
+    } else {
+      return position;
+    }
+  } */
+
+  Future<int> getCategoryListPos(String categoryName) async {
+    int position = 0;
+    CategoryListBlock _categoryListBlock = new CategoryListBlock();
+    List<CategoryResult> filteredCategoryData = new List();
+    if (filteredCategoryData == null || filteredCategoryData.length == 0) {
+      _categoryListBlock.getCategoryLists().then((value) {
+        filteredCategoryData = new CommonUtil().fliterCategories(value.result);
+
+        //filteredCategoryData.add(categoryDataObjClone);
+        //return filteredCategoryData;
+
+        for (int i = 0;
+            i <
+                (filteredCategoryData == null
+                    ? 0
+                    : filteredCategoryData.length);
+            i++) {
+          if (categoryName == filteredCategoryData[i].categoryName) {
+            print(
+                categoryName + ' ****' + filteredCategoryData[i].categoryName);
+            position = i;
+          }
+        }
+        if (categoryName == Constants.STR_PRESCRIPTION) {
+          return position;
+        } else if (categoryName == Constants.STR_IDDOCS ||
+            categoryName == Constants.STR_HOS_ID ||
+            categoryName == Constants.STR_OTHER_ID ||
+            categoryName == Constants.STR_INSURE_ID) {
+          // var pos = filteredCategoryData
+          //     .indexOf(CategoryResult(categoryName: Constants.STR_IDDOCS));
+          var pos = filteredCategoryData
+              .indexWhere((data) => data.categoryName == Constants.STR_IDDOCS);
+          return pos > 0 ? pos : 0;
+        } else {
+          return position;
+        }
+      });
+    } else {
+      return position;
+    }
+  }
+
+  void navigateToMyRecordsCategory(
+      dynamic categoryType, List<String> hrmId, bool isTerminate) async {
+    CommonUtil commonUtil = new CommonUtil();
+    commonUtil.getCategoryListPos(categoryType).then(
+        (value) => commonUtil.goToMyRecordsScreen(value, hrmId, isTerminate));
+
+    /* CommonUtil().getCategoryPosition(categoryType).then(
+        (value) => CommonUtil().goToMyRecordsScreen(value, hrmId, isTerminate)); */
+  }
+
+  void goToMyRecordsScreen(
+      dynamic position, List<String> hrmId, bool isTerminate) {
+    if (isTerminate) {
+      Get.toNamed(router.rt_MyRecords,
+          arguments: MyRecordsArgument(
+              categoryPosition: position,
+              allowSelect: false,
+              isAudioSelect: false,
+              isNotesSelect: false,
+              selectedMedias: hrmId,
+              isFromChat: false,
+              showDetails: true,
+              isAssociateOrChat: false,
+              fromAppointments: false,
+              fromClass: 'notification'));
+    } else {
+      Get.to(
+        MyRecords(
+          argument: MyRecordsArgument(
+              categoryPosition: position,
+              allowSelect: false,
+              isAudioSelect: false,
+              isNotesSelect: false,
+              selectedMedias: hrmId,
+              isFromChat: false,
+              showDetails: true,
+              isAssociateOrChat: false,
+              fromAppointments: false,
+              fromClass: 'notification'),
+        ),
+      );
     }
   }
 }

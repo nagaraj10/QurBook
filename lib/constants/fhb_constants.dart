@@ -392,3 +392,7 @@ const APP_STORE_URL =
     'https://apps.apple.com/in/app/qurbook/id1526444520';
 const PLAY_STORE_URL =
     'https://play.google.com/store/apps/details?id=com.ventechsolutions.myFHB';
+
+const String STR_HOS_ID = 'Hospital IDs';
+const String STR_OTHER_ID = 'Other IDs';
+const String STR_INSURE_ID = 'Insurance IDs';

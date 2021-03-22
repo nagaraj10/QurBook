@@ -23,6 +23,7 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/schedules/add_reminders.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
+import 'package:myfhb/src/ui/MyRecordsArguments.dart';
 import 'package:myfhb/src/ui/SplashScreen.dart';
 import 'package:myfhb/src/ui/NetworkScreen.dart';
 import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
@@ -353,7 +354,11 @@ class _MyFHBState extends State<MyFHB> {
     if (c_msg.isNotEmpty || c_msg != null) {
       var passedValArr = c_msg.split('&');
       if (passedValArr[0] == 'ack') {
-        if (passedValArr[1] == 'sheela') {
+        var temp = passedValArr[1].split('|');
+        if (temp[0] == 'myRecords') {
+          CommonUtil()
+              .navigateToMyRecordsCategory(temp[1], [passedValArr[2]], false);
+        } else if (passedValArr[1] == 'sheela') {
           Get.to(SuperMaya());
         } else if (passedValArr[1] == 'profile_page') {
           Get.toNamed(router.rt_UserAccounts,
@@ -537,67 +542,76 @@ class _MyFHBState extends State<MyFHB> {
     if (navRoute.isEmpty) {
       return SplashScreen();
     } else {
-      var parsedData = navRoute.split('&');
-      if (navRoute == 'chat') {
-        return SplashScreen(nsRoute: 'chat');
-      } else if (parsedData[1] == 'appointmentList') {
-        return SplashScreen(
-          nsRoute: 'appointmentList',
-        );
-      } else if (parsedData[0] == 'ack') {
-        if (parsedData[1] == 'sheela') {
+      try {
+        var parsedData = navRoute.split('&');
+        if (navRoute == 'chat') {
+          return SplashScreen(nsRoute: 'chat');
+        } else if (parsedData[1] == 'appointmentList') {
           return SplashScreen(
-            nsRoute: 'sheela',
+            nsRoute: 'appointmentList',
           );
-        } else if (parsedData[1] == 'profile_page') {
+        } else if (parsedData[0] == 'ack') {
+          var temp = parsedData[1].split('|');
+          if (temp[0] == 'myRecords') {
+            return SplashScreen(
+              nsRoute: 'myRecords',
+              templateName: temp[1],
+              bundle: parsedData[2],
+            );
+          } else if (parsedData[1] == 'sheela') {
+            return SplashScreen(
+              nsRoute: 'sheela',
+            );
+          } else if (parsedData[1] == 'profile_page') {
+            return SplashScreen(
+              nsRoute: 'profile_page',
+            );
+          } else if (parsedData[1] == 'googlefit') {
+            return SplashScreen(
+              nsRoute: 'googlefit',
+            );
+          } else if (parsedData[1] == 'th_provider') {
+            return SplashScreen(
+              nsRoute: 'th_provider',
+            );
+          } else if (parsedData[1] == 'my_record') {
+            return SplashScreen(
+              nsRoute: 'my_record',
+            );
+          } else {
+            return SplashScreen(
+              nsRoute: '',
+            );
+          }
+        } else if (navRoute.split('&')[0] == 'DoctorRescheduling') {
           return SplashScreen(
-            nsRoute: 'profile_page',
-          );
-        } else if (parsedData[1] == 'googlefit') {
+              nsRoute: 'DoctorRescheduling',
+              doctorID: navRoute.split('&')[1],
+              bookingID: navRoute.split('&')[2],
+              doctorSessionId: navRoute.split('&')[3],
+              healthOrganizationId: navRoute.split('&')[4],
+              templateName: navRoute.split('&')[5]);
+        } else if (navRoute.split('&')[0] == 'DoctorCancellation') {
           return SplashScreen(
-            nsRoute: 'googlefit',
+            nsRoute: 'DoctorCancellation',
+            bookingID: navRoute.split('&')[1],
+            appointmentDate: navRoute.split('&')[2],
+            templateName: navRoute.split('&')[3],
           );
-        } else if (parsedData[1] == 'th_provider') {
-          return SplashScreen(
-            nsRoute: 'th_provider',
-          );
-        } else if (parsedData[1] == 'my_record') {
-          return SplashScreen(
-            nsRoute: 'my_record',
-          );
+        } else if (navRoute.split('&')[0] == 'accept' ||
+            navRoute.split('&')[0] == 'decline') {
+          var jsonInput = {};
+          jsonInput['providerRequestId'] = navRoute.split('&')[1];
+          jsonInput['action'] = navRoute.split('&')[2];
+          // var body = {
+          //   "templateName": 'GoFHBDoctorOnboardingByHospital',
+          //   "contextId": parsedData[1]
+          // };
+          return SplashScreen();
         } else {
-          return SplashScreen(
-            nsRoute: '',
-          );
+          return StartTheCall();
         }
-      } else if (navRoute.split('&')[0] == 'DoctorRescheduling') {
-        return SplashScreen(
-            nsRoute: 'DoctorRescheduling',
-            doctorID: navRoute.split('&')[1],
-            bookingID: navRoute.split('&')[2],
-            doctorSessionId: navRoute.split('&')[3],
-            healthOrganizationId: navRoute.split('&')[4],
-            templateName: navRoute.split('&')[5]);
-      } else if (navRoute.split('&')[0] == 'DoctorCancellation') {
-        return SplashScreen(
-          nsRoute: 'DoctorCancellation',
-          bookingID: navRoute.split('&')[1],
-          appointmentDate: navRoute.split('&')[2],
-          templateName: navRoute.split('&')[3],
-        );
-      } else if (navRoute.split('&')[0] == 'accept' ||
-          navRoute.split('&')[0] == 'decline') {
-        var jsonInput = {};
-        jsonInput['providerRequestId'] = navRoute.split('&')[1];
-        jsonInput['action'] = navRoute.split('&')[2];
-        // var body = {
-        //   "templateName": 'GoFHBDoctorOnboardingByHospital',
-        //   "contextId": parsedData[1]
-        // };
-        return SplashScreen();
-      } else {
-        return StartTheCall();
-      }
+      } catch (e) {}
     }
   }
 

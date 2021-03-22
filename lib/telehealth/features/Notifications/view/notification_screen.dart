@@ -36,6 +36,11 @@ import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/src/ui/bot/SuperMaya.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
+import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
+import 'package:myfhb/src/ui/MyRecord.dart';
+import 'package:myfhb/src/ui/MyRecordsArguments.dart';
+import 'package:myfhb/src/model/Category/catergory_result.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 class NotificationScreen extends StatefulWidget {
   @override
@@ -142,10 +147,28 @@ class _NotificationScreen extends State<NotificationScreen> {
               onTap: (notification?.result[index]?.isUnread != null &&
                       notification?.result[index]?.isUnread)
                   ? () {
-                      notificationOnTapActions(
-                          notification?.result[index],
-                          notification?.result[index]?.messageDetails?.content
-                              ?.templateName);
+                      var tempRedirectTo = payload?.redirectTo != null &&
+                              payload?.redirectTo != ''
+                          ? payload?.redirectTo.split('|')[0]
+                          : '';
+                      if (tempRedirectTo == 'myRecords') {
+                        notificationOnTapActions(
+                            notification?.result[index], tempRedirectTo,
+                            bundles: {
+                              'catName': payload?.redirectTo.split('|')[1],
+                              'healthRecordMetaIds':
+                                  payload?.healthRecordMetaIds
+                            });
+                      } else {
+                        notificationOnTapActions(
+                            notification?.result[index],
+                            notification?.result[index]?.messageDetails?.content
+                                ?.templateName);
+                      }
+                      // notificationOnTapActions(
+                      //     notification?.result[index],
+                      //     notification?.result[index]?.messageDetails?.content
+                      //         ?.templateName);
                     }
                   : null,
               child: Column(
@@ -767,8 +790,8 @@ class _NotificationScreen extends State<NotificationScreen> {
     return cancelAppointment;
   }
 
-  void notificationOnTapActions(
-      NotificationResult result, String templateName) {
+  void notificationOnTapActions(NotificationResult result, String templateName,
+      {dynamic bundles}) {
     switch (templateName) {
       case "AppointmentReminder180":
       case "AppointmentReminder1440":
@@ -853,6 +876,14 @@ class _NotificationScreen extends State<NotificationScreen> {
                 PageNavigator.goToPermanent(context, router.rt_Dashboard));
         readUnreadAction(result);
         break;
+      case "myRecords":
+        var categoryName = bundles['catName'];
+        String hrmId = bundles['healthRecordMetaIds'];
+        List<String> _listOfhrmId = List<String>();
+        _listOfhrmId.add(hrmId);
+        navigateToMyRecordsCategory(categoryName, _listOfhrmId, false);
+        readUnreadAction(result);
+        break;
       default:
         readUnreadAction(result);
         break;
@@ -876,5 +907,93 @@ class _NotificationScreen extends State<NotificationScreen> {
     try {
       await new CommonUtil().getUserProfileData();
     } catch (e) {}
+  }
+
+  Future<int> getCategoryListPos(String categoryName) async {
+    int position = 0;
+    CategoryListBlock _categoryListBlock = new CategoryListBlock();
+    List<CategoryResult> filteredCategoryData = new List();
+    if (filteredCategoryData == null || filteredCategoryData.length == 0) {
+      _categoryListBlock.getCategoryLists().then((value) {
+        filteredCategoryData = new CommonUtil().fliterCategories(value.result);
+
+        //filteredCategoryData.add(categoryDataObjClone);
+        //return filteredCategoryData;
+
+        for (int i = 0;
+            i <
+                (filteredCategoryData == null
+                    ? 0
+                    : filteredCategoryData.length);
+            i++) {
+          if (categoryName == filteredCategoryData[i].categoryName) {
+            print(
+                categoryName + ' ****' + filteredCategoryData[i].categoryName);
+            position = i;
+          }
+        }
+        if (categoryName == Constants.STR_PRESCRIPTION) {
+          return position;
+        } else if (categoryName == Constants.STR_IDDOCS ||
+            categoryName == Constants.STR_HOS_ID ||
+            categoryName == Constants.STR_OTHER_ID ||
+            categoryName == Constants.STR_INSURE_ID) {
+          // var pos = filteredCategoryData
+          //     .indexOf(CategoryResult(categoryName: Constants.STR_IDDOCS));
+          var pos = filteredCategoryData
+              .indexWhere((data) => data.categoryName == Constants.STR_IDDOCS);
+          return pos > 0 ? pos : 0;
+        } else {
+          return position;
+        }
+      });
+    } else {
+      return position;
+    }
+  }
+
+
+  void navigateToMyRecordsCategory(
+      dynamic categoryType, List<String> hrmId, bool isTerminate) async {
+    //CommonUtil commonUtil = new CommonUtil();
+    getCategoryListPos(categoryType).then(
+        (value) => goToMyRecordsScreen(value, hrmId, isTerminate));
+
+    /* CommonUtil().getCategoryPosition(categoryType).then(
+        (value) => CommonUtil().goToMyRecordsScreen(value, hrmId, isTerminate)); */
+  }
+
+  void goToMyRecordsScreen(
+      dynamic position, List<String> hrmId, bool isTerminate) {
+    if (isTerminate) {
+      Get.toNamed(router.rt_MyRecords,
+          arguments: MyRecordsArgument(
+              categoryPosition: position,
+              allowSelect: false,
+              isAudioSelect: false,
+              isNotesSelect: false,
+              selectedMedias: hrmId,
+              isFromChat: false,
+              showDetails: true,
+              isAssociateOrChat: false,
+              fromAppointments: false,
+              fromClass: 'notification'));
+    } else {
+      Get.to(
+        MyRecords(
+          argument: MyRecordsArgument(
+              categoryPosition: position,
+              allowSelect: false,
+              isAudioSelect: false,
+              isNotesSelect: false,
+              selectedMedias: hrmId,
+              isFromChat: false,
+              showDetails: true,
+              isAssociateOrChat: false,
+              fromAppointments: false,
+              fromClass: 'notification'),
+        ),
+      );
+    }
   }
 }
