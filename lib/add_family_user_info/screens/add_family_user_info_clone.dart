@@ -40,6 +40,9 @@ import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/src/model/user/State.dart' as stateObj;
 import 'package:myfhb/my_family/models/FamilyMembersRes.dart' as contactObj;
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:myfhb/constants/fhb_parameters.dart';
+import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
 
 class AddFamilyUserInfoScreen extends StatefulWidget {
   AddFamilyUserInfoArguments arguments;
@@ -132,6 +135,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   String currentUserID;
 
   UserContactCollection3 mContactInfo;
+  ChatViewModel chatViewModel = new ChatViewModel();
 
   @override
   void initState() {
@@ -1519,6 +1523,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
         addFamilyUserInfoBloc.updateSelfProfile(false).then((value) {
           if (value != null && value.isSuccess) {
+            chatViewModel.upateUserNickname(
+                myProf.result.id,
+                firstNameController.text + ' ' + lastNameController.text);
             _familyListBloc.getFamilyMembersListNew().then((value) {
               PreferenceUtil.saveFamilyData(
                       Constants.KEY_FAMILYMEMBER, value.result)
@@ -1555,6 +1562,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
         addFamilyUserInfoBloc.updateSelfProfile(false).then((value) {
           if (value != null && value.isSuccess) {
+            chatViewModel.upateUserNickname(
+                myProf.result.id,
+                firstNameController.text + ' ' + lastNameController.text);
             _familyListBloc.getFamilyMembersListNew().then((value) {
               /*MySliverAppBar.imageURI = null;
                     fetchedProfileData = null;*/
@@ -1601,6 +1611,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
         addFamilyUserInfoBloc.updateSelfProfile(false).then((value) {
           if (value != null && value.isSuccess) {
+            chatViewModel.upateUserNickname(
+                myProf.result.id,
+                firstNameController.text + ' ' + lastNameController.text);
             _familyListBloc.getFamilyMembersListNew().then((value) {
               PreferenceUtil.saveFamilyData(
                       Constants.KEY_FAMILYMEMBER, value.result)
@@ -1669,11 +1682,16 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               } else {
                 return Center(
                   child: Text(
-                    widget.arguments.sharedbyme.child.firstName != null && widget.arguments.sharedbyme.child.lastName != null
+                    widget.arguments.sharedbyme.child.firstName != null &&
+                            widget.arguments.sharedbyme.child.lastName != null
                         ? widget.arguments.sharedbyme.child.firstName[0]
-                            .toUpperCase() + widget.arguments.sharedbyme.child.lastName[0]
-                        .toUpperCase()
-                        : widget.arguments.sharedbyme.child.firstName != null ? widget.arguments.sharedbyme.child.firstName[0].toUpperCase():'',
+                                .toUpperCase() +
+                            widget.arguments.sharedbyme.child.lastName[0]
+                                .toUpperCase()
+                        : widget.arguments.sharedbyme.child.firstName != null
+                            ? widget.arguments.sharedbyme.child.firstName[0]
+                                .toUpperCase()
+                            : '',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 50.0.sp,
@@ -1685,11 +1703,16 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             } else {
               return Center(
                 child: Text(
-                  widget.arguments.sharedbyme.child.firstName != null && widget.arguments.sharedbyme.child.lastName != null
+                  widget.arguments.sharedbyme.child.firstName != null &&
+                          widget.arguments.sharedbyme.child.lastName != null
                       ? widget.arguments.sharedbyme.child.firstName[0]
-                      .toUpperCase() + widget.arguments.sharedbyme.child.lastName[0]
-                      .toUpperCase()
-                      : widget.arguments.sharedbyme.child.firstName != null ? widget.arguments.sharedbyme.child.firstName[0].toUpperCase():'',
+                              .toUpperCase() +
+                          widget.arguments.sharedbyme.child.lastName[0]
+                              .toUpperCase()
+                      : widget.arguments.sharedbyme.child.firstName != null
+                          ? widget.arguments.sharedbyme.child.firstName[0]
+                              .toUpperCase()
+                          : '',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 50.0.sp,
@@ -1707,11 +1730,16 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           } else {
             return Center(
               child: Text(
-                widget.arguments.sharedbyme.child.firstName != null && widget.arguments.sharedbyme.child.lastName != null
+                widget.arguments.sharedbyme.child.firstName != null &&
+                        widget.arguments.sharedbyme.child.lastName != null
                     ? widget.arguments.sharedbyme.child.firstName[0]
-                    .toUpperCase() + widget.arguments.sharedbyme.child.lastName[0]
-                    .toUpperCase()
-                    : widget.arguments.sharedbyme.child.firstName != null ? widget.arguments.sharedbyme.child.firstName[0].toUpperCase():'',
+                            .toUpperCase() +
+                        widget.arguments.sharedbyme.child.lastName[0]
+                            .toUpperCase()
+                    : widget.arguments.sharedbyme.child.firstName != null
+                        ? widget.arguments.sharedbyme.child.firstName[0]
+                            .toUpperCase()
+                        : '',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 50.0.sp,
@@ -1745,12 +1773,16 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               } else {
                 return Center(
                   child: Text(
-                    widget.arguments.myProfileResult.firstName != null && widget.arguments.myProfileResult.lastName != null
+                    widget.arguments.myProfileResult.firstName != null &&
+                            widget.arguments.myProfileResult.lastName != null
                         ? widget.arguments.myProfileResult.firstName[0]
-                            .toUpperCase() + widget.arguments.myProfileResult.lastName[0]
-                        .toUpperCase()
-                        : widget.arguments.myProfileResult.firstName!=null ? widget.arguments.myProfileResult.firstName[0]
-                        .toUpperCase():'',
+                                .toUpperCase() +
+                            widget.arguments.myProfileResult.lastName[0]
+                                .toUpperCase()
+                        : widget.arguments.myProfileResult.firstName != null
+                            ? widget.arguments.myProfileResult.firstName[0]
+                                .toUpperCase()
+                            : '',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 50.0.sp,
@@ -1762,12 +1794,16 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             } else {
               return Center(
                 child: Text(
-                  widget.arguments.myProfileResult.firstName != null && widget.arguments.myProfileResult.lastName != null
+                  widget.arguments.myProfileResult.firstName != null &&
+                          widget.arguments.myProfileResult.lastName != null
                       ? widget.arguments.myProfileResult.firstName[0]
-                      .toUpperCase() + widget.arguments.myProfileResult.lastName[0]
-                      .toUpperCase()
-                      : widget.arguments.myProfileResult.firstName!=null ? widget.arguments.myProfileResult.firstName[0]
-                      .toUpperCase():'',
+                              .toUpperCase() +
+                          widget.arguments.myProfileResult.lastName[0]
+                              .toUpperCase()
+                      : widget.arguments.myProfileResult.firstName != null
+                          ? widget.arguments.myProfileResult.firstName[0]
+                              .toUpperCase()
+                          : '',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 50.0.sp,
@@ -1785,12 +1821,16 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           } else {
             return Center(
               child: Text(
-                widget.arguments.myProfileResult.firstName != null && widget.arguments.myProfileResult.lastName != null
+                widget.arguments.myProfileResult.firstName != null &&
+                        widget.arguments.myProfileResult.lastName != null
                     ? widget.arguments.myProfileResult.firstName[0]
-                    .toUpperCase() + widget.arguments.myProfileResult.lastName[0]
-                    .toUpperCase()
-                    : widget.arguments.myProfileResult.firstName!=null ? widget.arguments.myProfileResult.firstName[0]
-                    .toUpperCase():'',
+                            .toUpperCase() +
+                        widget.arguments.myProfileResult.lastName[0]
+                            .toUpperCase()
+                    : widget.arguments.myProfileResult.firstName != null
+                        ? widget.arguments.myProfileResult.firstName[0]
+                            .toUpperCase()
+                        : '',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 50.0.sp,
@@ -1824,9 +1864,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               } else {
                 return Center(
                   child: Text(
-                    widget.arguments.enteredFirstName != null && widget.arguments.enteredLastName!=null
-                        ? widget.arguments.enteredFirstName[0].toUpperCase() + widget.arguments.enteredLastName[0].toUpperCase()
-                        : widget.arguments.enteredFirstName != null? widget.arguments.enteredFirstName[0].toUpperCase():'',
+                    widget.arguments.enteredFirstName != null &&
+                            widget.arguments.enteredLastName != null
+                        ? widget.arguments.enteredFirstName[0].toUpperCase() +
+                            widget.arguments.enteredLastName[0].toUpperCase()
+                        : widget.arguments.enteredFirstName != null
+                            ? widget.arguments.enteredFirstName[0].toUpperCase()
+                            : '',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 50.0.sp,
@@ -1838,9 +1882,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             } else {
               return Center(
                 child: Text(
-                  widget.arguments.enteredFirstName != null && widget.arguments.enteredLastName!=null
-                      ? widget.arguments.enteredFirstName[0].toUpperCase() + widget.arguments.enteredLastName[0].toUpperCase()
-                      : widget.arguments.enteredFirstName != null? widget.arguments.enteredFirstName[0].toUpperCase():'',
+                  widget.arguments.enteredFirstName != null &&
+                          widget.arguments.enteredLastName != null
+                      ? widget.arguments.enteredFirstName[0].toUpperCase() +
+                          widget.arguments.enteredLastName[0].toUpperCase()
+                      : widget.arguments.enteredFirstName != null
+                          ? widget.arguments.enteredFirstName[0].toUpperCase()
+                          : '',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 50.0.sp,
@@ -1858,9 +1906,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           } else {
             return Center(
               child: Text(
-                widget.arguments.enteredFirstName != null && widget.arguments.enteredLastName!=null
-                    ? widget.arguments.enteredFirstName[0].toUpperCase() + widget.arguments.enteredLastName[0].toUpperCase()
-                    : widget.arguments.enteredFirstName != null? widget.arguments.enteredFirstName[0].toUpperCase():'',
+                widget.arguments.enteredFirstName != null &&
+                        widget.arguments.enteredLastName != null
+                    ? widget.arguments.enteredFirstName[0].toUpperCase() +
+                        widget.arguments.enteredLastName[0].toUpperCase()
+                    : widget.arguments.enteredFirstName != null
+                        ? widget.arguments.enteredFirstName[0].toUpperCase()
+                        : '',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 50.0.sp,
