@@ -448,12 +448,17 @@ class ApiBaseHelper {
         return responseJson;
       case 401:
         var responseJson = convert.jsonDecode(response.body.toString());
-
-        if (responseJson[parameters.strMessage] == Constants.STR_UN_AUTH_USER) {
+        if(responseJson[parameters.strMessage] != null && responseJson[parameters.strMessage] != ''){
+          SnackbarToLogout(msg: responseJson[parameters.strMessage]);
+        }else{
           SnackbarToLogout();
-        } else {
-          return responseJson;
         }
+
+        // if (responseJson[parameters.strMessage] == Constants.STR_UN_AUTH_USER) {
+        //   SnackbarToLogout();
+        // } else {
+        //   return responseJson;
+        // }
         break;
 
       case 403:
@@ -914,10 +919,10 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  void SnackbarToLogout() {
+  void SnackbarToLogout({String msg = 'something went wrong, please try again later.'}) {
     PreferenceUtil.clearAllData().then((value) {
-      Get.offAll(SignInScreen());
-      Get.snackbar(variable.strMessage, variable.strlogInDeviceOthr);
+      Get.offAll(PatientSignInScreen());
+      Get.snackbar(variable.strMessage, msg);
     });
   }
 
