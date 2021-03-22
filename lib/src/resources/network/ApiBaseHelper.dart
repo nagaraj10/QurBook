@@ -452,6 +452,7 @@ class ApiBaseHelper {
         if (responseJson[parameters.strMessage] == Constants.STR_UN_AUTH_USER) {
           SnackbarToLogout();
         } else {
+          exitFromApp();
           return responseJson;
         }
         break;
