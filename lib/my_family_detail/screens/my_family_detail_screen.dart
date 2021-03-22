@@ -355,6 +355,17 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                                   PreferenceUtil.getStringValue(
                                       Constants.KEY_AUTHTOKEN)
                             },
+                      errorBuilder:
+                          (BuildContext context, Object exception, StackTrace stackTrace) {
+                        return Container(
+                          height: 100.0.h,
+                          width: 100.0.h,
+                          color: Colors.grey[200],
+                          child: Center(
+                            child: getFirstLastNameText(sharedbyme.child),
+                          ),
+                        );
+                      },
                           )
                         : Container(
                             width: 100.0.h,
@@ -1352,5 +1363,39 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         ),
       ),
     );
+  }
+
+  Widget getFirstLastNameText(Child myProfile) {
+    if (myProfile != null &&
+        myProfile.firstName != null &&
+        myProfile.lastName != null) {
+      return Text(
+        myProfile.firstName[0].toUpperCase() +
+            myProfile.lastName[0].toUpperCase(),
+        style: TextStyle(
+          color: Color(new CommonUtil().getMyPrimaryColor()),
+          fontSize: 28.0.sp,
+          fontWeight: FontWeight.w400,
+        ),
+      );
+    } else if (myProfile != null && myProfile.firstName != null) {
+      return Text(
+        myProfile.firstName[0].toUpperCase(),
+        style: TextStyle(
+          color: Color(new CommonUtil().getMyPrimaryColor()),
+          fontSize: 28.0.sp,
+          fontWeight: FontWeight.w400,
+        ),
+      );
+    } else {
+      return Text(
+        '',
+        style: TextStyle(
+          color: Color(new CommonUtil().getMyPrimaryColor()),
+          fontSize: 28.0.sp,
+          fontWeight: FontWeight.w200,
+        ),
+      );
+    }
   }
 }

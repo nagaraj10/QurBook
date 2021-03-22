@@ -339,269 +339,283 @@ class HomeScreenState extends State<ChatHomeScreen> {
 
   Widget buildItem(BuildContext context, DocumentSnapshot document,
       chatListSnapshot, int index) {
-    String lastMessage = document[STR_LAST_MESSAGE];
-    if (document[STR_ID] == patientId) {
-      return Container();
-    } else {
-      return Column(
-        children: <Widget>[
-          InkWell(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => Chat(
-                            peerId: document.documentID,
-                            peerAvatar: document[STR_PHOTO_URL],
-                            peerName: document[STR_NICK_NAME],
-                            lastDate: getFormattedDateTime(
-                                (document[STR_CREATED_AT] as Timestamp)
-                                    .toDate()
-                                    .toString()),
-                            patientId: '',
-                            patientName: '',
-                            patientPicture: '',
-                            isFromVideoCall: false,
-                          )));
-            },
-            child: Container(
-              child: Row(
-                children: <Widget>[
-                  SizedBox(width: 1.sw * 0.025),
-                  Container(
-                    width: 1.sw * 0.12,
-                    height: 1.sw * 0.12,
+    return StreamBuilder(
+      stream: Firestore.instance
+          .collection(STR_USERS)
+          .document(document.documentID)
+          .snapshots(),
+      builder: (context, AsyncSnapshot<DocumentSnapshot> snapshotUser) {
+        if(snapshotUser.hasData){
+          String lastMessage = document[STR_LAST_MESSAGE];
+          if (document[STR_ID] == patientId) {
+            return Container();
+          } else {
+            return Column(
+              children: <Widget>[
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Chat(
+                              peerId: document.documentID,
+                              peerAvatar: document[STR_PHOTO_URL],
+                              peerName: snapshotUser.data[STR_NICK_NAME],
+                              lastDate: getFormattedDateTime(
+                                  (document[STR_CREATED_AT] as Timestamp)
+                                      .toDate()
+                                      .toString()),
+                              patientId: '',
+                              patientName: '',
+                              patientPicture: '',
+                              isFromVideoCall: false,
+                            )));
+                  },
+                  child: Container(
                     child: Row(
-                      children: [
-                        Expanded(
-                          child: ClipOval(
-                            child: document[STR_PHOTO_URL] != null
-                                ? CachedNetworkImage(
-                                    placeholder: (context, url) => Container(
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 1.0,
-                                        valueColor:
-                                            AlwaysStoppedAnimation<Color>(
-                                                themeColor),
+                      children: <Widget>[
+                        SizedBox(width: 1.sw * 0.025),
+                        Container(
+                          width: 1.sw * 0.12,
+                          height: 1.sw * 0.12,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: ClipOval(
+                                  child: document[STR_PHOTO_URL] != null
+                                      ? CachedNetworkImage(
+                                      placeholder: (context, url) => Container(
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 1.0,
+                                          valueColor:
+                                          AlwaysStoppedAnimation<Color>(
+                                              themeColor),
+                                        ),
+                                        width: 50.0,
+                                        height: 50.0,
+                                        padding: EdgeInsets.all(15.0),
                                       ),
+                                      imageUrl: document[STR_PHOTO_URL],
                                       width: 50.0,
                                       height: 50.0,
-                                      padding: EdgeInsets.all(15.0),
-                                    ),
-                                    imageUrl: document[STR_PHOTO_URL],
-                                    width: 50.0,
-                                    height: 50.0,
-                                    fit: BoxFit.cover,
-                                    errorWidget: (context, url, error) =>
-                                        Container(
-                                          height: 50.0.h,
-                                          width: 50.0.h,
-                                          color: Colors.grey[200],
-                                          child: Center(
-                                            child: Text(
-                                              document[STR_NICK_NAME][0].toString().toUpperCase(),
-                                              style: TextStyle(
-                                                color: Color(new CommonUtil().getMyPrimaryColor()),
-                                                fontSize: 16.0.sp,
-                                                fontWeight: FontWeight.w400,
-                                              ),
-                                            )
-                                          ),
-                                        )
+                                      fit: BoxFit.cover,
+                                      errorWidget: (context, url, error) =>
+                                          Container(
+                                            height: 50.0.h,
+                                            width: 50.0.h,
+                                            color: Colors.grey[200],
+                                            child: Center(
+                                                child: Text(
+                                                  snapshotUser.data[STR_NICK_NAME][0].toString().toUpperCase(),
+                                                  style: TextStyle(
+                                                    color: Color(new CommonUtil().getMyPrimaryColor()),
+                                                    fontSize: 16.0.sp,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                )
+                                            ),
+                                          )
                                   )
-                                : Icon(
+                                      : Icon(
                                     Icons.account_circle,
                                     size: 50.0,
                                     color: greyColor,
                                   ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    width: 1.sw * 0.055,
-                  ),
-                  Container(
-                    child: Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 4),
-                            child: Text(
-                              toBeginningOfSentenceCase(
-                                  document[STR_NICK_NAME]),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 15.0.sp,
-                                  fontFamily: variable.font_poppins),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 1,
-                          ),
-                          Container(
-                            constraints: BoxConstraints(maxWidth: 1.sw * 0.5),
-                            padding: const EdgeInsets.only(bottom: 4),
-                            child: lastMessage != null
-                                ? lastMessage.contains(STR_HTTPS)
-                                    ? Row(
-                                        children: [
-                                          Icon(
-                                            Icons.photo,
-                                            size: 16.0.sp,
-                                            color: Colors.black54,
-                                          ),
-                                          SizedBoxWidget(
-                                            width: 3,
-                                          ),
-                                          Text(
-                                            STR_FILE,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                                color: Colors.grey[600],
-                                                fontSize: 14.0.sp,
-                                                fontFamily:
-                                                    variable.font_poppins),
-                                          )
-                                        ],
-                                      )
-                                    : Text(
-                                        lastMessage,
+                        SizedBox(
+                          width: 1.sw * 0.055,
+                        ),
+                        Container(
+                          child: Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 4),
+                                  child: Text(
+                                    toBeginningOfSentenceCase(
+                                        snapshotUser.data[STR_NICK_NAME]),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 15.0.sp,
+                                        fontFamily: variable.font_poppins),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 1,
+                                ),
+                                Container(
+                                  constraints: BoxConstraints(maxWidth: 1.sw * 0.5),
+                                  padding: const EdgeInsets.only(bottom: 4),
+                                  child: lastMessage != null
+                                      ? lastMessage.contains(STR_HTTPS)
+                                      ? Row(
+                                    children: [
+                                      Icon(
+                                        Icons.photo,
+                                        size: 16.0.sp,
+                                        color: Colors.black54,
+                                      ),
+                                      SizedBoxWidget(
+                                        width: 3,
+                                      ),
+                                      Text(
+                                        STR_FILE,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
-                                            fontWeight: FontWeight.bold,
                                             color: Colors.grey[600],
                                             fontSize: 14.0.sp,
-                                            fontFamily: variable.font_poppins),
+                                            fontFamily:
+                                            variable.font_poppins),
                                       )
-                                : '',
-                          ),
-                          SizedBox(
-                            height: 1,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
-                            child: Text(
-                              document[STR_CREATED_AT] != null
-                                  ? LAST_RECEIVED +
-                                      getFormattedDateTime(
-                                          (document[STR_CREATED_AT]
-                                                  as Timestamp)
-                                              .toDate()
-                                              .toString())
-                                  : '',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w300,
-                                  color: Colors.grey[600],
-                                  fontSize: 12.0.sp,
-                                  fontFamily: variable.font_poppins),
+                                    ],
+                                  )
+                                      : Text(
+                                    lastMessage,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey[600],
+                                        fontSize: 14.0.sp,
+                                        fontFamily: variable.font_poppins),
+                                  )
+                                      : '',
+                                ),
+                                SizedBox(
+                                  height: 1,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 10),
+                                  child: Text(
+                                    document[STR_CREATED_AT] != null
+                                        ? LAST_RECEIVED +
+                                        getFormattedDateTime(
+                                            (document[STR_CREATED_AT]
+                                            as Timestamp)
+                                                .toDate()
+                                                .toString())
+                                        : '',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w300,
+                                        color: Colors.grey[600],
+                                        fontSize: 12.0.sp,
+                                        fontFamily: variable.font_poppins),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 1.sw * 0.035,
-                  ),
-                  Container(
-                    child: Column(
-                      children: [
-                        Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 8, 4, 4),
-                            child: (chatListSnapshot.hasData &&
-                                    chatListSnapshot.data.documents.length > 0)
-                                ? StreamBuilder<QuerySnapshot>(
-                                    stream: Firestore.instance
-                                        .collection('messages')
-                                        .document(chatViewModel.createGroupId(
-                                            patientId,
-                                            chatListSnapshot
-                                                .data.documents[index]['id']))
-                                        .collection(chatViewModel.createGroupId(
-                                            patientId,
-                                            chatListSnapshot
-                                                .data.documents[index]['id']))
-                                        .where('idTo', isEqualTo: patientId)
-                                        .where('isread', isEqualTo: false)
-                                        .snapshots(),
-                                    builder: (context, notReadMSGSnapshot) {
-                                      return Container(
-                                        width: 60,
-                                        height: 50,
-                                        child: Column(
-                                          children: <Widget>[
-                                            Padding(
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                        0, 5, 0, 0),
-                                                child: CircleAvatar(
-                                                  radius: 10,
-                                                  child: Text(
-                                                    (chatListSnapshot.hasData &&
-                                                            chatListSnapshot
-                                                                    .data
-                                                                    .documents
-                                                                    .length >
-                                                                0)
-                                                        ? ((notReadMSGSnapshot
-                                                                    .hasData &&
-                                                                notReadMSGSnapshot
-                                                                        .data
-                                                                        .documents
-                                                                        .length >
-                                                                    0)
-                                                            ? '${notReadMSGSnapshot.data.documents.length}'
-                                                            : '')
-                                                        : '',
-                                                    style: TextStyle(
-                                                      fontSize: 12.0.sp,
+                        ),
+                        SizedBox(
+                          width: 1.sw * 0.035,
+                        ),
+                        Container(
+                          child: Column(
+                            children: [
+                              Padding(
+                                  padding: const EdgeInsets.fromLTRB(0, 8, 4, 4),
+                                  child: (chatListSnapshot.hasData &&
+                                      chatListSnapshot.data.documents.length > 0)
+                                      ? StreamBuilder<QuerySnapshot>(
+                                      stream: Firestore.instance
+                                          .collection('messages')
+                                          .document(chatViewModel.createGroupId(
+                                          patientId,
+                                          chatListSnapshot
+                                              .data.documents[index]['id']))
+                                          .collection(chatViewModel.createGroupId(
+                                          patientId,
+                                          chatListSnapshot
+                                              .data.documents[index]['id']))
+                                          .where('idTo', isEqualTo: patientId)
+                                          .where('isread', isEqualTo: false)
+                                          .snapshots(),
+                                      builder: (context, notReadMSGSnapshot) {
+                                        return Container(
+                                          width: 60,
+                                          height: 50,
+                                          child: Column(
+                                            children: <Widget>[
+                                              Padding(
+                                                  padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      0, 5, 0, 0),
+                                                  child: CircleAvatar(
+                                                    radius: 10,
+                                                    child: Text(
+                                                      (chatListSnapshot.hasData &&
+                                                          chatListSnapshot
+                                                              .data
+                                                              .documents
+                                                              .length >
+                                                              0)
+                                                          ? ((notReadMSGSnapshot
+                                                          .hasData &&
+                                                          notReadMSGSnapshot
+                                                              .data
+                                                              .documents
+                                                              .length >
+                                                              0)
+                                                          ? '${notReadMSGSnapshot.data.documents.length}'
+                                                          : '')
+                                                          : '',
+                                                      style: TextStyle(
+                                                        fontSize: 12.0.sp,
+                                                      ),
                                                     ),
-                                                  ),
-                                                  backgroundColor:
-                                                      (notReadMSGSnapshot
-                                                                  .hasData &&
-                                                              notReadMSGSnapshot
-                                                                      .data
-                                                                      .documents
-                                                                      .length >
-                                                                  0 &&
-                                                              notReadMSGSnapshot
-                                                                  .hasData &&
-                                                              notReadMSGSnapshot
-                                                                      .data
-                                                                      .documents
-                                                                      .length >
-                                                                  0)
-                                                          ? Color(CommonUtil()
-                                                              .getMyPrimaryColor())
-                                                          : Colors.transparent,
-                                                  foregroundColor: Colors.white,
-                                                )),
-                                          ],
-                                        ),
-                                      );
-                                    })
-                                : Text(''))
+                                                    backgroundColor:
+                                                    (notReadMSGSnapshot
+                                                        .hasData &&
+                                                        notReadMSGSnapshot
+                                                            .data
+                                                            .documents
+                                                            .length >
+                                                            0 &&
+                                                        notReadMSGSnapshot
+                                                            .hasData &&
+                                                        notReadMSGSnapshot
+                                                            .data
+                                                            .documents
+                                                            .length >
+                                                            0)
+                                                        ? Color(CommonUtil()
+                                                        .getMyPrimaryColor())
+                                                        : Colors.transparent,
+                                                    foregroundColor: Colors.white,
+                                                  )),
+                                            ],
+                                          ),
+                                        );
+                                      })
+                                      : Text(''))
+                            ],
+                          ),
+                        )
                       ],
                     ),
-                  )
-                ],
-              ),
-            ),
-          ),
-          Container(
-            color: Colors.grey,
-            height: 0.5,
-            margin: EdgeInsets.only(bottom: 6),
-          )
-        ],
-      );
-    }
+                  ),
+                ),
+                Container(
+                  color: Colors.grey,
+                  height: 0.5,
+                  margin: EdgeInsets.only(bottom: 6),
+                )
+              ],
+            );
+          }
+        }else{
+          return new CircularProgressIndicator();
+        }
+
+      },
+    );
+
   }
 
   String getFormattedDateTime(String datetime) {

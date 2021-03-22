@@ -182,4 +182,21 @@ class ChatViewModel extends ChangeNotifier {
     } catch (e) {}
   }
 
+  Future<void> upateUserNickname(String patientId,String patientName) async {
+
+    final QuerySnapshot result = await Firestore.instance
+        .collection(USERS)
+        .where(ID, isEqualTo: patientId)
+        .getDocuments();
+    final List<DocumentSnapshot> documents = result.documents;
+
+    if (documents.length > 0) {
+      // Update data to fire store
+      Firestore.instance.collection(USERS).document(patientId).updateData({
+        NICK_NAME: patientName != null ? patientName : ''
+      });
+    }
+
+  }
+
 }
