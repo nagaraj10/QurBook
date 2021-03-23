@@ -122,18 +122,13 @@
 
 
 
-                <Button
+                <ImageView
                     android:id="@+id/tryAgain"
-                    style="@style/ButtonBorder.Accent"
                     android:layout_width="70dp"
                     android:layout_height="50dp"
                     android:layout_gravity="center"
                     android:layout_margin="20dp"
-                    android:text=""
-                    android:textAllCaps="false"
-                    android:drawableTop="@drawable/ic_mic_on_new_black"
-                    android:drawablePadding="20dp"
-                    />
+                    android:src="@drawable/ic_mic_on_new_black" />
 
 
             </LinearLayout>
