@@ -140,7 +140,8 @@ class ChatScreenState extends State<ChatScreen> {
   String peerId;
   String peerAvatar;
   String peerName;
-  String id;
+
+  //String id;
   String lastDate;
 
   var listMessage;
@@ -277,18 +278,12 @@ class ChatScreenState extends State<ChatScreen> {
   }
 
   readLocal() async {
-    prefs = await SharedPreferences.getInstance();
-    id = prefs.getString('id') ?? '';
     if (patientId.hashCode <= peerId.hashCode) {
       groupChatId = '$patientId-$peerId';
     } else {
       groupChatId = '$peerId-$patientId';
     }
     chatViewModel.setCurrentChatRoomID(groupChatId);
-    /*Firestore.instance
-        .collection('users')
-        .document(id == "" ? patientId : id)
-        .updateData({'chattingWith': peerId});*/
 
     setState(() {});
   }
@@ -404,9 +399,7 @@ class ChatScreenState extends State<ChatScreen> {
     // type: 0 = text, 1 = image, 2 = sticker
     if (content.trim() != '') {
       textValue = textEditingController.text;
-
       textEditingController.clear();
-
       var documentReference = Firestore.instance
           .collection(STR_MESSAGES)
           .document(groupChatId)
@@ -417,7 +410,7 @@ class ChatScreenState extends State<ChatScreen> {
         await transaction.set(
           documentReference,
           {
-            STR_ID_FROM: id == "" ? patientId : id,
+            STR_ID_FROM: patientId,
             STR_ID_TO: peerId,
             STR_TIME_STAMP: FieldValue.serverTimestamp(),
             STR_CONTENT: content,
@@ -426,9 +419,6 @@ class ChatScreenState extends State<ChatScreen> {
           },
         );
       });
-      /*listScrollController.animateTo(0.0,
-          duration: Duration(milliseconds: 300), curve: Curves.easeOut);*/
-
       addChatList(content, type);
     } else {
       Fluttertoast.showToast(msg: NOTHING_SEND, backgroundColor: Colors.red);
@@ -500,10 +490,7 @@ class ChatScreenState extends State<ChatScreen> {
           groupChatId,
           doctorDeviceToken);
       textValue = '';
-    } catch (e) {
-      print(e.message);
-    }
-    //_resetTextFieldAndLoading();
+    } catch (e) {}
   }
 
   openDownloadAlert(
@@ -595,9 +582,7 @@ class ChatScreenState extends State<ChatScreen> {
             ));
           }
         });
-      } catch (e) {
-        print('$e exception thrown');
-      }
+      } catch (e) {}
     }
   }
 
@@ -859,37 +844,35 @@ class ChatScreenState extends State<ChatScreen> {
                 isLastMessageLeft(index)
                     ? Material(
                         child: CachedNetworkImage(
-                          placeholder: (context, url) => Container(
-                            child: CircularProgressIndicator(
-                              strokeWidth: 1.0.sp,
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(themeColor),
-                            ),
+                            placeholder: (context, url) => Container(
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 1.0.sp,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        themeColor),
+                                  ),
+                                  width: 35.0.h,
+                                  height: 35.0.h,
+                                  padding: EdgeInsets.all(10.0),
+                                ),
+                            imageUrl: peerAvatar,
                             width: 35.0.h,
                             height: 35.0.h,
-                            padding: EdgeInsets.all(10.0),
-                          ),
-                          imageUrl: peerAvatar,
-                          width: 35.0.h,
-                          height: 35.0.h,
-                          fit: BoxFit.cover,
-                            errorWidget: (context, url, error) =>
-                                Container(
+                            fit: BoxFit.cover,
+                            errorWidget: (context, url, error) => Container(
                                   height: 35.0.h,
                                   width: 35.0.h,
                                   color: Colors.grey[200],
                                   child: Center(
                                       child: Text(
-                                        peerName[0].toString().toUpperCase(),
-                                        style: TextStyle(
-                                          color: Color(new CommonUtil().getMyPrimaryColor()),
-                                          fontSize: 16.0.sp,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      )
-                                  ),
-                                )
-                        ),
+                                    peerName[0].toString().toUpperCase(),
+                                    style: TextStyle(
+                                      color: Color(
+                                          new CommonUtil().getMyPrimaryColor()),
+                                      fontSize: 16.0.sp,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  )),
+                                )),
                         borderRadius: BorderRadius.all(
                           Radius.circular(18.0),
                         ),
@@ -1111,30 +1094,26 @@ class ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  Widget getPdfViewLabel(DocumentSnapshot document){
-
-    if(document[STR_TIME_STAMP]!=null && document[STR_TIME_STAMP]!=''){
+  Widget getPdfViewLabel(DocumentSnapshot document) {
+    if (document[STR_TIME_STAMP] != null && document[STR_TIME_STAMP] != '') {
       DateTime dateTimeFromServerTimeStamp =
-      (document[STR_TIME_STAMP] as Timestamp).toDate();
+          (document[STR_TIME_STAMP] as Timestamp).toDate();
       return Text(
-        'File '+dateTimeFromServerTimeStamp.millisecondsSinceEpoch.toString(),
+        'File ' + dateTimeFromServerTimeStamp.millisecondsSinceEpoch.toString(),
         style: TextStyle(
-          color: Color(
-              CommonUtil().getMyPrimaryColor()),
+          color: Color(CommonUtil().getMyPrimaryColor()),
           fontSize: 16.0.sp,
         ),
       );
-    }else{
+    } else {
       return Text(
         'Click to View Pdf',
         style: TextStyle(
-          color: Color(
-              CommonUtil().getMyPrimaryColor()),
+          color: Color(CommonUtil().getMyPrimaryColor()),
           fontSize: 16.0.sp,
         ),
       );
     }
-
   }
 
   goToPDFViewBasedonURL(String url) {
@@ -1410,7 +1389,10 @@ class ChatScreenState extends State<ChatScreen> {
                     ),
                   ),
                   filled: true,
-                  hintStyle: new TextStyle(color: Colors.grey[800],fontSize: 16.0.sp,),
+                  hintStyle: new TextStyle(
+                    color: Colors.grey[800],
+                    fontSize: 16.0.sp,
+                  ),
                   fillColor: Colors.white70),
               onChanged: _onSearch,
             ),
@@ -1422,30 +1404,26 @@ class ChatScreenState extends State<ChatScreen> {
           child: Row(
             children: <Widget>[
               ClipOval(
-                child: Image.network(
-                    widget.peerAvatar,
+                child: Image.network(widget.peerAvatar,
                     height: 40.0.h,
                     width: 40.0.h,
-                    fit: BoxFit.cover,
-                    errorBuilder:
-                        (BuildContext context, Object exception, StackTrace stackTrace) {
-                      return Container(
-                        height: 50.0.h,
-                        width: 50.0.h,
-                        color: Colors.grey[200],
-                        child: Center(
-                          child: Text(
-                            widget.peerName[0].toString().toUpperCase(),
-                            style: TextStyle(
-                              color: Color(new CommonUtil().getMyPrimaryColor()),
-                              fontSize: 16.0.sp,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          )
-                        ),
-                      );
-                    }
-                ),
+                    fit: BoxFit.cover, errorBuilder: (BuildContext context,
+                        Object exception, StackTrace stackTrace) {
+                  return Container(
+                    height: 50.0.h,
+                    width: 50.0.h,
+                    color: Colors.grey[200],
+                    child: Center(
+                        child: Text(
+                      widget.peerName[0].toString().toUpperCase(),
+                      style: TextStyle(
+                        color: Color(new CommonUtil().getMyPrimaryColor()),
+                        fontSize: 16.0.sp,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    )),
+                  );
+                }),
               ),
               SizedBox(
                 width: 15.0.w,
@@ -1982,6 +1960,7 @@ class ChatScreenState extends State<ChatScreen> {
       ),
     );
   }
+
   closeDialog() {
     Navigator.of(context).pop();
   }
