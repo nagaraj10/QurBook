@@ -22,6 +22,7 @@ class SenderLayout extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
               c.name.toUpperCase(),
@@ -63,12 +64,14 @@ class SenderLayout extends StatelessWidget {
             ),
           ],
         ),
+        SizedBox(
+          width: 10.0.w,
+        ),
         ClipOval(
             child: Container(
           height: 40.0.h,
           width: 40.0.h,
-          child: FHBBasicWidget().getProfilePicWidgeUsingUrl(
-              myProfile),
+          child: FHBBasicWidget().getProfilePicWidgeUsingUrl(myProfile),
         )),
         SizedBox(width: 20.0.w),
       ],
