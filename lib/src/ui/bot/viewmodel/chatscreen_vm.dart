@@ -36,6 +36,7 @@ class ChatScreenViewModel extends ChangeNotifier {
   var screenValue;
   bool isButtonResponse = false;
   bool stopTTS = false;
+  bool isSheelaSpeaking = false;
   String _screen = parameters.strSheela;
 
   List<Conversation> get getMyConversations => conversations;
@@ -96,11 +97,13 @@ class ChatScreenViewModel extends ChangeNotifier {
     notifyListeners();
     if (index != null) {
       conversations[index].isSpeaking = false;
+      isSheelaSpeaking = false;
       notifyListeners();
     } else {
       conversations.forEach((conversation) {
         conversation.isSpeaking = false;
       });
+      isSheelaSpeaking = false;
       notifyListeners();
     }
     stopAudioPlayer();
@@ -117,6 +120,7 @@ class ChatScreenViewModel extends ChangeNotifier {
     if (canSpeak) {
       if (index != null) {
         conversations[index].isSpeaking = true;
+        isSheelaSpeaking = true;
         notifyListeners();
       }
       final lan = langCode != null && langCode.isNotEmpty
@@ -134,6 +138,7 @@ class ChatScreenViewModel extends ChangeNotifier {
           if (response == 1) {
             if (index != null) {
               conversations[index].isSpeaking = false;
+              isSheelaSpeaking = false;
               notifyListeners();
             }
           }
@@ -156,12 +161,14 @@ class ChatScreenViewModel extends ChangeNotifier {
               event == AudioPlayerState.STOPPED) {
             if (index != null) {
               conversations[index].isSpeaking = false;
+              isSheelaSpeaking = false;
               notifyListeners();
             }
           }
           if (event == AudioPlayerState.PLAYING) {
             if (index != null) {
               conversations[index].isSpeaking = true;
+              isSheelaSpeaking = true;
               notifyListeners();
             }
           }
@@ -305,6 +312,7 @@ class ChatScreenViewModel extends ChangeNotifier {
           } else {
             isButtonResponse = false;
           }
+          isSheelaSpeaking = false;
           notifyListeners();
           Future.delayed(
               Duration(
@@ -336,6 +344,7 @@ class ChatScreenViewModel extends ChangeNotifier {
                 }
                 isLoading = false;
                 conversations[conversations.length - 1].isSpeaking = true;
+                isSheelaSpeaking = true;
                 notifyListeners();
                 variable.tts_platform.invokeMethod(variable.strtts, {
                   parameters.strMessage: res.text + textToSpeak,
@@ -343,6 +352,7 @@ class ChatScreenViewModel extends ChangeNotifier {
                   parameters.strLanguage: res.lang
                 }).then((response) async {
                   conversations[conversations.length - 1].isSpeaking = false;
+                  isSheelaSpeaking = false;
                   notifyListeners();
                   if (response == 1) {
                     isMayaSpeaks = 1;
@@ -356,6 +366,7 @@ class ChatScreenViewModel extends ChangeNotifier {
                   }
                 }).catchError((error) {
                   conversations[conversations.length - 1].isSpeaking = false;
+                  isSheelaSpeaking = false;
                   notifyListeners();
                   if (!isEndOfConv) {
                     gettingReposnseFromNative();
@@ -378,12 +389,14 @@ class ChatScreenViewModel extends ChangeNotifier {
                   if (event == AudioPlayerState.PLAYING) {
                     isLoading = false;
                     conversations[conversations.length - 1].isSpeaking = true;
+                    isSheelaSpeaking = true;
                     notifyListeners();
                     isAudioPlayerPlaying = true;
                   }
                   if (event == AudioPlayerState.COMPLETED) {
                     isLoading = false;
                     conversations[conversations.length - 1].isSpeaking = false;
+                    isSheelaSpeaking = false;
                     notifyListeners();
                     if (!isButtonResponse) {
                       if (!isEndOfConv) {
@@ -395,6 +408,7 @@ class ChatScreenViewModel extends ChangeNotifier {
                       event == AudioPlayerState.STOPPED) {
                     isLoading = false;
                     conversations[conversations.length - 1].isSpeaking = false;
+                    isSheelaSpeaking = false;
                     notifyListeners();
                     // if (!isButtonResponse) {
                     //   gettingReposnseFromNative();
