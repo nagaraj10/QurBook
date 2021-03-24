@@ -12,17 +12,28 @@ class SpeechModelResponse {
   List<Buttons> buttons;
   List<VideoLinks> videoLinks;
   bool redirect;
+  bool enableMic;
   SpeechModelResponse({
-    this.recipientId, this.text,this.endOfConv,this.imageURL,
-    this.searchURL,this.lang,this.buttons,this.videoLinks,this.redirect
-    });
+    this.recipientId,
+    this.text,
+    this.endOfConv,
+    this.imageURL,
+    this.searchURL,
+    this.lang,
+    this.buttons,
+    this.videoLinks,
+    this.redirect,
+    this.enableMic,
+  });
 
   //setter
   SpeechModelResponse.fromJson(Map<String, dynamic> json) {
     recipientId = json[parameters.strReceiptId];
     text = json[parameters.strText];
-    imageURL = json.containsKey(parameters.strSpeechImageURL)?json[parameters.strSpeechImageURL]:null;
-    endOfConv =json[parameters.strEndOfConv];
+    imageURL = json.containsKey(parameters.strSpeechImageURL)
+        ? json[parameters.strSpeechImageURL]
+        : null;
+    endOfConv = json[parameters.strEndOfConv];
     searchURL = json[parameters.strSearchUrl];
     lang = json[parameters.strLanguage];
     if (json[parameters.strButtons] != null) {
@@ -38,6 +49,7 @@ class SpeechModelResponse {
       });
     }
     redirect = json[parameters.strRedirect];
+    enableMic = json[parameters.strEnableMic] ?? false;
   }
 
   //getter
@@ -50,12 +62,15 @@ class SpeechModelResponse {
     data[parameters.strSearchUrl] = this.searchURL;
     data[parameters.strLanguage] = this.lang;
     if (this.buttons != null) {
-      data[parameters.strButtons] = this.buttons.map((v) => v.toJson()).toList();
+      data[parameters.strButtons] =
+          this.buttons.map((v) => v.toJson()).toList();
     }
     if (this.videoLinks != null) {
-      data[parameters.strVideoLinks] = this.videoLinks.map((v) => v.toJson()).toList();
+      data[parameters.strVideoLinks] =
+          this.videoLinks.map((v) => v.toJson()).toList();
     }
     data[parameters.strRedirect] = this.redirect;
+    data[parameters.strEnableMic] = this.enableMic;
     return data;
   }
 }

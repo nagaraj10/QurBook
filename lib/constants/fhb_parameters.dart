@@ -101,6 +101,7 @@ const String strVideoLinks = 'videoLinks';
 const String strPlatforType = 'device_type';
 const String strScreen = 'screen';
 const String strRedirect = 'redirect';
+const String strEnableMic = 'enable_mic';
 const String strDashboard = 'dashboard';
 const String strSheela = 'sheela';
 
