@@ -45,6 +45,8 @@ import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/Authentication/DeviceInfoSucess.dart';
 import 'package:myfhb/src/model/Authentication/SignOutResponse.dart';
 import 'package:myfhb/src/model/Category/CategoryData.dart';
+import 'package:myfhb/src/model/Category/CategoryResponseList.dart';
+import 'package:myfhb/src/model/Category/catergory_data_list.dart';
 import 'package:myfhb/src/model/Category/catergory_result.dart';
 import 'package:myfhb/src/model/Health/CategoryInfo.dart';
 import 'package:myfhb/src/model/Health/CompleteData.dart';
@@ -72,6 +74,7 @@ import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/ui/MyRecordsArguments.dart';
 import 'package:myfhb/src/ui/user/UserAccounts.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
+import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
@@ -1674,93 +1677,15 @@ class CommonUtil {
     }
   }
 
-  Future<int> getCategoryPosition(String categoryName) async {
-    int categoryPosition = 0;
-    switch (categoryName) {
-      case Constants.STR_NOTES:
-        categoryPosition = await getCategoryListPos(categoryName);
-        return categoryPosition;
-        break;
-      case Constants.STR_PRESCRIPTION:
-        categoryPosition = await getCategoryListPos(categoryName);
-        return categoryPosition;
-        break;
-      case Constants.STR_VOICERECORDS:
-        categoryPosition = await getCategoryListPos(categoryName);
-        return categoryPosition;
-        break;
-      case Constants.STR_BILLS:
-        categoryPosition = await getCategoryListPos(categoryName);
-        return categoryPosition;
-        break;
-      case Constants.STR_LABREPORT:
-        categoryPosition = await getCategoryListPos(categoryName);
-        return categoryPosition;
-        break;
-      case Constants.STR_OTHERS:
-        categoryPosition = await getCategoryListPos(categoryName);
-        return categoryPosition;
-        break;
-      case Constants.STR_HOSPITALDOCUMENT:
-        categoryPosition = await getCategoryListPos(categoryName);
-        return categoryPosition;
-        break;
-      case Constants.STR_MEDICALREPORT:
-        categoryPosition = await getCategoryListPos(categoryName);
-        return categoryPosition;
-        break;
-      case Constants.STR_IDDOCS:
-      case Constants.STR_HOS_ID:
-      case Constants.STR_OTHER_ID:
-      case Constants.STR_INSURE_ID:
-        categoryPosition = await getCategoryListPos(categoryName);
-        //return categoryPosition;
-        return 5;
-        break;
-      default:
-        categoryPosition = 0;
-        return categoryPosition;
-        break;
-    }
-  }
-/* 
-  int pickPosition(String categoryName) {
-    int position = 0;
-    List<CategoryResult> categoryDataList = List();
-    categoryDataList = getCategoryList();
-    for (int i = 0;
-        i < (categoryDataList == null ? 0 : categoryDataList.length);
-        i++) {
-      if (categoryName == categoryDataList[i].categoryName) {
-        print(categoryName + ' ****' + categoryDataList[i].categoryName);
-        position = i;
-      }
-    }
-    if (categoryName == Constants.STR_PRESCRIPTION) {
-      return position;
-    } else if (categoryName == Constants.STR_IDDOCS ||
-        categoryName == Constants.STR_HOS_ID ||
-        categoryName == Constants.STR_OTHER_ID ||
-        categoryName == Constants.STR_INSURE_ID) {
-      var pos = categoryDataList
-          .indexOf(CategoryResult(categoryName: Constants.STR_IDDOCS));
-      return pos > 0 ? pos : 0;
-    } else {
-      return position;
-    }
-  } */
-
   Future<int> getCategoryListPos(String categoryName) async {
     int position = 0;
-    CategoryListBlock _categoryListBlock = new CategoryListBlock();
+    _categoryResponseListRepository = CategoryResponseListRepository();
     List<CategoryResult> filteredCategoryData = new List();
     if (filteredCategoryData == null || filteredCategoryData.length == 0) {
-      _categoryListBlock.getCategoryLists().then((value) {
-        filteredCategoryData = new CommonUtil().fliterCategories(value.result);
-
-        //filteredCategoryData.add(categoryDataObjClone);
-        //return filteredCategoryData;
-
+      try {
+        CategoryDataList categoryResponseList =
+            await _categoryResponseListRepository.getCategoryLists();
+        filteredCategoryData = fliterCategories(categoryResponseList.result);
         for (int i = 0;
             i <
                 (filteredCategoryData == null
@@ -1779,15 +1704,13 @@ class CommonUtil {
             categoryName == Constants.STR_HOS_ID ||
             categoryName == Constants.STR_OTHER_ID ||
             categoryName == Constants.STR_INSURE_ID) {
-          // var pos = filteredCategoryData
-          //     .indexOf(CategoryResult(categoryName: Constants.STR_IDDOCS));
           var pos = filteredCategoryData
               .indexWhere((data) => data.categoryName == Constants.STR_IDDOCS);
           return pos > 0 ? pos : 0;
         } else {
           return position;
         }
-      });
+      } catch (e) {}
     } else {
       return position;
     }
@@ -1799,9 +1722,6 @@ class CommonUtil {
     if (value != null) {
       goToMyRecordsScreen(value, hrmId, isTerminate);
     }
-
-    /* CommonUtil().getCategoryPosition(categoryType).then(
-        (value) => CommonUtil().goToMyRecordsScreen(value, hrmId, isTerminate)); */
   }
 
   void goToMyRecordsScreen(
@@ -1818,7 +1738,7 @@ class CommonUtil {
               showDetails: true,
               isAssociateOrChat: false,
               fromAppointments: false,
-              fromClass: 'notification'));
+              fromClass: 'notification')).then((value) => Get.offNamedUntil(router.rt_Dashboard,(Route<dynamic> route) => false));
     } else {
       Get.to(
         MyRecords(
