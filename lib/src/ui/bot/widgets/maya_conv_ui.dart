@@ -115,6 +115,7 @@ class MayaConvUI extends StatelessWidget {
                     .startTTSEngine(
                   textToSpeak: c.text + textToSpeak,
                   index: index,
+                  langCode: c.langCode,
                 );
               } else {
                 Provider.of<ChatScreenViewModel>(context, listen: false)

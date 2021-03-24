@@ -30,7 +30,7 @@ class ChatScreenViewModel extends ChangeNotifier {
   var auth_token = PreferenceUtil.getStringValue(constants.KEY_AUTHTOKEN);
   var isMayaSpeaks = -1;
   var isEndOfConv = false;
-  var stopTTSNow = false;
+  bool canSpeak = true;
   var isLoading = false;
   var isRedirect = false;
   var screenValue;
@@ -47,6 +47,15 @@ class ChatScreenViewModel extends ChangeNotifier {
   bool get getIsButtonResponse => isButtonResponse;
   bool get getStopTTS => stopTTS;
 
+  void updateAppState(bool canSheelaSpeak, {bool isInitial: false}) {
+    canSpeak = canSheelaSpeak;
+    if (!canSheelaSpeak) {
+      isLoading = false;
+      stopTTSEngine();
+    }
+    if (!isInitial) notifyListeners();
+  }
+
   void clearMyConversation() {
     conversations = List();
     // notifyListeners();
@@ -60,6 +69,8 @@ class ChatScreenViewModel extends ChangeNotifier {
   }
 
   startMayaAutomatically() {
+    isLoading = true;
+    notifyListeners();
     Future.delayed(Duration(seconds: 1), () {
       _screen = parameters.strSheela;
       sendToMaya(variable.strhiMaya, screen: _screen);
@@ -100,51 +111,62 @@ class ChatScreenViewModel extends ChangeNotifier {
     });
   }
 
-  Future<bool> startTTSEngine({String textToSpeak, int index}) async {
+  Future<bool> startTTSEngine(
+      {String textToSpeak, int index, String langCode}) async {
     stopTTSEngine();
-    if (index != null) {
-      conversations[index].isSpeaking = true;
-      notifyListeners();
-    }
-    final lan = Utils.getCurrentLanCode();
-    if (Platform.isIOS ||
-        lan == "undef" ||
-        lan.toLowerCase() == "en-IN".toLowerCase() ||
-        lan.toLowerCase() == "en-US".toLowerCase()) {
-      await variable.tts_platform.invokeMethod(variable.strtts, {
-        parameters.strMessage: textToSpeak,
-        parameters.strIsClose: false,
-        parameters.strLanguage: Utils.getCurrentLanCode(),
-      }).then((response) async {
-        if (response == 1) {
-          if (index != null) {
-            conversations[index].isSpeaking = false;
-            notifyListeners();
-          }
-        }
-      });
-    } else {
-      String langCodeForRequest;
-      if (lan != "undef") {
-        final langCode = lan.split("-").first;
-        langCodeForRequest = langCode;
-        //print(langCode);
+    if (canSpeak) {
+      if (index != null) {
+        conversations[index].isSpeaking = true;
+        notifyListeners();
       }
-      AudioPlayer newAudioPlay1 = AudioPlayer();
-      final languageForTTS = Utils.getCurrentLanCode();
-      getGoogleTTSResponse(
-          textToSpeak, languageForTTS != null ? languageForTTS : "en", true);
-      newAudioPlay1.onPlayerStateChanged.listen((event) async {
-        print(event);
-        if (event == AudioPlayerState.COMPLETED ||
-            event == AudioPlayerState.PAUSED ||
-            event == AudioPlayerState.STOPPED) {
-          if (index != null) {
-            conversations[index].isSpeaking = false;
-            notifyListeners();
+      final lan = langCode != null && langCode.isNotEmpty
+          ? langCode
+          : Utils.getCurrentLanCode();
+      if (Platform.isIOS ||
+          lan == "undef" ||
+          lan.toLowerCase() == "en-IN".toLowerCase() ||
+          lan.toLowerCase() == "en-US".toLowerCase()) {
+        await variable.tts_platform.invokeMethod(variable.strtts, {
+          parameters.strMessage: textToSpeak,
+          parameters.strIsClose: false,
+          parameters.strLanguage: langCode ?? Utils.getCurrentLanCode(),
+        }).then((response) async {
+          if (response == 1) {
+            if (index != null) {
+              conversations[index].isSpeaking = false;
+              notifyListeners();
+            }
           }
+        });
+      } else {
+        String langCodeForRequest;
+        if (lan != "undef") {
+          final langCode = lan.split("-").first;
+          langCodeForRequest = langCode;
+          //print(langCode);
         }
-      });
+        AudioPlayer newAudioPlay1 = AudioPlayer();
+        final languageForTTS = Utils.getCurrentLanCode();
+        getGoogleTTSResponse(
+            textToSpeak, languageForTTS != null ? languageForTTS : "en", true);
+        newAudioPlay1.onPlayerStateChanged.listen((event) async {
+          print(event);
+          if (event == AudioPlayerState.COMPLETED ||
+              event == AudioPlayerState.PAUSED ||
+              event == AudioPlayerState.STOPPED) {
+            if (index != null) {
+              conversations[index].isSpeaking = false;
+              notifyListeners();
+            }
+          }
+          if (event == AudioPlayerState.PLAYING) {
+            if (index != null) {
+              conversations[index].isSpeaking = true;
+              notifyListeners();
+            }
+          }
+        });
+      }
     }
   }
 
@@ -245,6 +267,7 @@ class ChatScreenViewModel extends ChangeNotifier {
     reqJson[parameters.strPlatforType] = Platform.isAndroid ? 'android' : 'ios';
     reqJson[parameters.strScreen] = screen;
     screenValue = screen;
+    isLoading = true;
 
     Service mService = Service();
     final response = await mService.sendMetaToMaya(reqJson);
@@ -282,14 +305,11 @@ class ChatScreenViewModel extends ChangeNotifier {
           } else {
             isButtonResponse = false;
           }
-          isLoading = true;
           notifyListeners();
           Future.delayed(
               Duration(
                 seconds: 4,
               ), () async {
-            isLoading = false;
-            notifyListeners();
             isMayaSpeaks = 0;
             final lan = Utils.getCurrentLanCode();
             String langCodeForRequest;
@@ -299,7 +319,7 @@ class ChatScreenViewModel extends ChangeNotifier {
               //print(langCode);
             }
 
-            if (!stopTTSNow) {
+            if (canSpeak) {
               if (Platform.isIOS ||
                   lan == "undef" ||
                   lan.toLowerCase() == "en-IN".toLowerCase() ||
@@ -314,6 +334,7 @@ class ChatScreenViewModel extends ChangeNotifier {
                 if (res.lang == null || res.lang == "undef") {
                   res.lang = "en-IN";
                 }
+                isLoading = false;
                 conversations[conversations.length - 1].isSpeaking = true;
                 notifyListeners();
                 variable.tts_platform.invokeMethod(variable.strtts, {
@@ -355,11 +376,13 @@ class ChatScreenViewModel extends ChangeNotifier {
                     languageForTTS != null ? languageForTTS : "en", false);
                 audioPlayerForTTS.onPlayerStateChanged.listen((event) async {
                   if (event == AudioPlayerState.PLAYING) {
+                    isLoading = false;
                     conversations[conversations.length - 1].isSpeaking = true;
                     notifyListeners();
                     isAudioPlayerPlaying = true;
                   }
                   if (event == AudioPlayerState.COMPLETED) {
+                    isLoading = false;
                     conversations[conversations.length - 1].isSpeaking = false;
                     notifyListeners();
                     if (!isButtonResponse) {
@@ -370,6 +393,7 @@ class ChatScreenViewModel extends ChangeNotifier {
                   }
                   if (event == AudioPlayerState.PAUSED ||
                       event == AudioPlayerState.STOPPED) {
+                    isLoading = false;
                     conversations[conversations.length - 1].isSpeaking = false;
                     notifyListeners();
                     // if (!isButtonResponse) {
@@ -384,6 +408,8 @@ class ChatScreenViewModel extends ChangeNotifier {
         }
       }
     } else {
+      isLoading = false;
+      notifyListeners();
       FlutterToast().getToast(
           'There is some issue with sheela,\n Please try after some time',
           Colors.black54);
@@ -426,16 +452,20 @@ class ChatScreenViewModel extends ChangeNotifier {
               final file = File('${dir.path}/wavenet.mp3');
               await file.writeAsBytes(bytes);
               final path = dir.path + "/wavenet.mp3";
-              if (isTTS) {
-                newAudioPlay1.play(path, isLocal: true);
-              } else {
-                audioPlayerForTTS.play(path, isLocal: true);
+              if (canSpeak) {
+                if (isTTS) {
+                  newAudioPlay1.play(path, isLocal: true);
+                } else {
+                  audioPlayerForTTS.play(path, isLocal: true);
+                }
               }
             }
           }
         }
       }
     } else {
+      isLoading = false;
+      notifyListeners();
       FlutterToast().getToast(
           'There is some issue with sheela,\n Please try after some time',
           Colors.black54);
@@ -454,6 +484,7 @@ class ChatScreenViewModel extends ChangeNotifier {
   }
 
   Future<void> gettingReposnseFromNative() async {
+    stopTTSEngine();
     try {
       await variable.voice_platform.invokeMethod(variable.strspeakAssistant,
           {'langcode': Utils.getCurrentLanCode()}).then((response) {

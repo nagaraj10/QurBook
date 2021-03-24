@@ -91,7 +91,7 @@ class MainActivity : FlutterActivity() {
     //internal lateinit var errorTxt: TextView
     internal lateinit var tryMe: LinearLayout
     internal lateinit var listeningLayout: LinearLayout
-    internal lateinit var tryAgain: Button
+    internal lateinit var tryAgain: ImageView
     internal lateinit var customLayout: View
     internal lateinit var spin_kit: SpinKitView
     internal lateinit var close: ImageView
@@ -422,7 +422,7 @@ class MainActivity : FlutterActivity() {
                                             listeningLayout.visibility = View.GONE
                                             tryMe.visibility = View.VISIBLE
                                             errorTxt.text = "Please Retry"
-                                            tryAgain.setOnClickListener {
+                                            customLayout.setOnClickListener {
                                                 this@MainActivity.runOnUiThread(
                                                         object : Runnable {
                                                             override fun run() {
@@ -490,7 +490,7 @@ class MainActivity : FlutterActivity() {
                                             listeningLayout.visibility = View.GONE
                                             tryMe.visibility = View.VISIBLE
                                             errorTxt.text = "Please Retry"
-                                            tryAgain.setOnClickListener {
+                                            customLayout.setOnClickListener {
                                                 this@MainActivity.runOnUiThread(
                                                         object : Runnable {
                                                             override fun run() {

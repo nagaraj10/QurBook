@@ -44,6 +44,10 @@ class _ChatScreenState extends State<ChatScreen>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    Provider.of<ChatScreenViewModel>(context, listen: false).updateAppState(
+      true,
+      isInitial: true,
+    );
     PreferenceUtil.init();
     _controller = AnimationController(
         duration: const Duration(milliseconds: 2000), vsync: this, value: 0.1);
@@ -64,7 +68,12 @@ class _ChatScreenState extends State<ChatScreen>
     if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.inactive ||
         state == AppLifecycleState.detached) {
+      Provider.of<ChatScreenViewModel>(context, listen: false)
+          .updateAppState(false);
       stopTTSEngine();
+    } else if (state == AppLifecycleState.resumed) {
+      Provider.of<ChatScreenViewModel>(context, listen: false)
+          .updateAppState(true);
     }
   }
 
@@ -134,16 +143,18 @@ class _ChatScreenState extends State<ChatScreen>
           visible:
               !Provider.of<ChatScreenViewModel>(context).getIsButtonResponse,
           child: FloatingActionButton(
-            onPressed: () {
-              if (getMyViewModel().isLoading) {
-                //do nothing
-              } else if (getMyViewModel().getisMayaSpeaks <= 0) {
-                stopTTSEngine();
-                getMyViewModel().gettingReposnseFromNative();
-              } else {
-                getMyViewModel().gettingReposnseFromNative();
-              }
-            },
+            onPressed: Provider.of<ChatScreenViewModel>(context).isLoading
+                ? null
+                : () {
+                    if (getMyViewModel().isLoading) {
+                      //do nothing
+                    } else if (getMyViewModel().getisMayaSpeaks <= 0) {
+                      stopTTSEngine();
+                      getMyViewModel().gettingReposnseFromNative();
+                    } else {
+                      getMyViewModel().gettingReposnseFromNative();
+                    }
+                  },
             child: Icon(
               Icons.mic,
               color: Colors.white,
@@ -172,6 +183,8 @@ class _ChatScreenState extends State<ChatScreen>
   }
 
   _backToPrevious() async {
+    Provider.of<ChatScreenViewModel>(context, listen: false)
+        .updateAppState(false);
     stopTTSEngine();
     Navigator.pop(context);
   }
