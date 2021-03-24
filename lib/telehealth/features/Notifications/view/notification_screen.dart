@@ -952,12 +952,11 @@ class _NotificationScreen extends State<NotificationScreen> {
     }
   }
 
-
   void navigateToMyRecordsCategory(
       dynamic categoryType, List<String> hrmId, bool isTerminate) async {
     //CommonUtil commonUtil = new CommonUtil();
-    getCategoryListPos(categoryType).then(
-        (value) => goToMyRecordsScreen(value, hrmId, isTerminate));
+    getCategoryListPos(categoryType)
+        .then((value) => goToMyRecordsScreen(value, hrmId, isTerminate));
 
     /* CommonUtil().getCategoryPosition(categoryType).then(
         (value) => CommonUtil().goToMyRecordsScreen(value, hrmId, isTerminate)); */

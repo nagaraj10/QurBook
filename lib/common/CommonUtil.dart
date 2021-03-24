@@ -1795,9 +1795,10 @@ class CommonUtil {
 
   void navigateToMyRecordsCategory(
       dynamic categoryType, List<String> hrmId, bool isTerminate) async {
-    CommonUtil commonUtil = new CommonUtil();
-    commonUtil.getCategoryListPos(categoryType).then(
-        (value) => commonUtil.goToMyRecordsScreen(value, hrmId, isTerminate));
+    final value = await getCategoryListPos(categoryType);
+    if (value != null) {
+      goToMyRecordsScreen(value, hrmId, isTerminate);
+    }
 
     /* CommonUtil().getCategoryPosition(categoryType).then(
         (value) => CommonUtil().goToMyRecordsScreen(value, hrmId, isTerminate)); */

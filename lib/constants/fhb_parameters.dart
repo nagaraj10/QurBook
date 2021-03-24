@@ -570,6 +570,7 @@ const String decline = 'Decline';
 const String meetingId = 'meeting_id';
 const String notification = 'notification';
 const String token = 'Token';
+const String healthRecordMetaIds = 'healthRecordMetaIds';
 const String ongoing_channel = 'ongoing_ns.channel';
 const String startOnGoingNS = 'startOnGoingNS';
 const String mode = 'mode';

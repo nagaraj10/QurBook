@@ -21,6 +21,8 @@ import 'package:myfhb/constants/fhb_router.dart' as router;
 import 'package:myfhb/constants/router_variable.dart' as routervariable;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/schedules/add_reminders.dart';
+import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
+import 'package:myfhb/src/model/Category/catergory_result.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/ui/MyRecordsArguments.dart';
@@ -253,7 +255,11 @@ class _MyFHBState extends State<MyFHB> {
           } else if (event == parameters.chat) {
             Get.to(ChatHomeScreen());
           } else {
-            if (event == 'sheela') {
+            if (event is Map) {
+              final dataOne = event[1];
+              final dataTwo = event[2];
+              this.navigateToMyRecordsCategory(dataOne, dataTwo, false);
+            } else if (event == 'sheela') {
               Get.to(SuperMaya());
             } else if (event == 'profile_page') {
               Get.toNamed(router.rt_UserAccounts,
@@ -288,7 +294,13 @@ class _MyFHBState extends State<MyFHB> {
               nsRoute: parameters.chat,
             ));
           } else {
-            if (event == 'sheela') {
+            if (event is Map) {
+              Get.to(SplashScreen(
+                nsRoute: 'myRecords',
+                templateName: event[1],
+                bundle: event[2],
+              ));
+            } else if (event == 'sheela') {
               Get.to(SplashScreen(
                 nsRoute: 'sheela',
               ));
@@ -791,5 +803,92 @@ class _MyFHBState extends State<MyFHB> {
         toast.getToast(response['diagnostics']['message'], Colors.red);
       }
     });
+  }
+
+  Future<int> getCategoryListPos(String categoryName) async {
+    int position = 0;
+    CategoryListBlock _categoryListBlock = new CategoryListBlock();
+    List<CategoryResult> filteredCategoryData = new List();
+    if (filteredCategoryData == null || filteredCategoryData.length == 0) {
+      _categoryListBlock.getCategoryLists().then((value) {
+        filteredCategoryData = new CommonUtil().fliterCategories(value.result);
+
+        //filteredCategoryData.add(categoryDataObjClone);
+        //return filteredCategoryData;
+
+        for (int i = 0;
+            i <
+                (filteredCategoryData == null
+                    ? 0
+                    : filteredCategoryData.length);
+            i++) {
+          if (categoryName == filteredCategoryData[i].categoryName) {
+            print(
+                categoryName + ' ****' + filteredCategoryData[i].categoryName);
+            position = i;
+          }
+        }
+        if (categoryName == Constants.STR_PRESCRIPTION) {
+          return position;
+        } else if (categoryName == Constants.STR_IDDOCS ||
+            categoryName == Constants.STR_HOS_ID ||
+            categoryName == Constants.STR_OTHER_ID ||
+            categoryName == Constants.STR_INSURE_ID) {
+          // var pos = filteredCategoryData
+          //     .indexOf(CategoryResult(categoryName: Constants.STR_IDDOCS));
+          var pos = filteredCategoryData
+              .indexWhere((data) => data.categoryName == Constants.STR_IDDOCS);
+          return pos > 0 ? pos : 0;
+        } else {
+          return position;
+        }
+      });
+    } else {
+      return position;
+    }
+  }
+
+  void navigateToMyRecordsCategory(
+      dynamic categoryType, List<String> hrmId, bool isTerminate) async {
+    //CommonUtil commonUtil = new CommonUtil();
+    getCategoryListPos(categoryType)
+        .then((value) => goToMyRecordsScreen(value, hrmId, isTerminate));
+
+    /* CommonUtil().getCategoryPosition(categoryType).then(
+        (value) => CommonUtil().goToMyRecordsScreen(value, hrmId, isTerminate)); */
+  }
+
+  void goToMyRecordsScreen(
+      dynamic position, List<String> hrmId, bool isTerminate) {
+    if (isTerminate) {
+      Get.toNamed(router.rt_MyRecords,
+          arguments: MyRecordsArgument(
+              categoryPosition: position,
+              allowSelect: false,
+              isAudioSelect: false,
+              isNotesSelect: false,
+              selectedMedias: hrmId,
+              isFromChat: false,
+              showDetails: true,
+              isAssociateOrChat: false,
+              fromAppointments: false,
+              fromClass: 'notification'));
+    } else {
+      Get.to(
+        MyRecords(
+          argument: MyRecordsArgument(
+              categoryPosition: position,
+              allowSelect: false,
+              isAudioSelect: false,
+              isNotesSelect: false,
+              selectedMedias: hrmId,
+              isFromChat: false,
+              showDetails: true,
+              isAssociateOrChat: false,
+              fromAppointments: false,
+              fromClass: 'notification'),
+        ),
+      );
+    }
   }
 }
