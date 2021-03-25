@@ -357,6 +357,7 @@ const String strTimeHM = "hh:mm a";
 const String strsourceGoogle = "Google Fit";
 const String strsourceSheela = "SHEELA";
 const String strsourceHK = "Apple Health";
+const String strsourceCARGIVER = "CAREGIVER";
 const String strdevicesourceName = "sourceType";
 const String strdeviceType = "deviceType";
 const String strdeviceDataType = "deviceDataType";
