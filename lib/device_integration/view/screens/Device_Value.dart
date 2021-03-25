@@ -1890,7 +1890,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   }
 
   Widget getDeleteIcon(String deviceId, String type) {
-    if (type == strsourceHK || type == strsourceGoogle) {
+    if (type == strsourceHK || type == strsourceGoogle || type==strsourceCARGIVER) {
       return SizedBox();
     } else {
       return GestureDetector(
@@ -2362,6 +2362,13 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         'assets/maya/maya_us_main.png',
         height: 32.0.h,
         width: 32.0.h,
+      );
+    }else if (type == strsourceCARGIVER) {
+      return Image.asset(
+        'assets/devices/caregiver_source.png',
+        height: 32.0.h,
+        width: 32.0.h,
+        color: Color(new CommonUtil().getMyPrimaryColor()),
       );
     } else {
       return Image.asset(

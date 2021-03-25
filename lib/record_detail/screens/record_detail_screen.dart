@@ -1,6 +1,7 @@
 import 'dart:core';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -258,7 +259,11 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                               onPressed: () {
                                 bookMarkRecord(widget.data);
                               }),
-                          IconButton(
+                          widget.data.metadata.sourceName == strsourceCARGIVER?IconButton(
+                              icon: ImageIcon(
+                                AssetImage(variable.icon_record_switch),
+                                color: Colors.grey,
+                              )):IconButton(
                               icon: ImageIcon(
                                 AssetImage(variable.icon_record_switch),
                                 color: Colors.black,
@@ -277,12 +282,12 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                     .getFamilyMembersListNew()
                                     .then((familyMembersList) {
                                   Navigator.of(_keyLoader.currentContext,
-                                          rootNavigator: true)
+                                      rootNavigator: true)
                                       .pop();
                                   if (familyMembersList != null &&
                                       familyMembersList.result != null &&
                                       familyMembersList
-                                              .result.sharedByUsers.length >
+                                          .result.sharedByUsers.length >
                                           0) {
                                     getDialogBoxWithFamilyMember(
                                         familyMembersList.result);
@@ -293,7 +298,11 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                   }
                                 });
                               }),
-                          IconButton(
+                          widget.data.metadata.sourceName == strsourceCARGIVER?IconButton(
+                              icon: ImageIcon(
+                                AssetImage(variable.icon_edit),
+                                color: Colors.grey,
+                              )):IconButton(
                               icon: ImageIcon(
                                 AssetImage(variable.icon_edit),
                                 color: Colors.black,
@@ -315,7 +324,11 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                   }
                                 });*/
                               }),
-                          IconButton(
+                          widget.data.metadata.sourceName == strsourceCARGIVER?IconButton(
+                              icon: ImageIcon(
+                                AssetImage(variable.icon_delete),
+                                color: Colors.grey,
+                              )):IconButton(
                               icon: ImageIcon(
                                 AssetImage(variable.icon_delete),
                                 color: Colors.black,
@@ -325,13 +338,13 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                     .showDialogWithTwoButtons(context, () {
                                   deleteRecord(widget.data.id,
                                       isDeviceReadings: widget
-                                              .data
-                                              .metadata
-                                              .healthRecordCategory
-                                              .categoryName ==
+                                          .data
+                                          .metadata
+                                          .healthRecordCategory
+                                          .categoryName ==
                                           "Devices");
                                 }, 'Confirmation',
-                                        'Are you sure you want to delete');
+                                    'Are you sure you want to delete');
                               })
                         ],
                       );
