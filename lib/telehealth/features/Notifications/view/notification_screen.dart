@@ -36,6 +36,11 @@ import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/src/ui/bot/SuperMaya.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
+import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
+import 'package:myfhb/src/ui/MyRecord.dart';
+import 'package:myfhb/src/ui/MyRecordsArguments.dart';
+import 'package:myfhb/src/model/Category/catergory_result.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 class NotificationScreen extends StatefulWidget {
   @override
@@ -142,10 +147,28 @@ class _NotificationScreen extends State<NotificationScreen> {
               onTap: (notification?.result[index]?.isUnread != null &&
                       notification?.result[index]?.isUnread)
                   ? () {
-                      notificationOnTapActions(
-                          notification?.result[index],
-                          notification?.result[index]?.messageDetails?.content
-                              ?.templateName);
+                      var tempRedirectTo = payload?.redirectTo != null &&
+                              payload?.redirectTo != ''
+                          ? payload?.redirectTo.split('|')[0]
+                          : '';
+                      if (tempRedirectTo == 'myRecords') {
+                        notificationOnTapActions(
+                            notification?.result[index], tempRedirectTo,
+                            bundles: {
+                              'catName': payload?.redirectTo.split('|')[1],
+                              'healthRecordMetaIds':
+                                  payload?.healthRecordMetaIds
+                            });
+                      } else {
+                        notificationOnTapActions(
+                            notification?.result[index],
+                            notification?.result[index]?.messageDetails?.content
+                                ?.templateName);
+                      }
+                      // notificationOnTapActions(
+                      //     notification?.result[index],
+                      //     notification?.result[index]?.messageDetails?.content
+                      //         ?.templateName);
                     }
                   : null,
               child: Column(
@@ -767,8 +790,8 @@ class _NotificationScreen extends State<NotificationScreen> {
     return cancelAppointment;
   }
 
-  void notificationOnTapActions(
-      NotificationResult result, String templateName) {
+  void notificationOnTapActions(NotificationResult result, String templateName,
+      {dynamic bundles}) {
     switch (templateName) {
       case "AppointmentReminder180":
       case "AppointmentReminder1440":
@@ -851,6 +874,14 @@ class _NotificationScreen extends State<NotificationScreen> {
                 arguments: HomeScreenArguments(selectedIndex: 1))
             .then((value) =>
                 PageNavigator.goToPermanent(context, router.rt_Dashboard));
+        readUnreadAction(result);
+        break;
+      case "myRecords":
+        var categoryName = bundles['catName'];
+        String hrmId = bundles['healthRecordMetaIds'];
+        List<String> _listOfhrmId = List<String>();
+        _listOfhrmId.add(hrmId);
+        CommonUtil().navigateToMyRecordsCategory(categoryName, _listOfhrmId, false);
         readUnreadAction(result);
         break;
       default:

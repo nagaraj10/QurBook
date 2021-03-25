@@ -17,6 +17,7 @@ class OnTapNotification:BroadcastReceiver() {
         val username = p1?.getStringExtra(p0?.getString(R.string.username))
         val redirct_to = p1?.getStringExtra(Constants.PROP_REDIRECT_TO)
         val data = p1?.getStringExtra(Constants.PROP_DATA)
+        val HRMId = p1?.getStringExtra(Constants.PROP_HRMID)
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(p0!!)
 
         nsManager.cancel(notificationId!! as Int)
@@ -32,6 +33,7 @@ class OnTapNotification:BroadcastReceiver() {
         launchIntent?.putExtra(Intent.EXTRA_TEXT,meeting_id)
         launchIntent?.putExtra(p0.getString(R.string.username),username)
         launchIntent?.putExtra(Constants.PROP_REDIRECT_TO,redirct_to)
+        launchIntent?.putExtra(Constants.PROP_HRMID,HRMId)
         launchIntent?.putExtra(Constants.PROP_DATA,data)
         p0.startActivity(launchIntent)
     }

@@ -35,6 +35,7 @@ class SplashScreen extends StatefulWidget {
   final String doctorSessionId;
   final String healthOrganizationId;
   final String templateName;
+  final dynamic bundle;
 
   SplashScreen(
       {this.nsRoute,
@@ -43,7 +44,8 @@ class SplashScreen extends StatefulWidget {
       this.appointmentDate,
       this.doctorSessionId,
       this.healthOrganizationId,
-      this.templateName});
+      this.templateName,
+      this.bundle});
 
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -170,6 +172,12 @@ class _SplashScreenState extends State<SplashScreen> {
                                     HomeScreenArguments(selectedIndex: 1))
                             .then((value) => PageNavigator.goToPermanent(
                                 context, router.rt_Dashboard));
+                      } else if (widget.nsRoute == 'myRecords' &&
+                          (widget.templateName != null &&
+                              widget.templateName != '') &&
+                          (widget.bundle != null && widget.bundle != '')) {
+                        CommonUtil().navigateToMyRecordsCategory(
+                            widget.templateName, [widget.bundle], true);
                       } else {
                         PageNavigator.goToPermanent(
                             context, router.rt_Dashboard);
