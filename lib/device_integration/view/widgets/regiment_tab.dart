@@ -61,6 +61,38 @@ class RegimentTab extends StatelessWidget {
             RegimentDataCard(
               //TODO: Replace with actual data
               title: 'Blood Pressure',
+              time: '06:00 AM',
+              color: Colors.teal,
+              icon: Icons.meeting_room_outlined,
+            ),
+            RegimentDataCard(
+              //TODO: Replace with actual data
+              title: 'Glucose (Fasting)',
+              time: '06:15 AM',
+              color: Colors.green,
+              icon: Icons.no_food_outlined,
+            ),
+            RegimentDataCard(
+              //TODO: Replace with actual data
+              title: 'Medicine (Before Food)',
+              time: '06:45 AM',
+              color: Colors.lightBlueAccent,
+              icon: Icons.medical_services_outlined,
+              needCheckbox: true,
+            ),
+            RegimentDataCard(
+              //TODO: Replace with actual data
+              title: 'Walking',
+              time: '07:00 AM',
+              color: Colors.blue,
+              icon: Icons.directions_walk_rounded,
+            ),
+            RegimentDataCard(
+              //TODO: Replace with actual data
+              title: 'Food',
+              time: '08:00 AM',
+              color: Color(CommonUtil().getMyPrimaryColor()),
+              icon: Icons.fastfood_rounded,
             ),
           ],
         ),
