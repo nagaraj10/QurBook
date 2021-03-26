@@ -307,6 +307,7 @@ class MainActivity : FlutterActivity() {
         val providerReqId = intent.getStringExtra(Constants.PROP_PROVIDER_REQID)
         val redirect_to = intent.getStringExtra(Constants.PROP_REDIRECT_TO)
         val data = intent.getStringExtra(Constants.PROP_DATA)
+        val HRMId = intent.getStringExtra(Constants.PROP_HRMID)
         patId = intent.getStringExtra(getString(R.string.pat_id))
         patName = intent.getStringExtra(getString(R.string.pat_name))
         patPic = intent.getStringExtra(getString(R.string.pat_pic))
@@ -327,7 +328,9 @@ class MainActivity : FlutterActivity() {
                 sharedValue = "$sharedValue&${providerReqId}&${"rejected"}"
             }
         } else {
-            if (data != null) {
+            if (HRMId != null && HRMId != "") {
+                sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${HRMId}"
+            } else if (data != null) {
                 sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${data!!}"
             } else {
                 sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${""}"
@@ -412,7 +415,7 @@ class MainActivity : FlutterActivity() {
                         //dialog.dismiss()
                     } else if (finalWords == "") {
                         //do nothing
-                    }else if (isPartialResultInvoked == true) {
+                    } else if (isPartialResultInvoked == true) {
                         //do nothing
                     } else {
                         this@MainActivity.runOnUiThread(

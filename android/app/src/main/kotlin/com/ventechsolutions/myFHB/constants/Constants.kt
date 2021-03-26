@@ -53,4 +53,5 @@ object Constants {
     val PROP_TEMP_NAME ="templateName"
     val PROP_REDIRECT_TO ="redirectTo"
     val PROP_DATA ="data"
+    val PROP_HRMID ="healthRecordMetaIds"
 }

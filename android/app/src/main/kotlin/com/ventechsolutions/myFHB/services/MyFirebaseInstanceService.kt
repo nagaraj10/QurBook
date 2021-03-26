@@ -230,6 +230,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             //onTapNS.putExtra(getString(R.string.username), "$USER_NAME")
             onTapNS.putExtra(Constants.PROP_DATA, data[Constants.PROP_DATA])
             onTapNS.putExtra(Constants.PROP_REDIRECT_TO, data[Constants.PROP_REDIRECT_TO])
+            onTapNS.putExtra(Constants.PROP_HRMID, data[Constants.PROP_HRMID])
             val onTapPendingIntent = PendingIntent.getBroadcast(applicationContext, NS_ID, onTapNS, PendingIntent.FLAG_CANCEL_CURRENT)
 
 

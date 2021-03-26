@@ -2938,7 +2938,14 @@ Widget TypeIcon(String type, Color color) {
       height: 20.0.h,
       width: 20.0.h,
     );
-  } else {
+  }else if (type == strsourceCARGIVER) {
+    return Image.asset(
+      'assets/devices/caregiver_source.png',
+      height: 20.0.h,
+      width: 20.0.h,
+      color: color,
+    );
+  }else {
     return Image.asset(
       'assets/icons/myfhb_source.png',
       height: 18.0.h,

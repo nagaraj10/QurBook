@@ -1718,42 +1718,20 @@ class ChatScreenState extends State<ChatScreen> {
               flex: 4,
               child: Container(
                 height: 58.0.h,
-                child: Stack(
-                  alignment: Alignment.centerRight,
-                  children: [
-                    TextField(
-                      style: TextStyle(fontSize: 16.0.sp),
-                      focusNode: focusNode,
-                      onTap: () {
-                        //isSearchVisible = false;
-                        //_patientDetailOrSearch();
-                      },
-                      controller: textEditingController,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(
-                            RegExp("[ A-Za-z0-9#+-.@&?!{}():'%/=-]*")),
-                      ],
-                      decoration: InputDecoration(
-                        hintText: "$chatTextFieldHintText",
-                        hintStyle: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 16.0.sp,
-                        ),
-                        filled: true,
-                        fillColor: Colors.white70,
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                          borderSide:
-                              BorderSide(color: Colors.transparent, width: 2),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                          borderSide: BorderSide(color: Colors.transparent),
-                        ),
-                      ),
-                      /*onSubmitted: (value) =>*/
-                    ),
-                    SizedBoxWithChild(
+                child: TextField(
+                  style: TextStyle(fontSize: 16.0.sp),
+                  focusNode: focusNode,
+                  onTap: () {
+                    //isSearchVisible = false;
+                    //_patientDetailOrSearch();
+                  },
+                  controller: textEditingController,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(
+                        RegExp("[ A-Za-z0-9#+-.@&?!{}():'%/=-]*")),
+                  ],
+                  decoration: InputDecoration(
+                    suffixIcon: SizedBoxWithChild(
                       width: 50.0.h,
                       height: 50.0.h,
                       child: FlatButton(
@@ -1766,8 +1744,27 @@ class ChatScreenState extends State<ChatScreen> {
                             color: Color(CommonUtil().getMyPrimaryColor()),
                             size: 24,
                           )),
-                    )
-                  ],
+                    ),
+                    isDense: true,
+                    contentPadding: EdgeInsets.only(bottom: -10.0,left: 8),
+                    hintText: "$chatTextFieldHintText",
+                    hintStyle: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 16.0.sp,
+                    ),
+                    filled: true,
+                    fillColor: Colors.white70,
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                      borderSide:
+                      BorderSide(color: Colors.transparent, width: 2),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      borderSide: BorderSide(color: Colors.transparent),
+                    ),
+                  ),
+                  /*onSubmitted: (value) =>*/
                 ),
               ),
             ),
@@ -1790,37 +1787,37 @@ class ChatScreenState extends State<ChatScreen> {
             ),
             !isFromVideoCall
                 ? Flexible(
-                    flex: 1,
-                    child: new Container(
-                      child: RawMaterialButton(
-                        onPressed: () {
-                          Navigator.of(context)
-                              .push(MaterialPageRoute(
-                            builder: (context) => AudioRecordScreen(
-                                arguments: AudioScreenArguments(
-                              fromVoice: false,
-                            )),
-                          ))
-                              .then((results) {
-                            String audioPath = results[Constants.keyAudioFile];
-                            if (audioPath != null && audioPath != '') {
-                              setState(() {
-                                isLoading = true;
-                              });
-                              uploadFile(audioPath);
-                            }
-                          });
-                        },
-                        elevation: 2.0,
-                        fillColor: Colors.white,
-                        child: Icon(Icons.mic,
-                            size: 25.0,
-                            color: Color(CommonUtil().getMyPrimaryColor())),
-                        padding: EdgeInsets.all(12.0),
-                        shape: CircleBorder(),
-                      ),
-                    ),
-                  )
+              flex: 1,
+              child: new Container(
+                child: RawMaterialButton(
+                  onPressed: () {
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(
+                      builder: (context) => AudioRecordScreen(
+                          arguments: AudioScreenArguments(
+                            fromVoice: false,
+                          )),
+                    ))
+                        .then((results) {
+                      String audioPath = results[Constants.keyAudioFile];
+                      if (audioPath != null && audioPath != '') {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        uploadFile(audioPath);
+                      }
+                    });
+                  },
+                  elevation: 2.0,
+                  fillColor: Colors.white,
+                  child: Icon(Icons.mic,
+                      size: 25.0,
+                      color: Color(CommonUtil().getMyPrimaryColor())),
+                  padding: EdgeInsets.all(12.0),
+                  shape: CircleBorder(),
+                ),
+              ),
+            )
                 : Container()
           ],
         ),
