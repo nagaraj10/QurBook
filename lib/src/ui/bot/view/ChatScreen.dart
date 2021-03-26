@@ -15,6 +15,7 @@ import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import 'package:intl/intl.dart';
 
 // ignore: must_be_immutable
 class ChatScreen extends StatefulWidget {
@@ -48,6 +49,8 @@ class _ChatScreenState extends State<ChatScreen>
       true,
       isInitial: true,
     );
+    Provider.of<ChatScreenViewModel>(context, listen: false)
+        .getDeviceSelectionValues();
     PreferenceUtil.init();
     _controller = AnimationController(
         duration: const Duration(milliseconds: 2000), vsync: this, value: 0.1);
@@ -82,6 +85,38 @@ class _ChatScreenState extends State<ChatScreen>
     WidgetsBinding.instance.removeObserver(this);
     _controller.dispose();
     super.dispose();
+  }
+
+  List<PopupMenuItem<String>> getSupportedLanguages() {
+    stopTTSEngine();
+    List<PopupMenuItem<String>> languagesMenuList = [];
+    String currentLanguage = '';
+    final lan = Utils.getCurrentLanCode();
+    if (lan != "undef") {
+      final langCode = lan.split("-").first;
+      currentLanguage = langCode;
+    }
+    Utils.supportedLanguages.forEach((language, languageCode) {
+      languagesMenuList.add(
+        PopupMenuItem<String>(
+          value: languageCode,
+          child: Row(
+            children: [
+              Checkbox(
+                value: languageCode == currentLanguage,
+              ),
+              Text(
+                toBeginningOfSentenceCase(language),
+                style: TextStyle(
+                  fontSize: 16.0.sp,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    });
+    return languagesMenuList;
   }
 
   stopTTSEngine() async {
@@ -131,6 +166,19 @@ class _ChatScreenState extends State<ChatScreen>
               }
             },
           ),
+          actions: [
+            PopupMenuButton<String>(
+              onSelected: (languageCode) {
+                PreferenceUtil.saveString(constants.SHEELA_LANG,
+                    Utils.langaugeCodes[languageCode ?? 'undef']);
+                Provider.of<ChatScreenViewModel>(context, listen: false)
+                    .updateDeviceSelectionModel(
+                  preferredLanguage: languageCode,
+                );
+              },
+              itemBuilder: (BuildContext context) => getSupportedLanguages(),
+            ),
+          ],
         ),
         body: Consumer<ChatScreenViewModel>(
           builder: (contxt, model, child) {
