@@ -667,6 +667,9 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     print('inside loout');
     PreferenceUtil.clearAllData().then((value) {
       // PageNavigator.goToPermanent(context,router.rt_SignIn);
+      if (Platform.isIOS) {
+        PreferenceUtil.saveString(Constants.KEY_INTRO_SLIDER, variable.strtrue);
+      }
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
