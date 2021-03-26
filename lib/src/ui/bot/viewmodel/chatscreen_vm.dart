@@ -335,7 +335,7 @@ class ChatScreenViewModel extends ChangeNotifier {
           notifyListeners();
           Future.delayed(
               Duration(
-                seconds: 4,
+                seconds: 1,
               ), () async {
             isMayaSpeaks = 0;
             final lan = Utils.getCurrentLanCode();
