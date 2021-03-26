@@ -40,13 +40,15 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/authentication/view/login_screen.dart';
+import 'package:myfhb/device_integration/view/widgets/regiment_tab.dart';
 
 class ShowDevicesNew extends StatefulWidget {
   @override
   _ShowDevicesNewState createState() => _ShowDevicesNewState();
 }
 
-class _ShowDevicesNewState extends State<ShowDevicesNew> {
+class _ShowDevicesNewState extends State<ShowDevicesNew>
+    with TickerProviderStateMixin {
   DevicesViewModel devicesViewModel;
 
   LastMeasureSyncValues deviceValues;
@@ -130,11 +132,19 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
 
   final double circleRadius = 38.0;
   final double circleBorderWidth = 0.0;
+  TabController controller;
 
   @override
   void initState() {
     _familyListBloc = new FamilyListBloc();
     getFamilyLength();
+    controller = TabController(
+      //TODO: Replace with condition to check length
+      length: 2,
+      vsync: this,
+      //TODO: Replace with condition to check plan package
+      initialIndex: 0,
+    );
 
     super.initState();
   }
@@ -443,14 +453,141 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
 
   Widget getBody(BuildContext context) {
     DevicesViewModel _devicesmodel = Provider.of<DevicesViewModel>(context);
-    return SafeArea(
-      child: SingleChildScrollView(
-        child: Container(
-          alignment: Alignment.center,
-          child: getValues(context, _devicesmodel),
+    return LayoutBuilder(builder: (context, constraints) {
+      return Container(
+        height: constraints.maxHeight,
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                      colors: <Color>[
+                    Color(new CommonUtil().getMyPrimaryColor()),
+                    Color(new CommonUtil().getMyGredientColor())
+                  ],
+                      stops: [
+                    0.3,
+                    1.0
+                  ])),
+              child: IntrinsicHeight(
+                child: SafeArea(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      PreferredSize(
+                        preferredSize: Size.fromHeight(1.sh * 0.15),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                  begin: Alignment.centerLeft,
+                                  end: Alignment.centerRight,
+                                  colors: <Color>[
+                                Color(new CommonUtil().getMyPrimaryColor()),
+                                Color(new CommonUtil().getMyGredientColor())
+                              ],
+                                  stops: [
+                                0.3,
+                                1.0
+                              ])),
+                          child: SafeArea(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Container(
+                                  child: Row(
+                                    children: <Widget>[
+                                      SizedBox(
+                                        width: 0.05.sw,
+                                      ),
+                                      Container(
+                                        width: 0.66.sw,
+                                        child: _getUserName(),
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          setState(() {});
+                                        },
+                                        child: Image.asset(
+                                          'assets/icons/refresh_dash.png',
+                                          height: 26.0.h,
+                                          width: 26.0.h,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 0.03.sw,
+                                      ),
+                                      isFamilyAvail
+                                          ? SwitchProfile().buildActions(
+                                              context,
+                                              _key,
+                                              callBackToRefresh,
+                                              true)
+                                          : getMaterialPlusIcon(context),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  alignment: Alignment.centerLeft,
+                                  child: TabBar(
+                                    indicatorWeight: 2.0.h,
+                                    isScrollable: true,
+                                    controller: controller,
+                                    labelColor: Colors.white,
+                                    indicatorSize: TabBarIndicatorSize.label,
+                                    unselectedLabelColor: Colors.white70,
+                                    tabs: [
+                                      Tab(
+                                        child: Text(
+                                          'Regiment',
+                                          style: TextStyle(
+                                            fontSize: 16.0.sp,
+                                          ),
+                                        ),
+                                      ),
+                                      Tab(
+                                        child: Text(
+                                          'Devices',
+                                          style: TextStyle(
+                                            fontSize: 16.0.sp,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              child: TabBarView(
+                controller: controller,
+                children: [
+                  RegimentTab(),
+                  SingleChildScrollView(
+                    child: Container(
+                      width: 1.sw,
+                      alignment: Alignment.center,
+                      child: getValues(context, _devicesmodel),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
-      ),
-    );
+      );
+    });
   }
 
   Widget getValues(BuildContext context, DevicesViewModel devicesViewModel) {
@@ -947,89 +1084,11 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       String value2ForBp) {
     return Container(
       //height: 1.sh,
-      height: 1.sw * 2.0,
       color: Colors.grey[200],
       child: Column(
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Container(
-            height: 1.sw * 0.18,
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                    colors: <Color>[
-                  Color(new CommonUtil().getMyPrimaryColor()),
-                  Color(new CommonUtil().getMyGredientColor())
-                ],
-                    stops: [
-                  0.3,
-                  1.0
-                ])),
-            child: SafeArea(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  PreferredSize(
-                    preferredSize: Size.fromHeight(1.sh * 0.15),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                              begin: Alignment.centerLeft,
-                              end: Alignment.centerRight,
-                              colors: <Color>[
-                            Color(new CommonUtil().getMyPrimaryColor()),
-                            Color(new CommonUtil().getMyGredientColor())
-                          ],
-                              stops: [
-                            0.3,
-                            1.0
-                          ])),
-                      child: SafeArea(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Container(
-                              child: Row(
-                                children: <Widget>[
-                                  SizedBox(
-                                    width: 0.05.sw,
-                                  ),
-                                  Container(
-                                    width: 0.66.sw,
-                                    child: _getUserName(),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      setState(() {});
-                                    },
-                                    child: Image.asset(
-                                      'assets/icons/refresh_dash.png',
-                                      height: 26.0.h,
-                                      width: 26.0.h,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 0.03.sw,
-                                  ),
-                                  isFamilyAvail
-                                      ? SwitchProfile().buildActions(context,
-                                          _key, callBackToRefresh, true)
-                                      : getMaterialPlusIcon(context),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
           SizedBoxWidget(
             height: 10.0.h,
           ),

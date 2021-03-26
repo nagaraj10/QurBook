@@ -1190,6 +1190,22 @@ class CommonUtil {
     return updatedDate;
   }
 
+  regimentDateFormat(DateTime newDateTime) {
+    DateFormat newFormat;
+    String updatedDate = '';
+    DateTime currentTime = DateTime.now();
+    if (newDateTime.day == currentTime.day &&
+        newDateTime.month == currentTime.month &&
+        newDateTime.year == currentTime.year) {
+      newFormat = DateFormat("MMM d, yyyy");
+      updatedDate = 'Today, ';
+    } else {
+      newFormat = DateFormat("EEE, MMM d, yyyy");
+    }
+    updatedDate = updatedDate + newFormat.format(newDateTime);
+    return updatedDate;
+  }
+
   dateConversionToDayMonthYear(DateTime dateTime) {
     var newFormat = DateFormat('d MMM, ' 'yyyy');
     String updatedDate = newFormat.format(dateTime);

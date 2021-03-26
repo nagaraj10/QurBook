@@ -25,6 +25,8 @@ Future<String> _loadDeviceDataAsset() async {
 class DevicesViewModel with ChangeNotifier {
   GetGFDataFromFHBRepo _helper = GetGFDataFromFHBRepo();
   List<DeviceData> deviceList;
+  DateTime selectedDate = DateTime.now();
+  String regimentDate = '${CommonUtil().regimentDateFormat(DateTime.now())}';
 
   List<DeviceData> getDeviceValues() {
     List<DeviceData> devicelist = new List<DeviceData>();
@@ -58,7 +60,10 @@ class DevicesViewModel with ChangeNotifier {
         value_name: parameters.strOxgenSaturation,
         value1: 'OS',
         value2: '',
-        color: [Color(new CommonUtil().getMyPrimaryColor()), Color(new CommonUtil().getMyPrimaryColor())]));
+        color: [
+          Color(new CommonUtil().getMyPrimaryColor()),
+          Color(new CommonUtil().getMyPrimaryColor())
+        ]));
     devicelist.add(DeviceData(
         title: Constants.STR_THERMOMETER,
         icon: Constants.Devices_THM,
@@ -130,18 +135,17 @@ class DevicesViewModel with ChangeNotifier {
           final heartRateList = HeartRateEntity(bpm: element.bpm);
           heartRate.add(heartRateList);
         });*/
-
       });
 
-      if(deviceIntervalData.length==0 || deviceIntervalData==null){
-        deviceIntervalData =[];
+      if (deviceIntervalData.length == 0 || deviceIntervalData == null) {
+        deviceIntervalData = [];
       }
 
-      if(ret.length==0 || ret==null){
-        ret =[];
+      if (ret.length == 0 || ret == null) {
+        ret = [];
       }
 
-      finalResult = [ret,deviceIntervalData];
+      finalResult = [ret, deviceIntervalData];
 
       return finalResult;
     } catch (e) {}
@@ -179,15 +183,15 @@ class DevicesViewModel with ChangeNotifier {
           ret.add(bgList);
         });
       });
-      if(deviceIntervalData.length==0 || deviceIntervalData==null){
-        deviceIntervalData =[];
+      if (deviceIntervalData.length == 0 || deviceIntervalData == null) {
+        deviceIntervalData = [];
       }
 
-      if(ret.length==0 || ret==null){
-        ret =[];
+      if (ret.length == 0 || ret == null) {
+        ret = [];
       }
 
-      finalResult = [ret,deviceIntervalData];
+      finalResult = [ret, deviceIntervalData];
 
       return finalResult;
     } catch (e) {}
@@ -206,7 +210,8 @@ class DevicesViewModel with ChangeNotifier {
       List<OxyResult> ret = new List();
       //List<HeartRateEntity> heartRate = new List();
       deviceIntervalData.forEach((dataElement) {
-        if (dataElement.oxygenSaturationCollection.isEmpty && dataElement.heartRateCollection.isEmpty) {
+        if (dataElement.oxygenSaturationCollection.isEmpty &&
+            dataElement.heartRateCollection.isEmpty) {
           return [];
         }
         dataElement.oxygenSaturationCollection.forEach((oxyValue) {
@@ -217,21 +222,21 @@ class DevicesViewModel with ChangeNotifier {
               oxygenSaturation: oxyValue.oxygenSaturation);
           ret.add(oxyList);
         });
-       /* dataElement.heartRateCollection.forEach((element) {
+        /* dataElement.heartRateCollection.forEach((element) {
           final heartRateList = HeartRateEntity(bpm: element.bpm);
           heartRate.add(heartRateList);
         });*/
       });
 
-      if(deviceIntervalData.length==0 || deviceIntervalData==null){
-        deviceIntervalData =[];
+      if (deviceIntervalData.length == 0 || deviceIntervalData == null) {
+        deviceIntervalData = [];
       }
 
-      if(ret.length==0 || ret==null){
-        ret =[];
+      if (ret.length == 0 || ret == null) {
+        ret = [];
       }
 
-      finalResult = [ret,deviceIntervalData];
+      finalResult = [ret, deviceIntervalData];
 
       return finalResult;
     } catch (e) {}
@@ -262,15 +267,15 @@ class DevicesViewModel with ChangeNotifier {
           ret.add(tempList);
         });
       });
-      if(deviceIntervalData.length==0 || deviceIntervalData==null){
-        deviceIntervalData =[];
+      if (deviceIntervalData.length == 0 || deviceIntervalData == null) {
+        deviceIntervalData = [];
       }
 
-      if(ret.length==0 || ret==null){
-        ret =[];
+      if (ret.length == 0 || ret == null) {
+        ret = [];
       }
 
-      finalResult = [ret,deviceIntervalData];
+      finalResult = [ret, deviceIntervalData];
 
       return finalResult;
     } catch (e) {}
@@ -301,15 +306,15 @@ class DevicesViewModel with ChangeNotifier {
           ret.add(weightList);
         });
       });
-      if(deviceIntervalData.length==0 || deviceIntervalData==null){
-        deviceIntervalData =[];
+      if (deviceIntervalData.length == 0 || deviceIntervalData == null) {
+        deviceIntervalData = [];
       }
 
-      if(ret.length==0 || ret==null){
-        ret =[];
+      if (ret.length == 0 || ret == null) {
+        ret = [];
       }
 
-      finalResult = [ret,deviceIntervalData];
+      finalResult = [ret, deviceIntervalData];
 
       return finalResult;
     } catch (e) {}
@@ -341,5 +346,18 @@ class DevicesViewModel with ChangeNotifier {
       });
       return ret;
     } catch (e) {}
+  }
+
+  void getRegimentDate({
+    bool isPrevious: false,
+    bool isNext: false,
+  }) {
+    if (isPrevious) {
+      selectedDate = selectedDate.subtract(Duration(days: 1));
+    } else if (isNext) {
+      selectedDate = selectedDate.add(Duration(days: 1));
+    }
+    regimentDate = '${CommonUtil().regimentDateFormat(selectedDate)}';
+    notifyListeners();
   }
 }
