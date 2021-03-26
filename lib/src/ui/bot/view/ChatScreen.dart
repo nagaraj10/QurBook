@@ -148,6 +148,8 @@ class _ChatScreenState extends State<ChatScreen>
                 : () {
                     if (getMyViewModel().isLoading) {
                       //do nothing
+                    } else if (getMyViewModel().isSheelaSpeaking) {
+                      stopTTSEngine();
                     } else if (getMyViewModel().getisMayaSpeaks <= 0) {
                       stopTTSEngine();
                       getMyViewModel().gettingReposnseFromNative();
@@ -156,7 +158,9 @@ class _ChatScreenState extends State<ChatScreen>
                     }
                   },
             child: Icon(
-              Icons.mic,
+              Provider.of<ChatScreenViewModel>(context).isSheelaSpeaking
+                  ? Icons.pause
+                  : Icons.mic,
               color: Colors.white,
             ),
             backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
