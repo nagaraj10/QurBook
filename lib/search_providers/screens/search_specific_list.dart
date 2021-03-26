@@ -541,7 +541,9 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     return RefreshIndicator(
       key: _refreshIndicatorKey,
       onRefresh: _refresh,
-      child: (data.isSuccess == false && widget.isSkipUnknown == true)
+      child: (data.isSuccess == false &&
+              widget.isSkipUnknown == true &&
+              data?.diagnostics?.errorData != null)
           ? Container(
               child: getEmptyCard(data.diagnostics),
               color: Color(fhbColors.bgColorContainer),
@@ -674,8 +676,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                     color: Color(fhbColors.bgColorContainer),
                     child:
                         widget.arguments.searchWord == CommonConstants.doctors
-                            ? getHospitalLogoImage(logo,data)
-                            : getHospitalLogoImage(logo,data),
+                            ? getHospitalLogoImage(logo, data)
+                            : getHospitalLogoImage(logo, data),
                   )),
                   SizedBox(width: 10.0.w),
                   Expanded(
@@ -801,24 +803,21 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     );
   }
 
-  Widget getHospitalLogoImage(String logo,DoctorsListResult docs) {
+  Widget getHospitalLogoImage(String logo, DoctorsListResult docs) {
     if (logo == null || logo == '') {
       return Container();
     } else {
-      return Image.network(
-        logo,
-          errorBuilder:
-              (BuildContext context, Object exception, StackTrace stackTrace) {
-            return Container(
-              height: 50.0.h,
-              width: 50.0.h,
-              color: Colors.grey[200],
-              child: Center(
-                child: getFirstLastNameText(docs),
-              ),
-            );
-          }
-      );
+      return Image.network(logo, errorBuilder:
+          (BuildContext context, Object exception, StackTrace stackTrace) {
+        return Container(
+          height: 50.0.h,
+          width: 50.0.h,
+          color: Colors.grey[200],
+          child: Center(
+            child: getFirstLastNameText(docs),
+          ),
+        );
+      });
     }
   }
 
