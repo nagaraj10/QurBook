@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -167,16 +168,19 @@ class _ChatScreenState extends State<ChatScreen>
             },
           ),
           actions: [
-            PopupMenuButton<String>(
-              onSelected: (languageCode) {
-                PreferenceUtil.saveString(constants.SHEELA_LANG,
-                    Utils.langaugeCodes[languageCode ?? 'undef']);
-                Provider.of<ChatScreenViewModel>(context, listen: false)
-                    .updateDeviceSelectionModel(
-                  preferredLanguage: languageCode,
-                );
-              },
-              itemBuilder: (BuildContext context) => getSupportedLanguages(),
+            Visibility(
+              visible: !Platform.isIOS,
+              child: PopupMenuButton<String>(
+                onSelected: (languageCode) {
+                  PreferenceUtil.saveString(constants.SHEELA_LANG,
+                      Utils.langaugeCodes[languageCode ?? 'undef']);
+                  Provider.of<ChatScreenViewModel>(context, listen: false)
+                      .updateDeviceSelectionModel(
+                    preferredLanguage: languageCode,
+                  );
+                },
+                itemBuilder: (BuildContext context) => getSupportedLanguages(),
+              ),
             ),
           ],
         ),
