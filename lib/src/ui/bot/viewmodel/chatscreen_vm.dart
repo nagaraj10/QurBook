@@ -53,6 +53,7 @@ class ChatScreenViewModel extends ChangeNotifier {
   var isLoading = false;
   var isRedirect = false;
   var screenValue;
+  bool enableMic = true;
   bool isButtonResponse = false;
   bool stopTTS = false;
   bool isSheelaSpeaking = false;
@@ -64,7 +65,7 @@ class ChatScreenViewModel extends ChangeNotifier {
   AudioPlayer audioPlayerForTTS = AudioPlayer();
   AudioPlayer newAudioPlay1 = AudioPlayer();
   bool isAudioPlayerPlaying = false;
-  bool get getIsButtonResponse => isButtonResponse;
+  bool get getIsButtonResponse => isButtonResponse && !enableMic;
   bool get getStopTTS => stopTTS;
 
   void updateAppState(bool canSheelaSpeak, {bool isInitial: false}) {
@@ -332,6 +333,7 @@ class ChatScreenViewModel extends ChangeNotifier {
             isButtonResponse = false;
           }
           isSheelaSpeaking = false;
+          enableMic = res.enableMic ?? false;
           notifyListeners();
           Future.delayed(
               Duration(
