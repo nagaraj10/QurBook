@@ -1819,7 +1819,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                   width: 2,
                                 ),
                                 Text(
-                                  bpm == '' ? '' : 'mm Hg',
+                                  bpm == '' ? '' : CommonConstants.strPulseUnit,
                                   style: TextStyle(
                                       color: Color(
                                           new CommonUtil().getMyPrimaryColor()),
