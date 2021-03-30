@@ -317,12 +317,30 @@ class ChatScreenState extends State<ChatScreen> {
                       .deviceToken.doctor.payload[0].deviceTokenId
                   : ''
               : '';
-          patientDeviceToken = appointmentResult.deviceToken != null
-              ? appointmentResult.deviceToken.patient.payload.isNotEmpty
-                  ? appointmentResult
-                      .deviceToken.patient.payload[0].deviceTokenId
-                  : ''
-              : '';
+          patientDeviceToken = '';
+          if (appointmentResult.deviceToken != null) {
+            if (appointmentResult.deviceToken.patient.isSuccess &&
+                appointmentResult.deviceToken.patient.payload.isNotEmpty &&
+                appointmentResult
+                        .deviceToken.patient.payload[0].deviceTokenId !=
+                    null) {
+              patientDeviceToken = appointmentResult
+                  .deviceToken.patient.payload[0].deviceTokenId;
+            } else if (appointmentResult.deviceToken.parentMember.isSuccess &&
+                appointmentResult.deviceToken.parentMember.payload.isNotEmpty &&
+                appointmentResult
+                        .deviceToken.parentMember.payload[0].deviceTokenId !=
+                    null) {
+              patientDeviceToken = appointmentResult
+                  .deviceToken.parentMember.payload[0].deviceTokenId;
+            }
+          }
+          // patientDeviceToken = appointmentResult.deviceToken != null
+          //     ? appointmentResult.deviceToken.patient.payload.isNotEmpty
+          //         ? appointmentResult
+          //             .deviceToken.patient.payload[0].deviceTokenId
+          //         : ''
+          //     : '';
         });
       }
     });
@@ -1746,7 +1764,7 @@ class ChatScreenState extends State<ChatScreen> {
                           )),
                     ),
                     isDense: true,
-                    contentPadding: EdgeInsets.only(bottom: -10.0,left: 8),
+                    contentPadding: EdgeInsets.only(bottom: -10.0, left: 8),
                     hintText: "$chatTextFieldHintText",
                     hintStyle: TextStyle(
                       color: Colors.grey,
@@ -1757,7 +1775,7 @@ class ChatScreenState extends State<ChatScreen> {
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(12.0)),
                       borderSide:
-                      BorderSide(color: Colors.transparent, width: 2),
+                          BorderSide(color: Colors.transparent, width: 2),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(10.0)),
@@ -1787,37 +1805,37 @@ class ChatScreenState extends State<ChatScreen> {
             ),
             !isFromVideoCall
                 ? Flexible(
-              flex: 1,
-              child: new Container(
-                child: RawMaterialButton(
-                  onPressed: () {
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(
-                      builder: (context) => AudioRecordScreen(
-                          arguments: AudioScreenArguments(
-                            fromVoice: false,
-                          )),
-                    ))
-                        .then((results) {
-                      String audioPath = results[Constants.keyAudioFile];
-                      if (audioPath != null && audioPath != '') {
-                        setState(() {
-                          isLoading = true;
-                        });
-                        uploadFile(audioPath);
-                      }
-                    });
-                  },
-                  elevation: 2.0,
-                  fillColor: Colors.white,
-                  child: Icon(Icons.mic,
-                      size: 25.0,
-                      color: Color(CommonUtil().getMyPrimaryColor())),
-                  padding: EdgeInsets.all(12.0),
-                  shape: CircleBorder(),
-                ),
-              ),
-            )
+                    flex: 1,
+                    child: new Container(
+                      child: RawMaterialButton(
+                        onPressed: () {
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(
+                            builder: (context) => AudioRecordScreen(
+                                arguments: AudioScreenArguments(
+                              fromVoice: false,
+                            )),
+                          ))
+                              .then((results) {
+                            String audioPath = results[Constants.keyAudioFile];
+                            if (audioPath != null && audioPath != '') {
+                              setState(() {
+                                isLoading = true;
+                              });
+                              uploadFile(audioPath);
+                            }
+                          });
+                        },
+                        elevation: 2.0,
+                        fillColor: Colors.white,
+                        child: Icon(Icons.mic,
+                            size: 25.0,
+                            color: Color(CommonUtil().getMyPrimaryColor())),
+                        padding: EdgeInsets.all(12.0),
+                        shape: CircleBorder(),
+                      ),
+                    ),
+                  )
                 : Container()
           ],
         ),
