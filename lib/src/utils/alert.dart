@@ -6,6 +6,7 @@
 import 'package:flutter/material.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/common/CommonUtil.dart';
 
 class Alert {
   static Future displayAlertPlain(
@@ -77,7 +78,7 @@ class Alert {
             ),
             FlatButton(
               textColor: Colors.white,
-              color: Theme.of(context).primaryColor,
+              color: Color(CommonUtil().getMyPrimaryColor()),
               child: Text(confirm),
               onPressed: onPressedConfirm ??
                   () {
@@ -108,7 +109,7 @@ class Alert {
           actions: <Widget>[
             FlatButton(
               textColor: Colors.white,
-              color: Theme.of(context).primaryColor,
+              color: Color(CommonUtil().getMyPrimaryColor()),
               child: Text(confirm),
               onPressed: onPressedConfirm ??
                   () {

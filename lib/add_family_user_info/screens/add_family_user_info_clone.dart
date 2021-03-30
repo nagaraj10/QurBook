@@ -409,7 +409,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       child: Padding(
           padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
           child: TextField(
-            cursorColor: Theme.of(context).primaryColor,
+            cursorColor: Color(CommonUtil().getMyPrimaryColor()),
             controller: dateOfBirthController,
             maxLines: 1,
             autofocus: false,
@@ -489,7 +489,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
         child: TextField(
           enabled: isEnabled,
-          cursorColor: Theme.of(context).primaryColor,
+          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: textEditingController,
           maxLines: 1,
           enableInteractiveSelection: false,
@@ -841,7 +841,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     ? new Container()
                     : _showRelationShipTextField();
           },
-          cursorColor: Theme.of(context).primaryColor,
+          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: relationShipController,
           maxLines: 1,
           enabled: (widget.arguments.fromClass == CommonConstants.my_family ||
@@ -1523,8 +1523,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
         addFamilyUserInfoBloc.updateSelfProfile(false).then((value) {
           if (value != null && value.isSuccess) {
-            chatViewModel.upateUserNickname(
-                myProf.result.id,
+            chatViewModel.upateUserNickname(myProf.result.id,
                 firstNameController.text + ' ' + lastNameController.text);
             _familyListBloc.getFamilyMembersListNew().then((value) {
               PreferenceUtil.saveFamilyData(
@@ -1562,8 +1561,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
         addFamilyUserInfoBloc.updateSelfProfile(false).then((value) {
           if (value != null && value.isSuccess) {
-            chatViewModel.upateUserNickname(
-                myProf.result.id,
+            chatViewModel.upateUserNickname(myProf.result.id,
                 firstNameController.text + ' ' + lastNameController.text);
             _familyListBloc.getFamilyMembersListNew().then((value) {
               /*MySliverAppBar.imageURI = null;
@@ -1611,8 +1609,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
         addFamilyUserInfoBloc.updateSelfProfile(false).then((value) {
           if (value != null && value.isSuccess) {
-            chatViewModel.upateUserNickname(
-                myProf.result.id,
+            chatViewModel.upateUserNickname(myProf.result.id,
                 firstNameController.text + ' ' + lastNameController.text);
             _familyListBloc.getFamilyMembersListNew().then((value) {
               PreferenceUtil.saveFamilyData(

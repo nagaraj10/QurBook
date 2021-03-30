@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
-
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geocoder/geocoder.dart';
@@ -131,7 +131,7 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
       width: 1.sw - 70,
       padding: const EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 0.0),
       child: new TextField(
-        cursorColor: Theme.of(context).primaryColor,
+        cursorColor: Color(CommonUtil().getMyPrimaryColor()),
         controller: searchController,
         maxLines: 1,
         keyboardType: TextInputType.text,
@@ -171,7 +171,7 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
         width: 200.0.w,
         height: 40.0.h,
         decoration: new BoxDecoration(
-          color: Theme.of(context).primaryColor,
+          color: Color(CommonUtil().getMyPrimaryColor()),
           borderRadius: new BorderRadius.all(Radius.circular(25.0)),
           boxShadow: <BoxShadow>[
             BoxShadow(

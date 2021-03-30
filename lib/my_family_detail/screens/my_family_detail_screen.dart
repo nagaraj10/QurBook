@@ -355,17 +355,17 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                                   PreferenceUtil.getStringValue(
                                       Constants.KEY_AUTHTOKEN)
                             },
-                      errorBuilder:
-                          (BuildContext context, Object exception, StackTrace stackTrace) {
-                        return Container(
-                          height: 100.0.h,
-                          width: 100.0.h,
-                          color: Colors.grey[200],
-                          child: Center(
-                            child: getFirstLastNameText(sharedbyme.child),
-                          ),
-                        );
-                      },
+                            errorBuilder: (BuildContext context,
+                                Object exception, StackTrace stackTrace) {
+                              return Container(
+                                height: 100.0.h,
+                                width: 100.0.h,
+                                color: Colors.grey[200],
+                                child: Center(
+                                  child: getFirstLastNameText(sharedbyme.child),
+                                ),
+                              );
+                            },
                           )
                         : Container(
                             width: 100.0.h,
@@ -564,7 +564,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
         child: TextField(
           enabled: false,
-          cursorColor: Theme.of(context).primaryColor,
+          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: mobileNoController,
           maxLines: 1,
           enableInteractiveSelection: false,
@@ -600,7 +600,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
         child: TextField(
-          cursorColor: Theme.of(context).primaryColor,
+          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: nameController,
           maxLines: 1,
           enabled: false,
@@ -636,7 +636,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
         child: TextField(
-          cursorColor: Theme.of(context).primaryColor,
+          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: firstNameController,
           maxLines: 1,
           enabled: false,
@@ -672,7 +672,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
         child: TextField(
-          cursorColor: Theme.of(context).primaryColor,
+          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: middleNameController,
           maxLines: 1,
           enabled: false,
@@ -708,7 +708,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
         child: TextField(
-          cursorColor: Theme.of(context).primaryColor,
+          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: lastNameController,
           maxLines: 1,
           enabled: false,
@@ -744,7 +744,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
         child: TextField(
-          cursorColor: Theme.of(context).primaryColor,
+          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: relationShipController,
           maxLines: 1,
           enabled: false,
@@ -779,7 +779,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
         child: TextField(
-          cursorColor: Theme.of(context).primaryColor,
+          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: emailController,
           maxLines: 1,
           enabled: false,
@@ -815,7 +815,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
         child: TextField(
-          cursorColor: Theme.of(context).primaryColor,
+          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: genderController,
           maxLines: 1,
           enabled: false,
@@ -853,7 +853,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         child: Container(
             width: 1.sw / 2 - 40,
             child: TextField(
-              cursorColor: Theme.of(context).primaryColor,
+              cursorColor: Color(CommonUtil().getMyPrimaryColor()),
               controller: bloodGroupController,
               maxLines: 1,
               enabled: false,
@@ -892,7 +892,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         child: Container(
             width: 1.sw / 2 - 40,
             child: TextField(
-              cursorColor: Theme.of(context).primaryColor,
+              cursorColor: Color(CommonUtil().getMyPrimaryColor()),
               controller: bloodRangeController,
               maxLines: 1,
               enabled: false,
@@ -931,7 +931,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         child: Container(
             width: 1.sw / 2 - 40,
             child: TextField(
-              cursorColor: Theme.of(context).primaryColor,
+              cursorColor: Color(CommonUtil().getMyPrimaryColor()),
               controller: heightConroller,
               maxLines: 1,
               enabled: false,
@@ -970,7 +970,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         child: Container(
             width: 1.sw / 2 - 40,
             child: TextField(
-              cursorColor: Theme.of(context).primaryColor,
+              cursorColor: Color(CommonUtil().getMyPrimaryColor()),
               controller: weightController,
               maxLines: 1,
               enabled: false,
@@ -1009,7 +1009,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       child: Padding(
           padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
           child: TextField(
-            cursorColor: Theme.of(context).primaryColor,
+            cursorColor: Color(CommonUtil().getMyPrimaryColor()),
             controller: dateOfBirthController,
             maxLines: 1,
             autofocus: false,

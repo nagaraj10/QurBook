@@ -445,7 +445,7 @@ class _FeedbacksState extends State<Feedbacks> {
 
   Widget _showFeedbacktextFiled() {
     return TextFormField(
-      cursorColor: Theme.of(context).primaryColor,
+      cursorColor: Color(CommonUtil().getMyPrimaryColor()),
       controller: feedbackController,
       maxLines: 1,
       keyboardType: TextInputType.text,

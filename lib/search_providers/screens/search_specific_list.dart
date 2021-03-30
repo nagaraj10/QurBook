@@ -375,19 +375,19 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           _showAddButton(diagnostics),
           Text('to add the Doctor as',
               style: new TextStyle(
-                color: Theme.of(context).primaryColor,
+                color:  Color(CommonUtil().getMyPrimaryColor()),
                 fontSize: 15.0.sp,
                 fontWeight: FontWeight.w500,
               )),
           Text('Unknown Doctor ',
               style: new TextStyle(
-                color: Theme.of(context).primaryColor,
+                color:  Color(CommonUtil().getMyPrimaryColor()),
                 fontSize: 15.0.sp,
                 fontWeight: FontWeight.bold,
               )),
           Text('temporarily',
               style: new TextStyle(
-                color: Theme.of(context).primaryColor,
+                color:  Color(CommonUtil().getMyPrimaryColor()),
                 fontSize: 15.0.sp,
                 fontWeight: FontWeight.bold,
               )),
@@ -477,7 +477,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         width: 100.0.w,
         height: 40.0.h,
         decoration: new BoxDecoration(
-          color: Theme.of(context).primaryColor,
+          color: Color(CommonUtil().getMyPrimaryColor()),
           borderRadius: new BorderRadius.all(Radius.circular(25.0)),
           boxShadow: <BoxShadow>[
             BoxShadow(
@@ -674,8 +674,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                     color: Color(fhbColors.bgColorContainer),
                     child:
                         widget.arguments.searchWord == CommonConstants.doctors
-                            ? getHospitalLogoImage(logo,data)
-                            : getHospitalLogoImage(logo,data),
+                            ? getHospitalLogoImage(logo, data)
+                            : getHospitalLogoImage(logo, data),
                   )),
                   SizedBox(width: 10.0.w),
                   Expanded(
@@ -801,24 +801,21 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     );
   }
 
-  Widget getHospitalLogoImage(String logo,DoctorsListResult docs) {
+  Widget getHospitalLogoImage(String logo, DoctorsListResult docs) {
     if (logo == null || logo == '') {
       return Container();
     } else {
-      return Image.network(
-        logo,
-          errorBuilder:
-              (BuildContext context, Object exception, StackTrace stackTrace) {
-            return Container(
-              height: 50.0.h,
-              width: 50.0.h,
-              color: Colors.grey[200],
-              child: Center(
-                child: getFirstLastNameText(docs),
-              ),
-            );
-          }
-      );
+      return Image.network(logo, errorBuilder:
+          (BuildContext context, Object exception, StackTrace stackTrace) {
+        return Container(
+          height: 50.0.h,
+          width: 50.0.h,
+          color: Colors.grey[200],
+          child: Center(
+            child: getFirstLastNameText(docs),
+          ),
+        );
+      });
     }
   }
 

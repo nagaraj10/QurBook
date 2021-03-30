@@ -763,7 +763,8 @@ class _MyFamilyState extends State<MyFamily> {
                                         ? Icons.radio_button_checked
                                         : Icons.radio_button_unchecked,
                                     color: isPrimaryNoSelected == true
-                                        ? Theme.of(context).primaryColor
+                                        ? Color(
+                                            CommonUtil().getMyPrimaryColor())
                                         : ColorUtils.myFamilyGreyColor,
                                     size: 24.0.sp,
                                   ),
@@ -916,7 +917,7 @@ class _MyFamilyState extends State<MyFamily> {
   Widget _ShowMobileNoTextField() {
     return Expanded(
       child: new TextField(
-          cursorColor: Theme.of(context).primaryColor,
+          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: mobileNoController,
           maxLines: 1,
           enabled: isPrimaryNoSelected ? false : true,
@@ -950,7 +951,7 @@ class _MyFamilyState extends State<MyFamily> {
   Widget _ShowNameTextField() {
     return Expanded(
       child: new TextField(
-          cursorColor: Theme.of(context).primaryColor,
+          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: nameController,
           maxLines: 1,
           keyboardType: TextInputType.text,
@@ -983,7 +984,7 @@ class _MyFamilyState extends State<MyFamily> {
   Widget _showFirstNameTextField() {
     return Expanded(
         child: TextField(
-      cursorColor: Theme.of(context).primaryColor,
+      cursorColor: Color(CommonUtil().getMyPrimaryColor()),
       controller: firstNameController,
       maxLines: 1,
       keyboardType: TextInputType.text,
@@ -1017,7 +1018,7 @@ class _MyFamilyState extends State<MyFamily> {
   Widget _showMiddleNameTextField() {
     return Expanded(
         child: TextField(
-      cursorColor: Theme.of(context).primaryColor,
+      cursorColor: Color(CommonUtil().getMyPrimaryColor()),
       controller: middleNameController,
       maxLines: 1,
       keyboardType: TextInputType.text,
@@ -1051,7 +1052,7 @@ class _MyFamilyState extends State<MyFamily> {
   Widget _showLastNameTextField() {
     return Expanded(
         child: TextField(
-      cursorColor: Theme.of(context).primaryColor,
+      cursorColor: Color(CommonUtil().getMyPrimaryColor()),
       controller: lastNameController,
       maxLines: 1,
       keyboardType: TextInputType.text,
