@@ -94,7 +94,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   AddFamilyUserInfoBloc addFamilyUserInfoBloc;
   AddFamilyUserInfoRepository addFamilyUserInfoRepository;
 
-  MyProfileModel myProf = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+  //MyProfileModel myProf = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
 
   String selectedBloodGroup;
   String selectedBloodRange;
@@ -242,12 +242,12 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     if (sharedbyme.child != null) {
       if (sharedbyme.child.firstName != null &&
           sharedbyme.child.lastName != null) {
-        firstNameController.text = sharedbyme.child.firstName;
-        middleNameController.text = sharedbyme.child.middleName;
-        lastNameController.text = sharedbyme.child.lastName;
+        firstNameController.text = sharedbyme?.child?.firstName;
+        middleNameController.text = sharedbyme?.child?.middleName;
+        lastNameController.text = sharedbyme?.child?.lastName;
       }
     } else {
-      firstNameController.text = sharedbyme.child.name;
+      firstNameController.text = sharedbyme?.child?.name;
       middleNameController.text = '';
       lastNameController.text = '';
     }
@@ -256,7 +256,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       try {
         if (sharedbyme.child.isVirtualUser) {
           MyProfileModel myProf =
-              PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+              PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) != null ? PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) :PreferenceUtil.getProfileData(Constants.KEY_PROFILE) ;
           if (myProf.result.userContactCollection3 != null) {
             if (myProf.result.userContactCollection3.length > 0) {
               mobileNoController.text =
@@ -323,9 +323,9 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       cntrlr_addr_two.text =
           sharedbyme?.child?.userAddressCollection3[0].addressLine2;
       cntrlr_addr_city.text =
-          sharedbyme?.child?.userAddressCollection3[0].city.name;
+          sharedbyme?.child?.userAddressCollection3[0].city?.name;
       cntrlr_addr_state.text =
-          sharedbyme?.child?.userAddressCollection3[0].state.name;
+          sharedbyme?.child?.userAddressCollection3[0].state?.name;
       cntrlr_addr_zip.text =
           sharedbyme?.child?.userAddressCollection3[0].pincode;
     }
