@@ -35,6 +35,7 @@ class GVResult {
   String bgUnit;
   String mealContext;
   String mealType;
+  String deviceId;
   GVResult(
       {this.sourceType,
       this.startDateTime,
@@ -42,7 +43,8 @@ class GVResult {
       this.bloodGlucoseLevel,
       this.bgUnit,
       this.mealContext,
-      this.mealType});
+      this.mealType,
+      this.deviceId});
 
   GVResult.fromJson(Map<String, dynamic> json) {
     sourceType = json[strsourcetype];

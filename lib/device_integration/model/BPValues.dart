@@ -33,13 +33,15 @@ class BPResult {
   String endDateTime;
   int systolic;
   int diastolic;
+  String deviceId;
 
   BPResult(
       {this.sourceType,
       this.startDateTime,
       this.endDateTime,
       this.systolic,
-      this.diastolic});
+      this.diastolic,
+      this.deviceId});
 
   BPResult.fromJson(Map<String, dynamic> json) {
     sourceType = json[strsourcetype];
