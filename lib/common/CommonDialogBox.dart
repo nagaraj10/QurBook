@@ -2352,7 +2352,7 @@ class CommonDialogBox {
       },
       child: Container(
           child: TextField(
-        cursorColor: Theme.of(context).primaryColor,
+        cursorColor: Color(CommonUtil().getMyPrimaryColor()),
         controller: dateOfVisit,
         maxLines: 1,
         autofocus: false,
