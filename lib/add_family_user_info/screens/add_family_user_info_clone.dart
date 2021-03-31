@@ -1342,8 +1342,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             if (cRelationship?.parent?.id ==
                 PreferenceUtil.getStringValue(Constants.KEY_USERID)) {
               relationShipController.text = cRelationship?.relationship?.name;
+            } else {
+              relationShipController.text =
+                  widget?.arguments?.relationShip?.name;
             }
           }
+        } else {
+          relationShipController.text = widget?.arguments?.relationShip?.name;
         }
         try {
           setState(() {
@@ -1523,8 +1528,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
         addFamilyUserInfoBloc.updateSelfProfile(false).then((value) {
           if (value != null && value.isSuccess) {
-            chatViewModel.upateUserNickname(
-                myProf.result.id,
+            chatViewModel.upateUserNickname(myProf.result.id,
                 firstNameController.text + ' ' + lastNameController.text);
             _familyListBloc.getFamilyMembersListNew().then((value) {
               PreferenceUtil.saveFamilyData(
@@ -1562,8 +1566,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
         addFamilyUserInfoBloc.updateSelfProfile(false).then((value) {
           if (value != null && value.isSuccess) {
-            chatViewModel.upateUserNickname(
-                myProf.result.id,
+            chatViewModel.upateUserNickname(myProf.result.id,
                 firstNameController.text + ' ' + lastNameController.text);
             _familyListBloc.getFamilyMembersListNew().then((value) {
               /*MySliverAppBar.imageURI = null;
@@ -1611,8 +1614,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
         addFamilyUserInfoBloc.updateSelfProfile(false).then((value) {
           if (value != null && value.isSuccess) {
-            chatViewModel.upateUserNickname(
-                myProf.result.id,
+            chatViewModel.upateUserNickname(myProf.result.id,
                 firstNameController.text + ' ' + lastNameController.text);
             _familyListBloc.getFamilyMembersListNew().then((value) {
               PreferenceUtil.saveFamilyData(
