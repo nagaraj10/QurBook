@@ -398,17 +398,19 @@ class AddProvidersState extends State<AddProviders> {
       if (widget.arguments.hasData) {
         if (widget.arguments.searchKeyWord == CommonConstants.doctors) {
           doctorController.text = widget.arguments.data.name != null
-              ? toBeginningOfSentenceCase(widget.arguments.data.name)
+              ? widget?.arguments?.data?.name
+                  ?.capitalizeFirstofEach //toBeginningOfSentenceCase(widget.arguments.data.name)
               : '';
 //          isPreferred = widget.arguments.data.isUserDefined ?? false;
           isPreferred = false;
         } else if (widget.arguments.searchKeyWord ==
             CommonConstants.hospitals) {
-          doctorController.text =
-              widget.arguments.hospitalData.healthOrganizationName != null
-                  ? toBeginningOfSentenceCase(
-                      widget.arguments.hospitalData.healthOrganizationName)
-                  : '';
+          doctorController.text = widget
+                      .arguments.hospitalData.healthOrganizationName !=
+                  null
+              ? widget?.arguments?.hospitalData?.healthOrganizationName
+                  ?.capitalizeFirstofEach //toBeginningOfSentenceCase(widget.arguments.hospitalData.healthOrganizationName)
+              : '';
 //          isPreferred = widget.arguments.hospitalData.isUserDefined ?? false;
           isPreferred = false;
           // latitude = widget.arguments.hospitalData.latitude == null
@@ -423,11 +425,12 @@ class AddProvidersState extends State<AddProviders> {
           addressLine1 = widget.arguments.hospitalData.addressLine1;
           addressLine2 = widget.arguments.hospitalData.addressLine2;
         } else {
-          doctorController.text =
-              widget.arguments.labData.healthOrganizationName != null
-                  ? toBeginningOfSentenceCase(
-                      widget.arguments.labData.healthOrganizationName)
-                  : '';
+          doctorController.text = widget
+                      .arguments.labData.healthOrganizationName !=
+                  null
+              ? widget?.arguments?.labData?.healthOrganizationName
+                  ?.capitalizeFirstofEach //toBeginningOfSentenceCase(widget.arguments.labData.healthOrganizationName)
+              : '';
 //          isPreferred = widget.arguments.labData.isUserDefined ?? false;
           isPreferred = false;
 
@@ -445,7 +448,8 @@ class AddProvidersState extends State<AddProviders> {
         }
       } else {
         isPreferred = false;
-        doctorController.text = widget.arguments.searchText;
+        doctorController.text =
+            widget?.arguments?.searchText?.capitalizeFirstofEach;
 
         if (widget.arguments.placeDetail != null &&
             widget.arguments.placeDetail != null) {
@@ -465,7 +469,8 @@ class AddProvidersState extends State<AddProviders> {
     } else {
       if (widget.arguments.searchKeyWord == CommonConstants.doctors) {
         doctorController.text = widget.arguments.doctorsModel.user.name != null
-            ? toBeginningOfSentenceCase(widget.arguments.doctorsModel.user.name)
+            ? widget?.arguments?.doctorsModel?.user?.name
+                ?.capitalizeFirstofEach //toBeginningOfSentenceCase(widget.arguments.doctorsModel.user.name)
             : '';
         isPreferred = widget.arguments.doctorsModel.isDefault;
         myprovidersPreferred = widget.arguments.doctorsModel.isDefault;
@@ -482,7 +487,8 @@ class AddProvidersState extends State<AddProviders> {
             : double.parse(widget.arguments.data.longitude);*/
       } else if (widget.arguments.searchKeyWord == CommonConstants.hospitals) {
         doctorController.text = widget.arguments.hospitalsModel.name != null
-            ? toBeginningOfSentenceCase(widget.arguments.hospitalsModel.name)
+            ? widget?.arguments?.hospitalsModel?.name
+                ?.capitalizeFirstofEach //toBeginningOfSentenceCase(widget.arguments.hospitalsModel.name)
             : '';
         isPreferred = widget.arguments.hospitalsModel.isDefault;
         myprovidersPreferred = widget.arguments.hospitalsModel.isDefault;
@@ -502,7 +508,8 @@ class AddProvidersState extends State<AddProviders> {
             widget.arguments.hospitalsModel, 'address2');
       } else {
         doctorController.text = widget.arguments.labsModel.name != null
-            ? toBeginningOfSentenceCase(widget.arguments.labsModel.name)
+            ? widget?.arguments?.labsModel?.name
+                ?.capitalizeFirstofEach //toBeginningOfSentenceCase(widget.arguments.labsModel.name)
             : '';
         isPreferred = widget.arguments.labsModel.isDefault;
         myprovidersPreferred = widget.arguments.labsModel.isDefault;
@@ -730,7 +737,8 @@ class AddProvidersState extends State<AddProviders> {
                         ? myProfile.result.id == primaryUserProfile.result.id
                             ? variable.Self
                             : myProfile.result.firstName
-                        : toBeginningOfSentenceCase(selectedFamilyMemberName),
+                        : selectedFamilyMemberName
+                            .capitalizeFirstofEach, //toBeginningOfSentenceCase(selectedFamilyMemberName),
                     softWrap: true,
                     textAlign: TextAlign.left,
                     style: TextStyle(
