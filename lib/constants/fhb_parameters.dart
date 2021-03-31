@@ -321,6 +321,19 @@ const String noWeight =
 const String noAdditionalInfo =
     'Please fill your height & weight in your profile before you book an appointment';
 
+const String noAddressFamily =
+    'Please fill your address details in your selected family member before you book an appointment';
+const String noGenderFamily =
+    'Please fill your gender and address details in your selected family member before you book an appointment';
+const String noDOBFamily =
+    'Please fill your date of birth in your selected family member before you book an appointment';
+const String noHeightFamily =
+    'Please fill your height in your selected family member before you book an appointment';
+const String noWeightFamily =
+    'Please fill your weight in your selected family member before you book an appointment';
+const String noAdditionalInfoFamily =
+    'Please fill your height & weight in your selected family member before you book an appointment';
+
 //Payment
 const String PAYMENT_STATUS = 'payment_status';
 const String CREDIT = 'Credit';
