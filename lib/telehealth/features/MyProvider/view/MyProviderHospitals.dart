@@ -145,16 +145,16 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
         } else {
           final items = snapshot.data ??
               <MyProvidersResponseData>[]; // handle the case that data is null
-          if (snapshot.hasData &&
-              snapshot.data.result != null &&
-              snapshot.data.result.hospitals != null &&
-              snapshot.data.result.hospitals.length > 0) {
-            initialHospitalList = snapshot.data.result.hospitals;
+          if (snapshot?.hasData &&
+              snapshot?.data?.result != null &&
+              snapshot?.data?.result?.hospitals != null &&
+              snapshot?.data?.result?.hospitals?.length > 0) {
+            initialHospitalList = snapshot?.data?.result?.hospitals;
             return hospitalList(isSearch
                 ? myProviderHospitalList
-                : snapshot.data.result.hospitals);
+                : snapshot?.data?.result?.hospitals);
           } else {
-            initialHospitalList = snapshot.data.result.hospitals;
+            initialHospitalList = snapshot?.data?.result?.hospitals;
             return Container(
                 child: Center(
               child: Text(variable.strNoHospitaldata),
