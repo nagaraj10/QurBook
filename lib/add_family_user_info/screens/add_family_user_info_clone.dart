@@ -1178,7 +1178,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         try {
           if (widget.arguments.sharedbyme.child.isVirtualUser) {
             MyProfileModel myProf =
-                PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+                PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) != null ? PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) :PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
             if (myProf.result.userContactCollection3 != null) {
               if (myProf.result.userContactCollection3.length > 0) {
                 mobileNoController.text =
