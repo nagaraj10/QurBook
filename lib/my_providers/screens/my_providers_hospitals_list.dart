@@ -156,7 +156,10 @@ class _MyProvidersDoctorsList extends State<MyProvidersHospitalsList> {
                                   eachHospitalModel, () {
                                 providerViewModel
                                     .bookMarkHealthOrg(
-                                        eachHospitalModel, false, 'ListItem')
+                                        eachHospitalModel,
+                                        false,
+                                        'ListItem',
+                                        eachHospitalModel.sharedCategories)
                                     .then((status) {
                                   if (status) {
                                     widget.isRefresh();

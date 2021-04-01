@@ -46,8 +46,8 @@ class ProvidersListRepository {
     return TelehealthProviderModel.fromJson(response);
   }
 
-  Future<DoctorBookMarkedSucessModel> bookMarkDoctor(
-      Doctors doctorIds, bool isPreferred, String isFrom) async {
+  Future<DoctorBookMarkedSucessModel> bookMarkDoctor(Doctors doctorIds,
+      bool isPreferred, String isFrom, List<String> selectedCategories) async {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var bookMark = {};
     bookMark[parameters.strpatient] = userID;
@@ -56,14 +56,18 @@ class ProvidersListRepository {
     if (isFrom == 'ListItem') {
       if (doctorIds.isDefault) {
         bookMark[parameters.strisDefault] = false;
+        bookMark['sharedCategories'] = null;
       } else {
         bookMark[parameters.strisDefault] = true;
+        bookMark['sharedCategories'] = selectedCategories;
       }
     } else {
       if (isPreferred) {
         bookMark[parameters.strisDefault] = true;
+        bookMark['sharedCategories'] = selectedCategories;
       } else {
         bookMark[parameters.strisDefault] = false;
+        bookMark['sharedCategories'] = null;
       }
     }
     var jsonString = convert.jsonEncode(bookMark);
@@ -74,7 +78,10 @@ class ProvidersListRepository {
   }
 
   Future<DoctorBookMarkedSucessModel> bookMarkHealthOrganizaton(
-      Hospitals hospitals, bool isPreferred, String isFrom) async {
+      Hospitals hospitals,
+      bool isPreferred,
+      String isFrom,
+      List<String> selectedCategories) async {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var bookMark = {};
     bookMark[parameters.strpatient] = userID;
@@ -83,14 +90,18 @@ class ProvidersListRepository {
     if (isFrom == 'ListItem') {
       if (hospitals.isDefault) {
         bookMark[parameters.strisDefault] = false;
+        bookMark['sharedCategories'] = null;
       } else {
         bookMark[parameters.strisDefault] = true;
+        bookMark['sharedCategories'] = selectedCategories;
       }
     } else {
       if (isPreferred) {
         bookMark[parameters.strisDefault] = true;
+        bookMark['sharedCategories'] = selectedCategories;
       } else {
         bookMark[parameters.strisDefault] = false;
+        bookMark['sharedCategories'] = null;
       }
     }
 
@@ -157,9 +168,12 @@ class ProvidersListRepository {
   }
 
   Future<AppointmentDetailModel> getAppointmentDetail(
-      String doctorId,String patientId) async {
-    final response = await _helper
-        .getAppointmentDetail(appointmentSlash+patientIdEqualTo+patientId+doctorIdEqualTo+doctorId);
+      String doctorId, String patientId) async {
+    final response = await _helper.getAppointmentDetail(appointmentSlash +
+        patientIdEqualTo +
+        patientId +
+        doctorIdEqualTo +
+        doctorId);
     return AppointmentDetailModel.fromJson(response);
   }
 }

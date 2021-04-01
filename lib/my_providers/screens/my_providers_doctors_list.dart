@@ -190,7 +190,7 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                                   .getBookMarkedIconNew(eachDoctorModel, () {
                                 providerViewModel
                                     .bookMarkDoctor(
-                                        eachDoctorModel, false, 'ListItem')
+                                        eachDoctorModel, false, 'ListItem',eachDoctorModel.sharedCategories)
                                     .then((status) {
                                   if (status) {
                                     widget.refresh();

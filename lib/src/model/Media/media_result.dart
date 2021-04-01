@@ -12,19 +12,19 @@ class MediaResult {
   String createdOn;
   String lastModifiedOn;
   CategoryResult healthRecordCategory;
-
-  MediaResult({
-    this.id,
-    this.name,
-    this.description,
-    this.logo,
-    this.isDisplay,
-    this.isAiTranscription,
-    this.isActive,
-    this.createdOn,
-    this.lastModifiedOn,
-    this.healthRecordCategory,
-  });
+  bool isChecked = false;
+  MediaResult(
+      {this.id,
+      this.name,
+      this.description,
+      this.logo,
+      this.isDisplay,
+      this.isAiTranscription,
+      this.isActive,
+      this.createdOn,
+      this.lastModifiedOn,
+      this.healthRecordCategory,
+      this.isChecked});
 
   MediaResult.fromJson(Map<String, dynamic> json) {
     id = json[parameters.strId];
@@ -36,10 +36,10 @@ class MediaResult {
     isActive = json[parameters.strIsActive];
     createdOn = json[parameters.strCreatedOn];
     lastModifiedOn = json[parameters.strLastModifiedOn];
-    if(json.containsKey(parameters.strHealthRecordCategory)) {
+    if (json.containsKey(parameters.strHealthRecordCategory)) {
       healthRecordCategory = json[parameters.strHealthRecordCategory] != null
           ? new CategoryResult.fromJson(
-          json[parameters.strHealthRecordCategory])
+              json[parameters.strHealthRecordCategory])
           : null;
     }
   }
@@ -55,7 +55,7 @@ class MediaResult {
     data[parameters.strIsActive] = this.isActive;
     data[parameters.strCreatedOn] = this.createdOn;
     data[parameters.strLastModifiedOn] = this.lastModifiedOn;
-    if(data.containsKey(parameters.strHealthRecordCategory)) {
+    if (data.containsKey(parameters.strHealthRecordCategory)) {
       if (this.healthRecordCategory != null) {
         data[parameters.strHealthRecordCategory] =
             this.healthRecordCategory.toJson();
