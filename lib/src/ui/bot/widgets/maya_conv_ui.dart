@@ -30,7 +30,9 @@ class MayaConvUI extends StatelessWidget {
                     );
                   },
                   child: Card(
-                    color: Colors.white,
+                    color: (buttonData.isPlaying ?? false)
+                        ? Colors.redAccent
+                        : Colors.white,
                     margin: const EdgeInsets.only(top: 10),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -43,7 +45,9 @@ class MayaConvUI extends StatelessWidget {
                       child: Text(
                         buttonData.title,
                         style: TextStyle(
-                          color: Color(new CommonUtil().getMyPrimaryColor()),
+                          color: (buttonData.isPlaying ?? false)
+                              ? Colors.white
+                              : Color(new CommonUtil().getMyPrimaryColor()),
                           fontSize: 16.0.sp,
                         ),
                       ),
@@ -105,17 +109,24 @@ class MayaConvUI extends StatelessWidget {
             onTap: () async {
               if (!c.isSpeaking) {
                 String textToSpeak = '';
-                if ((c?.buttons?.length ?? 0) > 0) {
-                  textToSpeak = '.';
-                  await Future.forEach(c.buttons, (button) async {
-                    textToSpeak = textToSpeak + button.title + '.';
-                  });
-                }
+                // if ((c?.buttons?.length ?? 0) > 0) {
+                //   textToSpeak = '.';
+                //   await Future.forEach(c.buttons, (button) async {
+                //     textToSpeak = textToSpeak + button.title + '.';
+                //   });
+                // }
                 await Provider.of<ChatScreenViewModel>(context, listen: false)
                     .startTTSEngine(
                   textToSpeak: c.text + textToSpeak,
                   index: index,
                   langCode: c.langCode,
+                  stopPrevious: (c.buttons?.length ?? 0) == 0,
+                );
+                await Provider.of<ChatScreenViewModel>(context, listen: false)
+                    .startButtonsSpeech(
+                  index: index,
+                  langCode: c.langCode,
+                  buttons: c.buttons,
                 );
               } else {
                 Provider.of<ChatScreenViewModel>(context, listen: false)
@@ -125,10 +136,7 @@ class MayaConvUI extends StatelessWidget {
               }
             },
             child: Icon(
-              c.isSpeaking &&
-                      (!Provider.of<ChatScreenViewModel>(context).getStopTTS)
-                  ? Icons.pause
-                  : Icons.play_arrow,
+              c.isSpeaking ? Icons.pause : Icons.play_arrow,
               size: 24.0.sp,
               color: Colors.white,
             ),
