@@ -1305,7 +1305,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                       .bpm
                                       .toString()
                                   : '',
-                              deviceFullList[index].deviceId);
+                              bpResult[index].deviceId);
                         },
                       )
                     : Container(
@@ -1378,7 +1378,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                               '',
                               getFormattedTime(translist[index].startDateTime),
                               translist[index].bgUnit,
-                              deviceFullList[index].deviceId);
+                              translist[index].deviceId);
                         },
                       )
                     : Container(
@@ -1456,7 +1456,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                       .bpm
                                       .toString()
                                   : '',
-                              deviceFullList[index].deviceId);
+                              translist[index].deviceId);
                         },
                       )
                     : Container(
@@ -1526,7 +1526,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                               '',
                               getFormattedTime(translist[index].startDateTime),
                               'Kg',
-                              deviceFullList[index].deviceId);
+                              translist[index].deviceId);
                         },
                       )
                     : Container(
@@ -1596,7 +1596,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                               '',
                               getFormattedTime(translist[index].startDateTime),
                               'F',
-                              deviceFullList[index].deviceId);
+                              translist[index].deviceId);
                         },
                       )
                     : Container(
@@ -1890,7 +1890,9 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   }
 
   Widget getDeleteIcon(String deviceId, String type) {
-    if (type == strsourceHK || type == strsourceGoogle || type==strsourceCARGIVER) {
+    if (type == strsourceHK ||
+        type == strsourceGoogle ||
+        type == strsourceCARGIVER) {
       return SizedBox();
     } else {
       return GestureDetector(
@@ -2363,7 +2365,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         height: 32.0.h,
         width: 32.0.h,
       );
-    }else if (type == strsourceCARGIVER) {
+    } else if (type == strsourceCARGIVER) {
       return Image.asset(
         'assets/devices/caregiver_source.png',
         height: 32.0.h,
