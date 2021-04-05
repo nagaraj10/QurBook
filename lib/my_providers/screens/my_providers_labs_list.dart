@@ -152,7 +152,7 @@ class _MyProvidersLabsList extends State<MyProvidersLabsList> {
                                   .getBookMarkedIconHealth(eachLabModel, () {
                                 providerViewModel
                                     .bookMarkHealthOrg(
-                                        eachLabModel, false, 'ListItem')
+                                        eachLabModel, false, 'ListItem', null)
                                     .then((status) {
                                   if (status) {
                                     widget.isRefresh();

@@ -16,21 +16,23 @@ class Doctors {
   List<DoctorLanguageCollection> doctorLanguageCollection;
   bool isDefault;
   String providerPatientMappingId;
+  List<String> sharedCategories;
 
   Doctors(
       {this.id,
-        this.specialization,
-        this.isTelehealthEnabled,
-        this.isMciVerified,
-        this.isActive,
-        this.createdOn,
-        this.lastModifiedBy,
-        this.lastModifiedOn,
-        this.user,
-        this.doctorProfessionalDetailCollection,
-        this.doctorLanguageCollection,
-        this.isDefault,
-        this.providerPatientMappingId});
+      this.specialization,
+      this.isTelehealthEnabled,
+      this.isMciVerified,
+      this.isActive,
+      this.createdOn,
+      this.lastModifiedBy,
+      this.lastModifiedOn,
+      this.user,
+      this.doctorProfessionalDetailCollection,
+      this.doctorLanguageCollection,
+      this.isDefault,
+      this.providerPatientMappingId,
+      this.sharedCategories});
 
   Doctors.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -44,22 +46,23 @@ class Doctors {
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
     if (json['doctorProfessionalDetailCollection'] != null) {
       doctorProfessionalDetailCollection =
-      new List<DoctorProfessionalDetailCollection>();
+          new List<DoctorProfessionalDetailCollection>();
       json['doctorProfessionalDetailCollection'].forEach((v) {
         doctorProfessionalDetailCollection
             .add(new DoctorProfessionalDetailCollection.fromJson(v));
       });
     }
     if (json['doctorLanguageCollection'] != null) {
-      doctorLanguageCollection =
-      new List<DoctorLanguageCollection>();
+      doctorLanguageCollection = new List<DoctorLanguageCollection>();
       json['doctorLanguageCollection'].forEach((v) {
-        doctorLanguageCollection
-            .add(new DoctorLanguageCollection.fromJson(v));
+        doctorLanguageCollection.add(new DoctorLanguageCollection.fromJson(v));
       });
     }
     isDefault = json['isDefault'];
     providerPatientMappingId = json['providerPatientMappingId'];
+    if (json.containsKey("sharedCategories") &&
+        json['sharedCategories'] != null)
+      sharedCategories = json['sharedCategories'].cast<String>();
   }
 
   Map<String, dynamic> toJson() {
@@ -82,16 +85,13 @@ class Doctors {
           .toList();
     }
     if (this.doctorLanguageCollection != null) {
-      data['doctorLanguageCollection'] = this
-          .doctorLanguageCollection
-          .map((v) => v.toJson())
-          .toList();
+      data['doctorLanguageCollection'] =
+          this.doctorLanguageCollection.map((v) => v.toJson()).toList();
     }
     data['isDefault'] = this.isDefault;
     data['providerPatientMappingId'] = this.providerPatientMappingId;
+    data['sharedCategories'] = this.sharedCategories;
+
     return data;
   }
 }
-
-
-

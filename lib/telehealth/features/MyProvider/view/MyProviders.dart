@@ -393,7 +393,8 @@ class _MyProvidersState extends State<MyProviders> {
                       commonWidgets.getSizeBoxWidth(10.0.w),
                       commonWidgets.getBookMarkedIconNew(docs[i], () {
                         providerViewModel
-                            .bookMarkDoctor(docs[i], false, 'ListItem')
+                            .bookMarkDoctor(docs[i], false, 'ListItem',
+                                docs[i].sharedCategories)
                             .then((status) {
                           if (status) {
                             setState(() {});

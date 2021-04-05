@@ -9,6 +9,7 @@ class Hospitals {
   List<HealthOrganizationContactCollectionNew> healthOrganizationContactCollection;
   bool isDefault;
   String providerPatientMappingId;
+  List<String> sharedCategories;
 
   Hospitals(
       {this.id,
@@ -20,7 +21,7 @@ class Hospitals {
         this.healthOrganizationAddressCollection,
         this.healthOrganizationContactCollection,
         this.isDefault,
-        this.providerPatientMappingId});
+        this.providerPatientMappingId,this.sharedCategories});
 
   Hospitals.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -49,6 +50,9 @@ class Hospitals {
     }
     isDefault = json['isDefault'];
     providerPatientMappingId = json['providerPatientMappingId'];
+    if (json.containsKey("sharedCategories") &&
+        json['sharedCategories'] != null)
+      sharedCategories = json['sharedCategories'].cast<String>();
   }
 
   Map<String, dynamic> toJson() {
@@ -75,6 +79,8 @@ class Hospitals {
     }
     data['isDefault'] = this.isDefault;
     data['providerPatientMappingId'] = this.providerPatientMappingId;
+    data['sharedCategories'] = this.sharedCategories;
+
     return data;
   }
 }

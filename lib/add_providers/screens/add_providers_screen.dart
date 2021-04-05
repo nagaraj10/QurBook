@@ -2,6 +2,11 @@ import 'dart:async';
 import 'dart:convert' as convert;
 import 'dart:typed_data';
 import 'dart:ui' as ui;
+import 'package:myfhb/add_providers/widgets/dropdown_with_categories.dart';
+import 'package:myfhb/add_providers/widgets/sample_dropdown.dart';
+import 'package:myfhb/src/blocs/Media/MediaTypeBlock.dart';
+import 'package:myfhb/src/model/Media/media_data_list.dart';
+import 'package:myfhb/src/model/Media/media_result.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -134,6 +139,9 @@ class AddProvidersState extends State<AddProviders> {
   String USERID;
   MyProfileModel myProfile;
   String updatedProfilePic;
+  MediaTypeBlock _mediaTypeBlock;
+
+  List<String> selectedCategories = new List();
 
   @override
   void initState() {
@@ -153,6 +161,28 @@ class AddProvidersState extends State<AddProviders> {
     if (widget?.arguments?.data?.isTelehealthEnabled != null) {
       teleHealthAlertShown = widget.arguments.data.isTelehealthEnabled;
     }
+
+    if (_mediaTypeBlock == null) {
+      _mediaTypeBlock = new MediaTypeBlock();
+      _mediaTypeBlock.getMediTypesList();
+    }
+
+    if (widget.arguments.searchKeyWord == CommonConstants.doctors) {
+      selectedCategories = widget?.arguments?.doctorsModel?.sharedCategories;
+    }
+    if (widget.arguments.searchKeyWord == CommonConstants.hospitals) {
+      selectedCategories = widget?.arguments?.hospitalsModel?.sharedCategories;
+    }
+    if (widget.arguments.searchKeyWord == CommonConstants.labs) {
+      selectedCategories = widget?.arguments?.labsModel?.sharedCategories;
+    }
+
+    /* if (selectedCategories == null) {
+      selectedCategories = new List();
+      selectedCategories.add('e70ed858-246f-4f3b-b82c-513e6f591877');
+      selectedCategories.add('d4e1b1f0-ea4c-4534-a3d5-040d71d9f799');
+    }*/
+
     buildUI();
   }
 
@@ -184,86 +214,6 @@ class AddProvidersState extends State<AddProviders> {
             child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            // Container(
-            //   width: 1.sw,
-            //   height: 1.sh / 2,
-            //   child: Stack(
-            //     children: <Widget>[
-            //       GoogleMap(
-            //         scrollGesturesEnabled: false,
-            //         mapType: MapType.normal,
-            //         initialCameraPosition: kGooglePlex,
-            //         onCameraMove: _onCameraMove,
-            //         markers: Set.from(_markers),
-            //         onMapCreated: _onMapCreated,
-            //       ),
-            //       Column(
-            //         children: <Widget>[
-            //           InkWell(
-            //               onTap: () {
-            //                 if (widget.arguments.hasData == false) {
-            //                   Navigator.pushNamed(
-            //                     context,
-            //                     router.rt_AddAddress,
-            //                     arguments: AddAddressArguments(
-            //                         providerType:
-            //                             widget.arguments.searchKeyWord),
-            //                   ).then((value) {
-            //                     buildUI();
-            //                     getAddressesFromCoordinates();
-            //                   });
-            //                 }
-            //               },
-            //               child: Container(
-            //                 height: 40.0.h,
-            //                 color: Colors.white,
-            //                 margin:
-            //                     EdgeInsets.only(left: 10, right: 10, top: 40),
-            //                 child: Row(
-            //                   children: <Widget>[
-            //                     SizedBox(width: 10.0.w),
-            //                     InkWell(
-            //                         onTap: () {
-            //                           Navigator.pop(context);
-            //                         },
-            //                         child: Image.asset(ImageUrlUtils.backImg,
-            //                             width: 16.0.h,
-            //                             height: 16.0.h,
-            //                             fit: BoxFit.cover)),
-            //                     SizedBox(width: 10.0.w),
-            //                     Text(CommonConstants.searchPlaces,
-            //                         style: TextStyle(
-            //                             fontSize: 16.0.sp,
-            //                             fontWeight: FontWeight.w400,
-            //                             color: ColorUtils.greycolor1)),
-            //                   ],
-            //                 ),
-            //               )),
-            //           Visibility(
-            //               visible: widget.arguments.hasData == true
-            //                   ? latitude == 0.0
-            //                       ? true
-            //                       : false
-            //                   : false,
-            //               child: Container(
-            //                 height: 1.sh / 2 - 80,
-            //                 color: ColorUtils.blackcolor.withOpacity(0.7),
-            //                 child: Center(
-            //                   child: Text(
-            //                     CommonConstants.comingSoon,
-            //                     style: TextStyle(
-            //                         fontSize: 16.0.sp,
-            //                         fontWeight: FontWeight.w400,
-            //                         color: Colors.white),
-            //                   ),
-            //                 ),
-            //               ))
-            //         ],
-            //       )
-            //     ],
-            //   ),
-            // ),
-
             SingleChildScrollView(
               child: Container(
                 padding: EdgeInsets.only(left: 20, top: 20, right: 20),
@@ -296,37 +246,6 @@ class AddProvidersState extends State<AddProviders> {
                     _showUser(),
                     SizedBox(height: 10.0.h),
                     InkWell(
-                      // onTap: () {
-                      //   if (widget.arguments.fromClass !=
-                      //       router.rt_myprovider) {
-                      //     CommonUtil.showLoadingDialog(
-                      //         context, _keyLoader, variable.Please_Wait);
-
-                      //     if (_familyListBloc != null) {
-                      //       _familyListBloc = null;
-                      //       _familyListBloc = new FamilyListBloc();
-                      //     }
-                      //     _familyListBloc
-                      //         .getFamilyMembersListNew()
-                      //         .then((familyMembersList) {
-                      //       // Hide Loading
-                      //       Navigator.of(_keyLoader.currentContext,
-                      //               rootNavigator: true)
-                      //           .pop();
-
-                      //       if (familyMembersList != null &&
-                      //           familyMembersList.result != null &&
-                      //           familyMembersList.result.sharedByUsers.length >
-                      //               0) {
-                      //         getDialogBoxWithFamilyMemberScrap(
-                      //             familyMembersList.result);
-                      //       } else {
-                      //         toast.getToast(Constants.NO_DATA_FAMIY_CLONE,
-                      //             Colors.black54);
-                      //       }
-                      //     });
-                      //   }
-                      // },
                       child: Text(
                         variable.Switch_User,
                         style: TextStyle(
@@ -360,6 +279,12 @@ class AddProvidersState extends State<AddProviders> {
                         ),
                       ],
                     ),
+                    isPreferred
+                        ? (widget.arguments.searchKeyWord ==
+                                CommonConstants.labs)
+                            ? Container()
+                            : getDropDownWithCategoriesdrop()
+                        : Container(),
                     Visibility(
                       visible: true,
                       child: Row(
@@ -1000,6 +925,11 @@ class AddProvidersState extends State<AddProviders> {
             context, _keyLoader, variable.Please_Wait); //
 
         updateProvidersBloc.isPreferred = isPreferred;
+        updateProvidersBloc.selectedCategories = isPreferred
+            ? selectedCategories != null && selectedCategories.length > 0
+                ? selectedCategories
+                : null
+            : null;
 
         if (widget.arguments.searchKeyWord == CommonConstants.doctors) {
           if (widget.arguments.fromClass == router.rt_myprovider) {
@@ -1007,7 +937,8 @@ class AddProvidersState extends State<AddProviders> {
             updateProvidersBloc.providerReferenceId =
                 widget.arguments.data.doctorReferenceId;*/
             providerViewModel
-                .bookMarkDoctor(widget.arguments.doctorsModel, isPreferred, '')
+                .bookMarkDoctor(widget.arguments.doctorsModel, isPreferred, '',
+                    selectedCategories)
                 .then((status) {
               if (status) {
                 navigateToRefresh();
@@ -1028,8 +959,8 @@ class AddProvidersState extends State<AddProviders> {
                widget.arguments.hospitalData.healthOrganizationReferenceId;*/
 
             providerViewModel
-                .bookMarkHealthOrg(
-                    widget.arguments.hospitalsModel, isPreferred, '')
+                .bookMarkHealthOrg(widget.arguments.hospitalsModel, isPreferred,
+                    '', selectedCategories)
                 .then((status) {
               if (status) {
                 navigateToRefresh();
@@ -1042,7 +973,8 @@ class AddProvidersState extends State<AddProviders> {
             /*updateProvidersBloc.providerId = widget.arguments.labsModel.id;*/
 
             providerViewModel
-                .bookMarkHealthOrg(widget.arguments.labsModel, isPreferred, '')
+                .bookMarkHealthOrg(widget.arguments.labsModel, isPreferred, '',
+                    selectedCategories)
                 .then((status) {
               if (status) {
                 navigateToRefresh();
@@ -1064,10 +996,12 @@ class AddProvidersState extends State<AddProviders> {
               updateProvidersBloc.providerId = widget.arguments.data.doctorId;
               updateProvidersBloc.providerReferenceId =
                   widget.arguments.data.doctorReferenceId;
+              updateProvidersBloc.selectedCategories = selectedCategories;
             } else {
               updateProvidersBloc.providerId = widget.arguments.data.doctorId;
               updateProvidersBloc.providerReferenceId =
                   widget.arguments.data.doctorReferenceId;
+              updateProvidersBloc.selectedCategories = selectedCategories;
             }
             updateDoctorsIdWithUserDetails();
           } else {
@@ -1080,11 +1014,13 @@ class AddProvidersState extends State<AddProviders> {
                 widget.arguments.hospitalData.healthOrganizationId;
             updateProvidersBloc.providerReferenceId =
                 widget.arguments.hospitalData.healthOrganizationReferenceId;
+            updateProvidersBloc.selectedCategories = selectedCategories;
           } else {
             updateProvidersBloc.providerId =
                 widget.arguments.hospitalData.healthOrganizationId;
             updateProvidersBloc.providerReferenceId =
                 widget.arguments.hospitalData.healthOrganizationReferenceId;
+            updateProvidersBloc.selectedCategories = selectedCategories;
           }
           updateHospitalsIdWithUserDetails();
         } else {
@@ -1093,11 +1029,13 @@ class AddProvidersState extends State<AddProviders> {
                 widget.arguments.labData.healthOrganizationId;
             updateProvidersBloc.providerReferenceId =
                 widget.arguments.labData.healthOrganizationReferenceId;
+            updateProvidersBloc.selectedCategories = selectedCategories;
           } else {
             updateProvidersBloc.providerId =
                 widget.arguments.labData.healthOrganizationId;
             updateProvidersBloc.providerReferenceId =
                 widget.arguments.labData.healthOrganizationReferenceId;
+            updateProvidersBloc.selectedCategories = selectedCategories;
           }
           updateLabsIdWithUserDetails();
         }
@@ -1134,14 +1072,10 @@ class AddProvidersState extends State<AddProviders> {
           signInData[variable.strDescription] = '';
           signInData[variable.strCity] = address == null
               ? ''
-              : address.locality == null
-                  ? ''
-                  : address.locality;
+              : address.locality == null ? '' : address.locality;
           signInData[variable.strState] = address == null
               ? ''
-              : address.adminArea == null
-                  ? ''
-                  : address.adminArea;
+              : address.adminArea == null ? '' : address.adminArea;
           signInData[variable.strPhoneNumbers] =
               widget.arguments.placeDetail == null
                   ? ''
@@ -1159,7 +1093,7 @@ class AddProvidersState extends State<AddProviders> {
               widget.arguments.placeDetail.lng == null
                   ? 0.0
                   : widget.arguments.placeDetail.lng;
-
+          signInData['sharedCategories'] = selectedCategories;
           var jsonString = convert.jsonEncode(signInData);
 
           addProvidersBloc.doctorsJsonString = jsonString;
@@ -1273,24 +1207,16 @@ class AddProvidersState extends State<AddProviders> {
                       : widget.arguments.confirmAddressDescription;
           signInData[variable.straddressLine2] = address == null
               ? ''
-              : address.addressLine == null
-                  ? ''
-                  : address.addressLine;
+              : address.addressLine == null ? '' : address.addressLine;
           signInData[variable.strCity] = address == null
               ? ''
-              : address.locality == null
-                  ? ''
-                  : address.locality;
+              : address.locality == null ? '' : address.locality;
           signInData[variable.strState] = address == null
               ? ''
-              : address.adminArea == null
-                  ? ''
-                  : address.adminArea;
+              : address.adminArea == null ? '' : address.adminArea;
           signInData[variable.strzipCode] = address == null
               ? ''
-              : address.postalCode == null
-                  ? ''
-                  : address.postalCode;
+              : address.postalCode == null ? '' : address.postalCode;
           signInData[variable.strbranch] = '';
           signInData[variable.strIsUserDefined] = true;
           signInData[variable.strLatitude] =
@@ -1424,5 +1350,50 @@ class AddProvidersState extends State<AddProviders> {
             ],
           );
         });
+  }
+
+  Widget getDropDownWithCategoriesdrop() {
+    return FutureBuilder(
+        future: _mediaTypeBlock.getMediTypesList(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return new Center(
+              child: new CircularProgressIndicator(
+                backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
+              ),
+            );
+          }
+          MediaDataList mediaType = snapshot.data;
+          mediaType.result
+              .insert(0, new MediaResult(name: 'ALL', isChecked: false));
+
+          setTheValuesForDropdown(mediaType.result);
+          return DropdownWithCategories(
+            mediaData: mediaType.result,
+            onChecked: (result) {
+              addSelectedcategoriesToList(result);
+            },
+          );
+        });
+  }
+
+  void setTheValuesForDropdown(List<MediaResult> result) {
+    if (selectedCategories != null && selectedCategories.length > 0) {
+      for (MediaResult mediaResultObj in result) {
+        if (selectedCategories.contains(mediaResultObj.id)) {
+          mediaResultObj.isChecked = true;
+        }
+      }
+    }
+  }
+
+  void addSelectedcategoriesToList(List<MediaResult> result) {
+    selectedCategories = new List();
+    for (MediaResult mediaResultObj in result) {
+      if (!selectedCategories.contains(mediaResultObj.id) &&
+          mediaResultObj.isChecked) {
+        selectedCategories.add(mediaResultObj.id);
+      }
+    }
   }
 }
