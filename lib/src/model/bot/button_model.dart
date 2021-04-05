@@ -1,12 +1,14 @@
 class Buttons {
   String payload;
   String title;
+  bool isPlaying;
 
-  Buttons({this.payload, this.title});
+  Buttons({this.payload, this.title, this.isPlaying});
 
   Buttons.fromJson(Map<String, dynamic> json) {
     payload = json['payload'];
     title = json['title'];
+    isPlaying = false;
   }
 
   Map<String, dynamic> toJson() {

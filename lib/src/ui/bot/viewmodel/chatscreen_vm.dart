@@ -17,11 +17,11 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import '../../../model/bot/SpeechModelResponse.dart';
 import '../../../utils/FHBUtils.dart';
-import 'package:http/http.dart' as http;
 import 'package:audioplayer/audioplayer.dart';
 import 'package:myfhb/src/model/UpdatedDeviceModel.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
+import 'package:myfhb/src/model/bot/button_model.dart';
 
 class ChatScreenViewModel extends ChangeNotifier {
   static MyProfileModel prof =
@@ -58,6 +58,7 @@ class ChatScreenViewModel extends ChangeNotifier {
   bool stopTTS = false;
   bool isSheelaSpeaking = false;
   String _screen = parameters.strSheela;
+  int delayTime = 0;
 
   List<Conversation> get getMyConversations => conversations;
 
@@ -66,7 +67,6 @@ class ChatScreenViewModel extends ChangeNotifier {
   AudioPlayer newAudioPlay1 = AudioPlayer();
   bool isAudioPlayerPlaying = false;
   bool get getIsButtonResponse => isButtonResponse && !enableMic;
-  bool get getStopTTS => stopTTS;
 
   void updateAppState(bool canSheelaSpeak, {bool isInitial: false}) {
     canSpeak = canSheelaSpeak;
@@ -113,7 +113,7 @@ class ChatScreenViewModel extends ChangeNotifier {
   }
 
   Future<void> stopTTSEngine({int index}) async {
-    stopTTS = false;
+    stopTTS = true;
     notifyListeners();
     if (index != null) {
       conversations[index].isSpeaking = false;
@@ -134,9 +134,15 @@ class ChatScreenViewModel extends ChangeNotifier {
     });
   }
 
-  Future<bool> startTTSEngine(
-      {String textToSpeak, int index, String langCode}) async {
-    stopTTSEngine();
+  Future<bool> startTTSEngine({
+    String textToSpeak,
+    int index,
+    String langCode,
+    bool stopPrevious: true,
+  }) async {
+    if (stopPrevious) {
+      stopTTSEngine();
+    }
     if (canSpeak) {
       if (index != null) {
         conversations[index].isSpeaking = true;
@@ -170,16 +176,14 @@ class ChatScreenViewModel extends ChangeNotifier {
           langCodeForRequest = langCode;
           //print(langCode);
         }
-        AudioPlayer newAudioPlay1 = AudioPlayer();
+        newAudioPlay1 = AudioPlayer();
         final languageForTTS = langCodeForRequest ?? Utils.getCurrentLanCode();
-        getGoogleTTSResponse(
-            textToSpeak, languageForTTS != null ? languageForTTS : "en", true);
         newAudioPlay1.onPlayerStateChanged.listen((event) async {
           print(event);
           if (event == AudioPlayerState.COMPLETED ||
               event == AudioPlayerState.PAUSED ||
               event == AudioPlayerState.STOPPED) {
-            if (index != null) {
+            if (index != null && stopPrevious) {
               conversations[index].isSpeaking = false;
               isSheelaSpeaking = false;
               notifyListeners();
@@ -191,8 +195,11 @@ class ChatScreenViewModel extends ChangeNotifier {
               isSheelaSpeaking = true;
               notifyListeners();
             }
+            await setTimeDuration(newAudioPlay1);
           }
         });
+        await getGoogleTTSResponse(
+            textToSpeak, languageForTTS != null ? languageForTTS : "en", true);
       }
     }
   }
@@ -354,12 +361,12 @@ class ChatScreenViewModel extends ChangeNotifier {
                   lan.toLowerCase() == "en-IN".toLowerCase() ||
                   lan.toLowerCase() == "en-US".toLowerCase()) {
                 String textToSpeak = '';
-                if ((res?.buttons?.length ?? 0) > 0) {
-                  textToSpeak = '.';
-                  await Future.forEach(res.buttons, (button) async {
-                    textToSpeak = textToSpeak + button.title + '.';
-                  });
-                }
+                // if ((res?.buttons?.length ?? 0) > 0) {
+                //   textToSpeak = '.';
+                //   await Future.forEach(res.buttons, (button) async {
+                //     textToSpeak = textToSpeak + button.title + '.';
+                //   });
+                // }
                 if (res.lang == null || res.lang == "undef") {
                   res.lang = "en-IN";
                 }
@@ -372,18 +379,24 @@ class ChatScreenViewModel extends ChangeNotifier {
                   parameters.strIsClose: false,
                   parameters.strLanguage: res.lang
                 }).then((response) async {
-                  conversations[conversations.length - 1].isSpeaking = false;
-                  isSheelaSpeaking = false;
-                  notifyListeners();
                   if (response == 1) {
                     isMayaSpeaks = 1;
                   }
                   if (!isButtonResponse) {
+                    conversations[conversations.length - 1].isSpeaking = false;
+                    isSheelaSpeaking = false;
+                    notifyListeners();
                     if (!isEndOfConv) {
                       gettingReposnseFromNative();
                     } else {
                       refreshData();
                     }
+                  } else {
+                    await startButtonsSpeech(
+                      index: conversations.length - 1,
+                      langCode: res.lang,
+                      buttons: res.buttons,
+                    );
                   }
                 }).catchError((error) {
                   conversations[conversations.length - 1].isSpeaking = false;
@@ -396,16 +409,14 @@ class ChatScreenViewModel extends ChangeNotifier {
               } else {
                 //print(res.text);
                 String textToSpeak = '';
-                if ((res?.buttons?.length ?? 0) > 0) {
-                  textToSpeak = '.';
-                  await Future.forEach(res.buttons, (button) async {
-                    textToSpeak = textToSpeak + button.title + '.';
-                  });
-                }
+                // if ((res?.buttons?.length ?? 0) > 0) {
+                //   textToSpeak = '.';
+                //   await Future.forEach(res.buttons, (button) async {
+                //     textToSpeak = textToSpeak + button.title + '.';
+                //   });
+                // }
                 audioPlayerForTTS = AudioPlayer();
                 final languageForTTS = Utils.getCurrentLanCode();
-                getGoogleTTSResponse(res.text + textToSpeak,
-                    languageForTTS != null ? languageForTTS : "en", false);
                 audioPlayerForTTS.onPlayerStateChanged.listen((event) async {
                   if (event == AudioPlayerState.PLAYING) {
                     isLoading = false;
@@ -413,29 +424,45 @@ class ChatScreenViewModel extends ChangeNotifier {
                     isSheelaSpeaking = true;
                     notifyListeners();
                     isAudioPlayerPlaying = true;
+                    await setTimeDuration(audioPlayerForTTS);
                   }
                   if (event == AudioPlayerState.COMPLETED) {
-                    isLoading = false;
-                    conversations[conversations.length - 1].isSpeaking = false;
-                    isSheelaSpeaking = false;
-                    notifyListeners();
                     if (!isButtonResponse) {
+                      isLoading = false;
+                      conversations[conversations.length - 1].isSpeaking =
+                          false;
+                      isSheelaSpeaking = false;
+                      notifyListeners();
                       if (!isEndOfConv) {
                         gettingReposnseFromNative();
                       }
+                    } else {
+                      await startButtonsSpeech(
+                        index: conversations.length - 1,
+                        langCode: res.lang,
+                        buttons: res.buttons,
+                      );
                     }
                   }
                   if (event == AudioPlayerState.PAUSED ||
                       event == AudioPlayerState.STOPPED) {
                     isLoading = false;
-                    conversations[conversations.length - 1].isSpeaking = false;
-                    isSheelaSpeaking = false;
-                    notifyListeners();
-                    // if (!isButtonResponse) {
-                    //   gettingReposnseFromNative();
-                    // }
+                    if (!isButtonResponse) {
+                      conversations[conversations.length - 1].isSpeaking =
+                          false;
+                      isSheelaSpeaking = false;
+                      notifyListeners();
+                    } else {
+                      await startButtonsSpeech(
+                        index: conversations.length - 1,
+                        langCode: res.lang,
+                        buttons: res.buttons,
+                      );
+                    }
                   }
                 });
+                await getGoogleTTSResponse(res.text + textToSpeak,
+                    languageForTTS != null ? languageForTTS : "en", false);
               }
             }
           });
@@ -448,6 +475,44 @@ class ChatScreenViewModel extends ChangeNotifier {
       FlutterToast().getToast(
           'There is some issue with sheela,\n Please try after some time',
           Colors.black54);
+    }
+  }
+
+  Future<void> startButtonsSpeech({
+    @required List<Buttons> buttons,
+    @required int index,
+    @required String langCode,
+  }) async {
+    if ((buttons?.length ?? 0) > 0) {
+      stopTTS = false;
+      Conversation recentConversation = conversations[conversations.length - 1];
+      await Future.forEach(buttons, (button) async {
+        if (stopTTS) {
+          recentConversation.buttons[recentConversation.buttons.indexOf(button)]
+              .isPlaying = false;
+          notifyListeners();
+          stopTTSEngine(index: index);
+          return;
+        }
+        recentConversation.buttons[recentConversation.buttons.indexOf(button)]
+            .isPlaying = true;
+        notifyListeners();
+        await startTTSEngine(
+          langCode: langCode,
+          index: index,
+          textToSpeak: button.title,
+          stopPrevious: false,
+        );
+        recentConversation.buttons[recentConversation.buttons.indexOf(button)]
+            .isPlaying = false;
+        notifyListeners();
+      });
+      stopTTSEngine(index: index);
+      // conversations[index].isSpeaking = false;
+      // isSheelaSpeaking = false;
+      // notifyListeners();
+    } else {
+      stopTTSEngine();
     }
   }
 
@@ -493,6 +558,16 @@ class ChatScreenViewModel extends ChangeNotifier {
                 } else {
                   audioPlayerForTTS.play(path, isLocal: true);
                 }
+                print('Check delayTime - $delayTime');
+                await Future.delayed(Duration(milliseconds: 500), () async {
+                  print('Check delayTime - new $delayTime');
+                  await Future.delayed(
+                      Duration(
+                        milliseconds: delayTime > 0 ? delayTime : 0,
+                      ), () {
+                    return true;
+                  });
+                });
               }
             }
           }
@@ -511,6 +586,11 @@ class ChatScreenViewModel extends ChangeNotifier {
     // }
 
     //print(dir.path);
+  }
+
+  Future<bool> setTimeDuration(AudioPlayer audioPlayer) async {
+    delayTime = await audioPlayer.duration.inMilliseconds;
+    print('delayTime - $delayTime');
   }
 
   stopAudioPlayer() {
