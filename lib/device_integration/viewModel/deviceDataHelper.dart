@@ -56,7 +56,12 @@ class DeviceDataHelper {
 
   Future<void> syncHealthKit() async {
     try {
-      await _syncHealthKitData.syncHealthKitData();
+      bool bRet = await _syncHealthKitData.syncHealthKitData();
+      if (bRet) {
+        Fluttertoast.showToast(
+            msg: 'Syncing Health Data from Apple Health completed',
+            backgroundColor: Colors.green);
+      }
     } catch (e) {
       Fluttertoast.showToast(msg: '${e}', backgroundColor: Colors.red);
     }

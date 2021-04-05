@@ -126,6 +126,11 @@ class DevicesViewModel with ChangeNotifier {
               endDateTime: bpElement.endDateTime.toIso8601String(),
               systolic: bpElement.systolic,
               diastolic: bpElement.diastolic,
+              bpm: dataElement.heartRateCollection.length > 0
+                  ? dataElement.heartRateCollection[0].bpm != null
+                      ? dataElement.heartRateCollection[0].bpm
+                      : null
+                  : null,
               deviceId: dataElement.deviceId);
           ret.add(bpList);
         });
@@ -304,7 +309,9 @@ class DevicesViewModel with ChangeNotifier {
               startDateTime: weightValue.startDateTime.toIso8601String(),
               endDateTime: weightValue.endDateTime.toIso8601String(),
               weight: weightValue.weight,
-              weightUnit: weightValue.weightUnit.description,
+              weightUnit: weightValue.weightUnit != null
+                  ? weightValue.weightUnit.description
+                  : 'Kg',
               deviceId: dataElement.deviceId);
           ret.add(weightList);
         });
@@ -320,7 +327,9 @@ class DevicesViewModel with ChangeNotifier {
       finalResult = [ret, deviceIntervalData];
 
       return finalResult;
-    } catch (e) {}
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   Future<List<HRResult>> fetchHeartRateDetails(String response) async {

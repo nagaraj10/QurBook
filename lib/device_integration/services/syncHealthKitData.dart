@@ -25,8 +25,7 @@ class SyncHealthKitData {
     //todo
   }
 
-  Future<void> syncHealthKitData() async {
-    var response;
+  Future<bool> syncHealthKitData() async {
     DateTime startDate;
     DateTime endDate = DateTime.now();
 
@@ -49,43 +48,44 @@ class SyncHealthKitData {
     try {
       String weightParams = await _hkHelper.getWeightData(startDate, endDate);
       if (weightParams != null) {
-        response = await postHealthKitData(weightParams);
+        print(
+            "-------------------------weight-------------------------------------");
+        print(weightParams);
+        await postHealthKitData(weightParams);
       }
-      response = "";
+
       String bloodGlucoseParams =
           await _hkHelper.getBloodGlucoseData(startDate, endDate);
       if (bloodGlucoseParams != null) {
-        response = await postHealthKitData(bloodGlucoseParams);
+        await postHealthKitData(bloodGlucoseParams);
       }
 
-      response = "";
       String bpParams =
           await _hkHelper.getBloodPressureData(startDate, endDate);
       if (bpParams != null) {
-        response = await postHealthKitData(bpParams);
+        await postHealthKitData(bpParams);
       }
-      response = '';
-      // String bloodOxygenParams =
-      //     await _hkHelper.getBloodOxygenData(startDate, endDate);
-      // if (bloodOxygenParams != null) {
-      //   response = await postHealthKitData(bloodOxygenParams);
-      // }
-      // response = '';
+
+      String bloodOxygenParams =
+          await _hkHelper.getBloodOxygenData(startDate, endDate);
+      if (bloodOxygenParams != null) {
+        await postHealthKitData(bloodOxygenParams);
+      }
 
       String bodyTemperatureParams =
           await _hkHelper.getBodyTemperature(startDate, endDate);
       if (bodyTemperatureParams != null) {
-        response = await postHealthKitData(bodyTemperatureParams);
+        await postHealthKitData(bodyTemperatureParams);
       }
-      response = '';
 
-      String heartRateParams =
-          await _hkHelper.getHeartRateData(startDate, endDate);
-      if (heartRateParams != null) {
-        response = await postHealthKitData(heartRateParams);
-      }
+      // String heartRateParams =
+      //     await _hkHelper.getHeartRateData(startDate, endDate);
+      // if (heartRateParams != null) {
+      //   await postHealthKitData(heartRateParams);
+      // }
+      return true;
     } catch (e) {
-      throw e;
+      throw "Failed to sync Apple Health Data please try again later";
     }
 
     // todo

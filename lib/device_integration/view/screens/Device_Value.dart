@@ -1296,14 +1296,8 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                               'Diastolic',
                               '',
                               getFormattedTime(bpResult[index].startDateTime),
-                              deviceFullList[index]
-                                          .heartRateCollection[0]
-                                          .bpm !=
-                                      null
-                                  ? deviceFullList[index]
-                                      .heartRateCollection[0]
-                                      .bpm
-                                      .toString()
+                              bpResult[index].bpm != null
+                                  ? bpResult[index].bpm.toString()
                                   : '',
                               bpResult[index].deviceId);
                         },
