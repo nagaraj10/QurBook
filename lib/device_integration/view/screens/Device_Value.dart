@@ -1236,7 +1236,6 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   }
 
   String getFormattedDateTime(String datetime) {
-    print('**************' + datetime + '******************');
     DateTime dateTimeStamp = DateTime.parse(datetime);
     String formattedDate = DateFormat('d MMM yyyy').format(dateTimeStamp);
     return formattedDate;
