@@ -84,10 +84,13 @@ class HealthReportListForUserRepository {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     var response = await _helper.saveImageAndGetDeviceInfo(
-        query.qr_health_record + query.qr_digit_recog + query.qr_save_health_rec,
+        query.qr_health_record +
+            query.qr_digit_recog +
+            query.qr_save_health_rec,
         fileName,
         metaID,
-        jsonData,userID);
+        jsonData,
+        userID);
     return DigitRecogResponse.fromJson(response);
   }
 
@@ -163,7 +166,7 @@ class HealthReportListForUserRepository {
         (commonUserId != null && commonUserId != '') ? commonUserId : userID;
 
     var jsonString = convert.jsonEncode(requestParam);
-    String queryVal = query.qr_health_record + query.qr_slash + query.qr_filter;
+    String queryVal = query.qr_health_record + query.qr_filter;
 
     final response = await _helper.getHealthRecordLists(jsonString, queryVal);
     return HealthRecordList.fromJson(response);
@@ -235,27 +238,30 @@ class HealthReportListForUserRepository {
 
   Future<GetDeviceSelectionModel> getDeviceSelection() async {
     var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    final response = await _helper.getDeviceSelection(
-        query.qr_user_profile + query.qr_user + query.qr_my_profile + query.qr_member_id + userId);
+    final response = await _helper.getDeviceSelection(query.qr_user_profile +
+        query.qr_user +
+        query.qr_my_profile +
+        query.qr_member_id +
+        userId);
     return GetDeviceSelectionModel.fromJson(response);
   }
 
   Future<CreateDeviceSelectionModel> createDeviceSelection(
-      bool allowDigit,
-      bool allowDevice,
-      bool googleFit,
-      bool healthFit,
-      bool bpMonitor,
-      bool gluco,
-      bool pulseOximeter,
-      bool thermo,
-      bool weighScale,
-      String userId,
-      String preferred_language,
-      String qa_subscription,
-      int priColor,
-      int greColor,
-      ) async {
+    bool allowDigit,
+    bool allowDevice,
+    bool googleFit,
+    bool healthFit,
+    bool bpMonitor,
+    bool gluco,
+    bool pulseOximeter,
+    bool thermo,
+    bool weighScale,
+    String userId,
+    String preferred_language,
+    String qa_subscription,
+    int priColor,
+    int greColor,
+  ) async {
     var body = jsonEncode({
       "userId": userId,
       'profileSetting': {
@@ -270,8 +276,8 @@ class HealthReportListForUserRepository {
         'weighScale': weighScale,
         "greColor": greColor,
         "priColor": priColor,
-        'preferred_language':preferred_language,
-        'qa-subscription':qa_subscription
+        'preferred_language': preferred_language,
+        'qa-subscription': qa_subscription
       }
     });
 
@@ -294,8 +300,7 @@ class HealthReportListForUserRepository {
       String preferred_language,
       String qa_subscription,
       int priColor,
-      int greColor
-      ) async {
+      int greColor) async {
     var body = jsonEncode({
       'id': userMappingId,
       'profileSetting': {
@@ -310,8 +315,8 @@ class HealthReportListForUserRepository {
         'weighScale': weighScale,
         "greColor": greColor,
         "priColor": priColor,
-        'preferred_language':preferred_language,
-        'qa-subscription':qa_subscription
+        'preferred_language': preferred_language,
+        'qa-subscription': qa_subscription
       }
     });
     final response = await _helper.updateDeviceSelection(
@@ -319,7 +324,7 @@ class HealthReportListForUserRepository {
     return UpdateDeviceModel.fromJson(response);
   }
 
- /* Future<CreateDeviceSelectionModel> createAppColorSelection(
+  /* Future<CreateDeviceSelectionModel> createAppColorSelection(
       int priColor,
       int greColor,String userId) async {
     var body = jsonEncode({
@@ -351,11 +356,9 @@ class HealthReportListForUserRepository {
     return UpdateDeviceModel.fromJson(response);
   }*/
 
-  Future<DeleteDeviceHealthRecord> deleteDeviceRecords(
-      String deviceId) async {
-
-    final response = await _helper.deleteDeviceRecords(
-        query.device_health+deviceId);
+  Future<DeleteDeviceHealthRecord> deleteDeviceRecords(String deviceId) async {
+    final response =
+        await _helper.deleteDeviceRecords(query.device_health + deviceId);
     return DeleteDeviceHealthRecord.fromJson(response);
   }
 }

@@ -304,6 +304,9 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
       postMediaData[parameters.strSourceName] = CommonConstants.strTridentValue;
       postMediaData[parameters.strmemoTextRaw] = memoController.text;
+      DateTime dateTime = DateTime.now();
+      postMediaData[parameters.strStartDate] = dateTime.toUtc().toString();
+      postMediaData[parameters.strEndDate] = dateTime.toUtc().toString();
       var commonConstants = new CommonConstants();
 
       if (categoryName == CommonConstants.strDevice) {
