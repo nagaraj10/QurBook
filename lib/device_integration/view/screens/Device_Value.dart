@@ -1242,7 +1242,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   }
 
   String getFormattedTime(String datetime) {
-    DateTime dateTimeStamp = DateTime.parse(datetime);
+    DateTime dateTimeStamp = DateTime.parse(datetime).toLocal();
     String formattedDate = DateFormat('h:mm a').format(dateTimeStamp);
     return formattedDate;
   }
