@@ -1072,15 +1072,34 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     if (widget.arguments.fromClass == CommonConstants.user_update) {
       //* user profile update sections
       addFamilyUserInfoBloc.userId = widget.arguments.myProfileResult.id;
-      if (widget.arguments.myProfileResult.userContactCollection3 != null) {
-        if (widget.arguments.myProfileResult.userContactCollection3.length >
-            0) {
-          mobileNoController.text = widget
-              .arguments.myProfileResult.userContactCollection3[0].phoneNumber;
-          emailController.text =
-              widget.arguments.myProfileResult.userContactCollection3[0].email;
+
+      if (widget.arguments.sharedbyme != null) {
+        try {
+          if (widget
+              ?.arguments?.sharedbyme?.child?.userContactCollection3.isNotEmpty) {
+            mobileNoController.text = widget?.arguments?.sharedbyme?.child
+                ?.userContactCollection3[0].phoneNumber;
+            emailController.text = widget
+                ?.arguments?.sharedbyme?.child?.userContactCollection3[0].email;
+          }
+
+        } catch (e) {
+          mobileNoController.text = '';
+          emailController.text = '';
         }
+      } else {
+          MyProfileModel myProf =
+          PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) != null ? PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) :PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+          if (myProf.result.userContactCollection3 != null) {
+            if (myProf.result.userContactCollection3.length > 0) {
+              mobileNoController.text =
+                  myProf.result.userContactCollection3[0].phoneNumber;
+              emailController.text =
+                  myProf.result.userContactCollection3[0].email;
+            }
+          }
       }
+
       if (widget.arguments.myProfileResult.dateOfBirth != null) {
         dateofBirthStr = new FHBUtils().getFormattedDateForUserBirth(
             widget.arguments.myProfileResult.dateOfBirth);
