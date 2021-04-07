@@ -590,6 +590,12 @@ const String icon_whatsapp = 'assets/icons/ic_whatsapp.png';
 
 const String strAdd = 'Add';
 
+//Reminders
+//
+const reminderMethodChannel = MethodChannel('flutter.native/reminder');
+const addReminderMethod = 'addReminder';
+const removeReminderMethod = 'removeReminder';
+
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {
   final parts = token.split('.');
