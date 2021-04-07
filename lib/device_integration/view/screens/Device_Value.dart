@@ -1236,13 +1236,14 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   }
 
   String getFormattedDateTime(String datetime) {
+    print('**************' + datetime + '******************');
     DateTime dateTimeStamp = DateTime.parse(datetime);
     String formattedDate = DateFormat('d MMM yyyy').format(dateTimeStamp);
     return formattedDate;
   }
 
   String getFormattedTime(String datetime) {
-    DateTime dateTimeStamp = DateTime.parse(datetime);
+    DateTime dateTimeStamp = DateTime.parse(datetime).toLocal();
     String formattedDate = DateFormat('h:mm a').format(dateTimeStamp);
     return formattedDate;
   }

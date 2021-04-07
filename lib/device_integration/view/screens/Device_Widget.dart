@@ -485,7 +485,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
     }
 
     if (deviceValues.bloodPressure.entities.isNotEmpty) {
-      dateTimeStampForBp = deviceValues.bloodPressure.entities[0].startDateTime;
+      dateTimeStampForBp =
+          deviceValues.bloodPressure.entities[0].startDateTime.toLocal();
       //deviceValues.bloodPressure.entities[0].lastsyncdatetime;
       dateForBp =
           "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForBp)}";
@@ -576,7 +577,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
     }
     if (deviceValues.bloodGlucose.entities.isNotEmpty) {
       dateTimeStampForGulcose =
-          deviceValues.bloodGlucose.entities[0].startDateTime;
+          deviceValues.bloodGlucose.entities[0].startDateTime.toLocal();
       dateForGulcose =
           "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForGulcose)}";
       timeForGulcose =
@@ -630,7 +631,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
     }
     if (deviceValues.oxygenSaturation.entities.isNotEmpty) {
       dateTimeStampForOs =
-          deviceValues.oxygenSaturation.entities[0].startDateTime;
+          deviceValues.oxygenSaturation.entities[0].startDateTime.toLocal();
       dateForOs =
           "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForOs)}";
       timeForOs =
@@ -761,7 +762,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
     }
     if (deviceValues.bodyTemperature.entities.isNotEmpty) {
       dateTimeStampForTemp =
-          deviceValues.bodyTemperature.entities[0].startDateTime;
+          deviceValues.bodyTemperature.entities[0].startDateTime.toLocal();
       dateForTemp =
           "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForTemp)}";
       timeForTemp =
@@ -794,7 +795,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
     }
     if (deviceValues.bodyWeight.entities.isNotEmpty) {
       dateTimeStampForWeight =
-          deviceValues.bodyWeight.entities[0].startDateTime;
+          deviceValues.bodyWeight.entities[0].startDateTime.toLocal();
       dateForWeight =
           "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForWeight)}";
       timeForWeight =
