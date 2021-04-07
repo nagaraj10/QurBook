@@ -135,7 +135,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
   MyProfileModel myProfile;
   AddFamilyUserInfoRepository addFamilyUserInfoRepository =
-  AddFamilyUserInfoRepository();
+      AddFamilyUserInfoRepository();
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -157,7 +157,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   }
 
   addHealthRecords() {
-    healthRecords.addAll(CommonUtil.recordIds);
+    //healthRecords.addAll(CommonUtil.recordIds);
     healthRecords.addAll(CommonUtil.notesId);
     healthRecords.addAll(CommonUtil.voiceIds);
   }
@@ -753,11 +753,14 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                         onPressed: () {
                           new FHBUtils().check().then((intenet) {
                             if (intenet != null && intenet) {
-                              if(isFamilyChanged){
+                              if (isFamilyChanged) {
                                 profileValidationCheck(
-                                    context, selectedId!=''?selectedId:PreferenceUtil.getStringValue(
-                                    Constants.KEY_USERID));
-                              }else{
+                                    context,
+                                    selectedId != ''
+                                        ? selectedId
+                                        : PreferenceUtil.getStringValue(
+                                            Constants.KEY_USERID));
+                              } else {
                                 _displayDialog(context);
                               }
                             } else {
@@ -1151,7 +1154,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       : widget.docs[widget.doctorListPos].user
                           .profilePicThumbnailUrl),
             ),
-           /* Container(
+            /* Container(
               alignment: Alignment.center,
               child: widget.isFromHospital?commonWidgets.getClipOvalImageForHos(widget.resultFromHospitalList[widget.doctorListIndex]
                   .doctor):commonWidgets.getClipOvalImageNew(widget.docs[widget.doctorListPos]),
@@ -1495,57 +1498,57 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                             context);
                       } else {
                         //toast.getToast(noAddress, Colors.red);
-                        showInSnackBar(noAddressFamily,'Add');
+                        showInSnackBar(noAddressFamily, 'Add');
                         //CommonUtil().mSnackbar(context, noAddress, 'Add');
                       }
                     } else {
                       //toast.getToast(noAddress, Colors.red);
-                      showInSnackBar(noAddressFamily,'Add');
+                      showInSnackBar(noAddressFamily, 'Add');
                       //CommonUtil().mSnackbar(context, noAddress, 'Add');
                     }
                   } else {
                     //toast.getToast(noWeight, Colors.red);
-                    showInSnackBar(noWeightFamily,'Add');
+                    showInSnackBar(noWeightFamily, 'Add');
                     //CommonUtil().mSnackbar(context, noWeight, 'Add');
                   }
                 } else {
                   //toast.getToast(noHeight, Colors.red);
-                  showInSnackBar(noHeightFamily,'Add');
+                  showInSnackBar(noHeightFamily, 'Add');
                   //CommonUtil().mSnackbar(context, noHeight, 'Add');
                 }
               } else {
                 //toast.getToast(noAdditionalInfo, Colors.red);
-                showInSnackBar(noAdditionalInfoFamily,'Add');
+                showInSnackBar(noAdditionalInfoFamily, 'Add');
                 //CommonUtil().mSnackbar(context, noAdditionalInfo, 'Add');
               }
             } else {
               //toast.getToast(noDOB, Colors.red);
-              showInSnackBar(noDOBFamily,'Add');
+              showInSnackBar(noDOBFamily, 'Add');
               //CommonUtil().mSnackbar(context, noDOB, 'Add');
             }
           } else {
-            showInSnackBar(noGenderFamily,'Add');
+            showInSnackBar(noGenderFamily, 'Add');
             //toast.getToast(noGender, Colors.red);
           }
         } else {
           //toast.getToast(noAddress, Colors.red);
-          showInSnackBar(noAddressFamily,'Add');
+          showInSnackBar(noAddressFamily, 'Add');
           //CommonUtil().mSnackbar(context, noAddress, 'Add');
         }
       } else {
         //toast.getToast(noAddress, Colors.red);
-        showInSnackBar(noAddressFamily,'Add');
+        showInSnackBar(noAddressFamily, 'Add');
         //CommonUtil().mSnackbar(context, noAddress, 'Add');
       }
     } else {
       //toast.getToast(noAddress, Colors.red);
-      showInSnackBar(noAddressFamily,'Add');
+      showInSnackBar(noAddressFamily, 'Add');
       //CommonUtil().mSnackbar(context, noAddress, 'Add');
     }
   }
 
-  patientAddressCheck(UserAddressCollection3 userAddressCollection,
-      BuildContext context) {
+  patientAddressCheck(
+      UserAddressCollection3 userAddressCollection, BuildContext context) {
     String address1 = userAddressCollection.addressLine1 != null
         ? userAddressCollection.addressLine1
         : '';
@@ -1564,25 +1567,27 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     }
   }
 
-  void showInSnackBar(String message,String actionName) {
-    _scaffoldKey.currentState.showSnackBar(new SnackBar(
-      content: Text(message),
-      backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-      elevation: 5.0,
-      action: SnackBarAction(
-          label: actionName,
-          onPressed: () async {
-            if (myProfile?.result != null) {
-              Navigator.pushNamed(context, router.rt_AddFamilyUserInfo,
-                  arguments: AddFamilyUserInfoArguments(
-                      myProfileResult: myProfile?.result,
-                      fromClass: CommonConstants.user_update));
-            } else {
-              FlutterToast()
-                  .getToast('Unable to Fetch User Profile data', Colors.red);
-            }
-          }),
-      duration: const Duration(seconds: 10),
-    ),);
+  void showInSnackBar(String message, String actionName) {
+    _scaffoldKey.currentState.showSnackBar(
+      new SnackBar(
+        content: Text(message),
+        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+        elevation: 5.0,
+        action: SnackBarAction(
+            label: actionName,
+            onPressed: () async {
+              if (myProfile?.result != null) {
+                Navigator.pushNamed(context, router.rt_AddFamilyUserInfo,
+                    arguments: AddFamilyUserInfoArguments(
+                        myProfileResult: myProfile?.result,
+                        fromClass: CommonConstants.user_update));
+              } else {
+                FlutterToast()
+                    .getToast('Unable to Fetch User Profile data', Colors.red);
+              }
+            }),
+        duration: const Duration(seconds: 10),
+      ),
+    );
   }
 }
