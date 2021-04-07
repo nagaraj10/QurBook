@@ -235,6 +235,9 @@ const String strAuthtoken = 'authToken';
 const String strSourceName = 'sourceName';
 const String strMemoRawTxtVal = 'memoTextRaw';
 
+const String strStartDate = 'startDateTime';
+const String strEndDate = 'endDateTime';
+
 const String strTerms = 'terms';
 const String strplaceId = 'placeId';
 const String strplace_id = 'place_id';
