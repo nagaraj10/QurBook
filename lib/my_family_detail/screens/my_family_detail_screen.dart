@@ -242,12 +242,12 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     if (sharedbyme.child != null) {
       if (sharedbyme.child.firstName != null &&
           sharedbyme.child.lastName != null) {
-        firstNameController.text = sharedbyme.child.firstName;
-        middleNameController.text = sharedbyme.child.middleName;
-        lastNameController.text = sharedbyme.child.lastName;
+        firstNameController.text = sharedbyme?.child?.firstName?.capitalizeFirstofEach;
+        middleNameController.text = sharedbyme?.child?.middleName?.capitalizeFirstofEach;
+        lastNameController.text = sharedbyme?.child?.lastName?.capitalizeFirstofEach;
       }
     } else {
-      firstNameController.text = sharedbyme.child.name;
+      firstNameController.text = sharedbyme?.child?.name;
       middleNameController.text = '';
       lastNameController.text = '';
     }

@@ -1451,7 +1451,7 @@ class ChatScreenState extends State<ChatScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(toBeginningOfSentenceCase(widget.peerName),
+                    Text(widget?.peerName?.capitalizeFirstofEach/* toBeginningOfSentenceCase(widget.peerName) */,
                         textAlign: TextAlign.left,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,

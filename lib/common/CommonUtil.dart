@@ -1734,17 +1734,19 @@ class CommonUtil {
       dynamic position, List<String> hrmId, bool isTerminate) {
     if (isTerminate) {
       Get.toNamed(router.rt_MyRecords,
-          arguments: MyRecordsArgument(
-              categoryPosition: position,
-              allowSelect: false,
-              isAudioSelect: false,
-              isNotesSelect: false,
-              selectedMedias: hrmId,
-              isFromChat: false,
-              showDetails: true,
-              isAssociateOrChat: false,
-              fromAppointments: false,
-              fromClass: 'notification')).then((value) => Get.offNamedUntil(router.rt_Dashboard,(Route<dynamic> route) => false));
+              arguments: MyRecordsArgument(
+                  categoryPosition: position,
+                  allowSelect: false,
+                  isAudioSelect: false,
+                  isNotesSelect: false,
+                  selectedMedias: hrmId,
+                  isFromChat: false,
+                  showDetails: true,
+                  isAssociateOrChat: false,
+                  fromAppointments: false,
+                  fromClass: 'notification'))
+          .then((value) => Get.offNamedUntil(
+              router.rt_Dashboard, (Route<dynamic> route) => false));
     } else {
       Get.to(
         MyRecords(
@@ -1763,4 +1765,10 @@ class CommonUtil {
       );
     }
   }
+}
+
+extension CapExtension on String {
+  String get inCaps => '${this[0].toUpperCase()}${this.substring(1)}';
+  String get allInCaps => toUpperCase();
+  String get capitalizeFirstofEach => trim().toLowerCase().split(' ').map((str) => str.inCaps).join(' ');
 }

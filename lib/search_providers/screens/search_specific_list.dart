@@ -517,8 +517,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                   padding: EdgeInsets.only(top: 2, bottom: 2),
                   child: getCardToDisplaySearchList(
                       (data[i].name != null && data[i].name != '')
-                          ? data[i].name
-                          : data[i].firstName + ' ' + data[i].lastName,
+                          ? data[i]?.name?.capitalizeFirstofEach
+                          : data[i]?.firstName?.capitalizeFirstofEach + ' ' + data[i]?.lastName?.capitalizeFirstofEach,
                       getDoctorsAddress(data[i]),
                       data[i].doctorId,
                       data[i].profilePicThumbnailUrl,
@@ -557,10 +557,10 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                       child: getCardToDisplaySearchList(
                           (data.result[i].name != null &&
                                   data.result[i].name != '')
-                              ? data.result[i].name
-                              : data.result[i].firstName +
+                              ? data?.result[i]?.name?.capitalizeFirstofEach
+                              : data?.result[i]?.firstName?.capitalizeFirstofEach +
                                   ' ' +
-                                  data.result[i].lastName,
+                                  data?.result[i]?.lastName?.capitalizeFirstofEach,
                           getDoctorsAddress(data.result[i]),
                           data.result[i].doctorId,
                           data.result[i].profilePicThumbnailUrl,
@@ -706,7 +706,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                     : passLaboratoryValue(labData, context);
           } else {
             passdataToNextScreen(
-                data.name, context, data, hospitalData, labData);
+                data?.name.capitalizeFirstofEach, context, data, hospitalData, labData);
           }
         });
   }
@@ -736,7 +736,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Text(
-          name != null ? name : '',
+          name != null ? name.capitalizeFirstofEach : '',
           style: TextStyle(
               fontSize: 16.0.sp,
               fontWeight: FontWeight.w500,

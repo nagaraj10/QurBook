@@ -389,64 +389,58 @@ class CommonWidgets {
 
   Widget getProfilePicWidgetForHos(DoctorFromHos docs) {
     return docs.user.profilePicThumbnailUrl != null
-        ? Image.network(
-        docs.user.profilePicThumbnailUrl,
-        height: 40.0.h,
-        width: 40.0.h,
-        fit: BoxFit.cover,
-        errorBuilder:
-            (BuildContext context, Object exception, StackTrace stackTrace) {
-          return Container(
-            height: 50.0.h,
-            width: 50.0.h,
-            color: Colors.grey[200],
-            child: Center(
-              child: getFirstLastNameTextDoctorFromHos(docs),
-            ),
-          );
-        }
-    )
+        ? Image.network(docs.user.profilePicThumbnailUrl,
+            height: 40.0.h,
+            width: 40.0.h,
+            fit: BoxFit.cover, errorBuilder: (BuildContext context,
+                Object exception, StackTrace stackTrace) {
+            return Container(
+              height: 50.0.h,
+              width: 50.0.h,
+              color: Colors.grey[200],
+              child: Center(
+                child: getFirstLastNameTextDoctorFromHos(docs),
+              ),
+            );
+          })
         : Container(
-      color: Color(fhbColors.bgColorContainer),
-      height: 40.0.h,
-      width: 40.0.h,
-    );
+            color: Color(fhbColors.bgColorContainer),
+            height: 40.0.h,
+            width: 40.0.h,
+          );
   }
 
   Widget getProfilePicWidgetForDoctorIds(DoctorIds docs) {
     return docs.profilePicThumbnailURL != null
-        ? Image.network(
-        docs.profilePicThumbnailURL,
-        height: 40.0.h,
-        width: 40.0.h,
-        fit: BoxFit.cover,
-        errorBuilder:
-            (BuildContext context, Object exception, StackTrace stackTrace) {
-          return Container(
-            height: 50.0.h,
-            width: 50.0.h,
-            color: Colors.grey[200],
-            child: Center(
-              child: getFirstLastNameTextDoctorIds(docs),
-            ),
-          );
-        }
-    )
+        ? Image.network(docs.profilePicThumbnailURL,
+            height: 40.0.h,
+            width: 40.0.h,
+            fit: BoxFit.cover, errorBuilder: (BuildContext context,
+                Object exception, StackTrace stackTrace) {
+            return Container(
+              height: 50.0.h,
+              width: 50.0.h,
+              color: Colors.grey[200],
+              child: Center(
+                child: getFirstLastNameTextDoctorIds(docs),
+              ),
+            );
+          })
         : Container(
-      color: Color(fhbColors.bgColorContainer),
-      height: 40.0.h,
-      width: 40.0.h,
-    );
+            color: Color(fhbColors.bgColorContainer),
+            height: 40.0.h,
+            width: 40.0.h,
+          );
   }
 
   Widget getProfilePic(String url) {
     return url != null
         ? Image.network(
-        url,
-        height: 40.0.h,
-        width: 40.0.h,
-        fit: BoxFit.cover,
-        /*errorBuilder:
+            url,
+            height: 40.0.h,
+            width: 40.0.h,
+            fit: BoxFit.cover,
+            /*errorBuilder:
             (BuildContext context, Object exception, StackTrace stackTrace) {
           return Container(
             height: 50.0.h,
@@ -457,38 +451,35 @@ class CommonWidgets {
             ),
           );
         }*/
-    )
+          )
         : Container(
-      color: Color(fhbColors.bgColorContainer),
-      height: 40.0.h,
-      width: 40.0.h,
-    );
+            color: Color(fhbColors.bgColorContainer),
+            height: 40.0.h,
+            width: 40.0.h,
+          );
   }
 
   Widget getProfilePicWidget(Doctors docs) {
     return docs.user.profilePicThumbnailUrl != null
-        ? Image.network(
-        docs.user.profilePicThumbnailUrl,
-        height: 40.0.h,
-        width: 40.0.h,
-        fit: BoxFit.cover,
-        errorBuilder:
-            (BuildContext context, Object exception, StackTrace stackTrace) {
-          return Container(
+        ? Image.network(docs.user.profilePicThumbnailUrl,
             height: 40.0.h,
             width: 40.0.h,
-            color: Colors.grey[200],
-            child: Center(
-              child: getFirstLastNameText(docs),
-            ),
-          );
-        }
-    )
+            fit: BoxFit.cover, errorBuilder: (BuildContext context,
+                Object exception, StackTrace stackTrace) {
+            return Container(
+              height: 40.0.h,
+              width: 40.0.h,
+              color: Colors.grey[200],
+              child: Center(
+                child: getFirstLastNameText(docs),
+              ),
+            );
+          })
         : Container(
-      color: Color(fhbColors.bgColorContainer),
-      height: 40.0.h,
-      width: 40.0.h,
-    );
+            color: Color(fhbColors.bgColorContainer),
+            height: 40.0.h,
+            width: 40.0.h,
+          );
   }
 
   Widget showDoctorDetailView(DoctorIds docs, BuildContext context) {
@@ -1108,9 +1099,10 @@ class CommonWidgets {
     return Text(
       user != null
           ? toBeginningOfSentenceCase((user.name != null && user.name != '')
-              ? user.name
+              ? user.name.capitalizeFirstofEach
               : user.firstName != null && user.lastName != null
-                  ? (user.firstName + user.lastName)
+                  ? (user.firstName.capitalizeFirstofEach +
+                      user.lastName.capitalizeFirstofEach)
                   : '')
           : '',
       style: TextStyle(
@@ -1124,9 +1116,10 @@ class CommonWidgets {
     return Text(
       user != null
           ? toBeginningOfSentenceCase((user.name != null && user.name != '')
-              ? user.name
+              ? user.name.capitalizeFirstofEach
               : user.firstName != null && user.lastName != null
-                  ? (user.firstName + user.lastName)
+                  ? (user.firstName.capitalizeFirstofEach +
+                      user.lastName.capitalizeFirstofEach)
                   : '')
           : '',
       style: TextStyle(
@@ -1142,9 +1135,10 @@ class CommonWidgets {
     return Text(
       user != null
           ? toBeginningOfSentenceCase((user.name != null && user.name != '')
-              ? user.name
+              ? user.name.capitalizeFirstofEach
               : user.firstName != null && user.lastName != null
-                  ? (user.firstName + user.lastName)
+                  ? (user.firstName.capitalizeFirstofEach +
+                      user.lastName.capitalizeFirstofEach)
                   : '')
           : '',
       style: TextStyle(

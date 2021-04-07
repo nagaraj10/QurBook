@@ -1127,15 +1127,15 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       if (widget.arguments.myProfileResult.firstName != null) {
         firstNameController.text =
             widget.arguments.myProfileResult.firstName != null
-                ? widget.arguments.myProfileResult.firstName
+                ? widget?.arguments?.myProfileResult?.firstName?.capitalizeFirstofEach
                 : '';
         middleNameController.text =
             widget.arguments.myProfileResult.middleName != null
-                ? widget.arguments.myProfileResult.middleName
+                ? widget?.arguments?.myProfileResult?.middleName?.capitalizeFirstofEach
                 : '';
         lastNameController.text =
             widget.arguments.myProfileResult.lastName != null
-                ? widget.arguments.myProfileResult.lastName
+                ? widget?.arguments?.myProfileResult?.lastName?.capitalizeFirstofEach
                 : '';
       }
 
@@ -1218,15 +1218,15 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         if (widget.arguments.sharedbyme.child.firstName != null) {
           firstNameController.text =
               widget.arguments.sharedbyme.child.firstName != null
-                  ? widget.arguments.sharedbyme.child.firstName
+                  ? widget?.arguments?.sharedbyme?.child?.firstName?.capitalizeFirstofEach
                   : '';
           middleNameController.text =
               widget.arguments.sharedbyme.child.middleName != null
-                  ? widget.arguments.sharedbyme.child.middleName
+                  ? widget?.arguments?.sharedbyme?.child?.middleName?.capitalizeFirstofEach
                   : '';
           lastNameController.text =
               widget.arguments.sharedbyme.child.lastName != null
-                  ? widget.arguments.sharedbyme.child.lastName
+                  ? widget?.arguments?.sharedbyme?.child?.lastName?.capitalizeFirstofEach
                   : '';
         } else {
           firstNameController.text = '';
@@ -1332,9 +1332,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           currentAddressID = currentAddress.id;
         }
 
-        firstNameController.text = value?.result?.firstName;
-        middleNameController.text = value?.result?.middleName;
-        lastNameController.text = value?.result?.lastName;
+        firstNameController.text = value?.result?.firstName?.capitalizeFirstofEach;
+        middleNameController.text = value?.result?.middleName?.capitalizeFirstofEach;
+        lastNameController.text = value?.result?.lastName?.capitalizeFirstofEach;
         //? check relatioship id against logged in user
         if (value?.result?.userRelationshipCollection.length > 0) {
           for (UserRelationshipCollection cRelationship
@@ -1572,11 +1572,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               if (widget.arguments.myProfileResult.firstName != null) {
                 String firstName =
                     widget.arguments.myProfileResult.firstName != null
-                        ? widget.arguments.myProfileResult.firstName
+                        ? widget.arguments.myProfileResult.firstName.capitalizeFirstofEach
                         : '';
                 String lastName =
                     widget.arguments.myProfileResult.lastName != null
-                        ? widget.arguments.myProfileResult.lastName
+                        ? widget.arguments.myProfileResult.lastName.capitalizeFirstofEach
                         : '';
 
                 PreferenceUtil.saveString(Constants.FIRST_NAME, firstName);

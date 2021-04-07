@@ -224,6 +224,6 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
     } else if (user.userName != null && user.userName != '') {
       doctorName = user.userName;
     }
-    return doctorName;
+    return doctorName?.capitalizeFirstofEach;
   }
 }

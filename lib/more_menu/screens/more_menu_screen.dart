@@ -170,11 +170,14 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
               children: <Widget>[
                 Text(
                   myProfile.result != null
-                      ? toBeginningOfSentenceCase(
+                      ? /* toBeginningOfSentenceCase(
                               myProfile.result.firstName ?? '') +
                           ' ' +
                           toBeginningOfSentenceCase(
-                              myProfile.result.lastName ?? '')
+                              myProfile.result.lastName ?? '') */
+                      myProfile?.result?.firstName?.capitalizeFirstofEach ?? '' +
+                          ' ' +
+                          myProfile?.result?.lastName?.capitalizeFirstofEach ?? ''
                       : '',
                   style: TextStyle(fontWeight: FontWeight.w500),
                 ),

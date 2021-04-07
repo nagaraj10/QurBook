@@ -60,7 +60,7 @@ class RecordInfoCard {
                       children: <Widget>[
                         metaInfo.doctor != null
                             ? Text(
-                                toBeginningOfSentenceCase(
+                                /* toBeginningOfSentenceCase(
                                     metaInfo.doctor != null
                                         ? (metaInfo.doctor.name != null &&
                                                 metaInfo.doctor.name != '')
@@ -68,7 +68,18 @@ class RecordInfoCard {
                                             : metaInfo.doctor.firstName +
                                                 ' ' +
                                                 metaInfo.doctor.lastName
-                                        : ''),
+                                        : ''), */
+                                metaInfo.doctor != null
+                                    ? (metaInfo.doctor.name != null &&
+                                            metaInfo.doctor.name != '')
+                                        ? metaInfo
+                                            .doctor.name?.capitalizeFirstofEach
+                                        : metaInfo.doctor.firstName
+                                                ?.capitalizeFirstofEach +
+                                            ' ' +
+                                            metaInfo.doctor.lastName
+                                                ?.capitalizeFirstofEach
+                                    : '',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 16.0.sp,
@@ -81,8 +92,10 @@ class RecordInfoCard {
                               ),
                         metaInfo.hospital != null
                             ? Text(
-                                toBeginningOfSentenceCase(
-                                    metaInfo.hospital.healthOrganizationName),
+                                /* toBeginningOfSentenceCase(
+                                    metaInfo.hospital.healthOrganizationName) */
+                                metaInfo?.hospital?.healthOrganizationName
+                                    ?.capitalizeFirstofEach,
                                 softWrap: false,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
@@ -172,8 +185,10 @@ class RecordInfoCard {
                         metaInfo.hospital != null
                             ? metaInfo.hospital.healthOrganizationName != null
                                 ? Text(
-                                    toBeginningOfSentenceCase(metaInfo
-                                        .hospital.healthOrganizationName),
+                                    /* toBeginningOfSentenceCase(metaInfo
+                                        .hospital.healthOrganizationName), */
+                                    metaInfo?.hospital?.healthOrganizationName
+                                        ?.capitalizeFirstofEach,
                                     style: TextStyle(
                                       fontWeight: FontWeight.w500,
                                       fontSize: 16.0.sp,
@@ -189,7 +204,7 @@ class RecordInfoCard {
                               ),
                         metaInfo.doctor != null
                             ? Text(
-                                toBeginningOfSentenceCase(
+                                /* toBeginningOfSentenceCase(
                                     toBeginningOfSentenceCase(
                                         metaInfo.doctor != null
                                             ? (metaInfo.doctor.name != null &&
@@ -198,7 +213,18 @@ class RecordInfoCard {
                                                 : metaInfo.doctor.firstName +
                                                     ' ' +
                                                     metaInfo.doctor.lastName
-                                            : '')),
+                                            : '')), */
+                                metaInfo.doctor != null
+                                    ? (metaInfo.doctor.name != null &&
+                                            metaInfo.doctor.name != '')
+                                        ? metaInfo?.doctor?.name
+                                            ?.capitalizeFirstofEach
+                                        : metaInfo?.doctor?.firstName
+                                                ?.capitalizeFirstofEach +
+                                            ' ' +
+                                            metaInfo?.doctor?.lastName
+                                                ?.capitalizeFirstofEach
+                                    : '',
                                 style: TextStyle(
                                   fontSize: 15.0.sp,
                                 ),
@@ -284,8 +310,10 @@ class RecordInfoCard {
                         metaInfo.laboratory != null
                             ? metaInfo.laboratory.healthOrganizationName != null
                                 ? Text(
-                                    toBeginningOfSentenceCase(metaInfo
-                                        .laboratory.healthOrganizationName),
+                                    // toBeginningOfSentenceCase(metaInfo
+                                    //     .laboratory.healthOrganizationName),
+                                    metaInfo?.laboratory?.healthOrganizationName
+                                        ?.capitalizeFirstofEach,
                                     style: TextStyle(
                                       fontWeight: FontWeight.w500,
                                       fontSize: 16.0.sp,
@@ -301,7 +329,7 @@ class RecordInfoCard {
                               ),
                         metaInfo.doctor != null
                             ? Text(
-                                toBeginningOfSentenceCase(
+                                /* toBeginningOfSentenceCase(
                                     toBeginningOfSentenceCase(
                                         metaInfo.doctor != null
                                             ? (metaInfo.doctor.name != null &&
@@ -310,7 +338,18 @@ class RecordInfoCard {
                                                 : metaInfo.doctor.firstName +
                                                     ' ' +
                                                     metaInfo.doctor.lastName
-                                            : '')),
+                                            : '')), */
+                                metaInfo.doctor != null
+                                    ? (metaInfo.doctor.name != null &&
+                                            metaInfo.doctor.name != '')
+                                        ? metaInfo?.doctor?.name
+                                            ?.capitalizeFirstofEach
+                                        : metaInfo?.doctor?.firstName
+                                                ?.capitalizeFirstofEach +
+                                            ' ' +
+                                            metaInfo?.doctor?.lastName
+                                                ?.capitalizeFirstofEach
+                                    : '',
                                 style: TextStyle(
                                   fontSize: 15.0.sp,
                                 ),
@@ -437,7 +476,7 @@ class RecordInfoCard {
           ),
           metaInfo.doctor != null
               ? Text(
-                  metaInfo.doctor.name,
+                  metaInfo?.doctor?.name?.capitalizeFirstofEach,
                   style: TextStyle(
                     fontSize: 15.0.sp,
                   ),
@@ -498,7 +537,7 @@ class RecordInfoCard {
           ),
           metaInfo.doctor != null
               ? Text(
-                  metaInfo.doctor.name,
+                  metaInfo?.doctor?.name,
                   style: TextStyle(fontSize: 15.0.sp),
                 )
               : SizedBox(height: 0.0.h),
@@ -596,8 +635,9 @@ class RecordInfoCard {
                         metaInfo.hospital != null
                             ? metaInfo.hospital.healthOrganizationName != null
                                 ? Text(
-                                    toBeginningOfSentenceCase(metaInfo
-                                        .hospital.healthOrganizationName),
+                                    /* toBeginningOfSentenceCase(metaInfo
+                                        .hospital.healthOrganizationName) */
+                                        metaInfo?.hospital?.healthOrganizationName?.capitalizeFirstofEach,
                                     style: TextStyle(
                                         fontWeight: FontWeight.w500,
                                         fontSize: 16.0.sp),
@@ -612,7 +652,8 @@ class RecordInfoCard {
                               ),
                         metaInfo.doctor != null
                             ? Text(
-                                toBeginningOfSentenceCase(metaInfo.doctor.name),
+                                //toBeginningOfSentenceCase(metaInfo.doctor.name),
+                                metaInfo?.doctor?.name?.capitalizeFirstofEach,
                                 style: TextStyle(fontSize: 15.0.sp),
                               )
                             : SizedBox(height: 0.0.h),
