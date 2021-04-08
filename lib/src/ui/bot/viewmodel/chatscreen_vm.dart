@@ -667,6 +667,8 @@ class ChatScreenViewModel extends ChangeNotifier {
   }
 
   setValues(GetDeviceSelectionModel getDeviceSelectionModel) {
+    preColor = getDeviceSelectionModel.result[0].profileSetting.preColor;
+    greColor = getDeviceSelectionModel.result[0].profileSetting.greColor;
     _isdeviceRecognition =
         getDeviceSelectionModel.result[0].profileSetting.allowDevice != null &&
                 getDeviceSelectionModel.result[0].profileSetting.allowDevice !=

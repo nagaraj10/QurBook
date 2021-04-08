@@ -118,6 +118,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   stateObj.State stateVal = new stateObj.State();
 
   AddressResult _addressResult = new AddressResult();
+  List<DropdownMenuItem<String>> languagesList = [];
+  String selectedLanguage;
   List<AddressResult> _addressList = List();
   String addressTypeId;
 
@@ -140,8 +142,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   @override
   void initState() {
     super.initState();
+    getSupportedLanguages();
     addFamilyUserInfoBloc = new AddFamilyUserInfoBloc();
     _addFamilyUserInfoRepository = new AddFamilyUserInfoRepository();
+    addFamilyUserInfoBloc.getDeviceSelectionValues();
     setValuesInEditText();
   }
 
@@ -347,6 +351,27 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                             maxLength: 3))
                   ],
                 ),
+                Padding(
+                  padding:
+                      EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+                  child: DropdownButton(
+                    isExpanded: true,
+                    hint: Text(
+                      CommonConstants.preferredLanguage,
+                      style: TextStyle(
+                        fontSize: 16.0.sp,
+                      ),
+                    ),
+                    value: selectedLanguage,
+                    items: languagesList,
+                    onChanged: (String newLanguage) {
+                      setState(() {
+                        selectedLanguage = newLanguage;
+                      });
+                      addFamilyUserInfoBloc.preferredLanguage = newLanguage;
+                    },
+                  ),
+                ),
                 _showDateOfBirthTextField(),
                 AddressTypeWidget(
                   addressResult: _addressResult,
@@ -365,6 +390,28 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             ),
           )),
     );
+  }
+
+  void getSupportedLanguages() {
+    final lan = CommonUtil.getCurrentLanCode();
+    if (lan != "undef") {
+      final langCode = lan.split("-").first;
+      selectedLanguage = langCode;
+    }
+    CommonUtil.supportedLanguages.forEach((language, languageCode) {
+      languagesList.add(
+        DropdownMenuItem<String>(
+          value: languageCode,
+          child: Text(
+            toBeginningOfSentenceCase(language),
+            style: TextStyle(
+              fontSize: 16.0.sp,
+            ),
+          ),
+        ),
+      );
+    });
+    // return languagesList;
   }
 
   Widget getGenderDetails() {
@@ -1046,6 +1093,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     } else if (_addressResult == null || _addressResult.id == null) {
       isValid = false;
       strErrorMsg = 'Select Address type';
+    } else if (selectedLanguage == null || selectedLanguage.isEmpty) {
+      isValid = false;
+      strErrorMsg = 'Select Preferred Language';
     } else if (currentselectedBloodGroup == null) {
       if (currentselectedBloodGroupRange == null) {
         isValid = false;
@@ -1146,15 +1196,18 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       if (widget.arguments.myProfileResult.firstName != null) {
         firstNameController.text =
             widget.arguments.myProfileResult.firstName != null
-                ? widget?.arguments?.myProfileResult?.firstName?.capitalizeFirstofEach
+                ? widget?.arguments?.myProfileResult?.firstName
+                    ?.capitalizeFirstofEach
                 : '';
         middleNameController.text =
-            widget.arguments.myProfileResult.middleName != null
-                ? widget?.arguments?.myProfileResult?.middleName?.capitalizeFirstofEach
+            widget?.arguments?.myProfileResult?.middleName != null
+                ? widget?.arguments?.myProfileResult?.middleName
+                    ?.capitalizeFirstofEach
                 : '';
         lastNameController.text =
-            widget.arguments.myProfileResult.lastName != null
-                ? widget?.arguments?.myProfileResult?.lastName?.capitalizeFirstofEach
+            widget?.arguments?.myProfileResult?.lastName != null
+                ? widget?.arguments?.myProfileResult?.lastName
+                    ?.capitalizeFirstofEach
                 : '';
       }
 
@@ -1237,15 +1290,18 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         if (widget.arguments.sharedbyme.child.firstName != null) {
           firstNameController.text =
               widget.arguments.sharedbyme.child.firstName != null
-                  ? widget?.arguments?.sharedbyme?.child?.firstName?.capitalizeFirstofEach
+                  ? widget?.arguments?.sharedbyme?.child?.firstName
+                      ?.capitalizeFirstofEach
                   : '';
           middleNameController.text =
               widget.arguments.sharedbyme.child.middleName != null
-                  ? widget?.arguments?.sharedbyme?.child?.middleName?.capitalizeFirstofEach
+                  ? widget?.arguments?.sharedbyme?.child?.middleName
+                      ?.capitalizeFirstofEach
                   : '';
           lastNameController.text =
               widget.arguments.sharedbyme.child.lastName != null
-                  ? widget?.arguments?.sharedbyme?.child?.lastName?.capitalizeFirstofEach
+                  ? widget?.arguments?.sharedbyme?.child?.lastName
+                      ?.capitalizeFirstofEach
                   : '';
         } else {
           firstNameController.text = '';
@@ -1351,9 +1407,12 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           currentAddressID = currentAddress.id;
         }
 
-        firstNameController.text = value?.result?.firstName?.capitalizeFirstofEach;
-        middleNameController.text = value?.result?.middleName?.capitalizeFirstofEach;
-        lastNameController.text = value?.result?.lastName?.capitalizeFirstofEach;
+        firstNameController.text =
+            value?.result?.firstName?.capitalizeFirstofEach;
+        middleNameController.text =
+            value?.result?.middleName?.capitalizeFirstofEach;
+        lastNameController.text =
+            value?.result?.lastName?.capitalizeFirstofEach;
         //? check relatioship id against logged in user
         if (value?.result?.userRelationshipCollection.length > 0) {
           for (UserRelationshipCollection cRelationship
@@ -1594,11 +1653,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               if (widget.arguments.myProfileResult.firstName != null) {
                 String firstName =
                     widget.arguments.myProfileResult.firstName != null
-                        ? widget.arguments.myProfileResult.firstName.capitalizeFirstofEach
+                        ? widget.arguments.myProfileResult.firstName
+                            .capitalizeFirstofEach
                         : '';
                 String lastName =
                     widget.arguments.myProfileResult.lastName != null
-                        ? widget.arguments.myProfileResult.lastName.capitalizeFirstofEach
+                        ? widget.arguments.myProfileResult.lastName
+                            .capitalizeFirstofEach
                         : '';
 
                 PreferenceUtil.saveString(Constants.FIRST_NAME, firstName);
