@@ -4,6 +4,7 @@ class Reminder {
   String desc;
   String date;
   String time;
+
   Reminder({
     this.id,
     this.title,
@@ -28,5 +29,14 @@ class Reminder {
     desc = map['desc'];
     date = map['date'];
     time = map['time'];
+  }
+  @override
+  bool operator ==(other) {
+    return (other is Reminder) &&
+        other.id == id &&
+        other.title == title &&
+        other.desc == desc &&
+        other.date == date &&
+        other.time == time;
   }
 }
