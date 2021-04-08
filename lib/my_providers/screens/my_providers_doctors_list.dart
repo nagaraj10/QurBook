@@ -190,7 +190,7 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                                   .getBookMarkedIconNew(eachDoctorModel, () {
                                 providerViewModel
                                     .bookMarkDoctor(
-                                        eachDoctorModel, false, 'ListItem')
+                                        eachDoctorModel, false, 'ListItem',eachDoctorModel.sharedCategories)
                                     .then((status) {
                                   if (status) {
                                     widget.refresh();
@@ -224,6 +224,6 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
     } else if (user.userName != null && user.userName != '') {
       doctorName = user.userName;
     }
-    return doctorName;
+    return doctorName?.capitalizeFirstofEach;
   }
 }

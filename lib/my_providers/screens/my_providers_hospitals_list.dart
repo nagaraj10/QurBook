@@ -120,8 +120,8 @@ class _MyProvidersDoctorsList extends State<MyProvidersHospitalsList> {
                           SizedBox(height: 5.0.h),
                           AutoSizeText(
                             eachHospitalModel.name != null
-                                ? toBeginningOfSentenceCase(
-                                    eachHospitalModel.name)
+                                ? eachHospitalModel?.name?.capitalizeFirstofEach /* toBeginningOfSentenceCase(
+                                    eachHospitalModel.name) */
                                 : '',
                             maxLines: 1,
                             style: TextStyle(
@@ -156,7 +156,10 @@ class _MyProvidersDoctorsList extends State<MyProvidersHospitalsList> {
                                   eachHospitalModel, () {
                                 providerViewModel
                                     .bookMarkHealthOrg(
-                                        eachHospitalModel, false, 'ListItem')
+                                        eachHospitalModel,
+                                        false,
+                                        'ListItem',
+                                        eachHospitalModel.sharedCategories)
                                     .then((status) {
                                   if (status) {
                                     widget.isRefresh();

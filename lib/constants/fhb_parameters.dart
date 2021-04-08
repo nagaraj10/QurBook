@@ -101,6 +101,7 @@ const String strVideoLinks = 'videoLinks';
 const String strPlatforType = 'device_type';
 const String strScreen = 'screen';
 const String strRedirect = 'redirect';
+const String strEnableMic = 'enable_mic';
 const String strDashboard = 'dashboard';
 const String strSheela = 'sheela';
 
@@ -235,6 +236,9 @@ const String strAuthtoken = 'authToken';
 const String strSourceName = 'sourceName';
 const String strMemoRawTxtVal = 'memoTextRaw';
 
+const String strStartDate = 'startDateTime';
+const String strEndDate = 'endDateTime';
+
 const String strTerms = 'terms';
 const String strplaceId = 'placeId';
 const String strplace_id = 'place_id';
@@ -321,6 +325,19 @@ const String noWeight =
 const String noAdditionalInfo =
     'Please fill your height & weight in your profile before you book an appointment';
 
+const String noAddressFamily =
+    'Please fill your address details in your selected family member before you book an appointment';
+const String noGenderFamily =
+    'Please fill your gender and address details in your selected family member before you book an appointment';
+const String noDOBFamily =
+    'Please fill your date of birth in your selected family member before you book an appointment';
+const String noHeightFamily =
+    'Please fill your height in your selected family member before you book an appointment';
+const String noWeightFamily =
+    'Please fill your weight in your selected family member before you book an appointment';
+const String noAdditionalInfoFamily =
+    'Please fill your height & weight in your selected family member before you book an appointment';
+
 //Payment
 const String PAYMENT_STATUS = 'payment_status';
 const String CREDIT = 'Credit';
@@ -357,6 +374,7 @@ const String strTimeHM = "hh:mm a";
 const String strsourceGoogle = "Google Fit";
 const String strsourceSheela = "SHEELA";
 const String strsourceHK = "Apple Health";
+const String strsourceCARGIVER = "CAREGIVER";
 const String strdevicesourceName = "sourceType";
 const String strdeviceType = "deviceType";
 const String strdeviceDataType = "deviceDataType";
@@ -571,6 +589,7 @@ const String decline = 'Decline';
 const String meetingId = 'meeting_id';
 const String notification = 'notification';
 const String token = 'Token';
+const String healthRecordMetaIds = 'healthRecordMetaIds';
 const String ongoing_channel = 'ongoing_ns.channel';
 const String startOnGoingNS = 'startOnGoingNS';
 const String mode = 'mode';

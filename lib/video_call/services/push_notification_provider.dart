@@ -40,10 +40,10 @@ class PushNotificationsProvider {
   String ringtone;
   String templateName;
   final _pushNotificationStreamController =
-      StreamController<String>.broadcast();
-  Stream<String> get pushNotificationController =>
+      StreamController<dynamic>.broadcast();
+  Stream<dynamic> get pushNotificationController =>
       _pushNotificationStreamController.stream;
-
+  Map<int, String> redirectData;
   String redirect;
   var callArguments = CallArguments();
 
@@ -236,7 +236,11 @@ class PushNotificationsProvider {
     } else if (templateName != null && templateName == parameters.chat) {
       _pushNotificationStreamController.add(parameters.chat);
     } else if (redirect != null) {
-      _pushNotificationStreamController.add(redirect);
+      if (redirectData != null) {
+        _pushNotificationStreamController.add(redirectData);
+      } else {
+        _pushNotificationStreamController.add(redirect);
+      }
     } else {
       _pushNotificationStreamController.add("normal");
     }
@@ -250,12 +254,15 @@ class PushNotificationsProvider {
     title = null;
     body = null;
     redirect = null;
+    String healthRecordMetaIds = null;
     if (message[parameters.notification] != null) {
       title = message[parameters.notification][parameters.title];
       body = message[parameters.notification][parameters.body];
       ringtone = message[parameters.notification][parameters.sound];
       templateName = message[parameters.notification][parameters.templateName];
       redirect = message[parameters.notification][parameters.redirectTo];
+      healthRecordMetaIds =
+          message[parameters.notification][parameters.healthRecordMetaIds];
     } else if (message[parameters.aps] != null) {
       final aps = message[parameters.aps];
       final alert = aps[parameters.alert];
@@ -264,15 +271,27 @@ class PushNotificationsProvider {
       ringtone = aps[parameters.sound];
       templateName = aps[parameters.templateName];
       redirect = aps[parameters.redirectTo];
+      healthRecordMetaIds = aps[parameters.healthRecordMetaIds];
     } else {
       title = message[parameters.title];
       body = message[parameters.body];
       ringtone = message[parameters.sound];
       templateName = message[parameters.templateName];
       redirect = message[parameters.redirectTo];
+      healthRecordMetaIds = message[parameters.healthRecordMetaIds];
     }
     if (redirect == null && message[parameters.redirectTo] != null) {
       redirect = message[parameters.redirectTo];
+    }
+    if (healthRecordMetaIds == null &&
+        message[parameters.healthRecordMetaIds] != null) {
+      healthRecordMetaIds = message[parameters.healthRecordMetaIds];
+    }
+
+    if (redirect.contains('|')) {
+      final split = redirect.split('|');
+      redirectData = {for (int i = 0; i < split.length; i++) i: split[i]};
+      redirectData[split.length] = healthRecordMetaIds;
     }
 
     if (title == null) {

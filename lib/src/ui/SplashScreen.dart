@@ -35,6 +35,7 @@ class SplashScreen extends StatefulWidget {
   final String doctorSessionId;
   final String healthOrganizationId;
   final String templateName;
+  final dynamic bundle;
 
   SplashScreen(
       {this.nsRoute,
@@ -43,7 +44,8 @@ class SplashScreen extends StatefulWidget {
       this.appointmentDate,
       this.doctorSessionId,
       this.healthOrganizationId,
-      this.templateName});
+      this.templateName,
+      this.bundle});
 
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -59,7 +61,6 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-
     PreferenceUtil.init();
   }
 
@@ -72,14 +73,15 @@ class _SplashScreenState extends State<SplashScreen> {
             if (snapshot.hasData &&
                 (snapshot.data == ConnectivityResult.mobile ||
                     snapshot.data == ConnectivityResult.wifi)) {
+              var isFirstTime =
+                  PreferenceUtil.isKeyValid(Constants.KEY_INTRO_SLIDER);
+              var deviceIfo =
+                  PreferenceUtil.isKeyValid(Constants.KEY_DEVICEINFO);
+              PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID, '');
+              String authToken =
+                  PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+
               Future.delayed(const Duration(seconds: 3), () {
-                var isFirstTime =
-                    PreferenceUtil.isKeyValid(Constants.KEY_INTRO_SLIDER);
-
-                var deviceIfo =
-                    PreferenceUtil.isKeyValid(Constants.KEY_DEVICEINFO);
-                PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID, '');
-
                 if (!isFirstTime) {
                   PreferenceUtil.saveString(
                       Constants.KEY_INTRO_SLIDER, variable.strtrue);
@@ -92,8 +94,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
                   // PageNavigator.goToPermanent(context, router.rt_WebCognito);
                 } else {
-                  String authToken =
-                      PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
                   if (authToken != null) {
                     if (deviceIfo) {
                       if (widget.nsRoute == 'DoctorRescheduling') {
@@ -170,6 +170,12 @@ class _SplashScreenState extends State<SplashScreen> {
                                     HomeScreenArguments(selectedIndex: 1))
                             .then((value) => PageNavigator.goToPermanent(
                                 context, router.rt_Dashboard));
+                      } else if (widget.nsRoute == 'myRecords' &&
+                          (widget.templateName != null &&
+                              widget.templateName != '') &&
+                          (widget.bundle != null && widget.bundle != '')) {
+                        CommonUtil().navigateToMyRecordsCategory(
+                            widget.templateName, [widget.bundle], true);
                       } else {
                         PageNavigator.goToPermanent(
                             context, router.rt_Dashboard);

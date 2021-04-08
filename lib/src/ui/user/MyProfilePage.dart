@@ -157,8 +157,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
         }
       }
       if (data != null) {
-        name.text = toBeginningOfSentenceCase(
-            data.firstName.toLowerCase() + data.lastName.toLowerCase());
+        // name.text = toBeginningOfSentenceCase(
+        //     data.firstName.toLowerCase() + data.lastName.toLowerCase());
+        name.text = data?.firstName?.capitalizeFirstofEach + data?.lastName?.capitalizeFirstofEach;
       }
       if (data.userContactCollection3 != null) {
         if (data.userContactCollection3.length > 0) {
@@ -187,13 +188,13 @@ class _MyProfilePageState extends State<MyProfilePage> {
         dob.text = new FHBUtils().getFormattedDateOnlyNew(data.dateOfBirth);
       }
       if (data != null) {
-        firstName.text = data.firstName;
+        firstName.text = data?.firstName?.capitalizeFirstofEach;
         middleName.text = (data.middleName != null && data.middleName != '')
-            ? data.middleName
+            ? data?.middleName?.capitalizeFirstofEach
             : '';
-        lastName.text = data.lastName;
+        lastName.text = data?.lastName?.capitalizeFirstofEach;
       } else {
-        firstName.text = data != null ? data.firstName + data.lastName : '';
+        firstName.text = data != null ? data?.firstName?.capitalizeFirstofEach + data?.lastName?.capitalizeFirstofEach : '';
         middleName.text = '';
         lastName.text = '';
       }

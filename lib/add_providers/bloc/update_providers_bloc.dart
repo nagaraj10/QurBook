@@ -13,6 +13,7 @@ class UpdateProvidersBloc implements BaseBloc {
   bool isPreferred;
 
   String userId;
+  List<String> selectedCategories = new List();
 
   // 1
   // Doctors
@@ -107,7 +108,11 @@ class UpdateProvidersBloc implements BaseBloc {
     try {
       updateProvidersId =
           await updateProvidersRepository.updateDoctorsIdWithUserDetailsNew(
-              providerId, isPreferred, providerReferenceId, userId);
+              providerId,
+              isPreferred,
+              providerReferenceId,
+              userId,
+              selectedCategories);
 //      doctorsSink.add(ApiResponse.completed(updateProvidersId));
     } catch (e) {
       doctorsSink.add(ApiResponse.error(e.toString()));
@@ -124,7 +129,11 @@ class UpdateProvidersBloc implements BaseBloc {
     try {
       updateProvidersId =
           await updateProvidersRepository.updateHospitalsIdWithUserDetails(
-              providerId, isPreferred, providerReferenceId, userId);
+              providerId,
+              isPreferred,
+              providerReferenceId,
+              userId,
+              selectedCategories);
       hospitalsSink.add(ApiResponse.completed(updateProvidersId));
     } catch (e) {
       hospitalsSink.add(ApiResponse.error(e.toString()));
@@ -141,7 +150,11 @@ class UpdateProvidersBloc implements BaseBloc {
     try {
       updateProvidersId =
           await updateProvidersRepository.updateLabsIdWithUserDetails(
-              providerId, isPreferred, providerReferenceId, userId);
+              providerId,
+              isPreferred,
+              providerReferenceId,
+              userId,
+              selectedCategories);
       labsSink.add(ApiResponse.completed(updateProvidersId));
     } catch (e) {
       labsSink.add(ApiResponse.error(e.toString()));

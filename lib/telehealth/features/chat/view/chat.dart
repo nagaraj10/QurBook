@@ -317,12 +317,30 @@ class ChatScreenState extends State<ChatScreen> {
                       .deviceToken.doctor.payload[0].deviceTokenId
                   : ''
               : '';
-          patientDeviceToken = appointmentResult.deviceToken != null
-              ? appointmentResult.deviceToken.patient.payload.isNotEmpty
-                  ? appointmentResult
-                      .deviceToken.patient.payload[0].deviceTokenId
-                  : ''
-              : '';
+          patientDeviceToken = '';
+          if (appointmentResult.deviceToken != null) {
+            if (appointmentResult.deviceToken.patient.isSuccess &&
+                appointmentResult.deviceToken.patient.payload.isNotEmpty &&
+                appointmentResult
+                        .deviceToken.patient.payload[0].deviceTokenId !=
+                    null) {
+              patientDeviceToken = appointmentResult
+                  .deviceToken.patient.payload[0].deviceTokenId;
+            } else if (appointmentResult.deviceToken.parentMember.isSuccess &&
+                appointmentResult.deviceToken.parentMember.payload.isNotEmpty &&
+                appointmentResult
+                        .deviceToken.parentMember.payload[0].deviceTokenId !=
+                    null) {
+              patientDeviceToken = appointmentResult
+                  .deviceToken.parentMember.payload[0].deviceTokenId;
+            }
+          }
+          // patientDeviceToken = appointmentResult.deviceToken != null
+          //     ? appointmentResult.deviceToken.patient.payload.isNotEmpty
+          //         ? appointmentResult
+          //             .deviceToken.patient.payload[0].deviceTokenId
+          //         : ''
+          //     : '';
         });
       }
     });
@@ -1433,7 +1451,7 @@ class ChatScreenState extends State<ChatScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(toBeginningOfSentenceCase(widget.peerName),
+                    Text(widget?.peerName?.capitalizeFirstofEach/* toBeginningOfSentenceCase(widget.peerName) */,
                         textAlign: TextAlign.left,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
@@ -1718,42 +1736,20 @@ class ChatScreenState extends State<ChatScreen> {
               flex: 4,
               child: Container(
                 height: 58.0.h,
-                child: Stack(
-                  alignment: Alignment.centerRight,
-                  children: [
-                    TextField(
-                      style: TextStyle(fontSize: 16.0.sp),
-                      focusNode: focusNode,
-                      onTap: () {
-                        //isSearchVisible = false;
-                        //_patientDetailOrSearch();
-                      },
-                      controller: textEditingController,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(
-                            RegExp("[ A-Za-z0-9#+-.@&?!{}():'%/=-]*")),
-                      ],
-                      decoration: InputDecoration(
-                        hintText: "$chatTextFieldHintText",
-                        hintStyle: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 16.0.sp,
-                        ),
-                        filled: true,
-                        fillColor: Colors.white70,
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                          borderSide:
-                              BorderSide(color: Colors.transparent, width: 2),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                          borderSide: BorderSide(color: Colors.transparent),
-                        ),
-                      ),
-                      /*onSubmitted: (value) =>*/
-                    ),
-                    SizedBoxWithChild(
+                child: TextField(
+                  style: TextStyle(fontSize: 16.0.sp),
+                  focusNode: focusNode,
+                  onTap: () {
+                    //isSearchVisible = false;
+                    //_patientDetailOrSearch();
+                  },
+                  controller: textEditingController,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(
+                        RegExp("[ A-Za-z0-9#+-.@&?!{}():'%/=-]*")),
+                  ],
+                  decoration: InputDecoration(
+                    suffixIcon: SizedBoxWithChild(
                       width: 50.0.h,
                       height: 50.0.h,
                       child: FlatButton(
@@ -1766,8 +1762,27 @@ class ChatScreenState extends State<ChatScreen> {
                             color: Color(CommonUtil().getMyPrimaryColor()),
                             size: 24,
                           )),
-                    )
-                  ],
+                    ),
+                    isDense: true,
+                    contentPadding: EdgeInsets.only(bottom: -10.0, left: 8),
+                    hintText: "$chatTextFieldHintText",
+                    hintStyle: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 16.0.sp,
+                    ),
+                    filled: true,
+                    fillColor: Colors.white70,
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                      borderSide:
+                          BorderSide(color: Colors.transparent, width: 2),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      borderSide: BorderSide(color: Colors.transparent),
+                    ),
+                  ),
+                  /*onSubmitted: (value) =>*/
                 ),
               ),
             ),

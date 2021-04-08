@@ -437,8 +437,9 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                 Padding(
                                   padding: const EdgeInsets.only(bottom: 4),
                                   child: Text(
-                                    toBeginningOfSentenceCase(
-                                        snapshotUser.data[STR_NICK_NAME]),
+                                    /* toBeginningOfSentenceCase(
+                                        snapshotUser.data[STR_NICK_NAME]), */
+                                    snapshotUser?.data[STR_NICK_NAME]?.toString()?.capitalizeFirstofEach,    
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
                                     style: TextStyle(

@@ -375,19 +375,19 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           _showAddButton(diagnostics),
           Text('to add the Doctor as',
               style: new TextStyle(
-                color: Theme.of(context).primaryColor,
+                color:  Color(CommonUtil().getMyPrimaryColor()),
                 fontSize: 15.0.sp,
                 fontWeight: FontWeight.w500,
               )),
           Text('Unknown Doctor ',
               style: new TextStyle(
-                color: Theme.of(context).primaryColor,
+                color:  Color(CommonUtil().getMyPrimaryColor()),
                 fontSize: 15.0.sp,
                 fontWeight: FontWeight.bold,
               )),
           Text('temporarily',
               style: new TextStyle(
-                color: Theme.of(context).primaryColor,
+                color:  Color(CommonUtil().getMyPrimaryColor()),
                 fontSize: 15.0.sp,
                 fontWeight: FontWeight.bold,
               )),
@@ -477,7 +477,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         width: 100.0.w,
         height: 40.0.h,
         decoration: new BoxDecoration(
-          color: Theme.of(context).primaryColor,
+          color: Color(CommonUtil().getMyPrimaryColor()),
           borderRadius: new BorderRadius.all(Radius.circular(25.0)),
           boxShadow: <BoxShadow>[
             BoxShadow(
@@ -517,8 +517,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                   padding: EdgeInsets.only(top: 2, bottom: 2),
                   child: getCardToDisplaySearchList(
                       (data[i].name != null && data[i].name != '')
-                          ? data[i].name
-                          : data[i].firstName + ' ' + data[i].lastName,
+                          ? data[i]?.name?.capitalizeFirstofEach
+                          : data[i]?.firstName?.capitalizeFirstofEach + ' ' + data[i]?.lastName?.capitalizeFirstofEach,
                       getDoctorsAddress(data[i]),
                       data[i].doctorId,
                       data[i].profilePicThumbnailUrl,
@@ -541,7 +541,9 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     return RefreshIndicator(
       key: _refreshIndicatorKey,
       onRefresh: _refresh,
-      child: (data.isSuccess == false && widget.isSkipUnknown == true)
+      child: (data.isSuccess == false &&
+              widget.isSkipUnknown == true &&
+              data?.diagnostics?.errorData != null)
           ? Container(
               child: getEmptyCard(data.diagnostics),
               color: Color(fhbColors.bgColorContainer),
@@ -555,10 +557,10 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                       child: getCardToDisplaySearchList(
                           (data.result[i].name != null &&
                                   data.result[i].name != '')
-                              ? data.result[i].name
-                              : data.result[i].firstName +
+                              ? data?.result[i]?.name?.capitalizeFirstofEach
+                              : data?.result[i]?.firstName?.capitalizeFirstofEach +
                                   ' ' +
-                                  data.result[i].lastName,
+                                  data?.result[i]?.lastName?.capitalizeFirstofEach,
                           getDoctorsAddress(data.result[i]),
                           data.result[i].doctorId,
                           data.result[i].profilePicThumbnailUrl,
@@ -674,8 +676,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                     color: Color(fhbColors.bgColorContainer),
                     child:
                         widget.arguments.searchWord == CommonConstants.doctors
-                            ? getHospitalLogoImage(logo,data)
-                            : getHospitalLogoImage(logo,data),
+                            ? getHospitalLogoImage(logo, data)
+                            : getHospitalLogoImage(logo, data),
                   )),
                   SizedBox(width: 10.0.w),
                   Expanded(
@@ -704,7 +706,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                     : passLaboratoryValue(labData, context);
           } else {
             passdataToNextScreen(
-                data.name, context, data, hospitalData, labData);
+                data?.name.capitalizeFirstofEach, context, data, hospitalData, labData);
           }
         });
   }
@@ -734,7 +736,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Text(
-          name != null ? name : '',
+          name != null ? name.capitalizeFirstofEach : '',
           style: TextStyle(
               fontSize: 16.0.sp,
               fontWeight: FontWeight.w500,
@@ -801,24 +803,21 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     );
   }
 
-  Widget getHospitalLogoImage(String logo,DoctorsListResult docs) {
+  Widget getHospitalLogoImage(String logo, DoctorsListResult docs) {
     if (logo == null || logo == '') {
       return Container();
     } else {
-      return Image.network(
-        logo,
-          errorBuilder:
-              (BuildContext context, Object exception, StackTrace stackTrace) {
-            return Container(
-              height: 50.0.h,
-              width: 50.0.h,
-              color: Colors.grey[200],
-              child: Center(
-                child: getFirstLastNameText(docs),
-              ),
-            );
-          }
-      );
+      return Image.network(logo, errorBuilder:
+          (BuildContext context, Object exception, StackTrace stackTrace) {
+        return Container(
+          height: 50.0.h,
+          width: 50.0.h,
+          color: Colors.grey[200],
+          child: Center(
+            child: getFirstLastNameText(docs),
+          ),
+        );
+      });
     }
   }
 

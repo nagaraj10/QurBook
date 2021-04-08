@@ -38,12 +38,15 @@ import 'package:myfhb/my_providers/models/ProfilePicThumbnail.dart';
 import 'package:myfhb/myfhb_weview/myfhb_webview.dart';
 import 'package:myfhb/record_detail/model/DoctorImageResponse.dart';
 import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
+import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
 import 'package:myfhb/src/blocs/Media/MediaTypeBlock.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/Authentication/DeviceInfoSucess.dart';
 import 'package:myfhb/src/model/Authentication/SignOutResponse.dart';
 import 'package:myfhb/src/model/Category/CategoryData.dart';
+import 'package:myfhb/src/model/Category/CategoryResponseList.dart';
+import 'package:myfhb/src/model/Category/catergory_data_list.dart';
 import 'package:myfhb/src/model/Category/catergory_result.dart';
 import 'package:myfhb/src/model/Health/CategoryInfo.dart';
 import 'package:myfhb/src/model/Health/CompleteData.dart';
@@ -66,8 +69,12 @@ import 'package:myfhb/src/model/user/MyProfileResult.dart';
 import 'package:myfhb/src/model/user/ProfileCompletedata.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
+import 'package:myfhb/src/resources/repository/CategoryRepository/CategoryResponseListRepository.dart';
+import 'package:myfhb/src/ui/MyRecord.dart';
+import 'package:myfhb/src/ui/MyRecordsArguments.dart';
 import 'package:myfhb/src/ui/user/UserAccounts.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
+import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
@@ -98,6 +105,7 @@ class CommonUtil {
   static const secondaryGrey = 0xFF545454;
 
   CategoryResult categoryDataObjClone = new CategoryResult();
+  CategoryResponseListRepository _categoryResponseListRepository;
 
   static bool audioPage = false;
 
@@ -1690,4 +1698,93 @@ class CommonUtil {
       throw 'Could not launch $url';
     }
   }
+
+  Future<int> getCategoryListPos(String categoryName) async {
+    int position = 0;
+    _categoryResponseListRepository = CategoryResponseListRepository();
+    List<CategoryResult> filteredCategoryData = new List();
+    if (filteredCategoryData == null || filteredCategoryData.length == 0) {
+      try {
+        CategoryDataList categoryResponseList =
+            await _categoryResponseListRepository.getCategoryLists();
+        filteredCategoryData = fliterCategories(categoryResponseList.result);
+        for (int i = 0;
+            i <
+                (filteredCategoryData == null
+                    ? 0
+                    : filteredCategoryData.length);
+            i++) {
+          if (categoryName == filteredCategoryData[i].categoryName) {
+            print(
+                categoryName + ' ****' + filteredCategoryData[i].categoryName);
+            position = i;
+          }
+        }
+        if (categoryName == Constants.STR_PRESCRIPTION) {
+          return position;
+        } else if (categoryName == Constants.STR_IDDOCS ||
+            categoryName == Constants.STR_HOS_ID ||
+            categoryName == Constants.STR_OTHER_ID ||
+            categoryName == Constants.STR_INSURE_ID) {
+          var pos = filteredCategoryData
+              .indexWhere((data) => data.categoryName == Constants.STR_IDDOCS);
+          return pos > 0 ? pos : 0;
+        } else {
+          return position;
+        }
+      } catch (e) {}
+    } else {
+      return position;
+    }
+  }
+
+  void navigateToMyRecordsCategory(
+      dynamic categoryType, List<String> hrmId, bool isTerminate) async {
+    final value = await getCategoryListPos(categoryType);
+    if (value != null) {
+      goToMyRecordsScreen(value, hrmId, isTerminate);
+    }
+  }
+
+  void goToMyRecordsScreen(
+      dynamic position, List<String> hrmId, bool isTerminate) {
+    if (isTerminate) {
+      Get.toNamed(router.rt_MyRecords,
+              arguments: MyRecordsArgument(
+                  categoryPosition: position,
+                  allowSelect: false,
+                  isAudioSelect: false,
+                  isNotesSelect: false,
+                  selectedMedias: hrmId,
+                  isFromChat: false,
+                  showDetails: true,
+                  isAssociateOrChat: false,
+                  fromAppointments: false,
+                  fromClass: 'notification'))
+          .then((value) => Get.offNamedUntil(
+              router.rt_Dashboard, (Route<dynamic> route) => false));
+    } else {
+      Get.to(
+        MyRecords(
+          argument: MyRecordsArgument(
+              categoryPosition: position,
+              allowSelect: false,
+              isAudioSelect: false,
+              isNotesSelect: false,
+              selectedMedias: hrmId,
+              isFromChat: false,
+              showDetails: true,
+              isAssociateOrChat: false,
+              fromAppointments: false,
+              fromClass: 'notification'),
+        ),
+      );
+    }
+  }
+}
+
+extension CapExtension on String {
+  String get inCaps => '${this[0].toUpperCase()}${this.substring(1)}';
+  String get allInCaps => toUpperCase();
+  String get capitalizeFirstofEach => trim().toLowerCase().split(' ').map((str) => str.inCaps).join(' ');
 }

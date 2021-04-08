@@ -304,6 +304,9 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
       postMediaData[parameters.strSourceName] = CommonConstants.strTridentValue;
       postMediaData[parameters.strmemoTextRaw] = memoController.text;
+      DateTime dateTime = DateTime.now();
+      postMediaData[parameters.strStartDate] = dateTime.toUtc().toString();
+      postMediaData[parameters.strEndDate] = dateTime.toUtc().toString();
       var commonConstants = new CommonConstants();
 
       if (categoryName == CommonConstants.strDevice) {
@@ -1239,7 +1242,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   }
 
   String getFormattedTime(String datetime) {
-    DateTime dateTimeStamp = DateTime.parse(datetime);
+    DateTime dateTimeStamp = DateTime.parse(datetime).toLocal();
     String formattedDate = DateFormat('h:mm a').format(dateTimeStamp);
     return formattedDate;
   }
@@ -1296,16 +1299,10 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                               'Diastolic',
                               '',
                               getFormattedTime(bpResult[index].startDateTime),
-                              deviceFullList[index]
-                                          .heartRateCollection[0]
-                                          .bpm !=
-                                      null
-                                  ? deviceFullList[index]
-                                      .heartRateCollection[0]
-                                      .bpm
-                                      .toString()
+                              bpResult[index].bpm != null
+                                  ? bpResult[index].bpm.toString()
                                   : '',
-                              deviceFullList[index].deviceId);
+                              bpResult[index].deviceId);
                         },
                       )
                     : Container(
@@ -1378,7 +1375,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                               '',
                               getFormattedTime(translist[index].startDateTime),
                               translist[index].bgUnit,
-                              deviceFullList[index].deviceId);
+                              translist[index].deviceId);
                         },
                       )
                     : Container(
@@ -1456,7 +1453,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                       .bpm
                                       .toString()
                                   : '',
-                              deviceFullList[index].deviceId);
+                              translist[index].deviceId);
                         },
                       )
                     : Container(
@@ -1526,7 +1523,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                               '',
                               getFormattedTime(translist[index].startDateTime),
                               'Kg',
-                              deviceFullList[index].deviceId);
+                              translist[index].deviceId);
                         },
                       )
                     : Container(
@@ -1596,7 +1593,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                               '',
                               getFormattedTime(translist[index].startDateTime),
                               'F',
-                              deviceFullList[index].deviceId);
+                              translist[index].deviceId);
                         },
                       )
                     : Container(
@@ -1819,7 +1816,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                   width: 2,
                                 ),
                                 Text(
-                                  bpm == '' ? '' : 'mm Hg',
+                                  bpm == '' ? '' : CommonConstants.strPulseUnit,
                                   style: TextStyle(
                                       color: Color(
                                           new CommonUtil().getMyPrimaryColor()),
@@ -1890,7 +1887,9 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   }
 
   Widget getDeleteIcon(String deviceId, String type) {
-    if (type == strsourceHK || type == strsourceGoogle) {
+    if (type == strsourceHK ||
+        type == strsourceGoogle ||
+        type == strsourceCARGIVER) {
       return SizedBox();
     } else {
       return GestureDetector(
@@ -2362,6 +2361,13 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         'assets/maya/maya_us_main.png',
         height: 32.0.h,
         width: 32.0.h,
+      );
+    } else if (type == strsourceCARGIVER) {
+      return Image.asset(
+        'assets/devices/caregiver_source.png',
+        height: 32.0.h,
+        width: 32.0.h,
+        color: Color(new CommonUtil().getMyPrimaryColor()),
       );
     } else {
       return Image.asset(

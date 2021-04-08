@@ -127,7 +127,13 @@ class DevicesViewModel with ChangeNotifier {
               startDateTime: bpElement.startDateTime.toIso8601String(),
               endDateTime: bpElement.endDateTime.toIso8601String(),
               systolic: bpElement.systolic,
-              diastolic: bpElement.diastolic);
+              diastolic: bpElement.diastolic,
+              bpm: dataElement.heartRateCollection.length > 0
+                  ? dataElement.heartRateCollection[0].bpm != null
+                      ? dataElement.heartRateCollection[0].bpm
+                      : null
+                  : null,
+              deviceId: dataElement.deviceId);
           ret.add(bpList);
         });
 
@@ -179,7 +185,8 @@ class DevicesViewModel with ChangeNotifier {
                   : bgValue.mealContext.description,
               mealType: (bgValue.mealType == null)
                   ? null
-                  : bgValue.mealType.description);
+                  : bgValue.mealType.description,
+              deviceId: dataElement.deviceId);
           ret.add(bgList);
         });
       });
@@ -219,7 +226,8 @@ class DevicesViewModel with ChangeNotifier {
               sourceType: dataElement.sourceType.description,
               startDateTime: oxyValue.startDateTime.toIso8601String(),
               endDateTime: oxyValue.endDateTime.toIso8601String(),
-              oxygenSaturation: oxyValue.oxygenSaturation);
+              oxygenSaturation: oxyValue.oxygenSaturation,
+              deviceId: dataElement.deviceId);
           ret.add(oxyList);
         });
         /* dataElement.heartRateCollection.forEach((element) {
@@ -263,7 +271,8 @@ class DevicesViewModel with ChangeNotifier {
               startDateTime: tempValue.startDateTime.toIso8601String(),
               endDateTime: tempValue.endDateTime.toIso8601String(),
               temperature: tempValue.temperature,
-              temperatureUnit: tempValue.temperatureUnit.description);
+              temperatureUnit: tempValue.temperatureUnit.description,
+              deviceId: dataElement.deviceId);
           ret.add(tempList);
         });
       });
@@ -302,7 +311,10 @@ class DevicesViewModel with ChangeNotifier {
               startDateTime: weightValue.startDateTime.toIso8601String(),
               endDateTime: weightValue.endDateTime.toIso8601String(),
               weight: weightValue.weight,
-              weightUnit: weightValue.weightUnit.description);
+              weightUnit: weightValue.weightUnit != null
+                  ? weightValue.weightUnit.description
+                  : 'Kg',
+              deviceId: dataElement.deviceId);
           ret.add(weightList);
         });
       });
@@ -317,7 +329,9 @@ class DevicesViewModel with ChangeNotifier {
       finalResult = [ret, deviceIntervalData];
 
       return finalResult;
-    } catch (e) {}
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   Future<List<HRResult>> fetchHeartRateDetails(String response) async {

@@ -97,9 +97,9 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                             children: <Widget>[
                               commonWidget.docName(
                                   context,
-                                  widget.doc.doctor.user.firstName +
+                                  widget?.doc?.doctor?.user?.firstName?.capitalizeFirstofEach +
                                       ' ' +
-                                      widget.doc.doctor.user.lastName),
+                                      widget?.doc?.doctor?.user?.lastName?.capitalizeFirstofEach),
                               SizedBoxWidget(height: 3.0.h, width: 0.0.h),
                               widget.doc?.doctor?.specialization == null
                                   ? Container()

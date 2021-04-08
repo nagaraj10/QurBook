@@ -119,7 +119,7 @@ class _MyProvidersLabsList extends State<MyProvidersLabsList> {
                           SizedBox(height: 5.0.h),
                           AutoSizeText(
                             eachLabModel.name != null
-                                ? toBeginningOfSentenceCase(eachLabModel.name)
+                                ? eachLabModel?.name?.capitalizeFirstofEach//toBeginningOfSentenceCase(eachLabModel.name)
                                 : '',
                             maxLines: 1,
                             style: TextStyle(
@@ -152,7 +152,7 @@ class _MyProvidersLabsList extends State<MyProvidersLabsList> {
                                   .getBookMarkedIconHealth(eachLabModel, () {
                                 providerViewModel
                                     .bookMarkHealthOrg(
-                                        eachLabModel, false, 'ListItem')
+                                        eachLabModel, false, 'ListItem', null)
                                     .then((status) {
                                   if (status) {
                                     widget.isRefresh();

@@ -1026,7 +1026,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
         child: TextField(
           enabled: false,
-          cursorColor: Theme.of(context).primaryColor,
+          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: mobileNoController,
           maxLines: 1,
           enableInteractiveSelection: false,
@@ -1063,7 +1063,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
         child: TextField(
-          cursorColor: Theme.of(context).primaryColor,
+          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: nameController,
           maxLines: 1,
           enabled: (widget.arguments.fromClass == CommonConstants.my_family ||
@@ -1119,7 +1119,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                             ? new Container()
                             : _showRelationShipTextField(), */
           },
-          cursorColor: Theme.of(context).primaryColor,
+          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: relationShipController,
           maxLines: 1,
           enabled: widget.arguments.fromClass == CommonConstants.my_family
@@ -1161,7 +1161,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           TextField(
-            cursorColor: Theme.of(context).primaryColor,
+            cursorColor: Color(CommonUtil().getMyPrimaryColor()),
             controller: emailController,
             maxLines: 1,
             enabled: widget.arguments.fromClass == CommonConstants.user_update
@@ -1233,7 +1233,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
         child: TextField(
-          cursorColor: Theme.of(context).primaryColor,
+          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: genderController,
           maxLines: 1,
           keyboardType: TextInputType.text,
@@ -1269,7 +1269,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
         child: TextField(
-          cursorColor: Theme.of(context).primaryColor,
+          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: bloodGroupController,
           maxLines: 1,
           keyboardType: TextInputType.text,
@@ -1307,7 +1307,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       child: Padding(
           padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
           child: TextField(
-            cursorColor: Theme.of(context).primaryColor,
+            cursorColor: Color(CommonUtil().getMyPrimaryColor()),
             controller: dateOfBirthController,
             maxLines: 1,
             autofocus: false,
@@ -1932,10 +1932,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               cntrlr_addr_one.text;
           profileResult.userAddressCollection3[0].addressLine2 =
               cntrlr_addr_two.text;
-          profileResult.userAddressCollection3[0].isPrimary= true;    
-          profileResult.userAddressCollection3[0].isActive= true;    
-          profileResult.userAddressCollection3[0].createdOn= ''; 
-          profileResult.userAddressCollection3[0].lastModifiedOn= ''; 
+          profileResult.userAddressCollection3[0].isPrimary= true;
+          profileResult.userAddressCollection3[0].isActive= true;
+          profileResult.userAddressCollection3[0].createdOn= '';
+          profileResult.userAddressCollection3[0].lastModifiedOn= '';
           profileResult.userAddressCollection3[0].createdBy= '';
 
           profileResult.userAddressCollection3[0].state = stateVal;
@@ -2493,7 +2493,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
         child: TextField(
-          cursorColor: Theme.of(context).primaryColor,
+          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: firstNameController,
           maxLines: 1,
           enabled: (widget.arguments.fromClass == CommonConstants.my_family ||
@@ -2531,7 +2531,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
         child: TextField(
-          cursorColor: Theme.of(context).primaryColor,
+          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: middleNameController,
           maxLines: 1,
           enabled: (widget.arguments.fromClass == CommonConstants.my_family ||
@@ -2569,7 +2569,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
         child: TextField(
-          cursorColor: Theme.of(context).primaryColor,
+          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: lastNameController,
           maxLines: 1,
           enabled: (widget.arguments.fromClass == CommonConstants.my_family ||
