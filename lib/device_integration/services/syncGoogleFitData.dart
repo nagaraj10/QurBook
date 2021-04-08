@@ -6,7 +6,6 @@ import 'dart:convert' show json;
 import 'package:myfhb/constants/fhb_query.dart' as query;
 import 'package:myfhb/constants/fhb_parameters.dart' as params;
 
-
 class SyncGoogleFitData {
   GoogleFitData _gfHelper;
   DeviceHealthRecord _deviceHealthRecord;
@@ -34,8 +33,8 @@ class SyncGoogleFitData {
     String errorString = "";
 
     if (await isGoogleFitSignedIn()) {
-      if(!await _gfHelper.signInSilently()){
-      //if (!await activateGoogleFit()) {
+      if (!await _gfHelper.signInSilently()) {
+        //if (!await activateGoogleFit()) {
         throw "Failed to login GoogleFit account";
       }
     } else {
@@ -63,60 +62,57 @@ class SyncGoogleFitData {
         errorString = '$errorString ${params.strDataTypeBP},';
       } else {
         if (bpParams != null) {
-          response = await postGoogleFitData(bpParams);
+          await postGoogleFitData(bpParams);
         }
       }
 
-      response = "";
       String weightParams =
           await _gfHelper.getWeightSummary(startTime, endTime);
       if (weightParams == params.strWeight) {
         errorString = '$errorString ${params.strWeight},';
       } else {
         if (weightParams != null) {
-          response = await postGoogleFitData(weightParams);
+          await postGoogleFitData(weightParams);
         }
       }
-      response = "";
+
       String heartRateParams =
           await _gfHelper.getHeartRateSummary(startTime, endTime);
       if (heartRateParams == params.strHeartRate) {
         errorString = '$errorString ${params.strHeartRate},';
       } else {
         if (heartRateParams != null) {
-          response = await postGoogleFitData(heartRateParams);
+          await postGoogleFitData(heartRateParams);
         }
       }
-      response = "";
+
       String glucoseParams =
           await _gfHelper.getBloodGlucoseSummary(startTime, endTime);
       if (glucoseParams == params.strGlusoceLevel) {
         errorString = '$errorString ${params.strGlusoceLevel},';
       } else {
         if (glucoseParams != null) {
-          response = await postGoogleFitData(glucoseParams);
+          await postGoogleFitData(glucoseParams);
         }
       }
 
-      response = "";
       String temperatureParams =
           await _gfHelper.getBodyTempSummary(startTime, endTime);
       if (temperatureParams == params.strTemperature) {
         errorString = '$errorString ${params.strTemperature},';
       } else {
         if (temperatureParams != null) {
-          response = await postGoogleFitData(temperatureParams);
+          await postGoogleFitData(temperatureParams);
         }
       }
 
-      response = "";
       String oxygenParams =
           await _gfHelper.getOxygenSaturationSummary(startTime, endTime);
       if (oxygenParams == params.strOxgenSaturation) {
         errorString = '$errorString ${params.strOxgenSaturation},';
       } else {
         if (oxygenParams != null) {
-          response = await postGoogleFitData(oxygenParams);
+          await postGoogleFitData(oxygenParams);
         }
       }
       if (errorString.isNotEmpty) {

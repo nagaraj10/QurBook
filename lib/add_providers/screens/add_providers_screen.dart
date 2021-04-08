@@ -190,6 +190,7 @@ class AddProvidersState extends State<AddProviders> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
         leading: GestureDetector(
           onTap: () => Navigator.pop(context),
           child: Icon(
@@ -267,8 +268,10 @@ class AddProvidersState extends State<AddProviders> {
                                   isPreferred = value;
                                 });
                               },
-                              activeTrackColor: Theme.of(context).primaryColor,
-                              activeColor: Theme.of(context).primaryColor,
+                              activeTrackColor:
+                                  Color(CommonUtil().getMyPrimaryColor()),
+                              activeColor:
+                                  Color(CommonUtil().getMyPrimaryColor()),
                             )),
                         Text(
                           variable.Set_as_Preferred,
@@ -698,10 +701,11 @@ class AddProvidersState extends State<AddProviders> {
         style: new TextStyle(
             fontWeight: FontWeight.w500,
             fontSize: 16.0.sp,
-            color: Theme.of(context).primaryColor),
+            color: Color(CommonUtil().getMyPrimaryColor())),
         decoration: InputDecoration(
             enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Theme.of(context).primaryColor),
+              borderSide:
+                  BorderSide(color: Color(CommonUtil().getMyPrimaryColor())),
             ),
             labelText: widget.arguments.searchKeyWord,
             labelStyle: TextStyle(
@@ -723,7 +727,7 @@ class AddProvidersState extends State<AddProviders> {
         width: 100.0.w,
         height: 40.0.h,
         decoration: new BoxDecoration(
-          color: Theme.of(context).primaryColor,
+          color: Color(CommonUtil().getMyPrimaryColor()),
           borderRadius: new BorderRadius.all(Radius.circular(25.0)),
           boxShadow: <BoxShadow>[
             BoxShadow(

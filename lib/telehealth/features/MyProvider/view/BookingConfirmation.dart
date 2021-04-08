@@ -7,7 +7,9 @@ import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
+import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments.dart';
 import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
+import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -42,6 +44,7 @@ import 'package:myfhb/telehealth/features/Payment/PaymentPage.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:myfhb/constants/router_variable.dart' as router;
 
 class BookingConfirmation extends StatefulWidget {
   final followUpFee;
@@ -128,6 +131,14 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
   String doctorId;
 
+  bool isFamilyChanged = false;
+
+  MyProfileModel myProfile;
+  AddFamilyUserInfoRepository addFamilyUserInfoRepository =
+      AddFamilyUserInfoRepository();
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     providerViewModel = new MyProviderViewModel();
@@ -146,7 +157,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   }
 
   addHealthRecords() {
-    healthRecords.addAll(CommonUtil.recordIds);
+    //healthRecords.addAll(CommonUtil.recordIds);
     healthRecords.addAll(CommonUtil.notesId);
     healthRecords.addAll(CommonUtil.voiceIds);
   }
@@ -311,6 +322,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                   ))
               .toList(),
           onChanged: (SharedByUsers user) {
+            isFamilyChanged = true;
             setState(() {
               if (selectedUser != user) {
                 clearAttachedRecords();
@@ -467,6 +479,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         widget.refresh();
       },
       child: Scaffold(
+        key: _scaffoldKey,
         appBar: AppBar(
           flexibleSpace: GradientAppBar(),
           leading: GestureDetector(
@@ -740,7 +753,16 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                         onPressed: () {
                           new FHBUtils().check().then((intenet) {
                             if (intenet != null && intenet) {
-                              _displayDialog(context);
+                              if (isFamilyChanged) {
+                                profileValidationCheck(
+                                    context,
+                                    selectedId != ''
+                                        ? selectedId
+                                        : PreferenceUtil.getStringValue(
+                                            Constants.KEY_USERID));
+                              } else {
+                                _displayDialog(context);
+                              }
                             } else {
                               toast.getToast(Constants.STR_NO_CONNECTIVITY,
                                   Colors.black54);
@@ -761,6 +783,18 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         ),
       ),
     );
+  }
+
+  profileValidationCheck(BuildContext context, String userId) async {
+    await addFamilyUserInfoRepository.getMyProfileInfoNew(userId).then((value) {
+      myProfile = value;
+    });
+
+    if (myProfile != null) {
+      addressValidation(context);
+    } else {
+      toast.getToast(noGender, Colors.red);
+    }
   }
 
   String getFollowUpFee() {
@@ -1120,7 +1154,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       : widget.docs[widget.doctorListPos].user
                           .profilePicThumbnailUrl),
             ),
-           /* Container(
+            /* Container(
               alignment: Alignment.center,
               child: widget.isFromHospital?commonWidgets.getClipOvalImageForHos(widget.resultFromHospitalList[widget.doctorListIndex]
                   .doctor):commonWidgets.getClipOvalImageNew(widget.docs[widget.doctorListPos]),
@@ -1442,5 +1476,118 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         Constants.KEY_CATEGORYNAME, category.categoryName);
     await PreferenceUtil.saveString(Constants.KEY_CATEGORYID, category.id);
     await PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID, selectedId);
+  }
+
+  addressValidation(BuildContext context) {
+    if (myProfile != null) {
+      if (myProfile.isSuccess) {
+        if (myProfile.result != null) {
+          if (myProfile.result.gender != null &&
+              myProfile.result.gender.isNotEmpty) {
+            if (myProfile.result.dateOfBirth != null &&
+                myProfile.result.dateOfBirth.isNotEmpty) {
+              if (myProfile.result.additionalInfo != null) {
+                if (myProfile.result.additionalInfo.height != null &&
+                    myProfile.result.additionalInfo.height.isNotEmpty) {
+                  if (myProfile.result.additionalInfo.weight != null &&
+                      myProfile.result.additionalInfo.weight.isNotEmpty) {
+                    if (myProfile.result.userAddressCollection3 != null) {
+                      if (myProfile.result.userAddressCollection3.length > 0) {
+                        patientAddressCheck(
+                            myProfile.result.userAddressCollection3[0],
+                            context);
+                      } else {
+                        //toast.getToast(noAddress, Colors.red);
+                        showInSnackBar(noAddressFamily, 'Add');
+                        //CommonUtil().mSnackbar(context, noAddress, 'Add');
+                      }
+                    } else {
+                      //toast.getToast(noAddress, Colors.red);
+                      showInSnackBar(noAddressFamily, 'Add');
+                      //CommonUtil().mSnackbar(context, noAddress, 'Add');
+                    }
+                  } else {
+                    //toast.getToast(noWeight, Colors.red);
+                    showInSnackBar(noWeightFamily, 'Add');
+                    //CommonUtil().mSnackbar(context, noWeight, 'Add');
+                  }
+                } else {
+                  //toast.getToast(noHeight, Colors.red);
+                  showInSnackBar(noHeightFamily, 'Add');
+                  //CommonUtil().mSnackbar(context, noHeight, 'Add');
+                }
+              } else {
+                //toast.getToast(noAdditionalInfo, Colors.red);
+                showInSnackBar(noAdditionalInfoFamily, 'Add');
+                //CommonUtil().mSnackbar(context, noAdditionalInfo, 'Add');
+              }
+            } else {
+              //toast.getToast(noDOB, Colors.red);
+              showInSnackBar(noDOBFamily, 'Add');
+              //CommonUtil().mSnackbar(context, noDOB, 'Add');
+            }
+          } else {
+            showInSnackBar(noGenderFamily, 'Add');
+            //toast.getToast(noGender, Colors.red);
+          }
+        } else {
+          //toast.getToast(noAddress, Colors.red);
+          showInSnackBar(noAddressFamily, 'Add');
+          //CommonUtil().mSnackbar(context, noAddress, 'Add');
+        }
+      } else {
+        //toast.getToast(noAddress, Colors.red);
+        showInSnackBar(noAddressFamily, 'Add');
+        //CommonUtil().mSnackbar(context, noAddress, 'Add');
+      }
+    } else {
+      //toast.getToast(noAddress, Colors.red);
+      showInSnackBar(noAddressFamily, 'Add');
+      //CommonUtil().mSnackbar(context, noAddress, 'Add');
+    }
+  }
+
+  patientAddressCheck(
+      UserAddressCollection3 userAddressCollection, BuildContext context) {
+    String address1 = userAddressCollection.addressLine1 != null
+        ? userAddressCollection.addressLine1
+        : '';
+    String city = userAddressCollection.city.name != null
+        ? userAddressCollection.city.name
+        : '';
+    String state = userAddressCollection.state.name != null
+        ? userAddressCollection.state.name
+        : '';
+
+    if (address1 != '' && city != '' && state != '') {
+      //normal appointment
+      _displayDialog(context);
+    } else {
+      toast.getToast(noAddress, Colors.red);
+    }
+  }
+
+  void showInSnackBar(String message, String actionName) {
+    _scaffoldKey.currentState.showSnackBar(
+      new SnackBar(
+        content: Text(message),
+        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+        elevation: 5.0,
+        action: SnackBarAction(
+            label: actionName,
+            onPressed: () async {
+              if (myProfile?.result != null) {
+                Navigator.pushNamed(context, router.rt_AddFamilyUserInfo,
+                    arguments: AddFamilyUserInfoArguments(
+                        myProfileResult: myProfile?.result,
+                        fromClass: CommonConstants.user_update));
+              } else {
+                FlutterToast()
+                    .getToast('Unable to Fetch User Profile data', Colors.red);
+              }
+            }),
+        duration: const Duration(seconds: 10),
+      ),
+    );
   }
 }

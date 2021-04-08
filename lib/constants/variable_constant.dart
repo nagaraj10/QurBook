@@ -192,7 +192,7 @@ const String strBookmarkRecord = 'bookmark record';
 const String strChat = 'Chats';
 const String strFeedBack = 'Feedback';
 const String strFeedbackExp =
-    'We would like to hear from you on your experience with MyFHB';
+    'We would like to hear from you on your experience with QurBook';
 const String strAttachImage = 'Attach Image';
 const String strAddVoice = 'Add Voice';
 const String strcategoryInfo = 'categoryInfo';
