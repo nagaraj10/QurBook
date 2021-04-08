@@ -13,7 +13,9 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
+import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/device_integration/view/screens/Clipper.dart';
+import 'package:myfhb/device_integration/viewModel/deviceDataHelper.dart';
 import 'package:myfhb/devices/device_dashboard_arguments.dart';
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/screens/MyFamily.dart';
@@ -130,6 +132,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
 
   final double circleRadius = 38.0;
   final double circleBorderWidth = 0.0;
+
+  DeviceDataHelper _deviceDataHelper = DeviceDataHelper();
 
   @override
   void initState() {
@@ -1003,10 +1007,15 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                   ),
                                   GestureDetector(
                                     onTap: () {
-                                      setState(() {});
+                                      toast.getToastForLongTime(strSync, Colors.green);
+                                      Platform.isIOS?_deviceDataHelper.syncHealthKit().then((value) {
+                                        setState(() {});
+                                      }):_deviceDataHelper.syncGoogleFit().then((value) {
+                                        setState(() {});
+                                      });
                                     },
                                     child: Image.asset(
-                                      'assets/icons/refresh_dash.png',
+                                      icon_refresh_dash,
                                       height: 26.0.h,
                                       width: 26.0.h,
                                       color: Colors.white,
