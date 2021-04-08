@@ -456,7 +456,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       child: Padding(
           padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
           child: TextField(
-            cursorColor: Theme.of(context).primaryColor,
+            cursorColor: Color(CommonUtil().getMyPrimaryColor()),
             controller: dateOfBirthController,
             maxLines: 1,
             autofocus: false,
@@ -536,7 +536,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
         child: TextField(
           enabled: isEnabled,
-          cursorColor: Theme.of(context).primaryColor,
+          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: textEditingController,
           maxLines: 1,
           enableInteractiveSelection: false,
@@ -888,7 +888,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     ? new Container()
                     : _showRelationShipTextField();
           },
-          cursorColor: Theme.of(context).primaryColor,
+          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: relationShipController,
           maxLines: 1,
           enabled: (widget.arguments.fromClass == CommonConstants.my_family ||
@@ -1122,15 +1122,34 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     if (widget.arguments.fromClass == CommonConstants.user_update) {
       //* user profile update sections
       addFamilyUserInfoBloc.userId = widget.arguments.myProfileResult.id;
-      if (widget.arguments.myProfileResult.userContactCollection3 != null) {
-        if (widget.arguments.myProfileResult.userContactCollection3.length >
-            0) {
-          mobileNoController.text = widget
-              .arguments.myProfileResult.userContactCollection3[0].phoneNumber;
-          emailController.text =
-              widget.arguments.myProfileResult.userContactCollection3[0].email;
+
+      if (widget.arguments.sharedbyme != null) {
+        try {
+          if (widget
+              ?.arguments?.sharedbyme?.child?.userContactCollection3.isNotEmpty) {
+            mobileNoController.text = widget?.arguments?.sharedbyme?.child
+                ?.userContactCollection3[0].phoneNumber;
+            emailController.text = widget
+                ?.arguments?.sharedbyme?.child?.userContactCollection3[0].email;
+          }
+
+        } catch (e) {
+          mobileNoController.text = '';
+          emailController.text = '';
         }
+      } else {
+          MyProfileModel myProf =
+          PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) != null ? PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) :PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+          if (myProf.result.userContactCollection3 != null) {
+            if (myProf.result.userContactCollection3.length > 0) {
+              mobileNoController.text =
+                  myProf.result.userContactCollection3[0].phoneNumber;
+              emailController.text =
+                  myProf.result.userContactCollection3[0].email;
+            }
+          }
       }
+
       if (widget.arguments.myProfileResult.dateOfBirth != null) {
         dateofBirthStr = new FHBUtils().getFormattedDateForUserBirth(
             widget.arguments.myProfileResult.dateOfBirth);
@@ -1231,7 +1250,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         try {
           if (widget.arguments.sharedbyme.child.isVirtualUser) {
             MyProfileModel myProf =
-                PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+                PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) != null ? PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) :PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
             if (myProf.result.userContactCollection3 != null) {
               if (myProf.result.userContactCollection3.length > 0) {
                 mobileNoController.text =
@@ -1401,8 +1420,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             if (cRelationship?.parent?.id ==
                 PreferenceUtil.getStringValue(Constants.KEY_USERID)) {
               relationShipController.text = cRelationship?.relationship?.name;
+            } else {
+              relationShipController.text =
+                  widget?.arguments?.relationShip?.name;
             }
           }
+        } else {
+          relationShipController.text = widget?.arguments?.relationShip?.name;
         }
         try {
           setState(() {

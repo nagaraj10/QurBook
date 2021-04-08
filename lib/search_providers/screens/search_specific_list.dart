@@ -375,19 +375,19 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           _showAddButton(diagnostics),
           Text('to add the Doctor as',
               style: new TextStyle(
-                color: Theme.of(context).primaryColor,
+                color:  Color(CommonUtil().getMyPrimaryColor()),
                 fontSize: 15.0.sp,
                 fontWeight: FontWeight.w500,
               )),
           Text('Unknown Doctor ',
               style: new TextStyle(
-                color: Theme.of(context).primaryColor,
+                color:  Color(CommonUtil().getMyPrimaryColor()),
                 fontSize: 15.0.sp,
                 fontWeight: FontWeight.bold,
               )),
           Text('temporarily',
               style: new TextStyle(
-                color: Theme.of(context).primaryColor,
+                color:  Color(CommonUtil().getMyPrimaryColor()),
                 fontSize: 15.0.sp,
                 fontWeight: FontWeight.bold,
               )),
@@ -477,7 +477,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         width: 100.0.w,
         height: 40.0.h,
         decoration: new BoxDecoration(
-          color: Theme.of(context).primaryColor,
+          color: Color(CommonUtil().getMyPrimaryColor()),
           borderRadius: new BorderRadius.all(Radius.circular(25.0)),
           boxShadow: <BoxShadow>[
             BoxShadow(

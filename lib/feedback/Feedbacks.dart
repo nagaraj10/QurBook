@@ -311,6 +311,9 @@ class _FeedbacksState extends State<Feedbacks> {
     postMediaData[variable.strfileName] = fileName;
 
     postMainData[variable.strmetaInfo] = postMediaData;
+    DateTime dateTime = DateTime.now();
+    postMediaData[parameters.strStartDate] = dateTime.toUtc().toString();
+    postMediaData[parameters.strEndDate] = dateTime.toUtc().toString();
 
     var params = json.encode(postMediaData);
 
@@ -445,7 +448,7 @@ class _FeedbacksState extends State<Feedbacks> {
 
   Widget _showFeedbacktextFiled() {
     return TextFormField(
-      cursorColor: Theme.of(context).primaryColor,
+      cursorColor: Color(CommonUtil().getMyPrimaryColor()),
       controller: feedbackController,
       maxLines: 1,
       keyboardType: TextInputType.text,

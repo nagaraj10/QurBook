@@ -58,12 +58,14 @@ class _MyProvidersState extends State<MyProviders> {
   ProvidersBloc _providersBloc;
   MyProvidersResponse myProvidersResponseList;
   List<Doctors> copyOfdoctorsModel;
+  Future<MyProvidersResponse> _medicalPreferenceList;
 
   @override
   void initState() {
     super.initState();
     getDataForProvider();
     _providersBloc = new ProvidersBloc();
+    _medicalPreferenceList = _providersBloc.getMedicalPreferencesList();
   }
 
   @override
@@ -274,7 +276,7 @@ class _MyProvidersState extends State<MyProviders> {
 
   Widget getDoctorProviderListNew() {
     return new FutureBuilder<MyProvidersResponse>(
-      future: _providersBloc.getMedicalPreferencesList(),
+      future: _medicalPreferenceList,
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return new Center(
