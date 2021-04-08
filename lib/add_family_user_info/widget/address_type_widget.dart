@@ -46,7 +46,7 @@ class AddressTypeWidgetState extends State<AddressTypeWidget> {
       }
     }
     return Padding(
-      padding: EdgeInsets.only(left: 10, right: 10, top: 4, bottom: 4),
+      padding: EdgeInsets.only(left: 20, right: 20, top: 4, bottom: 4),
       child: DropdownButton(
         value: itemSelected,
         isExpanded: true,

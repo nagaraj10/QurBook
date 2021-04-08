@@ -6,8 +6,13 @@ import 'package:myfhb/add_family_user_info/models/update_relatiosnship_model.dar
 import 'package:myfhb/add_family_user_info/models/update_self_profile_model.dart';
 import 'package:myfhb/add_family_user_info/models/updated_add_family_relation_info.dart';
 import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
+import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/my_family/models/relationship_response_list.dart';
 import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
+import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
+import 'package:myfhb/src/model/UpdatedDeviceModel.dart';
 import 'package:myfhb/src/model/user/City.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/model/user/State.dart';
@@ -16,6 +21,8 @@ import 'package:myfhb/src/model/user/state_list_model.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/add_family_user_info/models/verify_email_response.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 
 class AddFamilyUserInfoBloc extends BaseBloc {
   AddFamilyUserInfoRepository addFamilyUserInfoRepository;
@@ -80,9 +87,37 @@ class AddFamilyUserInfoBloc extends BaseBloc {
       cityId,
       stateId,
       zipcode;
-      
-      bool isUpdate;
-      UpdateRelationshipModel relationship;
+
+  bool isUpdate;
+  UpdateRelationshipModel relationship;
+
+  String preferredLanguage = CommonUtil.getCurrentLanCode();
+
+  var userMappingId = '';
+  bool _isdigitRecognition = true;
+  bool _isdeviceRecognition = true;
+  bool _isGFActive;
+  bool _isHKActive = false;
+  bool _firstTym = true;
+  bool _isBPActive = true;
+  bool _isGLActive = true;
+  bool _isOxyActive = true;
+  bool _isTHActive = true;
+  bool _isWSActive = true;
+  bool _isHealthFirstTime = false;
+  String preferred_language;
+  String qa_subscription;
+  int preColor = 0xff5e1fe0;
+  int greColor = 0xff753aec;
+  var isEndOfConv = false;
+  bool canSpeak = true;
+  var isLoading = false;
+  var isRedirect = false;
+  var screenValue;
+  bool enableMic = true;
+  bool isButtonResponse = false;
+  bool stopTTS = false;
+  bool isSheelaSpeaking = false;
 
   MyProfileModel myProfileModel;
 
@@ -195,8 +230,13 @@ class AddFamilyUserInfoBloc extends BaseBloc {
   Future<UpdateSelfProfileModel> updateSelfProfile(bool fromFamily) async {
     userProfileSink.add(ApiResponse.loading(variable.strUpdatedSelfProfile));
     UpdateSelfProfileModel updateAddFamilyInfo;
-
     try {
+      if (preferredLanguage != null && preferredLanguage.isNotEmpty) {
+        await updateDeviceSelectionModel(preferredLanguage: preferredLanguage);
+        PreferenceUtil.saveString(SHEELA_LANG,
+            CommonUtil.langaugeCodes[preferredLanguage ?? 'undef']);
+      }
+
       updateAddFamilyInfo = await addFamilyUserInfoRepository.updateUserInfoNew(
           userId,
           name,
@@ -240,8 +280,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
     return verifyEmailResponse;
   }
 
-  Future<List<City>> getCityDataList(
-      String cityname, String apibody) async {
+  Future<List<City>> getCityDataList(String cityname, String apibody) async {
     CityModel cityListModel;
 
     cityListModel = await addFamilyUserInfoRepository.getValuesBaseOnSearch(
@@ -255,5 +294,138 @@ class AddFamilyUserInfoBloc extends BaseBloc {
     stateModel = await addFamilyUserInfoRepository.getStateValuesBaseOnSearch(
         cityname, apibody);
     return stateModel.result;
+  }
+
+  Future<void> getDeviceSelectionValues() async {
+    HealthReportListForUserRepository healthReportListForUserRepository =
+        HealthReportListForUserRepository();
+    GetDeviceSelectionModel selectionResult;
+    await healthReportListForUserRepository.getDeviceSelection().then((value) {
+      selectionResult = value;
+      if (selectionResult.isSuccess) {
+        if (selectionResult.result != null) {
+          setValues(selectionResult);
+          userMappingId = selectionResult.result[0].id;
+        } else {
+          userMappingId = '';
+          _isdeviceRecognition = true;
+          _isHKActive = false;
+          _firstTym = true;
+          _isBPActive = true;
+          _isGLActive = true;
+          _isOxyActive = true;
+          _isTHActive = true;
+          _isWSActive = true;
+          _isHealthFirstTime = false;
+        }
+      } else {
+        userMappingId = '';
+        _isdigitRecognition = true;
+        _isdeviceRecognition = true;
+        _isHKActive = false;
+        _firstTym = true;
+        _isBPActive = true;
+        _isGLActive = true;
+        _isOxyActive = true;
+        _isTHActive = true;
+        _isWSActive = true;
+        _isHealthFirstTime = false;
+      }
+    });
+  }
+
+  setValues(GetDeviceSelectionModel getDeviceSelectionModel) {
+    preColor = getDeviceSelectionModel.result[0].profileSetting.preColor;
+    greColor = getDeviceSelectionModel.result[0].profileSetting.greColor;
+    _isdeviceRecognition =
+        getDeviceSelectionModel.result[0].profileSetting.allowDevice != null &&
+                getDeviceSelectionModel.result[0].profileSetting.allowDevice !=
+                    ''
+            ? getDeviceSelectionModel.result[0].profileSetting.allowDevice
+            : true;
+    _isdigitRecognition =
+        getDeviceSelectionModel.result[0].profileSetting.allowDigit != null &&
+                getDeviceSelectionModel.result[0].profileSetting.allowDigit !=
+                    ''
+            ? getDeviceSelectionModel.result[0].profileSetting.allowDigit
+            : true;
+    _isHKActive =
+        getDeviceSelectionModel.result[0].profileSetting.healthFit != null &&
+                getDeviceSelectionModel.result[0].profileSetting.healthFit != ''
+            ? getDeviceSelectionModel.result[0].profileSetting.healthFit
+            : false;
+    _isBPActive =
+        getDeviceSelectionModel.result[0].profileSetting.bpMonitor != null &&
+                getDeviceSelectionModel.result[0].profileSetting.bpMonitor != ''
+            ? getDeviceSelectionModel.result[0].profileSetting.bpMonitor
+            : true;
+    _isGLActive = getDeviceSelectionModel.result[0].profileSetting.glucoMeter !=
+                null &&
+            getDeviceSelectionModel.result[0].profileSetting.glucoMeter != ''
+        ? getDeviceSelectionModel.result[0].profileSetting.glucoMeter
+        : true;
+    _isOxyActive = getDeviceSelectionModel
+                    .result[0].profileSetting.pulseOximeter !=
+                null &&
+            getDeviceSelectionModel.result[0].profileSetting.pulseOximeter != ''
+        ? getDeviceSelectionModel.result[0].profileSetting.pulseOximeter
+        : true;
+    _isWSActive = getDeviceSelectionModel.result[0].profileSetting.weighScale !=
+                null &&
+            getDeviceSelectionModel.result[0].profileSetting.weighScale != ''
+        ? getDeviceSelectionModel.result[0].profileSetting.weighScale
+        : true;
+    _isTHActive =
+        getDeviceSelectionModel.result[0].profileSetting.thermoMeter != null &&
+                getDeviceSelectionModel.result[0].profileSetting.thermoMeter !=
+                    ''
+            ? getDeviceSelectionModel.result[0].profileSetting.thermoMeter
+            : true;
+
+    preferred_language = getDeviceSelectionModel
+                    .result[0].profileSetting.preferred_language !=
+                null &&
+            getDeviceSelectionModel
+                    .result[0].profileSetting.preferred_language !=
+                ''
+        ? getDeviceSelectionModel.result[0].profileSetting.preferred_language
+        : 'undef';
+
+    qa_subscription = getDeviceSelectionModel
+                    .result[0].profileSetting.qa_subscription !=
+                null &&
+            getDeviceSelectionModel.result[0].profileSetting.qa_subscription !=
+                ''
+        ? getDeviceSelectionModel.result[0].profileSetting.qa_subscription
+        : 'Y';
+  }
+
+  Future<UpdateDeviceModel> updateDeviceSelectionModel(
+      {String preferredLanguage}) async {
+    HealthReportListForUserRepository healthReportListForUserRepository =
+        HealthReportListForUserRepository();
+    await healthReportListForUserRepository
+        .updateDeviceModel(
+            userMappingId,
+            _isdigitRecognition,
+            _isdeviceRecognition,
+            _isGFActive,
+            _isHKActive,
+            _isBPActive,
+            _isGLActive,
+            _isOxyActive,
+            _isTHActive,
+            _isWSActive,
+            preferredLanguage ?? preferred_language,
+            qa_subscription,
+            preColor,
+            greColor)
+        .then(
+      (value) {
+        if (value?.isSuccess ?? false) {
+          getDeviceSelectionValues();
+        }
+      },
+    );
   }
 }
