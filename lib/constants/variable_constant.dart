@@ -515,6 +515,7 @@ const String strAddDevice = 'Tap to add device widgets to your home screen';
 const String strMyInfo = 'My Info';
 const String strMyFamily = 'My Family';
 const String strMyProvider = 'My Provider';
+const String strMyPlans = 'My Plan';
 const String strExtImg = '.png';
 const String strTelehealth = 'TeleHealth';
 const String strMyRecords = 'My Records';
