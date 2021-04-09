@@ -85,7 +85,7 @@ class ChatScreenViewModel extends ChangeNotifier {
   ChatScreenViewModel() {
     prof = PreferenceUtil.getProfileData(constants.KEY_PROFILE);
     user_name =
-        prof.result != null ? prof.result.firstName + prof.result.lastName : '';
+        prof.result != null ? prof.result.firstName + ' ' + prof.result.lastName : '';
     user_id = PreferenceUtil.getStringValue(constants.KEY_USERID);
   }
 
@@ -218,7 +218,7 @@ class ChatScreenViewModel extends ChangeNotifier {
         isMayaSaid: false,
         text: buttonText,
         name: prof.result != null
-            ? prof.result.firstName + prof.result.lastName
+            ? prof.result.firstName + ' ' + prof.result.lastName
             : '',
         timeStamp: date,
         redirect: isRedirect,
@@ -246,7 +246,7 @@ class ChatScreenViewModel extends ChangeNotifier {
           isMayaSaid: false,
           text: inputs,
           name: prof.result != null
-              ? prof.result.firstName + prof.result.lastName
+              ? prof.result.firstName + ' ' + prof.result.lastName
               : '',
           timeStamp: date,
           redirect: isRedirect,
@@ -281,7 +281,7 @@ class ChatScreenViewModel extends ChangeNotifier {
   sendToMaya(String msg, {String screen}) async {
     prof = await PreferenceUtil.getProfileData(constants.KEY_PROFILE);
     user_name =
-        prof.result != null ? prof.result.firstName + prof.result.lastName : '';
+        prof.result != null ? prof.result.firstName + ' ' + prof.result.lastName : '';
 
     String uuidString = uuid;
     String tzOffset = DateTime.now().timeZoneOffset.toString();
@@ -322,7 +322,7 @@ class ChatScreenViewModel extends ChangeNotifier {
               isMayaSaid: true,
               text: res.text,
               name: prof.result != null
-                  ? prof.result.firstName + prof.result.lastName
+                  ? prof.result.firstName + ' ' +prof.result.lastName
                   : '',
               imageUrl: res.imageURL,
               timeStamp: date,
@@ -610,7 +610,7 @@ class ChatScreenViewModel extends ChangeNotifier {
             isMayaSaid: false,
             text: response,
             name: prof.result != null
-                ? prof.result.firstName + prof.result.lastName
+                ? prof.result.firstName + ' ' + prof.result.lastName
                 : '',
             timeStamp: date,
             redirect: isRedirect,

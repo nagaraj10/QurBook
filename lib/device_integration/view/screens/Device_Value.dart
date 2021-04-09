@@ -1247,6 +1247,12 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     return formattedDate;
   }
 
+  String getFormattedTimeClone(String datetime) {
+    DateTime dateTimeStamp = DateTime.parse(datetime);
+    String formattedDate = DateFormat('h:mm a').format(dateTimeStamp);
+    return formattedDate;
+  }
+
   Widget getValues(BuildContext context, DevicesViewModel devicesViewModel) {
     var todayDate = getFormattedDateTime(DateTime.now().toString());
     switch (widget.device_name) {
@@ -1298,7 +1304,13 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                               'Systolic',
                               'Diastolic',
                               '',
-                              getFormattedTime(bpResult[index].startDateTime),
+                              (bpResult[index].sourceType == 'Google Fit' ||
+                                      bpResult[index].sourceType ==
+                                          'Apple Health')
+                                  ? getFormattedTimeClone(
+                                      bpResult[index].startDateTime)
+                                  : getFormattedTime(
+                                      bpResult[index].startDateTime),
                               bpResult[index].bpm != null
                                   ? bpResult[index].bpm.toString()
                                   : '',
@@ -1373,7 +1385,13 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                               'Blood Glucose',
                               'Meal Type',
                               '',
-                              getFormattedTime(translist[index].startDateTime),
+                              (translist[index].sourceType == 'Google Fit' ||
+                                      translist[index].sourceType ==
+                                          'Apple Health')
+                                  ? getFormattedTimeClone(
+                                      translist[index].startDateTime)
+                                  : getFormattedTime(
+                                      translist[index].startDateTime),
                               translist[index].bgUnit,
                               translist[index].deviceId);
                         },
@@ -1442,7 +1460,13 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                               'SPO2',
                               '',
                               '',
-                              getFormattedTime(translist[index].startDateTime),
+                              (translist[index].sourceType == 'Google Fit' ||
+                                      translist[index].sourceType ==
+                                          'Apple Health')
+                                  ? getFormattedTimeClone(
+                                      translist[index].startDateTime)
+                                  : getFormattedTime(
+                                      translist[index].startDateTime),
                               '',
                               deviceFullList[index]
                                           .heartRateCollection[0]
@@ -1521,7 +1545,13 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                               'Weight',
                               '',
                               '',
-                              getFormattedTime(translist[index].startDateTime),
+                              (translist[index].sourceType == 'Google Fit' ||
+                                      translist[index].sourceType ==
+                                          'Apple Health')
+                                  ? getFormattedTimeClone(
+                                      translist[index].startDateTime)
+                                  : getFormattedTime(
+                                      translist[index].startDateTime),
                               'Kg',
                               translist[index].deviceId);
                         },
@@ -1591,7 +1621,13 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                               'Temperature',
                               '',
                               '',
-                              getFormattedTime(translist[index].startDateTime),
+                              (translist[index].sourceType == 'Google Fit' ||
+                                      translist[index].sourceType ==
+                                          'Apple Health')
+                                  ? getFormattedTimeClone(
+                                      translist[index].startDateTime)
+                                  : getFormattedTime(
+                                      translist[index].startDateTime),
                               'F',
                               translist[index].deviceId);
                         },
