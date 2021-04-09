@@ -489,8 +489,19 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
     }
 
     if (deviceValues.bloodPressure.entities.isNotEmpty) {
-      dateTimeStampForBp =
-          deviceValues.bloodPressure.entities[0].startDateTime.toLocal();
+      if (deviceValues.bloodPressure.entities[0].deviceHealthRecord.sourceType
+                  .code ==
+              'Google Fit' ||
+          deviceValues.bloodPressure.entities[0].deviceHealthRecord.sourceType
+                  .code ==
+              'Apple Health') {
+        dateTimeStampForBp =
+            deviceValues.bloodPressure.entities[0].startDateTime;
+      } else {
+        dateTimeStampForBp =
+            deviceValues.bloodPressure.entities[0].startDateTime.toLocal();
+      }
+
       //deviceValues.bloodPressure.entities[0].lastsyncdatetime;
       dateForBp =
           "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForBp)}";
@@ -580,8 +591,19 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       averageForPulForBp = '';
     }
     if (deviceValues.bloodGlucose.entities.isNotEmpty) {
-      dateTimeStampForGulcose =
-          deviceValues.bloodGlucose.entities[0].startDateTime.toLocal();
+      if (deviceValues.bloodGlucose.entities[0].deviceHealthRecord.sourceType
+                  .code ==
+              'Google Fit' ||
+          deviceValues.bloodGlucose.entities[0].deviceHealthRecord.sourceType
+                  .code ==
+              'Apple Health') {
+        dateTimeStampForGulcose =
+            deviceValues.bloodGlucose.entities[0].startDateTime;
+      } else {
+        dateTimeStampForGulcose =
+            deviceValues.bloodGlucose.entities[0].startDateTime.toLocal();
+      }
+
       dateForGulcose =
           "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForGulcose)}";
       timeForGulcose =
@@ -634,8 +656,19 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       averageForPP = '';
     }
     if (deviceValues.oxygenSaturation.entities.isNotEmpty) {
-      dateTimeStampForOs =
-          deviceValues.oxygenSaturation.entities[0].startDateTime.toLocal();
+      if (deviceValues.oxygenSaturation.entities[0].deviceHealthRecord
+                  .sourceType.code ==
+              'Google Fit' ||
+          deviceValues.oxygenSaturation.entities[0].deviceHealthRecord
+                  .sourceType.code ==
+              'Apple Health') {
+        dateTimeStampForOs =
+            deviceValues.oxygenSaturation.entities[0].startDateTime;
+      } else {
+        dateTimeStampForOs =
+            deviceValues.oxygenSaturation.entities[0].startDateTime.toLocal();
+      }
+
       dateForOs =
           "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForOs)}";
       timeForOs =
@@ -765,8 +798,19 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       averageForSPO2 = '';
     }
     if (deviceValues.bodyTemperature.entities.isNotEmpty) {
-      dateTimeStampForTemp =
-          deviceValues.bodyTemperature.entities[0].startDateTime.toLocal();
+      if (deviceValues.bodyTemperature.entities[0].deviceHealthRecord.sourceType
+                  .code ==
+              'Google Fit' ||
+          deviceValues.bodyTemperature.entities[0].deviceHealthRecord.sourceType
+                  .code ==
+              'Apple Health') {
+        dateTimeStampForTemp =
+            deviceValues.bodyTemperature.entities[0].startDateTime;
+      } else {
+        dateTimeStampForTemp =
+            deviceValues.bodyTemperature.entities[0].startDateTime.toLocal();
+      }
+
       dateForTemp =
           "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForTemp)}";
       timeForTemp =
@@ -798,8 +842,19 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       averageForTemp = '';
     }
     if (deviceValues.bodyWeight.entities.isNotEmpty) {
-      dateTimeStampForWeight =
-          deviceValues.bodyWeight.entities[0].startDateTime.toLocal();
+      if (deviceValues
+                  .bodyWeight.entities[0].deviceHealthRecord.sourceType.code ==
+              'Google Fit' ||
+          deviceValues
+                  .bodyWeight.entities[0].deviceHealthRecord.sourceType.code ==
+              'Apple Health') {
+        dateTimeStampForWeight =
+            deviceValues.bodyWeight.entities[0].startDateTime;
+      } else {
+        dateTimeStampForWeight =
+            deviceValues.bodyWeight.entities[0].startDateTime.toLocal();
+      }
+
       dateForWeight =
           "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForWeight)}";
       timeForWeight =
