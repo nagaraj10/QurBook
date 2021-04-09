@@ -424,7 +424,7 @@ class _MyRecordsState extends State<MyRecords> {
                 onChanged: (editedValue) {
                   _globalSearchBloc = null;
                   _globalSearchBloc = new GlobalSearchBloc();
-                  if (editedValue != '' && editedValue.length > 3) {
+                  /*if (editedValue != '' && editedValue.length > 3) {
                     PreferenceUtil.saveCompleteData(
                             Constants.KEY_SEARCHED_LIST, null)
                         .then((value) {
@@ -446,7 +446,7 @@ class _MyRecordsState extends State<MyRecords> {
                         fromSearch = false;
                       });
                     });
-                  }
+                  }*/
                 },
               ),
             ),
