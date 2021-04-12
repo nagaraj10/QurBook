@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/my_providers/bloc/providers_block.dart';
 import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
@@ -25,6 +26,7 @@ class MyProviderState extends State<MyProvider>
 
   @override
   void initState() {
+    mInitialTime = DateTime.now();
     super.initState();
 
     _tabController = new TabController(length: 3, vsync: this);
@@ -35,6 +37,17 @@ class MyProviderState extends State<MyProvider>
       setState(() {
         myProvidersResponseList = value;
       });
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'My Providers Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
     });
   }
 

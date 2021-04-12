@@ -61,9 +61,21 @@ class _HealthOrganizationState extends State<HealthOrganization> {
 
   @override
   void initState() {
+    mInitialTime = DateTime.now();
     super.initState();
     getDataForProvider();
     _providersBloc = new ProvidersBloc();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Health Organization Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   @override
@@ -130,24 +142,25 @@ class _HealthOrganizationState extends State<HealthOrganization> {
                       width: 5,
                     ),
                     ClipOval(
-                      child:  Image.network(
+                      child: Image.network(
                           doctors[index].user.profilePicThumbnailUrl != null
                               ? doctors[index].user.profilePicThumbnailUrl
                               : '',
                           height: 40.0.h,
                           width: 40.0.h,
-                          fit: BoxFit.cover,
-                          errorBuilder:
-                              (BuildContext context, Object exception, StackTrace stackTrace) {
-                            return Container(
-                              height: 40.0.h,
-                              width: 40.0.h,
-                              color: Colors.grey[200],
-                              child: Center(
-                                child: commonWidgets.getFirstLastNameText(doctors[index]),
-                              ),
-                            );
-                          }),
+                          fit: BoxFit.cover, errorBuilder:
+                              (BuildContext context, Object exception,
+                                  StackTrace stackTrace) {
+                        return Container(
+                          height: 40.0.h,
+                          width: 40.0.h,
+                          color: Colors.grey[200],
+                          child: Center(
+                            child: commonWidgets
+                                .getFirstLastNameText(doctors[index]),
+                          ),
+                        );
+                      }),
                     ),
                     SizedBox(
                       width: 15,

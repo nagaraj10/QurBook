@@ -75,6 +75,7 @@ class TakePictureScreenForDevicesState
     super.initState();
     // To display the current output from the Camera,
     // create a CameraController.
+    Constants.mInitialTime = DateTime.now();
     categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
     deviceName = PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME) == null
         ? Constants.IS_CATEGORYNAME_DEVICES
@@ -118,6 +119,12 @@ class TakePictureScreenForDevicesState
   void dispose() {
     // Dispose of the controller when the widget is disposed.
     _controller.dispose();
+    Constants.fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Take Picture Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(Constants.mInitialTime).inSeconds} secs'
+    });
     super.dispose();
   }
 

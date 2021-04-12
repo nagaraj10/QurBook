@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intro_slider/intro_slider.dart';
 import 'package:intro_slider/slide_object.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
@@ -18,6 +19,7 @@ class _IntroSliderState extends State<IntroSliderPage> {
 
   @override
   void initState() {
+    mInitialTime = DateTime.now();
     super.initState();
 
     pages.add(slideContent(
@@ -30,6 +32,17 @@ class _IntroSliderState extends State<IntroSliderPage> {
         Constants.INTRO_SLIDE_TITLE_4, Constants.INTRO_SLIDE_DESC_4, 4));
     pages.add(slideContent(
         Constants.INTRO_SLIDE_TITLE_5, Constants.INTRO_SLIDE_DESC_5, 5));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Intro Slider Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   void onDonePress() {

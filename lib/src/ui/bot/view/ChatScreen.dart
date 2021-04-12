@@ -42,6 +42,7 @@ class _ChatScreenState extends State<ChatScreen>
 
   @override
   void initState() {
+    constants.mInitialTime = DateTime.now();
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     Provider.of<ChatScreenViewModel>(context, listen: false).updateAppState(
@@ -79,6 +80,12 @@ class _ChatScreenState extends State<ChatScreen>
 
   @override
   void dispose() {
+    constants.fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Sheela Chat Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(constants.mInitialTime).inSeconds} secs'
+    });
     WidgetsBinding.instance.removeObserver(this);
     _controller.dispose();
     super.dispose();

@@ -63,9 +63,20 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    mInitialTime = DateTime.now();
     super.initState();
     getDoctorsData();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'TeleHealth Reshedule Appointment Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   getDoctorsData() async {

@@ -87,10 +87,22 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
 
   @override
   void initState() {
+    mInitialTime = DateTime.now();
     //getProfileImage();
     getAppColorValues();
     PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
       version = packageInfo.version;
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Moremenu Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
     });
   }
 

@@ -41,9 +41,21 @@ class _WebViewExampleState extends State<PaymentPage> {
 
   @override
   void initState() {
+    mInitialTime = DateTime.now();
     updatePaymentViewModel = new UpdatePaymentViewModel();
     PAYMENT_URL = widget.redirectUrl;
     paymentId = widget.paymentId;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Payment Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   @override

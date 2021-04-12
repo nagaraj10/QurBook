@@ -4,6 +4,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/my_family_detail_view/bloc/my_family_detail_view_boc.dart';
 import 'package:myfhb/my_family_detail_view/models/my_family_detail_view_arguments.dart';
@@ -50,6 +51,7 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
 
   @override
   void initState() {
+    mInitialTime = DateTime.now();
     super.initState();
 
     tabController = new TabController(length: 2, vsync: this);
@@ -65,6 +67,17 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
 
     PreferenceUtil.saveString(
         Constants.KEY_FAMILYMEMBERID, myFamilyDetailViewBloc.userId);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Family List Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   void _setActiveTabIndex() {
