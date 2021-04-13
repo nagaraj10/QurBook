@@ -16,6 +16,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.SET_ALARM"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <application
         android:name="com.ventechsolutions.myFHB.MyApp"
@@ -95,6 +97,10 @@
         <receiver android:name=".services.Accept" />
         <receiver android:name=".services.Decline" />
         <service android:name=".services.AVServices"/>
+        <receiver android:name=".services.YesReceiver"/>
+        <receiver android:name=".services.NoReceiver"/>
+        <receiver android:name=".services.SnoozeReceiver"/>
+        <receiver android:name=".services.ReminderBroadcaster" android:process=":remote"/>
         <service
             android:name=".services.MyFirebaseInstanceService"
             android:exported="true"

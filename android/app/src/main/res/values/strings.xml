@@ -79,4 +79,7 @@
     <string name="pat_name">patientName</string>
     <string name="pat_pic">patientPicture</string>
     <string name="pro_templateName">templateName</string>
+    <string name="currentMillis">currentMillis</string>
+    <string name="title">title</string>
+    <string name="body">body</string>
 </resources>
