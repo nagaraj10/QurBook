@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:math';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -139,10 +140,22 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   @override
   void initState() {
+    mInitialTime = DateTime.now();
     super.initState();
     addFamilyUserInfoBloc = new AddFamilyUserInfoBloc();
     _addFamilyUserInfoRepository = new AddFamilyUserInfoRepository();
     setValuesInEditText();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Add Family User info Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   @override
@@ -1075,29 +1088,30 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
       if (widget.arguments.sharedbyme != null) {
         try {
-          if (widget
-              ?.arguments?.sharedbyme?.child?.userContactCollection3.isNotEmpty) {
+          if (widget?.arguments?.sharedbyme?.child?.userContactCollection3
+              .isNotEmpty) {
             mobileNoController.text = widget?.arguments?.sharedbyme?.child
                 ?.userContactCollection3[0].phoneNumber;
             emailController.text = widget
                 ?.arguments?.sharedbyme?.child?.userContactCollection3[0].email;
           }
-
         } catch (e) {
           mobileNoController.text = '';
           emailController.text = '';
         }
       } else {
-          MyProfileModel myProf =
-          PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) != null ? PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) :PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
-          if (myProf.result.userContactCollection3 != null) {
-            if (myProf.result.userContactCollection3.length > 0) {
-              mobileNoController.text =
-                  myProf.result.userContactCollection3[0].phoneNumber;
-              emailController.text =
-                  myProf.result.userContactCollection3[0].email;
-            }
+        MyProfileModel myProf =
+            PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) != null
+                ? PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN)
+                : PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+        if (myProf.result.userContactCollection3 != null) {
+          if (myProf.result.userContactCollection3.length > 0) {
+            mobileNoController.text =
+                myProf.result.userContactCollection3[0].phoneNumber;
+            emailController.text =
+                myProf.result.userContactCollection3[0].email;
           }
+        }
       }
 
       if (widget.arguments.myProfileResult.dateOfBirth != null) {
@@ -1197,7 +1211,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         try {
           if (widget.arguments.sharedbyme.child.isVirtualUser) {
             MyProfileModel myProf =
-                PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) != null ? PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) :PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+                PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) !=
+                        null
+                    ? PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN)
+                    : PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
             if (myProf.result.userContactCollection3 != null) {
               if (myProf.result.userContactCollection3.length > 0) {
                 mobileNoController.text =

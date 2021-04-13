@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -24,6 +25,23 @@ class MyFhbWebView extends StatefulWidget {
 class _MyFhbWebViewState extends State<MyFhbWebView> {
   WebViewController _controller;
   bool isLoading = true;
+
+  @override
+  void initState() {
+    mInitialTime = DateTime.now();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Helps Docs Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

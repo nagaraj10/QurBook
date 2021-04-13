@@ -14,6 +14,7 @@ import 'package:myfhb/authentication/view/verifypatient_screen.dart';
 import 'package:myfhb/authentication/view_model/patientauth_view_model.dart';
 import 'package:myfhb/authentication/model/patientlogin_model.dart'
     as loginModel;
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/authentication/widgets/country_code_picker.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -52,13 +53,24 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    mInitialTime = DateTime.now();
     super.initState();
     authViewModel = new AuthViewModel();
     /* try {
       commonUtil.versionCheck(context);
     } catch (e) {
     }*/
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Login Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   @override

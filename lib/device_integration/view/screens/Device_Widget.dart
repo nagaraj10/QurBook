@@ -137,10 +137,22 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
 
   @override
   void initState() {
+    mInitialTime = DateTime.now();
     _familyListBloc = new FamilyListBloc();
     getFamilyLength();
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Device Value Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   getFamilyLength() async {

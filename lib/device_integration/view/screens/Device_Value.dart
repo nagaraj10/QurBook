@@ -95,7 +95,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    mInitialTime = DateTime.now();
     super.initState();
     catgoryDataList = PreferenceUtil.getCategoryType();
     if (catgoryDataList == null) {
@@ -105,6 +105,17 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     }
     _mediaTypeBlock.getMediTypesList().then((value) {
       mediaTypesResponse = value;
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Device Value Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
     });
   }
 

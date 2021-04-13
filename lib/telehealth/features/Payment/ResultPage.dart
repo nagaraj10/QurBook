@@ -22,8 +22,20 @@ class _ResultPage extends State<ResultPage> {
 
   @override
   void initState() {
+    mInitialTime = DateTime.now();
     status = widget.status;
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Payment Done Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   @override

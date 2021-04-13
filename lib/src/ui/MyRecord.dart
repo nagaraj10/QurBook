@@ -101,6 +101,7 @@ class _MyRecordsState extends State<MyRecords> {
 
   @override
   void initState() {
+    mInitialTime = DateTime.now();
     initPosition = widget.argument.categoryPosition;
     rebuildAllBlocks();
     searchQuery = _searchQueryController.text.toString();
@@ -126,6 +127,17 @@ class _MyRecordsState extends State<MyRecords> {
                     .startShowCase([_cameraKey, _voiceKey]));
       });
     } catch (e) {}
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'MyRecords Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   @override

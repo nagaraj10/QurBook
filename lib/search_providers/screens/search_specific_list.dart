@@ -8,6 +8,7 @@ import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/search_providers/bloc/labs_list_block.dart';
@@ -59,6 +60,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
   @override
   void initState() {
+    mInitialTime = DateTime.now();
     super.initState();
 
     _doctorsListBlock = new DoctorsListBlock();
@@ -78,6 +80,17 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     }
     WidgetsBinding.instance
         .addPostFrameCallback((_) => _refreshIndicatorKey.currentState.show());
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Search List Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   @override

@@ -9,6 +9,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:myfhb/add_providers/models/add_providers_arguments.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/confirm_location/models/confirm_location_arguments.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
@@ -44,6 +45,7 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
 
   @override
   void initState() {
+    mInitialTime = DateTime.now();
     super.initState();
 
     searchController.text = widget.arguments.place.description;
@@ -58,6 +60,17 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
       zoom: 12,
     );
     addMarker();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Confirm Location Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   @override

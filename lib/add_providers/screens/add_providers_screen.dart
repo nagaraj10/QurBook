@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert' as convert;
 import 'dart:typed_data';
 import 'dart:ui' as ui;
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -137,6 +138,7 @@ class AddProvidersState extends State<AddProviders> {
 
   @override
   void initState() {
+    mInitialTime = DateTime.now();
     super.initState();
 
     addProvidersBloc = AddProvidersBloc();
@@ -154,6 +156,17 @@ class AddProvidersState extends State<AddProviders> {
       teleHealthAlertShown = widget.arguments.data.isTelehealthEnabled;
     }
     buildUI();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Add Provider Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   @override

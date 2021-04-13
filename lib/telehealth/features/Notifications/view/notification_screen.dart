@@ -5,6 +5,7 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/MyProvidersMain.dart';
 import 'package:myfhb/telehealth/features/Notifications/constants/notification_constants.dart'
     as constants;
@@ -53,12 +54,23 @@ class _NotificationScreen extends State<NotificationScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    mInitialTime = DateTime.now();
     Provider.of<FetchNotificationViewModel>(context, listen: false)
         .fetchNotifications();
     cancelAppointmentViewModel =
         Provider.of<CancelAppointmentViewModel>(context, listen: false);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Notification Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   @override
@@ -881,7 +893,8 @@ class _NotificationScreen extends State<NotificationScreen> {
         String hrmId = bundles['healthRecordMetaIds'];
         List<String> _listOfhrmId = List<String>();
         _listOfhrmId.add(hrmId);
-        CommonUtil().navigateToMyRecordsCategory(categoryName, _listOfhrmId, false);
+        CommonUtil()
+            .navigateToMyRecordsCategory(categoryName, _listOfhrmId, false);
         readUnreadAction(result);
         break;
       default:
