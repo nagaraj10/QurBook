@@ -7,6 +7,7 @@ import 'package:myfhb/add_providers/widgets/sample_dropdown.dart';
 import 'package:myfhb/src/blocs/Media/MediaTypeBlock.dart';
 import 'package:myfhb/src/model/Media/media_data_list.dart';
 import 'package:myfhb/src/model/Media/media_result.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -145,6 +146,7 @@ class AddProvidersState extends State<AddProviders> {
 
   @override
   void initState() {
+    mInitialTime = DateTime.now();
     super.initState();
 
     addProvidersBloc = AddProvidersBloc();
@@ -184,6 +186,17 @@ class AddProvidersState extends State<AddProviders> {
     }*/
 
     buildUI();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Add Provider Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   @override
@@ -1084,10 +1097,14 @@ class AddProvidersState extends State<AddProviders> {
           signInData[variable.strDescription] = '';
           signInData[variable.strCity] = address == null
               ? ''
-              : address.locality == null ? '' : address.locality;
+              : address.locality == null
+                  ? ''
+                  : address.locality;
           signInData[variable.strState] = address == null
               ? ''
-              : address.adminArea == null ? '' : address.adminArea;
+              : address.adminArea == null
+                  ? ''
+                  : address.adminArea;
           signInData[variable.strPhoneNumbers] =
               widget.arguments.placeDetail == null
                   ? ''
@@ -1219,16 +1236,24 @@ class AddProvidersState extends State<AddProviders> {
                       : widget.arguments.confirmAddressDescription;
           signInData[variable.straddressLine2] = address == null
               ? ''
-              : address.addressLine == null ? '' : address.addressLine;
+              : address.addressLine == null
+                  ? ''
+                  : address.addressLine;
           signInData[variable.strCity] = address == null
               ? ''
-              : address.locality == null ? '' : address.locality;
+              : address.locality == null
+                  ? ''
+                  : address.locality;
           signInData[variable.strState] = address == null
               ? ''
-              : address.adminArea == null ? '' : address.adminArea;
+              : address.adminArea == null
+                  ? ''
+                  : address.adminArea;
           signInData[variable.strzipCode] = address == null
               ? ''
-              : address.postalCode == null ? '' : address.postalCode;
+              : address.postalCode == null
+                  ? ''
+                  : address.postalCode;
           signInData[variable.strbranch] = '';
           signInData[variable.strIsUserDefined] = true;
           signInData[variable.strLatitude] =

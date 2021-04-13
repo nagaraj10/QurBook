@@ -387,6 +387,8 @@ const String strStartTimeStamp = "startDateTime";
 const String strEndTimeStamp = "endDateTime";
 const String is_Success = "isSuccess";
 const String strsourcetype = "sourceType";
+const String strStartTimeStampNano = "startDateTimeNano";
+const String strEndTimeStampNano = "endDateTimeNano";
 
 //Data Params for device readings
 //DataCollections

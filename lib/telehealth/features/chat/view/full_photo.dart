@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
@@ -51,7 +52,19 @@ class FullPhotoScreenState extends State<FullPhotoScreen> {
 
   @override
   void initState() {
+    mInitialTime = DateTime.now();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Profile Picture Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   @override

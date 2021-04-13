@@ -9,6 +9,7 @@ import 'package:myfhb/authentication/view_model/patientauth_view_model.dart';
 import 'package:myfhb/authentication/model/confirm_password_model.dart'
     as confirmPasswordModel;
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
@@ -33,9 +34,20 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    mInitialTime = DateTime.now();
     super.initState();
     authViewModel = new AuthViewModel();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Confirm Password Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   @override

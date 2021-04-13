@@ -62,10 +62,22 @@ class _MyProvidersState extends State<MyProviders> {
 
   @override
   void initState() {
+    mInitialTime = DateTime.now();
     super.initState();
     getDataForProvider();
     _providersBloc = new ProvidersBloc();
     _medicalPreferenceList = _providersBloc.getMedicalPreferencesList();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'MyProviders Doctor List Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   @override

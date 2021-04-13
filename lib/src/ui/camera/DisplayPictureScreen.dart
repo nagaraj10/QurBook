@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
@@ -113,12 +114,24 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
   @override
   void initState() {
+    mInitialTime = DateTime.now();
     _healthReportListForUserBlock = new HealthReportListForUserBlock();
 
     PreferenceUtil.init();
 
     getAllObjectToPost();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Display Picture Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   @override
@@ -900,7 +913,8 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
             },
           ),
         ),
-        new SwitchProfile().buildActions(context, _keyLoader, callBackToRefresh,false)
+        new SwitchProfile()
+            .buildActions(context, _keyLoader, callBackToRefresh, false)
       ],
     );
   }

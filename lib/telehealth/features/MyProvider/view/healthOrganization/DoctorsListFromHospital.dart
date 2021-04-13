@@ -66,9 +66,21 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
 
   @override
   void initState() {
+    mInitialTime = DateTime.now();
     super.initState();
     getDataForProvider();
     _providersBloc = new ProvidersBloc();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Doctor List Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   @override

@@ -137,10 +137,22 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
 
   @override
   void initState() {
+    mInitialTime = DateTime.now();
     _familyListBloc = new FamilyListBloc();
     getFamilyLength();
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Device Value Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   getFamilyLength() async {
@@ -489,18 +501,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
     }
 
     if (deviceValues.bloodPressure.entities.isNotEmpty) {
-      if (deviceValues.bloodPressure.entities[0].deviceHealthRecord.sourceType
-                  .code ==
-              'Google Fit' ||
-          deviceValues.bloodPressure.entities[0].deviceHealthRecord.sourceType
-                  .code ==
-              'Apple Health') {
-        dateTimeStampForBp =
-            deviceValues.bloodPressure.entities[0].startDateTime;
-      } else {
-        dateTimeStampForBp =
-            deviceValues.bloodPressure.entities[0].startDateTime.toLocal();
-      }
+      dateTimeStampForBp =
+          deviceValues.bloodPressure.entities[0].startDateTime.toLocal();
 
       //deviceValues.bloodPressure.entities[0].lastsyncdatetime;
       dateForBp =
@@ -591,18 +593,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       averageForPulForBp = '';
     }
     if (deviceValues.bloodGlucose.entities.isNotEmpty) {
-      if (deviceValues.bloodGlucose.entities[0].deviceHealthRecord.sourceType
-                  .code ==
-              'Google Fit' ||
-          deviceValues.bloodGlucose.entities[0].deviceHealthRecord.sourceType
-                  .code ==
-              'Apple Health') {
-        dateTimeStampForGulcose =
-            deviceValues.bloodGlucose.entities[0].startDateTime;
-      } else {
-        dateTimeStampForGulcose =
-            deviceValues.bloodGlucose.entities[0].startDateTime.toLocal();
-      }
+      dateTimeStampForGulcose =
+          deviceValues.bloodGlucose.entities[0].startDateTime.toLocal();
 
       dateForGulcose =
           "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForGulcose)}";
@@ -656,18 +648,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       averageForPP = '';
     }
     if (deviceValues.oxygenSaturation.entities.isNotEmpty) {
-      if (deviceValues.oxygenSaturation.entities[0].deviceHealthRecord
-                  .sourceType.code ==
-              'Google Fit' ||
-          deviceValues.oxygenSaturation.entities[0].deviceHealthRecord
-                  .sourceType.code ==
-              'Apple Health') {
-        dateTimeStampForOs =
-            deviceValues.oxygenSaturation.entities[0].startDateTime;
-      } else {
-        dateTimeStampForOs =
-            deviceValues.oxygenSaturation.entities[0].startDateTime.toLocal();
-      }
+      dateTimeStampForOs =
+          deviceValues.oxygenSaturation.entities[0].startDateTime.toLocal();
 
       dateForOs =
           "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForOs)}";
@@ -746,40 +728,6 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
         prbPMOxi = '';
       }
 
-      /*try {
-        if (deviceValues.heartRate.entities.isNotEmpty) {
-          try {
-            prbPMOxi = deviceValues.heartRate.entities[0].bpm.toString();
-
-            averageForPul = deviceValues
-                        .heartRate.entities[0].averageAsOfNow.pulseAverage !=
-                    null
-                ? deviceValues.heartRate.entities[0].averageAsOfNow.pulseAverage
-                    .toString()
-                : '';
-            averageForPRBpm = deviceValues
-                        .heartRate.entities[0].averageAsOfNow.pulseAverage !=
-                    null
-                ? deviceValues.heartRate.entities[0].averageAsOfNow.pulseAverage
-                    .toString()
-                : '';
-          } catch (e) {
-            averageForPul = '';
-            averageForPRBpm = '';
-            prbPMOxi = '';
-          }
-        } else {
-          averageForPul = '';
-          averageForPRBpm = '';
-          prbPMOxi = '';
-        }
-      } catch (e) {
-        averageForPulForBp = '';
-        averageForPul = '';
-        averageForPRBpm = '';
-        prbPMOxi = '';
-      }*/
-
       try {
         averageForSPO2 = deviceValues.oxygenSaturation.entities[0]
                     .averageAsOfNow.oxygenLevelAverage !=
@@ -798,18 +746,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       averageForSPO2 = '';
     }
     if (deviceValues.bodyTemperature.entities.isNotEmpty) {
-      if (deviceValues.bodyTemperature.entities[0].deviceHealthRecord.sourceType
-                  .code ==
-              'Google Fit' ||
-          deviceValues.bodyTemperature.entities[0].deviceHealthRecord.sourceType
-                  .code ==
-              'Apple Health') {
-        dateTimeStampForTemp =
-            deviceValues.bodyTemperature.entities[0].startDateTime;
-      } else {
-        dateTimeStampForTemp =
-            deviceValues.bodyTemperature.entities[0].startDateTime.toLocal();
-      }
+      dateTimeStampForTemp =
+          deviceValues.bodyTemperature.entities[0].startDateTime.toLocal();
 
       dateForTemp =
           "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForTemp)}";
@@ -842,18 +780,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       averageForTemp = '';
     }
     if (deviceValues.bodyWeight.entities.isNotEmpty) {
-      if (deviceValues
-                  .bodyWeight.entities[0].deviceHealthRecord.sourceType.code ==
-              'Google Fit' ||
-          deviceValues
-                  .bodyWeight.entities[0].deviceHealthRecord.sourceType.code ==
-              'Apple Health') {
-        dateTimeStampForWeight =
-            deviceValues.bodyWeight.entities[0].startDateTime;
-      } else {
-        dateTimeStampForWeight =
-            deviceValues.bodyWeight.entities[0].startDateTime.toLocal();
-      }
+      dateTimeStampForWeight =
+          deviceValues.bodyWeight.entities[0].startDateTime.toLocal();
 
       dateForWeight =
           "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForWeight)}";
@@ -1062,12 +990,19 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                   ),
                                   GestureDetector(
                                     onTap: () {
-                                      toast.getToastForLongTime(strSync, Colors.green);
-                                      Platform.isIOS?_deviceDataHelper.syncHealthKit().then((value) {
-                                        setState(() {});
-                                      }):_deviceDataHelper.syncGoogleFit().then((value) {
-                                        setState(() {});
-                                      });
+                                      toast.getToastForLongTime(
+                                          strSync, Colors.green);
+                                      Platform.isIOS
+                                          ? _deviceDataHelper
+                                              .syncHealthKit()
+                                              .then((value) {
+                                              setState(() {});
+                                            })
+                                          : _deviceDataHelper
+                                              .syncGoogleFit()
+                                              .then((value) {
+                                              setState(() {});
+                                            });
                                     },
                                     child: Image.asset(
                                       icon_refresh_dash,

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -109,11 +110,23 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
   @override
   void initState() {
+    mInitialTime = DateTime.now();
     super.initState();
     addFamilyUserInfoBloc = new AddFamilyUserInfoBloc();
     getAllCustomRoles();
     setState(() {
       _currentPage = widget.arguments.currentPage;
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Family Detail Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
     });
   }
 

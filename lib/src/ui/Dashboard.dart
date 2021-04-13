@@ -56,7 +56,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
-
+    mInitialTime = DateTime.now();
     //chatViewModel.getUnreadMSGCount(PreferenceUtil.getStringValue(Constants.KEY_USERID));
 
     /*
@@ -87,8 +87,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
     try {
       commonUtil.versionCheck(context);
-    } catch (e) {
-    }
+    } catch (e) {}
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Dashboard Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   @override

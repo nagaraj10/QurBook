@@ -56,6 +56,10 @@ class FetchHealthKitData {
             Map<String, dynamic> rawData = new Map();
             rawData[strStartTimeStamp] = healthData.dateFrom.toIso8601String();
             rawData[strEndTimeStamp] = healthData.dateTo.toIso8601String();
+            rawData[strStartTimeStampNano] =
+                healthData.dateFrom.microsecondsSinceEpoch.abs() * 1000;
+            rawData[strEndTimeStampNano] =
+                healthData.dateTo.microsecondsSinceEpoch.abs() * 1000;
             rawData[strParamWeight] = healthData.value;
             if (healthData.unitString == hktWeightUnit) {
               rawData[strParamWeightUnit] = strValueWeightUnit;
@@ -100,6 +104,10 @@ class FetchHealthKitData {
             Map<String, dynamic> rawData = new Map();
             rawData[strStartTimeStamp] = healthData.dateFrom.toIso8601String();
             rawData[strEndTimeStamp] = healthData.dateTo.toIso8601String();
+            rawData[strStartTimeStampNano] =
+                healthData.dateFrom.microsecondsSinceEpoch.abs() * 1000;
+            rawData[strEndTimeStampNano] =
+                healthData.dateTo.microsecondsSinceEpoch.abs() * 1000;
             if (healthData.unitString == hktHeartRateUnit) {
               rawData[strParamHeartRate] = healthData.value;
             }
@@ -148,6 +156,10 @@ class FetchHealthKitData {
               Map<String, dynamic> rawData = new Map();
               rawData[strStartTimeStamp] = pair[0].dateFrom.toIso8601String();
               rawData[strEndTimeStamp] = pair[0].dateTo.toIso8601String();
+              rawData[strStartTimeStampNano] =
+                  pair[0].dateFrom.microsecondsSinceEpoch.abs() * 1000;
+              rawData[strEndTimeStampNano] =
+                  pair[0].dateTo.microsecondsSinceEpoch.abs() * 1000;
               rawData[strParamSystolic] = pair[0].value;
               rawData[strParamDiastolic] = pair[1].value;
 
@@ -195,6 +207,10 @@ class FetchHealthKitData {
             Map<String, dynamic> rawData = new Map();
             rawData[strStartTimeStamp] = healthData.dateFrom.toIso8601String();
             rawData[strEndTimeStamp] = healthData.dateTo.toIso8601String();
+            rawData[strStartTimeStampNano] =
+                healthData.dateFrom.microsecondsSinceEpoch.abs() * 1000;
+            rawData[strEndTimeStampNano] =
+                healthData.dateTo.microsecondsSinceEpoch.abs() * 1000;
             rawData[strParamBGLevel] = healthData.value;
             if (healthData.unitString == hktGlucoseUnit) {
               rawData[strParamBGUnit] = strMGDL;
@@ -241,6 +257,10 @@ class FetchHealthKitData {
             Map<String, dynamic> rawData = new Map();
             rawData[strStartTimeStamp] = healthData.dateFrom.toIso8601String();
             rawData[strEndTimeStamp] = healthData.dateTo.toIso8601String();
+            rawData[strStartTimeStampNano] =
+                healthData.dateFrom.microsecondsSinceEpoch.abs() * 1000;
+            rawData[strEndTimeStampNano] =
+                healthData.dateTo.microsecondsSinceEpoch.abs() * 1000;
             rawData[strParamOxygen] = healthData.value * 100;
 
             dataSet.add(rawData);
@@ -284,6 +304,10 @@ class FetchHealthKitData {
             Map<String, dynamic> rawData = new Map();
             rawData[strStartTimeStamp] = healthData.dateFrom.toIso8601String();
             rawData[strEndTimeStamp] = healthData.dateTo.toIso8601String();
+            rawData[strStartTimeStampNano] =
+                healthData.dateFrom.microsecondsSinceEpoch.abs() * 1000;
+            rawData[strEndTimeStampNano] =
+                healthData.dateTo.microsecondsSinceEpoch.abs() * 1000;
             rawData[strParamTemp] = healthData.value;
             if (healthData.unitString == hktTemperatureUnit1) {
               rawData[strParamTempUnit] = strParamUnitCelsius;

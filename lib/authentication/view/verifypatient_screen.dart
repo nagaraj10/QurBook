@@ -36,6 +36,7 @@ import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/authentication/model/patientlogin_model.dart'
     as loginModel;
+    import 'package:myfhb/constants/fhb_constants.dart' as con;
 
 class VerifyPatient extends StatefulWidget {
   VerifyPatient(
@@ -94,13 +95,24 @@ class _VerifyPatientState extends State<VerifyPatient> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    con.mInitialTime = DateTime.now();
     super.initState();
     from = widget.from;
     authViewModel = new AuthViewModel();
     if (widget.userConfirm) {
       _resendOtpDetails();
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    con.fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Verify Patient Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(con.mInitialTime).inSeconds} secs'
+    });
   }
 
   @override
