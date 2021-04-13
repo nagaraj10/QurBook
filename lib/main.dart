@@ -921,7 +921,9 @@ class _MyFHBState extends State<MyFHB> {
     authService.addDoctorAsProvider(jsonString).then((response) {
       if (response['isSuccess']) {
         toast.getToast(response['message'], Colors.green);
-        FetchNotificationService().updateNsActionStatus(body).then((data) {});
+        FetchNotificationService().updateNsActionStatus(body).then((data) {
+          //todo
+        });
       } else {
         toast.getToast(response['diagnostics']['message'], Colors.red);
       }
