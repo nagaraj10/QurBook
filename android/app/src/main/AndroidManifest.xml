@@ -97,7 +97,7 @@
         <receiver android:name=".services.Accept" />
         <receiver android:name=".services.Decline" />
         <service android:name=".services.AVServices"/>
-        <receiver android:name=".services.YesReceiver"/>
+        <receiver android:name=".services.DismissReceiver"/>
         <receiver android:name=".services.NoReceiver"/>
         <receiver android:name=".services.SnoozeReceiver"/>
         <receiver android:name=".services.ReminderBroadcaster" android:process=":remote"/>

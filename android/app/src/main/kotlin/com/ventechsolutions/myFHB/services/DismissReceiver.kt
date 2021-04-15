@@ -6,7 +6,7 @@ import androidx.core.app.NotificationManagerCompat
 import com.ventechsolutions.myFHB.MyApp
 import com.ventechsolutions.myFHB.R
 
-class YesReceiver:BroadcastReceiver() {
+class DismissReceiver:BroadcastReceiver() {
 
     override fun onReceive(p0: Context?, p1: Intent?) {
         val notificationId = p1?.getIntExtra(p0?.getString(R.string.nsid), 0)

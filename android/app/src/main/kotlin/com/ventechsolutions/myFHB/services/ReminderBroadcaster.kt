@@ -3,8 +3,6 @@ package com.ventechsolutions.myFHB.services
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.app.Service
-import android.app.Service.START_NOT_STICKY
 import android.content.BroadcastReceiver
 import android.content.ContentResolver
 import android.content.Context
@@ -13,9 +11,10 @@ import android.graphics.BitmapFactory
 import android.media.AudioAttributes
 import android.net.Uri
 import android.os.Build
-import android.widget.Toast
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.ventechsolutions.myFHB.MyApp
 import com.ventechsolutions.myFHB.R
 
 class ReminderBroadcaster : BroadcastReceiver() {
@@ -29,13 +28,13 @@ class ReminderBroadcaster : BroadcastReceiver() {
         val NS_ID = p1?.getIntExtra(p0.getString(R.string.nsid), 0)
         val currentMillis = p1?.getLongExtra(p0.getString(R.string.currentMillis), 0)
 
-        val declineIntent = Intent(p0, DeclineReciver::class.java)
-        declineIntent.putExtra(p0.getString(R.string.nsid), NS_ID)
-        val declinePendingIntent = PendingIntent.getBroadcast(p0, 0, declineIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+//        val declineIntent = Intent(p0, DeclineReciver::class.java)
+//        declineIntent.putExtra(p0.getString(R.string.nsid), NS_ID)
+//        val declinePendingIntent = PendingIntent.getBroadcast(p0, 0, declineIntent, PendingIntent.FLAG_CANCEL_CURRENT)
 
-        val acceptIntent = Intent(p0, AcceptReceiver::class.java)
-        acceptIntent.putExtra(p0.getString(R.string.nsid), NS_ID)
-        val acceptPendingIntent = PendingIntent.getBroadcast(p0, 0, acceptIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+        val dismissIntent = Intent(p0, DismissReceiver::class.java)
+        dismissIntent.putExtra(p0.getString(R.string.nsid), NS_ID)
+        val dismissIntentPendingIntent = PendingIntent.getBroadcast(p0, 0, dismissIntent, PendingIntent.FLAG_CANCEL_CURRENT)
 
         val snoozeIntent = Intent(p0, SnoozeReceiver::class.java)
         snoozeIntent.putExtra(p0.getString(R.string.nsid), NS_ID)
@@ -65,8 +64,7 @@ class ReminderBroadcaster : BroadcastReceiver() {
                 .setContentText(dataBody)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setCategory(NotificationCompat.CATEGORY_ALARM)
-                .addAction(R.drawable.ic_yes, "Yes", acceptPendingIntent)
-                .addAction(R.drawable.ic_close, "No", declinePendingIntent)
+                .addAction(R.drawable.ic_close, "Dismiss", dismissIntentPendingIntent)
                 .addAction(R.drawable.ic_snooze, "Snooze", snoozePendingIntent)
                 .setAutoCancel(true)
                 .setSound(_sound)

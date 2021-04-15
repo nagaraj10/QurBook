@@ -3,10 +3,15 @@ package com.ventechsolutions.myFHB.services
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Build
+import android.os.Handler
+import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.ventechsolutions.myFHB.MyApp
 import com.ventechsolutions.myFHB.R
@@ -18,13 +23,38 @@ class SnoozeReceiver : BroadcastReceiver() {
         val title = p1?.getStringExtra(p0?.getString(R.string.title))
         val body = p1?.getStringExtra(p0?.getString(R.string.body))
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(p0!!)
+        val nsTimeThreshold = 300000
         nsManager.cancel(notificationId!! as Int)
-        if (MyApp.snoozeTapCountTime in 0..2) {
-            currentMillis?.let { snoozeForSometime(p0, title, body, notificationId, it + 10000) }
+        if (MyApp.snoozeTapCountTime in 0..1) {
+            currentMillis?.let { snoozeForSometime(p0, title, body, notificationId, it + nsTimeThreshold) }
         } else {
             /*val reminderService = Intent(p0, RemiderService::class.java)
             p0.stopService(reminderService)*/
             //MyApp.snoozeTapCountTime = 0
+
+            Handler().postDelayed({
+                val CHANNEL_REMINDER = "ch_reminder"
+                val _sound: Uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + p0.packageName + "/" + R.raw.msg_tone)
+                val dismissIntent = Intent(p0, DismissReceiver::class.java)
+                dismissIntent.putExtra(p0.getString(R.string.nsid), notificationId)
+                val dismissIntentPendingIntent = PendingIntent.getBroadcast(p0, 0, dismissIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+                var notification = NotificationCompat.Builder(p0, CHANNEL_REMINDER)
+                        .setSmallIcon(R.drawable.ic_alarm_new)
+                        .setLargeIcon(BitmapFactory.decodeResource(p0.resources, R.mipmap.ic_launcher))
+                        .setContentTitle(title)
+                        .setContentText(body)
+                        .setPriority(NotificationCompat.PRIORITY_MAX)
+                        .setCategory(NotificationCompat.CATEGORY_ALARM)
+                        .addAction(R.drawable.ic_close, "Dismiss", dismissIntentPendingIntent)
+                        .setAutoCancel(true)
+                        .setSound(_sound)
+                        //.setOngoing(true)
+                        .setOnlyAlertOnce(false)
+                        .build()
+
+                nsManager.notify(notificationId, notification)
+            }, currentMillis!! + nsTimeThreshold)
+
         }
     }
 
