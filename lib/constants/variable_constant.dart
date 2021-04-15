@@ -576,6 +576,7 @@ const redirecturl = 'http://localhost:4200/callback?code=';
 const String strNoDoctordata = 'No Doctor List Available';
 const String strNoHospitaldata = 'No Hospital List Available';
 const String strNoAppointments = 'No Appoinments Available';
+const String strNoPlans = 'No Plan List Available';
 
 const String strNoDataAvailable = 'Unable To load';
 const String strHealthOrganizationName = 'healthOrganizationName';

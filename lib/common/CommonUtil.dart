@@ -1763,4 +1763,15 @@ class CommonUtil {
       );
     }
   }
+
+  String dateFormatConversion(String datetime) {
+    String formattedDate = '';
+    if(datetime!=null && datetime!=''){
+      DateTime dateTimeStamp = DateTime.parse(datetime);
+      formattedDate = DateFormat('MMM dd yyyy').format(dateTimeStamp);
+    }else{
+       formattedDate = '';
+    }
+    return formattedDate;
+  }
 }

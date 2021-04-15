@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:myfhb/myPlan/myPlanList.dart';
+import 'package:myfhb/myPlan/view/myPlanList.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';

@@ -218,3 +218,5 @@ const String device_health = 'device-health-record/';
 
 const String qr_isSkipUnknown = 'isSkipUnknown=';
 const String qr_Google_TTS_Proxy_URL = 'google-tts/proxy';
+
+const String qr_plan_list = 'user-plans/userPlansList/';
