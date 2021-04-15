@@ -1,16 +1,14 @@
 class Reminder {
-  int id;
+  String id;
   String title;
   String desc;
-  String date;
-  String time;
+  String dateTime;
 
   Reminder({
     this.id,
     this.title,
     this.desc,
-    this.date,
-    this.time,
+    this.dateTime,
   });
 
   Map<String, dynamic> toMap() {
@@ -18,17 +16,15 @@ class Reminder {
       'id': id,
       'title': title,
       'desc': desc,
-      'date': date,
-      'time': time,
+      'dateTime': dateTime,
     };
   }
 
   Reminder.fromMap(Map<String, dynamic> map) {
-    id = map['id'];
+    id = map['eid'];
     title = map['title'];
-    desc = map['desc'];
-    date = map['date'];
-    time = map['time'];
+    desc = map['saytext'];
+    dateTime = map['estart'];
   }
   @override
   bool operator ==(other) {
@@ -36,7 +32,6 @@ class Reminder {
         other.id == id &&
         other.title == title &&
         other.desc == desc &&
-        other.date == date &&
-        other.time == time;
+        other.dateTime == dateTime;
   }
 }

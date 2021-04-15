@@ -259,32 +259,38 @@ import AVFoundation
     var dateComponent:DateComponents = DateComponents();
     //Prepare New Notificaion with deatils and trigger
     func scheduleNotification(message: NSDictionary,snooze:Bool = false) {
-        if let _id =  message["id"] as? Int {
-            id = "\(_id)"
+        if let _id =  message["id"] as? String {
+            id = _id
         }
         if let _title = message[Constants.title] as? String { title = _title}
         if let _des = message[Constants.description] as? String {des = _des}
         
         if !snooze{
-            if let dateNotifiation = message["date"] as? String,let timeForNotification = message["time"] as? String{
-                let dateComponentsArray = dateNotifiation.components(separatedBy: "-").map{ (val) -> Int  in
-                    if let newInt = Int(val){
-                        return newInt
-                    }
-                    return 0
+            if let dateNotifiation = message["date"] as? String{
+//                let dateComponentsArray = dateNotifiation.components(separatedBy: "-").map{ (val) -> Int  in
+//                    if let newInt = Int(val){
+//                        return newInt
+//                    }
+//                    return 0
+//                }
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "yyyy-mm-dd HH:mm:ss"
+                let dateFromString = dateFormatter.date(from: dateNotifiation)
+                if let dateToBeTriggered = dateFromString{
+                    dateComponent = Calendar.current.dateComponents([.day,.month,.year,.hour,.minute], from: dateToBeTriggered )
                 }
-                dateComponent = DateComponents()
-                dateComponent.year = dateComponentsArray[0]
-                dateComponent.month = dateComponentsArray[1]
-                dateComponent.day = dateComponentsArray[2]
-                let timeComponentsArray = timeForNotification.components(separatedBy: "-").map{ (val) -> Int  in
-                    if let newInt = Int(val){
-                        return newInt
-                    }
-                    return 0
-                }
-                dateComponent.hour = timeComponentsArray[0]
-                dateComponent.minute = timeComponentsArray[1]
+                
+//                dateComponent.year = dateComponentsArray[0]
+//                dateComponent.month = dateComponentsArray[1]
+//                dateComponent.day = dateComponentsArray[2]
+//                let timeComponentsArray = timeForNotification.components(separatedBy: "-").map{ (val) -> Int  in
+//                    if let newInt = Int(val){
+//                        return newInt
+//                    }
+//                    return 0
+//                }
+//                dateComponent.hour = timeComponentsArray[0]
+//                dateComponent.minute = timeComponentsArray[1]
             }
         }
         
