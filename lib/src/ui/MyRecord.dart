@@ -650,6 +650,7 @@ class _CustomTabsState extends State<CustomTabView>
   String audioPath = '';
   HealthResult selectedResult;
 
+  bool isEnable = false;
   @override
   void initState() {
     if (widget.fromSearch) {
@@ -720,7 +721,7 @@ class _CustomTabsState extends State<CustomTabView>
   @override
   Widget build(BuildContext context) {
     if (widget.itemCount < 1) return widget.stub ?? Container();
-
+    checkEnableCondition();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
@@ -835,30 +836,7 @@ class _CustomTabsState extends State<CustomTabView>
                   widget.selectedMedia.length > 0 &&
                   !widget.showDetails)*/
               ? OutlineButton(
-                  onPressed: () {
-                    if (widget.isFromChat) {
-                      Navigator.of(context)
-                          .pop({'metaId': widget.selectedRecordsId});
-                    } else {
-                      if (widget.allowSelect) {
-                        if (widget.fromAppointments) {
-                          Navigator.of(context).pop(
-                              {'selectedResult': json.encode(selectedResult)});
-                        } else {
-                          Navigator.of(context)
-                              .pop({'metaId': widget.selectedMedia});
-                        }
-                      } else {
-                        if (widget.fromAppointments) {
-                          Navigator.of(context)
-                              .pop({'selectedResult': selectedResult});
-                        } else {
-                          Navigator.of(context)
-                              .pop({'metaId': widget.selectedMedia});
-                        }
-                      }
-                    }
-                  },
+                  onPressed: isEnable == true ? onAssociatePressed : null,
                   child: widget.isFromChat ? Text('Attach') : Text('Associate'),
                   textColor: Color(new CommonUtil().getMyPrimaryColor()),
                   color: Colors.white,
@@ -871,6 +849,67 @@ class _CustomTabsState extends State<CustomTabView>
           //: SizedBox(),
           )
     ]);
+  }
+
+  void onAssociatePressed() {
+    if (widget.isFromChat) {
+      Navigator.of(context).pop({'metaId': widget.selectedRecordsId});
+    } else {
+      if (widget.allowSelect) {
+        if (widget.fromAppointments) {
+          Navigator.of(context)
+              .pop({'selectedResult': json.encode(selectedResult)});
+        } else {
+          Navigator.of(context).pop({'metaId': widget.selectedMedia});
+        }
+      } else {
+        if (widget.fromAppointments) {
+          Navigator.of(context).pop({'selectedResult': selectedResult});
+        } else {
+          Navigator.of(context).pop({'metaId': widget.selectedMedia});
+        }
+      }
+    }
+  }
+
+  bool checkEnableCondition() {
+    try {
+      if (widget.isFromChat) {
+        if (widget.selectedRecordsId.length > 0) {
+          isEnable = true;
+          return true;
+        } else {
+          isEnable = false;
+
+          return false;
+        }
+      } else {
+        if (widget.fromAppointments) {
+          if (widget.selectedMedia.length > 0) {
+            isEnable = true;
+
+            return true;
+          } else {
+            isEnable = false;
+
+            return false;
+          }
+        } else {
+          if (widget.selectedMedia.length > 0) {
+            isEnable = true;
+
+            return true;
+          } else {
+            isEnable = false;
+
+            return false;
+          }
+        }
+      }
+    } catch (e) {
+      isEnable = false;
+      return isEnable;
+    }
   }
 
   Widget getAllTabsToDisplayInBody(List<CategoryResult> data) {
@@ -1164,6 +1203,7 @@ class _CustomTabsState extends State<CustomTabView>
       }
     }
 
+    checkEnableCondition();
     callBackToRefresh();
   }
 
