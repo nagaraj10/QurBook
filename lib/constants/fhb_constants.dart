@@ -1,5 +1,6 @@
 library fhb_constants;
 
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 
 String BASE_URL = CommonUtil.BASE_URL_FROM_RES;
@@ -403,3 +404,21 @@ const String noRegimentData =
     'No Regiments data available for the selected date';
 const String okButton = 'OK';
 const String saveButton = 'Save';
+
+FirebaseAnalytics _firebaseAnalytics = FirebaseAnalytics();
+var mInitialTime;
+
+Future<void> fbaLog({String eveName, dynamic eveParams}) async {
+  try {
+    await _firebaseAnalytics.logEvent(
+        name: eveName ?? 'qurbook_ns_event',
+        parameters: eveParams ??
+            {
+              'eventTime': '${DateTime.now()}',
+              'navigationPage': 'Appointment page',
+              'ns_type': 'appointment_list'
+            });
+  } catch (e) {
+    print(e);
+  }
+}

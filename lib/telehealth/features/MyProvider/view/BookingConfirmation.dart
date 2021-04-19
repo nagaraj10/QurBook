@@ -141,6 +141,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
   @override
   void initState() {
+    mInitialTime = DateTime.now();
     providerViewModel = new MyProviderViewModel();
     createAppointMentViewModel = new CreateAppointMentViewModel();
     createdBy = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
@@ -154,6 +155,17 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     getCategoryList();
     getDataFromWidget();
     setLengthValue();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Booking Confirmation Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   addHealthRecords() {
@@ -571,7 +583,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                               right: -5.0,
                                               child: Icon(
                                                 Icons.check_circle,
-                                                color: Colors.green,
+                                                color: Color(new CommonUtil()
+                                                    .getMyPrimaryColor()),
                                                 size: 15,
                                               ),
                                             )
@@ -619,7 +632,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                               right: -5.0,
                                               child: Icon(
                                                 Icons.check_circle,
-                                                color: Colors.green,
+                                                color: Color(new CommonUtil()
+                                                    .getMyPrimaryColor()),
                                                 size: 15,
                                               ),
                                             )

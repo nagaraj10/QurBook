@@ -13,7 +13,9 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
+import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/device_integration/view/screens/Clipper.dart';
+import 'package:myfhb/device_integration/viewModel/deviceDataHelper.dart';
 import 'package:myfhb/devices/device_dashboard_arguments.dart';
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/screens/MyFamily.dart';
@@ -135,8 +137,11 @@ class _ShowDevicesNewState extends State<ShowDevicesNew>
   final double circleBorderWidth = 0.0;
   TabController controller;
 
+  DeviceDataHelper _deviceDataHelper = DeviceDataHelper();
+
   @override
   void initState() {
+    mInitialTime = DateTime.now();
     _familyListBloc = new FamilyListBloc();
     getFamilyLength();
     controller = TabController(
@@ -148,6 +153,17 @@ class _ShowDevicesNewState extends State<ShowDevicesNew>
     );
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Device Value Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   getFamilyLength() async {
@@ -509,10 +525,22 @@ class _ShowDevicesNewState extends State<ShowDevicesNew>
                                       ),
                                       GestureDetector(
                                         onTap: () {
-                                          setState(() {});
+                                          toast.getToastForLongTime(
+                                              strSync, Colors.green);
+                                          Platform.isIOS
+                                              ? _deviceDataHelper
+                                              .syncHealthKit()
+                                              .then((value) {
+                                            setState(() {});
+                                          })
+                                              : _deviceDataHelper
+                                              .syncGoogleFit()
+                                              .then((value) {
+                                            setState(() {});
+                                          });
                                         },
                                         child: Image.asset(
-                                          'assets/icons/refresh_dash.png',
+                                          icon_refresh_dash,
                                           height: 26.0.h,
                                           width: 26.0.h,
                                           color: Colors.white,
@@ -625,6 +653,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew>
     if (deviceValues.bloodPressure.entities.isNotEmpty) {
       dateTimeStampForBp =
           deviceValues.bloodPressure.entities[0].startDateTime.toLocal();
+
       //deviceValues.bloodPressure.entities[0].lastsyncdatetime;
       dateForBp =
           "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForBp)}";
@@ -716,6 +745,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew>
     if (deviceValues.bloodGlucose.entities.isNotEmpty) {
       dateTimeStampForGulcose =
           deviceValues.bloodGlucose.entities[0].startDateTime.toLocal();
+
       dateForGulcose =
           "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForGulcose)}";
       timeForGulcose =
@@ -770,6 +800,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew>
     if (deviceValues.oxygenSaturation.entities.isNotEmpty) {
       dateTimeStampForOs =
           deviceValues.oxygenSaturation.entities[0].startDateTime.toLocal();
+
       dateForOs =
           "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForOs)}";
       timeForOs =
@@ -847,40 +878,6 @@ class _ShowDevicesNewState extends State<ShowDevicesNew>
         prbPMOxi = '';
       }
 
-      /*try {
-        if (deviceValues.heartRate.entities.isNotEmpty) {
-          try {
-            prbPMOxi = deviceValues.heartRate.entities[0].bpm.toString();
-
-            averageForPul = deviceValues
-                        .heartRate.entities[0].averageAsOfNow.pulseAverage !=
-                    null
-                ? deviceValues.heartRate.entities[0].averageAsOfNow.pulseAverage
-                    .toString()
-                : '';
-            averageForPRBpm = deviceValues
-                        .heartRate.entities[0].averageAsOfNow.pulseAverage !=
-                    null
-                ? deviceValues.heartRate.entities[0].averageAsOfNow.pulseAverage
-                    .toString()
-                : '';
-          } catch (e) {
-            averageForPul = '';
-            averageForPRBpm = '';
-            prbPMOxi = '';
-          }
-        } else {
-          averageForPul = '';
-          averageForPRBpm = '';
-          prbPMOxi = '';
-        }
-      } catch (e) {
-        averageForPulForBp = '';
-        averageForPul = '';
-        averageForPRBpm = '';
-        prbPMOxi = '';
-      }*/
-
       try {
         averageForSPO2 = deviceValues.oxygenSaturation.entities[0]
                     .averageAsOfNow.oxygenLevelAverage !=
@@ -901,6 +898,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew>
     if (deviceValues.bodyTemperature.entities.isNotEmpty) {
       dateTimeStampForTemp =
           deviceValues.bodyTemperature.entities[0].startDateTime.toLocal();
+
       dateForTemp =
           "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForTemp)}";
       timeForTemp =
@@ -934,6 +932,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew>
     if (deviceValues.bodyWeight.entities.isNotEmpty) {
       dateTimeStampForWeight =
           deviceValues.bodyWeight.entities[0].startDateTime.toLocal();
+
       dateForWeight =
           "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForWeight)}";
       timeForWeight =

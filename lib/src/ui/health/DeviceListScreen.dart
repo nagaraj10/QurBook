@@ -6,6 +6,7 @@ import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/record_detail/screens/device_info_card.dart';
@@ -67,11 +68,22 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
 
   @override
   void initState() {
+    mInitialTime = DateTime.now();
     _healthReportListForUserBlock = new HealthReportListForUserBlock();
     String categoryID = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYID);
-    print(categoryID + ' categoryID*******************');
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Device List Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   @override
@@ -354,14 +366,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                       fontWeight: FontWeight.w500,
                       fontSize: 12.0.sp),
                 ),
-                Text(
-                    deviceReadings[i].unit.toLowerCase() ==
-                            CommonConstants.strOxygenUnits.toLowerCase()
-                        ? CommonConstants.strOxygenUnitsName
-                        : (deviceReadings[i].unit.toLowerCase() ==
-                                strParamUnitFarenheit.toLowerCase()
-                            ? CommonConstants.strTemperatureValue
-                            : deviceReadings[i].unit.toString()),
+                Text(getValue(deviceReadings[i]),
                     maxLines: 2,
                     style: TextStyle(color: Colors.black54, fontSize: 10.0.sp))
               ],
@@ -380,5 +385,19 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
       ),
     );
     //return new Row(children: list);
+  }
+
+  String getValue(DeviceReadings deviceReading) {
+    return deviceReading.parameter.toLowerCase() == 'time of intake'
+        ? deviceReading.unit.toString().trim() == ''
+            ? 'Random'
+            : deviceReading.unit.toString()
+        : deviceReading.unit.toLowerCase() ==
+                CommonConstants.strOxygenUnits.toLowerCase()
+            ? CommonConstants.strOxygenUnitsName
+            : (deviceReading.unit.toLowerCase() ==
+                    strParamUnitFarenheit.toLowerCase()
+                ? CommonConstants.strTemperatureValue
+                : deviceReading.unit.toString());
   }
 }

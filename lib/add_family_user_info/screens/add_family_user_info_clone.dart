@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:math';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -118,6 +119,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   stateObj.State stateVal = new stateObj.State();
 
   AddressResult _addressResult = new AddressResult();
+  List<DropdownMenuItem<String>> languagesList = [];
+  String selectedLanguage;
   List<AddressResult> _addressList = List();
   String addressTypeId;
 
@@ -139,10 +142,24 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   @override
   void initState() {
+    mInitialTime = DateTime.now();
     super.initState();
+    getSupportedLanguages();
     addFamilyUserInfoBloc = new AddFamilyUserInfoBloc();
     _addFamilyUserInfoRepository = new AddFamilyUserInfoRepository();
+    addFamilyUserInfoBloc.getDeviceSelectionValues();
     setValuesInEditText();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Add Family User info Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   @override
@@ -347,6 +364,27 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                             maxLength: 3))
                   ],
                 ),
+                Padding(
+                  padding:
+                      EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+                  child: DropdownButton(
+                    isExpanded: true,
+                    hint: Text(
+                      CommonConstants.preferredLanguage,
+                      style: TextStyle(
+                        fontSize: 16.0.sp,
+                      ),
+                    ),
+                    value: selectedLanguage,
+                    items: languagesList,
+                    onChanged: (String newLanguage) {
+                      setState(() {
+                        selectedLanguage = newLanguage;
+                      });
+                      addFamilyUserInfoBloc.preferredLanguage = newLanguage;
+                    },
+                  ),
+                ),
                 _showDateOfBirthTextField(),
                 AddressTypeWidget(
                   addressResult: _addressResult,
@@ -365,6 +403,28 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             ),
           )),
     );
+  }
+
+  void getSupportedLanguages() {
+    final lan = CommonUtil.getCurrentLanCode();
+    if (lan != "undef") {
+      final langCode = lan.split("-").first;
+      selectedLanguage = langCode;
+    }
+    CommonUtil.supportedLanguages.forEach((language, languageCode) {
+      languagesList.add(
+        DropdownMenuItem<String>(
+          value: languageCode,
+          child: Text(
+            toBeginningOfSentenceCase(language),
+            style: TextStyle(
+              fontSize: 16.0.sp,
+            ),
+          ),
+        ),
+      );
+    });
+    // return languagesList;
   }
 
   Widget getGenderDetails() {
@@ -1046,6 +1106,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     } else if (_addressResult == null || _addressResult.id == null) {
       isValid = false;
       strErrorMsg = 'Select Address type';
+    } else if (selectedLanguage == null || selectedLanguage.isEmpty) {
+      isValid = false;
+      strErrorMsg = 'Select Preferred Language';
     } else if (currentselectedBloodGroup == null) {
       if (currentselectedBloodGroupRange == null) {
         isValid = false;
@@ -1075,29 +1138,30 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
       if (widget.arguments.sharedbyme != null) {
         try {
-          if (widget
-              ?.arguments?.sharedbyme?.child?.userContactCollection3.isNotEmpty) {
+          if (widget?.arguments?.sharedbyme?.child?.userContactCollection3
+              .isNotEmpty) {
             mobileNoController.text = widget?.arguments?.sharedbyme?.child
                 ?.userContactCollection3[0].phoneNumber;
             emailController.text = widget
                 ?.arguments?.sharedbyme?.child?.userContactCollection3[0].email;
           }
-
         } catch (e) {
           mobileNoController.text = '';
           emailController.text = '';
         }
       } else {
-          MyProfileModel myProf =
-          PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) != null ? PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) :PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
-          if (myProf.result.userContactCollection3 != null) {
-            if (myProf.result.userContactCollection3.length > 0) {
-              mobileNoController.text =
-                  myProf.result.userContactCollection3[0].phoneNumber;
-              emailController.text =
-                  myProf.result.userContactCollection3[0].email;
-            }
+        MyProfileModel myProf =
+            PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) != null
+                ? PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN)
+                : PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+        if (myProf.result.userContactCollection3 != null) {
+          if (myProf.result.userContactCollection3.length > 0) {
+            mobileNoController.text =
+                myProf.result.userContactCollection3[0].phoneNumber;
+            emailController.text =
+                myProf.result.userContactCollection3[0].email;
           }
+        }
       }
 
       if (widget.arguments.myProfileResult.dateOfBirth != null) {
@@ -1146,15 +1210,18 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       if (widget.arguments.myProfileResult.firstName != null) {
         firstNameController.text =
             widget.arguments.myProfileResult.firstName != null
-                ? widget?.arguments?.myProfileResult?.firstName?.capitalizeFirstofEach
+                ? widget?.arguments?.myProfileResult?.firstName
+                    ?.capitalizeFirstofEach
                 : '';
         middleNameController.text =
-            widget.arguments.myProfileResult.middleName != null
-                ? widget?.arguments?.myProfileResult?.middleName?.capitalizeFirstofEach
+            widget?.arguments?.myProfileResult?.middleName != null
+                ? widget?.arguments?.myProfileResult?.middleName
+                    ?.capitalizeFirstofEach
                 : '';
         lastNameController.text =
-            widget.arguments.myProfileResult.lastName != null
-                ? widget?.arguments?.myProfileResult?.lastName?.capitalizeFirstofEach
+            widget?.arguments?.myProfileResult?.lastName != null
+                ? widget?.arguments?.myProfileResult?.lastName
+                    ?.capitalizeFirstofEach
                 : '';
       }
 
@@ -1197,7 +1264,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         try {
           if (widget.arguments.sharedbyme.child.isVirtualUser) {
             MyProfileModel myProf =
-                PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) != null ? PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) :PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+                PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) !=
+                        null
+                    ? PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN)
+                    : PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
             if (myProf.result.userContactCollection3 != null) {
               if (myProf.result.userContactCollection3.length > 0) {
                 mobileNoController.text =
@@ -1237,15 +1307,18 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         if (widget.arguments.sharedbyme.child.firstName != null) {
           firstNameController.text =
               widget.arguments.sharedbyme.child.firstName != null
-                  ? widget?.arguments?.sharedbyme?.child?.firstName?.capitalizeFirstofEach
+                  ? widget?.arguments?.sharedbyme?.child?.firstName
+                      ?.capitalizeFirstofEach
                   : '';
           middleNameController.text =
               widget.arguments.sharedbyme.child.middleName != null
-                  ? widget?.arguments?.sharedbyme?.child?.middleName?.capitalizeFirstofEach
+                  ? widget?.arguments?.sharedbyme?.child?.middleName
+                      ?.capitalizeFirstofEach
                   : '';
           lastNameController.text =
               widget.arguments.sharedbyme.child.lastName != null
-                  ? widget?.arguments?.sharedbyme?.child?.lastName?.capitalizeFirstofEach
+                  ? widget?.arguments?.sharedbyme?.child?.lastName
+                      ?.capitalizeFirstofEach
                   : '';
         } else {
           firstNameController.text = '';
@@ -1351,9 +1424,12 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           currentAddressID = currentAddress.id;
         }
 
-        firstNameController.text = value?.result?.firstName?.capitalizeFirstofEach;
-        middleNameController.text = value?.result?.middleName?.capitalizeFirstofEach;
-        lastNameController.text = value?.result?.lastName?.capitalizeFirstofEach;
+        firstNameController.text =
+            value?.result?.firstName?.capitalizeFirstofEach;
+        middleNameController.text =
+            value?.result?.middleName?.capitalizeFirstofEach;
+        lastNameController.text =
+            value?.result?.lastName?.capitalizeFirstofEach;
         //? check relatioship id against logged in user
         if (value?.result?.userRelationshipCollection.length > 0) {
           for (UserRelationshipCollection cRelationship
@@ -1594,11 +1670,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               if (widget.arguments.myProfileResult.firstName != null) {
                 String firstName =
                     widget.arguments.myProfileResult.firstName != null
-                        ? widget.arguments.myProfileResult.firstName.capitalizeFirstofEach
+                        ? widget.arguments.myProfileResult.firstName
+                            .capitalizeFirstofEach
                         : '';
                 String lastName =
                     widget.arguments.myProfileResult.lastName != null
-                        ? widget.arguments.myProfileResult.lastName.capitalizeFirstofEach
+                        ? widget.arguments.myProfileResult.lastName
+                            .capitalizeFirstofEach
                         : '';
 
                 PreferenceUtil.saveString(Constants.FIRST_NAME, firstName);

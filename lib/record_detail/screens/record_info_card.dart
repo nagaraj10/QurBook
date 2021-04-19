@@ -637,7 +637,8 @@ class RecordInfoCard {
                                 ? Text(
                                     /* toBeginningOfSentenceCase(metaInfo
                                         .hospital.healthOrganizationName) */
-                                        metaInfo?.hospital?.healthOrganizationName?.capitalizeFirstofEach,
+                                    metaInfo?.hospital?.healthOrganizationName
+                                        ?.capitalizeFirstofEach,
                                     style: TextStyle(
                                         fontWeight: FontWeight.w500,
                                         fontSize: 16.0.sp),
@@ -722,14 +723,8 @@ Widget getDeviceReadings(List<DeviceReadings> deviceReadings) {
                           fontWeight: FontWeight.w500,
                           fontSize: 16.0.sp),
                     ),
-                    Text(
-                        deviceReadings[i].unit.toLowerCase() ==
-                                CommonConstants.strOxygenUnits.toLowerCase()
-                            ? CommonConstants.strOxygenUnitsName
-                            : (deviceReadings[i].unit.toLowerCase() ==
-                                    strParamUnitFarenheit.toLowerCase()
-                                ? CommonConstants.strTemperatureValue
-                                : deviceReadings[i].unit.toString()),
+                    Text(getValue(deviceReadings[i]),
+                        maxLines: 2,
                         style: TextStyle(
                             color: Colors.black54, fontSize: 14.0.sp)),
                   ],
@@ -758,6 +753,20 @@ Widget getDeviceReadings(List<DeviceReadings> deviceReadings) {
     ),
   ]);
   //return new Row(children: list);
+}
+
+String getValue(DeviceReadings deviceReading) {
+  return deviceReading.parameter.toLowerCase() == 'time of intake'
+      ? deviceReading.unit.toString().trim() == ''
+          ? 'Random'
+          : deviceReading.unit.toString()
+      : deviceReading.unit.toLowerCase() ==
+              CommonConstants.strOxygenUnits.toLowerCase()
+          ? CommonConstants.strOxygenUnitsName
+          : (deviceReading.unit.toLowerCase() ==
+                  strParamUnitFarenheit.toLowerCase()
+              ? CommonConstants.strTemperatureValue
+              : deviceReading.unit.toString());
 }
 
 getDoctorProfileImageWidget(MetaInfo data) {

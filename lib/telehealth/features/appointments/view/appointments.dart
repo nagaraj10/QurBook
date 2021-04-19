@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart'
     as Constants;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
@@ -44,10 +45,22 @@ class _AppointmentsState extends State<Appointments> {
 
   @override
   void initState() {
+    mInitialTime = DateTime.now();
     //commonWidget.getCategoryPosition(Constants.STR_NOTES);
     Provider.of<AppointmentsListViewModel>(context, listen: false)
         .fetchAppointments();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'TeleHealth Appointment Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   @override

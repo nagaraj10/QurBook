@@ -104,6 +104,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
   @override
   void initState() {
+    Constants.mInitialTime = DateTime.now();
     super.initState();
     PreferenceUtil.init();
     _listenForPermissionStatus();
@@ -139,6 +140,17 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       length = mediMasterId.length;
       index = 1;
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    Constants.fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Record Details Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(Constants.mInitialTime).inSeconds} secs'
+    });
   }
 
   @override
@@ -259,57 +271,61 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                               onPressed: () {
                                 bookMarkRecord(widget.data);
                               }),
-                          widget.data.metadata.sourceName == strsourceCARGIVER?IconButton(
-                              icon: ImageIcon(
-                                AssetImage(variable.icon_record_switch),
-                                color: Colors.grey,
-                              )):IconButton(
-                              icon: ImageIcon(
-                                AssetImage(variable.icon_record_switch),
-                                color: Colors.black,
-                              ),
-                              onPressed: () {
-                                //getAllFamilyMembers();
+                          widget.data.metadata.sourceName == strsourceCARGIVER
+                              ? IconButton(
+                                  icon: ImageIcon(
+                                  AssetImage(variable.icon_record_switch),
+                                  color: Colors.grey,
+                                ))
+                              : IconButton(
+                                  icon: ImageIcon(
+                                    AssetImage(variable.icon_record_switch),
+                                    color: Colors.black,
+                                  ),
+                                  onPressed: () {
+                                    //getAllFamilyMembers();
 
-                                CommonUtil.showLoadingDialog(
-                                    contxt, _keyLoader, variable.Please_Wait);
+                                    CommonUtil.showLoadingDialog(contxt,
+                                        _keyLoader, variable.Please_Wait);
 
-                                if (_familyListBloc != null) {
-                                  _familyListBloc = null;
-                                  _familyListBloc = new FamilyListBloc();
-                                }
-                                _familyListBloc
-                                    .getFamilyMembersListNew()
-                                    .then((familyMembersList) {
-                                  Navigator.of(_keyLoader.currentContext,
-                                      rootNavigator: true)
-                                      .pop();
-                                  if (familyMembersList != null &&
-                                      familyMembersList.result != null &&
-                                      familyMembersList
-                                          .result.sharedByUsers.length >
-                                          0) {
-                                    getDialogBoxWithFamilyMember(
-                                        familyMembersList.result);
-                                  } else {
-                                    toast.getToast(
-                                        Constants.NO_DATA_FAMIY_CLONE,
-                                        Colors.black54);
-                                  }
-                                });
-                              }),
-                          widget.data.metadata.sourceName == strsourceCARGIVER?IconButton(
-                              icon: ImageIcon(
-                                AssetImage(variable.icon_edit),
-                                color: Colors.grey,
-                              )):IconButton(
-                              icon: ImageIcon(
-                                AssetImage(variable.icon_edit),
-                                color: Colors.black,
-                              ),
-                              onPressed: () {
-                                openAlertDialogBasedOnRecordDetails();
-                              }),
+                                    if (_familyListBloc != null) {
+                                      _familyListBloc = null;
+                                      _familyListBloc = new FamilyListBloc();
+                                    }
+                                    _familyListBloc
+                                        .getFamilyMembersListNew()
+                                        .then((familyMembersList) {
+                                      Navigator.of(_keyLoader.currentContext,
+                                              rootNavigator: true)
+                                          .pop();
+                                      if (familyMembersList != null &&
+                                          familyMembersList.result != null &&
+                                          familyMembersList
+                                                  .result.sharedByUsers.length >
+                                              0) {
+                                        getDialogBoxWithFamilyMember(
+                                            familyMembersList.result);
+                                      } else {
+                                        toast.getToast(
+                                            Constants.NO_DATA_FAMIY_CLONE,
+                                            Colors.black54);
+                                      }
+                                    });
+                                  }),
+                          widget.data.metadata.sourceName == strsourceCARGIVER
+                              ? IconButton(
+                                  icon: ImageIcon(
+                                  AssetImage(variable.icon_edit),
+                                  color: Colors.grey,
+                                ))
+                              : IconButton(
+                                  icon: ImageIcon(
+                                    AssetImage(variable.icon_edit),
+                                    color: Colors.black,
+                                  ),
+                                  onPressed: () {
+                                    openAlertDialogBasedOnRecordDetails();
+                                  }),
                           IconButton(
                               icon: ImageIcon(
                                 AssetImage(variable.icon_download),
@@ -324,28 +340,30 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                   }
                                 });*/
                               }),
-                          widget.data.metadata.sourceName == strsourceCARGIVER?IconButton(
-                              icon: ImageIcon(
-                                AssetImage(variable.icon_delete),
-                                color: Colors.grey,
-                              )):IconButton(
-                              icon: ImageIcon(
-                                AssetImage(variable.icon_delete),
-                                color: Colors.black,
-                              ),
-                              onPressed: () {
-                                new FHBBasicWidget()
-                                    .showDialogWithTwoButtons(context, () {
-                                  deleteRecord(widget.data.id,
-                                      isDeviceReadings: widget
-                                          .data
-                                          .metadata
-                                          .healthRecordCategory
-                                          .categoryName ==
-                                          "Devices");
-                                }, 'Confirmation',
-                                    'Are you sure you want to delete');
-                              })
+                          widget.data.metadata.sourceName == strsourceCARGIVER
+                              ? IconButton(
+                                  icon: ImageIcon(
+                                  AssetImage(variable.icon_delete),
+                                  color: Colors.grey,
+                                ))
+                              : IconButton(
+                                  icon: ImageIcon(
+                                    AssetImage(variable.icon_delete),
+                                    color: Colors.black,
+                                  ),
+                                  onPressed: () {
+                                    new FHBBasicWidget()
+                                        .showDialogWithTwoButtons(context, () {
+                                      deleteRecord(widget.data.id,
+                                          isDeviceReadings: widget
+                                                  .data
+                                                  .metadata
+                                                  .healthRecordCategory
+                                                  .categoryName ==
+                                              "Devices");
+                                    }, 'Confirmation',
+                                            'Are you sure you want to delete');
+                                  })
                         ],
                       );
                     },

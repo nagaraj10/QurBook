@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/video_call/Prescription/model/prescription_medicines_model.dart';
 import 'package:myfhb/video_call/Prescription/view/new_prescription.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -70,8 +71,20 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
 
   @override
   void initState() {
+    mInitialTime = DateTime.now();
     super.initState();
     createMockUpMedicines();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Existing Prescription Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   @override

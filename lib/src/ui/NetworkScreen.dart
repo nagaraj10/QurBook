@@ -1,14 +1,24 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class NetworkScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    mInitialTime = DateTime.now();
     return WillPopScope(
-      onWillPop: () => Future.value(false),
+      onWillPop: () {
+        fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+          'eventTime': '${DateTime.now()}',
+          'pageName': 'Network Screen',
+          'screenSessionTime':
+              '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+        });
+        Future.value(false);
+      },
       child: Scaffold(
         body: Center(
           child: Column(

@@ -63,6 +63,7 @@ class _MySettingsState extends State<MySettings> {
 
   @override
   void initState() {
+    mInitialTime = DateTime.now();
     selectedList = List();
     _deviceModel = new DevicesViewModel();
     super.initState();
@@ -99,6 +100,17 @@ class _MySettingsState extends State<MySettings> {
       _isHKActive = false;
       //PreferenceUtil.saveString(Constants.activateHK, _isHKActive.toString());
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Settings Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   Future<GetDeviceSelectionModel> getDeviceSelectionValues() async {

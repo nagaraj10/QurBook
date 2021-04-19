@@ -246,38 +246,96 @@ class _MyFHBState extends State<MyFHB> {
       final provider = PushNotificationsProvider();
       provider.initNotification();
       provider.pushController.listen((callarguments) {
+        fbaLog(eveParams: {
+          'eventTime': '${DateTime.now()}',
+          'ns_type': 'call',
+          'navigationPage': 'TeleHelath Call screen',
+        });
+
         Get.key.currentState
             .pushNamed(routervariable.rt_CallMain, arguments: callarguments);
       });
       provider.pushNotificationController.listen((event) {
         if (isAlreadyLoaded) {
           if (event == parameters.doctorCancellation) {
+            fbaLog(eveParams: {
+              'eventTime': '${DateTime.now()}',
+              'ns_type': 'DoctorCancellation',
+              'navigationPage': 'Appointment List',
+            });
             Get.to(NotificationMain());
           } else if (event == parameters.chat) {
+            fbaLog(eveParams: {
+              'eventTime': '${DateTime.now()}',
+              'ns_type': 'chat',
+              'navigationPage': 'Tele Health Chat list',
+            });
+
             Get.to(ChatHomeScreen());
           } else {
             if (event is Map) {
               final dataOne = event[1];
               final dataTwo = event[2];
+              fbaLog(eveParams: {
+                'eventTime': '${DateTime.now()}',
+                'ns_type': 'myRecords',
+                'navigationPage': '$dataOne',
+              });
               this.navigateToMyRecordsCategory(dataOne, dataTwo, false);
             } else if (event == 'sheela') {
+              fbaLog(eveParams: {
+                'eventTime': '${DateTime.now()}',
+                'ns_type': 'sheela',
+                'navigationPage': 'Sheela Start Page',
+              });
+
               Get.to(SuperMaya());
             } else if (event == 'profile_page') {
+              fbaLog(eveParams: {
+                'eventTime': '${DateTime.now()}',
+                'ns_type': 'profile_page',
+                'navigationPage': 'User Profile page',
+              });
+
               Get.toNamed(router.rt_UserAccounts,
                       arguments: UserAccountsArguments(selectedIndex: 0))
                   .then((value) => setState(() {}));
             } else if (event == 'googlefit') {
+              fbaLog(eveParams: {
+                'eventTime': '${DateTime.now()}',
+                'ns_type': 'googlefit',
+                'navigationPage': 'Google Fit page',
+              });
+
               Get.toNamed(router.rt_AppSettings);
             } else if (event == 'th_provider') {
+              fbaLog(eveParams: {
+                'eventTime': '${DateTime.now()}',
+                'ns_type': 'th_provider',
+                'navigationPage': 'Tele Health Provider',
+              });
+
               Get.toNamed(router.rt_TelehealthProvider,
                       arguments: HomeScreenArguments(selectedIndex: 1))
                   .then((value) => setState(() {}));
             } else if (event == 'my_record') {
+              fbaLog(eveParams: {
+                'eventTime': '${DateTime.now()}',
+                'ns_type': 'my_record',
+                'navigationPage': 'My Records',
+              });
+
               getProfileData();
               Get.toNamed(router.rt_HomeScreen,
                       arguments: HomeScreenArguments(selectedIndex: 1))
                   .then((value) => setState(() {}));
             } else {
+              fbaLog(eveParams: {
+                'eventTime': '${DateTime.now()}',
+                'ns_type': 'appointment_list',
+                'navigationPage': 'Tele Health Appointment list',
+              });
+
               Get.to(TelehealthProviders(
                 arguments: HomeScreenArguments(selectedIndex: 0),
               ));
@@ -369,35 +427,80 @@ class _MyFHBState extends State<MyFHB> {
       if (passedValArr[0] == 'ack') {
         var temp = passedValArr[1].split('|');
         if (temp[0] == 'myRecords') {
+          fbaLog(eveParams: {
+            'eventTime': '${DateTime.now()}',
+            'ns_type': 'myRecords',
+            'navigationPage': '${temp[1]}',
+          });
           CommonUtil()
               .navigateToMyRecordsCategory(temp[1], [passedValArr[2]], false);
         } else if (passedValArr[1] == 'sheela') {
+          fbaLog(eveParams: {
+            'eventTime': '${DateTime.now()}',
+            'ns_type': 'sheela',
+            'navigationPage': 'Sheela Start Page',
+          });
           Get.to(SuperMaya());
         } else if (passedValArr[1] == 'profile_page') {
+          fbaLog(eveParams: {
+            'eventTime': '${DateTime.now()}',
+            'ns_type': 'profile_page',
+            'navigationPage': 'User Profile page',
+          });
           Get.toNamed(router.rt_UserAccounts,
                   arguments: UserAccountsArguments(selectedIndex: 0))
               .then((value) => setState(() {}));
         } else if (passedValArr[1] == 'googlefit') {
+          fbaLog(eveParams: {
+            'eventTime': '${DateTime.now()}',
+            'ns_type': 'googlefit',
+            'navigationPage': 'Google Fit page',
+          });
           Get.toNamed(router.rt_AppSettings);
         } else if (passedValArr[1] == 'th_provider') {
+          fbaLog(eveParams: {
+            'eventTime': '${DateTime.now()}',
+            'ns_type': 'th_provider',
+            'navigationPage': 'Tele Health Provider',
+          });
           Get.toNamed(router.rt_TelehealthProvider,
                   arguments: HomeScreenArguments(selectedIndex: 1))
               .then((value) => setState(() {}));
         } else if (passedValArr[1] == 'my_record') {
+          fbaLog(eveParams: {
+            'eventTime': '${DateTime.now()}',
+            'ns_type': 'my_record',
+            'navigationPage': 'My Records',
+          });
           getProfileData();
           Get.toNamed(router.rt_HomeScreen,
                   arguments: HomeScreenArguments(selectedIndex: 1))
               .then((value) => setState(() {}));
         } else {
+          fbaLog(eveParams: {
+            'eventTime': '${DateTime.now()}',
+            'ns_type': 'appointment_list',
+            'navigationPage': 'Tele Health Appointment list',
+          });
           Get.to(TelehealthProviders(
             arguments: HomeScreenArguments(selectedIndex: 0),
           ));
         }
       } else if (passedValArr[1] == 'appointmentList') {
+        fbaLog(eveParams: {
+          'eventTime': '${DateTime.now()}',
+          'ns_type': 'appointmentList',
+          'navigationPage': 'Tele Health Appointment list',
+        });
         Get.to(SplashScreen(
           nsRoute: 'appointmentList',
         ));
       } else if (c_msg == 'chat') {
+        fbaLog(eveParams: {
+          'eventTime': '${DateTime.now()}',
+          'ns_type': 'chat',
+          'navigationPage': 'Tele Health Chat list',
+        });
         Get.to(ChatHomeScreen());
       } else if (passedValArr[0] == 'DoctorRescheduling') {
         /* Get.to(TelehealthProviders(
@@ -409,6 +512,11 @@ class _MyFHBState extends State<MyFHB> {
           healthOrganizationId: passedValArr[4] ?? ''
           ),
         )); */
+        fbaLog(eveParams: {
+          'eventTime': '${DateTime.now()}',
+          'ns_type': 'DoctorRescheduling',
+          'navigationPage': 'Reschedule screen',
+        });
         var body = {};
         body['templateName'] = passedValArr[5] ?? '';
         body['contextId'] = passedValArr[2] ?? '';
@@ -425,6 +533,11 @@ class _MyFHBState extends State<MyFHB> {
           body: body,
         ));
       } else if (passedValArr[0] == 'DoctorCancellation') {
+        fbaLog(eveParams: {
+          'eventTime': '${DateTime.now()}',
+          'ns_type': 'DoctorCancellation',
+          'navigationPage': 'Appointment List',
+        });
         Get.to(TelehealthProviders(
           arguments: HomeScreenArguments(
               selectedIndex: 0,
@@ -453,6 +566,11 @@ class _MyFHBState extends State<MyFHB> {
             patientPic = '';
           }
         } catch (e) {}
+        fbaLog(eveParams: {
+          'eventTime': '${DateTime.now()}',
+          'ns_type': 'call',
+          'navigationPage': 'TeleHelath Call screen',
+        });
         Get.to(CallMain(
           doctorName: passedValArr[1],
           doctorId: passedValArr[2],
@@ -784,6 +902,11 @@ class _MyFHBState extends State<MyFHB> {
         patPic = '';
       }
     } catch (e) {}
+    fbaLog(eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'ns_type': 'call',
+      'navigationPage': 'TeleHelath Call screen',
+    });
     return CallMain(
         isAppExists: false,
         role: ClientRole.Broadcaster,
@@ -802,7 +925,9 @@ class _MyFHBState extends State<MyFHB> {
     authService.addDoctorAsProvider(jsonString).then((response) {
       if (response['isSuccess']) {
         toast.getToast(response['message'], Colors.green);
-        FetchNotificationService().updateNsActionStatus(body).then((data) {});
+        FetchNotificationService().updateNsActionStatus(body).then((data) {
+          //todo
+        });
       } else {
         toast.getToast(response['diagnostics']['message'], Colors.red);
       }

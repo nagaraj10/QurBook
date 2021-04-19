@@ -4,6 +4,7 @@ import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
 import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
@@ -29,6 +30,23 @@ class MyFamilyDetailViewInsurance extends StatefulWidget {
 
 class MyFamilyDetailViewInsuranceState
     extends State<MyFamilyDetailViewInsurance> {
+  @override
+  void initState() {
+    mInitialTime = DateTime.now();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Family Provider Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build

@@ -8,6 +8,7 @@ import 'package:myfhb/authentication/model/change_password_model.dart'
     as changePasswordModel;
 import 'package:myfhb/authentication/view_model/patientauth_view_model.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
@@ -26,9 +27,20 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   AuthViewModel authViewModel;
   @override
   void initState() {
-    // TODO: implement initState
+    mInitialTime = DateTime.now();
     super.initState();
     authViewModel = new AuthViewModel();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Change Password Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   @override

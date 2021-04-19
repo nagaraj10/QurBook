@@ -62,10 +62,17 @@ class _CallPageState extends State<CallPage> {
     super.dispose();
     Screen.keepOn(false);
     videoPauseResumeState = 0;
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'TeleHealth Call Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   @override
   void initState() {
+    mInitialTime = DateTime.now();
     super.initState();
 
     if (widget.arguments != null) {
