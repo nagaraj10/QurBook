@@ -529,15 +529,15 @@ class _ShowDevicesNewState extends State<ShowDevicesNew>
                                               strSync, Colors.green);
                                           Platform.isIOS
                                               ? _deviceDataHelper
-                                              .syncHealthKit()
-                                              .then((value) {
-                                            setState(() {});
-                                          })
+                                                  .syncHealthKit()
+                                                  .then((value) {
+                                                  setState(() {});
+                                                })
                                               : _deviceDataHelper
-                                              .syncGoogleFit()
-                                              .then((value) {
-                                            setState(() {});
-                                          });
+                                                  .syncGoogleFit()
+                                                  .then((value) {
+                                                  setState(() {});
+                                                });
                                         },
                                         child: Image.asset(
                                           icon_refresh_dash,
