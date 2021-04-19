@@ -21,6 +21,15 @@ struct Constants {
     static let TSS = "TTS : ";
     static let errorIs = "error is";
     
+    
+    static let reminderMethodChannel = "flutter.native/reminder"
+    static let addReminderMethod = "addReminder"
+    static let removeReminderMethod = "removeReminder"
+
+    static let title = "title";
+    static let description = "description";
+    static let notification = "notification";
+    
     struct paramaters {
         static let message = "message"
         static let isClose = "isClose"
