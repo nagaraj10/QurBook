@@ -13,17 +13,26 @@ class Reminder {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
+      'eid': id,
       'title': title,
-      'desc': desc,
-      'dateTime': dateTime,
+      'description': desc,
+      'estart': dateTime,
+    };
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'eid': id,
+      'title': title,
+      'description': desc,
+      'estart': dateTime,
     };
   }
 
   Reminder.fromMap(Map<String, dynamic> map) {
     id = map['eid'];
     title = map['title'];
-    desc = map['saytext'];
+    desc = map['description'];
     dateTime = map['estart'];
   }
   @override

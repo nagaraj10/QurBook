@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -72,7 +73,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     });
     */
     dbInitialize();
-
+    QurPlanReminders.getTheRemindersFromAPI();
     callImportantsMethod();
 
     print(
@@ -87,8 +88,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
     try {
       commonUtil.versionCheck(context);
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   @override
