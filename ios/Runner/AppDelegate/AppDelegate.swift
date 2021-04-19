@@ -243,9 +243,9 @@ import AVFoundation
                 if let notifiationToShow = notificationArray[0] as? NSDictionary{
                     self.scheduleNotification(message: notifiationToShow)
                 }
-            }else if call.method == self.removeReminderMethod,let dataArray = call.arguments as? NSArray,let id = dataArray[0] as? Int{
+            }else if call.method == self.removeReminderMethod,let dataArray = call.arguments as? NSArray,let id = dataArray[0] as? String{
                 
-                self.notificationCenter.removePendingNotificationRequests(withIdentifiers: ["\(id)"])
+                self.notificationCenter.removePendingNotificationRequests(withIdentifiers: [id])
             }else{
                 result(FlutterMethodNotImplemented)
                 return
@@ -259,14 +259,14 @@ import AVFoundation
     var dateComponent:DateComponents = DateComponents();
     //Prepare New Notificaion with deatils and trigger
     func scheduleNotification(message: NSDictionary,snooze:Bool = false) {
-        if let _id =  message["id"] as? String {
+        if let _id =  message["eid"] as? String {
             id = _id
         }
         if let _title = message[Constants.title] as? String { title = _title}
         if let _des = message[Constants.description] as? String {des = _des}
         
         if !snooze{
-            if let dateNotifiation = message["date"] as? String{
+            if let dateNotifiation = message["estart"] as? String{
 //                let dateComponentsArray = dateNotifiation.components(separatedBy: "-").map{ (val) -> Int  in
 //                    if let newInt = Int(val){
 //                        return newInt

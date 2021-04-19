@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:gallery_saver/files.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/HeaderRequest.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/reminders/ReminderModel.dart';
@@ -18,10 +19,15 @@ class QurPlanReminders {
     //final dataString = await rootBundle.loadString(fileName);
     HeaderRequest headerRequest = new HeaderRequest();
     final headers = await headerRequest.getRequestHeadersAuthContents();
+    final now = DateTime.now();
+    final dayAfterTomorrowDate = DateTime(now.year, now.month, now.day + 2);
+    final today = CommonUtil().dateConversionToApiFormat(now);
+    final dayAfterTomorrow =
+        CommonUtil().dateConversionToApiFormat(dayAfterTomorrowDate);
     final params = jsonEncode({
       "method": "get",
       "data":
-          "Action=GetUserReminders&pl=QurHealth&ul=patient_1_1@qurhealth.in&ispatient=1"
+          "Action=GetUserReminders&startdate=$today&enddate=$dayAfterTomorrow&pl=QurHealth&ul=patient_1_1@qurhealth.in&ispatient=1"
     });
     try {
       final responseFromApi = await http.post(
@@ -70,14 +76,14 @@ class QurPlanReminders {
     List<Reminder> reminders = await getLocalReminder();
     Reminder foundTheMatched = null;
     for (var i = 0; i < reminders.length; i++) {
-      if (reminders[i].id == data.id) {
+      if (reminders[i].eid == data.eid) {
         foundTheMatched = reminders.removeAt(i);
         break;
       }
 
       if (foundTheMatched != null) {
         reminderMethodChannel
-            .invokeMethod(removeReminderMethod, [foundTheMatched.id]);
+            .invokeMethod(removeReminderMethod, [foundTheMatched.eid]);
       }
       reminders.add(data);
     }
@@ -91,13 +97,13 @@ class QurPlanReminders {
       bool found = false;
       for (var j = 0; j < localReminders.length; j++) {
         final localReminder = localReminders[j];
-        if (apiReminder.id == localReminder.id) {
+        if (apiReminder.eid == localReminder.eid) {
           found = true;
           if (apiReminder == localReminder) {
             break;
           } else {
             reminderMethodChannel
-                .invokeMethod(removeReminderMethod, [localReminder.id]);
+                .invokeMethod(removeReminderMethod, [localReminder.eid]);
             reminderMethodChannel
                 .invokeMethod(addReminderMethod, [apiReminder.toMap()]);
           }
@@ -113,7 +119,7 @@ class QurPlanReminders {
       final localReminder = localReminders[i];
       if (!data.contains(localReminder)) {
         reminderMethodChannel
-            .invokeMethod(removeReminderMethod, [localReminder.id]);
+            .invokeMethod(removeReminderMethod, [localReminder.eid]);
       }
     }
     saveRemindersLocally(data);
@@ -127,16 +133,14 @@ class QurPlanReminders {
       return false;
     }
     for (var i = 0; i < reminders.length; i++) {
-      print(identical(reminders[i], data));
-
-      if (reminders[i].id == data.id) {
+      if (reminders[i].eid == data.eid) {
         foundTheMatched = reminders.removeAt(i);
         break;
       }
 
       if (foundTheMatched != null) {
         reminderMethodChannel
-            .invokeMethod(removeReminderMethod, [foundTheMatched.id]);
+            .invokeMethod(removeReminderMethod, [foundTheMatched.eid]);
         return true;
       } else {
         return false;
