@@ -1786,5 +1786,6 @@ class CommonUtil {
 extension CapExtension on String {
   String get inCaps => '${this[0].toUpperCase()}${this.substring(1)}';
   String get allInCaps => toUpperCase();
-  String get capitalizeFirstofEach => trim().toLowerCase().split(' ').map((str) => str.inCaps).join(' ');
+  String get capitalizeFirstofEach =>
+      trim().toLowerCase().split(' ').map((str) => str.inCaps).join(' ');
 }

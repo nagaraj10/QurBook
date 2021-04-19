@@ -17,6 +17,8 @@ import 'package:myfhb/device_integration/view/screens/Clipper.dart';
 import 'package:myfhb/devices/device_dashboard_arguments.dart';
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/screens/MyFamily.dart';
+import 'package:myfhb/regiment/view/regiment_tab.dart';
+import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/common_response.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
@@ -40,7 +42,6 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/authentication/view/login_screen.dart';
-import 'package:myfhb/device_integration/view/widgets/regiment_tab.dart';
 
 class ShowDevicesNew extends StatefulWidget {
   @override

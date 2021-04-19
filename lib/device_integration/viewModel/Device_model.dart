@@ -25,8 +25,6 @@ Future<String> _loadDeviceDataAsset() async {
 class DevicesViewModel with ChangeNotifier {
   GetGFDataFromFHBRepo _helper = GetGFDataFromFHBRepo();
   List<DeviceData> deviceList;
-  DateTime selectedDate = DateTime.now();
-  String regimentDate = '${CommonUtil().regimentDateFormat(DateTime.now())}';
 
   List<DeviceData> getDeviceValues() {
     List<DeviceData> devicelist = new List<DeviceData>();
@@ -360,18 +358,5 @@ class DevicesViewModel with ChangeNotifier {
       });
       return ret;
     } catch (e) {}
-  }
-
-  void getRegimentDate({
-    bool isPrevious: false,
-    bool isNext: false,
-  }) {
-    if (isPrevious) {
-      selectedDate = selectedDate.subtract(Duration(days: 1));
-    } else if (isNext) {
-      selectedDate = selectedDate.add(Duration(days: 1));
-    }
-    regimentDate = '${CommonUtil().regimentDateFormat(selectedDate)}';
-    notifyListeners();
   }
 }
