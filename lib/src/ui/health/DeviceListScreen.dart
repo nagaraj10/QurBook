@@ -366,7 +366,14 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                       fontWeight: FontWeight.w500,
                       fontSize: 12.0.sp),
                 ),
-                Text(getValue(deviceReadings[i]),
+                Text(
+                    deviceReadings[i].unit.toLowerCase() ==
+                            CommonConstants.strOxygenUnits.toLowerCase()
+                        ? CommonConstants.strOxygenUnitsName
+                        : (deviceReadings[i].unit.toLowerCase() ==
+                                strParamUnitFarenheit.toLowerCase()
+                            ? CommonConstants.strTemperatureValue
+                            : deviceReadings[i].unit.toString()),
                     maxLines: 2,
                     style: TextStyle(color: Colors.black54, fontSize: 10.0.sp))
               ],
@@ -385,19 +392,5 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
       ),
     );
     //return new Row(children: list);
-  }
-
-  String getValue(DeviceReadings deviceReading) {
-    return deviceReading.parameter.toLowerCase() == 'time of intake'
-        ? deviceReading.unit.toString().trim() == ''
-            ? 'Random'
-            : deviceReading.unit.toString()
-        : deviceReading.unit.toLowerCase() ==
-                CommonConstants.strOxygenUnits.toLowerCase()
-            ? CommonConstants.strOxygenUnitsName
-            : (deviceReading.unit.toLowerCase() ==
-                    strParamUnitFarenheit.toLowerCase()
-                ? CommonConstants.strTemperatureValue
-                : deviceReading.unit.toString());
   }
 }
