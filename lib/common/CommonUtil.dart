@@ -1198,6 +1198,22 @@ class CommonUtil {
     return updatedDate;
   }
 
+  regimentDateFormat(DateTime newDateTime) {
+    DateFormat newFormat;
+    String updatedDate = '';
+    DateTime currentTime = DateTime.now();
+    if (newDateTime.day == currentTime.day &&
+        newDateTime.month == currentTime.month &&
+        newDateTime.year == currentTime.year) {
+      newFormat = DateFormat("MMM d, yyyy");
+      updatedDate = 'Today, ';
+    } else {
+      newFormat = DateFormat("EEE, MMM d, yyyy");
+    }
+    updatedDate = updatedDate + newFormat.format(newDateTime);
+    return updatedDate;
+  }
+
   dateConversionToDayMonthYear(DateTime dateTime) {
     var newFormat = DateFormat('d MMM, ' 'yyyy');
     String updatedDate = newFormat.format(dateTime);
@@ -1803,6 +1819,17 @@ class CommonUtil {
       return 'undef';
     }
   }
+
+  String dateFormatConversion(String datetime) {
+    String formattedDate = '';
+    if (datetime != null && datetime != '') {
+      DateTime dateTimeStamp = DateTime.parse(datetime);
+      formattedDate = DateFormat('MMM dd yyyy').format(dateTimeStamp);
+    } else {
+      formattedDate = '';
+    }
+    return formattedDate;
+  }
 }
 
 extension CapExtension on String {
@@ -1811,15 +1838,4 @@ extension CapExtension on String {
   String get capitalizeFirstofEach => this != null && this.isNotEmpty
       ? trim().toLowerCase().split(' ').map((str) => str.inCaps).join(' ')
       : '';
-
-  String dateFormatConversion(String datetime) {
-    String formattedDate = '';
-    if(datetime!=null && datetime!=''){
-      DateTime dateTimeStamp = DateTime.parse(datetime);
-      formattedDate = DateFormat('MMM dd yyyy').format(dateTimeStamp);
-    }else{
-       formattedDate = '';
-    }
-    return formattedDate;
-  }
 }
