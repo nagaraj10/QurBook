@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/authentication/view/login_screen.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -63,6 +67,21 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     PreferenceUtil.init();
+    //setReminder();
+  }
+
+  void setReminder() {
+    var selecteTimeInDate = "${TimeOfDay.now().hour}-${TimeOfDay.now().minute+3}";
+    print('currentTime#######${selecteTimeInDate}');
+    var ch_android = const MethodChannel('android/notification');
+    var mappedReminder = {
+      'id': 001,
+      'title': 'Take BP tablet',
+      'desc': 'dont forgot to take tablets',
+      'date': '2021-04-13',
+      'time': '$selecteTimeInDate',
+    };
+    ch_android.invokeMethod('remindMe', {'data': jsonEncode(mappedReminder)});
   }
 
   @override

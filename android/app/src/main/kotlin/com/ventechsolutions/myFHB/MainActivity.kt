@@ -1,11 +1,10 @@
 package com.ventechsolutions.myFHB
 
-import android.app.Activity
-import android.app.Dialog
-import android.app.KeyguardManager
+import android.app.*
 import android.content.*
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.speech.RecognitionListener
@@ -18,14 +17,18 @@ import android.view.View
 import android.view.Window
 import android.widget.*
 import androidx.annotation.NonNull
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.multidex.BuildConfig
 import com.github.ybq.android.spinkit.SpinKitView
 import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.Status
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.ventechsolutions.myFHB.constants.Constants
 import com.ventechsolutions.myFHB.services.AVServices
+import com.ventechsolutions.myFHB.services.ReminderBroadcaster
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.EventChannel
@@ -33,6 +36,7 @@ import io.flutter.plugin.common.EventChannel.EventSink
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugins.GeneratedPluginRegistrant
 import kotlinx.android.synthetic.main.progess_dialog.*
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.system.exitProcess
 
@@ -96,6 +100,10 @@ class MainActivity : FlutterActivity() {
     internal lateinit var spin_kit: SpinKitView
     internal lateinit var close: ImageView
     internal lateinit var micOn: ImageView
+
+    private val REMINDER_CHANNEL = "android/notification"
+    private val REMINDER_METHOD_NAME = "remindMe"
+    var alarmManager: AlarmManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -281,6 +289,26 @@ class MainActivity : FlutterActivity() {
                 result.notImplemented()
             }
         }
+
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, REMINDER_CHANNEL).setMethodCallHandler { call, result ->
+            try {
+                if (call.method == REMINDER_METHOD_NAME) {
+                    val data = call.argument<String>("data")
+                    val retMap: Map<String, Any> = Gson().fromJson(
+                            data, object : TypeToken<HashMap<String?, Any?>?>() {}.type
+                    )
+
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+                        heyKindlyRemindMe(retMap)
+                    }
+                    result.success("success")
+                } else {
+                    result.notImplemented()
+                }
+            } catch (e: Exception) {
+                print("exception" + e.message)
+            }
+        }
     }
 
     private fun startOnGoingNS(name: String, mode: String) {
@@ -359,6 +387,7 @@ class MainActivity : FlutterActivity() {
         val serviceIntent = Intent(this, AVServices::class.java)
         stopService(serviceIntent)
         speechRecognizer!!.destroy()
+        MyApp.snoozeTapCountTime = 0
     }
 
     val handler: Handler = Handler()
@@ -715,6 +744,53 @@ class MainActivity : FlutterActivity() {
                     // Consent denied. User can type OTC manually.
                 }*/
 
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
+    private fun heyKindlyRemindMe(data: Map<String, Any>) {
+        val title: String = data["title"] as String
+        val body: String = data["desc"] as String
+        val nsId = data["id"] as Double
+        val date: String = data["date"] as String
+        val time: String = data["time"] as String
+        val alarmHour = time.split("-")[0].toInt()
+        val alarmMin = time.split("-")[1].toInt()
+        val alarmDate = date.split("-")[2].toInt()
+        val alarmMonth = date.split("-")[1].toInt()
+        val alarmYear = date.split("-")[0].toInt()
+        val reminderBroadcaster = Intent(this, ReminderBroadcaster::class.java)
+        reminderBroadcaster.putExtra("title", title)
+        reminderBroadcaster.putExtra("body", body)
+        reminderBroadcaster.putExtra("nsId", nsId.toInt())
+
+
+        // Set the alarm to start for specific time
+        val calendar: Calendar = Calendar.getInstance().apply {
+            timeInMillis = System.currentTimeMillis()
+            set(Calendar.YEAR, alarmYear)
+            set(Calendar.MONTH, alarmMonth - 1)
+            set(Calendar.DAY_OF_MONTH, alarmDate)
+            set(Calendar.HOUR_OF_DAY, alarmHour)
+            set(Calendar.MINUTE, alarmMin)
+            set(Calendar.SECOND, 0)
+        }
+
+        alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        reminderBroadcaster.putExtra("currentMillis", calendar.timeInMillis)
+        val pendingIntent = PendingIntent.getBroadcast(this, 1, reminderBroadcaster, PendingIntent.FLAG_ONE_SHOT)
+
+        //Log.d("CAL", "----------------${calendar.timeInMillis}")
+
+        val formatter = SimpleDateFormat("yyyy/MM/dd HH:SS")
+        val dateString = formatter.format(Date(calendar.timeInMillis))
+        //Log.d("CAL", "******************current convert date${dateString}")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            alarmManager?.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            alarmManager?.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
+        } else {
+            alarmManager?.set(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
         }
     }
 

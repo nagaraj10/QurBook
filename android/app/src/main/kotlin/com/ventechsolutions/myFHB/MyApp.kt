@@ -20,6 +20,7 @@ class MyApp : Application() {
         var isMissedNSShown = true
         var recordId = ""
         const val TAG: String = "MyApp"
+        var snoozeTapCountTime: Int = 0
     }
 
     fun updateStatus(isAccept: Boolean) {
