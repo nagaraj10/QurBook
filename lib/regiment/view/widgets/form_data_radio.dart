@@ -22,16 +22,16 @@ class _FormDataRadioState extends State<FormDataRadio> {
   @override
   Widget build(BuildContext context) {
     radioValue ??= (int.tryParse(widget.fieldData?.value ?? '') ?? 0) == 1;
-    return InkWell(
-      onTap: () {
-        setState(() {
-          radioValue = !radioValue;
-        });
-        FieldModel updatedFieldData = widget.fieldData;
-        updatedFieldData.value = (radioValue ? 1 : 0).toString();
-        widget.updateValue(updatedFieldData);
-      },
-      child: Row(
+    return Row(
+      children: getRadioItems(),
+    );
+  }
+
+  List<Widget> getRadioItems() {
+    List<Widget> radioItems = [];
+
+    radioItems.add(
+      Row(
         children: [
           Radio<bool>(
             groupValue: radioValue,
@@ -39,35 +39,30 @@ class _FormDataRadioState extends State<FormDataRadio> {
             activeColor: Color(CommonUtil().getMyPrimaryColor()),
             onChanged: (value) {
               setState(() {
-                radioValue = !radioValue;
+                radioValue = value;
               });
               FieldModel updatedFieldData = widget.fieldData;
               updatedFieldData.value = (radioValue ? 1 : 0).toString();
               widget.updateValue(updatedFieldData);
             },
           ),
-          // Radio<bool>(
-          //   groupValue: radioValue,
-          //   value: false,
-          //   activeColor: Color(CommonUtil().getMyPrimaryColor()),
-          //   onChanged: (value) {
-          //     setState(() {
-          //       radioValue = value;
-          //     });
-          //   },
-          // ),
-          SizedBox(
-            width: 2.0.w,
-          ),
-          Text(
-            widget.fieldData.title ?? '',
-            style: TextStyle(
-              fontSize: 16.0.sp,
-              fontWeight: FontWeight.w600,
+          Padding(
+            padding: EdgeInsets.only(
+              left: 2.0.w,
+              right: 10.0.w,
+            ),
+            child: Text(
+              widget.fieldData.title ?? '',
+              style: TextStyle(
+                fontSize: 16.0.sp,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
         ],
       ),
     );
+
+    return radioItems;
   }
 }

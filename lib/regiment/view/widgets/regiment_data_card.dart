@@ -101,110 +101,7 @@ class RegimentDataCard extends StatelessWidget {
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              '${title}',
-                              style: TextStyle(
-                                fontSize: 16.0.sp,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 5.0.h,
-                            ),
-                            Container(
-                              height: 58.0.h,
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                //TODO: Replace with actual count from API
-                                itemCount: vitalsData.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  // bool needCheckbox =
-                                  //     vitalsData[index].fieldType ==
-                                  //         FieldType.CHECKBOX;
-                                  bool isNormal = true;
-
-                                  isNormal = (vitalsData[index].fieldType ==
-                                          FieldType.NUMBER)
-                                      ? int.tryParse(
-                                                  vitalsData[index].value) !=
-                                              null &&
-                                          int.tryParse(vitalsData[index].amin) !=
-                                              null &&
-                                          int.tryParse(vitalsData[index].amax) !=
-                                              null &&
-                                          (int.tryParse(
-                                                      vitalsData[index].value) <
-                                                  int.tryParse(
-                                                      vitalsData[index].amax) &&
-                                              int.tryParse(
-                                                      vitalsData[index].value) >
-                                                  int.tryParse(
-                                                      vitalsData[index].amin))
-                                      : true;
-                                  return Padding(
-                                    padding: EdgeInsets.all(5.0.sp),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: <Widget>[
-                                        Text(
-                                          //TODO: Replace with actual value from API
-                                          vitalsData[index].vitalName,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.grey,
-                                            fontSize: 14.0.sp,
-                                          ),
-                                          maxLines: 2,
-                                          softWrap: true,
-                                        ),
-                                        Expanded(
-                                          child: Row(
-                                            children: [
-                                              Text(
-                                                //TODO: Replace with actual value from API
-                                                '${vitalsData[index].display ?? ''}',
-                                                style: TextStyle(
-                                                  color: isNormal
-                                                      ? color
-                                                      : Colors.red,
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 16.0.sp,
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 10.0.w,
-                                              ),
-                                              // Visibility(
-                                              //   visible: needCheckbox ?? false,
-                                              //   child: Container(
-                                              //     width: 10.0.w,
-                                              //     child: Checkbox(
-                                              //       //TODO: Replace with actual value from API
-                                              //       value: (int.tryParse(
-                                              //                   vitalsData[index]
-                                              //                           .value ??
-                                              //                       '0') ??
-                                              //               0) ==
-                                              //           1,
-                                              //       checkColor: Colors.white,
-                                              //       activeColor: Colors.black,
-                                              //       onChanged: (val) {},
-                                              //     ),
-                                              //   ),
-                                              // ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ],
+                          children: getFieldWidgets(),
                         ),
                       ),
                       Padding(
@@ -237,5 +134,80 @@ class RegimentDataCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  List<Widget> getFieldWidgets() {
+    List<Widget> fieldWidgets = [];
+    fieldWidgets.add(
+      Padding(
+        padding: EdgeInsets.only(
+          bottom: 5.0.h,
+        ),
+        child: Text(
+          '${title}',
+          style: TextStyle(
+            fontSize: 16.0.sp,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ),
+    );
+
+    vitalsData?.forEach((vitalData) {
+      bool isNormal = true;
+
+      isNormal = (vitalData.fieldType == FieldType.NUMBER)
+          ? int.tryParse(vitalData.value) != null &&
+              int.tryParse(vitalData.amin) != null &&
+              int.tryParse(vitalData.amax) != null &&
+              (int.tryParse(vitalData.value) < int.tryParse(vitalData.amax) &&
+                  int.tryParse(vitalData.value) > int.tryParse(vitalData.amin))
+          : true;
+      if ((vitalData.display ?? '').isNotEmpty) {
+        fieldWidgets.add(
+          Padding(
+            padding: EdgeInsets.all(5.0.sp),
+            child: Row(
+              children: [
+                Text(
+                  //TODO: Replace with actual value from API
+                  '${vitalData.vitalName} : ',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey,
+                    fontSize: 14.0.sp,
+                  ),
+                  maxLines: 2,
+                  softWrap: true,
+                ),
+                Text(
+                  //TODO: Replace with actual value from API
+                  '${vitalData.display ?? ''}',
+                  style: TextStyle(
+                    color: isNormal ? color : Colors.red,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16.0.sp,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }
+    });
+
+    return fieldWidgets;
+    // ListView.builder(
+    //   shrinkWrap: true,
+    //   scrollDirection: Axis.horizontal,
+    //   //TODO: Replace with actual count from API
+    //   itemCount: vitalsData.length,
+    //   itemBuilder: (BuildContext context, int index) {
+    //     // bool needCheckbox =
+    //     //     vitalsData[index].fieldType ==
+    //     //         FieldType.CHECKBOX;
+    //
+    //   },
+    // );
   }
 }
