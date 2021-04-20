@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:io' show Platform;
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 // import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:camera/camera.dart';
 import 'package:connectivity/connectivity.dart';
@@ -632,9 +631,6 @@ class _MyFHBState extends State<MyFHB> {
         ),
         provider.ChangeNotifierProvider<ChatScreenViewModel>(
           create: (_) => ChatScreenViewModel(),
-        ),
-        provider.ChangeNotifierProvider<RegimentViewModel>(
-          create: (_) => RegimentViewModel(),
         ),
       ],
       child: LayoutBuilder(
