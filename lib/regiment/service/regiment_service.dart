@@ -21,7 +21,7 @@ class RegimentService {
         body: json.encode(
           {
             "method": "get",
-            "data": "Action=GetUserData&startdate=$dateSelected",
+            "data": "Action=GetUserActivities&startdate=$dateSelected",
           },
         ),
       );
@@ -82,6 +82,36 @@ class RegimentService {
           {
             "method": "get",
             "data": "Action=GetFormForEvent&eid=$eid",
+          },
+        ),
+      );
+      if (response != null && response.statusCode == 200) {
+        print(response.body);
+        return FieldsResponseModel.fromJson(json.decode(response.body));
+      } else {
+        return FieldsResponseModel(
+          result: ResultDataModel(),
+          isSuccess: false,
+        );
+      }
+    } catch (e) {
+      print(e);
+      throw Exception('$e was thrown');
+    }
+  }
+
+  static Future<FieldsResponseModel> getProfile() async {
+    final urlForRegiment = Constants.BASE_URL + variable.regiment;
+    try {
+      final headerRequest =
+          await HeaderRequest().getRequestHeadersAuthContent();
+      final response = await http.post(
+        urlForRegiment,
+        headers: headerRequest,
+        body: json.encode(
+          {
+            "method": "get",
+            "data": "&Action=GetProfile",
           },
         ),
       );

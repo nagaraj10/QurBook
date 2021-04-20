@@ -1,15 +1,4 @@
-// To parse this JSON data, do
-//
-//     final regimentDataModel = regimentDataModelFromJson(jsonString);
-
 import 'dart:convert';
-
-List<RegimentDataModel> regimentDataModelFromJson(String str) =>
-    List<RegimentDataModel>.from(
-        json.decode(str).map((x) => RegimentDataModel.fromJson(x)));
-
-String regimentDataModelToJson(List<RegimentDataModel> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class RegimentDataModel {
   RegimentDataModel({
@@ -76,7 +65,8 @@ class RegimentDataModel {
         estart: DateTime.tryParse(json["estart"] ?? ''),
         eend: DateTime.tryParse(json["eend"] ?? ''),
         html: json["html"],
-        otherinfo: Otherinfo.fromJson(jsonDecode(json["otherinfo"] ?? '{}')),
+        otherinfo: Otherinfo.fromJson(
+            json["otherinfo"] is List ? {} : (json["otherinfo"] ?? '{}')),
         remindin: json["remindin"],
         remindinType: json["remindin_type"],
         ack: DateTime.tryParse(json["ack"] ?? ''),
@@ -123,7 +113,7 @@ class Otherinfo {
   final dynamic needPhoto;
   final dynamic needAudio;
   final dynamic needVideo;
-  final int needFile;
+  final dynamic needFile;
 
   factory Otherinfo.fromJson(Map<String, dynamic> json) => Otherinfo(
         needPhoto: json["NeedPhoto"],
