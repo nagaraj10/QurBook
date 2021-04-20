@@ -271,11 +271,11 @@ class FHBUtils {
     }
   }
 
-   static Future<String> createFolderInAppDocDirClone(String folderName) async {
+  static Future<String> createFolderInAppDocDirClone(String folderName) async {
     Directory _appDocDirFolder;
     //Create Directory with app name
-     final Directory _appDocDir = await getTemporaryDirectory();
-      _appDocDirFolder = Directory(_appDocDir.path);
+    final Directory _appDocDir = await getTemporaryDirectory();
+    _appDocDirFolder = Directory(_appDocDir.path);
 
     if (await _appDocDirFolder.exists()) {
       //if folder already exists return path
@@ -287,7 +287,13 @@ class FHBUtils {
       return _appDocDirNewFolder.path;
     }
   }
-  
+
+  static Future<String> getInAppDocDirForReminders() async {
+    final Directory _appDocDir = await getApplicationDocumentsDirectory();
+    final Directory _appDocDirFolder =
+        Directory('${_appDocDir.path}/NotificationReminders/');
+    return _appDocDirFolder.path;
+  }
 
   static Future<String> createFolderInAppDocDirForIOS(String folderName) async {
     final Directory _appDocDir = await getApplicationDocumentsDirectory();

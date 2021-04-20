@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -72,7 +73,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     });
     */
     dbInitialize();
-
+    QurPlanReminders.getTheRemindersFromAPI();
     callImportantsMethod();
 
     print(
@@ -275,12 +276,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
               ),
               backgroundColor: Colors.grey[200],
-              body: SingleChildScrollView(
-                //height: 1.sh - 200,
-                child: ChangeNotifierProvider(
-                  create: (context) => DevicesViewModel(),
-                  child: ShowDevicesNew(),
-                ),
+              body: ChangeNotifierProvider(
+                create: (context) => DevicesViewModel(),
+                child: ShowDevicesNew(),
               ));
         },
       ),
@@ -455,9 +453,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     try {
       getProfileData();
     } catch (e) {}
-    try {
+    /*try {
       syncDevices();
-    } catch (e) {}
+    } catch (e) {}*/
 
     try {
       await new CommonUtil().getMedicalPreference();
@@ -479,9 +477,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     } catch (e) {}
   }
 
-  void syncDevices() async {
+  /*void syncDevices() async {
     await new CommonUtil().syncDevices();
-  }
+  }*/
 
   Future<void> _handleCameraAndMic() async {
     await Permission.microphone.request();
