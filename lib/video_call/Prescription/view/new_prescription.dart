@@ -1,5 +1,6 @@
 import 'dart:core';
 import 'dart:ui';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -35,7 +36,7 @@ class NewPrescriptionState extends State<NewPrescription> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    mInitialTime = DateTime.now();
     super.initState();
     if (widget.isDuplicatedPrescription) {
       medicineList = widget.duplicatedMedicines;
@@ -47,9 +48,13 @@ class NewPrescriptionState extends State<NewPrescription> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
-    print('new prescription page dispose');
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'New Prescription Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   @override

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/DatePicker/date_picker_widget.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/my_providers/models/Doctors.dart';
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
@@ -71,8 +72,20 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
 
   @override
   void initState() {
+    mInitialTime = DateTime.now();
     super.initState();
     getSelectedValue();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Doctor Session Time Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   getSelectedValue() {

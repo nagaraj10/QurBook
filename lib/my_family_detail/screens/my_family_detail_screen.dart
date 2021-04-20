@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -94,7 +95,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   AddFamilyUserInfoBloc addFamilyUserInfoBloc;
   AddFamilyUserInfoRepository addFamilyUserInfoRepository;
 
-  MyProfileModel myProf = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+  //MyProfileModel myProf = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
 
   String selectedBloodGroup;
   String selectedBloodRange;
@@ -109,11 +110,23 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
   @override
   void initState() {
+    mInitialTime = DateTime.now();
     super.initState();
     addFamilyUserInfoBloc = new AddFamilyUserInfoBloc();
     getAllCustomRoles();
     setState(() {
       _currentPage = widget.arguments.currentPage;
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Family Detail Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
     });
   }
 
@@ -242,12 +255,15 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     if (sharedbyme.child != null) {
       if (sharedbyme.child.firstName != null &&
           sharedbyme.child.lastName != null) {
-        firstNameController.text = sharedbyme.child.firstName;
-        middleNameController.text = sharedbyme.child.middleName;
-        lastNameController.text = sharedbyme.child.lastName;
+        firstNameController.text =
+            sharedbyme?.child?.firstName?.capitalizeFirstofEach;
+        middleNameController.text =
+            sharedbyme?.child?.middleName?.capitalizeFirstofEach;
+        lastNameController.text =
+            sharedbyme?.child?.lastName?.capitalizeFirstofEach;
       }
     } else {
-      firstNameController.text = sharedbyme.child.name;
+      firstNameController.text = sharedbyme?.child?.name;
       middleNameController.text = '';
       lastNameController.text = '';
     }
@@ -256,7 +272,9 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       try {
         if (sharedbyme.child.isVirtualUser) {
           MyProfileModel myProf =
-              PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+              PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) != null
+                  ? PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN)
+                  : PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
           if (myProf.result.userContactCollection3 != null) {
             if (myProf.result.userContactCollection3.length > 0) {
               mobileNoController.text =
@@ -323,9 +341,9 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       cntrlr_addr_two.text =
           sharedbyme?.child?.userAddressCollection3[0].addressLine2;
       cntrlr_addr_city.text =
-          sharedbyme?.child?.userAddressCollection3[0].city.name;
+          sharedbyme?.child?.userAddressCollection3[0].city?.name;
       cntrlr_addr_state.text =
-          sharedbyme?.child?.userAddressCollection3[0].state.name;
+          sharedbyme?.child?.userAddressCollection3[0].state?.name;
       cntrlr_addr_zip.text =
           sharedbyme?.child?.userAddressCollection3[0].pincode;
     }
@@ -355,17 +373,17 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                                   PreferenceUtil.getStringValue(
                                       Constants.KEY_AUTHTOKEN)
                             },
-                      errorBuilder:
-                          (BuildContext context, Object exception, StackTrace stackTrace) {
-                        return Container(
-                          height: 100.0.h,
-                          width: 100.0.h,
-                          color: Colors.grey[200],
-                          child: Center(
-                            child: getFirstLastNameText(sharedbyme.child),
-                          ),
-                        );
-                      },
+                            errorBuilder: (BuildContext context,
+                                Object exception, StackTrace stackTrace) {
+                              return Container(
+                                height: 100.0.h,
+                                width: 100.0.h,
+                                color: Colors.grey[200],
+                                child: Center(
+                                  child: getFirstLastNameText(sharedbyme.child),
+                                ),
+                              );
+                            },
                           )
                         : Container(
                             width: 100.0.h,
@@ -564,7 +582,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
         child: TextField(
           enabled: false,
-          cursorColor: Theme.of(context).primaryColor,
+          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: mobileNoController,
           maxLines: 1,
           enableInteractiveSelection: false,
@@ -600,7 +618,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
         child: TextField(
-          cursorColor: Theme.of(context).primaryColor,
+          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: nameController,
           maxLines: 1,
           enabled: false,
@@ -636,7 +654,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
         child: TextField(
-          cursorColor: Theme.of(context).primaryColor,
+          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: firstNameController,
           maxLines: 1,
           enabled: false,
@@ -672,7 +690,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
         child: TextField(
-          cursorColor: Theme.of(context).primaryColor,
+          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: middleNameController,
           maxLines: 1,
           enabled: false,
@@ -708,7 +726,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
         child: TextField(
-          cursorColor: Theme.of(context).primaryColor,
+          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: lastNameController,
           maxLines: 1,
           enabled: false,
@@ -744,7 +762,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
         child: TextField(
-          cursorColor: Theme.of(context).primaryColor,
+          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: relationShipController,
           maxLines: 1,
           enabled: false,
@@ -779,7 +797,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
         child: TextField(
-          cursorColor: Theme.of(context).primaryColor,
+          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: emailController,
           maxLines: 1,
           enabled: false,
@@ -815,7 +833,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
         child: TextField(
-          cursorColor: Theme.of(context).primaryColor,
+          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: genderController,
           maxLines: 1,
           enabled: false,
@@ -853,7 +871,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         child: Container(
             width: 1.sw / 2 - 40,
             child: TextField(
-              cursorColor: Theme.of(context).primaryColor,
+              cursorColor: Color(CommonUtil().getMyPrimaryColor()),
               controller: bloodGroupController,
               maxLines: 1,
               enabled: false,
@@ -892,7 +910,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         child: Container(
             width: 1.sw / 2 - 40,
             child: TextField(
-              cursorColor: Theme.of(context).primaryColor,
+              cursorColor: Color(CommonUtil().getMyPrimaryColor()),
               controller: bloodRangeController,
               maxLines: 1,
               enabled: false,
@@ -931,7 +949,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         child: Container(
             width: 1.sw / 2 - 40,
             child: TextField(
-              cursorColor: Theme.of(context).primaryColor,
+              cursorColor: Color(CommonUtil().getMyPrimaryColor()),
               controller: heightConroller,
               maxLines: 1,
               enabled: false,
@@ -970,7 +988,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         child: Container(
             width: 1.sw / 2 - 40,
             child: TextField(
-              cursorColor: Theme.of(context).primaryColor,
+              cursorColor: Color(CommonUtil().getMyPrimaryColor()),
               controller: weightController,
               maxLines: 1,
               enabled: false,
@@ -1009,7 +1027,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       child: Padding(
           padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
           child: TextField(
-            cursorColor: Theme.of(context).primaryColor,
+            cursorColor: Color(CommonUtil().getMyPrimaryColor()),
             controller: dateOfBirthController,
             maxLines: 1,
             autofocus: false,

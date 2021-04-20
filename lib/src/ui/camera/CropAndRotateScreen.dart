@@ -81,7 +81,8 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
             },
           ),
         ),
-        new SwitchProfile().buildActions(context, _keyLoader, callBackToRefresh,false)
+        new SwitchProfile()
+            .buildActions(context, _keyLoader, callBackToRefresh, false)
       ],
     );
   }
@@ -263,7 +264,7 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
   }
 
   Future showBusyingDialog() async {
-    var primaryColor = Theme.of(context).primaryColor;
+    var primaryColor = Color(CommonUtil().getMyPrimaryColor());
     return showDialog(
         context: context,
         barrierDismissible: false,

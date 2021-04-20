@@ -5,6 +5,7 @@ import 'package:myfhb/add_providers/models/add_providers_arguments.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/my_providers/bloc/providers_block.dart';
@@ -43,9 +44,21 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
 
   @override
   void initState() {
+    mInitialTime = DateTime.now();
     providerViewModel = new MyProviderViewModel();
     super.initState();
     filterDuplicateDoctor();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'My Providers Doctor list Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   void filterDuplicateDoctor() {
@@ -224,6 +237,6 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
     } else if (user.userName != null && user.userName != '') {
       doctorName = user.userName;
     }
-    return doctorName;
+    return doctorName?.capitalizeFirstofEach;
   }
 }

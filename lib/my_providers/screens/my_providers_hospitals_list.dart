@@ -5,6 +5,7 @@ import 'package:myfhb/add_providers/models/add_providers_arguments.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/my_providers/bloc/providers_block.dart';
@@ -38,6 +39,23 @@ class _MyProvidersDoctorsList extends State<MyProvidersHospitalsList> {
   MyProviderState myProviderState;
   MyProviderViewModel providerViewModel;
   CommonWidgets commonWidgets = new CommonWidgets();
+
+  @override
+  void initState() {
+    mInitialTime = DateTime.now();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'My Providers Hospital list Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -120,8 +138,8 @@ class _MyProvidersDoctorsList extends State<MyProvidersHospitalsList> {
                           SizedBox(height: 5.0.h),
                           AutoSizeText(
                             eachHospitalModel.name != null
-                                ? toBeginningOfSentenceCase(
-                                    eachHospitalModel.name)
+                                ? eachHospitalModel?.name?.capitalizeFirstofEach /* toBeginningOfSentenceCase(
+                                    eachHospitalModel.name) */
                                 : '',
                             maxLines: 1,
                             style: TextStyle(

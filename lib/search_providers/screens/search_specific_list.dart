@@ -8,6 +8,7 @@ import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/search_providers/bloc/labs_list_block.dart';
@@ -59,6 +60,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
   @override
   void initState() {
+    mInitialTime = DateTime.now();
     super.initState();
 
     _doctorsListBlock = new DoctorsListBlock();
@@ -78,6 +80,17 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     }
     WidgetsBinding.instance
         .addPostFrameCallback((_) => _refreshIndicatorKey.currentState.show());
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Search List Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   @override
@@ -375,19 +388,19 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           _showAddButton(diagnostics),
           Text('to add the Doctor as',
               style: new TextStyle(
-                color: Theme.of(context).primaryColor,
+                color:  Color(CommonUtil().getMyPrimaryColor()),
                 fontSize: 15.0.sp,
                 fontWeight: FontWeight.w500,
               )),
           Text('Unknown Doctor ',
               style: new TextStyle(
-                color: Theme.of(context).primaryColor,
+                color:  Color(CommonUtil().getMyPrimaryColor()),
                 fontSize: 15.0.sp,
                 fontWeight: FontWeight.bold,
               )),
           Text('temporarily',
               style: new TextStyle(
-                color: Theme.of(context).primaryColor,
+                color:  Color(CommonUtil().getMyPrimaryColor()),
                 fontSize: 15.0.sp,
                 fontWeight: FontWeight.bold,
               )),
@@ -477,7 +490,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         width: 100.0.w,
         height: 40.0.h,
         decoration: new BoxDecoration(
-          color: Theme.of(context).primaryColor,
+          color: Color(CommonUtil().getMyPrimaryColor()),
           borderRadius: new BorderRadius.all(Radius.circular(25.0)),
           boxShadow: <BoxShadow>[
             BoxShadow(
@@ -517,8 +530,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                   padding: EdgeInsets.only(top: 2, bottom: 2),
                   child: getCardToDisplaySearchList(
                       (data[i].name != null && data[i].name != '')
-                          ? data[i].name
-                          : data[i].firstName + ' ' + data[i].lastName,
+                          ? data[i]?.name?.capitalizeFirstofEach
+                          : data[i]?.firstName?.capitalizeFirstofEach + ' ' + data[i]?.lastName?.capitalizeFirstofEach,
                       getDoctorsAddress(data[i]),
                       data[i].doctorId,
                       data[i].profilePicThumbnailUrl,
@@ -557,10 +570,10 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                       child: getCardToDisplaySearchList(
                           (data.result[i].name != null &&
                                   data.result[i].name != '')
-                              ? data.result[i].name
-                              : data.result[i].firstName +
+                              ? data?.result[i]?.name?.capitalizeFirstofEach
+                              : data?.result[i]?.firstName?.capitalizeFirstofEach +
                                   ' ' +
-                                  data.result[i].lastName,
+                                  data?.result[i]?.lastName?.capitalizeFirstofEach,
                           getDoctorsAddress(data.result[i]),
                           data.result[i].doctorId,
                           data.result[i].profilePicThumbnailUrl,
@@ -706,7 +719,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                     : passLaboratoryValue(labData, context);
           } else {
             passdataToNextScreen(
-                data.name, context, data, hospitalData, labData);
+                data?.name.capitalizeFirstofEach, context, data, hospitalData, labData);
           }
         });
   }
@@ -736,7 +749,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Text(
-          name != null ? name : '',
+          name != null ? name.capitalizeFirstofEach : '',
           style: TextStyle(
               fontSize: 16.0.sp,
               fontWeight: FontWeight.w500,

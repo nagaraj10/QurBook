@@ -33,13 +33,14 @@ class WVResult {
   String endDateTime;
   String weight;
   String weightUnit;
-
+  String deviceId;
   WVResult(
       {this.sourceType,
       this.startDateTime,
       this.endDateTime,
       this.weight,
-      this.weightUnit});
+      this.weightUnit,
+      this.deviceId});
 
   WVResult.fromJson(Map<String, dynamic> json) {
     sourceType = json[strsourcetype];

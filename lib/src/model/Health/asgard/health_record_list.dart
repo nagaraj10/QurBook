@@ -114,6 +114,8 @@ class Metadata {
   bool isDraft;
   String sourceName;
   String memoTextRaw;
+  String startDateTime;
+  String endDateTime;
   Doctor doctor;
   Hospital hospital;
   String fileName;
@@ -148,6 +150,12 @@ class Metadata {
     isDraft = json['isDraft'];
     sourceName = json['sourceName'];
     memoTextRaw = json['memoTextRaw'];
+    if (json.containsKey('startDateTime')) {
+      startDateTime = json['startDateTime'];
+    }
+    if (json.containsKey('endDateTime')) {
+      endDateTime = json['endDateTime'];
+    }
     fileName = json['fileName'];
     try {
       if (json.containsKey('deviceReadings')) {
@@ -191,6 +199,9 @@ class Metadata {
     data['isDraft'] = this.isDraft;
     data['sourceName'] = this.sourceName;
     data['memoTextRaw'] = this.memoTextRaw;
+    data['startDateTime'] = this.startDateTime;
+    data['endDateTime'] = this.endDateTime;
+
     if (this.doctor != null) {
       data['doctor'] = this.doctor.toJson();
     }

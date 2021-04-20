@@ -3,6 +3,7 @@ import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
@@ -56,9 +57,21 @@ class _NotesScreenListState extends State<NotesScreenList> {
 
   @override
   void initState() {
+    mInitialTime = DateTime.now();
     _healthReportListForUserBlock = new HealthReportListForUserBlock();
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Notes List Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   @override

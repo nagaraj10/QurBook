@@ -254,10 +254,10 @@ class FamilyListView {
                                       child: Text(
                                         index == 0
                                             ? sharedByMe[index].nickName != null
-                                                ? toBeginningOfSentenceCase(
+                                                ? sharedByMe[index]?.nickName?.capitalizeFirstofEach /* toBeginningOfSentenceCase(
                                                     sharedByMe[index]
                                                         .nickName
-                                                        .toLowerCase())
+                                                        .toLowerCase()) */
                                                 : ''
                                             : sharedByMe[index].child != null
                                                 ? getName(

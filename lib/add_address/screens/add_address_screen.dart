@@ -4,6 +4,7 @@ import 'package:myfhb/add_address/models/place.dart';
 import 'package:myfhb/add_address/services/google_map_service.dart';
 import 'package:myfhb/add_address/widgets/add_address_list.dart';
 import 'package:myfhb/common/CommonConstants.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:uuid/uuid.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -34,8 +35,19 @@ class AddAddressScreenState extends State<AddAddressScreen> {
   @override
   void initState() {
     super.initState();
-
+    mInitialTime = DateTime.now();
     searchController.addListener(textListener);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Add address Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   @override

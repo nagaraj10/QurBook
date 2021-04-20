@@ -194,6 +194,7 @@ class ChatScreenState extends State<ChatScreen> {
 
   @override
   void initState() {
+    mInitialTime = DateTime.now();
     super.initState();
 
     focusNode.addListener(onFocusChange);
@@ -217,6 +218,12 @@ class ChatScreenState extends State<ChatScreen> {
   void dispose() {
     chatViewModel.setCurrentChatRoomID('none');
     super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'TeleHealth Chat Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   updateReadCount() async {
@@ -1451,7 +1458,7 @@ class ChatScreenState extends State<ChatScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(toBeginningOfSentenceCase(widget.peerName),
+                    Text(widget?.peerName?.capitalizeFirstofEach/* toBeginningOfSentenceCase(widget.peerName) */,
                         textAlign: TextAlign.left,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,

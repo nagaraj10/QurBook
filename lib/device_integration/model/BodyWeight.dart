@@ -24,15 +24,14 @@ class BodyWeight {
 }
 
 class BodyWeightEntity {
-  BodyWeightEntity({
-    this.id,
-    this.startDateTime,
-    this.endDateTime,
-    this.weight,
-    this.weightUnit,
-    this.deviceHealthRecord,
-    this.averageAsOfNow
-  });
+  BodyWeightEntity(
+      {this.id,
+      this.startDateTime,
+      this.endDateTime,
+      this.weight,
+      this.weightUnit,
+      this.deviceHealthRecord,
+      this.averageAsOfNow});
 
   String id;
   DateTime startDateTime;
@@ -44,18 +43,20 @@ class BodyWeightEntity {
 
   factory BodyWeightEntity.fromJson(Map<String, dynamic> json) =>
       BodyWeightEntity(
-        //id: json["id"],
-        startDateTime: DateTime.parse(json[param.strsyncStartDate]),
-        endDateTime: DateTime.parse(json[param.strsyncEndDate]),
-        weight: json[param.strParamWeight],
-        weightUnit: RefrenceValueMeta.fromJson(json[param.strParamWeightUnit]),
-          deviceHealthRecord: json[param.strParamDeviceHealthRecord] != null
-              ? new DeviceHealthRecord.fromJson(json[param.strParamDeviceHealthRecord])
+          //id: json["id"],
+          startDateTime: DateTime.parse(json[param.strsyncStartDate]),
+          endDateTime: DateTime.parse(json[param.strsyncEndDate]),
+          weight: json[param.strParamWeight],
+          weightUnit: json[param.strParamWeightUnit] != null
+              ? RefrenceValueMeta.fromJson(json[param.strParamWeightUnit])
               : null,
-        averageAsOfNow: json['averageAsOfNow'] != null
-            ? new AverageAsOfNow.fromJson(json['averageAsOfNow'])
-            : null
-      );
+          deviceHealthRecord: json[param.strParamDeviceHealthRecord] != null
+              ? new DeviceHealthRecord.fromJson(
+                  json[param.strParamDeviceHealthRecord])
+              : null,
+          averageAsOfNow: json['averageAsOfNow'] != null
+              ? new AverageAsOfNow.fromJson(json['averageAsOfNow'])
+              : null);
 
   Map<String, dynamic> toJson() => {
         //"id": id,
@@ -63,8 +64,8 @@ class BodyWeightEntity {
         param.strsyncEndDate: endDateTime.toIso8601String(),
         param.strParamWeight: weight,
         param.strParamWeightUnit: weightUnit.toJson(),
-        param.strParamDeviceHealthRecord:deviceHealthRecord.toJson(),
-        param.strParamAverageAsOfNow:averageAsOfNow.toJson()
+        param.strParamDeviceHealthRecord: deviceHealthRecord.toJson(),
+        param.strParamAverageAsOfNow: averageAsOfNow.toJson()
       };
 }
 

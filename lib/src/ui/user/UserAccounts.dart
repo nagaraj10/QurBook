@@ -53,7 +53,7 @@ class _UserAccountsState extends State<UserAccounts>
   }
 
   fetchUserProfileInfo() async {
-    var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
     myProfile = await addFamilyUserInfoRepository.getMyProfileInfoNew(userid);
   }
 

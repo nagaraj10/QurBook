@@ -11,11 +11,12 @@ class FetchHealthKitData {
 
   HealthFactory Health = HealthFactory();
   List<HealthDataType> types = [
-    HealthDataType.STEPS,
+    HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
+    HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
     HealthDataType.WEIGHT,
     HealthDataType.HEIGHT,
     HealthDataType.BLOOD_GLUCOSE,
-    HealthDataType.DISTANCE_WALKING_RUNNING,
+    HealthDataType.BLOOD_OXYGEN,
     HealthDataType.BODY_TEMPERATURE,
   ];
 
@@ -50,17 +51,25 @@ class FetchHealthKitData {
           healthRecord[strdeviceDataType] = strWeight;
           List<dynamic> dataSet = [];
           healthData.forEach((healthData) {
+            print('----------------------health data -------------------');
+            print(healthData.unit);
             Map<String, dynamic> rawData = new Map();
             rawData[strStartTimeStamp] = healthData.dateFrom.toIso8601String();
             rawData[strEndTimeStamp] = healthData.dateTo.toIso8601String();
+            rawData[strStartTimeStampNano] =
+                healthData.dateFrom.microsecondsSinceEpoch.abs() * 1000;
+            rawData[strEndTimeStampNano] =
+                healthData.dateTo.microsecondsSinceEpoch.abs() * 1000;
             rawData[strParamWeight] = healthData.value;
-            if (healthData.unit == hktWeightUnit) {
+            if (healthData.unitString == hktWeightUnit) {
               rawData[strParamWeightUnit] = strValueWeightUnit;
             }
             dataSet.add(rawData);
           });
           healthRecord[strRawData] = dataSet;
           String params = json.encode(healthRecord);
+          print(
+              "-------------------------weight-------------------------------------");
           print(params);
           return params;
         }
@@ -95,7 +104,11 @@ class FetchHealthKitData {
             Map<String, dynamic> rawData = new Map();
             rawData[strStartTimeStamp] = healthData.dateFrom.toIso8601String();
             rawData[strEndTimeStamp] = healthData.dateTo.toIso8601String();
-            if (healthData.unit == hktHeartRateUnit) {
+            rawData[strStartTimeStampNano] =
+                healthData.dateFrom.microsecondsSinceEpoch.abs() * 1000;
+            rawData[strEndTimeStampNano] =
+                healthData.dateTo.microsecondsSinceEpoch.abs() * 1000;
+            if (healthData.unitString == hktHeartRateUnit) {
               rawData[strParamHeartRate] = healthData.value;
             }
             dataSet.add(rawData);
@@ -143,6 +156,10 @@ class FetchHealthKitData {
               Map<String, dynamic> rawData = new Map();
               rawData[strStartTimeStamp] = pair[0].dateFrom.toIso8601String();
               rawData[strEndTimeStamp] = pair[0].dateTo.toIso8601String();
+              rawData[strStartTimeStampNano] =
+                  pair[0].dateFrom.microsecondsSinceEpoch.abs() * 1000;
+              rawData[strEndTimeStampNano] =
+                  pair[0].dateTo.microsecondsSinceEpoch.abs() * 1000;
               rawData[strParamSystolic] = pair[0].value;
               rawData[strParamDiastolic] = pair[1].value;
 
@@ -151,6 +168,8 @@ class FetchHealthKitData {
           }
           healthRecord[strRawData] = dataSet;
           String params = json.encode(healthRecord);
+          print(
+              "-------------------------Bp-------------------------------------");
           print(params);
           return params;
         }
@@ -188,8 +207,12 @@ class FetchHealthKitData {
             Map<String, dynamic> rawData = new Map();
             rawData[strStartTimeStamp] = healthData.dateFrom.toIso8601String();
             rawData[strEndTimeStamp] = healthData.dateTo.toIso8601String();
+            rawData[strStartTimeStampNano] =
+                healthData.dateFrom.microsecondsSinceEpoch.abs() * 1000;
+            rawData[strEndTimeStampNano] =
+                healthData.dateTo.microsecondsSinceEpoch.abs() * 1000;
             rawData[strParamBGLevel] = healthData.value;
-            if (healthData.unit == hktGlucoseUnit) {
+            if (healthData.unitString == hktGlucoseUnit) {
               rawData[strParamBGUnit] = strMGDL;
             }
             dataSet.add(rawData);
@@ -204,49 +227,53 @@ class FetchHealthKitData {
     }
   }
 
-  // Future<String> getBloodOxygenData(var startDate, var endDate) async {
-  //   if (await Health.requestAuthorization(types) {
-  //     //print("Blood_Oxygen Summary");
-  //     try {
-  //       /// Fetch BloodOxygen data
-  //       List<HealthDataPoint> healthData = await Health.getHealthDataFromTypes(
-  //           startDate, endDate, [HealthDataType.BLOOD_OXYGEN]);
+  Future<String> getBloodOxygenData(var startDate, var endDate) async {
+    if (await Health.requestAuthorization(types)) {
+      //print("Blood_Oxygen Summary");
+      try {
+        /// Fetch BloodOxygen data
+        List<HealthDataPoint> healthData = await Health.getHealthDataFromTypes(
+            startDate, endDate, [HealthDataType.BLOOD_OXYGEN]);
 
-  //       // healthData = Health.removeDuplicates(healthData);
+        // healthData = Health.removeDuplicates(healthData);
 
-  //       // healthData.forEach((list) => print("list for GLuecose: $list \n \n"));
-  //       Map<String, dynamic> healthRecord = new Map();
+        // healthData.forEach((list) => print("list for GLuecose: $list \n \n"));
+        Map<String, dynamic> healthRecord = new Map();
 
-  //       Map<String, dynamic> userData = new Map();
-  //       userData[strId] = _userID;
+        Map<String, dynamic> userData = new Map();
+        userData[strId] = _userID;
 
-  //       healthRecord[strUser] = userData;
+        healthRecord[strUser] = userData;
 
-  //       if (healthData.isNotEmpty) {
-  //         healthRecord[strsyncStartDate] = startDate.toIso8601String();
-  //         healthRecord[strsyncEndDate] = endDate.toIso8601String();
-  //         healthRecord[strlastSyncDateTime] = endDate.toIso8601String();
-  //         healthRecord[strdevicesourceName] = strsourceHK;
-  //         healthRecord[strdeviceType] = strOxymeter;
-  //         healthRecord[strdeviceDataType] = strOxgenSaturation;
-  //         List<dynamic> dataSet = [];
-  //         healthData.forEach((healthData) {
-  //           Map<String, dynamic> rawData = new Map();
-  //           rawData[strStartTimeStamp] = healthData.dateFrom.toIso8601String();
-  //           rawData[strEndTimeStamp] = healthData.dateTo.toIso8601String();
-  //           rawData[strParamOxygen] = healthData.value * 100;
+        if (healthData.isNotEmpty) {
+          healthRecord[strsyncStartDate] = startDate.toIso8601String();
+          healthRecord[strsyncEndDate] = endDate.toIso8601String();
+          healthRecord[strlastSyncDateTime] = endDate.toIso8601String();
+          healthRecord[strdevicesourceName] = strsourceHK;
+          healthRecord[strdeviceType] = strOxymeter;
+          healthRecord[strdeviceDataType] = strOxgenSaturation;
+          List<dynamic> dataSet = [];
+          healthData.forEach((healthData) {
+            Map<String, dynamic> rawData = new Map();
+            rawData[strStartTimeStamp] = healthData.dateFrom.toIso8601String();
+            rawData[strEndTimeStamp] = healthData.dateTo.toIso8601String();
+            rawData[strStartTimeStampNano] =
+                healthData.dateFrom.microsecondsSinceEpoch.abs() * 1000;
+            rawData[strEndTimeStampNano] =
+                healthData.dateTo.microsecondsSinceEpoch.abs() * 1000;
+            rawData[strParamOxygen] = healthData.value * 100;
 
-  //           dataSet.add(rawData);
-  //         });
-  //         healthRecord[strRawData] = dataSet;
-  //         String params = json.encode(healthRecord);
-  //         return params;
-  //       }
-  //     } catch (exception) {
-  //       throw "Unable to fetch Oxygen data from HealthKit $exception";
-  //     }
-  //   }
-  // }
+            dataSet.add(rawData);
+          });
+          healthRecord[strRawData] = dataSet;
+          String params = json.encode(healthRecord);
+          return params;
+        }
+      } catch (exception) {
+        throw "Unable to fetch Oxygen data from HealthKit $exception";
+      }
+    }
+  }
 
   Future<String> getBodyTemperature(var startDate, var endDate) async {
     if (await Health.requestAuthorization(types)) {
@@ -277,16 +304,22 @@ class FetchHealthKitData {
             Map<String, dynamic> rawData = new Map();
             rawData[strStartTimeStamp] = healthData.dateFrom.toIso8601String();
             rawData[strEndTimeStamp] = healthData.dateTo.toIso8601String();
+            rawData[strStartTimeStampNano] =
+                healthData.dateFrom.microsecondsSinceEpoch.abs() * 1000;
+            rawData[strEndTimeStampNano] =
+                healthData.dateTo.microsecondsSinceEpoch.abs() * 1000;
             rawData[strParamTemp] = healthData.value;
-            if (healthData.unit == hktTemperatureUnit1) {
+            if (healthData.unitString == hktTemperatureUnit1) {
               rawData[strParamTempUnit] = strParamUnitCelsius;
-            } else if (healthData.unit == hktTemperatureUnit2) {
+            } else if (healthData.unitString == hktTemperatureUnit2) {
               rawData[strParamTempUnit] = strParamUnitFarenheit;
             }
             dataSet.add(rawData);
           });
           healthRecord[strRawData] = dataSet;
           String params = json.encode(healthRecord);
+          print(
+              "-------------------------Temp-------------------------------------");
           print(params);
         }
       } catch (exception) {

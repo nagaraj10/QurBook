@@ -67,6 +67,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 
   @override
   void initState() {
+    Constants.mInitialTime = DateTime.now();
     super.initState();
 
     initFlashlight();
@@ -107,6 +108,12 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 
   @override
   void dispose() {
+    Constants.fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Take Picture Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(Constants.mInitialTime).inSeconds} secs'
+    });
     // Dispose of the controller when the widget is disposed.
     _controller.dispose();
     super.dispose();

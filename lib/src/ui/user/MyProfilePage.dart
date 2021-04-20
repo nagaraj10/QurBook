@@ -37,6 +37,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
   var bloodRangeController = TextEditingController();
   File imageURIProfile, profileImage;
   var dob = TextEditingController();
+  var languageController = TextEditingController();
 
   var heightController = TextEditingController();
   var weightController = TextEditingController();
@@ -54,12 +55,30 @@ class _MyProfilePageState extends State<MyProfilePage> {
   @override
   void initState() {
     PreferenceUtil.init();
+    // getPreferredLanguage();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(key: scaffold_state, body: getProfileDetailClone());
+  }
+
+  void getPreferredLanguage() {
+    String currentLanguage = '';
+    final lan = CommonUtil.getCurrentLanCode();
+    if (lan != "undef") {
+      final langCode = lan.split("-").first;
+      currentLanguage = langCode;
+    }
+    if (currentLanguage.isNotEmpty) {
+      CommonUtil.supportedLanguages.forEach((language, languageCode) {
+        if (currentLanguage == languageCode) {
+          languageController.text = toBeginningOfSentenceCase(language);
+          return;
+        }
+      });
+    }
   }
 
   /* Widget getProfileDetailClone() {
@@ -83,11 +102,13 @@ class _MyProfilePageState extends State<MyProfilePage> {
         if (snapshot.hasData) {
           //* its done with fetching the data from remote
           if (snapshot.hasData && snapshot.data != null) {
-            return getProfileWidget(snapshot.data,snapshot.data.result);
+            getPreferredLanguage();
+            return getProfileWidget(snapshot.data, snapshot.data.result);
           } else {
             //todo proper error msg to users
             toast.getToast('something went wrong!', Colors.red);
-            return getProfileWidget(snapshot.data,null, errorMsg: 'something went wrong!');
+            return getProfileWidget(snapshot.data, null,
+                errorMsg: 'something went wrong!');
           }
         } else if (snapshot.connectionState == ConnectionState.waiting) {
           //* its fetching the data from remote
@@ -108,7 +129,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
           );
         } else {
           toast.getToast('${snapshot.error.toString()}', Colors.red);
-          return getProfileWidget(snapshot.data,null, errorMsg: snapshot.error.toString());
+          return getProfileWidget(snapshot.data, null,
+              errorMsg: snapshot.error.toString());
         }
       },
     );
@@ -149,7 +171,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
     }
   }
 
-  Widget getProfileWidget(MyProfileModel myProfile,MyProfileResult data, {String errorMsg}) {
+  Widget getProfileWidget(MyProfileModel myProfile, MyProfileResult data,
+      {String errorMsg}) {
     if (data != null) {
       if (data.userContactCollection3 != null) {
         if (data.userContactCollection3.length > 0) {
@@ -157,8 +180,10 @@ class _MyProfilePageState extends State<MyProfilePage> {
         }
       }
       if (data != null) {
-        name.text = toBeginningOfSentenceCase(
-            data.firstName.toLowerCase() + data.lastName.toLowerCase());
+        // name.text = toBeginningOfSentenceCase(
+        //     data.firstName.toLowerCase() + data.lastName.toLowerCase());
+        name.text = data?.firstName?.capitalizeFirstofEach +
+            data?.lastName?.capitalizeFirstofEach;
       }
       if (data.userContactCollection3 != null) {
         if (data.userContactCollection3.length > 0) {
@@ -187,13 +212,16 @@ class _MyProfilePageState extends State<MyProfilePage> {
         dob.text = new FHBUtils().getFormattedDateOnlyNew(data.dateOfBirth);
       }
       if (data != null) {
-        firstName.text = data.firstName;
+        firstName.text = data?.firstName?.capitalizeFirstofEach;
         middleName.text = (data.middleName != null && data.middleName != '')
-            ? data.middleName
+            ? data?.middleName?.capitalizeFirstofEach
             : '';
-        lastName.text = data.lastName;
+        lastName.text = data?.lastName?.capitalizeFirstofEach;
       } else {
-        firstName.text = data != null ? data.firstName + data.lastName : '';
+        firstName.text = data != null
+            ? data?.firstName?.capitalizeFirstofEach +
+                data?.lastName?.capitalizeFirstofEach
+            : '';
         middleName.text = '';
         lastName.text = '';
       }
@@ -240,8 +268,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
                               fit: BoxFit.cover,
                             )
                           : data.profilePicThumbnailUrl != null
-                              ? FHBBasicWidget().getProfilePicWidgeUsingUrlForProfile(
-                                  myProfile)
+                              ? FHBBasicWidget()
+                                  .getProfilePicWidgeUsingUrlForProfile(
+                                      myProfile)
                               : Container(),
                     ),
                   ),
@@ -419,7 +448,19 @@ class _MyProfilePageState extends State<MyProfilePage> {
                         )),
                   ],
                 ),
-
+                Padding(
+                  padding: EdgeInsets.all(10),
+                  child: TextField(
+                    style: TextStyle(fontSize: 16.0.sp),
+                    controller: languageController,
+                    enabled: false,
+                    decoration: InputDecoration(
+                      hintText: CommonConstants.preferredLanguage,
+                      hintStyle: TextStyle(fontSize: 16.0.sp),
+                      labelText: CommonConstants.preferredLanguage,
+                    ),
+                  ),
+                ),
                 Padding(
                   padding: EdgeInsets.all(10),
                   child: TextField(

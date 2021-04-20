@@ -167,6 +167,7 @@ const String icon_profile = 'assets/navicons/ic_profile_two.png';
 const String icon_more = 'assets/navicons/more.png';
 const String icon_no_internet = 'assets/no_internet.png';
 const String icon_something_wrong = 'assets/something-wrong.png';
+const String icon_refresh_dash = 'assets/icons/refresh_dash.png';
 
 //For Apple Health Settings Info
 const String apple_health_settings_info = 'assets/settings/health.jpg';
@@ -192,7 +193,7 @@ const String strBookmarkRecord = 'bookmark record';
 const String strChat = 'Chats';
 const String strFeedBack = 'Feedback';
 const String strFeedbackExp =
-    'We would like to hear from you on your experience with MyFHB';
+    'We would like to hear from you on your experience with QurBook';
 const String strAttachImage = 'Attach Image';
 const String strAddVoice = 'Add Voice';
 const String strcategoryInfo = 'categoryInfo';
@@ -592,6 +593,13 @@ const String c_qurhealth_helpline = '919566200555';
 const String icon_whatsapp = 'assets/icons/ic_whatsapp.png';
 
 const String strAdd = 'Add';
+const String strSync = 'Syncing...';
+
+//Reminders
+//
+const reminderMethodChannel = MethodChannel('flutter.native/reminder');
+const addReminderMethod = 'addReminder';
+const removeReminderMethod = 'removeReminder';
 
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {

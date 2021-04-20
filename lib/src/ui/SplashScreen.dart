@@ -1,11 +1,16 @@
+import 'dart:convert';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/authentication/view/login_screen.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
@@ -62,6 +67,21 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     PreferenceUtil.init();
+    //setReminder();
+  }
+
+  void setReminder() {
+    var selecteTimeInDate = "${TimeOfDay.now().hour}-${TimeOfDay.now().minute+3}";
+    print('currentTime#######${selecteTimeInDate}');
+    var ch_android = const MethodChannel('android/notification');
+    var mappedReminder = {
+      'id': 001,
+      'title': 'Take BP tablet',
+      'desc': 'dont forgot to take tablets',
+      'date': '2021-04-13',
+      'time': '$selecteTimeInDate',
+    };
+    ch_android.invokeMethod('remindMe', {'data': jsonEncode(mappedReminder)});
   }
 
   @override
@@ -97,6 +117,11 @@ class _SplashScreenState extends State<SplashScreen> {
                   if (authToken != null) {
                     if (deviceIfo) {
                       if (widget.nsRoute == 'DoctorRescheduling') {
+                        fbaLog(eveParams: {
+                          'eventTime': '${DateTime.now()}',
+                          'ns_type': 'DoctorRescheduling',
+                          'navigationPage': 'Reschedule screen',
+                        });
                         var body = {};
                         body['templateName'] = widget.templateName;
                         body['contextId'] = widget.bookingID;
@@ -117,7 +142,11 @@ class _SplashScreenState extends State<SplashScreen> {
                         );
                       } else if (widget.nsRoute == 'DoctorCancellation') {
                         //cancel appointments route
-
+                        fbaLog(eveParams: {
+                          'eventTime': '${DateTime.now()}',
+                          'ns_type': 'DoctorCancellation',
+                          'navigationPage': 'Appointment List',
+                        });
                         Get.offAll(TelehealthProviders(
                           arguments: HomeScreenArguments(
                               selectedIndex: 0,
@@ -131,10 +160,20 @@ class _SplashScreenState extends State<SplashScreen> {
                           parameters.doctorCancellation) {
                         Get.to(NotificationMain());
                       } else if (widget.nsRoute == 'chat') {
+                        fbaLog(eveParams: {
+                          'eventTime': '${DateTime.now()}',
+                          'ns_type': 'chat',
+                          'navigationPage': 'Tele Health Chat list',
+                        });
                         Get.to(
                           ChatHomeScreen(),
                         );
                       } else if (widget.nsRoute == 'appointmentList') {
+                        fbaLog(eveParams: {
+                          'eventTime': '${DateTime.now()}',
+                          'ns_type': 'appointmentList',
+                          'navigationPage': 'Tele Health Appointment list',
+                        });
                         //cancel appointments route
                         Get.offAll(TelehealthProviders(
                           arguments: HomeScreenArguments(
@@ -144,26 +183,51 @@ class _SplashScreenState extends State<SplashScreen> {
                               templateName: widget.templateName),
                         ));
                       } else if (widget.nsRoute == 'sheela') {
+                        fbaLog(eveParams: {
+                          'eventTime': '${DateTime.now()}',
+                          'ns_type': 'sheela',
+                          'navigationPage': 'Sheela Start Page',
+                        });
                         Get.to(SuperMaya()).then((value) =>
                             PageNavigator.goToPermanent(
                                 context, router.rt_Dashboard));
                       } else if (widget.nsRoute == 'profile_page') {
+                        fbaLog(eveParams: {
+                          'eventTime': '${DateTime.now()}',
+                          'ns_type': 'profile_page',
+                          'navigationPage': 'User Profile page',
+                        });
                         Get.toNamed(router.rt_UserAccounts,
                                 arguments:
                                     UserAccountsArguments(selectedIndex: 0))
                             .then((value) => PageNavigator.goToPermanent(
                                 context, router.rt_Dashboard));
                       } else if (widget.nsRoute == 'googlefit') {
+                        fbaLog(eveParams: {
+                          'eventTime': '${DateTime.now()}',
+                          'ns_type': 'googlefit',
+                          'navigationPage': 'Google Fit page',
+                        });
                         Get.toNamed(router.rt_AppSettings).then((value) =>
                             PageNavigator.goToPermanent(
                                 context, router.rt_Dashboard));
                       } else if (widget.nsRoute == 'th_provider') {
+                        fbaLog(eveParams: {
+                          'eventTime': '${DateTime.now()}',
+                          'ns_type': 'th_provider',
+                          'navigationPage': 'Tele Health Provider',
+                        });
                         Get.toNamed(router.rt_TelehealthProvider,
                                 arguments:
                                     HomeScreenArguments(selectedIndex: 1))
                             .then((value) => PageNavigator.goToPermanent(
                                 context, router.rt_Dashboard));
                       } else if (widget.nsRoute == 'my_record') {
+                        fbaLog(eveParams: {
+                          'eventTime': '${DateTime.now()}',
+                          'ns_type': 'my_record',
+                          'navigationPage': 'My Records',
+                        });
                         getProfileData();
                         Get.toNamed(router.rt_HomeScreen,
                                 arguments:
@@ -174,9 +238,19 @@ class _SplashScreenState extends State<SplashScreen> {
                           (widget.templateName != null &&
                               widget.templateName != '') &&
                           (widget.bundle != null && widget.bundle != '')) {
+                        fbaLog(eveParams: {
+                          'eventTime': '${DateTime.now()}',
+                          'ns_type': 'myRecords',
+                          'navigationPage': '${widget.templateName}',
+                        });
                         CommonUtil().navigateToMyRecordsCategory(
                             widget.templateName, [widget.bundle], true);
                       } else {
+                        fbaLog(eveParams: {
+                          'eventTime': '${DateTime.now()}',
+                          'ns_type': 'dashboard',
+                          'navigationPage': 'Dashboard',
+                        });
                         PageNavigator.goToPermanent(
                             context, router.rt_Dashboard);
                       }
@@ -196,6 +270,11 @@ class _SplashScreenState extends State<SplashScreen> {
                                 token,
                                 true)
                             .then((value) {
+                          fbaLog(eveParams: {
+                            'eventTime': '${DateTime.now()}',
+                            'ns_type': 'dashboard',
+                            'navigationPage': 'Dashboard',
+                          });
                           PageNavigator.goToPermanent(
                               context, router.rt_Dashboard);
                         });
@@ -207,6 +286,11 @@ class _SplashScreenState extends State<SplashScreen> {
                     //     context,
                     //     MaterialPageRoute(
                     //         builder: (context) => PatientSignInScreen()));
+                    fbaLog(eveParams: {
+                      'eventTime': '${DateTime.now()}',
+                      'ns_type': 'sign_in',
+                      'navigationPage': 'Login Page',
+                    });
                     Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(

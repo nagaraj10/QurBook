@@ -52,6 +52,18 @@ class HomeScreenState extends State<ChatHomeScreen> {
     super.initState();
     //registerNotification();
     //configLocalNotification();
+    mInitialTime = DateTime.now();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Chat Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   Future<String> getPatientDetails() async {
@@ -345,7 +357,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
           .document(document.documentID)
           .snapshots(),
       builder: (context, AsyncSnapshot<DocumentSnapshot> snapshotUser) {
-        if(snapshotUser.hasData){
+        if (snapshotUser.hasData) {
           String lastMessage = document[STR_LAST_MESSAGE];
           if (document[STR_ID] == patientId) {
             return Container();
@@ -358,18 +370,18 @@ class HomeScreenState extends State<ChatHomeScreen> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => Chat(
-                              peerId: document.documentID,
-                              peerAvatar: document[STR_PHOTO_URL],
-                              peerName: snapshotUser.data[STR_NICK_NAME],
-                              lastDate: getFormattedDateTime(
-                                  (document[STR_CREATED_AT] as Timestamp)
-                                      .toDate()
-                                      .toString()),
-                              patientId: '',
-                              patientName: '',
-                              patientPicture: '',
-                              isFromVideoCall: false,
-                            )));
+                                  peerId: document.documentID,
+                                  peerAvatar: document[STR_PHOTO_URL],
+                                  peerName: snapshotUser.data[STR_NICK_NAME],
+                                  lastDate: getFormattedDateTime(
+                                      (document[STR_CREATED_AT] as Timestamp)
+                                          .toDate()
+                                          .toString()),
+                                  patientId: '',
+                                  patientName: '',
+                                  patientPicture: '',
+                                  isFromVideoCall: false,
+                                )));
                   },
                   child: Container(
                     child: Row(
@@ -384,43 +396,47 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                 child: ClipOval(
                                   child: document[STR_PHOTO_URL] != null
                                       ? CachedNetworkImage(
-                                      placeholder: (context, url) => Container(
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 1.0,
-                                          valueColor:
-                                          AlwaysStoppedAnimation<Color>(
-                                              themeColor),
-                                        ),
-                                        width: 50.0,
-                                        height: 50.0,
-                                        padding: EdgeInsets.all(15.0),
-                                      ),
-                                      imageUrl: document[STR_PHOTO_URL],
-                                      width: 50.0,
-                                      height: 50.0,
-                                      fit: BoxFit.cover,
-                                      errorWidget: (context, url, error) =>
-                                          Container(
-                                            height: 50.0.h,
-                                            width: 50.0.h,
-                                            color: Colors.grey[200],
-                                            child: Center(
-                                                child: Text(
-                                                  snapshotUser.data[STR_NICK_NAME][0].toString().toUpperCase(),
+                                          placeholder: (context, url) =>
+                                              Container(
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  strokeWidth: 1.0,
+                                                  valueColor:
+                                                      AlwaysStoppedAnimation<
+                                                          Color>(themeColor),
+                                                ),
+                                                width: 50.0,
+                                                height: 50.0,
+                                                padding: EdgeInsets.all(15.0),
+                                              ),
+                                          imageUrl: document[STR_PHOTO_URL],
+                                          width: 50.0,
+                                          height: 50.0,
+                                          fit: BoxFit.cover,
+                                          errorWidget: (context, url, error) =>
+                                              Container(
+                                                height: 50.0.h,
+                                                width: 50.0.h,
+                                                color: Colors.grey[200],
+                                                child: Center(
+                                                    child: Text(
+                                                  snapshotUser
+                                                      .data[STR_NICK_NAME][0]
+                                                      .toString()
+                                                      .toUpperCase(),
                                                   style: TextStyle(
-                                                    color: Color(new CommonUtil().getMyPrimaryColor()),
+                                                    color: Color(new CommonUtil()
+                                                        .getMyPrimaryColor()),
                                                     fontSize: 16.0.sp,
                                                     fontWeight: FontWeight.w400,
                                                   ),
-                                                )
-                                            ),
-                                          )
-                                  )
+                                                )),
+                                              ))
                                       : Icon(
-                                    Icons.account_circle,
-                                    size: 50.0,
-                                    color: greyColor,
-                                  ),
+                                          Icons.account_circle,
+                                          size: 50.0,
+                                          color: greyColor,
+                                        ),
                                 ),
                               ),
                             ],
@@ -437,8 +453,9 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                 Padding(
                                   padding: const EdgeInsets.only(bottom: 4),
                                   child: Text(
-                                    toBeginningOfSentenceCase(
-                                        snapshotUser.data[STR_NICK_NAME]),
+                                    /* toBeginningOfSentenceCase(
+                                        snapshotUser.data[STR_NICK_NAME]), */
+                                    snapshotUser?.data[STR_NICK_NAME]?.toString()?.capitalizeFirstofEach,    
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
                                     style: TextStyle(
@@ -451,40 +468,43 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                   height: 1,
                                 ),
                                 Container(
-                                  constraints: BoxConstraints(maxWidth: 1.sw * 0.5),
+                                  constraints:
+                                      BoxConstraints(maxWidth: 1.sw * 0.5),
                                   padding: const EdgeInsets.only(bottom: 4),
                                   child: lastMessage != null
                                       ? lastMessage.contains(STR_HTTPS)
-                                      ? Row(
-                                    children: [
-                                      Icon(
-                                        Icons.photo,
-                                        size: 16.0.sp,
-                                        color: Colors.black54,
-                                      ),
-                                      SizedBoxWidget(
-                                        width: 3,
-                                      ),
-                                      Text(
-                                        STR_FILE,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                            color: Colors.grey[600],
-                                            fontSize: 14.0.sp,
-                                            fontFamily:
-                                            variable.font_poppins),
-                                      )
-                                    ],
-                                  )
-                                      : Text(
-                                    lastMessage,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.grey[600],
-                                        fontSize: 14.0.sp,
-                                        fontFamily: variable.font_poppins),
-                                  )
+                                          ? Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.photo,
+                                                  size: 16.0.sp,
+                                                  color: Colors.black54,
+                                                ),
+                                                SizedBoxWidget(
+                                                  width: 3,
+                                                ),
+                                                Text(
+                                                  STR_FILE,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                      color: Colors.grey[600],
+                                                      fontSize: 14.0.sp,
+                                                      fontFamily: variable
+                                                          .font_poppins),
+                                                )
+                                              ],
+                                            )
+                                          : Text(
+                                              lastMessage,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.grey[600],
+                                                  fontSize: 14.0.sp,
+                                                  fontFamily:
+                                                      variable.font_poppins),
+                                            )
                                       : '',
                                 ),
                                 SizedBox(
@@ -495,11 +515,11 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                   child: Text(
                                     document[STR_CREATED_AT] != null
                                         ? LAST_RECEIVED +
-                                        getFormattedDateTime(
-                                            (document[STR_CREATED_AT]
-                                            as Timestamp)
-                                                .toDate()
-                                                .toString())
+                                            getFormattedDateTime(
+                                                (document[STR_CREATED_AT]
+                                                        as Timestamp)
+                                                    .toDate()
+                                                    .toString())
                                         : '',
                                     style: TextStyle(
                                         fontWeight: FontWeight.w300,
@@ -519,80 +539,86 @@ class HomeScreenState extends State<ChatHomeScreen> {
                           child: Column(
                             children: [
                               Padding(
-                                  padding: const EdgeInsets.fromLTRB(0, 8, 4, 4),
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 8, 4, 4),
                                   child: (chatListSnapshot.hasData &&
-                                      chatListSnapshot.data.documents.length > 0)
+                                          chatListSnapshot.data.documents.length >
+                                              0)
                                       ? StreamBuilder<QuerySnapshot>(
-                                      stream: Firestore.instance
-                                          .collection('messages')
-                                          .document(chatViewModel.createGroupId(
-                                          patientId,
-                                          chatListSnapshot
-                                              .data.documents[index]['id']))
-                                          .collection(chatViewModel.createGroupId(
-                                          patientId,
-                                          chatListSnapshot
-                                              .data.documents[index]['id']))
-                                          .where('idTo', isEqualTo: patientId)
-                                          .where('isread', isEqualTo: false)
-                                          .snapshots(),
-                                      builder: (context, notReadMSGSnapshot) {
-                                        return Container(
-                                          width: 60,
-                                          height: 50,
-                                          child: Column(
-                                            children: <Widget>[
-                                              Padding(
-                                                  padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      0, 5, 0, 0),
-                                                  child: CircleAvatar(
-                                                    radius: 10,
-                                                    child: Text(
-                                                      (chatListSnapshot.hasData &&
-                                                          chatListSnapshot
-                                                              .data
-                                                              .documents
-                                                              .length >
-                                                              0)
-                                                          ? ((notReadMSGSnapshot
-                                                          .hasData &&
-                                                          notReadMSGSnapshot
-                                                              .data
-                                                              .documents
-                                                              .length >
-                                                              0)
-                                                          ? '${notReadMSGSnapshot.data.documents.length}'
-                                                          : '')
-                                                          : '',
-                                                      style: TextStyle(
-                                                        fontSize: 12.0.sp,
-                                                      ),
-                                                    ),
-                                                    backgroundColor:
-                                                    (notReadMSGSnapshot
-                                                        .hasData &&
-                                                        notReadMSGSnapshot
-                                                            .data
-                                                            .documents
-                                                            .length >
-                                                            0 &&
-                                                        notReadMSGSnapshot
-                                                            .hasData &&
-                                                        notReadMSGSnapshot
-                                                            .data
-                                                            .documents
-                                                            .length >
-                                                            0)
-                                                        ? Color(CommonUtil()
-                                                        .getMyPrimaryColor())
-                                                        : Colors.transparent,
-                                                    foregroundColor: Colors.white,
-                                                  )),
-                                            ],
-                                          ),
-                                        );
-                                      })
+                                          stream: Firestore.instance
+                                              .collection('messages')
+                                              .document(
+                                                  chatViewModel.createGroupId(
+                                                      patientId,
+                                                      chatListSnapshot.data
+                                                              .documents[index]
+                                                          ['id']))
+                                              .collection(
+                                                  chatViewModel.createGroupId(
+                                                      patientId,
+                                                      chatListSnapshot.data
+                                                              .documents[index]
+                                                          ['id']))
+                                              .where('idTo', isEqualTo: patientId)
+                                              .where('isread', isEqualTo: false)
+                                              .snapshots(),
+                                          builder: (context, notReadMSGSnapshot) {
+                                            return Container(
+                                              width: 60,
+                                              height: 50,
+                                              child: Column(
+                                                children: <Widget>[
+                                                  Padding(
+                                                      padding: const EdgeInsets
+                                                          .fromLTRB(0, 5, 0, 0),
+                                                      child: CircleAvatar(
+                                                        radius: 10,
+                                                        child: Text(
+                                                          (chatListSnapshot
+                                                                      .hasData &&
+                                                                  chatListSnapshot
+                                                                          .data
+                                                                          .documents
+                                                                          .length >
+                                                                      0)
+                                                              ? ((notReadMSGSnapshot
+                                                                          .hasData &&
+                                                                      notReadMSGSnapshot
+                                                                              .data
+                                                                              .documents
+                                                                              .length >
+                                                                          0)
+                                                                  ? '${notReadMSGSnapshot.data.documents.length}'
+                                                                  : '')
+                                                              : '',
+                                                          style: TextStyle(
+                                                            fontSize: 12.0.sp,
+                                                          ),
+                                                        ),
+                                                        backgroundColor: (notReadMSGSnapshot.hasData &&
+                                                                notReadMSGSnapshot
+                                                                        .data
+                                                                        .documents
+                                                                        .length >
+                                                                    0 &&
+                                                                notReadMSGSnapshot
+                                                                    .hasData &&
+                                                                notReadMSGSnapshot
+                                                                        .data
+                                                                        .documents
+                                                                        .length >
+                                                                    0)
+                                                            ? Color(CommonUtil()
+                                                                .getMyPrimaryColor())
+                                                            : Colors
+                                                                .transparent,
+                                                        foregroundColor:
+                                                            Colors.white,
+                                                      )),
+                                                ],
+                                              ),
+                                            );
+                                          })
                                       : Text(''))
                             ],
                           ),
@@ -609,13 +635,11 @@ class HomeScreenState extends State<ChatHomeScreen> {
               ],
             );
           }
-        }else{
+        } else {
           return new CircularProgressIndicator();
         }
-
       },
     );
-
   }
 
   String getFormattedDateTime(String datetime) {

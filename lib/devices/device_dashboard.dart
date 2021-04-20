@@ -68,7 +68,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    mInitialTime = DateTime.now();
     super.initState();
     deviceName = widget.arguments.deviceName;
     catgoryDataList = PreferenceUtil.getCategoryType();
@@ -79,6 +79,17 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
     }
     _mediaTypeBlock.getMediTypesList().then((value) {
       mediaTypesResponse = value;
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Device Dashboard Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
     });
   }
 
@@ -442,6 +453,9 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
 
       postMediaData[parameters.strSourceName] = CommonConstants.strTridentValue;
       postMediaData[parameters.strmemoTextRaw] = memoController.text;
+      DateTime dateTime = DateTime.now();
+      postMediaData[parameters.strStartDate] = dateTime.toUtc().toString();
+      postMediaData[parameters.strEndDate] = dateTime.toUtc().toString();
       var commonConstants = new CommonConstants();
 
       if (categoryName == CommonConstants.strDevice) {

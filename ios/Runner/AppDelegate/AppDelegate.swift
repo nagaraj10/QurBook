@@ -29,6 +29,12 @@ import AVFoundation
     
     let speechSynthesizer = AVSpeechSynthesizer()
     
+    let reminderChannel = Constants.reminderMethodChannel
+    let addReminderMethod = Constants.addReminderMethod
+    let removeReminderMethod = Constants.addReminderMethod
+
+    let notificationCenter = UNUserNotificationCenter.current()
+    
     override func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
@@ -41,7 +47,7 @@ import AVFoundation
         // 1
         // Local Notification
         if #available(iOS 10.0, *) {
-            UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
+            UNUserNotificationCenter.current().delegate = self
         }
         
         // 2
@@ -100,7 +106,7 @@ import AVFoundation
             self?.TTS_Result = result;
             self?.textToSpeech(messageToSpeak: message, isClose: isClose)
         })
-        
+        setUpReminders(messanger: controller.binaryMessenger)
         GeneratedPluginRegistrant.register(with: self)
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
@@ -146,7 +152,7 @@ import AVFoundation
         
         recognitionTask = speechRecognizer.recognitionTask(with: recognitionRequest) { result, error in
             if let result = result {
-       
+                
                 self.message = result.bestTranscription.formattedString
                 self.detectionTimer?.invalidate()
                 
@@ -223,6 +229,139 @@ import AVFoundation
         
         self.recognitionRequest = nil
         self.recognitionTask = nil
+    }
+    
+    func setUpReminders(messanger:FlutterBinaryMessenger){
+        let notifiationChannel = FlutterMethodChannel(name: reminderChannel, binaryMessenger: messanger)
+        notifiationChannel.setMethodCallHandler {[weak self] (call, result) in
+            guard let self = self else{
+                result(FlutterMethodNotImplemented)
+                return
+            }
+            if call.method == self.addReminderMethod{
+                let notificationArray = call.arguments as! NSArray
+                if let notifiationToShow = notificationArray[0] as? NSDictionary{
+                    self.scheduleNotification(message: notifiationToShow)
+                }
+            }else if call.method == self.removeReminderMethod,let dataArray = call.arguments as? NSArray,let id = dataArray[0] as? String{
+                
+                self.notificationCenter.removePendingNotificationRequests(withIdentifiers: [id])
+            }else{
+                result(FlutterMethodNotImplemented)
+                return
+            }
+        }
+    }
+    
+    var id = "";
+    var title = "";
+    var des = "";
+    var dateComponent:DateComponents = DateComponents();
+    //Prepare New Notificaion with deatils and trigger
+    func scheduleNotification(message: NSDictionary,snooze:Bool = false) {
+        if let _id =  message["eid"] as? String {
+            id = _id
+        }
+        if let _title = message[Constants.title] as? String { title = _title}
+        if let _des = message[Constants.description] as? String {des = _des}
+        
+        if !snooze{
+            if let dateNotifiation = message["estart"] as? String{
+//                let dateComponentsArray = dateNotifiation.components(separatedBy: "-").map{ (val) -> Int  in
+//                    if let newInt = Int(val){
+//                        return newInt
+//                    }
+//                    return 0
+//                }
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "yyyy-mm-dd HH:mm:ss"
+                let dateFromString = dateFormatter.date(from: dateNotifiation)
+                if let dateToBeTriggered = dateFromString{
+                    dateComponent = Calendar.current.dateComponents([.day,.month,.year,.hour,.minute], from: dateToBeTriggered )
+                }
+                
+//                dateComponent.year = dateComponentsArray[0]
+//                dateComponent.month = dateComponentsArray[1]
+//                dateComponent.day = dateComponentsArray[2]
+//                let timeComponentsArray = timeForNotification.components(separatedBy: "-").map{ (val) -> Int  in
+//                    if let newInt = Int(val){
+//                        return newInt
+//                    }
+//                    return 0
+//                }
+//                dateComponent.hour = timeComponentsArray[0]
+//                dateComponent.minute = timeComponentsArray[1]
+            }
+        }
+        
+        //Compose New Notificaion
+        let content = UNMutableNotificationContent()
+        let categoryIdentifire = "Native Notification Type"
+        content.title = title
+        content.body = des
+        content.categoryIdentifier = categoryIdentifire
+        content.userInfo = message as! [AnyHashable : Any]
+        var request:UNNotificationRequest;
+        let identifier = id
+        if snooze{
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 300, repeats: false)
+            request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
+        }else{
+            let dateTrigger = UNCalendarNotificationTrigger(dateMatching: dateComponent, repeats: false)
+            request = UNNotificationRequest(identifier: identifier, content: content, trigger: dateTrigger)
+        }
+        //adding the notification
+        notificationCenter.add(request) { (error) in
+            if let error = error {
+                print("Error \(error.localizedDescription)")
+            }
+        }
+        
+        //Add Action button the Notification
+        
+//        let addAction = UNNotificationAction(identifier: "Yes", title: "Yes", options: [])
+        let snoozeAction = UNNotificationAction(identifier: "Snooze", title: "Snooze", options: [])
+        let declineAction = UNNotificationAction(identifier: "Dismiss", title: "Dismiss", options: [.destructive])
+        let category = UNNotificationCategory(identifier: categoryIdentifire,
+                                              actions: [snoozeAction, declineAction],
+                                              intentIdentifiers: [],
+                                              options: [])
+        notificationCenter.setNotificationCategories([category])
+        
+    }
+    
+    
+    //Handle Notification Center Delegate methods
+    override func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                         willPresent notification: UNNotification,
+                                         withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.alert, .sound])
+    }
+    
+    override func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                         didReceive response: UNNotificationResponse,
+                                         withCompletionHandler completionHandler: @escaping () -> Void) {
+        //            if (response.actionIdentifier == "Accept") || (response.actionIdentifier == "Decline"){
+        //
+        //            }
+        print(response.actionIdentifier)
+        if response.actionIdentifier == "Snooze" {
+            if let data = response.notification.request.content.userInfo as? NSDictionary{
+                if let count = data["snoozeCount"] as? Int{
+                    if count < 2{
+                        var newData = response.notification.request.content.userInfo
+                        newData["snoozeCount"] = count + 1
+                        self.scheduleNotification(message:newData as NSDictionary, snooze: true)
+                    }
+                }else{
+                    var newData = response.notification.request.content.userInfo
+                    newData["snoozeCount"] = 1
+                    self.scheduleNotification(message:newData as NSDictionary, snooze: true)
+                }
+            }
+            
+        }
+        completionHandler()
     }
 }
 

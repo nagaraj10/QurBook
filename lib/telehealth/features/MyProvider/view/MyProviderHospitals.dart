@@ -50,12 +50,26 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
   ProvidersBloc _providersBloc;
   List<Hospitals> myProviderHospitalList = List();
   List<Hospitals> initialHospitalList = List();
+  Future<MyProvidersResponse> _medicalPreferenceList;
 
   @override
   void initState() {
+    mInitialTime = DateTime.now();
     super.initState();
     _providersBloc = new ProvidersBloc();
-    getHospitalsList();
+    _medicalPreferenceList = _providersBloc.getMedicalPreferencesList();
+    // getHospitalsList();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'MyProvider Hospitals List Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   getHospitalsList() {
@@ -131,7 +145,7 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
 
   Widget getDoctorProviderListNew() {
     return new FutureBuilder<MyProvidersResponse>(
-      future: _providersBloc.getMedicalPreferencesList(),
+      future: _medicalPreferenceList,
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return new Center(
@@ -143,16 +157,21 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
         } else {
           final items = snapshot.data ??
               <MyProvidersResponseData>[]; // handle the case that data is null
-          return (snapshot.data.result != null &&
-                  snapshot.data.result.hospitals != null &&
-                  snapshot.data.result.hospitals.length > 0)
-              ? hospitalList(isSearch
-                  ? myProviderHospitalList
-                  : snapshot.data.result.hospitals)
-              : Container(
-                  child: Center(
-                  child: Text(variable.strNoHospitaldata),
-                ));
+          if (snapshot?.hasData &&
+              snapshot?.data?.result != null &&
+              snapshot?.data?.result?.hospitals != null &&
+              snapshot?.data?.result?.hospitals?.length > 0) {
+            initialHospitalList = snapshot?.data?.result?.hospitals;
+            return hospitalList(isSearch
+                ? myProviderHospitalList
+                : snapshot?.data?.result?.hospitals);
+          } else {
+            initialHospitalList = snapshot?.data?.result?.hospitals;
+            return Container(
+                child: Center(
+              child: Text(variable.strNoHospitaldata),
+            ));
+          }
         }
       },
     );

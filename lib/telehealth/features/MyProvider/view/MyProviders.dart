@@ -58,12 +58,26 @@ class _MyProvidersState extends State<MyProviders> {
   ProvidersBloc _providersBloc;
   MyProvidersResponse myProvidersResponseList;
   List<Doctors> copyOfdoctorsModel;
+  Future<MyProvidersResponse> _medicalPreferenceList;
 
   @override
   void initState() {
+    mInitialTime = DateTime.now();
     super.initState();
     getDataForProvider();
     _providersBloc = new ProvidersBloc();
+    _medicalPreferenceList = _providersBloc.getMedicalPreferencesList();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'MyProviders Doctor List Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   @override
@@ -274,7 +288,7 @@ class _MyProvidersState extends State<MyProviders> {
 
   Widget getDoctorProviderListNew() {
     return new FutureBuilder<MyProvidersResponse>(
-      future: _providersBloc.getMedicalPreferencesList(),
+      future: _medicalPreferenceList,
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return new Center(

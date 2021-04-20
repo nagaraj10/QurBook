@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -56,7 +57,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
-
+    mInitialTime = DateTime.now();
     //chatViewModel.getUnreadMSGCount(PreferenceUtil.getStringValue(Constants.KEY_USERID));
 
     /*
@@ -72,7 +73,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     });
     */
     dbInitialize();
-
+    QurPlanReminders.getTheRemindersFromAPI();
     callImportantsMethod();
 
     print(
@@ -87,8 +88,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
     try {
       commonUtil.versionCheck(context);
-    } catch (e) {
-    }
+    } catch (e) {}
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Dashboard Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   @override
@@ -445,9 +456,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     try {
       getProfileData();
     } catch (e) {}
-    try {
+    /*try {
       syncDevices();
-    } catch (e) {}
+    } catch (e) {}*/
 
     try {
       await new CommonUtil().getMedicalPreference();
@@ -469,9 +480,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     } catch (e) {}
   }
 
-  void syncDevices() async {
+  /*void syncDevices() async {
     await new CommonUtil().syncDevices();
-  }
+  }*/
 
   Future<void> _handleCameraAndMic() async {
     await Permission.microphone.request();

@@ -16,6 +16,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
@@ -77,6 +78,7 @@ class _MyFamilyState extends State<MyFamily> {
 
   @override
   void initState() {
+    mInitialTime = DateTime.now();
     super.initState();
     _familyListBloc = new FamilyListBloc();
     _familyListBloc.getFamilyMembersListNew();
@@ -84,6 +86,17 @@ class _MyFamilyState extends State<MyFamily> {
     parentProfilePic =
         PreferenceUtil.getStringValue(Constants.KEY_PROFILE_IMAGE);
     PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID, "");
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'MyFamily Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   @override
@@ -763,7 +776,8 @@ class _MyFamilyState extends State<MyFamily> {
                                         ? Icons.radio_button_checked
                                         : Icons.radio_button_unchecked,
                                     color: isPrimaryNoSelected == true
-                                        ? Theme.of(context).primaryColor
+                                        ? Color(
+                                            CommonUtil().getMyPrimaryColor())
                                         : ColorUtils.myFamilyGreyColor,
                                     size: 24.0.sp,
                                   ),
@@ -916,7 +930,7 @@ class _MyFamilyState extends State<MyFamily> {
   Widget _ShowMobileNoTextField() {
     return Expanded(
       child: new TextField(
-          cursorColor: Theme.of(context).primaryColor,
+          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: mobileNoController,
           maxLines: 1,
           enabled: isPrimaryNoSelected ? false : true,
@@ -950,7 +964,7 @@ class _MyFamilyState extends State<MyFamily> {
   Widget _ShowNameTextField() {
     return Expanded(
       child: new TextField(
-          cursorColor: Theme.of(context).primaryColor,
+          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: nameController,
           maxLines: 1,
           keyboardType: TextInputType.text,
@@ -983,7 +997,7 @@ class _MyFamilyState extends State<MyFamily> {
   Widget _showFirstNameTextField() {
     return Expanded(
         child: TextField(
-      cursorColor: Theme.of(context).primaryColor,
+      cursorColor: Color(CommonUtil().getMyPrimaryColor()),
       controller: firstNameController,
       maxLines: 1,
       keyboardType: TextInputType.text,
@@ -1017,7 +1031,7 @@ class _MyFamilyState extends State<MyFamily> {
   Widget _showMiddleNameTextField() {
     return Expanded(
         child: TextField(
-      cursorColor: Theme.of(context).primaryColor,
+      cursorColor: Color(CommonUtil().getMyPrimaryColor()),
       controller: middleNameController,
       maxLines: 1,
       keyboardType: TextInputType.text,
@@ -1051,7 +1065,7 @@ class _MyFamilyState extends State<MyFamily> {
   Widget _showLastNameTextField() {
     return Expanded(
         child: TextField(
-      cursorColor: Theme.of(context).primaryColor,
+      cursorColor: Color(CommonUtil().getMyPrimaryColor()),
       controller: lastNameController,
       maxLines: 1,
       keyboardType: TextInputType.text,
