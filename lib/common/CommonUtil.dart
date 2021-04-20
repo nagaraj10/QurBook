@@ -1825,7 +1825,7 @@ class CommonUtil {
     if (datetime != null && datetime != '') {
       DateTime dateTimeStamp = DateTime.parse(datetime);
       formattedDate = DateFormat('MMM dd yyyy').format(dateTimeStamp);
-    }else{
+    } else {
       formattedDate = '';
     }
     return formattedDate;
