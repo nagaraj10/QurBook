@@ -21,8 +21,7 @@ class RegimentService {
         body: json.encode(
           {
             "method": "get",
-            "data":
-                "Action=GetUserData&startdate=$dateSelected&pl=QurHealth&ul=patient_1_1@qurhealth.in&ispatient=1",
+            "data": "Action=GetUserData&startdate=$dateSelected",
           },
         ),
       );
@@ -52,8 +51,7 @@ class RegimentService {
         body: json.encode(
           {
             "method": "post",
-            "data":
-                "Action=SaveFormForEvent&eid=$eid$events&pl=QurHealth&ul=patient_1_1@qurhealth.in&ispatient=1",
+            "data": "Action=SaveFormForEvent&eid=$eid$events",
           },
         ),
       );
@@ -83,8 +81,7 @@ class RegimentService {
         body: json.encode(
           {
             "method": "get",
-            "data":
-                "Action=GetFormForEvent&eid=$eid&pl=QurHealth&ul=patient_1_1@qurhealth.in&ispatient=1",
+            "data": "Action=GetFormForEvent&eid=$eid",
           },
         ),
       );
