@@ -29,7 +29,7 @@ class QurPlanReminders {
     final params = jsonEncode({
       "method": "get",
       "data":
-          "Action=GetUserReminders&startdate=$today&enddate=$dayAfterTomorrow&pl=QurHealth&ul=patient_1_1@qurhealth.in&ispatient=1"
+          "Action=GetUserReminders&startdate=$today&enddate=$dayAfterTomorrow"
     });
     try {
       final responseFromApi = await http.post(
