@@ -276,12 +276,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
               ),
               backgroundColor: Colors.grey[200],
-              body: SingleChildScrollView(
-                //height: 1.sh - 200,
-                child: ChangeNotifierProvider(
-                  create: (context) => DevicesViewModel(),
-                  child: ShowDevicesNew(),
-                ),
+              body: ChangeNotifierProvider(
+                create: (context) => DevicesViewModel(),
+                child: ShowDevicesNew(),
               ));
         },
       ),

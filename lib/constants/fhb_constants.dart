@@ -399,6 +399,10 @@ const PLAY_STORE_URL =
 const String STR_HOS_ID = 'Hospital IDs';
 const String STR_OTHER_ID = 'Other IDs';
 const String STR_INSURE_ID = 'Insurance IDs';
+const String noRegimentData =
+    'No Regiments data available for the selected date';
+const String okButton = 'OK';
+const String saveButton = 'Save';
 
 FirebaseAnalytics _firebaseAnalytics = FirebaseAnalytics();
 var mInitialTime;
