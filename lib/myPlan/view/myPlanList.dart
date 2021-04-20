@@ -11,6 +11,7 @@ import 'package:myfhb/myPlan/viewModel/myPlanViewModel.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
 
 class MyPlanList extends StatefulWidget {
   @override
@@ -20,6 +21,8 @@ class MyPlanList extends StatefulWidget {
 class _MyPlanState extends State<MyPlanList> {
   MyPlanListModel myPlanListModel;
   MyPlanViewModel myPlanViewModel = new MyPlanViewModel();
+  bool isSearch = false;
+  List<MyPlanListResult> myPLanListResult = List();
 
   @override
   void initState() {
@@ -32,20 +35,44 @@ class _MyPlanState extends State<MyPlanList> {
         body: Container(
             child: Column(
       children: [
-        myPlanListModel != null ?? myPlanListModel.isSuccess
-            ? hospitalList(myPlanListModel.result)
-            : getPlanList()
+        SearchWidget(
+          onChanged: (providerName) {
+            if (providerName != '' && providerName.length > 2) {
+              isSearch = true;
+              onSearchedNew(providerName);
+            } else {
+              setState(() {
+                isSearch = false;
+              });
+            }
+          },
+        ),
+        Expanded(
+          child: myPlanListModel != null ?? myPlanListModel.isSuccess
+              ? hospitalList(myPlanListModel.result)
+              : getPlanList(),
+        )
       ],
     )));
   }
 
+  onSearchedNew(String doctorName) async {
+    myPLanListResult.clear();
+    if (doctorName != null) {
+      myPLanListResult = await myPlanViewModel.getProviderSearch(doctorName);
+    }
+    setState(() {});
+  }
+
+
   Widget hospitalList(List<MyPlanListResult> planList) {
     return (planList != null && planList.length > 0)
-        ? new ListView.builder(
-            itemBuilder: (BuildContext ctx, int i) =>
-                hospitalListItem(ctx, i, planList),
-            itemCount: planList.length,
-          )
+        ?ListView.builder(
+                shrinkWrap: true,
+                itemBuilder: (BuildContext ctx, int i) =>
+                    hospitalListItem(ctx, i, isSearch?myPLanListResult:planList),
+                itemCount: isSearch?myPLanListResult.length:planList.length,
+              )
         : SafeArea(
             child: SizedBox(
               height: 1.sh / 1.3,
@@ -64,7 +91,7 @@ class _MyPlanState extends State<MyPlanList> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return SafeArea(
             child: SizedBox(
-              height: 1.sh / 1.3,
+              height: 1.sh / 4.5,
               child: new Center(
                 child: SizedBox(
                   width: 30.0.h,
@@ -104,14 +131,22 @@ class _MyPlanState extends State<MyPlanList> {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => MyPlanDetail()),
+          MaterialPageRoute(
+              builder: (context) => MyPlanDetail(
+                    title: planList[i].title,
+                    providerName: planList[i].providerName,
+                    docName: planList[i].docNick,
+                    packageId: planList[i].packageid,
+                    startDate: planList[i].startdate,
+                    endDate: planList[i].enddate,
+                  )),
         );
       },
       child: Container(
-        padding: EdgeInsets.all(12.0),
-        margin: EdgeInsets.only(left: 15, right: 15, top: 8),
+        padding: EdgeInsets.all(4.0),
+        margin: EdgeInsets.only(left: 12, right: 12, top: 8),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: planList[i].isexpired == '1' ? Colors.grey[400] : Colors.white,
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
@@ -127,13 +162,16 @@ class _MyPlanState extends State<MyPlanList> {
         ),
         child: Row(
           children: <Widget>[
+            SizedBox(
+              width: 15.0.w,
+            ),
             CircleAvatar(
-              backgroundColor: Colors.grey[300],
-              radius: 22,
+              backgroundColor: Colors.grey[200],
+              radius: 20,
               child: ClipOval(
                   child: CircleAvatar(
                 backgroundImage: AssetImage('assets/launcher/myfhb1.png'),
-                radius: 20,
+                radius: 18,
                 backgroundColor: Colors.transparent,
               )),
             ),
@@ -147,50 +185,55 @@ class _MyPlanState extends State<MyPlanList> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   SizedBox(height: 5.0.h),
-                  AutoSizeText(
-                    planList[i].planPackage != null
-                        ? toBeginningOfSentenceCase(planList[i].planPackage)
+                  Text(
+                    planList[i].title != null
+                        ? toBeginningOfSentenceCase(planList[i].title)
                         : '',
-                    maxLines: 1,
                     style: TextStyle(
-                      fontSize: 16.0.sp,
+                      fontSize: 15.0.sp,
                       fontWeight: FontWeight.w600,
                     ),
                     textAlign: TextAlign.start,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  SizedBox(height: 5.0.h),
                   Column(
                     children: [
-                      AutoSizeText(
-                        planList[i].provider,
-                        maxLines: 2,
-                        style: TextStyle(
-                            fontSize: 15.0.sp,
-                            fontWeight: FontWeight.w400,
-                            color: ColorUtils.lightgraycolor),
+                      SizedBox(
+                        width: 250.0.w,
+                        child: Text(
+                          planList[i].providerName != null
+                              ? toBeginningOfSentenceCase(
+                                  planList[i].providerName)
+                              : '',
+                          style: TextStyle(
+                              fontSize: 14.0.sp,
+                              fontWeight: FontWeight.w400,
+                              color: ColorUtils.lightgraycolor),
+                        ),
                       ),
-                      SizedBox(height: 5.0.h),
                     ],
                   ),
                   Column(
                     children: [
                       Row(
                         children: [
-                          AutoSizeText(
+                          Text(
                             'Start Date:',
                             style: TextStyle(
-                                fontSize: 12.0.sp, fontWeight: FontWeight.w400),
+                                fontSize: 10.0.sp, fontWeight: FontWeight.w400),
                           ),
-                          AutoSizeText(
-                            new CommonUtil().dateFormatConversion(planList[i].startDate),
+                          Text(
+                            new CommonUtil()
+                                .dateFormatConversion(planList[i].startdate),
                             maxLines: 1,
                             style: TextStyle(
-                                fontSize: 12.0.sp, fontWeight: FontWeight.w500),
+                                fontSize: 10.0.sp, fontWeight: FontWeight.w600),
                           ),
                         ],
                       ),
                     ],
-                  )
+                  ),
+                  SizedBox(height: 5.0.h),
                 ],
               ),
             ),

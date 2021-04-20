@@ -4,8 +4,26 @@ import 'package:myfhb/myPlan/model/myPlanDetailModel.dart';
 import 'package:myfhb/myPlan/viewModel/myPlanViewModel.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 class MyPlanDetail extends StatefulWidget {
+  final String title;
+  final String providerName;
+  final String docName;
+  final String startDate;
+  final String endDate;
+  final String packageId;
+
+  MyPlanDetail(
+      {Key key,
+      @required this.title,
+      @required this.providerName,
+      @required this.docName,
+      @required this.startDate,
+      @required this.endDate,
+      @required this.packageId})
+      : super(key: key);
+
   @override
   State<StatefulWidget> createState() {
     return PlanDetail();
@@ -15,9 +33,26 @@ class MyPlanDetail extends StatefulWidget {
 class PlanDetail extends State<MyPlanDetail> {
   MyPlanViewModel myPlanViewModel = new MyPlanViewModel();
 
+  String title;
+  String providerName;
+  String docName;
+  String startDate;
+  String endDate;
+  String packageId;
+
   @override
   void initState() {
     super.initState();
+    setValues();
+  }
+
+  void setValues() {
+    title = widget.title;
+    providerName = widget.providerName;
+    docName = widget.docName;
+    startDate = widget.startDate;
+    endDate = widget.endDate;
+    packageId = widget.packageId;
   }
 
   @override
@@ -39,52 +74,10 @@ class PlanDetail extends State<MyPlanDetail> {
             ),
           ),
         ),
-        body: getPlanDetails(context));
+        body: getMainWidget());
   }
 
-  Widget getPlanDetails(BuildContext context) {
-    return FutureBuilder<MyPlanDetailModel>(
-      future: myPlanViewModel.getMyPlanDetails(""),
-      builder: (BuildContext context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return SafeArea(
-            child: SizedBox(
-              height: 1.sh / 1.3,
-              child: Center(
-                  child: SizedBox(
-                width: 30.0.h,
-                height: 30.0.h,
-                child: CircularProgressIndicator(
-                    backgroundColor: Color(CommonUtil().getMyPrimaryColor())),
-              )),
-            ),
-          );
-        } else if (snapshot.hasError) {
-          return ErrorsWidget();
-        } else {
-          if (snapshot.hasData) {
-            return getMainWidget(snapshot.data.result);
-          }
-          return SizedBox(
-            height: 1.sh / 1.3,
-            child: new Center(
-              child: SizedBox(
-                width: 30.0.h,
-                height: 30.0.h,
-                child: new CircularProgressIndicator(
-                  backgroundColor: Color(
-                    new CommonUtil().getMyPrimaryColor(),
-                  ),
-                ),
-              ),
-            ),
-          );
-        }
-      },
-    );
-  }
-
-  Widget getMainWidget(MyPlanDetailResult myPlanDetailResult) {
+  Widget getMainWidget() {
     return Column(
       children: [
         SizedBox(height: 30),
@@ -108,12 +101,9 @@ class PlanDetail extends State<MyPlanDetail> {
                               SizedBox(
                                 width: 200,
                                 child: Text(
-                                  myPlanDetailResult != null &&
-                                          myPlanDetailResult.planPackage != null
-                                      ? myPlanDetailResult.planPackage
-                                      : '-',
+                                  title != null && title != '' ? title : '-',
                                   style: TextStyle(
-                                      fontSize: 17,
+                                      fontSize: 16,
                                       fontWeight: FontWeight.w500),
                                 ),
                               ),
@@ -121,17 +111,19 @@ class PlanDetail extends State<MyPlanDetail> {
                               SizedBox(
                                 width: 200,
                                 child: Text(
-                                    myPlanDetailResult != null &&
-                                            myPlanDetailResult.provider != null
-                                        ? myPlanDetailResult.provider
+                                    providerName != null && providerName != ''
+                                        ? providerName
                                         : '-',
                                     style: TextStyle(color: Colors.grey[600])),
                               ),
                               SizedBox(height: 5),
                               SizedBox(
                                 width: 200,
-                                child:
-                                    Text("Dr.Ramakrishnan", style: TextStyle()),
+                                child: Text(
+                                    docName != null && docName != ''
+                                        ? docName
+                                        : '-',
+                                    style: TextStyle()),
                               ),
                               SizedBox(height: 8),
                               Column(
@@ -141,11 +133,10 @@ class PlanDetail extends State<MyPlanDetail> {
                                       Text("Start Date: ",
                                           style: TextStyle(fontSize: 9)),
                                       Text(
-                                          myPlanDetailResult != null &&
-                                                  myPlanDetailResult
-                                                          .startDate !=
-                                                      null
-                                              ? new CommonUtil().dateFormatConversion(myPlanDetailResult.startDate)
+                                          startDate != null && startDate != ''
+                                              ? new CommonUtil()
+                                                  .dateFormatConversion(
+                                                      startDate)
                                               : '-',
                                           style: TextStyle(
                                               fontSize: 9,
@@ -154,10 +145,9 @@ class PlanDetail extends State<MyPlanDetail> {
                                       Text("End Date: ",
                                           style: TextStyle(fontSize: 9)),
                                       Text(
-                                          myPlanDetailResult != null &&
-                                                  myPlanDetailResult.endDate !=
-                                                      null
-                                              ? new CommonUtil().dateFormatConversion(myPlanDetailResult.endDate)
+                                          endDate != null && endDate != ''
+                                              ? new CommonUtil()
+                                                  .dateFormatConversion(endDate)
                                               : '-',
                                           style: TextStyle(
                                               fontSize: 9,
@@ -180,22 +170,10 @@ class PlanDetail extends State<MyPlanDetail> {
                         ],
                       ),
                       Column(
-                        children: [
-                          Container(
-                            constraints:
-                                BoxConstraints(minHeight: 20, maxHeight: 300),
-                            margin: new EdgeInsets.symmetric(horizontal: 55.0),
-                            child: Scrollbar(
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: 6,
-                                itemBuilder: (c, i) => getEventCardWidget(),
-                              ),
-                            ),
-                          ),
-                        ],
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [getActivityList()],
                       ),
-                      SizedBox(height: 30),
+                      SizedBox(height: 20),
                       Divider(color: Colors.grey[500]),
                       SizedBox(height: 3),
                       InkWell(
@@ -226,25 +204,108 @@ class PlanDetail extends State<MyPlanDetail> {
     );
   }
 
-  Widget getEventCardWidget() {
+  Widget getActivityList() {
+    return new FutureBuilder<MyPlanDetailModel>(
+      future: myPlanViewModel.getMyPlanDetails(packageId),
+      builder: (BuildContext context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return SafeArea(
+            child: SizedBox(
+              height: 1.sh / 4.5,
+              child: new Center(
+                child: SizedBox(
+                  width: 20.0.h,
+                  height: 20.0.h,
+                  child: new CircularProgressIndicator(
+                    strokeWidth: 1.0,
+                      backgroundColor:
+                          Color(new CommonUtil().getMyPrimaryColor())),
+                ),
+              ),
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return ErrorsWidget();
+        } else {
+          final items = snapshot.data ??
+              <MyPlanDetailModel>[]; // handle the case that data is null
+          return (snapshot.data.result != null &&
+                  snapshot.data.result.length > 0)
+              ? activitiesList(snapshot.data.result)
+              : SafeArea(
+                  child: SizedBox(
+                    height: 1.sh / 5.0,
+                    child: Container(
+                        child: Center(
+                      child: Text(
+                        variable.strNoActivities,
+                        style: TextStyle(fontSize: 12.sp),
+                      ),
+                    )),
+                  ),
+                );
+        }
+      },
+    );
+  }
+
+  Widget activitiesList(List<MyPlanDetailResult> actList) {
+    return (actList != null && actList.length > 0)
+        ? new Container(
+            constraints: BoxConstraints(minHeight: 20, maxHeight: 280),
+            margin: new EdgeInsets.symmetric(horizontal: 50.0),
+            child: Scrollbar(
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: actList.length,
+                itemBuilder: (BuildContext ctx, int i) =>
+                    getEventCardWidget(ctx, i, actList),
+              ),
+            ),
+          )
+        : SafeArea(
+            child: SizedBox(
+              height: 1.sh / 5.0,
+              child: Container(
+                  child: Center(
+                child: Text(
+                  variable.strNoActivities,
+                  style: TextStyle(fontSize: 12.sp),
+                ),
+              )),
+            ),
+          );
+  }
+
+  Widget getEventCardWidget(
+      BuildContext context, int i, List<MyPlanDetailResult> actList) {
     return Container(
-        padding: EdgeInsets.all(6.0),
-        margin: EdgeInsets.only(top: 3),
+        padding: EdgeInsets.all(4.0),
+        margin: EdgeInsets.only(top: 4.0),
         decoration: BoxDecoration(
           color: const Color(0xFFEDE7FC),
           borderRadius: BorderRadius.circular(4),
         ),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(width: 5),
-            Text(
-              '10.00AM',
-              style: TextStyle(fontSize: 9, fontWeight: FontWeight.w600),
-            ),
-            SizedBox(width: 20),
             SizedBox(
-              width: 120,
-              child: Text('Blood Pressure', style: TextStyle(fontSize: 9)),
+              width: 200.sp,
+              child: Text(
+                  actList[i].titletext != null && actList[i].titletext != ''
+                      ? actList[i].titletext
+                      : '',
+                  style: TextStyle(fontSize: 10.sp)),
+            ),
+            SizedBox(height: 4.0.sp),
+            SizedBox(
+              width: 200.sp,
+              child: Text(
+                actList[i].repeattext != null && actList[i].repeattext != ''
+                    ? actList[i].repeattext
+                    : '',
+                style: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.w600),
+              ),
             ),
           ],
         ));

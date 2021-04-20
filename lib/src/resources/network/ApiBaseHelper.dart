@@ -1434,11 +1434,12 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<dynamic> getPlanList(String url) async {
+  Future<dynamic> getPlanList(String url,String jsonString) async {
     var responseJson;
     try {
-      final response = await http.get(_baseUrl + url,
-          headers: await headerRequest.getRequestHeadersTimeSlot());
+      final response = await http.post(_baseUrl + url,
+          headers: await headerRequest.getRequestHeadersTimeSlot(),
+          body: jsonString);
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
@@ -1446,11 +1447,12 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<dynamic> getPlanDetails(String url) async {
+  Future<dynamic> getPlanDetails(String url,String jsonString) async {
     var responseJson;
     try {
-      final response = await http.get(_baseUrl + url,
-          headers: await headerRequest.getRequestHeadersTimeSlot());
+      final response = await http.post(_baseUrl + url,
+          headers: await headerRequest.getRequestHeadersTimeSlot(),
+          body: jsonString);
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);

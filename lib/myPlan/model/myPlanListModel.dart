@@ -1,13 +1,11 @@
 class MyPlanListModel {
   bool isSuccess;
-  String message;
   List<MyPlanListResult> result;
 
-  MyPlanListModel({this.isSuccess, this.message, this.result});
+  MyPlanListModel({this.isSuccess, this.result});
 
   MyPlanListModel.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
-    message = json['message'];
     if (json['result'] != null) {
       result = new List<MyPlanListResult>();
       json['result'].forEach((v) {
@@ -19,7 +17,6 @@ class MyPlanListModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
-    data['message'] = this.message;
     if (this.result != null) {
       data['result'] = this.result.map((v) => v.toJson()).toList();
     }
@@ -28,26 +25,74 @@ class MyPlanListModel {
 }
 
 class MyPlanListResult {
-  String planPackage;
-  String provider;
-  String startDate;
-  bool planExpired;
+  String packageid;
+  String title;
+  String docid;
+  String price;
+  String paid;
+  String packcatid;
+  String catname;
+  String catdesc;
+  String docNick;
+  String providerid;
+  String providerName;
+  String startdate;
+  String duration;
+  String enddate;
+  String isexpired;
 
-  MyPlanListResult({this.planPackage, this.provider, this.startDate,this.planExpired});
+  MyPlanListResult(
+      {this.packageid,
+        this.title,
+        this.docid,
+        this.price,
+        this.paid,
+        this.packcatid,
+        this.catname,
+        this.catdesc,
+        this.docNick,
+        this.providerid,
+        this.providerName,
+        this.startdate,
+        this.duration,
+        this.enddate,
+        this.isexpired});
 
   MyPlanListResult.fromJson(Map<String, dynamic> json) {
-    planPackage = json['planPackage'];
-    provider = json['provider'];
-    startDate = json['startDate'];
-    planExpired = json['planExpired'];
+    packageid = json['packageid'];
+    title = json['title'];
+    docid = json['docid'];
+    price = json['price'];
+    paid = json['paid'];
+    packcatid = json['packcatid'];
+    catname = json['catname'];
+    catdesc = json['catdesc'];
+    docNick = json['doc_nick'];
+    providerid = json['providerid'];
+    providerName = json['provider_name'];
+    startdate = json['startdate'];
+    duration = json['duration'];
+    enddate = json['enddate'];
+    isexpired = json['isexpired'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['planPackage'] = this.planPackage;
-    data['provider'] = this.provider;
-    data['startDate'] = this.startDate;
-    data['startDate'] = this.planExpired;
+    data['packageid'] = this.packageid;
+    data['title'] = this.title;
+    data['docid'] = this.docid;
+    data['price'] = this.price;
+    data['paid'] = this.paid;
+    data['packcatid'] = this.packcatid;
+    data['catname'] = this.catname;
+    data['catdesc'] = this.catdesc;
+    data['doc_nick'] = this.docNick;
+    data['providerid'] = this.providerid;
+    data['provider_name'] = this.providerName;
+    data['startdate'] = this.startdate;
+    data['duration'] = this.duration;
+    data['enddate'] = this.enddate;
+    data['isexpired'] = this.isexpired;
     return data;
   }
 }

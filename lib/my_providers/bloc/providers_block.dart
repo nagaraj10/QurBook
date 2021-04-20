@@ -38,6 +38,7 @@ class ProvidersBloc implements BaseBloc {
     try {
       myProvidersResponseList =
           await _providersListRepository.getMedicalPreferencesList(userId: userId);
+      doctors = myProvidersResponseList.result.doctors;
       /*doctors = myProvidersResponseList.result.doctors;
       hospitals = myProvidersResponseList.result.hospitals;
       labs = myProvidersResponseList.result.labs;*/
