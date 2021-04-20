@@ -218,3 +218,8 @@ const String device_health = 'device-health-record/';
 
 const String qr_isSkipUnknown = 'isSkipUnknown=';
 const String qr_Google_TTS_Proxy_URL = 'google-tts/proxy';
+
+const String qr_plan_list = 'plan-package-master/wrapperApi';
+const String qr_getUserPack = 'Action=GetUserPackages';
+const String qr_getUserPackDetail = 'Action=GetUserPlanDetails&packageid=';
+const String qr_get = 'get';

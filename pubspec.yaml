@@ -155,6 +155,7 @@ flutter:
     - assets/payment/failure.png
     - assets/payment/success_tick.png
     - assets/launcher/myfhb.png
+    - assets/launcher/myfhb1.png
 
 
   #  - images/a_dot_ham.jpeg

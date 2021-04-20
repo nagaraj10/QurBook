@@ -1811,4 +1811,15 @@ extension CapExtension on String {
   String get capitalizeFirstofEach => this != null && this.isNotEmpty
       ? trim().toLowerCase().split(' ').map((str) => str.inCaps).join(' ')
       : '';
+
+  String dateFormatConversion(String datetime) {
+    String formattedDate = '';
+    if(datetime!=null && datetime!=''){
+      DateTime dateTimeStamp = DateTime.parse(datetime);
+      formattedDate = DateFormat('MMM dd yyyy').format(dateTimeStamp);
+    }else{
+       formattedDate = '';
+    }
+    return formattedDate;
+  }
 }

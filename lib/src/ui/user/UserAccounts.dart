@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:myfhb/myPlan/view/myPlanList.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -47,7 +48,7 @@ class _UserAccountsState extends State<UserAccounts>
     PreferenceUtil.init();
     //fetchUserProfileInfo();
     _sliverTabController = TabController(
-        vsync: this, length: 3, initialIndex: widget.arguments.selectedIndex);
+        vsync: this, length: 4, initialIndex: widget.arguments.selectedIndex);
     _sliverTabController.addListener(_handleSelected);
   }
 
@@ -158,6 +159,7 @@ class _UserAccountsState extends State<UserAccounts>
             bottom: PreferredSize(
               preferredSize: Size.fromHeight(50.0.h),
               child: TabBar(
+                isScrollable: true,
                 controller: _sliverTabController,
                 labelColor: Colors.white,
                 unselectedLabelColor: Colors.white70,
@@ -167,6 +169,7 @@ class _UserAccountsState extends State<UserAccounts>
                   Tab(text: variable.strMyInfo),
                   Tab(text: variable.strMyFamily),
                   Tab(text: variable.strMyProvider),
+                  Tab(text: variable.strMyPlans)
                 ],
               ),
             ),
@@ -174,7 +177,7 @@ class _UserAccountsState extends State<UserAccounts>
           body: Container(
             child: TabBarView(
               controller: _sliverTabController,
-              children: <Widget>[MyProfilePage(), MyFamily(), MyProvider()],
+              children: <Widget>[MyProfilePage(), MyFamily(), MyProvider(),MyPlanList()],
             ),
           ),
 //          body: NestedScrollView(

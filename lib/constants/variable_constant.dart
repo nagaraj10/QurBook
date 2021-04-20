@@ -516,6 +516,7 @@ const String strAddDevice = 'Tap to add device widgets to your home screen';
 const String strMyInfo = 'My Info';
 const String strMyFamily = 'My Family';
 const String strMyProvider = 'My Provider';
+const String strMyPlans = 'My Plan';
 const String strExtImg = '.png';
 const String strTelehealth = 'TeleHealth';
 const String strMyRecords = 'My Records';
@@ -576,6 +577,8 @@ const redirecturl = 'http://localhost:4200/callback?code=';
 const String strNoDoctordata = 'No Doctor List Available';
 const String strNoHospitaldata = 'No Hospital List Available';
 const String strNoAppointments = 'No Appoinments Available';
+const String strNoPlans = 'No Plan List Available';
+const String strNoActivities = 'No Activities Available';
 
 const String strNoDataAvailable = 'Unable To load';
 const String strHealthOrganizationName = 'healthOrganizationName';
