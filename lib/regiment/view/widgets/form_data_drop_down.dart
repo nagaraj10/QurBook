@@ -19,6 +19,7 @@ class FormDataDropDown extends StatefulWidget {
 
 class _FormDataDropDownState extends State<FormDataDropDown> {
   List<DropdownMenuItem<dynamic>> comboItems = [];
+  var comboValue;
 
   @override
   void initState() {
@@ -46,6 +47,7 @@ class _FormDataDropDownState extends State<FormDataDropDown> {
         i++;
       }
     }
+    comboItems.length > 0 ? comboItems[0].value : null;
     print(comboItems);
   }
 
@@ -71,9 +73,12 @@ class _FormDataDropDownState extends State<FormDataDropDown> {
           ),
           isExpanded: true,
           //TODO: Need to update the items based on the API
-          value: comboItems.length > 0 ? comboItems[0].value : null,
+          value: comboValue,
           items: comboItems,
           onChanged: (value) {
+            setState(() {
+              comboValue = value;
+            });
             FieldModel updatedFieldData = widget.fieldData;
             updatedFieldData.value = (value).toString();
             widget.updateValue(updatedFieldData);
