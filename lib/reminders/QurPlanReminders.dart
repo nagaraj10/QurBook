@@ -1,14 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/services.dart';
-import 'package:gallery_saver/files.dart';
+// import 'package:flutter/services.dart';
+// import 'package:gallery_saver/files.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/HeaderRequest.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/reminders/ReminderModel.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:http/http.dart' as http;
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 class QurPlanReminders {
   static const reminderLocalFile = 'notificationList.json';
@@ -24,6 +25,7 @@ class QurPlanReminders {
     final today = CommonUtil().dateConversionToApiFormat(now);
     final dayAfterTomorrow =
         CommonUtil().dateConversionToApiFormat(dayAfterTomorrowDate);
+    final String _baseUrl = Constants.BASE_URL;
     final params = jsonEncode({
       "method": "get",
       "data":
@@ -31,7 +33,7 @@ class QurPlanReminders {
     });
     try {
       final responseFromApi = await http.post(
-          "https://dwtg3mk9sjz8epmqfo.vsolgmi.com/api/plan-package-master/wrapperApi",
+          _baseUrl + "plan-package-master/wrapperApi",
           headers: headers,
           body: params);
 
