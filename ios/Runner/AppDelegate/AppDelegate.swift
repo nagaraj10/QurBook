@@ -36,7 +36,9 @@ import AVFoundation
 
     let notificationCenter = UNUserNotificationCenter.current()
     var listOfScheduledNotificaitons:[UNNotificationRequest] = []
-    
+    let showBothButtonsCat = "showBothButtonsCat"
+    let showSingleButtonCat = "showSingleButtonCat"
+
     override func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
@@ -62,6 +64,20 @@ import AVFoundation
             self.listOfScheduledNotificaitons = data
             print(data.count)
         }
+        //Add Action button the Notification
+    
+        let snoozeAction = UNNotificationAction(identifier: "Snooze", title: "Snooze", options: [])
+        let declineAction = UNNotificationAction(identifier: "Dismiss", title: "Dismiss", options: [.destructive])
+        let showBothButtonscategory = UNNotificationCategory(identifier: showBothButtonsCat,
+                                              actions:  [snoozeAction, declineAction],
+                                              intentIdentifiers: [],
+                                              options: [])
+      
+        let showSingleButtonCategory = UNNotificationCategory(identifier: showSingleButtonCat,
+                                              actions:  [declineAction],
+                                              intentIdentifiers: [],
+                                              options: [])
+        notificationCenter.setNotificationCategories([showBothButtonscategory,showSingleButtonCategory])
         // 2 a)
         // Speech to Text
         let sttChannel = FlutterMethodChannel(name: STT_CHANNEL,
@@ -304,15 +320,27 @@ import AVFoundation
         
         //Compose New Notificaion
         let content = UNMutableNotificationContent()
-        let categoryIdentifire = "Native Notification Type"
+         
         content.title = title
         content.body = des
-        content.categoryIdentifier = categoryIdentifire
+        let identifier = id
+        if snooze,let snoozcount = message["snoozeCount"] as? Int{
+            if (snoozcount > 1){
+                content.categoryIdentifier = showSingleButtonCat
+            }else{
+                content.categoryIdentifier = showBothButtonsCat
+            }
+           // identifier = id + "\(snoozcount)"
+        }else{
+            content.categoryIdentifier = showBothButtonsCat
+        }
+        
         content.userInfo = message as! [AnyHashable : Any]
         var request:UNNotificationRequest;
-        let identifier = id
+        
+        
         if snooze{
-            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 300, repeats: false)
             request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
         }else{
             let dateTrigger = UNCalendarNotificationTrigger(dateMatching: dateComponent, repeats: false)
@@ -324,25 +352,6 @@ import AVFoundation
                 print("Error \(error.localizedDescription)")
             }
         }
-        
-        //Add Action button the Notification
-        
-//        let addAction = UNNotificationAction(identifier: "Yes", title: "Yes", options: [])
-        let snoozeAction = UNNotificationAction(identifier: "Snooze", title: "Snooze", options: [])
-        let declineAction = UNNotificationAction(identifier: "Dismiss", title: "Dismiss", options: [.destructive])
-        var category = UNNotificationCategory(identifier: categoryIdentifire,
-                                              actions:  [snoozeAction, declineAction],
-                                              intentIdentifiers: [],
-                                              options: [])
-      if  let snoozeCount = message["snoozeCount"] as? Int,snoozeCount > 1 {
-        category = UNNotificationCategory(identifier: categoryIdentifire,
-                                              actions:  [ declineAction],
-                                              intentIdentifiers: [],
-                                              options: [])
-        }
-        
-        notificationCenter.setNotificationCategories([category])
-        
     }
     
     
