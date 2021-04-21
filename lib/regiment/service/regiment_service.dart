@@ -7,6 +7,7 @@ import 'package:myfhb/constants/fhb_query.dart' as variable;
 import 'package:myfhb/regiment/models/regiment_response_model.dart';
 import 'package:myfhb/regiment/models/save_response_model.dart';
 import 'package:myfhb/regiment/models/field_response_model.dart';
+import 'package:myfhb/regiment/models/profile_response_model.dart';
 
 class RegimentService {
   static Future<RegimentResponseModel> getRegimentData(
@@ -21,7 +22,7 @@ class RegimentService {
         body: json.encode(
           {
             "method": "get",
-            "data": "Action=GetUserActivities&startdate=$dateSelected",
+            "data": "Action=GetUserActivities&date=$dateSelected",
           },
         ),
       );
@@ -100,7 +101,7 @@ class RegimentService {
     }
   }
 
-  static Future<FieldsResponseModel> getProfile() async {
+  static Future<ProfileResponseModel> getProfile() async {
     final urlForRegiment = Constants.BASE_URL + variable.regiment;
     try {
       final headerRequest =
@@ -117,10 +118,40 @@ class RegimentService {
       );
       if (response != null && response.statusCode == 200) {
         print(response.body);
-        return FieldsResponseModel.fromJson(json.decode(response.body));
+        return ProfileResponseModel.fromJson(json.decode(response.body));
       } else {
-        return FieldsResponseModel(
-          result: ResultDataModel(),
+        return ProfileResponseModel(
+          result: ProfileResultModel(),
+          isSuccess: false,
+        );
+      }
+    } catch (e) {
+      print(e);
+      throw Exception('$e was thrown');
+    }
+  }
+
+  static Future<SaveResponseModel> saveProfile({String schedules}) async {
+    final urlForRegiment = Constants.BASE_URL + variable.regiment;
+    try {
+      final headerRequest =
+          await HeaderRequest().getRequestHeadersAuthContent();
+      final response = await http.post(
+        urlForRegiment,
+        headers: headerRequest,
+        body: json.encode(
+          {
+            "method": "post",
+            "data": "Action=SetProfile$schedules",
+          },
+        ),
+      );
+      if (response != null && response.statusCode == 200) {
+        print(response.body);
+        return SaveResponseModel.fromJson(json.decode(response.body));
+      } else {
+        return SaveResponseModel(
+          result: SaveResultModel(),
           isSuccess: false,
         );
       }

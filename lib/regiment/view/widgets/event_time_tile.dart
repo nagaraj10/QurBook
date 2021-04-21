@@ -4,13 +4,11 @@ import 'package:myfhb/common/CommonUtil.dart';
 
 class EventTimeTile extends StatefulWidget {
   const EventTimeTile({
-    @required this.icon,
     @required this.title,
     @required this.onTimeSelected,
     this.selectedTime,
   });
 
-  final IconData icon;
   final String title;
   final Function onTimeSelected;
   final TimeOfDay selectedTime;
@@ -21,11 +19,15 @@ class EventTimeTile extends StatefulWidget {
 
 class _EventTimeTileState extends State<EventTimeTile> {
   TimeOfDay timeSelected;
-  String selectedTime = '07:00';
   DayPeriod selectedTimePeriod = DayPeriod.am;
 
   getTimeAsString(TimeOfDay timeOfDay) {
-    return '${timeOfDay.hourOfPeriod > 9 ? '' : '0'}${timeOfDay.hourOfPeriod}:${timeOfDay.minute > 9 ? '' : '0'}${timeOfDay.minute}';
+    selectedTimePeriod = timeOfDay.period;
+    int hour = timeOfDay.hourOfPeriod;
+    if (timeOfDay.hour == 12) {
+      hour = 12;
+    }
+    return '${hour > 9 ? '' : '0'}${hour}:${timeOfDay.minute > 9 ? '' : '0'}${timeOfDay.minute}';
   }
 
   @override
@@ -45,7 +47,7 @@ class _EventTimeTileState extends State<EventTimeTile> {
           Row(
             children: [
               Icon(
-                widget.icon,
+                getIcon(widget.title),
                 color: Color(
                   CommonUtil().getMyPrimaryColor(),
                 ),
@@ -76,9 +78,11 @@ class _EventTimeTileState extends State<EventTimeTile> {
                     if (timeSelected != null) {
                       setState(() {
                         selectedTimePeriod = timeSelected.period;
-                        selectedTime = getTimeAsString(timeSelected);
                       });
-                      widget.onTimeSelected(timeSelected);
+                      widget.onTimeSelected(
+                        timeSelected,
+                        widget.title,
+                      );
                     }
                   },
                   child: Column(
@@ -86,7 +90,7 @@ class _EventTimeTileState extends State<EventTimeTile> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        selectedTime,
+                        getTimeAsString(timeSelected),
                         style: TextStyle(
                           fontSize: 16.0.sp,
                         ),
@@ -135,4 +139,73 @@ class _EventTimeTileState extends State<EventTimeTile> {
       ),
     );
   }
+
+  IconData getIcon(String title) {
+    IconData icon = Icons.event;
+    if (title.toLowerCase().contains('wakeup')) {
+      icon = Icons.king_bed_rounded;
+    } else if (title.toLowerCase().contains('breakfast')) {
+      icon = Icons.fastfood_rounded;
+    } else if (title.toLowerCase().contains('lunch')) {
+      icon = Icons.fastfood_outlined;
+    } else if (title.toLowerCase().contains('tea')) {
+      icon = Icons.emoji_food_beverage;
+    } else if (title.toLowerCase().contains('dinner')) {
+      icon = Icons.food_bank;
+    } else if (title.toLowerCase().contains('sleep')) {
+      icon = Icons.bedtime_rounded;
+    }
+    return icon;
+  }
 }
+
+// EventTimeTile(
+// title: 'Wake up time',
+// icon: Icons.king_bed_rounded,
+// onTimeSelected: (timeSelected) {
+// print(timeSelected);
+// },
+// ),
+// EventTimeTile(
+// title: 'Breakfast',
+// icon: Icons.fastfood_rounded,
+// onTimeSelected: (timeSelected) {
+// print(timeSelected);
+// },
+// ),
+// EventTimeTile(
+// title: 'Break',
+// icon: Icons.free_breakfast,
+// onTimeSelected: (timeSelected) {
+// print(timeSelected);
+// },
+// ),
+// EventTimeTile(
+// title: 'Lunch time',
+// icon: Icons.fastfood_outlined,
+// selectedTime: TimeOfDay(hour: 0, minute: 10),
+// onTimeSelected: (timeSelected) {
+// print(timeSelected);
+// },
+// ),
+// EventTimeTile(
+// title: 'Tea',
+// icon: Icons.emoji_food_beverage,
+// onTimeSelected: (timeSelected) {
+// print(timeSelected);
+// },
+// ),
+// EventTimeTile(
+// title: 'Dinner',
+// icon: Icons.food_bank,
+// onTimeSelected: (timeSelected) {
+// print(timeSelected);
+// },
+// ),
+// EventTimeTile(
+// title: 'Sleep time',
+// icon: Icons.bedtime_rounded,
+// onTimeSelected: (timeSelected) {
+// print(timeSelected);
+// },
+// ),

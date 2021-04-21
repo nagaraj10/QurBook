@@ -10,6 +10,8 @@ import 'package:myfhb/regiment/models/regiment_response_model.dart';
 import 'package:myfhb/regiment/models/regiment_data_model.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/regiment/models/profile_response_model.dart';
+import 'package:myfhb/regiment/view/widgets/event_list_widget.dart';
 
 class RegimentTab extends StatefulWidget {
   @override
@@ -137,97 +139,20 @@ class _RegimentTabState extends State<RegimentTab> {
                   right: 5.0.w,
                 ),
                 child: InkWell(
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return StatefulBuilder(builder: (context, setState) {
-                          return SimpleDialog(
-                            children: [
-                              EventTimeTile(
-                                title: 'Wake up time',
-                                icon: Icons.king_bed_rounded,
-                                onTimeSelected: (timeSelected) {
-                                  print(timeSelected);
-                                },
-                              ),
-                              EventTimeTile(
-                                title: 'Breakfast',
-                                icon: Icons.fastfood_rounded,
-                                onTimeSelected: (timeSelected) {
-                                  print(timeSelected);
-                                },
-                              ),
-                              EventTimeTile(
-                                title: 'Break',
-                                icon: Icons.free_breakfast,
-                                onTimeSelected: (timeSelected) {
-                                  print(timeSelected);
-                                },
-                              ),
-                              EventTimeTile(
-                                title: 'Lunch time',
-                                icon: Icons.fastfood_outlined,
-                                selectedTime: TimeOfDay(hour: 0, minute: 10),
-                                onTimeSelected: (timeSelected) {
-                                  print(timeSelected);
-                                },
-                              ),
-                              EventTimeTile(
-                                title: 'Tea',
-                                icon: Icons.emoji_food_beverage,
-                                onTimeSelected: (timeSelected) {
-                                  print(timeSelected);
-                                },
-                              ),
-                              EventTimeTile(
-                                title: 'Dinner',
-                                icon: Icons.food_bank,
-                                onTimeSelected: (timeSelected) {
-                                  print(timeSelected);
-                                },
-                              ),
-                              EventTimeTile(
-                                title: 'Sleep time',
-                                icon: Icons.bedtime_rounded,
-                                onTimeSelected: (timeSelected) {
-                                  print(timeSelected);
-                                },
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    width: 150.0.w,
-                                    child: RaisedButton(
-                                      child: Text(
-                                        okButton,
-                                        style: TextStyle(
-                                          fontSize: 16.0.sp,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.all(Radius.circular(
-                                          5.0.sp,
-                                        )),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                            contentPadding: EdgeInsets.all(10.0.sp),
-                          );
-                        });
-                      },
-                    );
+                  onTap: () async {
+                    ProfileResponseModel profileResponseModel =
+                        await Provider.of<RegimentViewModel>(context,
+                                listen: false)
+                            .getProfile();
+                    if (profileResponseModel.isSuccess &&
+                        profileResponseModel?.result?.profileData != null) {
+                      await showDialog(
+                        context: context,
+                        builder: (context) => EventListWidget(
+                          profileResultModel: profileResponseModel.result,
+                        ),
+                      );
+                    }
                   },
                   child: Icon(
                     Icons.access_time,
@@ -259,42 +184,15 @@ class _RegimentTabState extends State<RegimentTab> {
                         var regimentData = snapshot.data.regimentsList[index];
                         return RegimentDataCard(
                           title: regimentData.title,
-                          time: DateFormat('HH:mm\na')
+                          time: DateFormat('hh:mm\na')
                               .format(regimentData.estart),
                           color: getColor(regimentData.activityname),
                           icon: getIcon(regimentData.activityname),
                           vitalsData: regimentData.uformdata.vitalsData,
                           eid: regimentData.eid,
+                          mediaData: regimentData.otherinfo,
+                          startTime: regimentData.estart,
                         );
-                        // RegimentDataCard(
-                        // //TODO: Replace with actual data
-                        // title: 'Glucose (Fasting)',
-                        // time: '06:15 AM',
-                        // color: Colors.green,
-                        // icon: Icons.no_food_outlined,
-                        // ),
-                        // RegimentDataCard(
-                        // //TODO: Replace with actual data
-                        // title: 'Medicine (Before Food)',
-                        // time: '06:45 AM',
-                        // color: Colors.lightBlueAccent,
-                        // icon: Icons.medical_services_outlined,
-                        // needCheckbox: true,
-                        // ),
-                        // RegimentDataCard(
-                        // //TODO: Replace with actual data
-                        // title: 'Walking',
-                        // time: '07:00 AM',
-                        // color: Colors.blue,
-                        // icon: Icons.directions_walk_rounded,
-                        // ),
-                        // RegimentDataCard(
-                        // //TODO: Replace with actual data
-                        // title: 'Food',
-                        // time: '08:00 AM',
-                        // color: Color(CommonUtil().getMyPrimaryColor()),
-                        // icon: Icons.fastfood_rounded,
-                        // ),
                       },
                     );
                   } else {

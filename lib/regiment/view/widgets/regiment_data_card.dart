@@ -7,6 +7,8 @@ import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/regiment/models/save_response_model.dart';
 import 'package:myfhb/regiment/models/field_response_model.dart';
 import 'package:provider/provider.dart';
+import 'media_icon_widget.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 
 class RegimentDataCard extends StatelessWidget {
   final String title;
@@ -15,6 +17,8 @@ class RegimentDataCard extends StatelessWidget {
   final IconData icon;
   final String eid;
   final List<VitalsData> vitalsData;
+  final Otherinfo mediaData;
+  final DateTime startTime;
 
   const RegimentDataCard({
     @required this.title,
@@ -23,6 +27,8 @@ class RegimentDataCard extends StatelessWidget {
     @required this.icon,
     @required this.eid,
     @required this.vitalsData,
+    @required this.startTime,
+    @required this.mediaData,
   });
 
   @override
@@ -36,22 +42,39 @@ class RegimentDataCard extends StatelessWidget {
         ),
         child: InkWell(
           onTap: () async {
-            FieldsResponseModel fieldsResponseModel =
-                await Provider.of<RegimentViewModel>(context, listen: false)
-                    .getFormData(eid: eid);
-            print(fieldsResponseModel);
-            if (fieldsResponseModel.isSuccess) {
-              bool value = await showDialog(
-                context: context,
-                builder: (context) => FormDataDialog(
-                  fieldsData: fieldsResponseModel.result.fields,
-                  eid: eid,
-                ),
-              );
-              if (value != null && (value ?? false)) {
-                await Provider.of<RegimentViewModel>(context, listen: false)
-                    .fetchRegimentData();
+            bool canEdit = startTime.difference(DateTime.now()).inMinutes <= 15;
+            if (canEdit) {
+              FieldsResponseModel fieldsResponseModel =
+                  await Provider.of<RegimentViewModel>(context, listen: false)
+                      .getFormData(eid: eid);
+              print(fieldsResponseModel);
+              if (fieldsResponseModel.isSuccess &&
+                  (fieldsResponseModel.result.fields.length > 0 ||
+                      mediaData.toJson().toString().contains('1'))) {
+                bool value = await showDialog(
+                  context: context,
+                  builder: (context) => FormDataDialog(
+                    fieldsData: fieldsResponseModel.result.fields,
+                    eid: eid,
+                    color: color,
+                    mediaData: mediaData,
+                  ),
+                );
+                if (value != null && (value ?? false)) {
+                  await Provider.of<RegimentViewModel>(context, listen: false)
+                      .fetchRegimentData();
+                }
+              } else {
+                FlutterToast().getToast(
+                  'No plans associated with this event',
+                  Colors.red,
+                );
               }
+            } else {
+              FlutterToast().getToast(
+                'Data for future events can be entered only 15 min prior to the event time',
+                Colors.red,
+              );
             }
           },
           child: Row(
@@ -195,6 +218,43 @@ class RegimentDataCard extends StatelessWidget {
         );
       }
     });
+
+    if (mediaData != null) {
+      fieldWidgets.add(
+        Row(
+          children: [
+            Visibility(
+              visible: mediaData.needVideo == '1',
+              child: MediaIconWidget(
+                color: color,
+                icon: Icons.video_call,
+              ),
+            ),
+            Visibility(
+              visible: mediaData.needAudio == '1',
+              child: MediaIconWidget(
+                color: color,
+                icon: Icons.audiotrack,
+              ),
+            ),
+            Visibility(
+              visible: mediaData.needPhoto == '1',
+              child: MediaIconWidget(
+                color: color,
+                icon: Icons.photo,
+              ),
+            ),
+            Visibility(
+              visible: mediaData.needFile == '1',
+              child: MediaIconWidget(
+                color: color,
+                icon: Icons.file_copy_rounded,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
 
     return fieldWidgets;
     // ListView.builder(

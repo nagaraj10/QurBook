@@ -4,6 +4,7 @@ import 'package:myfhb/regiment/service/regiment_service.dart';
 import 'package:myfhb/regiment/models/regiment_response_model.dart';
 import 'package:myfhb/regiment/models/save_response_model.dart';
 import 'package:myfhb/regiment/models/field_response_model.dart';
+import 'package:myfhb/regiment/models/profile_response_model.dart';
 
 class RegimentViewModel extends ChangeNotifier {
   Future<RegimentResponseModel> regimentsData;
@@ -51,6 +52,18 @@ class RegimentViewModel extends ChangeNotifier {
   }) async {
     return await RegimentService.getFormData(
       eid: eid,
+    );
+  }
+
+  Future<ProfileResponseModel> getProfile() async {
+    return await RegimentService.getProfile();
+  }
+
+  Future<SaveResponseModel> saveProfile({
+    String schedules,
+  }) async {
+    return await RegimentService.saveProfile(
+      schedules: schedules,
     );
   }
 }

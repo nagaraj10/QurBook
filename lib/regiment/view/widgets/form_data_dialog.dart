@@ -8,15 +8,20 @@ import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/regiment/models/field_response_model.dart';
 import 'package:myfhb/regiment/models/save_response_model.dart';
 import 'package:provider/provider.dart';
+import 'media_icon_widget.dart';
 
 class FormDataDialog extends StatelessWidget {
   FormDataDialog({
     @required this.fieldsData,
     @required this.eid,
+    @required this.color,
+    @required this.mediaData,
   });
 
   final List<FieldModel> fieldsData;
   final String eid;
+  final Color color;
+  final Otherinfo mediaData;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +29,6 @@ class FormDataDialog extends StatelessWidget {
     return SimpleDialog(
       children: [
         Container(
-          height: 0.5.sh,
           width: 0.75.sw,
           padding: EdgeInsets.all(
             10.0.sp,
@@ -55,6 +59,46 @@ class FormDataDialog extends StatelessWidget {
                 ),
               );
             },
+          ),
+        ),
+        Container(
+          width: 0.75.sw,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Visibility(
+                visible: mediaData.needVideo == '1',
+                child: MediaIconWidget(
+                  color: color,
+                  icon: Icons.video_call,
+                  padding: 10.0.sp,
+                ),
+              ),
+              Visibility(
+                visible: mediaData.needAudio == '1',
+                child: MediaIconWidget(
+                  color: color,
+                  icon: Icons.audiotrack,
+                  padding: 10.0.sp,
+                ),
+              ),
+              Visibility(
+                visible: mediaData.needPhoto == '1',
+                child: MediaIconWidget(
+                  color: color,
+                  icon: Icons.photo,
+                  padding: 10.0.sp,
+                ),
+              ),
+              Visibility(
+                visible: mediaData.needFile == '1',
+                child: MediaIconWidget(
+                  color: color,
+                  icon: Icons.file_copy_rounded,
+                  padding: 10.0.sp,
+                ),
+              ),
+            ],
           ),
         ),
         Container(
