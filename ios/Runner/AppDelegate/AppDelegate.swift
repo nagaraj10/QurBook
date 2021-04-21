@@ -31,9 +31,11 @@ import AVFoundation
     
     let reminderChannel = Constants.reminderMethodChannel
     let addReminderMethod = Constants.addReminderMethod
-    let removeReminderMethod = Constants.addReminderMethod
+    let removeReminderMethod = Constants.removeReminderMethod
+    
 
     let notificationCenter = UNUserNotificationCenter.current()
+    var listOfScheduledNotificaitons:[UNNotificationRequest] = []
     
     override func application(
         _ application: UIApplication,
@@ -55,7 +57,11 @@ import AVFoundation
         let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
         
         requestAuthorization();
-        
+        notificationCenter.getPendingNotificationRequests { [weak self](data) in
+            guard let self = self else { return }
+            self.listOfScheduledNotificaitons = data
+            print(data.count)
+        }
         // 2 a)
         // Speech to Text
         let sttChannel = FlutterMethodChannel(name: STT_CHANNEL,
@@ -164,7 +170,6 @@ import AVFoundation
                         // pull out the best transcription...
                         print(result.bestTranscription.formattedString as Any)
                         print(result.isFinal)
-                        
                         timer.invalidate()
                         self.STT_Result!(result.bestTranscription.formattedString as Any);
                         self.message = "";
@@ -175,9 +180,7 @@ import AVFoundation
                     self.detectionTimer = Timer.scheduledTimer(withTimeInterval: 1.5, repeats: false, block: { (timer) in
                         //                    isFinal = true
                         Loading.sharedInstance.hideLoader()
-                        
                         print(self.message)
-                        
                         timer.invalidate()
                         self.STT_Result!(self.message);
                         self.message = "";
@@ -246,6 +249,10 @@ import AVFoundation
             }else if call.method == self.removeReminderMethod,let dataArray = call.arguments as? NSArray,let id = dataArray[0] as? String{
                 
                 self.notificationCenter.removePendingNotificationRequests(withIdentifiers: [id])
+            }
+            else if call.method == Constants.removeAllReminderMethod{
+                self.notificationCenter.removeAllDeliveredNotifications()
+                self.notificationCenter.removeAllPendingNotificationRequests()
             }else{
                 result(FlutterMethodNotImplemented)
                 return
@@ -261,38 +268,39 @@ import AVFoundation
     func scheduleNotification(message: NSDictionary,snooze:Bool = false) {
         if let _id =  message["eid"] as? String {
             id = _id
+        }else{
+            return
         }
         if let _title = message[Constants.title] as? String { title = _title}
         if let _des = message[Constants.description] as? String {des = _des}
         
         if !snooze{
             if let dateNotifiation = message["estart"] as? String{
-//                let dateComponentsArray = dateNotifiation.components(separatedBy: "-").map{ (val) -> Int  in
-//                    if let newInt = Int(val){
-//                        return newInt
-//                    }
-//                    return 0
-//                }
                 let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "yyyy-mm-dd HH:mm:ss"
+                dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
                 let dateFromString = dateFormatter.date(from: dateNotifiation)
+                print(dateNotifiation)
+                print(dateFromString as Any)
+                
                 if let dateToBeTriggered = dateFromString{
-                    dateComponent = Calendar.current.dateComponents([.day,.month,.year,.hour,.minute], from: dateToBeTriggered )
+                    var dateForTheNotification = dateToBeTriggered
+                    if let remindInStr = message["remindin"] as? String, let remindIn = Int(remindInStr){
+                        dateForTheNotification = Calendar.current.date(byAdding: .minute, value: -remindIn, to: dateToBeTriggered) ?? dateToBeTriggered
+                        print(dateForTheNotification)
+                    }
+                        dateComponent = Calendar.current.dateComponents([.day,.month,.year,.hour,.minute], from: dateForTheNotification )
                 }
                 
-//                dateComponent.year = dateComponentsArray[0]
-//                dateComponent.month = dateComponentsArray[1]
-//                dateComponent.day = dateComponentsArray[2]
-//                let timeComponentsArray = timeForNotification.components(separatedBy: "-").map{ (val) -> Int  in
-//                    if let newInt = Int(val){
-//                        return newInt
-//                    }
-//                    return 0
-//                }
-//                dateComponent.hour = timeComponentsArray[0]
-//                dateComponent.minute = timeComponentsArray[1]
+                print(dateComponent.description)
+            }
+            if let alreadyScheduled = message["alreadyScheduled"] as? Bool,alreadyScheduled{
+                let ids = listOfScheduledNotificaitons.filter({$0.identifier == id})
+                if ids.count > 0{
+                    return
+                }
             }
         }
+        
         
         //Compose New Notificaion
         let content = UNMutableNotificationContent()
@@ -304,7 +312,7 @@ import AVFoundation
         var request:UNNotificationRequest;
         let identifier = id
         if snooze{
-            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 300, repeats: false)
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
             request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
         }else{
             let dateTrigger = UNCalendarNotificationTrigger(dateMatching: dateComponent, repeats: false)
@@ -322,10 +330,17 @@ import AVFoundation
 //        let addAction = UNNotificationAction(identifier: "Yes", title: "Yes", options: [])
         let snoozeAction = UNNotificationAction(identifier: "Snooze", title: "Snooze", options: [])
         let declineAction = UNNotificationAction(identifier: "Dismiss", title: "Dismiss", options: [.destructive])
-        let category = UNNotificationCategory(identifier: categoryIdentifire,
-                                              actions: [snoozeAction, declineAction],
+        var category = UNNotificationCategory(identifier: categoryIdentifire,
+                                              actions:  [snoozeAction, declineAction],
                                               intentIdentifiers: [],
                                               options: [])
+      if  let snoozeCount = message["snoozeCount"] as? Int,snoozeCount > 1 {
+        category = UNNotificationCategory(identifier: categoryIdentifire,
+                                              actions:  [ declineAction],
+                                              intentIdentifiers: [],
+                                              options: [])
+        }
+        
         notificationCenter.setNotificationCategories([category])
         
     }

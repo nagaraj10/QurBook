@@ -25,6 +25,7 @@ struct Constants {
     static let reminderMethodChannel = "flutter.native/reminder"
     static let addReminderMethod = "addReminder"
     static let removeReminderMethod = "removeReminder"
+    static let removeAllReminderMethod = "removeAllReminder"
 
     static let title = "title";
     static let description = "description";

@@ -13,6 +13,7 @@ class Reminder {
   String remindin_type;
   String providerid;
   String providername;
+  bool alreadyScheduled = false;
 
   Reminder({
     this.eid,
@@ -73,6 +74,7 @@ class Reminder {
       'remindin_type': remindin_type,
       'providerid': providerid,
       'providername': providername,
+      'alreadyScheduled': alreadyScheduled
     };
   }
 

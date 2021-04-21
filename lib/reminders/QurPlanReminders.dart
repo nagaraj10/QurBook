@@ -40,9 +40,15 @@ class QurPlanReminders {
       final dataArray = await json.decode(responseFromApi.body);
       List<dynamic> data = dataArray['result'];
       List<Reminder> reminders = [];
+      var oneHourbeforeFromNow = DateTime.now().subtract(Duration(hours: 1));
+      print(oneHourbeforeFromNow);
       data.forEach((element) {
         final newData = Reminder.fromMap(element);
-        reminders.add(newData);
+        final currentDateAndTime = DateTime.parse(newData.estart);
+        print(currentDateAndTime);
+        if (currentDateAndTime.isAfter(oneHourbeforeFromNow)) {
+          reminders.add(newData);
+        }
       });
       updateReminderswithLocal(reminders);
     } catch (e) {
@@ -62,7 +68,7 @@ class QurPlanReminders {
     final String directory =
         await FHBUtils.createFolderInAppDocDirForIOS('reminders');
     final File file = File(directory + 'notificationList.json');
-    final dataTosave = notificationToSave.map((e) => json.encode(e)).toList();
+    final dataTosave = notificationToSave.map((e) => e.toJson()).toList();
     try {
       final dataToSave = {"reminders": dataTosave};
       final dataToJson = json.encode(dataToSave);
@@ -102,6 +108,11 @@ class QurPlanReminders {
         if (apiReminder.eid == localReminder.eid) {
           found = true;
           if (apiReminder == localReminder) {
+            if (Platform.isIOS) {
+              apiReminder.alreadyScheduled = true;
+              reminderMethodChannel
+                  .invokeMethod(addReminderMethod, [apiReminder.toMap()]);
+            }
             break;
           } else {
             reminderMethodChannel
@@ -162,14 +173,21 @@ class QurPlanReminders {
 
       var notifications = <Reminder>[];
       for (var i = 0; i < myJson.length; i++) {
-        Map val = jsonDecode(myJson[i]);
-        final newData = Reminder.fromMap(val);
-        notifications.add(newData);
+        Reminder val = Reminder.fromJson(myJson[i]);
+        //final newData = Reminder.fromMap(val);
+        notifications.add(val);
       }
       return notifications;
     } catch (e) {
       print(e.toString());
       return [];
     }
+  }
+
+  static deleteAllLocalReminders() {
+    if (Platform.isIOS) {
+      reminderMethodChannel.invokeMethod(removeAllReminderMethod);
+    } else {}
+    saveRemindersLocally([]);
   }
 }
