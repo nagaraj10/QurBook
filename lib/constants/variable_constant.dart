@@ -600,6 +600,8 @@ const String strSync = 'Syncing...';
 const reminderMethodChannel = MethodChannel('flutter.native/reminder');
 const addReminderMethod = 'addReminder';
 const removeReminderMethod = 'removeReminder';
+const removeAllReminderMethod = 'removeAllReminder';
+const navigateToRegimentMethod = 'navigateToRegiment';
 
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {
