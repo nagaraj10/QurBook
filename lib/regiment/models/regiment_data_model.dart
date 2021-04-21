@@ -110,16 +110,16 @@ class Otherinfo {
     this.needFile,
   });
 
-  final dynamic needPhoto;
-  final dynamic needAudio;
-  final dynamic needVideo;
-  final dynamic needFile;
+  final String needPhoto;
+  final String needAudio;
+  final String needVideo;
+  final String needFile;
 
   factory Otherinfo.fromJson(Map<String, dynamic> json) => Otherinfo(
-        needPhoto: json["NeedPhoto"],
-        needAudio: json["NeedAudio"],
-        needVideo: json["NeedVideo"],
-        needFile: json["NeedFile"],
+        needPhoto: (json["NeedPhoto"] ?? 0).toString(),
+        needAudio: (json["NeedAudio"] ?? 0).toString(),
+        needVideo: (json["NeedVideo"] ?? 0).toString(),
+        needFile: (json["NeedFile"] ?? 0).toString(),
       );
 
   Map<String, dynamic> toJson() => {

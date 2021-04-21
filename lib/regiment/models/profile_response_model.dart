@@ -28,7 +28,7 @@ class ProfileResultModel {
     this.nick,
     this.ulinkid,
     this.familyName,
-    this.profile,
+    this.profileData,
     this.metadata,
   });
 
@@ -39,7 +39,7 @@ class ProfileResultModel {
   final String nick;
   final String ulinkid;
   final String familyName;
-  final ProfileDataModel profile;
+  final ProfileDataModel profileData;
   final dynamic metadata;
 
   factory ProfileResultModel.fromJson(Map<String, dynamic> json) =>
@@ -51,7 +51,7 @@ class ProfileResultModel {
         nick: json["nick"],
         ulinkid: json["ulinkid"],
         familyName: json["family_name"],
-        profile: ProfileDataModel.fromJson(json["profile"]),
+        profileData: ProfileDataModel.fromJson(json["profile"]),
         metadata: json["metadata"],
       );
 
@@ -63,7 +63,7 @@ class ProfileResultModel {
         "nick": nick,
         "ulinkid": ulinkid,
         "family_name": familyName,
-        "profile": profile.toJson(),
+        "profile": profileData.toJson(),
         "metadata": metadata,
       };
 }
@@ -105,9 +105,6 @@ class ProfileDataModel {
       );
 
   Map<String, dynamic> toJson() => {
-        "Age": age,
-        "Height": height,
-        "Language": language,
         "Wakeup": wakeup,
         "Breakfast": breakfast,
         "Lunch": lunch,
