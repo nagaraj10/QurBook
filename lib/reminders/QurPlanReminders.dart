@@ -60,6 +60,9 @@ class QurPlanReminders {
     final reminderMap = data.toMap();
     if (Platform.isIOS) {
       reminderMethodChannel.invokeMethod(addReminderMethod, [reminderMap]);
+    } else {
+      reminderMethodChannelAndroid
+          .invokeMethod(addReminderMethod, {'data': jsonEncode(reminderMap)});
     }
   }
 
@@ -90,8 +93,13 @@ class QurPlanReminders {
       }
 
       if (foundTheMatched != null) {
-        reminderMethodChannel
-            .invokeMethod(removeReminderMethod, [foundTheMatched.eid]);
+        if (Platform.isIOS) {
+          reminderMethodChannel
+              .invokeMethod(removeReminderMethod, [foundTheMatched.eid]);
+        } else {
+          reminderMethodChannelAndroid.invokeMethod(
+              removeReminderMethod, {'data': foundTheMatched.eid});
+        }
       }
       reminders.add(data);
     }
@@ -115,24 +123,41 @@ class QurPlanReminders {
             }
             break;
           } else {
-            reminderMethodChannel
-                .invokeMethod(removeReminderMethod, [localReminder.eid]);
-            reminderMethodChannel
-                .invokeMethod(addReminderMethod, [apiReminder.toMap()]);
+            if (Platform.isIOS) {
+              reminderMethodChannel
+                  .invokeMethod(removeReminderMethod, [localReminder.eid]);
+              reminderMethodChannel
+                  .invokeMethod(addReminderMethod, [apiReminder.toMap()]);
+            } else {
+              reminderMethodChannelAndroid.invokeMethod(
+                  removeReminderMethod, {'data': localReminder.eid});
+              reminderMethodChannelAndroid.invokeMethod(
+                  addReminderMethod, {'data': jsonEncode(apiReminder.toMap())});
+            }
           }
         }
       }
       if (!found) {
-        reminderMethodChannel
-            .invokeMethod(addReminderMethod, [apiReminder.toMap()]);
+        if (Platform.isIOS) {
+          reminderMethodChannel
+              .invokeMethod(addReminderMethod, [apiReminder.toMap()]);
+        } else {
+          reminderMethodChannelAndroid.invokeMethod(
+              addReminderMethod, {'data': jsonEncode(apiReminder.toMap())});
+        }
       }
     }
 
     for (var i = 0; i < localReminders.length; i++) {
       final localReminder = localReminders[i];
       if (!data.contains(localReminder)) {
-        reminderMethodChannel
-            .invokeMethod(removeReminderMethod, [localReminder.eid]);
+        if (Platform.isIOS) {
+          reminderMethodChannel
+              .invokeMethod(removeReminderMethod, [localReminder.eid]);
+        } else {
+          reminderMethodChannelAndroid
+              .invokeMethod(removeReminderMethod, {'data': localReminder.eid});
+        }
       }
     }
     saveRemindersLocally(data);
@@ -152,8 +177,13 @@ class QurPlanReminders {
       }
 
       if (foundTheMatched != null) {
-        reminderMethodChannel
-            .invokeMethod(removeReminderMethod, [foundTheMatched.eid]);
+        if (Platform.isIOS) {
+          reminderMethodChannel
+              .invokeMethod(removeReminderMethod, [foundTheMatched.eid]);
+        } else {
+          reminderMethodChannelAndroid.invokeMethod(
+              removeReminderMethod, {'data': foundTheMatched.eid});
+        }
         return true;
       } else {
         return false;
@@ -184,10 +214,16 @@ class QurPlanReminders {
     }
   }
 
-  static deleteAllLocalReminders() {
+  static deleteAllLocalReminders() async{
     if (Platform.isIOS) {
       reminderMethodChannel.invokeMethod(removeAllReminderMethod);
-    } else {}
+    } else {
+      List<Reminder> reminders = await getLocalReminder();
+      for (Reminder r in reminders) {
+        reminderMethodChannelAndroid
+            .invokeMethod(removeReminderMethod, {'data': r.eid});
+      }
+    }
     saveRemindersLocally([]);
   }
 }

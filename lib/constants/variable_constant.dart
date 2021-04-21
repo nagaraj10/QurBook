@@ -603,6 +603,8 @@ const removeReminderMethod = 'removeReminder';
 const removeAllReminderMethod = 'removeAllReminder';
 const navigateToRegimentMethod = 'navigateToRegiment';
 
+var reminderMethodChannelAndroid = const MethodChannel('android/notification');
+
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {
   final parts = token.split('.');

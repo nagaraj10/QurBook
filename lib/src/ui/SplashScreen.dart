@@ -16,6 +16,7 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
+import 'package:myfhb/src/ui/Dashboard.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/city.dart';
@@ -71,7 +72,8 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void setReminder() {
-    var selecteTimeInDate = "${TimeOfDay.now().hour}-${TimeOfDay.now().minute+3}";
+    var selecteTimeInDate =
+        "${TimeOfDay.now().hour}-${TimeOfDay.now().minute + 3}";
     print('currentTime#######${selecteTimeInDate}');
     var ch_android = const MethodChannel('android/notification');
     var mappedReminder = {
@@ -245,6 +247,10 @@ class _SplashScreenState extends State<SplashScreen> {
                         });
                         CommonUtil().navigateToMyRecordsCategory(
                             widget.templateName, [widget.bundle], true);
+                      } else if (widget.nsRoute == 'regiment_screen') {
+                        Get.to(DashboardScreen()).then((value) =>
+                            PageNavigator.goToPermanent(
+                                context, router.rt_Dashboard));
                       } else {
                         fbaLog(eveParams: {
                           'eventTime': '${DateTime.now()}',
