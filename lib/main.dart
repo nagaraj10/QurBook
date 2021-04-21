@@ -487,6 +487,9 @@ class _MyFHBState extends State<MyFHB> {
           Get.toNamed(router.rt_HomeScreen,
                   arguments: HomeScreenArguments(selectedIndex: 1))
               .then((value) => setState(() {}));
+        } else if (passedValArr[1] == 'regiment_screen') {
+          //this need to be navigte to Regiment screen
+          Get.to(DashboardScreen());
         } else {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
@@ -722,6 +725,11 @@ class _MyFHBState extends State<MyFHB> {
           } else if (parsedData[1] == 'my_record') {
             return SplashScreen(
               nsRoute: 'my_record',
+            );
+          } else if (parsedData[1] == 'regiment_screen') {
+            //this need to be navigte to Regiment screen
+            return SplashScreen(
+              nsRoute: 'regiment_screen',
             );
           } else {
             return SplashScreen(

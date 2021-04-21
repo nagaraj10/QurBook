@@ -14,8 +14,10 @@ import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.pichillilorenzo.flutter_inappwebview.Shared.applicationContext
 import com.ventechsolutions.myFHB.MyApp
 import com.ventechsolutions.myFHB.R
+import com.ventechsolutions.myFHB.constants.Constants
 
 class ReminderBroadcaster : BroadcastReceiver() {
     override fun onReceive(p0: Context?, p1: Intent?) {
@@ -43,6 +45,18 @@ class ReminderBroadcaster : BroadcastReceiver() {
         snoozeIntent.putExtra(p0.getString(R.string.body), dataBody)
         val snoozePendingIntent = PendingIntent.getBroadcast(p0, 0, snoozeIntent, PendingIntent.FLAG_CANCEL_CURRENT)
 
+
+        val onTapNS = Intent(p0, OnTapNotification::class.java)
+        onTapNS.putExtra("notificationId", NS_ID)
+        onTapNS.putExtra("meeting_id", "")
+        onTapNS.putExtra("username", "")
+        //onTapNS.putExtra(getString(R.string.username), "$USER_NAME")
+        onTapNS.putExtra(Constants.PROP_DATA, "")
+        onTapNS.putExtra(Constants.PROP_REDIRECT_TO, "regiment_screen")
+        onTapNS.putExtra(Constants.PROP_HRMID, "")
+        val onTapPendingIntent = PendingIntent.getBroadcast(p0, NS_ID!!, onTapNS, PendingIntent.FLAG_CANCEL_CURRENT)
+
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             //val manager = getSystemService(NotificationManager::class.java)
             val isChannelExists = nsManager.getNotificationChannel(CHANNEL_REMINDER)
@@ -62,6 +76,7 @@ class ReminderBroadcaster : BroadcastReceiver() {
                 .setLargeIcon(BitmapFactory.decodeResource(p0.resources, R.mipmap.ic_launcher))
                 .setContentTitle(dataTitle)
                 .setContentText(dataBody)
+                .setContentIntent(onTapPendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setCategory(NotificationCompat.CATEGORY_ALARM)
                 .addAction(R.drawable.ic_close, "Dismiss", dismissIntentPendingIntent)
