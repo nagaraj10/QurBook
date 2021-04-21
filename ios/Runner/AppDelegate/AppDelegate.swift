@@ -375,6 +375,12 @@ import AVFoundation
                 }
             }
             
+        }else if response.actionIdentifier == "Dismiss"{
+            
+        }else{
+            let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
+            let reminderChannel = FlutterMethodChannel.init(name: self.reminderChannel, binaryMessenger: controller.binaryMessenger)
+            reminderChannel.invokeMethod(Constants.navigateToRegimentMethod, arguments: nil)
         }
         completionHandler()
     }

@@ -598,6 +598,8 @@ const reminderMethodChannel = MethodChannel('flutter.native/reminder');
 const addReminderMethod = 'addReminder';
 const removeReminderMethod = 'removeReminder';
 const removeAllReminderMethod = 'removeAllReminder';
+const navigateToRegimentMethod = 'navigateToRegiment';
+
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {
   final parts = token.split('.');

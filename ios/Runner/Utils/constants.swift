@@ -26,7 +26,7 @@ struct Constants {
     static let addReminderMethod = "addReminder"
     static let removeReminderMethod = "removeReminder"
     static let removeAllReminderMethod = "removeAllReminder"
-
+    static let navigateToRegimentMethod = "navigateToRegiment"
     static let title = "title";
     static let description = "description";
     static let notification = "notification";
