@@ -19,6 +19,7 @@ import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
 class DeviceListScreen extends StatefulWidget {
   final HealthRecordList completeData;
@@ -246,8 +247,8 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
-                            new FHBUtils()
-                                .getFormattedDateString(data.createdOn),
+                            new FHBUtils().getFormattedDateStringClone(
+                                data.dateTimeValue.toLocal()),
                             style: TextStyle(
                                 color:
                                     Color(new CommonUtil().getMyPrimaryColor()),
@@ -334,6 +335,19 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
         }
       },
     );
+  }
+
+  String getCreatedDate(HealthResult data) {
+    DateTime dateTimeStampForBp = data.dateTimeValue.toLocal();
+
+    //deviceValues.bloodPressure.entities[0].lastsyncdatetime;
+    String dateForBp =
+        "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForBp)}";
+    String timeForBp =
+        "${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStampForBp)}";
+    print(dateForBp + ',' + timeForBp);
+
+    return dateForBp + ',' + timeForBp;
   }
 
   Widget getDeviceReadings(

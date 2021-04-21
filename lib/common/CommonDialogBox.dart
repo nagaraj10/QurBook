@@ -91,6 +91,7 @@ class CommonDialogBox {
   FlutterToast toast = new FlutterToast();
 
   String fromClassNew = '';
+  HealthResult deviceHealthResult;
 
   Future<Widget> getDialogBoxForPrescription(
       BuildContext context,
@@ -112,6 +113,7 @@ class CommonDialogBox {
       containsAudioMain = containsAudio;
 
       if (mediaMetaInfo != null) {
+        deviceHealthResult = mediaMetaInfo;
         doctorsData = mediaMetaInfo.metadata.doctor != null
             ? mediaMetaInfo.metadata.doctor
             : null;
@@ -304,6 +306,7 @@ class CommonDialogBox {
       containsAudioMain = containsAudio;
       if (mediaMetaInfo != null) {
         mediaMetaInfo = mediaMetaInfo != null ? mediaMetaInfo : null;
+        deviceHealthResult = mediaMetaInfo;
 
         doctorsData = mediaMetaInfo.metadata.doctor;
 
@@ -493,6 +496,8 @@ class CommonDialogBox {
     containsAudioMain = containsAudio;
     imagePathMain.addAll(imagePath);
     if (modeOfSave) {
+      deviceHealthResult = mediaMetaInfoClone;
+
       loadMemoText(mediaMetaInfoClone.metadata.memoText != null
           ? mediaMetaInfoClone.metadata.memoText
           : '');
@@ -609,6 +614,7 @@ class CommonDialogBox {
 
     setFileName(fileNameClone.text, mediaMetaInfoClone);
     if (modeOfSave) {
+      deviceHealthResult = mediaMetaInfoClone;
       loadMemoText(mediaMetaInfoClone.metadata.memoText != null
           ? mediaMetaInfoClone.metadata.memoText
           : '');
@@ -795,6 +801,7 @@ class CommonDialogBox {
     deviceController.text = deviceControllerClone.text;
     isSelected = isSelectedClone;
     if (modeOfSave) {
+      deviceHealthResult = mediaMetaInfoClone;
       loadMemoText(mediaMetaInfoClone.metadata.memoText != null
           ? mediaMetaInfoClone.metadata.memoText
           : '');
@@ -963,6 +970,7 @@ class CommonDialogBox {
     imagePathMain.addAll(imagePath);
     deviceController.text = deviceControllerClone.text;
     if (modeOfSave) {
+      deviceHealthResult = mediaMetaInfoClone;
       loadMemoText(mediaMetaInfoClone.metadata.memoText != null
           ? mediaMetaInfoClone.metadata.memoText
           : '');
@@ -1123,6 +1131,7 @@ class CommonDialogBox {
     deviceController.text = deviceControllerClone.text;
 
     if (modeOfSave) {
+      deviceHealthResult = mediaMetaInfoClone;
       loadMemoText(mediaMetaInfoClone.metadata.memoText != null
           ? mediaMetaInfoClone.metadata.memoText
           : '');
@@ -1251,6 +1260,7 @@ class CommonDialogBox {
     pulse.text = pulseClone.text;
 
     if (modeOfSave) {
+      deviceHealthResult = mediaMetaInfoClone;
       loadMemoText(mediaMetaInfoClone.metadata.memoText != null
           ? mediaMetaInfoClone.metadata.memoText
           : '');
@@ -1392,6 +1402,7 @@ class CommonDialogBox {
     pulse.text = pulseClone.text;
     diaStolicPressure.text = diastolicPressureClone.text;
     if (modeOfSave) {
+      deviceHealthResult = mediaMetaInfoClone;
       loadMemoText(mediaMetaInfoClone.metadata.memoText != null
           ? mediaMetaInfoClone.metadata.memoText
           : '');
@@ -1698,9 +1709,19 @@ class CommonDialogBox {
 
       postMediaData[parameters.strSourceName] = CommonConstants.strTridentValue;
       postMediaData[parameters.strmemoTextRaw] = memoController.text;
-      DateTime dateTime = DateTime.now();
-      postMediaData[parameters.strStartDate] = dateTime.toUtc().toString();
-      postMediaData[parameters.strEndDate] = dateTime.toUtc().toString();
+      if (modeOfSave) {
+        DateTime dateTime = DateTime.now();
+        postMediaData[parameters.strStartDate] =
+            deviceHealthResult.metadata.startDateTime ??
+                dateTime.toUtc().toString();
+        postMediaData[parameters.strEndDate] =
+            deviceHealthResult.metadata.endDateTime ??
+                dateTime.toUtc().toString();
+      } else {
+        DateTime dateTime = DateTime.now();
+        postMediaData[parameters.strStartDate] = dateTime.toUtc().toString();
+        postMediaData[parameters.strEndDate] = dateTime.toUtc().toString();
+      }
       var commonConstants = new CommonConstants();
 
       if (categoryName == CommonConstants.strDevice) {
@@ -2403,6 +2424,7 @@ class CommonDialogBox {
 
     if (imagePath != null) imagePathMain.addAll(imagePath);
     if (modeOfSave) {
+      deviceHealthResult = mediaMetaInfoClone;
       loadMemoText(mediaMetaInfoClone.metadata.memoText != null
           ? mediaMetaInfoClone.metadata.memoText
           : '');
