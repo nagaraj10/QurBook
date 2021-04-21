@@ -50,6 +50,7 @@ class FormDataDialogState extends State<FormDataDialog> {
   String imagePaths = '';
 
   ApiBaseHelper _helper = ApiBaseHelper();
+  Map<String, dynamic> saveMap = {};
 
   @override
   void initState() {
@@ -63,7 +64,6 @@ class FormDataDialogState extends State<FormDataDialog> {
 
   @override
   Widget build(BuildContext context) {
-    Map<String, dynamic> saveMap = {};
     return SimpleDialog(
       children: [
         Container(
@@ -84,14 +84,25 @@ class FormDataDialogState extends State<FormDataDialog> {
                 ),
                 child: FormFieldWidget(
                   fieldData: fieldsData[index],
-                  updateValue: (FieldModel updatedFieldData) {
-                    var oldValue = saveMap.putIfAbsent(
-                      'pf_${updatedFieldData.title}',
-                      () => updatedFieldData.value,
-                    );
-                    if (oldValue != null) {
-                      saveMap['pf_${updatedFieldData.title}'] =
-                          updatedFieldData.value;
+                  updateValue: (
+                    FieldModel updatedFieldData, {
+                    bool isAdd,
+                    String title,
+                  }) {
+                    if (isAdd == null || isAdd) {
+                      isAdd = isAdd ?? false;
+                      var oldValue = saveMap.putIfAbsent(
+                        isAdd ? 'pf_${title}' : 'pf_${updatedFieldData.title}',
+                        () => updatedFieldData.value,
+                      );
+                      if (oldValue != null) {
+                        saveMap[isAdd
+                                ? 'pf_${title}'
+                                : 'pf_${updatedFieldData.title}'] =
+                            updatedFieldData.value;
+                      }
+                    } else {
+                      saveMap.remove('pf_${title}');
                     }
                   },
                 ),
@@ -105,21 +116,21 @@ class FormDataDialogState extends State<FormDataDialog> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Visibility(
-                visible: mediaData.needVideo == '1',
+                visible: mediaData.needPhoto == '1',
                 child: Row(
                   children: [
                     MediaIconWidget(
                       color: color,
-                      icon: Icons.video_call,
+                      icon: Icons.camera_alt,
                       padding: 10.0.sp,
                       onPressed: () {
-                        getOpenGallery(strVideo);
+                        getOpenGallery(strGallery);
                       },
                     ),
                     SizedBox(
                       width: 250.0.w,
                       child: Text(
-                        videoFileName,
+                        imageFileName,
                         style: TextStyle(
                           fontSize: 14.0.sp,
                           color: Colors.grey[500],
@@ -135,7 +146,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                   children: [
                     MediaIconWidget(
                       color: color,
-                      icon: Icons.audiotrack,
+                      icon: Icons.mic,
                       padding: 10.0.sp,
                       onPressed: () {
                         //getOpenGallery(strAudio);
@@ -157,6 +168,14 @@ class FormDataDialogState extends State<FormDataDialog> {
                               saveMediaRegiment(imagePaths).then((value) {
                                 if (value.isSuccess) {
                                   print('url:  ' + value.result.accessUrl);
+                                  var oldValue = saveMap.putIfAbsent(
+                                    'pf_audio',
+                                    () => value.result.accessUrl,
+                                  );
+                                  if (oldValue != null) {
+                                    saveMap['pf_audio'] =
+                                        value.result.accessUrl;
+                                  }
                                 }
                               });
                             }
@@ -178,21 +197,21 @@ class FormDataDialogState extends State<FormDataDialog> {
                 ),
               ),
               Visibility(
-                visible: mediaData.needPhoto == '1',
+                visible: mediaData.needVideo == '1',
                 child: Row(
                   children: [
                     MediaIconWidget(
                       color: color,
-                      icon: Icons.photo,
+                      icon: Icons.videocam,
                       padding: 10.0.sp,
                       onPressed: () {
-                        getOpenGallery(strGallery);
+                        getOpenGallery(strVideo);
                       },
                     ),
                     SizedBox(
                       width: 250.0.w,
                       child: Text(
-                        imageFileName,
+                        videoFileName,
                         style: TextStyle(
                           fontSize: 14.0.sp,
                           color: Colors.grey[500],
@@ -208,7 +227,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                   children: [
                     MediaIconWidget(
                       color: color,
-                      icon: Icons.file_copy_rounded,
+                      icon: Icons.attach_file,
                       padding: 10.0.sp,
                       onPressed: () {
                         getOpenGallery(strFiles);
@@ -308,6 +327,14 @@ class FormDataDialogState extends State<FormDataDialog> {
             if (value.isSuccess) {
               print('url:  ' + value.result.accessUrl);
               print('uploaded');
+
+              var oldValue = saveMap.putIfAbsent(
+                'pf_$fromPath',
+                () => value.result.accessUrl,
+              );
+              if (oldValue != null) {
+                saveMap['pf_$fromPath'] = value.result.accessUrl;
+              }
             }
           });
         }

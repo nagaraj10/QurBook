@@ -1199,17 +1199,32 @@ class CommonUtil {
     return updatedDate;
   }
 
-  regimentDateFormat(DateTime newDateTime) {
+  regimentDateFormat(
+    DateTime newDateTime, {
+    bool isAck = false,
+  }) {
     DateFormat newFormat;
     String updatedDate = '';
     DateTime currentTime = DateTime.now();
     if (newDateTime.day == currentTime.day &&
         newDateTime.month == currentTime.month &&
         newDateTime.year == currentTime.year) {
-      newFormat = DateFormat("MMM d, yyyy");
-      updatedDate = 'Today, ';
+      if (isAck) {
+        newFormat = DateFormat("HH:mm");
+      } else {
+        newFormat = DateFormat("MMM d, yyyy");
+      }
+      if (isAck) {
+        updatedDate = 'Today at ';
+      } else {
+        updatedDate = 'Today, ';
+      }
     } else {
-      newFormat = DateFormat("EEE, MMM d, yyyy");
+      if (isAck) {
+        newFormat = DateFormat("HH:mm");
+      } else {
+        newFormat = DateFormat("EEE, MMM d, yyyy");
+      }
     }
     updatedDate = updatedDate + newFormat.format(newDateTime);
     return updatedDate;

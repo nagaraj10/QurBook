@@ -44,4 +44,22 @@ class Service {
       throw Exception('$e was thrown');
     }
   }
+
+  Future<dynamic> getAudioFileRegiments(Map<String, dynamic> reqJson) async {
+    final urlForTTS = Constants.BASE_URL + variable.qr_Google_TTS_Regiment_URL;
+    try {
+      final jsonString = jsonEncode(reqJson);
+      final headerRequest =
+          await HeaderRequest().getRequestHeadersAuthContent();
+      final response = await http.post(
+        urlForTTS,
+        body: jsonString,
+        headers: headerRequest,
+      );
+
+      return response;
+    } catch (e) {
+      throw Exception('$e was thrown');
+    }
+  }
 }

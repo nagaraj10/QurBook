@@ -12,30 +12,62 @@ import 'package:intl/intl.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/regiment/models/profile_response_model.dart';
 import 'package:myfhb/regiment/view/widgets/event_list_widget.dart';
+import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 
 class RegimentTab extends StatefulWidget {
   @override
   _RegimentTabState createState() => _RegimentTabState();
 }
 
-class _RegimentTabState extends State<RegimentTab> {
+class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
   RegimentViewModel _regimentViewModel;
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    Provider.of<ChatScreenViewModel>(context, listen: false).updateAppState(
+      true,
+      isInitial: true,
+    );
     Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
       isInitial: true,
     );
   }
 
-  Color getColor(Activityname activityname) {
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.detached) {
+      Provider.of<ChatScreenViewModel>(context, listen: false)
+          .updateAppState(false);
+    } else if (state == AppLifecycleState.resumed) {
+      Provider.of<ChatScreenViewModel>(context, listen: false)
+          .updateAppState(true);
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  Color getColor(Activityname activityname, Uformname uformName) {
     Color cardColor;
     switch (activityname) {
       case Activityname.DIET:
         cardColor = Colors.green;
         break;
       case Activityname.VITALS:
-        cardColor = Colors.lightBlueAccent;
+        if (uformName == Uformname.BLOODPRESSURE) {
+          cardColor = Color(0xFF059192);
+        } else if (uformName == Uformname.BLOODSUGAR) {
+          cardColor = Color(0xFFb70a80);
+        } else if (uformName == Uformname.PULSE) {
+          cardColor = Color(0xFF8600bd);
+        } else {
+          cardColor = Colors.lightBlueAccent;
+        }
         break;
       case Activityname.MEDICATION:
         cardColor = Colors.blue;
@@ -49,14 +81,23 @@ class _RegimentTabState extends State<RegimentTab> {
     return cardColor;
   }
 
-  IconData getIcon(Activityname activityname) {
-    IconData cardIcon;
+  dynamic getIcon(Activityname activityname, Uformname uformName) {
+    dynamic cardIcon;
     switch (activityname) {
       case Activityname.DIET:
         cardIcon = Icons.fastfood_rounded;
         break;
       case Activityname.VITALS:
-        cardIcon = Icons.style;
+        if (uformName == Uformname.BLOODPRESSURE) {
+          cardIcon = 'assets/devices/bp_dashboard.png';
+        } else if (uformName == Uformname.BLOODSUGAR) {
+          cardIcon = 'assets/devices/gulcose_dashboard.png';
+        } else if (uformName == Uformname.PULSE) {
+          cardIcon = 'assets/devices/os_dashboard.png';
+        } else {
+          cardIcon = 'assets/devices/temp_dashboard.png';
+        }
+
         break;
       case Activityname.MEDICATION:
         cardIcon = Icons.medical_services;
@@ -186,12 +227,15 @@ class _RegimentTabState extends State<RegimentTab> {
                           title: regimentData.title,
                           time: DateFormat('hh:mm\na')
                               .format(regimentData.estart),
-                          color: getColor(regimentData.activityname),
-                          icon: getIcon(regimentData.activityname),
+                          color: getColor(regimentData.activityname,
+                              regimentData.uformname),
+                          icon: getIcon(regimentData.activityname,
+                              regimentData.uformname),
                           vitalsData: regimentData.uformdata.vitalsData,
                           eid: regimentData.eid,
                           mediaData: regimentData.otherinfo,
                           startTime: regimentData.estart,
+                          regimentData: regimentData,
                         );
                       },
                     );
