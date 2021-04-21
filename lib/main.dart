@@ -25,6 +25,7 @@ import 'package:myfhb/schedules/add_reminders.dart';
 import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
 import 'package:myfhb/src/model/Category/catergory_result.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
+import 'package:myfhb/src/ui/Dashboard.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/ui/MyRecordsArguments.dart';
 import 'package:myfhb/src/ui/SplashScreen.dart';
@@ -391,11 +392,9 @@ class _MyFHBState extends State<MyFHB> {
       variable.reminderMethodChannel.setMethodCallHandler((call) {
         if (call.method == variable.navigateToRegimentMethod) {
           if (isAlreadyLoaded) {
-            Get.to(SuperMaya());
+            Get.to(DashboardScreen());
           } else {
-            Get.to(SplashScreen(
-              nsRoute: 'sheela',
-            ));
+            Get.to(SplashScreen());
           }
         }
       });
