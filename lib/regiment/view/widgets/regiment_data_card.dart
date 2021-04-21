@@ -42,7 +42,7 @@ class RegimentDataCard extends StatelessWidget {
         ),
         child: InkWell(
           onTap: () async {
-            bool canEdit = startTime.difference(DateTime.now()).inMinutes <= 10;
+            bool canEdit = startTime.difference(DateTime.now()).inMinutes <= 15;
             if (canEdit) {
               FieldsResponseModel fieldsResponseModel =
                   await Provider.of<RegimentViewModel>(context, listen: false)
@@ -66,13 +66,13 @@ class RegimentDataCard extends StatelessWidget {
                 }
               } else {
                 FlutterToast().getToast(
-                  'No data to enter for this event',
+                  'No plans associated with this event',
                   Colors.red,
                 );
               }
             } else {
               FlutterToast().getToast(
-                'Data for future events can be entered only 10 min prior to the event time',
+                'Data for future events can be entered only 15 min prior to the event time',
                 Colors.red,
               );
             }

@@ -22,7 +22,7 @@ class RegimentService {
         body: json.encode(
           {
             "method": "get",
-            "data": "Action=GetUserActivities&startdate=$dateSelected",
+            "data": "Action=GetUserActivities&date=$dateSelected",
           },
         ),
       );

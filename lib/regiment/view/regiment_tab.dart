@@ -184,7 +184,7 @@ class _RegimentTabState extends State<RegimentTab> {
                         var regimentData = snapshot.data.regimentsList[index];
                         return RegimentDataCard(
                           title: regimentData.title,
-                          time: DateFormat('HH:mm\na')
+                          time: DateFormat('hh:mm\na')
                               .format(regimentData.estart),
                           color: getColor(regimentData.activityname),
                           icon: getIcon(regimentData.activityname),
