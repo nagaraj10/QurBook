@@ -229,6 +229,7 @@ class _MyFHBState extends State<MyFHB> {
   var globalContext;
   AuthService authService = AuthService();
   ChatViewModel chatViewModel = new ChatViewModel();
+
   @override
   void initState() {
     // TODO: implement initState
@@ -384,6 +385,17 @@ class _MyFHBState extends State<MyFHB> {
                 nsRoute: '',
               ));
             }
+          }
+        }
+      });
+      variable.reminderMethodChannel.setMethodCallHandler((call) {
+        if (call.method == variable.navigateToRegimentMethod) {
+          if (isAlreadyLoaded) {
+            Get.to(SuperMaya());
+          } else {
+            Get.to(SplashScreen(
+              nsRoute: 'sheela',
+            ));
           }
         }
       });

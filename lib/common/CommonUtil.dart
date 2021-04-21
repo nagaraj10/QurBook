@@ -37,6 +37,7 @@ import 'package:myfhb/my_family/models/Sharedbyme.dart';
 import 'package:myfhb/my_providers/models/ProfilePicThumbnail.dart';
 import 'package:myfhb/myfhb_weview/myfhb_webview.dart';
 import 'package:myfhb/record_detail/model/DoctorImageResponse.dart';
+import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
 import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
 import 'package:myfhb/src/blocs/Media/MediaTypeBlock.dart';
@@ -147,8 +148,8 @@ class CommonUtil {
 
     if (mediaMetaInfoObj.length > 0) {
       mediaMetaInfoObj.sort((mediaMetaInfoObjCopy, mediaMetaInfoObjClone) {
-        return mediaMetaInfoObjCopy.createdOn
-            .compareTo(mediaMetaInfoObjClone.createdOn);
+        return mediaMetaInfoObjCopy.dateTimeValue
+            .compareTo(mediaMetaInfoObjClone.dateTimeValue);
       });
 
       //NOTE show the bookmarked data as first
@@ -442,7 +443,7 @@ class CommonUtil {
       MyProfileModel myProfile =
           PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
       MyProfileResult profileResult = myProfile.result;
-
+      QurPlanReminders.deleteAllLocalReminders();
       CommonUtil()
           .sendDeviceToken(
               PreferenceUtil.getStringValue(Constants.KEY_USERID),
@@ -1258,6 +1259,12 @@ class CommonUtil {
 
   dateConversionToApiFormat(DateTime dateTime) {
     var newFormat = DateFormat('yyyy-MM-dd');
+    String updatedDate = newFormat.format(dateTime);
+    return updatedDate;
+  }
+
+  dateConversionToApiFormatClone(DateTime dateTime) {
+    var newFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
     String updatedDate = newFormat.format(dateTime);
     return updatedDate;
   }

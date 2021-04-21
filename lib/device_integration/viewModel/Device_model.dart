@@ -131,7 +131,8 @@ class DevicesViewModel with ChangeNotifier {
                       ? dataElement.heartRateCollection[0].bpm
                       : null
                   : null,
-              deviceId: dataElement.deviceId);
+              deviceId: dataElement.deviceId,
+              dateTimeValue: bpElement.startDateTime);
           ret.add(bpList);
         });
 
@@ -184,7 +185,8 @@ class DevicesViewModel with ChangeNotifier {
               mealType: (bgValue.mealType == null)
                   ? null
                   : bgValue.mealType.description,
-              deviceId: dataElement.deviceId);
+              deviceId: dataElement.deviceId,
+              dateTimeValue: bgValue.startDateTime);
           ret.add(bgList);
         });
       });
@@ -225,7 +227,8 @@ class DevicesViewModel with ChangeNotifier {
               startDateTime: oxyValue.startDateTime.toIso8601String(),
               endDateTime: oxyValue.endDateTime.toIso8601String(),
               oxygenSaturation: oxyValue.oxygenSaturation,
-              deviceId: dataElement.deviceId);
+              deviceId: dataElement.deviceId,
+              dateTimeValue: oxyValue.startDateTime);
           ret.add(oxyList);
         });
         /* dataElement.heartRateCollection.forEach((element) {
@@ -270,7 +273,8 @@ class DevicesViewModel with ChangeNotifier {
               endDateTime: tempValue.endDateTime.toIso8601String(),
               temperature: tempValue.temperature,
               temperatureUnit: tempValue.temperatureUnit.description,
-              deviceId: dataElement.deviceId);
+              deviceId: dataElement.deviceId,
+              dateTimeValue: tempValue.startDateTime);
           ret.add(tempList);
         });
       });
@@ -312,7 +316,8 @@ class DevicesViewModel with ChangeNotifier {
               weightUnit: weightValue.weightUnit != null
                   ? weightValue.weightUnit.description
                   : 'Kg',
-              deviceId: dataElement.deviceId);
+              deviceId: dataElement.deviceId,
+              dateTimeValue: weightValue.startDateTime);
           ret.add(weightList);
         });
       });

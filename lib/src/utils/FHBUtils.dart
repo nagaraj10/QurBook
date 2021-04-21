@@ -100,6 +100,21 @@ class FHBUtils {
     return formattedDate;
   }
 
+  String getFormattedDateStringClone(DateTime strDate) {
+    String formattedDate = '';
+
+    if (strDate != null && strDate != '') {
+      if (CURRENT_DATE_CODE == 'MDY') {
+        formattedDate = DateFormat('MMM dd yyyy, hh:mm aa').format(strDate);
+      } else if (CURRENT_DATE_CODE == 'YMD') {
+        formattedDate = DateFormat('yyyy MMM dd, hh:mm aa').format(strDate);
+      } else {
+        formattedDate = DateFormat('dd MMM yyyy, hh:mm aa').format(strDate);
+      }
+    }
+    return formattedDate;
+  }
+
   String getFormattedDateForUser(String strDate) {
     String formattedDate;
     try {

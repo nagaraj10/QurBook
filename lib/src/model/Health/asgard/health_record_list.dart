@@ -1,3 +1,4 @@
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
 
 class HealthRecordList {
@@ -41,6 +42,7 @@ class HealthResult {
   List<HealthRecordCollection> healthRecordCollection;
   bool isSelected = false;
   String createdOn;
+  DateTime dateTimeValue;
 
   HealthResult(
       {this.id,
@@ -56,7 +58,8 @@ class HealthResult {
       this.doctorId,
       this.healthRecordCollection,
       this.isSelected,
-      this.createdOn});
+      this.createdOn,
+      this.dateTimeValue});
 
   HealthResult.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -79,6 +82,13 @@ class HealthResult {
       });
     }
     createdOn = json['createdOn'];
+    if (metadata != null) {
+      if (metadata.startDateTime != null && metadata.startDateTime != '') {
+        dateTimeValue = DateTime.parse(metadata.startDateTime);
+      } else {
+        dateTimeValue = DateTime.parse(createdOn);
+      }
+    }
   }
 
   Map<String, dynamic> toJson() {

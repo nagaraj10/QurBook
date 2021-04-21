@@ -34,13 +34,15 @@ class TMPResult {
   String temperature;
   String temperatureUnit;
   String deviceId;
+  DateTime dateTimeValue;
   TMPResult(
       {this.sourceType,
       this.startDateTime,
       this.endDateTime,
       this.temperature,
       this.temperatureUnit,
-      this.deviceId});
+      this.deviceId,
+      this.dateTimeValue});
 
   TMPResult.fromJson(Map<String, dynamic> json) {
     sourceType = json[strsourcetype];
