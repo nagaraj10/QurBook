@@ -189,6 +189,13 @@ const String audioConfig = 'audioConfig';
 const String isAudioFile = 'isAudioFile';
 const String MP3 = 'MP3';
 
+const String regimentInput = 'q';
+const String regimentSource = 'source';
+const String regimentTarget = 'target';
+const String regimentFormat = 'format';
+const String regimentAudioEncoding = 'audioEncoding';
+const String regimentIsAudioFile = 'isAudioFile';
+
 const String audioEncoding = 'audioEncoding';
 const String strmedicalPreferences = 'medicalPreferences';
 const String strpreferences = 'preferences';

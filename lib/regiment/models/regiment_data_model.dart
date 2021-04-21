@@ -24,6 +24,16 @@ class RegimentDataModel {
     this.uformdata,
     this.ts,
     this.deleted,
+    this.evDuration,
+    this.hashtml,
+    this.hascustform,
+    this.htmltemplate,
+    this.dosesNeeded,
+    this.dosesAvailable,
+    this.dosesUsed,
+    this.providername,
+    this.hasform,
+    this.saytext,
   });
 
   final String eid;
@@ -48,6 +58,16 @@ class RegimentDataModel {
   final UformData uformdata;
   final DateTime ts;
   final String deleted;
+  final String evDuration;
+  final int hashtml;
+  final int hascustform;
+  final dynamic htmltemplate;
+  final String dosesNeeded;
+  final String dosesAvailable;
+  final String dosesUsed;
+  final String providername;
+  final bool hasform;
+  final String saytext;
 
   factory RegimentDataModel.fromJson(Map<String, dynamic> json) =>
       RegimentDataModel(
@@ -74,6 +94,16 @@ class RegimentDataModel {
         uformdata: UformData().fromJson(jsonDecode(json["uformdata"] ?? '{}')),
         ts: DateTime.tryParse(json["ts"] ?? ''),
         deleted: json["deleted"],
+        evDuration: json["ev_duration"],
+        hashtml: json["hashtml"],
+        hascustform: json["hascustform"],
+        htmltemplate: json["htmltemplate"],
+        dosesNeeded: json["doses_needed"],
+        dosesAvailable: json["doses_available"],
+        dosesUsed: json["doses_used"],
+        providername: json["providername"],
+        hasform: (json["hasform"] ?? 0) == 1,
+        saytext: json["saytext"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -99,6 +129,16 @@ class RegimentDataModel {
         "uformdata": uformdata,
         "ts": ts.toIso8601String(),
         "deleted": deleted,
+        "ev_duration": evDuration,
+        "hashtml": hashtml,
+        "hascustform": hascustform,
+        "htmltemplate": htmltemplate,
+        "doses_needed": dosesNeeded,
+        "doses_available": dosesAvailable,
+        "doses_used": dosesUsed,
+        "providername": providername,
+        "hasform": hasform,
+        "saytext": saytext,
       };
 }
 

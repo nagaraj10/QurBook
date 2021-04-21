@@ -14,7 +14,11 @@ class FormFieldWidget extends StatelessWidget {
   });
 
   final FieldModel fieldData;
-  final Function(FieldModel updatedFieldData) updateValue;
+  final Function(
+    FieldModel updatedFieldData, {
+    bool isAdd,
+    String title,
+  }) updateValue;
 
   @override
   Widget build(BuildContext context) {

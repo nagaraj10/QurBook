@@ -9,16 +9,19 @@ import 'package:myfhb/regiment/models/field_response_model.dart';
 import 'package:provider/provider.dart';
 import 'media_icon_widget.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 
 class RegimentDataCard extends StatelessWidget {
   final String title;
   final String time;
   final Color color;
-  final IconData icon;
+  final dynamic icon;
   final String eid;
   final List<VitalsData> vitalsData;
   final Otherinfo mediaData;
   final DateTime startTime;
+  final RegimentDataModel regimentData;
 
   const RegimentDataCard({
     @required this.title,
@@ -29,6 +32,7 @@ class RegimentDataCard extends StatelessWidget {
     @required this.vitalsData,
     @required this.startTime,
     @required this.mediaData,
+    @required this.regimentData,
   });
 
   @override
@@ -41,42 +45,49 @@ class RegimentDataCard extends StatelessWidget {
           top: 10.0.h,
         ),
         child: InkWell(
-          onTap: () async {
-            bool canEdit = startTime.difference(DateTime.now()).inMinutes <= 15;
-            if (canEdit) {
-              FieldsResponseModel fieldsResponseModel =
-                  await Provider.of<RegimentViewModel>(context, listen: false)
-                      .getFormData(eid: eid);
-              print(fieldsResponseModel);
-              if (fieldsResponseModel.isSuccess &&
-                  (fieldsResponseModel.result.fields.length > 0 ||
-                      mediaData.toJson().toString().contains('1'))) {
-                bool value = await showDialog(
-                  context: context,
-                  builder: (context) => FormDataDialog(
-                    fieldsData: fieldsResponseModel.result.fields,
-                    eid: eid,
-                    color: color,
-                    mediaData: mediaData,
-                  ),
-                );
-                if (value != null && (value ?? false)) {
-                  await Provider.of<RegimentViewModel>(context, listen: false)
-                      .fetchRegimentData();
-                }
-              } else {
-                FlutterToast().getToast(
-                  'No plans associated with this event',
-                  Colors.red,
-                );
-              }
-            } else {
-              FlutterToast().getToast(
-                'Data for future events can be entered only 15 min prior to the event time',
-                Colors.red,
-              );
-            }
-          },
+          onTap: !regimentData.hasform
+              ? null
+              : () async {
+                  Provider.of<ChatScreenViewModel>(context, listen: false)
+                      .stopTTSEngine();
+                  bool canEdit =
+                      startTime.difference(DateTime.now()).inMinutes <= 15;
+                  if (canEdit) {
+                    FieldsResponseModel fieldsResponseModel =
+                        await Provider.of<RegimentViewModel>(context,
+                                listen: false)
+                            .getFormData(eid: eid);
+                    print(fieldsResponseModel);
+                    if (fieldsResponseModel.isSuccess &&
+                        (fieldsResponseModel.result.fields.length > 0 ||
+                            mediaData.toJson().toString().contains('1'))) {
+                      bool value = await showDialog(
+                        context: context,
+                        builder: (context) => FormDataDialog(
+                          fieldsData: fieldsResponseModel.result.fields,
+                          eid: eid,
+                          color: color,
+                          mediaData: mediaData,
+                        ),
+                      );
+                      if (value != null && (value ?? false)) {
+                        await Provider.of<RegimentViewModel>(context,
+                                listen: false)
+                            .fetchRegimentData();
+                      }
+                    } else {
+                      FlutterToast().getToast(
+                        'No plans associated with this event',
+                        Colors.red,
+                      );
+                    }
+                  } else {
+                    FlutterToast().getToast(
+                      'Data for future events can be entered only 15 minutes prior to the event time',
+                      Colors.red,
+                    );
+                  }
+                },
           child: Row(
             children: [
               Expanded(
@@ -119,27 +130,113 @@ class RegimentDataCard extends StatelessWidget {
                     vertical: 5.0.h,
                     horizontal: 20.0.w,
                   ),
-                  child: Row(
+                  child: Column(
                     children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: getFieldWidgets(),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          vertical: 10.0.h,
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.play_circle_fill_rounded,
-                              size: 30.0.sp,
-                              color: color,
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: getFieldWidgets(),
                             ),
-                          ],
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: 10.0.h,
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    Provider.of<ChatScreenViewModel>(context,
+                                            listen: false)
+                                        .startTTSEngine(
+                                      textToSpeak: regimentData.saytext,
+                                      isRegiment: true,
+                                    );
+                                  },
+                                  child: Icon(
+                                    Icons.play_circle_fill_rounded,
+                                    size: 30.0.sp,
+                                    color: color,
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: !regimentData.hasform,
+                                  child: Padding(
+                                    padding: EdgeInsets.only(
+                                      top: 10.0.h,
+                                    ),
+                                    child: InkWell(
+                                      onTap: () async {
+                                        Provider.of<ChatScreenViewModel>(
+                                                context,
+                                                listen: false)
+                                            .stopTTSEngine();
+                                        bool canEdit = startTime
+                                                .difference(DateTime.now())
+                                                .inMinutes <=
+                                            15;
+                                        if (canEdit) {
+                                          SaveResponseModel saveResponse =
+                                              await Provider.of<
+                                                          RegimentViewModel>(
+                                                      context,
+                                                      listen: false)
+                                                  .saveFormData(
+                                            eid: eid,
+                                          );
+                                          if (saveResponse?.isSuccess ??
+                                              false) {
+                                            await Provider.of<
+                                                        RegimentViewModel>(
+                                                    context,
+                                                    listen: false)
+                                                .fetchRegimentData();
+                                          }
+                                        } else {
+                                          FlutterToast().getToast(
+                                            'Data for future events can be entered only 15 minutes prior to the event time',
+                                            Colors.red,
+                                          );
+                                        }
+                                      },
+                                      child: Icon(
+                                        Icons.check_circle_rounded,
+                                        size: 30.0.sp,
+                                        color: color,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      Visibility(
+                        visible:
+                            !regimentData.hasform && regimentData.ack != null,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            top: 5.0.h,
+                            bottom: 5.0.h,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(
+                                '${CommonUtil().regimentDateFormat(
+                                  regimentData.ack ?? DateTime.now(),
+                                  isAck: true,
+                                )}',
+                                style: TextStyle(
+                                  fontSize: 12.0.sp,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
@@ -167,7 +264,7 @@ class RegimentDataCard extends StatelessWidget {
           bottom: 5.0.h,
         ),
         child: Text(
-          '${title}',
+          '${title?.trim()}',
           style: TextStyle(
             fontSize: 16.0.sp,
             fontWeight: FontWeight.w500,
@@ -203,13 +300,15 @@ class RegimentDataCard extends StatelessWidget {
                   maxLines: 2,
                   softWrap: true,
                 ),
-                Text(
-                  //TODO: Replace with actual value from API
-                  '${vitalData.display ?? ''}',
-                  style: TextStyle(
-                    color: isNormal ? color : Colors.red,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16.0.sp,
+                Flexible(
+                  child: Text(
+                    //TODO: Replace with actual value from API
+                    '${vitalData.display ?? ''}',
+                    style: TextStyle(
+                      color: isNormal ? color : Colors.red,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16.0.sp,
+                    ),
                   ),
                 ),
               ],
@@ -221,53 +320,47 @@ class RegimentDataCard extends StatelessWidget {
 
     if (mediaData != null) {
       fieldWidgets.add(
-        Row(
-          children: [
-            Visibility(
-              visible: mediaData.needVideo == '1',
-              child: MediaIconWidget(
-                color: color,
-                icon: Icons.video_call,
+        Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: 10.0.w,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Visibility(
+                visible: mediaData.needPhoto == '1',
+                child: MediaIconWidget(
+                  color: color,
+                  icon: Icons.camera_alt,
+                ),
               ),
-            ),
-            Visibility(
-              visible: mediaData.needAudio == '1',
-              child: MediaIconWidget(
-                color: color,
-                icon: Icons.audiotrack,
+              Visibility(
+                visible: mediaData.needAudio == '1',
+                child: MediaIconWidget(
+                  color: color,
+                  icon: Icons.mic,
+                ),
               ),
-            ),
-            Visibility(
-              visible: mediaData.needPhoto == '1',
-              child: MediaIconWidget(
-                color: color,
-                icon: Icons.photo,
+              Visibility(
+                visible: mediaData.needVideo == '1',
+                child: MediaIconWidget(
+                  color: color,
+                  icon: Icons.videocam,
+                ),
               ),
-            ),
-            Visibility(
-              visible: mediaData.needFile == '1',
-              child: MediaIconWidget(
-                color: color,
-                icon: Icons.file_copy_rounded,
+              Visibility(
+                visible: mediaData.needFile == '1',
+                child: MediaIconWidget(
+                  color: color,
+                  icon: Icons.attach_file,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
     }
 
     return fieldWidgets;
-    // ListView.builder(
-    //   shrinkWrap: true,
-    //   scrollDirection: Axis.horizontal,
-    //   //TODO: Replace with actual count from API
-    //   itemCount: vitalsData.length,
-    //   itemBuilder: (BuildContext context, int index) {
-    //     // bool needCheckbox =
-    //     //     vitalsData[index].fieldType ==
-    //     //         FieldType.CHECKBOX;
-    //
-    //   },
-    // );
   }
 }

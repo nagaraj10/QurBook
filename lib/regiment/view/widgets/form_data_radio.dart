@@ -3,6 +3,7 @@ import 'package:myfhb/regiment/models/regiment_data_model.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/regiment/models/field_response_model.dart';
+import 'radio_tile_widget.dart';
 
 class FormDataRadio extends StatefulWidget {
   const FormDataRadio({
@@ -18,51 +19,45 @@ class FormDataRadio extends StatefulWidget {
 }
 
 class _FormDataRadioState extends State<FormDataRadio> {
-  bool radioValue;
+  dynamic radioGroupValue;
+  List<Widget> radioWidget = [];
+
   @override
-  Widget build(BuildContext context) {
-    radioValue ??= (int.tryParse(widget.fieldData?.value ?? '') ?? 0) == 1;
-    return Row(
-      children: getRadioItems(),
-    );
+  void initState() {
+    super.initState();
   }
 
-  List<Widget> getRadioItems() {
-    List<Widget> radioItems = [];
-
-    radioItems.add(
-      Row(
-        children: [
-          Radio<bool>(
-            groupValue: radioValue,
-            value: true,
-            activeColor: Color(CommonUtil().getMyPrimaryColor()),
-            onChanged: (value) {
+  List<Widget> loadRadioItems() {
+    List<String> radioList = (widget?.fieldData?.fdata ?? '')?.split('|');
+    if (radioList?.length > 0 && radioList.length.isEven) {
+      radioGroupValue ??= radioList.isNotEmpty ? radioList[0] : null;
+      radioWidget.clear();
+      for (int index = 0; index < radioList.length; index++) {
+        radioWidget.add(
+          RadioTileWidget(
+            title: radioList[index + 1] ?? '',
+            value: radioList[index],
+            radioGroupValue: radioGroupValue,
+            onSelected: (selectedValue) {
               setState(() {
-                radioValue = value;
+                radioGroupValue = selectedValue;
               });
               FieldModel updatedFieldData = widget.fieldData;
-              updatedFieldData.value = (radioValue ? 1 : 0).toString();
+              updatedFieldData.value = radioGroupValue.toString();
               widget.updateValue(updatedFieldData);
             },
           ),
-          Padding(
-            padding: EdgeInsets.only(
-              left: 2.0.w,
-              right: 10.0.w,
-            ),
-            child: Text(
-              widget.fieldData.title ?? '',
-              style: TextStyle(
-                fontSize: 16.0.sp,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+        );
+        index++;
+      }
+    }
+    return radioWidget;
+  }
 
-    return radioItems;
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: loadRadioItems(),
+    );
   }
 }

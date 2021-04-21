@@ -12,20 +12,44 @@ import 'package:intl/intl.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/regiment/models/profile_response_model.dart';
 import 'package:myfhb/regiment/view/widgets/event_list_widget.dart';
+import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 
 class RegimentTab extends StatefulWidget {
   @override
   _RegimentTabState createState() => _RegimentTabState();
 }
 
-class _RegimentTabState extends State<RegimentTab> {
+class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
   RegimentViewModel _regimentViewModel;
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    Provider.of<ChatScreenViewModel>(context, listen: false).updateAppState(
+      true,
+      isInitial: true,
+    );
     Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
       isInitial: true,
     );
+  }
+
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.detached) {
+      Provider.of<ChatScreenViewModel>(context, listen: false)
+          .updateAppState(false);
+    } else if (state == AppLifecycleState.resumed) {
+      Provider.of<ChatScreenViewModel>(context, listen: false)
+          .updateAppState(true);
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 
   Color getColor(Activityname activityname) {
@@ -192,6 +216,7 @@ class _RegimentTabState extends State<RegimentTab> {
                           eid: regimentData.eid,
                           mediaData: regimentData.otherinfo,
                           startTime: regimentData.estart,
+                          regimentData: regimentData,
                         );
                       },
                     );

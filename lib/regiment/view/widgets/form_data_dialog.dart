@@ -46,14 +46,25 @@ class FormDataDialog extends StatelessWidget {
                 ),
                 child: FormFieldWidget(
                   fieldData: fieldsData[index],
-                  updateValue: (FieldModel updatedFieldData) {
-                    var oldValue = saveMap.putIfAbsent(
-                      'pf_${updatedFieldData.title}',
-                      () => updatedFieldData.value,
-                    );
-                    if (oldValue != null) {
-                      saveMap['pf_${updatedFieldData.title}'] =
-                          updatedFieldData.value;
+                  updateValue: (
+                    FieldModel updatedFieldData, {
+                    bool isAdd,
+                    String title,
+                  }) {
+                    if (isAdd == null || isAdd) {
+                      isAdd = isAdd ?? false;
+                      var oldValue = saveMap.putIfAbsent(
+                        isAdd ? 'pf_${title}' : 'pf_${updatedFieldData.title}',
+                        () => updatedFieldData.value,
+                      );
+                      if (oldValue != null) {
+                        saveMap[isAdd
+                                ? 'pf_${title}'
+                                : 'pf_${updatedFieldData.title}'] =
+                            updatedFieldData.value;
+                      }
+                    } else {
+                      saveMap.remove('pf_${title}');
                     }
                   },
                 ),
@@ -67,10 +78,10 @@ class FormDataDialog extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Visibility(
-                visible: mediaData.needVideo == '1',
+                visible: mediaData.needPhoto == '1',
                 child: MediaIconWidget(
                   color: color,
-                  icon: Icons.video_call,
+                  icon: Icons.camera_alt,
                   padding: 10.0.sp,
                 ),
               ),
@@ -78,15 +89,15 @@ class FormDataDialog extends StatelessWidget {
                 visible: mediaData.needAudio == '1',
                 child: MediaIconWidget(
                   color: color,
-                  icon: Icons.audiotrack,
+                  icon: Icons.mic,
                   padding: 10.0.sp,
                 ),
               ),
               Visibility(
-                visible: mediaData.needPhoto == '1',
+                visible: mediaData.needVideo == '1',
                 child: MediaIconWidget(
                   color: color,
-                  icon: Icons.photo,
+                  icon: Icons.videocam,
                   padding: 10.0.sp,
                 ),
               ),
@@ -94,7 +105,7 @@ class FormDataDialog extends StatelessWidget {
                 visible: mediaData.needFile == '1',
                 child: MediaIconWidget(
                   color: color,
-                  icon: Icons.file_copy_rounded,
+                  icon: Icons.attach_file,
                   padding: 10.0.sp,
                 ),
               ),

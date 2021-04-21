@@ -84,8 +84,9 @@ class ChatScreenViewModel extends ChangeNotifier {
 
   ChatScreenViewModel() {
     prof = PreferenceUtil.getProfileData(constants.KEY_PROFILE);
-    user_name =
-        prof.result != null ? prof.result.firstName + ' ' + prof.result.lastName : '';
+    user_name = prof.result != null
+        ? prof.result.firstName + ' ' + prof.result.lastName
+        : '';
     user_id = PreferenceUtil.getStringValue(constants.KEY_USERID);
   }
 
@@ -139,6 +140,7 @@ class ChatScreenViewModel extends ChangeNotifier {
     int index,
     String langCode,
     bool stopPrevious: true,
+    bool isRegiment: false,
   }) async {
     if (stopPrevious) {
       stopTTSEngine();
@@ -198,8 +200,15 @@ class ChatScreenViewModel extends ChangeNotifier {
             await setTimeDuration(newAudioPlay1);
           }
         });
-        await getGoogleTTSResponse(
-            textToSpeak, languageForTTS != null ? languageForTTS : "en", true);
+        if (isRegiment) {
+          await getGoogleTTSRegiment(
+            textToSpeak,
+            languageForTTS != null ? languageForTTS : "en",
+          );
+        } else {
+          await getGoogleTTSResponse(textToSpeak,
+              languageForTTS != null ? languageForTTS : "en", true);
+        }
       }
     }
   }
@@ -280,8 +289,9 @@ class ChatScreenViewModel extends ChangeNotifier {
 
   sendToMaya(String msg, {String screen}) async {
     prof = await PreferenceUtil.getProfileData(constants.KEY_PROFILE);
-    user_name =
-        prof.result != null ? prof.result.firstName + ' ' + prof.result.lastName : '';
+    user_name = prof.result != null
+        ? prof.result.firstName + ' ' + prof.result.lastName
+        : '';
 
     String uuidString = uuid;
     String tzOffset = DateTime.now().timeZoneOffset.toString();
@@ -322,7 +332,7 @@ class ChatScreenViewModel extends ChangeNotifier {
               isMayaSaid: true,
               text: res.text,
               name: prof.result != null
-                  ? prof.result.firstName + ' ' +prof.result.lastName
+                  ? prof.result.firstName + ' ' + prof.result.lastName
                   : '',
               imageUrl: res.imageURL,
               timeStamp: date,
@@ -759,5 +769,71 @@ class ChatScreenViewModel extends ChangeNotifier {
         }
       },
     );
+  }
+
+  getGoogleTTSRegiment(String dataForVoice, String langCode) async {
+    Map<String, dynamic> reqJson = {};
+    reqJson[parameters.regimentInput] = dataForVoice;
+    reqJson[parameters.regimentSource] = 'en';
+    reqJson[parameters.regimentTarget] = langCode;
+    reqJson[parameters.regimentFormat] = 'text';
+    reqJson[parameters.regimentAudioEncoding] = 'MP3';
+    reqJson[parameters.regimentIsAudioFile] = false;
+
+    Service mService = Service();
+    final response = await mService.getAudioFileRegiments(reqJson);
+
+    if (response.statusCode == 200) {
+      try {
+        if (response.body != null) {
+          final data = jsonDecode(response.body);
+          final result = data["payload"];
+          if (result != null) {
+            final audioContent = result["audioContent"];
+            if (audioContent != null) {
+              final bytes = Base64Decoder().convert(audioContent);
+              if (bytes != null) {
+                final dir = await getTemporaryDirectory();
+                final file = File('${dir.path}/wavenet.mp3');
+                await file.writeAsBytes(bytes);
+                final path = dir.path + "/wavenet.mp3";
+                if (canSpeak) {
+                  newAudioPlay1.play(path, isLocal: true);
+                  await Future.delayed(Duration(milliseconds: 500), () async {
+                    await Future.delayed(
+                        Duration(
+                          milliseconds: delayTime > 0 ? delayTime : 0,
+                        ), () {
+                      return true;
+                    });
+                  });
+                }
+              }
+            }
+          }
+        }
+      } catch (e) {
+        print(e);
+        isLoading = false;
+        notifyListeners();
+        FlutterToast().getToast(
+          'There is some issue in translation,\n Please try after some time',
+          Colors.black54,
+        );
+      }
+    } else {
+      isLoading = false;
+      notifyListeners();
+      FlutterToast().getToast(
+        'There is some issue in translation,\n Please try after some time',
+        Colors.black54,
+      );
+    }
+
+    // } else if (Platform.isAndroid) {
+    //   newAudioPlay.playBytes(bytes);
+    // }
+
+    //print(dir.path);
   }
 }

@@ -52,7 +52,7 @@ class RegimentService {
         body: json.encode(
           {
             "method": "post",
-            "data": "Action=SaveFormForEvent&eid=$eid$events",
+            "data": "Action=SaveFormForEvent&eid=$eid${events ?? ''}",
           },
         ),
       );
