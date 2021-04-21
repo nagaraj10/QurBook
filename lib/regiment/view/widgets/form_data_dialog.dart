@@ -1,4 +1,12 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_query.dart';
+import 'package:myfhb/regiment/view_model/AddRegimentModel.dart';
+import 'package:myfhb/regiment/view_model/pickImageController.dart';
+import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
+import 'package:myfhb/src/ui/audio/AudioScreenArguments.dart';
+import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/regiment/models/regiment_data_model.dart';
@@ -9,8 +17,9 @@ import 'package:myfhb/regiment/models/field_response_model.dart';
 import 'package:myfhb/regiment/models/save_response_model.dart';
 import 'package:provider/provider.dart';
 import 'media_icon_widget.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
-class FormDataDialog extends StatelessWidget {
+class FormDataDialog extends StatefulWidget {
   FormDataDialog({
     @required this.fieldsData,
     @required this.eid,
@@ -22,6 +31,35 @@ class FormDataDialog extends StatelessWidget {
   final String eid;
   final Color color;
   final Otherinfo mediaData;
+
+  @override
+  State<StatefulWidget> createState() => FormDataDialogState();
+}
+
+class FormDataDialogState extends State<FormDataDialog> {
+  List<FieldModel> fieldsData;
+  String eid;
+  Color color;
+  Otherinfo mediaData;
+
+  String videoFileName = '';
+  String audioFileName = '';
+  String imageFileName = '';
+  String docFileName = '';
+
+  String imagePaths = '';
+
+  ApiBaseHelper _helper = ApiBaseHelper();
+
+  @override
+  void initState() {
+    super.initState();
+
+    fieldsData = widget.fieldsData;
+    eid = widget.eid;
+    color = widget.color;
+    mediaData = widget.mediaData;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,34 +106,125 @@ class FormDataDialog extends StatelessWidget {
             children: [
               Visibility(
                 visible: mediaData.needVideo == '1',
-                child: MediaIconWidget(
-                  color: color,
-                  icon: Icons.video_call,
-                  padding: 10.0.sp,
+                child: Row(
+                  children: [
+                    MediaIconWidget(
+                      color: color,
+                      icon: Icons.video_call,
+                      padding: 10.0.sp,
+                      onPressed: () {
+                        getOpenGallery(strVideo);
+                      },
+                    ),
+                    SizedBox(
+                      width: 250.0.w,
+                      child: Text(
+                        videoFileName,
+                        style: TextStyle(
+                          fontSize: 14.0.sp,
+                          color: Colors.grey[500],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               Visibility(
                 visible: mediaData.needAudio == '1',
-                child: MediaIconWidget(
-                  color: color,
-                  icon: Icons.audiotrack,
-                  padding: 10.0.sp,
+                child: Row(
+                  children: [
+                    MediaIconWidget(
+                      color: color,
+                      icon: Icons.audiotrack,
+                      padding: 10.0.sp,
+                      onPressed: () {
+                        //getOpenGallery(strAudio);
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(
+                          builder: (context) => AudioRecordScreen(
+                              arguments: AudioScreenArguments(
+                            fromVoice: false,
+                          )),
+                        ))
+                            .then((results) {
+                          String audioPath = results[Constants.keyAudioFile];
+                          if (audioPath != null && audioPath != '') {
+                            imagePaths = audioPath;
+                            setState(() {
+                              audioFileName = audioPath.split('/').last;
+                            });
+                            if (imagePaths != null && imagePaths != '') {
+                              saveMediaRegiment(imagePaths).then((value) {
+                                if (value.isSuccess) {
+                                  print('url:  ' + value.result.accessUrl);
+                                }
+                              });
+                            }
+                          }
+                        });
+                      },
+                    ),
+                    SizedBox(
+                      width: 250.0.w,
+                      child: Text(
+                        audioFileName,
+                        style: TextStyle(
+                          fontSize: 14.0.sp,
+                          color: Colors.grey[500],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               Visibility(
                 visible: mediaData.needPhoto == '1',
-                child: MediaIconWidget(
-                  color: color,
-                  icon: Icons.photo,
-                  padding: 10.0.sp,
+                child: Row(
+                  children: [
+                    MediaIconWidget(
+                      color: color,
+                      icon: Icons.photo,
+                      padding: 10.0.sp,
+                      onPressed: () {
+                        getOpenGallery(strGallery);
+                      },
+                    ),
+                    SizedBox(
+                      width: 250.0.w,
+                      child: Text(
+                        imageFileName,
+                        style: TextStyle(
+                          fontSize: 14.0.sp,
+                          color: Colors.grey[500],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               Visibility(
                 visible: mediaData.needFile == '1',
-                child: MediaIconWidget(
-                  color: color,
-                  icon: Icons.file_copy_rounded,
-                  padding: 10.0.sp,
+                child: Row(
+                  children: [
+                    MediaIconWidget(
+                      color: color,
+                      icon: Icons.file_copy_rounded,
+                      padding: 10.0.sp,
+                      onPressed: () {
+                        getOpenGallery(strFiles);
+                      },
+                    ),
+                    SizedBox(
+                      width: 250.0.w,
+                      child: Text(
+                        docFileName,
+                        style: TextStyle(
+                          fontSize: 14.0.sp,
+                          color: Colors.grey[500],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -145,5 +274,44 @@ class FormDataDialog extends StatelessWidget {
       ],
       contentPadding: EdgeInsets.all(10.0.sp),
     );
+  }
+
+  Future<AddMediaRegimentModel> saveMediaRegiment(String imagePaths) async {
+    String patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+
+    var response = await _helper.saveRegimentMedia(
+        qr_save_regi_media, imagePaths, patientId);
+    return AddMediaRegimentModel.fromJson(response);
+  }
+
+  void getOpenGallery(String fromPath) {
+    PickImageController.instance
+        .cropImageFromFile(fromPath)
+        .then((croppedFile) {
+      if (croppedFile != null) {
+        File file = new File(croppedFile.path);
+        setState(() {
+          if (fromPath == strGallery) {
+            imageFileName = file.path.split('/').last;
+          } else if (fromPath == strFiles) {
+            docFileName = file.path.split('/').last;
+          } else if (fromPath == strVideo) {
+            videoFileName = file.path.split('/').last;
+          } else if (fromPath == strAudio) {
+            audioFileName = file.path.split('/').last;
+          }
+        });
+        imagePaths = croppedFile.path;
+
+        if (imagePaths != null && imagePaths != '') {
+          saveMediaRegiment(imagePaths).then((value) {
+            if (value.isSuccess) {
+              print('url:  ' + value.result.accessUrl);
+              print('uploaded');
+            }
+          });
+        }
+      }
+    });
   }
 }

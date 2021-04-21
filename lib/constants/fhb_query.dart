@@ -224,3 +224,4 @@ const String qr_getUserPack = 'Action=GetUserPackages';
 const String qr_getUserPackDetail = 'Action=GetUserPlanDetails&packageid=';
 const String qr_get = 'get';
 const String regiment = 'plan-package-master/wrapperApi';
+const String qr_save_regi_media = 'media-details/store-media';
