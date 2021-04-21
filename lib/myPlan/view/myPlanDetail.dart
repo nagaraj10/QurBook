@@ -217,7 +217,7 @@ class PlanDetail extends State<MyPlanDetail> {
                   width: 20.0.h,
                   height: 20.0.h,
                   child: new CircularProgressIndicator(
-                    strokeWidth: 1.0,
+                      strokeWidth: 1.0,
                       backgroundColor:
                           Color(new CommonUtil().getMyPrimaryColor())),
                 ),
@@ -229,7 +229,7 @@ class PlanDetail extends State<MyPlanDetail> {
         } else {
           final items = snapshot.data ??
               <MyPlanDetailModel>[]; // handle the case that data is null
-          return (snapshot.data.result != null &&
+          return (snapshot?.data?.result != null &&
                   snapshot.data.result.length > 0)
               ? activitiesList(snapshot.data.result)
               : SafeArea(
