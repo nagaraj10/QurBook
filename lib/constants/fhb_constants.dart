@@ -404,6 +404,20 @@ const String noRegimentData =
 const String okButton = 'OK';
 const String saveButton = 'Save';
 
+const strJpgDot = '.jpg';
+const strJpegDot = '.jpeg';
+const strPdfDot = '.pdf';
+const strPngDot = '.png';
+
+const strJpg = 'jpg';
+const strPdf = 'pdf';
+const strPng = 'png';
+
+const strGallery = 'gallery';
+const strVideo = 'video';
+const strFiles = 'files';
+const strAudio = 'audio';
+
 FirebaseAnalytics _firebaseAnalytics = FirebaseAnalytics();
 var mInitialTime;
 

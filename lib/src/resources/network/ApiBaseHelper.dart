@@ -1434,7 +1434,7 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<dynamic> getPlanList(String url,String jsonString) async {
+  Future<dynamic> getPlanList(String url, String jsonString) async {
     var responseJson;
     try {
       final response = await http.post(_baseUrl + url,
@@ -1447,7 +1447,7 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<dynamic> getPlanDetails(String url,String jsonString) async {
+  Future<dynamic> getPlanDetails(String url, String jsonString) async {
     var responseJson;
     try {
       final response = await http.post(_baseUrl + url,
@@ -1460,6 +1460,41 @@ class ApiBaseHelper {
     return responseJson;
   }
 
+  Future<dynamic> saveRegimentMedia(
+      String url, String imagePaths, String userId) async {
+    var response;
+    try {
+      String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+
+      Dio dio = new Dio();
+      dio.options.headers['content-type'] = 'multipart/form-data';
+      dio.options.headers["authorization"] = authToken;
+      FormData formData;
+
+      if (imagePaths != null && imagePaths.length > 0) {
+        formData = new FormData.fromMap({
+          'folderName': 'event',
+          'userId': userId,
+        });
+
+          File fileName = new File(imagePaths);
+          String fileNoun = fileName.path.split('/').last;
+          formData.files.addAll([
+            MapEntry(
+                "file",
+                await MultipartFile.fromFile(fileName.path,
+                    filename: fileNoun)),
+          ]);
+
+
+        response = await dio.post(_baseUrl + url, data: formData);
+
+        return response.data;
+      }
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+  }
 }
 
 void exitFromApp() async {
