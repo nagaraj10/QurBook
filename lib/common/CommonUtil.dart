@@ -147,8 +147,8 @@ class CommonUtil {
 
     if (mediaMetaInfoObj.length > 0) {
       mediaMetaInfoObj.sort((mediaMetaInfoObjCopy, mediaMetaInfoObjClone) {
-        return mediaMetaInfoObjCopy.createdOn
-            .compareTo(mediaMetaInfoObjClone.createdOn);
+        return mediaMetaInfoObjCopy.dateTimeValue
+            .compareTo(mediaMetaInfoObjClone.dateTimeValue);
       });
 
       //NOTE show the bookmarked data as first
@@ -1243,6 +1243,12 @@ class CommonUtil {
 
   dateConversionToApiFormat(DateTime dateTime) {
     var newFormat = DateFormat('yyyy-MM-dd');
+    String updatedDate = newFormat.format(dateTime);
+    return updatedDate;
+  }
+
+  dateConversionToApiFormatClone(DateTime dateTime) {
+    var newFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
     String updatedDate = newFormat.format(dateTime);
     return updatedDate;
   }
