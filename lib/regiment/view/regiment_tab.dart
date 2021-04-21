@@ -52,14 +52,22 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
     super.dispose();
   }
 
-  Color getColor(Activityname activityname) {
+  Color getColor(Activityname activityname, Uformname uformName) {
     Color cardColor;
     switch (activityname) {
       case Activityname.DIET:
         cardColor = Colors.green;
         break;
       case Activityname.VITALS:
-        cardColor = Colors.lightBlueAccent;
+        if (uformName == Uformname.BLOODPRESSURE) {
+          cardColor = Color(0xFF059192);
+        } else if (uformName == Uformname.BLOODSUGAR) {
+          cardColor = Color(0xFFb70a80);
+        } else if (uformName == Uformname.PULSE) {
+          cardColor = Color(0xFF8600bd);
+        } else {
+          cardColor = Colors.lightBlueAccent;
+        }
         break;
       case Activityname.MEDICATION:
         cardColor = Colors.blue;
@@ -73,14 +81,23 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
     return cardColor;
   }
 
-  IconData getIcon(Activityname activityname) {
-    IconData cardIcon;
+  dynamic getIcon(Activityname activityname, Uformname uformName) {
+    dynamic cardIcon;
     switch (activityname) {
       case Activityname.DIET:
         cardIcon = Icons.fastfood_rounded;
         break;
       case Activityname.VITALS:
-        cardIcon = Icons.style;
+        if (uformName == Uformname.BLOODPRESSURE) {
+          cardIcon = 'assets/devices/bp_dashboard.png';
+        } else if (uformName == Uformname.BLOODSUGAR) {
+          cardIcon = 'assets/devices/gulcose_dashboard.png';
+        } else if (uformName == Uformname.PULSE) {
+          cardIcon = 'assets/devices/os_dashboard.png';
+        } else {
+          cardIcon = 'assets/devices/temp_dashboard.png';
+        }
+
         break;
       case Activityname.MEDICATION:
         cardIcon = Icons.medical_services;
@@ -210,8 +227,10 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                           title: regimentData.title,
                           time: DateFormat('hh:mm\na')
                               .format(regimentData.estart),
-                          color: getColor(regimentData.activityname),
-                          icon: getIcon(regimentData.activityname),
+                          color: getColor(regimentData.activityname,
+                              regimentData.uformname),
+                          icon: getIcon(regimentData.activityname,
+                              regimentData.uformname),
                           vitalsData: regimentData.uformdata.vitalsData,
                           eid: regimentData.eid,
                           mediaData: regimentData.otherinfo,

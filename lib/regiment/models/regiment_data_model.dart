@@ -263,11 +263,12 @@ final fieldTypeValues = EnumValues({
   "radio": FieldType.RADIO,
 });
 
-enum Uformname { EMPTY, BLOODPRESSURE, BLOODSUGAR }
+enum Uformname { EMPTY, BLOODPRESSURE, BLOODSUGAR, PULSE }
 
 final uformnameValues = EnumValues({
   "bloodpressure": Uformname.BLOODPRESSURE,
   "bloodsugar": Uformname.BLOODSUGAR,
+  "pulse": Uformname.PULSE,
   "": Uformname.EMPTY
 });
 
