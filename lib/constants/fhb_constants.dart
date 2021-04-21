@@ -413,9 +413,9 @@ const strJpg = 'jpg';
 const strPdf = 'pdf';
 const strPng = 'png';
 
-const strGallery = 'gallery';
+const strGallery = 'photo';
 const strVideo = 'video';
-const strFiles = 'files';
+const strFiles = 'file';
 const strAudio = 'audio';
 
 FirebaseAnalytics _firebaseAnalytics = FirebaseAnalytics();
