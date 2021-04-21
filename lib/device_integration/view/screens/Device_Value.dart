@@ -1247,19 +1247,13 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   }
 
   String getFormattedDateTime(String datetime) {
-    DateTime dateTimeStamp = DateTime.parse(datetime);
+    DateTime dateTimeStamp = DateTime.parse(datetime).toLocal();
     String formattedDate = DateFormat('d MMM yyyy').format(dateTimeStamp);
     return formattedDate;
   }
 
   String getFormattedTime(String datetime) {
     DateTime dateTimeStamp = DateTime.parse(datetime).toLocal();
-    String formattedDate = DateFormat('h:mm a').format(dateTimeStamp);
-    return formattedDate;
-  }
-
-  String getFormattedTimeClone(String datetime) {
-    DateTime dateTimeStamp = DateTime.parse(datetime);
     String formattedDate = DateFormat('h:mm a').format(dateTimeStamp);
     return formattedDate;
   }
@@ -1280,8 +1274,15 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                     ),
                   );
                 }
+
                 List<dynamic> translis = snapshot.data;
-                List<BPResult> bpResult = translis.first;
+                //List<WVResult> translist = translis.first;
+                List<BPResult> bpResultNew = translis.first;
+                bpResultNew.sort((translisCopy, translisClone) {
+                  return translisClone.dateTimeValue
+                      .compareTo(translisCopy.dateTimeValue);
+                });
+                List<BPResult> bpResult = bpResultNew;
                 List<DeviceIntervalData> deviceFullList = translis.last;
                 return !bpResult.isEmpty
                     ? GroupedListView<BPResult, String>(
@@ -1353,7 +1354,13 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 }
 
                 List<dynamic> translis = snapshot.data;
-                List<GVResult> translist = translis.first;
+                //List<WVResult> translist = translis.first;
+                List<GVResult> translistNew = translis.first;
+                translistNew.sort((translisCopy, translisClone) {
+                  return translisClone.dateTimeValue
+                      .compareTo(translisCopy.dateTimeValue);
+                });
+                List<GVResult> translist = translistNew;
                 List<DeviceIntervalData> deviceFullList = translis.last;
                 return !translist.isEmpty
                     ? GroupedListView<GVResult, String>(
@@ -1424,8 +1431,15 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                     ),
                   );
                 }
+
                 List<dynamic> translis = snapshot.data;
-                List<OxyResult> translist = translis.first;
+                //List<WVResult> translist = translis.first;
+                List<OxyResult> translistNew = translis.first;
+                translistNew.sort((translisCopy, translisClone) {
+                  return translisClone.dateTimeValue
+                      .compareTo(translisCopy.dateTimeValue);
+                });
+                List<OxyResult> translist = translistNew;
                 List<DeviceIntervalData> deviceFullList = translis.last;
                 return !translist.isEmpty
                     ? GroupedListView<OxyResult, String>(
@@ -1504,7 +1518,13 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 }
 
                 List<dynamic> translis = snapshot.data;
-                List<WVResult> translist = translis.first;
+                //List<WVResult> translist = translis.first;
+                List<WVResult> translistNew = translis.first;
+                translistNew.sort((translisCopy, translisClone) {
+                  return translisClone.dateTimeValue
+                      .compareTo(translisCopy.dateTimeValue);
+                });
+                List<WVResult> translist = translistNew;
                 List<DeviceIntervalData> deviceFullList = translis.last;
                 return !translist.isEmpty
                     ? GroupedListView<WVResult, String>(
@@ -1574,7 +1594,13 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 }
 
                 List<dynamic> translis = snapshot.data;
-                List<TMPResult> translist = translis.first;
+                //List<WVResult> translist = translis.first;
+                List<TMPResult> translistNew = translis.first;
+                translistNew.sort((translisCopy, translisClone) {
+                  return translisClone.dateTimeValue
+                      .compareTo(translisCopy.dateTimeValue);
+                });
+                List<TMPResult> translist = translistNew;
                 List<DeviceIntervalData> deviceFullList = translis.last;
                 return !translist.isEmpty
                     ? GroupedListView<TMPResult, String>(
