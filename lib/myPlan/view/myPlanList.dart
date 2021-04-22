@@ -64,15 +64,14 @@ class _MyPlanState extends State<MyPlanList> {
     setState(() {});
   }
 
-
   Widget hospitalList(List<MyPlanListResult> planList) {
     return (planList != null && planList.length > 0)
-        ?ListView.builder(
-                shrinkWrap: true,
-                itemBuilder: (BuildContext ctx, int i) =>
-                    hospitalListItem(ctx, i, isSearch?myPLanListResult:planList),
-                itemCount: isSearch?myPLanListResult.length:planList.length,
-              )
+        ? ListView.builder(
+            shrinkWrap: true,
+            itemBuilder: (BuildContext ctx, int i) => hospitalListItem(
+                ctx, i, isSearch ? myPLanListResult : planList),
+            itemCount: isSearch ? myPLanListResult.length : planList.length,
+          )
         : SafeArea(
             child: SizedBox(
               height: 1.sh / 1.3,
@@ -106,20 +105,21 @@ class _MyPlanState extends State<MyPlanList> {
         } else if (snapshot.hasError) {
           return ErrorsWidget();
         } else {
-          final items = snapshot.data ??
-              <MyPlanListModel>[]; // handle the case that data is null
-          return (snapshot.data.result != null &&
-                  snapshot.data.result.length > 0)
-              ? hospitalList(snapshot.data.result)
-              : SafeArea(
-                  child: SizedBox(
-                    height: 1.sh / 1.3,
-                    child: Container(
-                        child: Center(
-                      child: Text(variable.strNoPlans),
-                    )),
-                  ),
-                );
+          if (snapshot?.hasData &&
+              snapshot?.data?.result != null &&
+              snapshot?.data?.result?.length > 0) {
+            return hospitalList(snapshot.data.result);
+          } else {
+            return SafeArea(
+              child: SizedBox(
+                height: 1.sh / 1.3,
+                child: Container(
+                    child: Center(
+                  child: Text(variable.strNoPlans),
+                )),
+              ),
+            );
+          }
         }
       },
     );
