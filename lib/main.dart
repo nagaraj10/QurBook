@@ -489,6 +489,11 @@ class _MyFHBState extends State<MyFHB> {
               .then((value) => setState(() {}));
         } else if (passedValArr[1] == 'regiment_screen') {
           //this need to be navigte to Regiment screen
+          fbaLog(eveParams: {
+            'eventTime': '${DateTime.now()}',
+            'ns_type': 'regiment_screen',
+            'navigationPage': 'Regiment Screen',
+          });
           Get.to(DashboardScreen());
         } else if (passedValArr[1] == 'dashboard') {
           fbaLog(eveParams: {
@@ -498,20 +503,37 @@ class _MyFHBState extends State<MyFHB> {
           });
           Get.toNamed(router.rt_Dashboard);
         } else if (passedValArr[1] == 'th_provider_hospital') {
+          fbaLog(eveParams: {
+            'eventTime': '${DateTime.now()}',
+            'ns_type': 'th_provider_hospital',
+            'navigationPage': 'TH provider Hospital Screen',
+          });
           Get.toNamed(router.rt_TelehealthProvider,
               arguments: HomeScreenArguments(selectedIndex: 1, thTabIndex: 1));
         } else if (passedValArr[1] == 'myfamily_list') {
+          fbaLog(eveParams: {
+            'eventTime': '${DateTime.now()}',
+            'ns_type': 'myfamily_list',
+            'navigationPage': 'MyFamily List Screen',
+          });
           Get.toNamed(router.rt_UserAccounts,
-                                arguments:
-                                    UserAccountsArguments(selectedIndex: 1));
+              arguments: UserAccountsArguments(selectedIndex: 1));
         } else if (passedValArr[1] == 'myprovider_list') {
+          fbaLog(eveParams: {
+            'eventTime': '${DateTime.now()}',
+            'ns_type': 'myprovider_list',
+            'navigationPage': 'MyProvider List Screen',
+          });
           Get.toNamed(router.rt_UserAccounts,
-                                arguments:
-                                    UserAccountsArguments(selectedIndex: 2));
+              arguments: UserAccountsArguments(selectedIndex: 2));
         } else if (passedValArr[1] == 'myplans') {
+          fbaLog(eveParams: {
+            'eventTime': '${DateTime.now()}',
+            'ns_type': 'myplans',
+            'navigationPage': 'MyPlans Screen',
+          });
           Get.toNamed(router.rt_UserAccounts,
-                                arguments:
-                                    UserAccountsArguments(selectedIndex: 3));
+              arguments: UserAccountsArguments(selectedIndex: 3));
         } else {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',

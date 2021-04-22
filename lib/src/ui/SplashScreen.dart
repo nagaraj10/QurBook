@@ -248,28 +248,53 @@ class _SplashScreenState extends State<SplashScreen> {
                         CommonUtil().navigateToMyRecordsCategory(
                             widget.templateName, [widget.bundle], true);
                       } else if (widget.nsRoute == 'regiment_screen') {
+                        fbaLog(eveParams: {
+                          'eventTime': '${DateTime.now()}',
+                          'ns_type': 'regiment_screen',
+                          'navigationPage': 'Regiment Screen',
+                        });
                         Get.to(DashboardScreen()).then((value) =>
                             PageNavigator.goToPermanent(
                                 context, router.rt_Dashboard));
                       } else if (widget.nsRoute == 'th_provider_hospital') {
+                        fbaLog(eveParams: {
+                          'eventTime': '${DateTime.now()}',
+                          'ns_type': 'th_provider_hospital',
+                          'navigationPage': 'TH provider Hospital Screen',
+                        });
                         Get.toNamed(router.rt_TelehealthProvider,
                                 arguments: HomeScreenArguments(
                                     selectedIndex: 1, thTabIndex: 1))
                             .then((value) => PageNavigator.goToPermanent(
                                 context, router.rt_Dashboard));
                       } else if (widget.nsRoute == 'myfamily_list') {
+                        fbaLog(eveParams: {
+                          'eventTime': '${DateTime.now()}',
+                          'ns_type': 'myfamily_list',
+                          'navigationPage': 'MyFamily List Screen',
+                        });
                         Get.toNamed(router.rt_UserAccounts,
                                 arguments:
                                     UserAccountsArguments(selectedIndex: 1))
                             .then((value) => PageNavigator.goToPermanent(
                                 context, router.rt_Dashboard));
                       } else if (widget.nsRoute == 'myprovider_list') {
+                        fbaLog(eveParams: {
+                          'eventTime': '${DateTime.now()}',
+                          'ns_type': 'myprovider_list',
+                          'navigationPage': 'MyProvider List Screen',
+                        });
                         Get.toNamed(router.rt_UserAccounts,
                                 arguments:
                                     UserAccountsArguments(selectedIndex: 2))
                             .then((value) => PageNavigator.goToPermanent(
                                 context, router.rt_Dashboard));
                       } else if (widget.nsRoute == 'myplans') {
+                        fbaLog(eveParams: {
+                          'eventTime': '${DateTime.now()}',
+                          'ns_type': 'myplans',
+                          'navigationPage': 'MyPlans Screen',
+                        });
                         Get.toNamed(router.rt_UserAccounts,
                                 arguments:
                                     UserAccountsArguments(selectedIndex: 3))
