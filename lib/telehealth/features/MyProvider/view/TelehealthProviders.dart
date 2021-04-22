@@ -51,15 +51,7 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
   static TextStyle optionStyle =
       TextStyle(fontSize: 30.0.sp, fontWeight: FontWeight.bold);
   List<BottomNavigationArguments> bottomNavigationArgumentsList = new List();
-  var _widgetOptions = [
-    AppointmentsMain(),
-    MyProvidersMain(),
-    SuperMaya(),
-    ChatHomeScreen(),
-    MyRecords(
-      argument: MyRecordsArgument(),
-    ),
-  ];
+  var _widgetOptions;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -82,6 +74,18 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
     }
 
     getAllValuesForBottom();
+
+    _widgetOptions = [
+      AppointmentsMain(),
+      MyProvidersMain(
+        mTabIndex: widget.arguments.thTabIndex,
+      ),
+      SuperMaya(),
+      ChatHomeScreen(),
+      MyRecords(
+        argument: MyRecordsArgument(),
+      ),
+    ];
   }
 
   @override

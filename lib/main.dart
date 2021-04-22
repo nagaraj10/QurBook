@@ -490,6 +490,28 @@ class _MyFHBState extends State<MyFHB> {
         } else if (passedValArr[1] == 'regiment_screen') {
           //this need to be navigte to Regiment screen
           Get.to(DashboardScreen());
+        } else if (passedValArr[1] == 'dashboard') {
+          fbaLog(eveParams: {
+            'eventTime': '${DateTime.now()}',
+            'ns_type': 'dashboard',
+            'navigationPage': 'Device List Screen',
+          });
+          Get.toNamed(router.rt_Dashboard);
+        } else if (passedValArr[1] == 'th_provider_hospital') {
+          Get.toNamed(router.rt_TelehealthProvider,
+              arguments: HomeScreenArguments(selectedIndex: 1, thTabIndex: 1));
+        } else if (passedValArr[1] == 'myfamily_list') {
+          Get.toNamed(router.rt_UserAccounts,
+                                arguments:
+                                    UserAccountsArguments(selectedIndex: 1));
+        } else if (passedValArr[1] == 'myprovider_list') {
+          Get.toNamed(router.rt_UserAccounts,
+                                arguments:
+                                    UserAccountsArguments(selectedIndex: 2));
+        } else if (passedValArr[1] == 'myplans') {
+          Get.toNamed(router.rt_UserAccounts,
+                                arguments:
+                                    UserAccountsArguments(selectedIndex: 3));
         } else {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
@@ -730,6 +752,26 @@ class _MyFHBState extends State<MyFHB> {
             //this need to be navigte to Regiment screen
             return SplashScreen(
               nsRoute: 'regiment_screen',
+            );
+          } else if (parsedData[1] == 'th_provider_hospital') {
+            //this need to be navigte to TH provider screen
+            return SplashScreen(
+              nsRoute: 'th_provider_hospital',
+            );
+          } else if (parsedData[1] == 'myfamily_list') {
+            //this need to be navigte to My Family List screen
+            return SplashScreen(
+              nsRoute: 'myfamily_list',
+            );
+          } else if (parsedData[1] == 'myprovider_list') {
+            //this need to be navigte to My Provider screen
+            return SplashScreen(
+              nsRoute: 'myprovider_list',
+            );
+          } else if (parsedData[1] == 'myplans') {
+            //this need to be navigte to My Plans screen
+            return SplashScreen(
+              nsRoute: 'myplans',
             );
           } else {
             return SplashScreen(

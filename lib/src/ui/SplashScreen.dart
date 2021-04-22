@@ -251,6 +251,30 @@ class _SplashScreenState extends State<SplashScreen> {
                         Get.to(DashboardScreen()).then((value) =>
                             PageNavigator.goToPermanent(
                                 context, router.rt_Dashboard));
+                      } else if (widget.nsRoute == 'th_provider_hospital') {
+                        Get.toNamed(router.rt_TelehealthProvider,
+                                arguments: HomeScreenArguments(
+                                    selectedIndex: 1, thTabIndex: 1))
+                            .then((value) => PageNavigator.goToPermanent(
+                                context, router.rt_Dashboard));
+                      } else if (widget.nsRoute == 'myfamily_list') {
+                        Get.toNamed(router.rt_UserAccounts,
+                                arguments:
+                                    UserAccountsArguments(selectedIndex: 1))
+                            .then((value) => PageNavigator.goToPermanent(
+                                context, router.rt_Dashboard));
+                      } else if (widget.nsRoute == 'myprovider_list') {
+                        Get.toNamed(router.rt_UserAccounts,
+                                arguments:
+                                    UserAccountsArguments(selectedIndex: 2))
+                            .then((value) => PageNavigator.goToPermanent(
+                                context, router.rt_Dashboard));
+                      } else if (widget.nsRoute == 'myplans') {
+                        Get.toNamed(router.rt_UserAccounts,
+                                arguments:
+                                    UserAccountsArguments(selectedIndex: 3))
+                            .then((value) => PageNavigator.goToPermanent(
+                                context, router.rt_Dashboard));
                       } else {
                         fbaLog(eveParams: {
                           'eventTime': '${DateTime.now()}',

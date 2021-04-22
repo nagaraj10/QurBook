@@ -17,6 +17,9 @@ import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
 
 class MyProvidersMain extends StatefulWidget {
+  final int mTabIndex;
+
+  MyProvidersMain({this.mTabIndex});
   @override
   _TabBarDemoState createState() => _TabBarDemoState();
 }
@@ -36,6 +39,8 @@ class _TabBarDemoState extends State<MyProvidersMain>
       length: 2,
       vsync: this,
     );
+
+    _controller.index = widget.mTabIndex != null ? widget.mTabIndex : 0;
 
     _controller.addListener(() {
       setState(() {
@@ -110,7 +115,7 @@ class _TabBarDemoState extends State<MyProvidersMain>
         ),
         new CommonUtil().getNotificationIcon(context),
         new SwitchProfile()
-            .buildActions(context, _keyLoader, callBackToRefresh,false),
+            .buildActions(context, _keyLoader, callBackToRefresh, false),
         // Icon(Icons.more_vert),
       ],
     );
