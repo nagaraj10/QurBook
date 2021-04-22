@@ -331,6 +331,54 @@ class _MyFHBState extends State<MyFHB> {
               Get.toNamed(router.rt_HomeScreen,
                       arguments: HomeScreenArguments(selectedIndex: 1))
                   .then((value) => setState(() {}));
+            } else if (event == 'regiment_screen') {
+              //this need to be navigte to Regiment screen
+              fbaLog(eveParams: {
+                'eventTime': '${DateTime.now()}',
+                'ns_type': 'regiment_screen',
+                'navigationPage': 'Regiment Screen',
+              });
+              Get.to(DashboardScreen());
+            } else if (event == 'dashboard') {
+              fbaLog(eveParams: {
+                'eventTime': '${DateTime.now()}',
+                'ns_type': 'dashboard',
+                'navigationPage': 'Device List Screen',
+              });
+              Get.toNamed(router.rt_Dashboard);
+            } else if (event == 'th_provider_hospital') {
+              fbaLog(eveParams: {
+                'eventTime': '${DateTime.now()}',
+                'ns_type': 'th_provider_hospital',
+                'navigationPage': 'TH provider Hospital Screen',
+              });
+              Get.toNamed(router.rt_TelehealthProvider,
+                  arguments:
+                      HomeScreenArguments(selectedIndex: 1, thTabIndex: 1));
+            } else if (event == 'myfamily_list') {
+              fbaLog(eveParams: {
+                'eventTime': '${DateTime.now()}',
+                'ns_type': 'myfamily_list',
+                'navigationPage': 'MyFamily List Screen',
+              });
+              Get.toNamed(router.rt_UserAccounts,
+                  arguments: UserAccountsArguments(selectedIndex: 1));
+            } else if (event == 'myprovider_list') {
+              fbaLog(eveParams: {
+                'eventTime': '${DateTime.now()}',
+                'ns_type': 'myprovider_list',
+                'navigationPage': 'MyProvider List Screen',
+              });
+              Get.toNamed(router.rt_UserAccounts,
+                  arguments: UserAccountsArguments(selectedIndex: 2));
+            } else if (event == 'myplans') {
+              fbaLog(eveParams: {
+                'eventTime': '${DateTime.now()}',
+                'ns_type': 'myplans',
+                'navigationPage': 'MyPlans Screen',
+              });
+              Get.toNamed(router.rt_UserAccounts,
+                  arguments: UserAccountsArguments(selectedIndex: 3));
             } else {
               fbaLog(eveParams: {
                 'eventTime': '${DateTime.now()}',
@@ -381,6 +429,31 @@ class _MyFHBState extends State<MyFHB> {
               Get.to(SplashScreen(
                 nsRoute: 'my_record',
               ));
+            } else if (event == 'regiment_screen') {
+              //this need to be navigte to Regiment screen
+              return SplashScreen(
+                nsRoute: 'regiment_screen',
+              );
+            } else if (event == 'th_provider_hospital') {
+              //this need to be navigte to TH provider screen
+              return SplashScreen(
+                nsRoute: 'th_provider_hospital',
+              );
+            } else if (event == 'myfamily_list') {
+              //this need to be navigte to My Family List screen
+              return SplashScreen(
+                nsRoute: 'myfamily_list',
+              );
+            } else if (event == 'myprovider_list') {
+              //this need to be navigte to My Provider screen
+              return SplashScreen(
+                nsRoute: 'myprovider_list',
+              );
+            } else if (event == 'myplans') {
+              //this need to be navigte to My Plans screen
+              return SplashScreen(
+                nsRoute: 'myplans',
+              );
             } else {
               Get.to(SplashScreen(
                 nsRoute: '',
