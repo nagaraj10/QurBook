@@ -16,10 +16,12 @@ class RegimentResponseModel {
   RegimentResponseModel({
     this.isSuccess,
     this.regimentsList,
+    this.message,
   });
 
   final bool isSuccess;
   final List<RegimentDataModel> regimentsList;
+  final String message;
 
   factory RegimentResponseModel.fromJson(Map<String, dynamic> json) =>
       RegimentResponseModel(

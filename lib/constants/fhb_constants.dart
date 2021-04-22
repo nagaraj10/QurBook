@@ -401,6 +401,8 @@ const String STR_OTHER_ID = 'Other IDs';
 const String STR_INSURE_ID = 'Insurance IDs';
 const String noRegimentData =
     'No Regiments data available for the selected date';
+const String plansForFamily =
+    'Regiment plans are not available for family members';
 const String okButton = 'OK';
 const String saveButton = 'Save';
 

@@ -5,16 +5,32 @@ import 'package:myfhb/regiment/models/regiment_response_model.dart';
 import 'package:myfhb/regiment/models/save_response_model.dart';
 import 'package:myfhb/regiment/models/field_response_model.dart';
 import 'package:myfhb/regiment/models/profile_response_model.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 class RegimentViewModel extends ChangeNotifier {
   Future<RegimentResponseModel> regimentsData;
+  bool regimentsDataAvailable = true;
   DateTime selectedDate = DateTime.now();
   String regimentDate = '${CommonUtil().regimentDateFormat(DateTime.now())}';
 
   Future<void> fetchRegimentData({bool isInitial = false}) {
-    regimentsData = RegimentService.getRegimentData(
-      dateSelected: CommonUtil().dateConversionToApiFormat(selectedDate),
-    );
+    if (PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN) ==
+        PreferenceUtil.getStringValue(Constants.KEY_USERID)) {
+      regimentsDataAvailable = true;
+      regimentsData = RegimentService.getRegimentData(
+        dateSelected: CommonUtil().dateConversionToApiFormat(selectedDate),
+      );
+    } else {
+      regimentsDataAvailable = false;
+      regimentsData = Future.value(
+        RegimentResponseModel(
+          isSuccess: true,
+          regimentsList: [],
+          message: Constants.plansForFamily,
+        ),
+      );
+    }
     if (!isInitial) {
       notifyListeners();
     }
