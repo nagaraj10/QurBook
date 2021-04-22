@@ -278,12 +278,15 @@ class RegimentDataCard extends StatelessWidget {
     vitalsData?.forEach((vitalData) {
       bool isNormal = true;
 
-      isNormal = (vitalData.fieldType == FieldType.NUMBER)
-          ? int.tryParse(vitalData.value) != null &&
+      isNormal = (vitalData.fieldType == FieldType.NUMBER &&
+              int.tryParse(vitalData.value) != null &&
               int.tryParse(vitalData.amin) != null &&
               int.tryParse(vitalData.amax) != null &&
-              (int.tryParse(vitalData.value) < int.tryParse(vitalData.amax) &&
-                  int.tryParse(vitalData.value) > int.tryParse(vitalData.amin))
+              int.tryParse(vitalData.value).toString().isNotEmpty &&
+              int.tryParse(vitalData.amin).toString().isNotEmpty &&
+              int.tryParse(vitalData.amax).toString().isNotEmpty)
+          ? (int.tryParse(vitalData.value) <= int.tryParse(vitalData.amax) &&
+              int.tryParse(vitalData.value) >= int.tryParse(vitalData.amin))
           : true;
       if ((vitalData.display ?? '').isNotEmpty) {
         fieldWidgets.add(
