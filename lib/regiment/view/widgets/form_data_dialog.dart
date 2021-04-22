@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/regiment/view_model/AddRegimentModel.dart';
@@ -145,7 +146,8 @@ class FormDataDialogState extends State<FormDataDialog> {
                     visible: mediaData.needPhoto == '1',
                     child: InkWell(
                       onTap: () {
-                        getOpenGallery(strGallery);
+                        //getOpenGallery(strGallery);
+                        imgFromCamera(strGallery);
                       },
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -369,9 +371,6 @@ class FormDataDialogState extends State<FormDataDialog> {
         if (imagePaths != null && imagePaths != '') {
           saveMediaRegiment(imagePaths).then((value) {
             if (value.isSuccess) {
-              print('url:  ' + value.result.accessUrl);
-              print('uploaded');
-
               var oldValue = saveMap.putIfAbsent(
                 'pf_$fromPath',
                 () => value.result.accessUrl,
@@ -384,5 +383,32 @@ class FormDataDialogState extends State<FormDataDialog> {
         }
       }
     });
+  }
+
+  imgFromCamera(String fromPath) async {
+    File _image;
+    final picker = ImagePicker();
+    final pickedFile = await picker.getImage(source: ImageSource.camera);
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+        imageFileName = _image.path.split('/').last;
+        imagePaths = _image.path;
+      }
+    });
+    if (imagePaths != null && imagePaths != '') {
+      saveMediaRegiment(imagePaths).then((value) {
+        if (value.isSuccess) {
+          var oldValue = saveMap.putIfAbsent(
+            'pf_$fromPath',
+                () => value.result.accessUrl,
+          );
+          if (oldValue != null) {
+            saveMap['pf_$fromPath'] =
+                value.result.accessUrl;
+          }
+        }
+      });
+    }
   }
 }
