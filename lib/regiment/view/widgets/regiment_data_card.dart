@@ -320,7 +320,7 @@ class RegimentDataCard extends StatelessWidget {
       }
     });
 
-    if (mediaData != null) {
+    if (mediaData != null || regimentData.hashtml) {
       fieldWidgets.add(
         Padding(
           padding: EdgeInsets.symmetric(
@@ -355,6 +355,20 @@ class RegimentDataCard extends StatelessWidget {
                 child: MediaIconWidget(
                   color: color,
                   icon: Icons.attach_file,
+                ),
+              ),
+              Visibility(
+                visible: regimentData.hashtml,
+                child: MediaIconWidget(
+                  color: color,
+                  icon: Icons.menu_book_rounded,
+                  onPressed: () {
+                    CommonUtil().openWebViewNew(
+                      regimentData.title,
+                      regimentData.htmltemplate,
+                      true,
+                    );
+                  },
                 ),
               ),
             ],

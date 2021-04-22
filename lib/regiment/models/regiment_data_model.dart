@@ -59,7 +59,7 @@ class RegimentDataModel {
   final DateTime ts;
   final String deleted;
   final String evDuration;
-  final int hashtml;
+  final bool hashtml;
   final int hascustform;
   final dynamic htmltemplate;
   final String dosesNeeded;
@@ -95,7 +95,7 @@ class RegimentDataModel {
         ts: DateTime.tryParse(json["ts"] ?? ''),
         deleted: json["deleted"],
         evDuration: json["ev_duration"],
-        hashtml: json["hashtml"],
+        hashtml: (json["hashtml"] ?? 0) == 1,
         hascustform: json["hascustform"],
         htmltemplate: json["htmltemplate"],
         dosesNeeded: json["doses_needed"],

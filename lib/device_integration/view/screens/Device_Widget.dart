@@ -49,8 +49,7 @@ class ShowDevicesNew extends StatefulWidget {
   _ShowDevicesNewState createState() => _ShowDevicesNewState();
 }
 
-class _ShowDevicesNewState extends State<ShowDevicesNew>
-    with TickerProviderStateMixin {
+class _ShowDevicesNewState extends State<ShowDevicesNew> {
   DevicesViewModel devicesViewModel;
 
   LastMeasureSyncValues deviceValues;
@@ -134,7 +133,6 @@ class _ShowDevicesNewState extends State<ShowDevicesNew>
 
   final double circleRadius = 38.0;
   final double circleBorderWidth = 0.0;
-  TabController controller;
 
   DeviceDataHelper _deviceDataHelper = DeviceDataHelper();
 
@@ -143,13 +141,6 @@ class _ShowDevicesNewState extends State<ShowDevicesNew>
     mInitialTime = DateTime.now();
     _familyListBloc = new FamilyListBloc();
     getFamilyLength();
-    controller = TabController(
-      //TODO: Replace with condition to check length
-      length: 2,
-      vsync: this,
-      //TODO: Replace with condition to check plan package
-      initialIndex: 0,
-    );
 
     super.initState();
   }
@@ -472,147 +463,149 @@ class _ShowDevicesNewState extends State<ShowDevicesNew>
     return LayoutBuilder(builder: (context, constraints) {
       return Container(
         height: constraints.maxHeight,
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                      colors: <Color>[
-                    Color(new CommonUtil().getMyPrimaryColor()),
-                    Color(new CommonUtil().getMyGredientColor())
-                  ],
-                      stops: [
-                    0.3,
-                    1.0
-                  ])),
-              child: IntrinsicHeight(
-                child: SafeArea(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      PreferredSize(
-                        preferredSize: Size.fromHeight(1.sh * 0.15),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                  begin: Alignment.centerLeft,
-                                  end: Alignment.centerRight,
-                                  colors: <Color>[
-                                Color(new CommonUtil().getMyPrimaryColor()),
-                                Color(new CommonUtil().getMyGredientColor())
-                              ],
-                                  stops: [
-                                0.3,
-                                1.0
-                              ])),
-                          child: SafeArea(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Container(
-                                  child: Row(
-                                    children: <Widget>[
-                                      SizedBox(
-                                        width: 0.05.sw,
-                                      ),
-                                      Container(
-                                        width: 0.66.sw,
-                                        child: _getUserName(),
-                                      ),
-                                      GestureDetector(
-                                        onTap: () {
-                                          toast.getToastForLongTime(
-                                              strSync, Colors.green);
-                                          Platform.isIOS
-                                              ? _deviceDataHelper
-                                                  .syncHealthKit()
-                                                  .then((value) {
-                                                  setState(() {});
-                                                })
-                                              : _deviceDataHelper
-                                                  .syncGoogleFit()
-                                                  .then((value) {
-                                                  setState(() {});
-                                                });
-                                        },
-                                        child: Image.asset(
-                                          icon_refresh_dash,
-                                          height: 26.0.h,
-                                          width: 26.0.h,
-                                          color: Colors.white,
+        child: DefaultTabController(
+          length: 2,
+          initialIndex: 0,
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                        colors: <Color>[
+                      Color(new CommonUtil().getMyPrimaryColor()),
+                      Color(new CommonUtil().getMyGredientColor())
+                    ],
+                        stops: [
+                      0.3,
+                      1.0
+                    ])),
+                child: IntrinsicHeight(
+                  child: SafeArea(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        PreferredSize(
+                          preferredSize: Size.fromHeight(1.sh * 0.15),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                    begin: Alignment.centerLeft,
+                                    end: Alignment.centerRight,
+                                    colors: <Color>[
+                                  Color(new CommonUtil().getMyPrimaryColor()),
+                                  Color(new CommonUtil().getMyGredientColor())
+                                ],
+                                    stops: [
+                                  0.3,
+                                  1.0
+                                ])),
+                            child: SafeArea(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Container(
+                                    child: Row(
+                                      children: <Widget>[
+                                        SizedBox(
+                                          width: 0.05.sw,
                                         ),
-                                      ),
-                                      SizedBox(
-                                        width: 0.03.sw,
-                                      ),
-                                      isFamilyAvail
-                                          ? SwitchProfile().buildActions(
-                                              context,
-                                              _key,
-                                              callBackToRefresh,
-                                              true)
-                                          : getMaterialPlusIcon(context),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  alignment: Alignment.centerLeft,
-                                  child: TabBar(
-                                    indicatorWeight: 2.0.h,
-                                    isScrollable: true,
-                                    controller: controller,
-                                    labelColor: Colors.white,
-                                    indicatorSize: TabBarIndicatorSize.label,
-                                    unselectedLabelColor: Colors.white70,
-                                    tabs: [
-                                      Tab(
-                                        child: Text(
-                                          'Regiment',
-                                          style: TextStyle(
-                                            fontSize: 16.0.sp,
+                                        Container(
+                                          width: 0.66.sw,
+                                          child: _getUserName(),
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            toast.getToastForLongTime(
+                                                strSync, Colors.green);
+                                            Platform.isIOS
+                                                ? _deviceDataHelper
+                                                    .syncHealthKit()
+                                                    .then((value) {
+                                                    setState(() {});
+                                                  })
+                                                : _deviceDataHelper
+                                                    .syncGoogleFit()
+                                                    .then((value) {
+                                                    setState(() {});
+                                                  });
+                                          },
+                                          child: Image.asset(
+                                            icon_refresh_dash,
+                                            height: 26.0.h,
+                                            width: 26.0.h,
+                                            color: Colors.white,
                                           ),
                                         ),
-                                      ),
-                                      Tab(
-                                        child: Text(
-                                          'Devices',
-                                          style: TextStyle(
-                                            fontSize: 16.0.sp,
+                                        SizedBox(
+                                          width: 0.03.sw,
+                                        ),
+                                        isFamilyAvail
+                                            ? SwitchProfile().buildActions(
+                                                context,
+                                                _key,
+                                                callBackToRefresh,
+                                                true)
+                                            : getMaterialPlusIcon(context),
+                                      ],
+                                    ),
+                                  ),
+                                  Container(
+                                    alignment: Alignment.centerLeft,
+                                    child: TabBar(
+                                      indicatorWeight: 2.0.h,
+                                      isScrollable: true,
+                                      labelColor: Colors.white,
+                                      indicatorSize: TabBarIndicatorSize.label,
+                                      unselectedLabelColor: Colors.white70,
+                                      tabs: [
+                                        Tab(
+                                          child: Text(
+                                            'Regiment',
+                                            style: TextStyle(
+                                              fontSize: 16.0.sp,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ],
+                                        Tab(
+                                          child: Text(
+                                            'Devices',
+                                            style: TextStyle(
+                                              fontSize: 16.0.sp,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      )
-                    ],
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            Expanded(
-              child: TabBarView(
-                controller: controller,
-                children: [
-                  RegimentTab(),
-                  SingleChildScrollView(
-                    child: Container(
-                      width: 1.sw,
-                      alignment: Alignment.center,
-                      child: getValues(context, _devicesmodel),
+              Expanded(
+                child: TabBarView(
+                  children: [
+                    RegimentTab(),
+                    SingleChildScrollView(
+                      child: Container(
+                        width: 1.sw,
+                        alignment: Alignment.center,
+                        child: getValues(context, _devicesmodel),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
     });

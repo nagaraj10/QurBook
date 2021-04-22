@@ -87,10 +87,20 @@ class _MyFhbWebViewState extends State<MyFhbWebView> {
   }
 
   _loadHtmlFromAssets(String selectedUrl) async {
-    String fileText = await rootBundle.loadString(selectedUrl);
-    _controller.loadUrl(Uri.dataFromString(fileText,
-            mimeType: variable.strtexthtml,
-            encoding: Encoding.getByName(variable.strUtf))
-        .toString());
+    try {
+      String fileText = await rootBundle.loadString(selectedUrl);
+      _controller.loadUrl(Uri.dataFromString(fileText,
+              mimeType: variable.strtexthtml,
+              encoding: Encoding.getByName(variable.strUtf))
+          .toString());
+    } catch (e) {
+      print(e);
+      if (selectedUrl.isNotEmpty) {
+        _controller.loadUrl(Uri.dataFromString(selectedUrl,
+                mimeType: variable.strtexthtml,
+                encoding: Encoding.getByName(variable.strUtf))
+            .toString());
+      }
+    }
   }
 }
