@@ -227,23 +227,24 @@ class PlanDetail extends State<MyPlanDetail> {
         } else if (snapshot.hasError) {
           return ErrorsWidget();
         } else {
-          final items = snapshot.data ??
-              <MyPlanDetailModel>[]; // handle the case that data is null
-          return (snapshot?.data?.result != null &&
-                  snapshot.data.result.length > 0)
-              ? activitiesList(snapshot.data.result)
-              : SafeArea(
-                  child: SizedBox(
-                    height: 1.sh / 5.0,
-                    child: Container(
-                        child: Center(
-                      child: Text(
-                        variable.strNoActivities,
-                        style: TextStyle(fontSize: 12.sp),
-                      ),
-                    )),
+          if (snapshot?.hasData &&
+              snapshot?.data?.result != null &&
+              snapshot?.data?.result?.length > 0) {
+            return activitiesList(snapshot.data.result);
+          } else {
+            return SafeArea(
+              child: SizedBox(
+                height: 1.sh / 5.0,
+                child: Container(
+                    child: Center(
+                  child: Text(
+                    variable.strNoActivities,
+                    style: TextStyle(fontSize: 12.sp),
                   ),
-                );
+                )),
+              ),
+            );
+          }
         }
       },
     );
