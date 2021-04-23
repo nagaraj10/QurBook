@@ -194,12 +194,11 @@ class FormDataDialogState extends State<FormDataDialog> {
                                 if (value.isSuccess) {
                                   print('url:  ' + value.result.accessUrl);
                                   var oldValue = saveMap.putIfAbsent(
-                                    'pf_audio',
+                                    'audio',
                                     () => value.result.accessUrl,
                                   );
                                   if (oldValue != null) {
-                                    saveMap['pf_audio'] =
-                                        value.result.accessUrl;
+                                    saveMap['audio'] = value.result.accessUrl;
                                   }
                                 }
                               });
@@ -372,11 +371,11 @@ class FormDataDialogState extends State<FormDataDialog> {
           saveMediaRegiment(imagePaths).then((value) {
             if (value.isSuccess) {
               var oldValue = saveMap.putIfAbsent(
-                'pf_$fromPath',
+                '$fromPath',
                 () => value.result.accessUrl,
               );
               if (oldValue != null) {
-                saveMap['pf_$fromPath'] = value.result.accessUrl;
+                saveMap['$fromPath'] = value.result.accessUrl;
               }
             }
           });
@@ -400,12 +399,11 @@ class FormDataDialogState extends State<FormDataDialog> {
       saveMediaRegiment(imagePaths).then((value) {
         if (value.isSuccess) {
           var oldValue = saveMap.putIfAbsent(
-            'pf_$fromPath',
-                () => value.result.accessUrl,
+            '$fromPath',
+            () => value.result.accessUrl,
           );
           if (oldValue != null) {
-            saveMap['pf_$fromPath'] =
-                value.result.accessUrl;
+            saveMap['$fromPath'] = value.result.accessUrl;
           }
         }
       });
