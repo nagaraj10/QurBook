@@ -40,15 +40,10 @@ class QurPlanReminders {
       final dataArray = await json.decode(responseFromApi.body);
       List<dynamic> data = dataArray['result'];
       List<Reminder> reminders = [];
-      var oneHourbeforeFromNow = DateTime.now().subtract(Duration(hours: 1));
-      print(oneHourbeforeFromNow);
       data.forEach((element) {
         final newData = Reminder.fromMap(element);
-        final currentDateAndTime = DateTime.parse(newData.estart);
-        print(currentDateAndTime);
-        if (currentDateAndTime.isAfter(oneHourbeforeFromNow)) {
-          reminders.add(newData);
-        }
+        print(newData.estart);
+        reminders.add(newData);
       });
       updateReminderswithLocal(reminders);
     } catch (e) {
@@ -68,8 +63,9 @@ class QurPlanReminders {
 
   static Future<bool> saveRemindersLocally(
       List<Reminder> notificationToSave) async {
-    final String directory =
-        await FHBUtils.createFolderInAppDocDirForIOS('reminders');
+    final String directory = Platform.isIOS
+        ? await FHBUtils.createFolderInAppDocDirForIOS("reminders")
+        : await FHBUtils.createFolderInAppDocDir('reminders');
     final File file = File(directory + 'notificationList.json');
     final dataTosave = notificationToSave.map((e) => e.toJson()).toList();
     try {
@@ -193,8 +189,10 @@ class QurPlanReminders {
 
   static Future<List<Reminder>> getLocalReminder() async {
     try {
-      final directory =
-          await FHBUtils.createFolderInAppDocDirForIOS('reminders');
+      final directory = Platform.isIOS
+          ? await FHBUtils.createFolderInAppDocDirForIOS("reminders")
+          : await FHBUtils.createFolderInAppDocDir('reminders');
+
       final file = File('$directory$reminderLocalFile');
       final data = await file.readAsString();
       final decodedData = await json.decode(data);
@@ -214,7 +212,7 @@ class QurPlanReminders {
     }
   }
 
-  static deleteAllLocalReminders() async{
+  static deleteAllLocalReminders() async {
     if (Platform.isIOS) {
       reminderMethodChannel.invokeMethod(removeAllReminderMethod);
     } else {

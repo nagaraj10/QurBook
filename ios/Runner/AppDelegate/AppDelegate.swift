@@ -89,15 +89,10 @@ import AVFoundation
                 result(FlutterMethodNotImplemented)
                 return
             }
-            
             print(Constants.speechToText)
-            
-            print(Constants.STT, result);
-            
+            print(Constants.STT, result)
             Loading.sharedInstance.showLoader()
-            
             self?.STT_Result = result;
-            
             do{
                 try self?.startRecording();
             }catch(let error){
@@ -189,7 +184,6 @@ import AVFoundation
                         timer.invalidate()
                         self.STT_Result!(result.bestTranscription.formattedString as Any);
                         self.message = "";
-                        
                         self.stopRecording()
                     }
                 } else {
@@ -221,17 +215,13 @@ import AVFoundation
         }catch{
             
         }
-        
         speechSynthesizer.delegate = self
-        
         let speechUtterance = AVSpeechUtterance(string: messageToSpeak)
         speechUtterance.voice = AVSpeechSynthesisVoice(language: Constants.enUS) // en-GB -> MAle , en-US -> Female
-        
         speechUtterance.rate = 0.5
         //        speechUtterance.pitchMultiplier = 0.5
         //        speechUtterance.preUtteranceDelay = 0
         speechUtterance.volume = 1
-        
         if (isClose){
             speechSynthesizer.stopSpeaking(at: AVSpeechBoundary.immediate)
         }else{
@@ -245,7 +235,6 @@ import AVFoundation
         self.audioEngine.inputNode.removeTap(onBus: 0)
         self.audioEngine.stop()
         self.recognitionRequest?.endAudio()
-        
         self.recognitionRequest = nil
         self.recognitionTask = nil
     }
@@ -294,19 +283,28 @@ import AVFoundation
             if let dateNotifiation = message["estart"] as? String{
                 let dateFormatter = DateFormatter()
                 dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                let dateFromString = dateFormatter.date(from: dateNotifiation)
+                var dateFromString = dateFormatter.date(from: dateNotifiation)?.toLocalTime()
                 print(dateNotifiation)
                 print(dateFromString as Any)
-                
                 if let dateToBeTriggered = dateFromString{
-                    var dateForTheNotification = dateToBeTriggered
                     if let remindInStr = message["remindin"] as? String, let remindIn = Int(remindInStr){
-                        dateForTheNotification = Calendar.current.date(byAdding: .minute, value: -remindIn, to: dateToBeTriggered) ?? dateToBeTriggered
-                        print(dateForTheNotification)
+                        dateFromString = Calendar.current.date(byAdding: .minute, value: -remindIn, to: dateToBeTriggered) ?? dateToBeTriggered
                     }
-                        dateComponent = Calendar.current.dateComponents([.day,.month,.year,.hour,.minute], from: dateForTheNotification )
                 }
-                
+                if let dateForSchedule = dateFromString{
+                    let strOfDateAndTime = "\(dateForSchedule)"
+                    let strSplitDateTime = strOfDateAndTime.components(separatedBy: " ")
+                    let strDates = strSplitDateTime[0].components(separatedBy: "-")
+                    let strTime = strSplitDateTime[1].components(separatedBy: ":")
+                    if let year = Int(strDates[0]),let month = Int(strDates[1]),let day = Int(strDates[2]),let hour = Int(strTime[0]),let min = Int(strTime[1]),let sec = Int(strTime[2]){
+                        dateComponent.year = year
+                        dateComponent.month = month
+                        dateComponent.day = day
+                        dateComponent.hour = hour
+                        dateComponent.minute = min
+                        dateComponent.second = sec
+                    }
+                }
                 print(dateComponent.description)
             }
             if let alreadyScheduled = message["alreadyScheduled"] as? Bool,alreadyScheduled{
@@ -316,11 +314,8 @@ import AVFoundation
                 }
             }
         }
-        
-        
         //Compose New Notificaion
         let content = UNMutableNotificationContent()
-         
         content.title = title
         content.body = des
         let identifier = id
@@ -353,8 +348,6 @@ import AVFoundation
             }
         }
     }
-    
-    
     //Handle Notification Center Delegate methods
     override func userNotificationCenter(_ center: UNUserNotificationCenter,
                                          willPresent notification: UNNotification,
@@ -397,7 +390,22 @@ import AVFoundation
 
 extension AppDelegate: AVSpeechSynthesizerDelegate {
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
-        
         TTS_Result!(1);
     }
+}
+extension Date {
+    // Convert local time to UTC (or GMT)
+    func toGlobalTime() -> Date {
+        let timezone = TimeZone.current
+        let seconds = -TimeInterval(timezone.secondsFromGMT(for: self))
+        return Date(timeInterval: seconds, since: self)
+    }
+
+    // Convert UTC (or GMT) to local time
+    func toLocalTime() -> Date {
+        let timezone = TimeZone.current
+        let seconds = TimeInterval(timezone.secondsFromGMT(for: self))
+        return Date(timeInterval: seconds, since: self)
+    }
+
 }
