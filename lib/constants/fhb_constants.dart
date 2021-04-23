@@ -405,6 +405,7 @@ const String plansForFamily =
     'Regiment plans are not available for family members';
 const String okButton = 'OK';
 const String saveButton = 'Save';
+const String select = 'Select';
 
 const strJpgDot = '.jpg';
 const strJpegDot = '.jpeg';
