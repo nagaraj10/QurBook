@@ -26,12 +26,14 @@ class FormDataDialog extends StatefulWidget {
     @required this.eid,
     @required this.color,
     @required this.mediaData,
+    @required this.formTitle,
   });
 
   final List<FieldModel> fieldsData;
   final String eid;
   final Color color;
   final Otherinfo mediaData;
+  final String formTitle;
 
   @override
   State<StatefulWidget> createState() => FormDataDialogState();
@@ -69,6 +71,14 @@ class FormDataDialogState extends State<FormDataDialog> {
       title: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
+          Flexible(
+            child: Text(
+              widget.formTitle,
+              style: TextStyle(
+                fontSize: 16.0.sp,
+              ),
+            ),
+          ),
           IconButton(
             icon: Icon(
               Icons.close,
@@ -79,8 +89,10 @@ class FormDataDialogState extends State<FormDataDialog> {
         ],
       ),
       titlePadding: EdgeInsets.only(
-        top: 5.0.h,
+        top: 10.0.h,
         right: 5.0.w,
+        left: 15.0.w,
+        bottom: 10.0.h,
       ),
       content: Container(
         width: 0.75.sw,

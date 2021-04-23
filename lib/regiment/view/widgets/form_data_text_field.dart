@@ -22,7 +22,7 @@ class FormDataTextField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          fieldData.title,
+          '${fieldData.title} ${((fieldData?.vmin ?? '').isNotEmpty && (fieldData?.vmax ?? '').isNotEmpty) ? '(${fieldData.vmin} - ${fieldData.vmax})' : ''}',
           style: TextStyle(
             fontSize: 14.0.sp,
             fontWeight: FontWeight.w600,

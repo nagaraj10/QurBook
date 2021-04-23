@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/regiment/models/regiment_data_model.dart';
 import 'package:myfhb/regiment/models/field_response_model.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 class FormDataDropDown extends StatefulWidget {
   FormDataDropDown({
@@ -70,6 +70,14 @@ class _FormDataDropDownState extends State<FormDataDropDown> {
         DropdownButton<dynamic>(
           style: TextStyle(
             fontSize: 16.0.sp,
+          ),
+          hint: Text(
+            (widget.fieldData?.title ?? '').isNotEmpty
+                ? '${Constants.select} ${widget.fieldData?.title}'
+                : '',
+            style: TextStyle(
+              fontSize: 14.0.sp,
+            ),
           ),
           isExpanded: true,
           //TODO: Need to update the items based on the API

@@ -11,6 +11,7 @@ import 'media_icon_widget.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
+import 'package:intl/intl.dart';
 
 class RegimentDataCard extends StatelessWidget {
   final String title;
@@ -64,6 +65,8 @@ class RegimentDataCard extends StatelessWidget {
                     eid: eid,
                     color: color,
                     mediaData: mediaData,
+                    formTitle:
+                        '${DateFormat('hh:mm a').format(regimentData.estart)},${regimentData.title}',
                   ),
                 );
                 if (value != null && (value ?? false)) {
