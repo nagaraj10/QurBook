@@ -29,6 +29,7 @@ import 'package:myfhb/src/ui/HomeScreen.dart';
 import 'package:myfhb/src/ui/user/UserAccounts.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:provider/provider.dart';
+import 'package:myfhb/src/ui/bot/common/botutils.dart';
 
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
@@ -243,6 +244,11 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                   selectionResult.result[0].profileSetting.preColor);
               PreferenceUtil.saveTheme(Constants.keyGreyColor,
                   selectionResult.result[0].profileSetting.greColor);
+              PreferenceUtil.saveString(
+                  Constants.SHEELA_LANG,
+                  Utils.langaugeCodes[selectionResult
+                          .result[0].profileSetting.preferred_language ??
+                      'undef']);
               //HomeScreen.of(context).refresh();
               //setState(() {});
             } else {
