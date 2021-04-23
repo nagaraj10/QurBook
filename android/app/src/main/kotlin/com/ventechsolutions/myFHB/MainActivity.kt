@@ -779,14 +779,13 @@ class MainActivity : FlutterActivity() {
             set(Calendar.SECOND, 0)
         }
 
-        calendar.add(Calendar.MINUTE,-remindin.toInt())
+        calendar.add(Calendar.MINUTE, -remindin.toInt())
 
         //check the reminder time with current time if its true allow user to create alaram
         if (calendar.timeInMillis > Calendar.getInstance().timeInMillis) {
             alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             reminderBroadcaster.putExtra("currentMillis", calendar.timeInMillis)
             val pendingIntent = PendingIntent.getBroadcast(this, nsId.toInt(), reminderBroadcaster, PendingIntent.FLAG_ONE_SHOT)
-
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 alarmManager?.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {

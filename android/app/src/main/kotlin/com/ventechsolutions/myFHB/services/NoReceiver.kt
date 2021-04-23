@@ -15,7 +15,7 @@ class NoReceiver:BroadcastReceiver() {
 
         /*val reminderService = Intent(p0, RemiderService::class.java)
         p0.stopService(reminderService)*/
-        MyApp.snoozeTapCountTime=0
+        //MyApp.snoozeTapCountTime=0
 
 
         /*p0.sendBroadcast(Intent(p0.getString(R.string.intaction_accept_call))

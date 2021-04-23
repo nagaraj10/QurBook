@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Handler
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.ventechsolutions.myFHB.MyApp
@@ -24,14 +25,11 @@ class SnoozeReceiver : BroadcastReceiver() {
         val body = p1?.getStringExtra(p0?.getString(R.string.body))
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(p0!!)
         val nsTimeThreshold = 300000
-        nsManager.cancel(notificationId!! as Int)
-        if (MyApp.snoozeTapCountTime in 0..1) {
+        MyApp.snoozeTapCountTime = MyApp.snoozeTapCountTime + 1
+        if (MyApp.snoozeTapCountTime <= 1) {
             currentMillis?.let { snoozeForSometime(p0, title, body, notificationId, it + nsTimeThreshold) }
+            nsManager.cancel(notificationId!! as Int)
         } else {
-            /*val reminderService = Intent(p0, RemiderService::class.java)
-            p0.stopService(reminderService)*/
-            //MyApp.snoozeTapCountTime = 0
-
             Handler().postDelayed({
                 val CHANNEL_REMINDER = "ch_reminder"
                 val _sound: Uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + p0.packageName + "/" + R.raw.msg_tone)
@@ -52,8 +50,9 @@ class SnoozeReceiver : BroadcastReceiver() {
                         .setOnlyAlertOnce(false)
                         .build()
 
-                nsManager.notify(notificationId, notification)
+                nsManager.notify(notificationId!!, notification)
             }, currentMillis!! + nsTimeThreshold)
+            nsManager.cancel(notificationId!! as Int)
 
         }
     }
@@ -74,7 +73,6 @@ class SnoozeReceiver : BroadcastReceiver() {
         } else {
             currentMillis.let { alarmMgr.set(AlarmManager.RTC_WAKEUP, it, pendingIntent) }
         }
-        MyApp.snoozeTapCountTime++
     }
 
 }
