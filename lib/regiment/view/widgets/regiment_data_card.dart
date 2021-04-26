@@ -12,6 +12,8 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'package:intl/intl.dart';
+import 'package:get/get.dart';
+import 'regiment_webview.dart';
 
 class RegimentDataCard extends StatelessWidget {
   final String title;
@@ -369,11 +371,17 @@ class RegimentDataCard extends StatelessWidget {
                   color: color,
                   icon: Icons.menu_book_rounded,
                   onPressed: () {
-                    CommonUtil().openWebViewNew(
-                      regimentData.title,
-                      regimentData.htmltemplate,
-                      true,
+                    Get.to(
+                      RegimentWebView(
+                        title: title,
+                        selectedUrl: regimentData.htmltemplate,
+                      ),
                     );
+                    // CommonUtil().openWebViewNew(
+                    //   regimentData.title,
+                    //   regimentData.htmltemplate,
+                    //   true,
+                    // );
                   },
                 ),
               ),
