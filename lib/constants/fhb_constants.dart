@@ -421,6 +421,9 @@ const strVideo = 'video';
 const strFiles = 'file';
 const strAudio = 'audio';
 
+const strUploading = 'Uploading...';
+
+
 FirebaseAnalytics _firebaseAnalytics = FirebaseAnalytics();
 var mInitialTime;
 
