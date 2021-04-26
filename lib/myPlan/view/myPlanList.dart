@@ -9,9 +9,12 @@ import 'package:myfhb/myPlan/services/myPlanService.dart';
 import 'package:myfhb/myPlan/view/myPlanDetail.dart';
 import 'package:myfhb/myPlan/viewModel/myPlanViewModel.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
+import 'package:provider/provider.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 class MyPlanList extends StatefulWidget {
   @override
@@ -32,28 +35,45 @@ class _MyPlanState extends State<MyPlanList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
-            child: Column(
-      children: [
-        SearchWidget(
-          onChanged: (providerName) {
-            if (providerName != '' && providerName.length > 2) {
-              isSearch = true;
-              onSearchedNew(providerName);
-            } else {
-              setState(() {
-                isSearch = false;
-              });
-            }
-          },
+        body: Visibility(
+      visible: Provider.of<RegimentViewModel>(context).regimentsDataAvailable,
+      child: Container(
+          child: Column(
+        children: [
+          SearchWidget(
+            onChanged: (providerName) {
+              if (providerName != '' && providerName.length > 2) {
+                isSearch = true;
+                onSearchedNew(providerName);
+              } else {
+                setState(() {
+                  isSearch = false;
+                });
+              }
+            },
+          ),
+          Expanded(
+            child: myPlanListModel != null ?? myPlanListModel.isSuccess
+                ? hospitalList(myPlanListModel.result)
+                : getPlanList(),
+          )
+        ],
+      )),
+      replacement: Center(
+        child: Padding(
+          padding: EdgeInsets.all(
+            10.0.sp,
+          ),
+          child: Text(
+            Constants.plansForFamily,
+            style: TextStyle(
+              fontSize: 16.0.sp,
+            ),
+            textAlign: TextAlign.center,
+          ),
         ),
-        Expanded(
-          child: myPlanListModel != null ?? myPlanListModel.isSuccess
-              ? hospitalList(myPlanListModel.result)
-              : getPlanList(),
-        )
-      ],
-    )));
+      ),
+    ));
   }
 
   onSearchedNew(String doctorName) async {
