@@ -9,6 +9,7 @@ import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
@@ -128,9 +129,10 @@ class _MyProfilePageState extends State<MyProfilePage> {
             ),
           );
         } else {
-          toast.getToast('${snapshot.error.toString()}', Colors.red);
-          return getProfileWidget(snapshot.data, null,
-              errorMsg: snapshot.error.toString());
+          // toast.getToast('${snapshot.error.toString()}', Colors.red);
+          // return getProfileWidget(snapshot.data, null,
+          //     errorMsg: snapshot.error.toString());
+          return ErrorsWidget();
         }
       },
     );
