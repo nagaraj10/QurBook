@@ -223,8 +223,7 @@ class RegimentDataCard extends StatelessWidget {
                         ],
                       ),
                       Visibility(
-                        visible:
-                            !regimentData.hasform && regimentData.ack != null,
+                        visible: regimentData.ack != null,
                         child: Padding(
                           padding: EdgeInsets.only(
                             top: 5.0.h,
