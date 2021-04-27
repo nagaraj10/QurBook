@@ -121,14 +121,28 @@ class _DropdownWithCategoriesState extends State<DropdownWithCategories> {
   }
 
   void whenAllIsChecked(bool val, String name) {
-    if (name == 'ALL') {
-      for (MediaResult mediaResult in widget.mediaData) {
-        if (mediaResult.name == 'Prescription' ||
-            mediaResult.name == 'Lab Report' ||
-            mediaResult.name == 'Medical Report' ||
-            mediaResult.name == 'Hospital Documents' ||
-            mediaResult.healthRecordCategory?.categoryName == 'Devices') {
-          mediaResult.isChecked = val;
+    if (name == 'ALL' || name == 'Devices') {
+      if (name == 'ALL') {
+        for (MediaResult mediaResult in widget.mediaData) {
+          if (mediaResult.name == 'Prescription' ||
+              mediaResult.name == 'Lab Report' ||
+              mediaResult.name == 'Medical Report' ||
+              mediaResult.name == 'Hospital Documents' ||
+              mediaResult.name == 'Devices' ||
+              mediaResult.healthRecordCategory?.categoryName == 'Devices') {
+            mediaResult.isChecked = val;
+          }
+        }
+      } else if (name == 'Devices') {
+        for (MediaResult mediaResult in widget.mediaData) {
+          if (mediaResult.name == 'Pulse Oximeter' ||
+              mediaResult.name == 'Thermometer' ||
+              mediaResult.name == 'Glucometer' ||
+              mediaResult.name == 'BP Monitor' ||
+              mediaResult.name == 'Weighing Scale' ||
+              mediaResult.healthRecordCategory?.categoryName == 'Devices') {
+            mediaResult.isChecked = val;
+          }
         }
       }
     }
