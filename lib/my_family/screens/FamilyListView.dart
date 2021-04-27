@@ -54,11 +54,12 @@ class FamilyListView {
   String getName(Child child) {
     var name = '';
     if (child.firstName != null) {
-      name = child.firstName.toLowerCase();
+      name = child.firstName;
       if (child.lastName != null) {
-        name = name + ' ' + child.lastName.toLowerCase();
+        name = name + ' ' + child.lastName;
       }
-      return toBeginningOfSentenceCase(name);
+      //return toBeginningOfSentenceCase(name);
+      return name?.capitalizeFirstofEach;
     } else {
       return name;
     }

@@ -267,7 +267,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     try {
       myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
       fulName = myProfile.result != null
-          ? myProfile.result.firstName + ' ' + myProfile.result.lastName
+          ? myProfile.result.firstName?.capitalizeFirstofEach + ' ' + myProfile.result.lastName?.capitalizeFirstofEach
           : '';
     } catch (e) {}
 
@@ -324,7 +324,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                     child: Row(
                       children: <Widget>[
                         SizedBoxWidget(width: 20),
-                        Text(user.nickName == null ? 'Self' : user.nickName,
+                        Text(user.nickName == null ? 'Self' : user.nickName?.capitalizeFirstofEach,
                             style: TextStyle(
                               fontSize: 14.0.sp,
                             )),
