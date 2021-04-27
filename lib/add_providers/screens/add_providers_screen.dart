@@ -1097,14 +1097,10 @@ class AddProvidersState extends State<AddProviders> {
           signInData[variable.strDescription] = '';
           signInData[variable.strCity] = address == null
               ? ''
-              : address.locality == null
-                  ? ''
-                  : address.locality;
+              : address.locality == null ? '' : address.locality;
           signInData[variable.strState] = address == null
               ? ''
-              : address.adminArea == null
-                  ? ''
-                  : address.adminArea;
+              : address.adminArea == null ? '' : address.adminArea;
           signInData[variable.strPhoneNumbers] =
               widget.arguments.placeDetail == null
                   ? ''
@@ -1236,24 +1232,16 @@ class AddProvidersState extends State<AddProviders> {
                       : widget.arguments.confirmAddressDescription;
           signInData[variable.straddressLine2] = address == null
               ? ''
-              : address.addressLine == null
-                  ? ''
-                  : address.addressLine;
+              : address.addressLine == null ? '' : address.addressLine;
           signInData[variable.strCity] = address == null
               ? ''
-              : address.locality == null
-                  ? ''
-                  : address.locality;
+              : address.locality == null ? '' : address.locality;
           signInData[variable.strState] = address == null
               ? ''
-              : address.adminArea == null
-                  ? ''
-                  : address.adminArea;
+              : address.adminArea == null ? '' : address.adminArea;
           signInData[variable.strzipCode] = address == null
               ? ''
-              : address.postalCode == null
-                  ? ''
-                  : address.postalCode;
+              : address.postalCode == null ? '' : address.postalCode;
           signInData[variable.strbranch] = '';
           signInData[variable.strIsUserDefined] = true;
           signInData[variable.strLatitude] =
@@ -1401,8 +1389,10 @@ class AddProvidersState extends State<AddProviders> {
             );
           }
           MediaDataList mediaType = snapshot.data;
-          mediaType.result
-              .insert(0, new MediaResult(name: 'ALL', isChecked: false));
+          mediaType.result.insert(
+              0, new MediaResult(name: 'ALL', isChecked: false, id: '1'));
+          mediaType.result.insert(
+              1, new MediaResult(name: 'Devices', isChecked: false, id: '2'));
 
           setTheValuesForDropdown(mediaType.result);
           return DropdownWithCategories(
