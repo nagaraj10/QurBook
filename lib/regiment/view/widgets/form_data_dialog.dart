@@ -158,8 +158,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                     visible: mediaData.needPhoto == '1',
                     child: InkWell(
                       onTap: () {
-                        //getOpenGallery(strGallery);
-                        imgFromCamera(strGallery);
+                        _showSelectionDialog(context);
                       },
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -199,12 +198,14 @@ class FormDataDialogState extends State<FormDataDialog> {
                           if (audioPath != null && audioPath != '') {
                             imagePaths = audioPath;
                             setState(() {
-                              audioFileName = audioPath.split('/').last;
+                              audioFileName = strUploading;
                             });
                             if (imagePaths != null && imagePaths != '') {
                               saveMediaRegiment(imagePaths).then((value) {
                                 if (value.isSuccess) {
-                                  print('url:  ' + value.result.accessUrl);
+                                  setState(() {
+                                    audioFileName = audioPath.split('/').last;
+                                  });
                                   var oldValue = saveMap.putIfAbsent(
                                     'audio',
                                     () => value.result.accessUrl,
@@ -212,6 +213,10 @@ class FormDataDialogState extends State<FormDataDialog> {
                                   if (oldValue != null) {
                                     saveMap['audio'] = value.result.accessUrl;
                                   }
+                                } else {
+                                  setState(() {
+                                    audioFileName = 'Add Audio';
+                                  });
                                 }
                               });
                             }
@@ -365,16 +370,15 @@ class FormDataDialogState extends State<FormDataDialog> {
         .cropImageFromFile(fromPath)
         .then((croppedFile) {
       if (croppedFile != null) {
-        File file = new File(croppedFile.path);
         setState(() {
           if (fromPath == strGallery) {
-            imageFileName = file.path.split('/').last;
+            imageFileName = strUploading;
           } else if (fromPath == strFiles) {
-            docFileName = file.path.split('/').last;
+            docFileName = strUploading;
           } else if (fromPath == strVideo) {
-            videoFileName = file.path.split('/').last;
+            videoFileName = strUploading;
           } else if (fromPath == strAudio) {
-            audioFileName = file.path.split('/').last;
+            audioFileName = strUploading;
           }
         });
         imagePaths = croppedFile.path;
@@ -382,6 +386,19 @@ class FormDataDialogState extends State<FormDataDialog> {
         if (imagePaths != null && imagePaths != '') {
           saveMediaRegiment(imagePaths).then((value) {
             if (value.isSuccess) {
+              File file = new File(croppedFile.path);
+              setState(() {
+                if (fromPath == strGallery) {
+                  imageFileName = file.path.split('/').last;
+                } else if (fromPath == strFiles) {
+                  docFileName = file.path.split('/').last;
+                } else if (fromPath == strVideo) {
+                  videoFileName = file.path.split('/').last;
+                } else if (fromPath == strAudio) {
+                  audioFileName = file.path.split('/').last;
+                }
+              });
+
               var oldValue = saveMap.putIfAbsent(
                 '$fromPath',
                 () => value.result.accessUrl,
@@ -389,6 +406,18 @@ class FormDataDialogState extends State<FormDataDialog> {
               if (oldValue != null) {
                 saveMap['$fromPath'] = value.result.accessUrl;
               }
+            } else {
+              setState(() {
+                if (fromPath == strGallery) {
+                  imageFileName = 'Add Image';
+                } else if (fromPath == strFiles) {
+                  docFileName = 'Add File';
+                } else if (fromPath == strVideo) {
+                  videoFileName = 'Add Video';
+                } else if (fromPath == strAudio) {
+                  audioFileName = 'Add Audio';
+                }
+              });
             }
           });
         }
@@ -402,14 +431,18 @@ class FormDataDialogState extends State<FormDataDialog> {
     final pickedFile = await picker.getImage(source: ImageSource.camera);
     setState(() {
       if (pickedFile != null) {
+        imageFileName = strUploading;
         _image = File(pickedFile.path);
-        imageFileName = _image.path.split('/').last;
         imagePaths = _image.path;
       }
     });
     if (imagePaths != null && imagePaths != '') {
       saveMediaRegiment(imagePaths).then((value) {
         if (value.isSuccess) {
+          setState(() {
+            imageFileName = _image.path.split('/').last;
+          });
+
           var oldValue = saveMap.putIfAbsent(
             '$fromPath',
             () => value.result.accessUrl,
@@ -417,8 +450,40 @@ class FormDataDialogState extends State<FormDataDialog> {
           if (oldValue != null) {
             saveMap['$fromPath'] = value.result.accessUrl;
           }
+        } else {
+          imageFileName = 'Add Image';
         }
       });
     }
+  }
+
+  Future<void> _showSelectionDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              title: Text("Choose an action"),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    GestureDetector(
+                      child: Text("Gallery"),
+                      onTap: () {
+                        getOpenGallery(strGallery);
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    Padding(padding: EdgeInsets.all(8.0)),
+                    GestureDetector(
+                      child: Text("Camera"),
+                      onTap: () {
+                        imgFromCamera(strGallery);
+                        Navigator.of(context).pop();
+                      },
+                    )
+                  ],
+                ),
+              ));
+        });
   }
 }
