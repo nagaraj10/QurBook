@@ -16,14 +16,14 @@ class MediaIconWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(padding ?? 5.0.sp),
-      child: InkWell(
-        onTap: onPressed,
+    return InkWell(
+      onTap: onPressed,
+      child: Padding(
+        padding: EdgeInsets.all(padding ?? 5.0.sp),
         child: Icon(
           icon,
           color: color,
-          size: 24.0.sp,
+          size: 30.0.sp,
         ),
       ),
     );
