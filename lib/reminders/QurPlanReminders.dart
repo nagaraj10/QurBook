@@ -10,6 +10,7 @@ import 'package:myfhb/reminders/ReminderModel.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:http/http.dart' as http;
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:permission_handler/permission_handler.dart';
 
 class QurPlanReminders {
   static const reminderLocalFile = 'notificationList.json';
@@ -189,6 +190,13 @@ class QurPlanReminders {
 
   static Future<List<Reminder>> getLocalReminder() async {
     try {
+      if (Platform.isAndroid) {
+        PermissionStatus storagePermission = await Permission.storage.status;
+        if (storagePermission.isUndetermined ||
+            storagePermission.isRestricted) {
+          await Permission.storage.request();
+        }
+      }
       final directory = Platform.isIOS
           ? await FHBUtils.createFolderInAppDocDirForIOS("reminders")
           : await FHBUtils.createFolderInAppDocDir('reminders');

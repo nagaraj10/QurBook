@@ -35,7 +35,7 @@ class SnoozeReceiver : BroadcastReceiver() {
                 val _sound: Uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + p0.packageName + "/" + R.raw.msg_tone)
                 val dismissIntent = Intent(p0, DismissReceiver::class.java)
                 dismissIntent.putExtra(p0.getString(R.string.nsid), notificationId)
-                val dismissIntentPendingIntent = PendingIntent.getBroadcast(p0, 0, dismissIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+                val dismissIntentPendingIntent = PendingIntent.getBroadcast(p0, 0, dismissIntent, PendingIntent.FLAG_UPDATE_CURRENT)
                 var notification = NotificationCompat.Builder(p0, CHANNEL_REMINDER)
                         .setSmallIcon(R.drawable.ic_alarm_new)
                         .setLargeIcon(BitmapFactory.decodeResource(p0.resources, R.mipmap.ic_launcher))
@@ -62,6 +62,7 @@ class SnoozeReceiver : BroadcastReceiver() {
         reminderBroadcaster.putExtra(p0?.getString(R.string.title), title)
         reminderBroadcaster.putExtra(p0?.getString(R.string.body), body)
         reminderBroadcaster.putExtra(p0?.getString(R.string.nsid), notificationId)
+        reminderBroadcaster.putExtra("isCancel", false)
 
         val alarmMgr = p0?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val pendingIntent = PendingIntent.getBroadcast(p0, 1, reminderBroadcaster, PendingIntent.FLAG_ONE_SHOT)
