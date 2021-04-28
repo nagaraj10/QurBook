@@ -1210,7 +1210,7 @@ class CommonUtil {
         newDateTime.month == currentTime.month &&
         newDateTime.year == currentTime.year) {
       if (isAck) {
-        newFormat = DateFormat("HH:mm");
+        newFormat = DateFormat("hh:mm a");
       } else {
         newFormat = DateFormat("MMM d, yyyy");
       }
@@ -1221,7 +1221,7 @@ class CommonUtil {
       }
     } else {
       if (isAck) {
-        newFormat = DateFormat("HH:mm");
+        newFormat = DateFormat("hh:mm a");
       } else {
         newFormat = DateFormat("EEE, MMM d, yyyy");
       }
