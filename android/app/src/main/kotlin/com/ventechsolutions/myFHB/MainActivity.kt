@@ -19,6 +19,7 @@ import android.widget.*
 import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.multidex.BuildConfig
 import com.github.ybq.android.spinkit.SpinKitView
 import com.google.android.gms.auth.api.phone.SmsRetriever
@@ -765,7 +766,8 @@ class MainActivity : FlutterActivity() {
         val reminderBroadcaster = Intent(this, ReminderBroadcaster::class.java)
         reminderBroadcaster.putExtra("title", title)
         reminderBroadcaster.putExtra("body", body)
-        reminderBroadcaster.putExtra("nsId", nsId.toInt())
+        reminderBroadcaster.putExtra("nsid", nsId.toInt())
+        reminderBroadcaster.putExtra("isCancel", false)
 
 
         // Set the alarm to start for specific time
@@ -785,7 +787,7 @@ class MainActivity : FlutterActivity() {
         if (calendar.timeInMillis > Calendar.getInstance().timeInMillis) {
             alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             reminderBroadcaster.putExtra("currentMillis", calendar.timeInMillis)
-            val pendingIntent = PendingIntent.getBroadcast(this, nsId.toInt(), reminderBroadcaster, PendingIntent.FLAG_ONE_SHOT)
+            val pendingIntent = PendingIntent.getBroadcast(this, nsId.toInt(), reminderBroadcaster, PendingIntent.FLAG_UPDATE_CURRENT)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 alarmManager?.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -801,12 +803,11 @@ class MainActivity : FlutterActivity() {
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     private fun heyCancelMyReminder(nsId: String) {
         val reminderBroadcaster = Intent(this, ReminderBroadcaster::class.java)
-        reminderBroadcaster.putExtra("nsId", nsId.toInt())
-
-        alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        reminderBroadcaster.putExtra("nsid", nsId.toInt())
+        reminderBroadcaster.putExtra("isCancel", true)
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val pendingIntent = PendingIntent.getBroadcast(this, nsId.toInt(), reminderBroadcaster, PendingIntent.FLAG_UPDATE_CURRENT)
-
-        alarmManager?.cancel(pendingIntent)
+        alarmManager.cancel(pendingIntent)
     }
 
 }

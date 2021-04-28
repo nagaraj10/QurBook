@@ -303,6 +303,23 @@ class FHBUtils {
     }
   }
 
+  static Future<String> abstractUserData() async {
+    Directory _appDocDirFolder;
+    //Create Directory with app name
+    final Directory _appDocDir = await getApplicationSupportDirectory();
+    _appDocDirFolder = Directory(_appDocDir.path);
+
+    if (await _appDocDirFolder.exists()) {
+      //if folder already exists return path
+      return _appDocDirFolder.path;
+    } else {
+      //if folder not exists create folder and then return its path
+      final Directory _appDocDirNewFolder =
+          await _appDocDirFolder.create(recursive: true);
+      return _appDocDirNewFolder.path;
+    }
+  }
+
   static Future<String> getInAppDocDirForReminders() async {
     final Directory _appDocDir = await getApplicationDocumentsDirectory();
     final Directory _appDocDirFolder =
