@@ -66,8 +66,8 @@ class QurPlanReminders {
       List<Reminder> notificationToSave) async {
     final String directory = Platform.isIOS
         ? await FHBUtils.createFolderInAppDocDirForIOS("reminders")
-        : await FHBUtils.createFolderInAppDocDir('reminders');
-    final File file = File(directory + 'notificationList.json');
+        : await FHBUtils.abstractUserData();
+    final File file = Platform.isIOS ? File(directory + 'notificationList.json') : File(directory + '/notificationList.json');
     final dataTosave = notificationToSave.map((e) => e.toJson()).toList();
     try {
       final dataToSave = {"reminders": dataTosave};
@@ -190,18 +190,11 @@ class QurPlanReminders {
 
   static Future<List<Reminder>> getLocalReminder() async {
     try {
-      if (Platform.isAndroid) {
-        PermissionStatus storagePermission = await Permission.storage.status;
-        if (storagePermission.isUndetermined ||
-            storagePermission.isRestricted) {
-          await Permission.storage.request();
-        }
-      }
       final directory = Platform.isIOS
           ? await FHBUtils.createFolderInAppDocDirForIOS("reminders")
-          : await FHBUtils.createFolderInAppDocDir('reminders');
+          : await FHBUtils.abstractUserData();
 
-      final file = File('$directory$reminderLocalFile');
+      final file = Platform.isIOS ? File('$directory$reminderLocalFile') : File('$directory/$reminderLocalFile');
       final data = await file.readAsString();
       final decodedData = await json.decode(data);
 
