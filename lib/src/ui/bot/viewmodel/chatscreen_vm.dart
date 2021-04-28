@@ -113,26 +113,45 @@ class ChatScreenViewModel extends ChangeNotifier {
     // notifyListeners();
   }
 
-  Future<void> stopTTSEngine({int index}) async {
+  Future<void> stopTTSEngine({
+    int index,
+    String langCode,
+  }) async {
     stopTTS = true;
     notifyListeners();
     if (index != null) {
       conversations[index].isSpeaking = false;
       isSheelaSpeaking = false;
-      notifyListeners();
     } else {
       conversations.forEach((conversation) {
         conversation.isSpeaking = false;
       });
       isSheelaSpeaking = false;
+    }
+    conversations.forEach((conversation) {
+      conversation.buttons?.forEach((button) {
+        button.isPlaying = false;
+      });
+    });
+    isSheelaSpeaking = false;
+    notifyListeners();
+
+    await stopAudioPlayer();
+    final lan = langCode != null && langCode.isNotEmpty
+        ? langCode
+        : Utils.getCurrentLanCode();
+    if (Platform.isIOS ||
+        lan == "undef" ||
+        lan.toLowerCase() == "en-IN".toLowerCase() ||
+        lan.toLowerCase() == "en-US".toLowerCase()) {
+      await variable.tts_platform.invokeMethod(variable.strtts, {
+        parameters.strMessage: "",
+        parameters.strIsClose: true,
+        parameters.strLanguage: Utils.getCurrentLanCode()
+      });
+    } else {
       notifyListeners();
     }
-    stopAudioPlayer();
-    await variable.tts_platform.invokeMethod(variable.strtts, {
-      parameters.strMessage: "",
-      parameters.strIsClose: true,
-      parameters.strLanguage: Utils.getCurrentLanCode()
-    });
   }
 
   Future<bool> startTTSEngine({
@@ -142,6 +161,7 @@ class ChatScreenViewModel extends ChangeNotifier {
     bool stopPrevious: true,
     bool isRegiment: false,
   }) async {
+    print('newAudioPlay1.state == ${newAudioPlay1.state}');
     if (stopPrevious) {
       stopTTSEngine();
     }
@@ -495,17 +515,25 @@ class ChatScreenViewModel extends ChangeNotifier {
   }) async {
     if ((buttons?.length ?? 0) > 0) {
       stopTTS = false;
-      Conversation recentConversation = conversations[conversations.length - 1];
+      Conversation recentConversation = conversations[index];
       await Future.forEach(buttons, (button) async {
         if (stopTTS) {
-          recentConversation.buttons[recentConversation.buttons.indexOf(button)]
-              .isPlaying = false;
+          if ((recentConversation?.buttons?.length ?? 0) > 0) {
+            recentConversation.buttons.forEach((button) {
+              button.isPlaying = false;
+            });
+          }
           notifyListeners();
-          stopTTSEngine(index: index);
+          if (recentConversation.isSpeaking ?? false) {
+            stopTTSEngine(index: index);
+          }
           return;
         }
-        recentConversation.buttons[recentConversation.buttons.indexOf(button)]
-            .isPlaying = true;
+        if ((recentConversation?.buttons?.length ?? 0) > 0) {
+          recentConversation
+              .buttons[recentConversation.buttons?.indexOf(button)]
+              .isPlaying = true;
+        }
         notifyListeners();
         await startTTSEngine(
           langCode: langCode,
@@ -513,8 +541,11 @@ class ChatScreenViewModel extends ChangeNotifier {
           textToSpeak: button.title,
           stopPrevious: false,
         );
-        recentConversation.buttons[recentConversation.buttons.indexOf(button)]
-            .isPlaying = false;
+        if ((recentConversation?.buttons?.length ?? 0) > 0) {
+          recentConversation
+              .buttons[recentConversation.buttons?.indexOf(button)]
+              .isPlaying = false;
+        }
         notifyListeners();
       });
       stopTTSEngine(index: index);
@@ -603,9 +634,9 @@ class ChatScreenViewModel extends ChangeNotifier {
     print('delayTime - $delayTime');
   }
 
-  stopAudioPlayer() {
-    audioPlayerForTTS?.stop();
-    newAudioPlay1?.stop();
+  stopAudioPlayer() async {
+    await audioPlayerForTTS?.stop();
+    await newAudioPlay1?.stop();
   }
 
   Future<void> gettingReposnseFromNative() async {
