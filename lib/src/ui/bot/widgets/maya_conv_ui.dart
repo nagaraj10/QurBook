@@ -121,16 +121,17 @@ class MayaConvUI extends StatelessWidget {
                   textToSpeak: c.text + textToSpeak,
                   index: index,
                   langCode: c.langCode,
+                  isButtonText: (c.buttons?.length ?? 0) > 0,
                 );
-                if (!Provider.of<ChatScreenViewModel>(context, listen: false)
-                    .stopTTS) {
-                  await Provider.of<ChatScreenViewModel>(context, listen: false)
-                      .startButtonsSpeech(
-                    index: index,
-                    langCode: c.langCode,
-                    buttons: c.buttons,
-                  );
-                }
+                // if (!Provider.of<ChatScreenViewModel>(context, listen: false)
+                //     .stopTTS) {
+                await Provider.of<ChatScreenViewModel>(context, listen: false)
+                    .startButtonsSpeech(
+                  index: index,
+                  langCode: c.langCode,
+                  buttons: c.buttons,
+                );
+                // }
               } else {
                 Provider.of<ChatScreenViewModel>(context, listen: false)
                     .stopTTSEngine(
