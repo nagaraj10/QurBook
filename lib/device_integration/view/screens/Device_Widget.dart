@@ -238,17 +238,23 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                   ? selectionResult.result[0].profileSetting.weighScale
                   : true;
           if (selectionResult.result[0].profileSetting != null) {
+            if (selectionResult.result[0].profileSetting.preferred_language !=
+                null) {
+              String preferredLanguage =
+                  selectionResult.result[0].profileSetting.preferred_language;
+              String currentLanguage = '';
+              if (preferredLanguage != "undef") {
+                currentLanguage = preferredLanguage.split("-").first;
+              }
+              PreferenceUtil.saveString(Constants.SHEELA_LANG,
+                  Utils.langaugeCodes[currentLanguage ?? 'undef']);
+            }
             if (selectionResult.result[0].profileSetting.preColor != null &&
                 selectionResult.result[0].profileSetting.greColor != null) {
               PreferenceUtil.saveTheme(Constants.keyPriColor,
                   selectionResult.result[0].profileSetting.preColor);
               PreferenceUtil.saveTheme(Constants.keyGreyColor,
                   selectionResult.result[0].profileSetting.greColor);
-              PreferenceUtil.saveString(
-                  Constants.SHEELA_LANG,
-                  Utils.langaugeCodes[selectionResult
-                          .result[0].profileSetting.preferred_language ??
-                      'undef']);
               //HomeScreen.of(context).refresh();
               //setState(() {});
             } else {
