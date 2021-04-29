@@ -1481,7 +1481,16 @@ class _CustomTabsState extends State<CustomTabView>
     return tabWidgetList;
   }
 
-  void openNotesDialog() {
+  void openNotesDialog() async {
+    await saveCategoryToPrefernce();
+    PreferenceUtil.saveString(Constants.KEY_DEVICENAME, null).then((onValue) {
+      PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, categoryName)
+          .then((onValue) {
+        PreferenceUtil.saveString(Constants.KEY_CATEGORYID, categoryID)
+            .then((value) {});
+      });
+    });
+
     TextEditingController fileName = new TextEditingController(
         text:
             categoryName + '_${DateTime.now().toUtc().millisecondsSinceEpoch}');
@@ -1606,7 +1615,7 @@ class _CustomTabsState extends State<CustomTabView>
     }
   }
 
-  saveCategoryToPrefernce() {
+  saveCategoryToPrefernce() async {
     categoryName = widget.categoryData.elementAt(_currentPosition).categoryName;
     categoryID = widget.categoryData.elementAt(_currentPosition).id;
   }
