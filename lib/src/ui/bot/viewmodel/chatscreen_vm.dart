@@ -137,7 +137,7 @@ class ChatScreenViewModel extends ChangeNotifier {
     isSheelaSpeaking = false;
     notifyListeners();
 
-    await stopAudioPlayer();
+    stopAudioPlayer();
     final lan = langCode != null && langCode.isNotEmpty
         ? langCode
         : Utils.getCurrentLanCode();
@@ -643,9 +643,9 @@ class ChatScreenViewModel extends ChangeNotifier {
     print('delayTime - $delayTime');
   }
 
-  stopAudioPlayer() async {
-    await audioPlayerForTTS?.stop();
-    await newAudioPlay1?.stop();
+  stopAudioPlayer() {
+    audioPlayerForTTS?.stop();
+    newAudioPlay1?.stop();
   }
 
   Future<void> gettingReposnseFromNative() async {
