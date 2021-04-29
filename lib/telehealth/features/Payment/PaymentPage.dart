@@ -12,6 +12,7 @@ import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/updatePayment/UpdatePaymentModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/UpdatePaymentViewModel.dart';
 import 'package:myfhb/telehealth/features/Payment/ResultPage.dart';
+import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
@@ -64,6 +65,7 @@ class _WebViewExampleState extends State<PaymentPage> {
       onWillPop: _onWillPop,
       child: Scaffold(
         appBar: AppBar(
+          flexibleSpace: GradientAppBar(),
           leading: new IconButton(
             icon: new Icon(
               Icons.arrow_back_ios,
