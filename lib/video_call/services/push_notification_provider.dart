@@ -21,6 +21,7 @@ import 'package:myfhb/video_call/model/CallArguments.dart';
 import 'package:myfhb/video_call/pages/callmain.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/doctor.dart'
     as doc;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 class PushNotificationsProvider {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
@@ -46,6 +47,7 @@ class PushNotificationsProvider {
   Map<int, String> redirectData;
   String redirect;
   var callArguments = CallArguments();
+  bool isAlreadyLoaded = false;
 
   static Future<dynamic> onBackgroundMessage(
       Map<String, dynamic> message) async {
@@ -145,7 +147,7 @@ class PushNotificationsProvider {
     var iOS = new IOSInitializationSettings();
     var initSetttings = new InitializationSettings(android: android, iOS: iOS);
     flutterLocalNotificationsPlugin.initialize(initSetttings,
-        onSelectNotification: onSelectNotification);
+        onSelectNotification: (value) {});
   }
 
   showLocalNotification() async {
@@ -226,7 +228,7 @@ class PushNotificationsProvider {
   //   );
   // }
 
-  Future onSelectNotification(String payload) {
+  onSelectNotificationFromNative(String payload) {
     // print(
     //     "----------------------------------------------------------- called on selection");
     if (isCall) {
@@ -315,6 +317,91 @@ class PushNotificationsProvider {
 
     initLocalNotification();
     showLocalNotification();
+  }
+
+  setUpListerForTheNotification() {
+    variable.reponseToRemoteNotificationMethodChannel
+        .setMethodCallHandler((call) {
+      if (call.method == variable.notificationResponseMethod) {
+        print(call.arguments);
+        print(call.arguments.runtimeType);
+
+        final data = Map<String, dynamic>.from(call.arguments);
+        if (!isAlreadyLoaded) {
+          Future.delayed(const Duration(seconds: 5), () {
+            setResponseMessage(data);
+            onSelectNotificationFromNative("");
+          });
+        } else {
+          setResponseMessage(data);
+          onSelectNotificationFromNative("");
+        }
+      }
+    });
+  }
+
+  setResponseMessage(Map<String, dynamic> message) {
+    title = null;
+    body = null;
+    redirect = null;
+    String healthRecordMetaIds = null;
+    if (message[parameters.notification] != null) {
+      title = message[parameters.notification][parameters.title];
+      body = message[parameters.notification][parameters.body];
+      ringtone = message[parameters.notification][parameters.sound];
+      templateName = message[parameters.notification][parameters.templateName];
+      redirect = message[parameters.notification][parameters.redirectTo];
+      healthRecordMetaIds =
+          message[parameters.notification][parameters.healthRecordMetaIds];
+    } else if (message[parameters.aps] != null) {
+      final aps = message[parameters.aps];
+      final alert = aps[parameters.alert];
+      title = alert[parameters.title];
+      body = alert[parameters.body];
+      ringtone = aps[parameters.sound];
+      templateName = aps[parameters.templateName];
+      redirect = aps[parameters.redirectTo];
+      healthRecordMetaIds = aps[parameters.healthRecordMetaIds];
+    } else {
+      title = message[parameters.title];
+      body = message[parameters.body];
+      ringtone = message[parameters.sound];
+      templateName = message[parameters.templateName];
+      redirect = message[parameters.redirectTo];
+      healthRecordMetaIds = message[parameters.healthRecordMetaIds];
+    }
+    if (redirect == null && message[parameters.redirectTo] != null) {
+      redirect = message[parameters.redirectTo];
+    }
+    if (healthRecordMetaIds == null &&
+        message[parameters.healthRecordMetaIds] != null) {
+      healthRecordMetaIds = message[parameters.healthRecordMetaIds];
+    }
+
+    if (redirect.contains('|')) {
+      final split = redirect.split('|');
+      redirectData = {for (int i = 0; i < split.length; i++) i: split[i]};
+      redirectData[split.length] = healthRecordMetaIds;
+    }
+
+    if (title == null) {
+      title = "title";
+      body = "body";
+    }
+    isCall = message[parameters.strtype] == parameters.call;
+    isCancellation =
+        message[parameters.templateName] == parameters.doctorCancellation ||
+            message[parameters.templateName] == parameters.doctorRescheduling;
+    if (message[parameters.strtype] == parameters.call) {
+      final userName = message[parameters.username];
+      final channelName = message[parameters.meeting_id];
+      final doctorId = message[parameters.doctorId];
+      callArguments = CallArguments(
+          role: ClientRole.Broadcaster,
+          channelName: channelName,
+          userName: userName,
+          doctorId: doctorId);
+    }
   }
 
   Future<dynamic> onMessage(Map<String, dynamic> message) async {
