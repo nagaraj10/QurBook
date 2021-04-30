@@ -147,7 +147,7 @@ class PushNotificationsProvider {
     var iOS = new IOSInitializationSettings();
     var initSetttings = new InitializationSettings(android: android, iOS: iOS);
     flutterLocalNotificationsPlugin.initialize(initSetttings,
-        onSelectNotification: onSelectNotification);
+        onSelectNotification: (value) {});
   }
 
   showLocalNotification() async {
@@ -228,7 +228,7 @@ class PushNotificationsProvider {
   //   );
   // }
 
-  Future onSelectNotification(String payload) {
+  onSelectNotificationFromNative(String payload) {
     // print(
     //     "----------------------------------------------------------- called on selection");
     if (isCall) {
@@ -327,8 +327,15 @@ class PushNotificationsProvider {
         print(call.arguments.runtimeType);
 
         final data = Map<String, dynamic>.from(call.arguments);
-        setResponseMessage(data);
-        onSelectNotification("");
+        if (!isAlreadyLoaded) {
+          Future.delayed(const Duration(seconds: 5), () {
+            setResponseMessage(data);
+            onSelectNotificationFromNative("");
+          });
+        } else {
+          setResponseMessage(data);
+          onSelectNotificationFromNative("");
+        }
       }
     });
   }
