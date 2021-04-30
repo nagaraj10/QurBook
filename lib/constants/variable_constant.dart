@@ -602,6 +602,9 @@ const addReminderMethod = 'addReminder';
 const removeReminderMethod = 'removeReminder';
 const removeAllReminderMethod = 'removeAllReminder';
 const navigateToRegimentMethod = 'navigateToRegiment';
+const reponseToRemoteNotificationMethodChannel =
+    MethodChannel('flutter.native.QurBook/notificationResponse');
+const notificationResponseMethod = 'notificationResponse';
 
 var reminderMethodChannelAndroid = const MethodChannel('android/notification');
 

@@ -33,12 +33,12 @@ import AVFoundation
     let addReminderMethod = Constants.addReminderMethod
     let removeReminderMethod = Constants.removeReminderMethod
     
-
+    
     let notificationCenter = UNUserNotificationCenter.current()
     var listOfScheduledNotificaitons:[UNNotificationRequest] = []
     let showBothButtonsCat = "showBothButtonsCat"
     let showSingleButtonCat = "showSingleButtonCat"
-
+    
     override func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
@@ -65,18 +65,18 @@ import AVFoundation
             print(data.count)
         }
         //Add Action button the Notification
-    
+        
         let snoozeAction = UNNotificationAction(identifier: "Snooze", title: "Snooze", options: [])
         let declineAction = UNNotificationAction(identifier: "Dismiss", title: "Dismiss", options: [.destructive])
         let showBothButtonscategory = UNNotificationCategory(identifier: showBothButtonsCat,
-                                              actions:  [snoozeAction, declineAction],
-                                              intentIdentifiers: [],
-                                              options: [])
-      
+                                                             actions:  [snoozeAction, declineAction],
+                                                             intentIdentifiers: [],
+                                                             options: [])
+        
         let showSingleButtonCategory = UNNotificationCategory(identifier: showSingleButtonCat,
-                                              actions:  [declineAction],
-                                              intentIdentifiers: [],
-                                              options: [])
+                                                              actions:  [declineAction],
+                                                              intentIdentifiers: [],
+                                                              options: [])
         notificationCenter.setNotificationCategories([showBothButtonscategory,showSingleButtonCategory])
         // 2 a)
         // Speech to Text
@@ -325,7 +325,7 @@ import AVFoundation
             }else{
                 content.categoryIdentifier = showBothButtonsCat
             }
-           // identifier = id + "\(snoozcount)"
+            // identifier = id + "\(snoozcount)"
         }else{
             content.categoryIdentifier = showBothButtonsCat
         }
@@ -362,27 +362,33 @@ import AVFoundation
         //
         //            }
         print(response.actionIdentifier)
-        if response.actionIdentifier == "Snooze" {
-            if let data = response.notification.request.content.userInfo as? NSDictionary{
-                if let count = data["snoozeCount"] as? Int{
-                    if count < 2{
+        let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
+        if let data = response.notification.request.content.userInfo as? NSDictionary{
+            if let eId = data["eid"] as? String{
+                if response.actionIdentifier == "Snooze" {
+                    
+                    if let count = data["snoozeCount"] as? Int{
+                        if count < 2{
+                            var newData = response.notification.request.content.userInfo
+                            newData["snoozeCount"] = count + 1
+                            self.scheduleNotification(message:newData as NSDictionary, snooze: true)
+                        }
+                    }else{
                         var newData = response.notification.request.content.userInfo
-                        newData["snoozeCount"] = count + 1
+                        newData["snoozeCount"] = 1
                         self.scheduleNotification(message:newData as NSDictionary, snooze: true)
                     }
+                }else if response.actionIdentifier == "Dismiss"{
+                    
                 }else{
-                    var newData = response.notification.request.content.userInfo
-                    newData["snoozeCount"] = 1
-                    self.scheduleNotification(message:newData as NSDictionary, snooze: true)
+                    let reminderChannel = FlutterMethodChannel.init(name: self.reminderChannel, binaryMessenger: controller.binaryMessenger)
+                    reminderChannel.invokeMethod(Constants.navigateToRegimentMethod, arguments: nil)
                 }
             }
-            
-        }else if response.actionIdentifier == "Dismiss"{
-            
-        }else{
-            let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
-            let reminderChannel = FlutterMethodChannel.init(name: self.reminderChannel, binaryMessenger: controller.binaryMessenger)
-            reminderChannel.invokeMethod(Constants.navigateToRegimentMethod, arguments: nil)
+            else{
+                let notificationResponseChannel = FlutterMethodChannel.init(name: Constants.reponseToRemoteNotificationMethodChannel, binaryMessenger: controller.binaryMessenger)
+                notificationResponseChannel.invokeMethod(Constants.notificationResponseMethod, arguments:data)
+            }
         }
         completionHandler()
     }
@@ -400,12 +406,12 @@ extension Date {
         let seconds = -TimeInterval(timezone.secondsFromGMT(for: self))
         return Date(timeInterval: seconds, since: self)
     }
-
+    
     // Convert UTC (or GMT) to local time
     func toLocalTime() -> Date {
         let timezone = TimeZone.current
         let seconds = TimeInterval(timezone.secondsFromGMT(for: self))
         return Date(timeInterval: seconds, since: self)
     }
-
+    
 }

@@ -247,6 +247,7 @@ class _MyFHBState extends State<MyFHB> {
       // Push Notifications
       final provider = PushNotificationsProvider();
       provider.initNotification();
+      provider.setUpListerForTheNotification();
       provider.pushController.listen((callarguments) {
         fbaLog(eveParams: {
           'eventTime': '${DateTime.now()}',
