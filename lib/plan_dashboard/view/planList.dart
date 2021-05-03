@@ -15,6 +15,7 @@ import 'package:myfhb/myPlan/viewModel/myPlanViewModel.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
 import 'package:myfhb/plan_dashboard/model/subscribeModel.dart';
+import 'package:myfhb/plan_dashboard/view/planDetailsView.dart';
 import 'package:myfhb/plan_dashboard/viewModel/planViewModel.dart';
 import 'package:myfhb/plan_dashboard/viewModel/subscribeViewModel.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
@@ -144,7 +145,20 @@ class _MyPlanState extends State<PlanList> {
     return InkWell(
       onTap: () {
         //Mohan......................MOHAN
-        /*Navigator.push(
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => MyPlanDetailView(
+                    title: planList[i].title,
+                    providerName: planList[i].providerName,
+                    description: planList[i].description,
+                    issubscription: planList[i].isSubscribed,
+                    packageId: planList[i].packageid,
+                    price: planList[i].price,
+                  )),
+        );
+
+        /* Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => MyPlanDetail(
@@ -155,7 +169,7 @@ class _MyPlanState extends State<PlanList> {
                 startDate: planList[i].startdate,
                 endDate: planList[i].enddate,
               )),
-        );*/
+        ); */
       },
       child: Container(
         padding: EdgeInsets.all(4.0),
@@ -215,12 +229,14 @@ class _MyPlanState extends State<PlanList> {
                           textAlign: TextAlign.start,
                         ),
                       ),
-                      planList[i].price!=null?TextWidget(
-                          text: INR +
-                              planList[i].price,
-                          fontsize: 16.0.sp,
-                          fontWeight: FontWeight.w400,
-                          colors: Color(new CommonUtil().getMyPrimaryColor())):Container(),
+                      planList[i].price != null
+                          ? TextWidget(
+                              text: INR + planList[i].price,
+                              fontsize: 16.0.sp,
+                              fontWeight: FontWeight.w400,
+                              colors:
+                                  Color(new CommonUtil().getMyPrimaryColor()))
+                          : Container(),
                     ],
                   ),
                   Column(
