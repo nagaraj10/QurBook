@@ -155,6 +155,7 @@ class _MyPlanState extends State<PlanList> {
                     issubscription: planList[i].isSubscribed,
                     packageId: planList[i].packageid,
                     price: planList[i].price,
+                    packageDuration: planList[i].packageDuration,
                   )),
         );
 
@@ -299,7 +300,10 @@ class _MyPlanState extends State<PlanList> {
                                   8.0.sp,
                                 ),
                                 onPressed: () async {
-                                  if (planList[i].isSubscribed == '0') {
+                                  CommonUtil().profileValidationCheck(context,
+                                      packageId: planList[i].packageid,
+                                      isSubscribed: planList[i].isSubscribed);
+                                  /* if (planList[i].isSubscribed == '0') {
                                     await subscribeViewModel
                                         .subScribePlan(planList[i].packageid)
                                         .then((value) {
@@ -340,7 +344,7 @@ class _MyPlanState extends State<PlanList> {
                                         }
                                       }
                                     });
-                                  }
+                                  } */
                                 },
                                 child: TextWidget(
                                   text: planList[i].isSubscribed == '0'

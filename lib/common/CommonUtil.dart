@@ -37,6 +37,7 @@ import 'package:myfhb/my_family/models/ProfileData.dart';
 import 'package:myfhb/my_family/models/Sharedbyme.dart';
 import 'package:myfhb/my_providers/models/ProfilePicThumbnail.dart';
 import 'package:myfhb/myfhb_weview/myfhb_webview.dart';
+import 'package:myfhb/plan_dashboard/viewModel/subscribeViewModel.dart';
 import 'package:myfhb/record_detail/model/DoctorImageResponse.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
@@ -1858,19 +1859,23 @@ class CommonUtil {
     return formattedDate;
   }
 
-  profileValidationCheck(BuildContext context, String userId) async {
+  profileValidationCheck(BuildContext context,
+      {String packageId, String isSubscribed}) async {
+    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     await addFamilyUserInfoRepository.getMyProfileInfoNew(userId).then((value) {
       myProfile = value;
     });
 
     if (myProfile != null) {
-      addressValidation(context);
+      addressValidation(context,
+          packageId: packageId, isSubscribed: isSubscribed);
     } else {
       FlutterToast().getToast(noGender, Colors.red);
     }
   }
 
-  addressValidation(BuildContext context) {
+  addressValidation(BuildContext context,
+      {String packageId, String isSubscribed}) {
     if (myProfile != null) {
       if (myProfile.isSuccess) {
         if (myProfile.result != null) {
@@ -1886,52 +1891,83 @@ class CommonUtil {
                     if (myProfile.result.userAddressCollection3 != null) {
                       if (myProfile.result.userAddressCollection3.length > 0) {
                         patientAddressCheck(
-                            myProfile.result.userAddressCollection3[0],
-                            context);
+                            myProfile.result.userAddressCollection3[0], context,
+                            packageId: packageId, isSubscribed: isSubscribed);
                       } else {
                         //toast.getToast(noAddress, Colors.red);
-                        CommonUtil().mSnackbar(context, noAddress, 'Add');
+                        //CommonUtil().mSnackbar(context, noAddress, 'Add');
+                        mCustomAlertDialog(context,
+                            content:
+                                'This profile is incomplete. please complete the profile before subscribing');
                       }
                     } else {
                       //toast.getToast(noAddress, Colors.red);
-                      CommonUtil().mSnackbar(context, noAddress, 'Add');
+                      //CommonUtil().mSnackbar(context, noAddress, 'Add');
+                      mCustomAlertDialog(context,
+                          content:
+                              'This profile is incomplete. please complete the profile before subscribing');
                     }
                   } else {
                     //toast.getToast(noWeight, Colors.red);
-                    CommonUtil().mSnackbar(context, noWeight, 'Add');
+                    //CommonUtil().mSnackbar(context, noWeight, 'Add');
+                    mCustomAlertDialog(context,
+                        content:
+                            'This profile is incomplete. please complete the profile before subscribing');
                   }
                 } else {
                   //toast.getToast(noHeight, Colors.red);
-                  CommonUtil().mSnackbar(context, noHeight, 'Add');
+                  //CommonUtil().mSnackbar(context, noHeight, 'Add');
+                  mCustomAlertDialog(context,
+                      content:
+                          'This profile is incomplete. please complete the profile before subscribing');
                 }
               } else {
                 //toast.getToast(noAdditionalInfo, Colors.red);
-                CommonUtil().mSnackbar(context, noAdditionalInfo, 'Add');
+                //CommonUtil().mSnackbar(context, noAdditionalInfo, 'Add');
+                mCustomAlertDialog(context,
+                    content:
+                        'This profile is incomplete. please complete the profile before subscribing');
               }
             } else {
               //toast.getToast(noDOB, Colors.red);
-              CommonUtil().mSnackbar(context, noDOB, 'Add');
+              //CommonUtil().mSnackbar(context, noDOB, 'Add');
+              mCustomAlertDialog(context,
+                  content:
+                      'This profile is incomplete. please complete the profile before subscribing');
             }
           } else {
-            CommonUtil().mSnackbar(context, noGender, 'Add');
+            //CommonUtil().mSnackbar(context, noGender, 'Add');
             //toast.getToast(noGender, Colors.red);
+            mCustomAlertDialog(context,
+                content:
+                    'This profile is incomplete. please complete the profile before subscribing');
           }
         } else {
           //toast.getToast(noAddress, Colors.red);
-          CommonUtil().mSnackbar(context, noAddress, 'Add');
+          //CommonUtil().mSnackbar(context, noAddress, 'Add');
+          mCustomAlertDialog(context,
+              content:
+                  'This profile is incomplete. please complete the profile before subscribing');
         }
       } else {
         //toast.getToast(noAddress, Colors.red);
-        CommonUtil().mSnackbar(context, noAddress, 'Add');
+        //CommonUtil().mSnackbar(context, noAddress, 'Add');
+        mCustomAlertDialog(context,
+            content:
+                'This profile is incomplete. please complete the profile before subscribing');
       }
     } else {
       //toast.getToast(noAddress, Colors.red);
-      CommonUtil().mSnackbar(context, noAddress, 'Add');
+      //CommonUtil().mSnackbar(context, noAddress, 'Add');
+      mCustomAlertDialog(context,
+          content:
+              'This profile is incomplete. please complete the profile before subscribing');
     }
   }
 
   patientAddressCheck(
-      UserAddressCollection3 userAddressCollection, BuildContext context) {
+      UserAddressCollection3 userAddressCollection, BuildContext context,
+      {String packageId, String isSubscribed}) {
     String address1 = userAddressCollection.addressLine1 != null
         ? userAddressCollection.addressLine1
         : '';
@@ -1943,13 +1979,11 @@ class CommonUtil {
         : '';
 
     if (address1 != '' && city != '' && state != '') {
-      //* Disclimar Window
-      //normal appointment
-      // navigateToConfirmBook(
-      //     context, rowPosition, itemPosition, null, false, false);
+      mDisclaimerAlertDialog(packageId: packageId, isSubscribed: isSubscribed);
     } else {
-      FlutterToast().getToast(noAddress, Colors.red);
-      //* Head to CSIR package list
+      mCustomAlertDialog(context,
+          content:
+              'This profile is incomplete. please complete the profile before subscribing');
     }
   }
 
@@ -2046,7 +2080,12 @@ class CommonUtil {
         });
   }
 
-  Future<dynamic> mDisclaimerAlertDialog({String title, String content}) async {
+  Future<dynamic> mDisclaimerAlertDialog(
+      {String title,
+      String content,
+      String packageId,
+      String isSubscribed}) async {
+    SubscribeViewModel subscribeViewModel = SubscribeViewModel();
     await Get.dialog(
       AlertDialog(
         content: Column(
@@ -2058,6 +2097,14 @@ class CommonUtil {
                 width: double.infinity,
                 child: Column(children: [
                   //CircularProgressIndicator(),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: IconButton(
+                        icon: Icon(Icons.close_rounded),
+                        onPressed: () {
+                          Get.back();
+                        }),
+                  ),
                   SizedBox(
                     height: 10.0.h,
                   ),
@@ -2081,7 +2128,9 @@ class CommonUtil {
                       ),
                     ),
                   ),
-                  SizedBox(height: 20,),
+                  SizedBox(
+                    height: 20,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -2097,6 +2146,46 @@ class CommonUtil {
                         onPressed: () async {
                           // open profile page
                           Get.back();
+                          if (isSubscribed == '0') {
+                            await subscribeViewModel
+                                .subScribePlan(packageId)
+                                .then((value) {
+                              if (value != null) {
+                                if (value.isSuccess) {
+                                  if (value.result != null) {
+                                    if (value.result.result == 'Done') {
+                                      //provider API ll be added here
+                                    } else {
+                                      FlutterToast().getToast(
+                                          'Subscribe Failed', Colors.red);
+                                    }
+                                  }
+                                } else {
+                                  FlutterToast()
+                                    ..getToast('Subscribe Failed', Colors.red);
+                                }
+                              }
+                            });
+                          } else {
+                            await subscribeViewModel.UnsubScribePlan(packageId)
+                                .then((value) {
+                              if (value != null) {
+                                if (value.isSuccess) {
+                                  if (value.result != null) {
+                                    if (value.result.result == 'Done') {
+                                      //setState(() {});
+                                    } else {
+                                      FlutterToast().getToast(
+                                          'UnSubscribe Failed', Colors.red);
+                                    }
+                                  }
+                                } else {
+                                  FlutterToast().getToast(
+                                      'UnSubscribe Failed', Colors.red);
+                                }
+                              }
+                            });
+                          }
                         },
                         borderSide: BorderSide(
                           color: Color(
