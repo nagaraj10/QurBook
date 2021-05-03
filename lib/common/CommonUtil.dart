@@ -2046,8 +2046,7 @@ class CommonUtil {
         });
   }
 
-  Future<dynamic> mDisclaimerAlertDialog(
-      {String title, String content}) async {
+  Future<dynamic> mDisclaimerAlertDialog({String title, String content}) async {
     await Get.dialog(
       AlertDialog(
         content: Column(
@@ -2082,16 +2081,16 @@ class CommonUtil {
                       ),
                     ),
                   ),
+                  SizedBox(height: 20,),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       OutlineButton(
+                        //hoverColor: Color(getMyPrimaryColor()),
                         child: Text(
-                          'Reject'.toUpperCase(),
+                          'accept'.toUpperCase(),
                           style: TextStyle(
-                            color: Color(
-                              CommonUtil().getMyPrimaryColor(),
-                            ),
+                            color: Color(CommonUtil().getMyPrimaryColor()),
                             fontSize: 13,
                           ),
                         ),
@@ -2108,14 +2107,15 @@ class CommonUtil {
                         ),
                       ),
                       SizedBox(
-                        height: 10,
+                        width: 10,
                       ),
                       OutlineButton(
-                        //hoverColor: Color(getMyPrimaryColor()),
                         child: Text(
-                          'accept'.toUpperCase(),
+                          'Reject'.toUpperCase(),
                           style: TextStyle(
-                            color: Color(CommonUtil().getMyPrimaryColor()),
+                            color: Color(
+                              CommonUtil().getMyPrimaryColor(),
+                            ),
                             fontSize: 13,
                           ),
                         ),
