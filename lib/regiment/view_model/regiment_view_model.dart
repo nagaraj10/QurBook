@@ -7,14 +7,27 @@ import 'package:myfhb/regiment/models/field_response_model.dart';
 import 'package:myfhb/regiment/models/profile_response_model.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/regiment/models/regiment_data_model.dart';
+
+enum RegimentMode { Schedule, Symptoms }
 
 class RegimentViewModel extends ChangeNotifier {
   Future<RegimentResponseModel> regimentsData;
+  List<RegimentDataModel> regimentsScheduledList;
+  List<RegimentDataModel> regimentsAsNeededList;
   bool regimentsDataAvailable = true;
   DateTime selectedDate = DateTime.now();
   String regimentDate = '${CommonUtil().regimentDateFormat(DateTime.now())}';
+  RegimentMode regimentMode = RegimentMode.Schedule;
 
-  Future<void> fetchRegimentData({bool isInitial = false}) {
+  Future<void> switchRegimentMode() {
+    regimentMode = (regimentMode == RegimentMode.Schedule)
+        ? RegimentMode.Symptoms
+        : RegimentMode.Schedule;
+    notifyListeners();
+  }
+
+  Future<void> fetchRegimentData({bool isInitial = false}) async {
     if (PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN) ==
         PreferenceUtil.getStringValue(Constants.KEY_USERID)) {
       regimentsDataAvailable = true;
