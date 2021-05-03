@@ -1860,7 +1860,7 @@ class CommonUtil {
   }
 
   profileValidationCheck(BuildContext context,
-      {String packageId, String isSubscribed}) async {
+      {String packageId, String isSubscribed,Function() refresh}) async {
     var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     await addFamilyUserInfoRepository.getMyProfileInfoNew(userId).then((value) {
       myProfile = value;
@@ -1868,14 +1868,14 @@ class CommonUtil {
 
     if (myProfile != null) {
       addressValidation(context,
-          packageId: packageId, isSubscribed: isSubscribed);
+          packageId: packageId, isSubscribed: isSubscribed,refresh: refresh);
     } else {
       FlutterToast().getToast(noGender, Colors.red);
     }
   }
 
   addressValidation(BuildContext context,
-      {String packageId, String isSubscribed}) {
+      {String packageId, String isSubscribed,Function() refresh}) {
     if (myProfile != null) {
       if (myProfile.isSuccess) {
         if (myProfile.result != null) {
@@ -1892,7 +1892,7 @@ class CommonUtil {
                       if (myProfile.result.userAddressCollection3.length > 0) {
                         patientAddressCheck(
                             myProfile.result.userAddressCollection3[0], context,
-                            packageId: packageId, isSubscribed: isSubscribed);
+                            packageId: packageId, isSubscribed: isSubscribed,refresh: refresh);
                       } else {
                         //toast.getToast(noAddress, Colors.red);
                         //CommonUtil().mSnackbar(context, noAddress, 'Add');
@@ -1967,7 +1967,7 @@ class CommonUtil {
 
   patientAddressCheck(
       UserAddressCollection3 userAddressCollection, BuildContext context,
-      {String packageId, String isSubscribed}) {
+      {String packageId, String isSubscribed,Function() refresh}) {
     String address1 = userAddressCollection.addressLine1 != null
         ? userAddressCollection.addressLine1
         : '';
@@ -1979,7 +1979,7 @@ class CommonUtil {
         : '';
 
     if (address1 != '' && city != '' && state != '') {
-      mDisclaimerAlertDialog(packageId: packageId, isSubscribed: isSubscribed);
+      mDisclaimerAlertDialog(packageId: packageId, isSubscribed: isSubscribed,refresh: refresh);
     } else {
       mCustomAlertDialog(context,
           content:
@@ -2084,7 +2084,7 @@ class CommonUtil {
       {String title,
       String content,
       String packageId,
-      String isSubscribed}) async {
+      String isSubscribed,Function() refresh}) async {
     SubscribeViewModel subscribeViewModel = SubscribeViewModel();
     await Get.dialog(
       AlertDialog(
@@ -2154,7 +2154,7 @@ class CommonUtil {
                                 if (value.isSuccess) {
                                   if (value.result != null) {
                                     if (value.result.result == 'Done') {
-                                      //provider API ll be added here
+                                      refresh();
                                     } else {
                                       FlutterToast().getToast(
                                           'Subscribe Failed', Colors.red);
@@ -2173,7 +2173,7 @@ class CommonUtil {
                                 if (value.isSuccess) {
                                   if (value.result != null) {
                                     if (value.result.result == 'Done') {
-                                      //setState(() {});
+                                      refresh();
                                     } else {
                                       FlutterToast().getToast(
                                           'UnSubscribe Failed', Colors.red);

@@ -144,7 +144,6 @@ class _MyPlanState extends State<PlanList> {
       BuildContext context, int i, List<PlanListResult> planList) {
     return InkWell(
       onTap: () {
-        //Mohan......................MOHAN
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -158,19 +157,6 @@ class _MyPlanState extends State<PlanList> {
                     packageDuration: planList[i].packageDuration,
                   )),
         );
-
-        /* Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => MyPlanDetail(
-                title: planList[i].title,
-                providerName: planList[i].providerName,
-                docName: planList[i].docNick,
-                packageId: planList[i].packageid,
-                startDate: planList[i].startdate,
-                endDate: planList[i].enddate,
-              )),
-        ); */
       },
       child: Container(
         padding: EdgeInsets.all(4.0),
@@ -230,6 +216,7 @@ class _MyPlanState extends State<PlanList> {
                           textAlign: TextAlign.start,
                         ),
                       ),
+                      SizedBox(width: 40.w),
                       planList[i].price != null
                           ? TextWidget(
                               text: INR + planList[i].price,
@@ -261,6 +248,28 @@ class _MyPlanState extends State<PlanList> {
                     children: [
                       Row(
                         children: [
+                          Text(
+                            'Duration: ',
+                            style: TextStyle(
+                                fontSize: 10.0.sp, fontWeight: FontWeight.w400),
+                          ),
+                          planList[i].packageDuration != null
+                              ? Text(
+                                  planList[i].packageDuration + ' days',
+                                  maxLines: 1,
+                                  style: TextStyle(
+                                      fontSize: 10.0.sp,
+                                      fontWeight: FontWeight.w600),
+                                )
+                              : Container()
+                        ],
+                      ),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Row(
+                        children: [
                           planList[i].isSubscribed == '1'
                               ? Text(
                                   'Start Date: ',
@@ -280,8 +289,8 @@ class _MyPlanState extends State<PlanList> {
                                 )
                               : SizedBox(width: 55.w),
                           planList[i].isSubscribed == '0'
-                              ? SizedBox(width: 50.sp)
-                              : SizedBox(width: 45.sp),
+                              ? SizedBox(width: 60.w)
+                              : SizedBox(width: 55.w),
                           Align(
                             alignment: Alignment.center,
                             child: SizedBoxWithChild(
@@ -302,49 +311,10 @@ class _MyPlanState extends State<PlanList> {
                                 onPressed: () async {
                                   CommonUtil().profileValidationCheck(context,
                                       packageId: planList[i].packageid,
-                                      isSubscribed: planList[i].isSubscribed);
-                                  /* if (planList[i].isSubscribed == '0') {
-                                    await subscribeViewModel
-                                        .subScribePlan(planList[i].packageid)
-                                        .then((value) {
-                                      if (value != null) {
-                                        if (value.isSuccess) {
-                                          if (value.result != null) {
-                                            if (value.result.result == 'Done') {
-                                              setState(() {});
-                                            } else {
-                                              toast.getToast('Subscribe Failed',
-                                                  Colors.red);
-                                            }
-                                          }
-                                        } else {
-                                          toast.getToast(
-                                              'Subscribe Failed', Colors.red);
-                                        }
-                                      }
-                                    });
-                                  } else {
-                                    await subscribeViewModel.UnsubScribePlan(
-                                            planList[i].packageid)
-                                        .then((value) {
-                                      if (value != null) {
-                                        if (value.isSuccess) {
-                                          if (value.result != null) {
-                                            if (value.result.result == 'Done') {
-                                              setState(() {});
-                                            } else {
-                                              toast.getToast(
-                                                  'UnSubscribe Failed',
-                                                  Colors.red);
-                                            }
-                                          }
-                                        } else {
-                                          toast.getToast(
-                                              'UnSubscribe Failed', Colors.red);
-                                        }
-                                      }
-                                    });
-                                  } */
+                                      isSubscribed: planList[i].isSubscribed,
+                                      refresh: () {
+                                    setState(() {});
+                                  });
                                 },
                                 child: TextWidget(
                                   text: planList[i].isSubscribed == '0'
