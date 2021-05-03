@@ -157,7 +157,11 @@ class _MyPlanState extends State<PlanList> {
                     price: planList[i].price,
                     packageDuration: planList[i].packageDuration,
                   )),
-        );
+        ).then((value) {
+          if (value == 'refreshUI') {
+            setState(() {});
+          }
+        });
 
         /* Navigator.push(
           context,
