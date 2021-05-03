@@ -181,26 +181,60 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                   padding: EdgeInsets.only(
                     right: 5.0.w,
                   ),
-                  child: InkWell(
-                    onTap: () async {
-                      ProfileResponseModel profileResponseModel =
-                          await Provider.of<RegimentViewModel>(context,
-                                  listen: false)
-                              .getProfile();
-                      if (profileResponseModel.isSuccess &&
-                          profileResponseModel?.result?.profileData != null) {
-                        await showDialog(
-                          context: context,
-                          builder: (context) => EventListWidget(
-                            profileResultModel: profileResponseModel.result,
+                  child: Row(
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          _regimentViewModel.switchRegimentMode();
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 10.0.sp,
+                            vertical: 2.0.sp,
                           ),
-                        );
-                      }
-                    },
-                    child: Icon(
-                      Icons.access_time,
-                      size: 24.0.sp,
-                    ),
+                          child: Text(
+                            _regimentViewModel.regimentMode ==
+                                    RegimentMode.Schedule
+                                ? symptoms
+                                : scheduled,
+                            style: TextStyle(
+                              fontSize: 14.0.sp,
+                              fontWeight: FontWeight.w500,
+                              decoration: TextDecoration.underline,
+                              color: Color(CommonUtil().getMyPrimaryColor()),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          left: 15.0.w,
+                        ),
+                        child: InkWell(
+                          onTap: () async {
+                            ProfileResponseModel profileResponseModel =
+                                await Provider.of<RegimentViewModel>(context,
+                                        listen: false)
+                                    .getProfile();
+                            if (profileResponseModel.isSuccess &&
+                                profileResponseModel?.result?.profileData !=
+                                    null) {
+                              await showDialog(
+                                context: context,
+                                builder: (context) => EventListWidget(
+                                  profileResultModel:
+                                      profileResponseModel.result,
+                                ),
+                              );
+                            }
+                          },
+                          child: Icon(
+                            Icons.access_time,
+                            size: 30.0.sp,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -217,31 +251,71 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                 } else {
                   if (snapshot.hasData &&
                       (snapshot?.data?.regimentsList?.length ?? 0) > 0) {
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      padding: EdgeInsets.only(
-                        bottom: 10.0.h,
-                      ),
-                      // physics: NeverScrollableScrollPhysics(),
-                      itemCount: snapshot.data.regimentsList.length,
-                      itemBuilder: (context, index) {
-                        var regimentData = snapshot.data.regimentsList[index];
-                        return RegimentDataCard(
-                          title: regimentData.title,
-                          time: DateFormat('hh:mm\na')
-                              .format(regimentData.estart),
-                          color: getColor(regimentData.activityname,
-                              regimentData.uformname),
-                          icon: getIcon(regimentData.activityname,
-                              regimentData.uformname),
-                          vitalsData: regimentData.uformdata.vitalsData,
-                          eid: regimentData.eid,
-                          mediaData: regimentData.otherinfo,
-                          startTime: regimentData.estart,
-                          regimentData: regimentData,
-                        );
-                      },
-                    );
+                    List<RegimentDataModel> regimentsScheduledList = [];
+                    List<RegimentDataModel> regimentsAsNeededList = [];
+                    snapshot?.data?.regimentsList?.forEach((event) {
+                      if (event.doseMeal) {
+                        regimentsAsNeededList.add(event);
+                      } else {
+                        regimentsScheduledList.add(event);
+                      }
+                    });
+                    var regimentsList = [];
+                    if (_regimentViewModel.regimentMode ==
+                        RegimentMode.Schedule) {
+                      regimentsList = regimentsScheduledList;
+                    } else {
+                      regimentsList = regimentsAsNeededList;
+                    }
+                    if ((regimentsList?.length ?? 0) > 0) {
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        padding: EdgeInsets.only(
+                          bottom: 10.0.h,
+                        ),
+                        // physics: NeverScrollableScrollPhysics(),
+                        itemCount: regimentsList?.length ?? 0,
+                        itemBuilder: (context, index) {
+                          var regimentData = regimentsList[index];
+                          return RegimentDataCard(
+                            title: regimentData.title,
+                            time: DateFormat('hh:mm\na')
+                                .format(regimentData.estart),
+                            color: getColor(regimentData.activityname,
+                                regimentData.uformname),
+                            icon: getIcon(regimentData.activityname,
+                                regimentData.uformname),
+                            vitalsData: regimentData.uformdata.vitalsData,
+                            eid: regimentData.eid,
+                            mediaData: regimentData.otherinfo,
+                            startTime: regimentData.estart,
+                            regimentData: regimentData,
+                          );
+                        },
+                      );
+                    } else {
+                      return Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(
+                              10.0.sp,
+                            ),
+                            child: Text(
+                              _regimentViewModel.regimentMode ==
+                                      RegimentMode.Schedule
+                                  ? noRegimentScheduleData
+                                  : noRegimentSymptomsData,
+                              style: TextStyle(
+                                fontSize: 16.0.sp,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ],
+                      );
+                    }
                   } else {
                     return Column(
                       mainAxisSize: MainAxisSize.max,
@@ -252,7 +326,11 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                             10.0.sp,
                           ),
                           child: Text(
-                            snapshot?.data?.message ?? noRegimentData,
+                            snapshot?.data?.message ??
+                                (_regimentViewModel.regimentMode ==
+                                        RegimentMode.Schedule
+                                    ? noRegimentScheduleData
+                                    : noRegimentSymptomsData),
                             style: TextStyle(
                               fontSize: 16.0.sp,
                             ),

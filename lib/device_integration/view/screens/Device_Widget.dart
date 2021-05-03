@@ -31,6 +31,7 @@ import 'package:myfhb/src/ui/user/UserAccounts.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:provider/provider.dart';
 import 'package:myfhb/src/ui/bot/common/botutils.dart';
+import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
@@ -478,7 +479,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
         height: constraints.maxHeight,
         child: DefaultTabController(
           length: 3,
-          initialIndex: 0,
+          initialIndex:
+              Provider.of<RegimentViewModel>(context).regimentsDataAvailable
+                  ? 0
+                  : 2,
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [

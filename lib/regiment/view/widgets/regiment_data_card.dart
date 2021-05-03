@@ -114,16 +114,22 @@ class RegimentDataCard extends StatelessWidget {
                           height: 24.0.sp,
                           width: 24.0.sp,
                         ),
-                      Text(
-                        //TODO: Replace with actual time
-                        time,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16.0.sp,
+                      Visibility(
+                        visible: Provider.of<RegimentViewModel>(context,
+                                    listen: false)
+                                .regimentMode ==
+                            RegimentMode.Schedule,
+                        child: Text(
+                          //TODO: Replace with actual time
+                          time,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16.0.sp,
+                          ),
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        textAlign: TextAlign.center,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),

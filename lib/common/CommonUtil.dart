@@ -1864,7 +1864,7 @@ class CommonUtil {
   }
 
   profileValidationCheck(BuildContext context,
-      {String packageId, String isSubscribed}) async {
+      {String packageId, String isSubscribed,Function() refresh}) async {
     var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     await addFamilyUserInfoRepository.getMyProfileInfoNew(userId).then((value) {
       myProfile = value;
@@ -1872,14 +1872,14 @@ class CommonUtil {
 
     if (myProfile != null) {
       addressValidation(context,
-          packageId: packageId, isSubscribed: isSubscribed);
+          packageId: packageId, isSubscribed: isSubscribed,refresh: refresh);
     } else {
       FlutterToast().getToast(noGender, Colors.red);
     }
   }
 
   addressValidation(BuildContext context,
-      {String packageId, String isSubscribed}) {
+      {String packageId, String isSubscribed,Function() refresh}) {
     if (myProfile != null) {
       if (myProfile.isSuccess) {
         if (myProfile.result != null) {
@@ -1896,7 +1896,7 @@ class CommonUtil {
                       if (myProfile.result.userAddressCollection3.length > 0) {
                         patientAddressCheck(
                             myProfile.result.userAddressCollection3[0], context,
-                            packageId: packageId, isSubscribed: isSubscribed);
+                            packageId: packageId, isSubscribed: isSubscribed,refresh: refresh);
                       } else {
                         mCustomAlertDialog(context,
                             content: CONTENT_PROFILE_CHECK,
@@ -1979,7 +1979,7 @@ class CommonUtil {
 
   patientAddressCheck(
       UserAddressCollection3 userAddressCollection, BuildContext context,
-      {String packageId, String isSubscribed}) async {
+      {String packageId, String isSubscribed,Function() refresh}) {
     String address1 = userAddressCollection.addressLine1 != null
         ? userAddressCollection.addressLine1
         : '';
@@ -2030,10 +2030,7 @@ class CommonUtil {
         }
       } else {
         // if its unsubscibed need to invoke discalimer dialog
-        mDisclaimerAlertDialog(
-          packageId: packageId,
-          isSubscribed: isSubscribed,
-        );
+        mDisclaimerAlertDialog(packageId: packageId, isSubscribed: isSubscribed,refresh: refresh);
       }
     } else {
       mCustomAlertDialog(
@@ -2145,7 +2142,7 @@ class CommonUtil {
       {String title,
       String content,
       String packageId,
-      String isSubscribed}) async {
+      String isSubscribed,Function() refresh}) async {
     await Get.dialog(
       AlertDialog(
         content: Column(
@@ -2216,6 +2213,7 @@ class CommonUtil {
                                     if (value.result.result == 'Done') {
                                       //provider API ll be added here
                                       Get.back(result: 'refreshUI');
+                                      refresh();
                                     } else {
                                       Get.back(result: 'refreshUI');
                                       FlutterToast().getToast(
@@ -2236,6 +2234,7 @@ class CommonUtil {
                                   if (value.result != null) {
                                     if (value.result.result == 'Done') {
                                       Get.back(result: 'refreshUI');
+                                      refresh();
                                     } else {
                                       Get.back(result: 'refreshUI');
                                       FlutterToast().getToast(

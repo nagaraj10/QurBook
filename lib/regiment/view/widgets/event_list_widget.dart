@@ -57,6 +57,23 @@ class EventListWidget extends StatelessWidget {
     Function onSave,
   }) {
     List<Widget> dialogItems = [];
+
+    dialogItems.add(
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            scheduleTitle,
+            style: TextStyle(
+              fontSize: 16.0.sp,
+              color: Color(CommonUtil().getMyPrimaryColor()),
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+
     try {
       profileResultModel.profileData.toJson()?.forEach(
         (key, value) {
