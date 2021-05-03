@@ -59,6 +59,7 @@ class ChatScreenViewModel extends ChangeNotifier {
   bool isSheelaSpeaking = false;
   String _screen = parameters.strSheela;
   int delayTime = 0;
+  int playingIndex = 0;
 
   List<Conversation> get getMyConversations => conversations;
 
@@ -113,26 +114,45 @@ class ChatScreenViewModel extends ChangeNotifier {
     // notifyListeners();
   }
 
-  Future<void> stopTTSEngine({int index}) async {
+  Future<void> stopTTSEngine({
+    int index,
+    String langCode,
+  }) async {
     stopTTS = true;
     notifyListeners();
     if (index != null) {
       conversations[index].isSpeaking = false;
       isSheelaSpeaking = false;
-      notifyListeners();
     } else {
       conversations.forEach((conversation) {
         conversation.isSpeaking = false;
       });
       isSheelaSpeaking = false;
+    }
+    conversations.forEach((conversation) {
+      conversation.buttons?.forEach((button) {
+        button.isPlaying = false;
+      });
+    });
+    isSheelaSpeaking = false;
+    notifyListeners();
+
+    stopAudioPlayer();
+    final lan = langCode != null && langCode.isNotEmpty
+        ? langCode
+        : Utils.getCurrentLanCode();
+    if (Platform.isIOS ||
+        lan == "undef" ||
+        lan.toLowerCase() == "en-IN".toLowerCase() ||
+        lan.toLowerCase() == "en-US".toLowerCase()) {
+      await variable.tts_platform.invokeMethod(variable.strtts, {
+        parameters.strMessage: "",
+        parameters.strIsClose: true,
+        parameters.strLanguage: Utils.getCurrentLanCode()
+      });
+    } else {
       notifyListeners();
     }
-    stopAudioPlayer();
-    await variable.tts_platform.invokeMethod(variable.strtts, {
-      parameters.strMessage: "",
-      parameters.strIsClose: true,
-      parameters.strLanguage: Utils.getCurrentLanCode()
-    });
   }
 
   Future<bool> startTTSEngine({
@@ -141,12 +161,16 @@ class ChatScreenViewModel extends ChangeNotifier {
     String langCode,
     bool stopPrevious: true,
     bool isRegiment: false,
+    bool isButtonText: false,
   }) async {
+    print('newAudioPlay1.state == ${newAudioPlay1.state}');
     if (stopPrevious) {
       stopTTSEngine();
     }
+    stopTTS = false;
     if (canSpeak) {
       if (index != null) {
+        playingIndex = index;
         conversations[index].isSpeaking = true;
         isSheelaSpeaking = true;
         notifyListeners();
@@ -185,7 +209,7 @@ class ChatScreenViewModel extends ChangeNotifier {
           if (event == AudioPlayerState.COMPLETED ||
               event == AudioPlayerState.PAUSED ||
               event == AudioPlayerState.STOPPED) {
-            if (index != null && stopPrevious) {
+            if (index != null && stopPrevious && !isButtonText) {
               conversations[index].isSpeaking = false;
               isSheelaSpeaking = false;
               notifyListeners();
@@ -402,6 +426,7 @@ class ChatScreenViewModel extends ChangeNotifier {
                       refreshData();
                     }
                   } else {
+                    playingIndex = conversations.length - 1;
                     await startButtonsSpeech(
                       index: conversations.length - 1,
                       langCode: res.lang,
@@ -447,6 +472,7 @@ class ChatScreenViewModel extends ChangeNotifier {
                         gettingReposnseFromNative();
                       }
                     } else {
+                      playingIndex = conversations.length - 1;
                       await startButtonsSpeech(
                         index: conversations.length - 1,
                         langCode: res.lang,
@@ -463,6 +489,7 @@ class ChatScreenViewModel extends ChangeNotifier {
                       isSheelaSpeaking = false;
                       notifyListeners();
                     } else {
+                      playingIndex = conversations.length - 1;
                       await startButtonsSpeech(
                         index: conversations.length - 1,
                         langCode: res.lang,
@@ -493,37 +520,50 @@ class ChatScreenViewModel extends ChangeNotifier {
     @required int index,
     @required String langCode,
   }) async {
-    if ((buttons?.length ?? 0) > 0) {
+    if ((buttons?.length ?? 0) > 0 && playingIndex == index) {
       stopTTS = false;
-      Conversation recentConversation = conversations[conversations.length - 1];
+      Conversation recentConversation = conversations[index];
       await Future.forEach(buttons, (button) async {
-        if (stopTTS) {
-          recentConversation.buttons[recentConversation.buttons.indexOf(button)]
-              .isPlaying = false;
-          notifyListeners();
-          stopTTSEngine(index: index);
+        if (stopTTS || playingIndex != index) {
+          // if ((recentConversation?.buttons?.length ?? 0) > 0) {
+          //   recentConversation.buttons.forEach((button) {
+          //     button.isPlaying = false;
+          //   });
+          // }
+          // notifyListeners();
+          // if (recentConversation.isSpeaking ?? false) {
+          // stopTTSEngine(index: index);
+          // }
           return;
+        } else {
+          if ((recentConversation?.buttons?.length ?? 0) > 0) {
+            recentConversation
+                .buttons[recentConversation.buttons?.indexOf(button)]
+                .isPlaying = true;
+          }
+          notifyListeners();
+          await startTTSEngine(
+            langCode: langCode,
+            index: index,
+            textToSpeak: button.title,
+            stopPrevious: false,
+          );
+          if ((recentConversation?.buttons?.length ?? 0) > 0) {
+            recentConversation
+                .buttons[recentConversation.buttons?.indexOf(button)]
+                .isPlaying = false;
+          }
+          notifyListeners();
         }
-        recentConversation.buttons[recentConversation.buttons.indexOf(button)]
-            .isPlaying = true;
-        notifyListeners();
-        await startTTSEngine(
-          langCode: langCode,
-          index: index,
-          textToSpeak: button.title,
-          stopPrevious: false,
-        );
-        recentConversation.buttons[recentConversation.buttons.indexOf(button)]
-            .isPlaying = false;
-        notifyListeners();
       });
       stopTTSEngine(index: index);
       // conversations[index].isSpeaking = false;
       // isSheelaSpeaking = false;
       // notifyListeners();
-    } else {
-      stopTTSEngine();
     }
+    // else {
+    //   stopTTSEngine();
+    // }
   }
 
   getGoogleTTSResponse(String dataForVoice, String langCode, bool isTTS) async {
