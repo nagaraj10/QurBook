@@ -26,6 +26,7 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
 import 'package:myfhb/device_integration/viewModel/deviceDataHelper.dart';
@@ -68,6 +69,7 @@ import 'package:myfhb/src/model/user/LaboratoryIds.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/model/user/MyProfileResult.dart';
 import 'package:myfhb/src/model/user/ProfileCompletedata.dart';
+import 'package:myfhb/src/model/user/UserAddressCollection.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/src/resources/repository/CategoryRepository/CategoryResponseListRepository.dart';
@@ -113,6 +115,9 @@ class CommonUtil {
   static List<String> recordIds = new List();
   static List<String> notesId = new List();
   static List<String> voiceIds = new List();
+  MyProfileModel myProfile;
+  AddFamilyUserInfoRepository addFamilyUserInfoRepository =
+      AddFamilyUserInfoRepository();
 
   static Future<dynamic> getResourceLoader() async {
     final Future<Secret> secret =
@@ -1851,6 +1856,289 @@ class CommonUtil {
       formattedDate = '';
     }
     return formattedDate;
+  }
+
+  profileValidationCheck(BuildContext context, String userId) async {
+    await addFamilyUserInfoRepository.getMyProfileInfoNew(userId).then((value) {
+      myProfile = value;
+    });
+
+    if (myProfile != null) {
+      addressValidation(context);
+    } else {
+      FlutterToast().getToast(noGender, Colors.red);
+    }
+  }
+
+  addressValidation(BuildContext context) {
+    if (myProfile != null) {
+      if (myProfile.isSuccess) {
+        if (myProfile.result != null) {
+          if (myProfile.result.gender != null &&
+              myProfile.result.gender.isNotEmpty) {
+            if (myProfile.result.dateOfBirth != null &&
+                myProfile.result.dateOfBirth.isNotEmpty) {
+              if (myProfile.result.additionalInfo != null) {
+                if (myProfile.result.additionalInfo.height != null &&
+                    myProfile.result.additionalInfo.height.isNotEmpty) {
+                  if (myProfile.result.additionalInfo.weight != null &&
+                      myProfile.result.additionalInfo.weight.isNotEmpty) {
+                    if (myProfile.result.userAddressCollection3 != null) {
+                      if (myProfile.result.userAddressCollection3.length > 0) {
+                        patientAddressCheck(
+                            myProfile.result.userAddressCollection3[0],
+                            context);
+                      } else {
+                        //toast.getToast(noAddress, Colors.red);
+                        CommonUtil().mSnackbar(context, noAddress, 'Add');
+                      }
+                    } else {
+                      //toast.getToast(noAddress, Colors.red);
+                      CommonUtil().mSnackbar(context, noAddress, 'Add');
+                    }
+                  } else {
+                    //toast.getToast(noWeight, Colors.red);
+                    CommonUtil().mSnackbar(context, noWeight, 'Add');
+                  }
+                } else {
+                  //toast.getToast(noHeight, Colors.red);
+                  CommonUtil().mSnackbar(context, noHeight, 'Add');
+                }
+              } else {
+                //toast.getToast(noAdditionalInfo, Colors.red);
+                CommonUtil().mSnackbar(context, noAdditionalInfo, 'Add');
+              }
+            } else {
+              //toast.getToast(noDOB, Colors.red);
+              CommonUtil().mSnackbar(context, noDOB, 'Add');
+            }
+          } else {
+            CommonUtil().mSnackbar(context, noGender, 'Add');
+            //toast.getToast(noGender, Colors.red);
+          }
+        } else {
+          //toast.getToast(noAddress, Colors.red);
+          CommonUtil().mSnackbar(context, noAddress, 'Add');
+        }
+      } else {
+        //toast.getToast(noAddress, Colors.red);
+        CommonUtil().mSnackbar(context, noAddress, 'Add');
+      }
+    } else {
+      //toast.getToast(noAddress, Colors.red);
+      CommonUtil().mSnackbar(context, noAddress, 'Add');
+    }
+  }
+
+  patientAddressCheck(
+      UserAddressCollection3 userAddressCollection, BuildContext context) {
+    String address1 = userAddressCollection.addressLine1 != null
+        ? userAddressCollection.addressLine1
+        : '';
+    String city = userAddressCollection.city.name != null
+        ? userAddressCollection.city.name
+        : '';
+    String state = userAddressCollection.state.name != null
+        ? userAddressCollection.state.name
+        : '';
+
+    if (address1 != '' && city != '' && state != '') {
+      //* Disclimar Window
+      //normal appointment
+      // navigateToConfirmBook(
+      //     context, rowPosition, itemPosition, null, false, false);
+    } else {
+      FlutterToast().getToast(noAddress, Colors.red);
+      //* Head to CSIR package list
+    }
+  }
+
+  Future<dynamic> mCustomAlertDialog(BuildContext context,
+      {String title, String content}) async {
+    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return new WillPopScope(
+            onWillPop: () async => false,
+            child: SimpleDialog(children: <Widget>[
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 20),
+                child: Center(
+                  child: Column(children: [
+                    //CircularProgressIndicator(),
+                    SizedBox(
+                      height: 10.0.h,
+                    ),
+                    Text(
+                      content,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 20.0.sp,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10.0.h,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        OutlineButton(
+                          child: Text(
+                            'cancel'.toUpperCase(),
+                            style: TextStyle(
+                              color: Color(
+                                getMyPrimaryColor(),
+                              ),
+                              fontSize: 13,
+                            ),
+                          ),
+                          onPressed: () async {
+                            // open profile page
+                            Navigator.of(context).pop();
+                          },
+                          borderSide: BorderSide(
+                            color: Color(
+                              getMyPrimaryColor(),
+                            ),
+                            style: BorderStyle.solid,
+                            width: 1,
+                          ),
+                        ),
+                        OutlineButton(
+                          //hoverColor: Color(getMyPrimaryColor()),
+                          child: Text(
+                            'complete profile'.toUpperCase(),
+                            style: TextStyle(
+                              color: Color(getMyPrimaryColor()),
+                              fontSize: 13,
+                            ),
+                          ),
+                          onPressed: () async {
+                            // open profile page
+                            Navigator.of(context).pop();
+                            MyProfileModel myProfile =
+                                await fetchUserProfileInfo();
+                            Get.toNamed(
+                              router.rt_AddFamilyUserInfo,
+                              arguments: AddFamilyUserInfoArguments(
+                                  myProfileResult: myProfile?.result,
+                                  fromClass: CommonConstants.user_update,
+                                  isFromCSIR: true),
+                            );
+                          },
+                          borderSide: BorderSide(
+                            color: Color(
+                              getMyPrimaryColor(),
+                            ),
+                            style: BorderStyle.solid,
+                            width: 1,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ]),
+                ),
+              ),
+            ]),
+          );
+        });
+  }
+
+  Future<dynamic> mDisclaimerAlertDialog(
+      {String title, String content}) async {
+    await Get.dialog(
+      AlertDialog(
+        content: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 5),
+                width: double.infinity,
+                child: Column(children: [
+                  //CircularProgressIndicator(),
+                  SizedBox(
+                    height: 10.0.h,
+                  ),
+                  Text(
+                    'Disclaimer',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20.0.sp,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10.0.h,
+                  ),
+                  Container(
+                    height: 400,
+                    child: SingleChildScrollView(
+                      child: Text(
+                        'You have a blog, and you\'ve been publishing since 2012 and continue to publish your own material in 2018. To add a copyright, you can add the disclaimer to the bottom of your homepage with the name of your blog or business, the copyright symbol, and the years 2012-2018. The disclaimer then provides blanket copyright across all content that appears on your site.When you place a copyright disclaimer on your work, you\'re providing yourself with five rights to your work that only you can transfer. Only you have the right to:',
+                        style: TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.w300),
+                      ),
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      OutlineButton(
+                        child: Text(
+                          'Reject'.toUpperCase(),
+                          style: TextStyle(
+                            color: Color(
+                              CommonUtil().getMyPrimaryColor(),
+                            ),
+                            fontSize: 13,
+                          ),
+                        ),
+                        onPressed: () async {
+                          // open profile page
+                          Get.back();
+                        },
+                        borderSide: BorderSide(
+                          color: Color(
+                            CommonUtil().getMyPrimaryColor(),
+                          ),
+                          style: BorderStyle.solid,
+                          width: 1,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      OutlineButton(
+                        //hoverColor: Color(getMyPrimaryColor()),
+                        child: Text(
+                          'accept'.toUpperCase(),
+                          style: TextStyle(
+                            color: Color(CommonUtil().getMyPrimaryColor()),
+                            fontSize: 13,
+                          ),
+                        ),
+                        onPressed: () async {
+                          // open profile page
+                          Get.back();
+                        },
+                        borderSide: BorderSide(
+                          color: Color(
+                            CommonUtil().getMyPrimaryColor(),
+                          ),
+                          style: BorderStyle.solid,
+                          width: 1,
+                        ),
+                      ),
+                    ],
+                  ),
+                ]),
+              ),
+            ]),
+      ),
+      barrierDismissible: false,
+    );
   }
 }
 

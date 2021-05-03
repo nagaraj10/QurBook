@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:math';
+import 'package:get/get.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/cupertino.dart';
@@ -162,13 +163,61 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     });
   }
 
+  dynamic checkAddressValidation(
+      UserAddressCollection3 userAddressCollection3) {
+    var addrLine1 = userAddressCollection3?.addressLine1;
+    var city = userAddressCollection3?.city?.name;
+    var state = userAddressCollection3?.state?.name;
+    if (addrLine1 != '' && city != '' && state != '') {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  void checkCSIRPackageVaildation() async{
+    if (widget.arguments.isFromCSIR) {
+      MyProfileModel myProfile = await CommonUtil().fetchUserProfileInfo();
+      if (myProfile?.result?.userAddressCollection3?.isNotEmpty) {
+        final callback = checkAddressValidation(
+            myProfile?.result?.userAddressCollection3[0]);
+        if (callback) {
+          // show the disclimer dialog
+          //FlutterToast().getToast('Disclaimer', Colors.green);
+          Navigator.of(context).pop();
+          CommonUtil().mDisclaimerAlertDialog();
+        } else {
+          // do nothing
+          Navigator.of(context).pop();
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     dialogContext = context;
     return WillPopScope(
       onWillPop: () async {
-        Navigator.of(context).pop();
-        //Navigator.of(context).pop();
+        if (widget.arguments.isFromCSIR) {
+          MyProfileModel myProfile = await CommonUtil().fetchUserProfileInfo();
+          if (myProfile?.result?.userAddressCollection3?.isNotEmpty) {
+            final callback = checkAddressValidation(
+                myProfile?.result?.userAddressCollection3[0]);
+            if (callback) {
+              // show the disclimer dialog
+              //FlutterToast().getToast('Disclaimer', Colors.green);
+              Navigator.of(context).pop();
+              CommonUtil().mDisclaimerAlertDialog();
+            } else {
+              // do nothing\
+              //FlutterToast().getToast('Do nothing', Colors.red);
+              Navigator.of(context).pop();
+            }
+          }
+        }
+
+        //await checkCSIRPackageVaildation();
         return Future.value(true);
       },
       child: Scaffold(
@@ -182,8 +231,26 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   color: Colors.black,
                   size: 24.0.sp,
                 ),
-                onPressed: () {
-                  Navigator.of(context).pop();
+                onPressed: () async {
+                  if (widget.arguments.isFromCSIR) {
+                    MyProfileModel myProfile =
+                        await CommonUtil().fetchUserProfileInfo();
+                    if (myProfile?.result?.userAddressCollection3?.isNotEmpty) {
+                      final callback = checkAddressValidation(
+                          myProfile?.result?.userAddressCollection3[0]);
+                      if (callback) {
+                        // show the disclimer dialog
+                        Navigator.of(context).pop();
+                        CommonUtil().mDisclaimerAlertDialog();
+                      } else {
+                        // do nothing
+                        //FlutterToast().getToast('Do nothing', Colors.red);
+                        Navigator.of(context).pop();
+                      }
+                    }
+                  }
+                  //await checkCSIRPackageVaildation();
+                  //Navigator.of(context).pop();
                   //Navigator.of(context).pop();
                 },
               )),
@@ -1663,7 +1730,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           if (value != null && value.isSuccess) {
             chatViewModel.upateUserNickname(myProf.result.id,
                 firstNameController.text + ' ' + lastNameController.text);
-            _familyListBloc.getFamilyMembersListNew().then((value) {
+            _familyListBloc.getFamilyMembersListNew().then((value) async {
               /*MySliverAppBar.imageURI = null;
                     fetchedProfileData = null;*/
 
@@ -1686,6 +1753,23 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               imageURI = null;
               Navigator.pop(dialogContext);
               Navigator.pop(dialogContext, true);
+              if (widget.arguments.isFromCSIR) {
+                    MyProfileModel myProfile =
+                        await CommonUtil().fetchUserProfileInfo();
+                    if (myProfile?.result?.userAddressCollection3?.isNotEmpty) {
+                      final callback = checkAddressValidation(
+                          myProfile?.result?.userAddressCollection3[0]);
+                      if (callback) {
+                        // show the disclimer dialog
+                        //Navigator.of(context).pop();
+                        CommonUtil().mDisclaimerAlertDialog();
+                      } else {
+                        // do nothing
+                        //FlutterToast().getToast('Do nothing', Colors.red);
+                        //Navigator.of(context).pop();
+                      }
+                    }
+                  }
             });
           } else {
             Navigator.pop(dialogContext);

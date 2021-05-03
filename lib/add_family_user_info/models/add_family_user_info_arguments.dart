@@ -15,6 +15,7 @@ class AddFamilyUserInfoArguments {
   SharedByUsers sharedbyme;
   String fromClass;
   MyProfileResult myProfileResult;
+  bool isFromCSIR;
 
   AddFamilyUserInfoArguments(
       {this.addFamilyUserInfo,
@@ -26,5 +27,5 @@ class AddFamilyUserInfoArguments {
       this.id,
       this.isPrimaryNoSelected,
       this.sharedbyme,
-      this.fromClass,this.myProfileResult});
+      this.fromClass,this.myProfileResult,this.isFromCSIR=false});
 }
