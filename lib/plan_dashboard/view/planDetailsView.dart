@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:path/path.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class MyPlanDetailView extends StatefulWidget {
   final String title;
@@ -8,16 +11,18 @@ class MyPlanDetailView extends StatefulWidget {
   final String issubscription;
   final String packageId;
   final String providerName;
+  final String packageDuration;
 
-  MyPlanDetailView(
-      {Key key,
-      @required this.title,
-      @required this.description,
-      @required this.price,
-      @required this.issubscription,
-      @required this.packageId,
-      @required this.providerName})
-      : super(key: key);
+  MyPlanDetailView({
+    Key key,
+    @required this.title,
+    @required this.description,
+    @required this.price,
+    @required this.issubscription,
+    @required this.packageId,
+    @required this.providerName,
+    @required this.packageDuration,
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -26,14 +31,13 @@ class MyPlanDetailView extends StatefulWidget {
 }
 
 class PlanDetail extends State<MyPlanDetailView> {
-  //MyPlanViewModel myPlanViewModel = new MyPlanViewModel();
-
   String title;
   String description;
   String price;
   String issubscription;
   String packageId;
   String providerName;
+  String packageDuration;
 
   @override
   void initState() {
@@ -48,207 +52,279 @@ class PlanDetail extends State<MyPlanDetailView> {
     issubscription = widget.issubscription;
     packageId = widget.packageId;
     providerName = widget.providerName;
+    packageDuration = widget.packageDuration;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          leading: GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: Icon(
-              Icons.arrow_back_ios, // add custom icons also
-              size: 24.0,
-            ),
-          ),
-          title: Text(
-            'Plans',
-            style: TextStyle(
-              fontSize: 18.0,
-              fontWeight: FontWeight.w500,
-            ),
+      appBar: AppBar(
+        leading: GestureDetector(
+          onTap: () => Navigator.pop(context),
+          child: Icon(
+            Icons.arrow_back_ios, // add custom icons also
+            size: 24.0,
           ),
         ),
-        body: getMainWidget());
-  }
-
-  Widget getMainWidget() {
-    return Column(
-      children: [
-        SizedBox(height: 30),
-        Stack(
-          alignment: Alignment.topCenter,
-          children: <Widget>[
-            Container(
-              margin: EdgeInsets.only(top: 20, left: 15, right: 15),
-              child: Card(
-                  color: Colors.white,
-                  child: Column(
-                    children: [
-                      SizedBox(height: 30),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              SizedBox(
-                                width: 200,
-                                child: Text(
-                                  title != null && title != '' ? title : '-',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              ),
-                              SizedBox(height: 5),
-                              SizedBox(
-                                width: 200,
-                                child: Text(
-                                    providerName != null && providerName != ''
-                                        ? providerName
-                                        : '-',
-                                    style: TextStyle(color: Colors.grey[600])),
-                              ),
-                              SizedBox(height: 5),
-                              SizedBox(
-                                width: 200,
-                                child: Text(
-                                  description != null && description != '' ? description : '-',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              ),
-                              
-                              // SizedBox(
-                              //   width: 200,
-                              //   child: Text(
-                              //       docName != null && docName != ''
-                              //           ? docName
-                              //           : '-',
-                              //       style: TextStyle()),
-                              // ),
-                              // SizedBox(height: 8),
-                              // Column(
-                              //   children: [
-                              //     Row(
-                              //       children: [
-                              //         Text("Start Date: ",
-                              //             style: TextStyle(fontSize: 9)),
-                              //         Text(
-                              //             startDate != null && startDate != ''
-                              //                 ? new CommonUtil()
-                              //                     .dateFormatConversion(
-                              //                         startDate)
-                              //                 : '-',
-                              //             style: TextStyle(
-                              //                 fontSize: 9,
-                              //                 fontWeight: FontWeight.bold)),
-                              //         SizedBox(width: 5),
-                              //         Text("End Date: ",
-                              //             style: TextStyle(fontSize: 9)),
-                              //         Text(
-                              //             endDate != null && endDate != ''
-                              //                 ? new CommonUtil()
-                              //                     .dateFormatConversion(endDate)
-                              //                 : '-',
-                              //             style: TextStyle(
-                              //                 fontSize: 9,
-                              //                 fontWeight: FontWeight.bold)),
-                              //       ],
-                              //     ),
-                              //   ],
-                              // ),
-                              // Column(
-                              //   children: [
-                              //     SizedBox(height: 10),
-                              //     Text("Activities Associated",
-                              //         style: TextStyle(
-                              //             color: Colors.grey[500],
-                              //             fontSize: 10)),
-                              //   ],
-                              // ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      // Column(
-                      //   crossAxisAlignment: CrossAxisAlignment.center,
-                      //   children: [getActivityList()],
-                      // ),
-                      SizedBox(height: 20),
-                      //Divider(color: Colors.grey[500]),
-                      SizedBox(height: 3),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          OutlineButton(
-                            //hoverColor: Color(getMyPrimaryColor()),
-                            child: Text(
-                              issubscription == '1'
-                                  ? 'subscribe'.toUpperCase()
-                                  : 'unsubscribe'.toUpperCase(),
-                              style: TextStyle(
-                                color: Color(CommonUtil().getMyPrimaryColor()),
-                                fontSize: 13,
-                              ),
-                            ),
-                            onPressed: () async {
-                              // open profile page
-                              //Navigator.of(context).pop();
-                              CommonUtil().mDisclaimerAlertDialog();
-                              
-                            },
-                            borderSide: BorderSide(
-                              color: Color(
-                                CommonUtil().getMyPrimaryColor(),
-                              ),
-                              style: BorderStyle.solid,
-                              width: 1,
-                            ),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          OutlineButton(
-                            //hoverColor: Color(getMyPrimaryColor()),
-                            child: Text(
-                              'cancel'.toUpperCase(),
-                              style: TextStyle(
-                                color: Color(CommonUtil().getMyPrimaryColor()),
-                                fontSize: 13,
-                              ),
-                            ),
-                            onPressed: () async {
-                              // open profile page
-                              Navigator.of(context).pop();
-                            },
-                            borderSide: BorderSide(
-                              color: Color(
-                                CommonUtil().getMyPrimaryColor(),
-                              ),
-                              style: BorderStyle.solid,
-                              width: 1,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 10),
-                    ],
-                  )),
-            ),
-            CircleAvatar(
-              backgroundImage: AssetImage('assets/launcher/myfhb1.png'),
-              radius: 24,
-              backgroundColor: Colors.transparent,
-            )
-          ],
+        title: Text(
+          'Plans',
+          style: TextStyle(
+            fontSize: 18.0,
+            fontWeight: FontWeight.w500,
+          ),
         ),
-      ],
+      ),
+      body: Builder(
+        builder: (contxt) => Container(
+          alignment: Alignment.center,
+          child: Column(
+            children: [
+              CircleAvatar(
+                backgroundImage: AssetImage('assets/launcher/myfhb1.png'),
+                radius: 50.sp,
+                backgroundColor: Colors.transparent,
+              ),
+              SizedBox(
+                height: 20.h,
+              ),
+              Text(
+                title != null && title != '' ? title : '-',
+                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500),
+              ),
+              SizedBox(
+                height: 10.h,
+              ),
+              Text(
+                providerName != null && providerName != '' ? providerName : '-',
+                style: TextStyle(fontSize: 14.sp, color: Colors.grey[600]),
+              ),
+              SizedBox(
+                height: 10.h,
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    packageDuration != null && packageDuration != ''
+                        ? 'Duration $packageDuration days'
+                        : 'Duration -',
+                    style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600),
+                  ),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Text(
+                    price != null && price != '' ? 'INR $price' : '-',
+                    style: TextStyle(
+                        color: Color(CommonUtil().getMyPrimaryColor()),
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600),
+                  ),
+                ],
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                height: 0.55.sh,
+                child: SingleChildScrollView(
+                  child: Html(
+                    data: description.replaceAll('src="//', 'src="'),
+                    shrinkWrap: true,
+                    onLinkTap: (linkUrl) {
+                      CommonUtil().openWebViewNew(widget.title, linkUrl, false);
+                      print(linkUrl);
+                    },
+                  ),
+                ),
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  OutlineButton(
+                    //hoverColor: Color(getMyPrimaryColor()),
+                    child: Text(
+                      issubscription == '0'
+                          ? 'subscribe'.toUpperCase()
+                          : 'unsubscribe'.toUpperCase(),
+                      style: TextStyle(
+                        color: Color(CommonUtil().getMyPrimaryColor()),
+                        fontSize: 13.sp,
+                      ),
+                    ),
+                    onPressed: () async {
+                      // open profile page
+                      CommonUtil().profileValidationCheck(contxt,
+                          packageId: packageId, isSubscribed: issubscription);
+                    },
+                    borderSide: BorderSide(
+                      color: Color(
+                        CommonUtil().getMyPrimaryColor(),
+                      ),
+                      style: BorderStyle.solid,
+                      width: 1,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  OutlineButton(
+                    //hoverColor: Color(getMyPrimaryColor()),
+                    child: Text(
+                      'cancel'.toUpperCase(),
+                      style: TextStyle(
+                        color: Color(CommonUtil().getMyPrimaryColor()),
+                        fontSize: 13.sp,
+                      ),
+                    ),
+                    onPressed: () async {
+                      // open profile page
+                      Navigator.of(context).pop();
+                    },
+                    borderSide: BorderSide(
+                      color: Color(
+                        CommonUtil().getMyPrimaryColor(),
+                      ),
+                      style: BorderStyle.solid,
+                      width: 1,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
+
+  /* Widget getMainWidget(BuildContext context) {
+    return Container(
+      alignment: Alignment.center,
+      child: Column(
+        children: [
+          CircleAvatar(
+            backgroundImage: AssetImage('assets/launcher/myfhb1.png'),
+            radius: 50.sp,
+            backgroundColor: Colors.transparent,
+          ),
+          SizedBox(
+            height: 20.h,
+          ),
+          Text(
+            title != null && title != '' ? title : '-',
+            style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500),
+          ),
+          SizedBox(
+            height: 10.h,
+          ),
+          Text(
+            providerName != null && providerName != '' ? providerName : '-',
+            style: TextStyle(fontSize: 14.sp, color: Colors.grey[600]),
+          ),
+          SizedBox(
+            height: 10.h,
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                packageDuration != null && packageDuration != ''
+                    ? 'Duration $packageDuration days'
+                    : 'Duration -',
+                style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w600),
+              ),
+              SizedBox(
+                width: 20,
+              ),
+              Text(
+                price != null && price != '' ? 'INR $price' : '-',
+                style: TextStyle(
+                    color: Color(CommonUtil().getMyPrimaryColor()),
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w600),
+              ),
+            ],
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            height: 0.55.sh,
+            child: SingleChildScrollView(
+              child: Html(
+                data: description.replaceAll('src="//', 'src="'),
+                shrinkWrap: true,
+                onLinkTap: (linkUrl) {
+                  CommonUtil().openWebViewNew(widget.title, linkUrl, false);
+                  print(linkUrl);
+                },
+              ),
+            ),
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              OutlineButton(
+                //hoverColor: Color(getMyPrimaryColor()),
+                child: Text(
+                  issubscription == '0'
+                      ? 'subscribe'.toUpperCase()
+                      : 'unsubscribe'.toUpperCase(),
+                  style: TextStyle(
+                    color: Color(CommonUtil().getMyPrimaryColor()),
+                    fontSize: 13.sp,
+                  ),
+                ),
+                onPressed: () async {
+                  // open profile page
+                  CommonUtil().profileValidationCheck(context,
+                      packageId: packageId, isSubscribed: issubscription);
+                },
+                borderSide: BorderSide(
+                  color: Color(
+                    CommonUtil().getMyPrimaryColor(),
+                  ),
+                  style: BorderStyle.solid,
+                  width: 1,
+                ),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              OutlineButton(
+                //hoverColor: Color(getMyPrimaryColor()),
+                child: Text(
+                  'cancel'.toUpperCase(),
+                  style: TextStyle(
+                    color: Color(CommonUtil().getMyPrimaryColor()),
+                    fontSize: 13.sp,
+                  ),
+                ),
+                onPressed: () async {
+                  // open profile page
+                  Navigator.of(context).pop();
+                },
+                borderSide: BorderSide(
+                  color: Color(
+                    CommonUtil().getMyPrimaryColor(),
+                  ),
+                  style: BorderStyle.solid,
+                  width: 1,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  } */
 
   // Widget getActivityList() {
   //   return new FutureBuilder<MyPlanDetailModel>(
