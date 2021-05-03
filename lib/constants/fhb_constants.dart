@@ -422,6 +422,8 @@ const strFiles = 'file';
 const strAudio = 'audio';
 
 const strUploading = 'Uploading...';
+const strSubscribe = 'Subscribe';
+const strUnSubscribe = 'UnSubscribe';
 
 
 FirebaseAnalytics _firebaseAnalytics = FirebaseAnalytics();

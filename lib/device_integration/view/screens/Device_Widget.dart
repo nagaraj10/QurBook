@@ -19,6 +19,7 @@ import 'package:myfhb/device_integration/viewModel/deviceDataHelper.dart';
 import 'package:myfhb/devices/device_dashboard_arguments.dart';
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/screens/MyFamily.dart';
+import 'package:myfhb/plan_dashboard/view/planList.dart';
 import 'package:myfhb/regiment/view/regiment_tab.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/common_response.dart';
@@ -476,7 +477,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       return Container(
         height: constraints.maxHeight,
         child: DefaultTabController(
-          length: 2,
+          length: 3,
           initialIndex: 0,
           child: Column(
             mainAxisSize: MainAxisSize.max,
@@ -589,6 +590,14 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                             ),
                                           ),
                                         ),
+                                        Tab(
+                                          child: Text(
+                                            'Plans',
+                                            style: TextStyle(
+                                              fontSize: 16.0.sp,
+                                            ),
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   ),
@@ -613,6 +622,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                         child: getValues(context, _devicesmodel),
                       ),
                     ),
+                    PlanList(),
                   ],
                 ),
               ),
