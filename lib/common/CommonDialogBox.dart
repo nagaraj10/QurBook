@@ -2440,7 +2440,8 @@ class CommonDialogBox {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            fhbBasicWidget.getTextTextTitleWithPurpleColor(categoryName),
+            fhbBasicWidget.getTextTextTitleWithPurpleColor(
+                categoryName != null ? categoryName : 'Notes'),
             IconButton(
               icon: Icon(
                 Icons.close,
