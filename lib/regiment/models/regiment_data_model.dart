@@ -34,6 +34,8 @@ class RegimentDataModel {
     this.providername,
     this.hasform,
     this.saytext,
+    this.doseMeal,
+    this.doseRepeat,
   });
 
   final String eid;
@@ -68,6 +70,8 @@ class RegimentDataModel {
   final String providername;
   final bool hasform;
   final String saytext;
+  final bool doseMeal;
+  final String doseRepeat;
 
   factory RegimentDataModel.fromJson(Map<String, dynamic> json) =>
       RegimentDataModel(
@@ -104,6 +108,8 @@ class RegimentDataModel {
         providername: json["providername"],
         hasform: (json["hasform"] ?? 0) == 1,
         saytext: json["saytext"],
+        doseMeal: (json["dosemeal"] ?? 0).toString() == '1',
+        doseRepeat: json["doserepeat"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -139,6 +145,8 @@ class RegimentDataModel {
         "providername": providername,
         "hasform": hasform,
         "saytext": saytext,
+        "dosemeal": doseMeal,
+        "doserepeat": doseRepeat,
       };
 }
 
