@@ -3,6 +3,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:path/path.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import 'package:get/get.dart';
 
 class MyPlanDetailView extends StatefulWidget {
   final String title;
@@ -12,6 +13,7 @@ class MyPlanDetailView extends StatefulWidget {
   final String packageId;
   final String providerName;
   final String packageDuration;
+  final String providerId;
 
   MyPlanDetailView({
     Key key,
@@ -22,6 +24,7 @@ class MyPlanDetailView extends StatefulWidget {
     @required this.packageId,
     @required this.providerName,
     @required this.packageDuration,
+    @required this.providerId,
   }) : super(key: key);
 
   @override
@@ -38,6 +41,7 @@ class PlanDetail extends State<MyPlanDetailView> {
   String packageId;
   String providerName;
   String packageDuration;
+  String providerId;
 
   @override
   void initState() {
@@ -53,6 +57,7 @@ class PlanDetail extends State<MyPlanDetailView> {
     packageId = widget.packageId;
     providerName = widget.providerName;
     packageDuration = widget.packageDuration;
+    providerId = widget.providerId;
   }
 
   @override
@@ -60,7 +65,7 @@ class PlanDetail extends State<MyPlanDetailView> {
     return Scaffold(
       appBar: AppBar(
         leading: GestureDetector(
-          onTap: () => Navigator.pop(context),
+          onTap: () => Get.back(),
           child: Icon(
             Icons.arrow_back_ios, // add custom icons also
             size: 24.0,
@@ -108,11 +113,9 @@ class PlanDetail extends State<MyPlanDetailView> {
                   Row(
                     children: [
                       Text(
-                        'Duration :',
-                        style: TextStyle(
-                            color: Colors.grey[600],
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w600),
+                        'Duration: ',
+                        style:
+                            TextStyle(color: Colors.grey[600], fontSize: 14.sp),
                       ),
                       Text(
                         packageDuration != null && packageDuration != ''
@@ -132,10 +135,8 @@ class PlanDetail extends State<MyPlanDetailView> {
                     children: [
                       Text(
                         'Price: ',
-                        style: TextStyle(
-                            color: Colors.grey[600],
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w600),
+                        style:
+                            TextStyle(color: Colors.grey[600], fontSize: 14.sp),
                       ),
                       Text(
                         price != null && price != '' ? 'INR $price' : '-',
@@ -177,9 +178,17 @@ class PlanDetail extends State<MyPlanDetailView> {
                       ),
                     ),
                     onPressed: () async {
-                      // open profile page
-                      CommonUtil().profileValidationCheck(contxt,
-                          packageId: packageId, isSubscribed: issubscription);
+                      if (issubscription == '0') {
+                        CommonUtil().profileValidationCheck(contxt,
+                            packageId: packageId,
+                            isSubscribed: issubscription,
+                            providerId: providerId);
+                      } else {
+                        CommonUtil().unSubcribeAlertDialog(context,
+                            packageId: packageId, refresh: () {
+                          setState(() {});
+                        });
+                      }
                     },
                     borderSide: BorderSide(
                       color: Color(
