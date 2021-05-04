@@ -110,6 +110,7 @@ class CommonUtil {
 
   CategoryResult categoryDataObjClone = new CategoryResult();
   CategoryResponseListRepository _categoryResponseListRepository;
+  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
 
   static bool audioPage = false;
 
@@ -123,7 +124,9 @@ class CommonUtil {
   final String CONTENT_DISCALIMER =
       'QurHealth is just the service provider, and the service provided as part of QurPlan depends on the sole discretion of your care provider and only works best as the information shared by you with your care provider. If the information shared by you is incorrect or untrue, or withheld from the care provider, then neither the care provider nor QurHealth can be held responsible for any untoward illness or sickness.';
   final String CONTENT_PROFILE_CHECK =
-      'This profile is incomplete. please complete the profile before subscribing';
+      'Oops! Your profile is incomplete. Please complete the profile to subscribe to a QurPlan.';
+  final String CONTENT_UNSUBSCRIBE_PACKAGE =
+      'Are you sure you want to unsubscribe?';
   static Future<dynamic> getResourceLoader() async {
     final Future<Secret> secret =
         SecretLoader(secretPath: "secrets.json").load();
@@ -1864,7 +1867,7 @@ class CommonUtil {
   }
 
   profileValidationCheck(BuildContext context,
-      {String packageId, String isSubscribed,Function() refresh}) async {
+      {String packageId, String isSubscribed, Function() refresh}) async {
     var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     await addFamilyUserInfoRepository.getMyProfileInfoNew(userId).then((value) {
       myProfile = value;
@@ -1872,14 +1875,14 @@ class CommonUtil {
 
     if (myProfile != null) {
       addressValidation(context,
-          packageId: packageId, isSubscribed: isSubscribed,refresh: refresh);
+          packageId: packageId, isSubscribed: isSubscribed, refresh: refresh);
     } else {
       FlutterToast().getToast(noGender, Colors.red);
     }
   }
 
   addressValidation(BuildContext context,
-      {String packageId, String isSubscribed,Function() refresh}) {
+      {String packageId, String isSubscribed, Function() refresh}) {
     if (myProfile != null) {
       if (myProfile.isSuccess) {
         if (myProfile.result != null) {
@@ -1896,90 +1899,84 @@ class CommonUtil {
                       if (myProfile.result.userAddressCollection3.length > 0) {
                         patientAddressCheck(
                             myProfile.result.userAddressCollection3[0], context,
-                            packageId: packageId, isSubscribed: isSubscribed,refresh: refresh);
+                            packageId: packageId,
+                            isSubscribed: isSubscribed,
+                            refresh: refresh);
                       } else {
                         mCustomAlertDialog(context,
                             content: CONTENT_PROFILE_CHECK,
                             packageId: packageId,
-                            isSubscribed: isSubscribed);
+                            isSubscribed: isSubscribed,
+                            refresh: refresh);
                       }
                     } else {
-                      mCustomAlertDialog(
-                        context,
+                      mCustomAlertDialog(context,
+                          content: CONTENT_PROFILE_CHECK,
+                          packageId: packageId,
+                          isSubscribed: isSubscribed,
+                          refresh: refresh);
+                    }
+                  } else {
+                    mCustomAlertDialog(context,
                         content: CONTENT_PROFILE_CHECK,
                         packageId: packageId,
                         isSubscribed: isSubscribed,
-                      );
-                    }
-                  } else {
-                    mCustomAlertDialog(
-                      context,
+                        refresh: refresh);
+                  }
+                } else {
+                  mCustomAlertDialog(context,
                       content: CONTENT_PROFILE_CHECK,
                       packageId: packageId,
                       isSubscribed: isSubscribed,
-                    );
-                  }
-                } else {
-                  mCustomAlertDialog(
-                    context,
+                      refresh: refresh);
+                }
+              } else {
+                mCustomAlertDialog(context,
                     content: CONTENT_PROFILE_CHECK,
                     packageId: packageId,
                     isSubscribed: isSubscribed,
-                  );
-                }
-              } else {
-                mCustomAlertDialog(
-                  context,
+                    refresh: refresh);
+              }
+            } else {
+              mCustomAlertDialog(context,
                   content: CONTENT_PROFILE_CHECK,
                   packageId: packageId,
                   isSubscribed: isSubscribed,
-                );
-              }
-            } else {
-              mCustomAlertDialog(
-                context,
+                  refresh: refresh);
+            }
+          } else {
+            mCustomAlertDialog(context,
                 content: CONTENT_PROFILE_CHECK,
                 packageId: packageId,
                 isSubscribed: isSubscribed,
-              );
-            }
-          } else {
-            mCustomAlertDialog(
-              context,
+                refresh: refresh);
+          }
+        } else {
+          mCustomAlertDialog(context,
               content: CONTENT_PROFILE_CHECK,
               packageId: packageId,
               isSubscribed: isSubscribed,
-            );
-          }
-        } else {
-          mCustomAlertDialog(
-            context,
+              refresh: refresh);
+        }
+      } else {
+        mCustomAlertDialog(context,
             content: CONTENT_PROFILE_CHECK,
             packageId: packageId,
             isSubscribed: isSubscribed,
-          );
-        }
-      } else {
-        mCustomAlertDialog(
-          context,
+            refresh: refresh);
+      }
+    } else {
+      mCustomAlertDialog(context,
           content: CONTENT_PROFILE_CHECK,
           packageId: packageId,
           isSubscribed: isSubscribed,
-        );
-      }
-    } else {
-      mCustomAlertDialog(
-        context,
-        content: CONTENT_PROFILE_CHECK,
-        packageId: packageId,
-        isSubscribed: isSubscribed,
-      );
+          refresh: refresh);
     }
   }
 
   patientAddressCheck(
       UserAddressCollection3 userAddressCollection, BuildContext context,
-      {String packageId, String isSubscribed,Function() refresh}) {
+      {String packageId, String isSubscribed, Function() refresh}) {
     String address1 = userAddressCollection.addressLine1 != null
         ? userAddressCollection.addressLine1
         : '';
@@ -1994,7 +1991,7 @@ class CommonUtil {
       //check if its subcribed we need not to show disclimer alert
       if (isSubscribed == '1') {
         if (isSubscribed == '0') {
-           subscribeViewModel.subScribePlan(packageId).then((value) {
+          subscribeViewModel.subScribePlan(packageId).then((value) {
             if (value != null) {
               if (value.isSuccess) {
                 if (value.result != null) {
@@ -2011,34 +2008,46 @@ class CommonUtil {
             }
           });
         } else {
+          unSubcribeAlertDialog(context,
+              packageId: packageId, refresh: refresh);
+          /* CommonUtil.showLoadingDialog(
+                  context, _keyLoader, variable.Please_Wait);
            subscribeViewModel.UnsubScribePlan(packageId).then((value) {
             if (value != null) {
               if (value.isSuccess) {
                 if (value.result != null) {
                   if (value.result.result == 'Done') {
                     //setState(() {});
+                    Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
                     Get.back(result: 'refreshUI');
+                    refresh();
                   } else {
+                    Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
                     FlutterToast().getToast('UnSubscribe Failed', Colors.red);
                   }
                 }
               } else {
+                Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
                 FlutterToast().getToast('UnSubscribe Failed', Colors.red);
               }
             }
-          });
+            
+          }); */
         }
       } else {
         // if its unsubscibed need to invoke discalimer dialog
-        mDisclaimerAlertDialog(packageId: packageId, isSubscribed: isSubscribed,refresh: refresh);
+        mDisclaimerAlertDialog(
+            packageId: packageId,
+            isSubscribed: isSubscribed,
+            refresh: refresh,
+            context: context);
       }
     } else {
-      mCustomAlertDialog(
-        context,
-        content: CONTENT_PROFILE_CHECK,
-        packageId: packageId,
-        isSubscribed: isSubscribed,
-      );
+      mCustomAlertDialog(context,
+          content: CONTENT_PROFILE_CHECK,
+          packageId: packageId,
+          isSubscribed: isSubscribed,
+          refresh: refresh);
     }
   }
 
@@ -2046,7 +2055,8 @@ class CommonUtil {
       {String title,
       String content,
       String packageId,
-      String isSubscribed}) async {
+      String isSubscribed,
+      Function() refresh}) async {
     var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     showDialog<void>(
         context: context,
@@ -2067,14 +2077,15 @@ class CommonUtil {
                       content,
                       style: TextStyle(
                         color: Colors.black,
-                        fontSize: 20.0.sp,
+                        fontSize: 16.0.sp,
                       ),
                     ),
                     SizedBox(
                       height: 10.0.h,
                     ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         OutlineButton(
                           child: Text(
@@ -2098,6 +2109,9 @@ class CommonUtil {
                             width: 1,
                           ),
                         ),
+                        SizedBox(
+                          width: 10.0.h,
+                        ),
                         OutlineButton(
                           //hoverColor: Color(getMyPrimaryColor()),
                           child: Text(
@@ -2118,7 +2132,130 @@ class CommonUtil {
                                     fromClass: CommonConstants.user_update,
                                     isFromCSIR: true,
                                     packageId: packageId,
-                                    isSubscribed: isSubscribed));
+                                    isSubscribed: isSubscribed,
+                                    refresh: refresh));
+                          },
+                          borderSide: BorderSide(
+                            color: Color(
+                              getMyPrimaryColor(),
+                            ),
+                            style: BorderStyle.solid,
+                            width: 1,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ]),
+                ),
+              ),
+            ]),
+          );
+        });
+  }
+
+  Future<dynamic> unSubcribeAlertDialog(BuildContext context,
+      {String title,
+      String content,
+      String packageId,
+      String isSubscribed,
+      Function() refresh}) async {
+    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return new WillPopScope(
+            onWillPop: () async => false,
+            child: SimpleDialog(children: <Widget>[
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 20),
+                child: Center(
+                  child: Column(children: [
+                    //CircularProgressIndicator(),
+                    SizedBox(
+                      height: 10.0.h,
+                    ),
+                    Text(
+                      CONTENT_UNSUBSCRIBE_PACKAGE,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16.0.sp,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10.0.h,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        OutlineButton(
+                          child: Text(
+                            'no'.toUpperCase(),
+                            style: TextStyle(
+                              color: Color(
+                                getMyPrimaryColor(),
+                              ),
+                              fontSize: 13,
+                            ),
+                          ),
+                          onPressed: () async {
+                            // open profile page
+                            Navigator.of(context).pop();
+                          },
+                          borderSide: BorderSide(
+                            color: Color(
+                              getMyPrimaryColor(),
+                            ),
+                            style: BorderStyle.solid,
+                            width: 1,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10.0.h,
+                        ),
+                        OutlineButton(
+                          //hoverColor: Color(getMyPrimaryColor()),
+                          child: Text(
+                            'yes'.toUpperCase(),
+                            style: TextStyle(
+                              color: Color(getMyPrimaryColor()),
+                              fontSize: 13,
+                            ),
+                          ),
+                          onPressed: () async {
+                            CommonUtil.showLoadingDialog(
+                                context, _keyLoader, variable.Please_Wait);
+                            subscribeViewModel.UnsubScribePlan(packageId)
+                                .then((value) {
+                              if (value != null) {
+                                if (value.isSuccess) {
+                                  if (value.result != null) {
+                                    if (value.result.result == 'Done') {
+                                      //setState(() {});
+                                      Navigator.of(_keyLoader.currentContext,
+                                              rootNavigator: true)
+                                          .pop();
+                                      Get.back();
+                                      Get.back(result: 'refreshUI');
+                                      refresh();
+                                    } else {
+                                      Navigator.of(_keyLoader.currentContext,
+                                              rootNavigator: true)
+                                          .pop();
+                                      FlutterToast().getToast(
+                                          'UnSubscribe Failed', Colors.red);
+                                    }
+                                  }
+                                } else {
+                                  Navigator.of(_keyLoader.currentContext,
+                                          rootNavigator: true)
+                                      .pop();
+                                  FlutterToast().getToast(
+                                      'UnSubscribe Failed', Colors.red);
+                                }
+                              }
+                            });
                           },
                           borderSide: BorderSide(
                             color: Color(
@@ -2139,10 +2276,12 @@ class CommonUtil {
   }
 
   Future<dynamic> mDisclaimerAlertDialog(
-      {String title,
+      {BuildContext context,
+      String title,
       String content,
       String packageId,
-      String isSubscribed,Function() refresh}) async {
+      String isSubscribed,
+      Function() refresh}) async {
     await Get.dialog(
       AlertDialog(
         content: Column(
@@ -2202,7 +2341,8 @@ class CommonUtil {
                         ),
                         onPressed: () async {
                           // open profile page
-                          Get.back();
+                          CommonUtil.showLoadingDialog(
+                              context, _keyLoader, variable.Please_Wait);
                           if (isSubscribed == '0') {
                             await subscribeViewModel
                                 .subScribePlan(packageId)
@@ -2212,15 +2352,26 @@ class CommonUtil {
                                   if (value.result != null) {
                                     if (value.result.result == 'Done') {
                                       //provider API ll be added here
+                                      Navigator.of(_keyLoader.currentContext,
+                                              rootNavigator: true)
+                                          .pop();
+                                      Get.back();
                                       Get.back(result: 'refreshUI');
                                       refresh();
                                     } else {
+                                      Navigator.of(_keyLoader.currentContext,
+                                              rootNavigator: true)
+                                          .pop();
+                                      Get.back();
                                       Get.back(result: 'refreshUI');
                                       FlutterToast().getToast(
                                           'Already Subscribed', Colors.red);
                                     }
                                   }
                                 } else {
+                                  Navigator.of(_keyLoader.currentContext,
+                                          rootNavigator: true)
+                                      .pop();
                                   FlutterToast()
                                     ..getToast('Subscribe Failed', Colors.red);
                                 }
@@ -2233,15 +2384,24 @@ class CommonUtil {
                                 if (value.isSuccess) {
                                   if (value.result != null) {
                                     if (value.result.result == 'Done') {
+                                      Navigator.of(_keyLoader.currentContext,
+                                              rootNavigator: true)
+                                          .pop();
                                       Get.back(result: 'refreshUI');
                                       refresh();
                                     } else {
+                                      Navigator.of(_keyLoader.currentContext,
+                                              rootNavigator: true)
+                                          .pop();
                                       Get.back(result: 'refreshUI');
                                       FlutterToast().getToast(
                                           'UnSubscribe Failed', Colors.red);
                                     }
                                   }
                                 } else {
+                                  Navigator.of(_keyLoader.currentContext,
+                                          rootNavigator: true)
+                                      .pop();
                                   FlutterToast().getToast(
                                       'UnSubscribe Failed', Colors.red);
                                 }
