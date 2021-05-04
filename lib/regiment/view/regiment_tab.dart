@@ -13,6 +13,7 @@ import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/regiment/models/profile_response_model.dart';
 import 'package:myfhb/regiment/view/widgets/event_list_widget.dart';
 import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class RegimentTab extends StatefulWidget {
   @override
@@ -52,7 +53,8 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
     super.dispose();
   }
 
-  Color getColor(Activityname activityname, Uformname uformName) {
+  Color getColor(
+      Activityname activityname, Uformname uformName, Metadata metadata) {
     Color cardColor;
     switch (activityname) {
       case Activityname.DIET:
@@ -81,34 +83,64 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
     return cardColor;
   }
 
-  dynamic getIcon(Activityname activityname, Uformname uformName) {
+  dynamic getIcon(
+      Activityname activityname, Uformname uformName, Metadata metadata) {
     dynamic cardIcon;
-    switch (activityname) {
-      case Activityname.DIET:
-        cardIcon = Icons.fastfood_rounded;
-        break;
-      case Activityname.VITALS:
-        if (uformName == Uformname.BLOODPRESSURE) {
-          cardIcon = 'assets/devices/bp_dashboard.png';
-        } else if (uformName == Uformname.BLOODSUGAR) {
-          cardIcon = 'assets/devices/gulcose_dashboard.png';
-        } else if (uformName == Uformname.PULSE) {
-          cardIcon = 'assets/devices/os_dashboard.png';
-        } else {
-          cardIcon = Icons.lock_clock;
-        }
 
-        break;
-      case Activityname.MEDICATION:
-        cardIcon = Icons.medical_services;
-        break;
-      case Activityname.SCREENING:
-        cardIcon = Icons.screen_search_desktop;
-        break;
-      default:
-        cardIcon = Icons.lock_clock;
+    if (metadata?.icon != null) {
+      cardIcon = metadata.icon;
     }
-    return cardIcon;
+    try {
+      return CachedNetworkImage(
+        imageUrl: cardIcon,
+        height: 24.0.sp,
+        width: 24.0.sp,
+        errorWidget: (context, url, error) {
+          return Image.asset(
+            'assets/launcher/myfhb1.png',
+            height: 24.0.sp,
+            width: 24.0.sp,
+          );
+        },
+      );
+    } catch (e) {
+      return Image.asset(
+        'assets/launcher/myfhb1.png',
+        height: 24.0.sp,
+        width: 24.0.sp,
+      );
+    }
+    // if (metadata?.icon != null) {
+    //   cardIcon = metadata.icon;
+    // }
+    // else {
+    // switch (activityname) {
+    //   case Activityname.DIET:
+    //     cardIcon = Icons.fastfood_rounded;
+    //     break;
+    //   case Activityname.VITALS:
+    //     if (uformName == Uformname.BLOODPRESSURE) {
+    //       cardIcon = 'assets/devices/bp_dashboard.png';
+    //     } else if (uformName == Uformname.BLOODSUGAR) {
+    //       cardIcon = 'assets/devices/gulcose_dashboard.png';
+    //     } else if (uformName == Uformname.PULSE) {
+    //       cardIcon = 'assets/devices/os_dashboard.png';
+    //     } else {
+    //       cardIcon = Icons.lock_clock;
+    //     }
+    //
+    //     break;
+    //   case Activityname.MEDICATION:
+    //     cardIcon = Icons.medical_services;
+    //     break;
+    //   case Activityname.SCREENING:
+    //     cardIcon = Icons.screen_search_desktop;
+    //     break;
+    //   default:
+    //     cardIcon = Icons.lock_clock;
+    // }
+    // }
+    // return cardIcon;
   }
 
   @override
@@ -282,9 +314,9 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                             time: DateFormat('hh:mm\na')
                                 .format(regimentData.estart),
                             color: getColor(regimentData.activityname,
-                                regimentData.uformname),
+                                regimentData.uformname, regimentData.metadata),
                             icon: getIcon(regimentData.activityname,
-                                regimentData.uformname),
+                                regimentData.uformname, regimentData.metadata),
                             vitalsData: regimentData.uformdata.vitalsData,
                             eid: regimentData.eid,
                             mediaData: regimentData.otherinfo,

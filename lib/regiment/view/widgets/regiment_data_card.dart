@@ -101,19 +101,7 @@ class RegimentDataCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      //TODO: Change Icon to Image when data is from API
-                      if (icon is IconData)
-                        Icon(
-                          icon,
-                          color: Colors.white,
-                          size: 24.0.sp,
-                        ),
-                      if (icon is String)
-                        Image.asset(
-                          icon,
-                          height: 24.0.sp,
-                          width: 24.0.sp,
-                        ),
+                      icon,
                       Visibility(
                         visible: Provider.of<RegimentViewModel>(context,
                                     listen: false)
