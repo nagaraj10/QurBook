@@ -112,7 +112,9 @@ class RegimentDataModel {
         saytext: json['saytext'],
         doseMeal: (json['dosemeal'] ?? 0).toString() == '1',
         doseRepeat: json['doserepeat'],
-        metadata: Metadata.fromJson(json['metadata'] ?? {}),
+        metadata: json['metadata'] is List
+            ? Metadata()
+            : Metadata.fromJson(json['metadata'] ?? {}),
       );
 
   Map<String, dynamic> toJson() => {
