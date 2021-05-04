@@ -184,11 +184,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             myProfile?.result?.userAddressCollection3[0]);
         if (callback) {
           CommonUtil().mDisclaimerAlertDialog(
+              context: Get.context,
               packageId: widget.arguments.packageId,
-              isSubscribed: widget.arguments.isSubscribed
-              );
-        } else {
-        }
+              isSubscribed: widget.arguments.isSubscribed,
+              refresh: widget.arguments.refresh,);
+        } else {}
       }
     }
   }

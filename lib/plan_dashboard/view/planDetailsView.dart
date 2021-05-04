@@ -3,6 +3,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:path/path.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import 'package:get/get.dart';
 
 class MyPlanDetailView extends StatefulWidget {
   final String title;
@@ -60,7 +61,7 @@ class PlanDetail extends State<MyPlanDetailView> {
     return Scaffold(
       appBar: AppBar(
         leading: GestureDetector(
-          onTap: () => Navigator.pop(context),
+          onTap: () => Get.back(),
           child: Icon(
             Icons.arrow_back_ios, // add custom icons also
             size: 24.0,
@@ -108,11 +109,9 @@ class PlanDetail extends State<MyPlanDetailView> {
                   Row(
                     children: [
                       Text(
-                        'Duration :',
-                        style: TextStyle(
-                            color: Colors.grey[600],
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w600),
+                        'Duration: ',
+                        style:
+                            TextStyle(color: Colors.grey[600], fontSize: 14.sp),
                       ),
                       Text(
                         packageDuration != null && packageDuration != ''
@@ -134,8 +133,8 @@ class PlanDetail extends State<MyPlanDetailView> {
                         'Price: ',
                         style: TextStyle(
                             color: Colors.grey[600],
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w600),
+                            fontSize: 14.sp
+                            ),
                       ),
                       Text(
                         price != null && price != '' ? 'INR $price' : '-',
