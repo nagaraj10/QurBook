@@ -36,6 +36,7 @@ class RegimentDataModel {
     this.saytext,
     this.doseMeal,
     this.doseRepeat,
+    this.metadata,
   });
 
   final String eid;
@@ -72,81 +73,86 @@ class RegimentDataModel {
   final String saytext;
   final bool doseMeal;
   final String doseRepeat;
+  final Metadata metadata;
 
   factory RegimentDataModel.fromJson(Map<String, dynamic> json) =>
       RegimentDataModel(
-        eid: json["eid"],
-        providerid: json["providerid"],
-        uid: json["uid"],
-        title: json["title"],
-        description: json["description"],
-        tplanid: json["tplanid"],
-        teidUser: json["teid_user"],
-        aid: json["aid"],
-        activityname: activitynameValues.map[json["activityname"]],
-        uformid: json["uformid"],
-        uformname: uformnameValues.map[json["uformname"]],
-        estart: DateTime.tryParse(json["estart"] ?? ''),
-        eend: DateTime.tryParse(json["eend"] ?? ''),
-        html: json["html"],
+        eid: json['eid'],
+        providerid: json['providerid'],
+        uid: json['uid'],
+        title: json['title'],
+        description: json['description'],
+        tplanid: json['tplanid'],
+        teidUser: json['teid_user'],
+        aid: json['aid'],
+        activityname: activitynameValues.map[json['activityname']],
+        uformid: json['uformid'],
+        uformname: uformnameValues.map[json['uformname']],
+        estart: DateTime.tryParse(json['estart'] ?? ''),
+        eend: DateTime.tryParse(json['eend'] ?? ''),
+        html: json['html'],
         otherinfo: Otherinfo.fromJson(
-            json["otherinfo"] is List ? {} : (json["otherinfo"] ?? '{}')),
-        remindin: json["remindin"],
-        remindinType: json["remindin_type"],
-        ack: DateTime.tryParse(json["ack"] ?? ''),
-        alarm: json["alarm"],
-        uformdata: UformData().fromJson(jsonDecode(json["uformdata"] ?? '{}')),
-        ts: DateTime.tryParse(json["ts"] ?? ''),
-        deleted: json["deleted"],
-        evDuration: json["ev_duration"],
-        hashtml: (json["hashtml"] ?? 0) == 1,
-        hascustform: json["hascustform"],
-        htmltemplate: json["htmltemplate"],
-        dosesNeeded: json["doses_needed"],
-        dosesAvailable: json["doses_available"],
-        dosesUsed: json["doses_used"],
-        providername: json["providername"],
-        hasform: (json["hasform"] ?? 0) == 1,
-        saytext: json["saytext"],
-        doseMeal: (json["dosemeal"] ?? 0).toString() == '1',
-        doseRepeat: json["doserepeat"],
+            json['otherinfo'] is List ? {} : (json['otherinfo'] ?? '{}')),
+        remindin: json['remindin'],
+        remindinType: json['remindin_type'],
+        ack: DateTime.tryParse(json['ack'] ?? ''),
+        alarm: json['alarm'],
+        uformdata: UformData().fromJson(jsonDecode(json['uformdata'] ?? '{}')),
+        ts: DateTime.tryParse(json['ts'] ?? ''),
+        deleted: json['deleted'],
+        evDuration: json['ev_duration'],
+        hashtml: (json['hashtml'] ?? 0) == 1,
+        hascustform: json['hascustform'],
+        htmltemplate: json['htmltemplate'],
+        dosesNeeded: json['doses_needed'],
+        dosesAvailable: json['doses_available'],
+        dosesUsed: json['doses_used'],
+        providername: json['providername'],
+        hasform: (json['hasform'] ?? 0) == 1,
+        saytext: json['saytext'],
+        doseMeal: (json['dosemeal'] ?? 0).toString() == '1',
+        doseRepeat: json['doserepeat'],
+        metadata: json['metadata'] is List
+            ? Metadata()
+            : Metadata.fromJson(json['metadata'] ?? {}),
       );
 
   Map<String, dynamic> toJson() => {
-        "eid": eid,
-        "providerid": providerid,
-        "uid": uid,
-        "title": title,
-        "description": description,
-        "tplanid": tplanid,
-        "teid_user": teidUser,
-        "aid": aid,
-        "activityname": activitynameValues.reverse[activityname],
-        "uformid": uformid,
-        "uformname": uformnameValues.reverse[uformname],
-        "estart": estart.toIso8601String(),
-        "eend": eend.toIso8601String(),
-        "html": html,
-        "otherinfo": otherinfo.toJson(),
-        "remindin": remindin,
-        "remindin_type": remindinType,
-        "ack": ack.toIso8601String(),
-        "alarm": alarm,
-        "uformdata": uformdata,
-        "ts": ts.toIso8601String(),
-        "deleted": deleted,
-        "ev_duration": evDuration,
-        "hashtml": hashtml,
-        "hascustform": hascustform,
-        "htmltemplate": htmltemplate,
-        "doses_needed": dosesNeeded,
-        "doses_available": dosesAvailable,
-        "doses_used": dosesUsed,
-        "providername": providername,
-        "hasform": hasform,
-        "saytext": saytext,
-        "dosemeal": doseMeal,
-        "doserepeat": doseRepeat,
+        'eid': eid,
+        'providerid': providerid,
+        'uid': uid,
+        'title': title,
+        'description': description,
+        'tplanid': tplanid,
+        'teid_user': teidUser,
+        'aid': aid,
+        'activityname': activitynameValues.reverse[activityname],
+        'uformid': uformid,
+        'uformname': uformnameValues.reverse[uformname],
+        'estart': estart.toIso8601String(),
+        'eend': eend.toIso8601String(),
+        'html': html,
+        'otherinfo': otherinfo.toJson(),
+        'remindin': remindin,
+        'remindin_type': remindinType,
+        'ack': ack.toIso8601String(),
+        'alarm': alarm,
+        'uformdata': uformdata,
+        'ts': ts.toIso8601String(),
+        'deleted': deleted,
+        'ev_duration': evDuration,
+        'hashtml': hashtml,
+        'hascustform': hascustform,
+        'htmltemplate': htmltemplate,
+        'doses_needed': dosesNeeded,
+        'doses_available': dosesAvailable,
+        'doses_used': dosesUsed,
+        'providername': providername,
+        'hasform': hasform,
+        'saytext': saytext,
+        'dosemeal': doseMeal,
+        'doserepeat': doseRepeat,
+        'metadata': metadata.toJson(),
       };
 }
 
@@ -164,17 +170,17 @@ class Otherinfo {
   final String needFile;
 
   factory Otherinfo.fromJson(Map<String, dynamic> json) => Otherinfo(
-        needPhoto: (json["NeedPhoto"] ?? 0).toString(),
-        needAudio: (json["NeedAudio"] ?? 0).toString(),
-        needVideo: (json["NeedVideo"] ?? 0).toString(),
-        needFile: (json["NeedFile"] ?? 0).toString(),
+        needPhoto: (json['NeedPhoto'] ?? 0).toString(),
+        needAudio: (json['NeedAudio'] ?? 0).toString(),
+        needVideo: (json['NeedVideo'] ?? 0).toString(),
+        needFile: (json['NeedFile'] ?? 0).toString(),
       );
 
   Map<String, dynamic> toJson() => {
-        "NeedPhoto": needPhoto,
-        "NeedAudio": needAudio,
-        "NeedVideo": needVideo,
-        "NeedFile": needFile,
+        'NeedPhoto': needPhoto,
+        'NeedAudio': needAudio,
+        'NeedVideo': needVideo,
+        'NeedFile': needFile,
       };
 }
 
@@ -230,54 +236,54 @@ class VitalsData {
 
   factory VitalsData.fromJson(Map<String, dynamic> json) {
     return VitalsData(
-      vitalName: json["vitalName"] ?? '',
-      value: json["value"],
-      type: json["type"],
-      display: json["display"],
-      alarm: json["alarm"],
-      amin: json["amin"],
-      amax: json["amax"],
-      fieldType: fieldTypeValues.map[json["type"]],
+      vitalName: json['vitalName'] ?? '',
+      value: json['value'],
+      type: json['type'],
+      display: json['display'],
+      alarm: json['alarm'],
+      amin: json['amin'],
+      amax: json['amax'],
+      fieldType: fieldTypeValues.map[json['type']],
     );
   }
 
   Map<String, dynamic> toJson() => {
-        "value": value,
-        "type": type,
-        "display": display,
-        "alarm": alarm,
-        "amin": amin,
-        "amax": amax,
+        'value': value,
+        'type': type,
+        'display': display,
+        'alarm': alarm,
+        'amin': amin,
+        'amax': amax,
       };
 }
 
 enum Activityname { DIET, VITALS, MEDICATION, SCREENING }
 
 final activitynameValues = EnumValues({
-  "diet": Activityname.DIET,
-  "medication": Activityname.MEDICATION,
-  "screening": Activityname.SCREENING,
-  "vitals": Activityname.VITALS
+  'diet': Activityname.DIET,
+  'medication': Activityname.MEDICATION,
+  'screening': Activityname.SCREENING,
+  'vitals': Activityname.VITALS
 });
 
 enum FieldType { NUMBER, CHECKBOX, TEXT, LOOKUP, RADIO }
 
 final fieldTypeValues = EnumValues({
-  "number": FieldType.NUMBER,
-  "checkbox": FieldType.CHECKBOX,
-  "text": FieldType.TEXT,
-  "lookup": FieldType.LOOKUP,
-  "check": FieldType.CHECKBOX,
-  "radio": FieldType.RADIO,
+  'number': FieldType.NUMBER,
+  'checkbox': FieldType.CHECKBOX,
+  'text': FieldType.TEXT,
+  'lookup': FieldType.LOOKUP,
+  'check': FieldType.CHECKBOX,
+  'radio': FieldType.RADIO,
 });
 
 enum Uformname { EMPTY, BLOODPRESSURE, BLOODSUGAR, PULSE }
 
 final uformnameValues = EnumValues({
-  "bloodpressure": Uformname.BLOODPRESSURE,
-  "bloodsugar": Uformname.BLOODSUGAR,
-  "pulse": Uformname.PULSE,
-  "": Uformname.EMPTY
+  'bloodpressure': Uformname.BLOODPRESSURE,
+  'bloodsugar': Uformname.BLOODSUGAR,
+  'pulse': Uformname.PULSE,
+  '': Uformname.EMPTY
 });
 
 class EnumValues<T> {
@@ -292,4 +298,32 @@ class EnumValues<T> {
     }
     return reverseMap;
   }
+}
+
+class Metadata {
+  Metadata({
+    this.icon,
+    this.color,
+    this.bgcolor,
+    this.metadatafrom,
+  });
+
+  final String icon;
+  final String color;
+  final String bgcolor;
+  final String metadatafrom;
+
+  factory Metadata.fromJson(Map<String, dynamic> json) => Metadata(
+        icon: json['icon'],
+        color: json['color'],
+        bgcolor: json['bgcolor'],
+        metadatafrom: json['metadatafrom'],
+      );
+
+  Map<String, dynamic> toJson() => {
+        'icon': icon,
+        'color': color,
+        'bgcolor': bgcolor,
+        'metadatafrom': metadatafrom,
+      };
 }
