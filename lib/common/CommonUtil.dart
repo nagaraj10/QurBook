@@ -1994,7 +1994,7 @@ class CommonUtil {
       //check if its subcribed we need not to show disclimer alert
       if (isSubscribed == '1') {
         if (isSubscribed == '0') {
-          await subscribeViewModel.subScribePlan(packageId).then((value) {
+           subscribeViewModel.subScribePlan(packageId).then((value) {
             if (value != null) {
               if (value.isSuccess) {
                 if (value.result != null) {
@@ -2011,7 +2011,7 @@ class CommonUtil {
             }
           });
         } else {
-          await subscribeViewModel.UnsubScribePlan(packageId).then((value) {
+           subscribeViewModel.UnsubScribePlan(packageId).then((value) {
             if (value != null) {
               if (value.isSuccess) {
                 if (value.result != null) {
