@@ -20,6 +20,7 @@ import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments.dart';
 import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
+import 'package:myfhb/add_providers/bloc/update_providers_bloc.dart';
 import 'package:myfhb/bookmark_record/bloc/bookmarkRecordBloc.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -120,6 +121,7 @@ class CommonUtil {
   MyProfileModel myProfile;
   AddFamilyUserInfoRepository addFamilyUserInfoRepository =
       AddFamilyUserInfoRepository();
+  UpdateProvidersBloc updateProvidersBloc = UpdateProvidersBloc();
   SubscribeViewModel subscribeViewModel = SubscribeViewModel();
   final String CONTENT_DISCALIMER =
       'QurHealth is just the service provider, and the service provided as part of QurPlan depends on the sole discretion of your care provider and only works best as the information shared by you with your care provider. If the information shared by you is incorrect or untrue, or withheld from the care provider, then neither the care provider nor QurHealth can be held responsible for any untoward illness or sickness.';
@@ -127,6 +129,7 @@ class CommonUtil {
       'Oops! Your profile is incomplete. Please complete the profile to subscribe to a QurPlan.';
   final String CONTENT_UNSUBSCRIBE_PACKAGE =
       'Are you sure you want to unsubscribe?';
+
   static Future<dynamic> getResourceLoader() async {
     final Future<Secret> secret =
         SecretLoader(secretPath: "secrets.json").load();
@@ -1867,7 +1870,10 @@ class CommonUtil {
   }
 
   profileValidationCheck(BuildContext context,
-      {String packageId, String isSubscribed, Function() refresh}) async {
+      {String packageId,
+      String isSubscribed,
+      String providerId,
+      Function() refresh}) async {
     var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     await addFamilyUserInfoRepository.getMyProfileInfoNew(userId).then((value) {
       myProfile = value;
@@ -1875,14 +1881,20 @@ class CommonUtil {
 
     if (myProfile != null) {
       addressValidation(context,
-          packageId: packageId, isSubscribed: isSubscribed, refresh: refresh);
+          packageId: packageId,
+          isSubscribed: isSubscribed,
+          providerId: providerId,
+          refresh: refresh);
     } else {
       FlutterToast().getToast(noGender, Colors.red);
     }
   }
 
   addressValidation(BuildContext context,
-      {String packageId, String isSubscribed, Function() refresh}) {
+      {String packageId,
+      String isSubscribed,
+      String providerId,
+      Function() refresh}) {
     if (myProfile != null) {
       if (myProfile.isSuccess) {
         if (myProfile.result != null) {
@@ -1901,6 +1913,7 @@ class CommonUtil {
                             myProfile.result.userAddressCollection3[0], context,
                             packageId: packageId,
                             isSubscribed: isSubscribed,
+                            providerId: providerId,
                             refresh: refresh);
                       } else {
                         mCustomAlertDialog(context,
@@ -1976,7 +1989,10 @@ class CommonUtil {
 
   patientAddressCheck(
       UserAddressCollection3 userAddressCollection, BuildContext context,
-      {String packageId, String isSubscribed, Function() refresh}) {
+      {String packageId,
+      String isSubscribed,
+      String providerId,
+      Function() refresh}) {
     String address1 = userAddressCollection.addressLine1 != null
         ? userAddressCollection.addressLine1
         : '';
@@ -1991,54 +2007,45 @@ class CommonUtil {
       //check if its subcribed we need not to show disclimer alert
       if (isSubscribed == '1') {
         if (isSubscribed == '0') {
-          subscribeViewModel.subScribePlan(packageId).then((value) {
+          String userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+          updateProvidersBloc
+              .mappingHealthOrg(providerId, userId)
+              .then((value) {
             if (value != null) {
-              if (value.isSuccess) {
-                if (value.result != null) {
-                  if (value.result.result == 'Done') {
-                    //provider API ll be added here
-                    Get.back(result: 'refreshUI');
-                  } else {
-                    FlutterToast().getToast('Subscribe Failed', Colors.red);
+              if (value.success) {
+                subscribeViewModel.subScribePlan(packageId).then((value) {
+                  if (value != null) {
+                    if (value.isSuccess) {
+                      if (value.result != null) {
+                        if (value.result.result == 'Done') {
+                          Get.back(result: 'refreshUI');
+                        } else {
+                          FlutterToast()
+                              .getToast('Subscribe Failed', Colors.red);
+                        }
+                      }
+                    } else {
+                      FlutterToast()..getToast('Subscribe Failed', Colors.red);
+                    }
                   }
-                }
+                });
               } else {
-                FlutterToast()..getToast('Subscribe Failed', Colors.red);
+                FlutterToast().getToast('Subscribe Map Failed', Colors.red);
               }
+            } else {
+              FlutterToast().getToast('Subscribe Map Failed', Colors.red);
             }
           });
         } else {
           unSubcribeAlertDialog(context,
               packageId: packageId, refresh: refresh);
-          /* CommonUtil.showLoadingDialog(
-                  context, _keyLoader, variable.Please_Wait);
-           subscribeViewModel.UnsubScribePlan(packageId).then((value) {
-            if (value != null) {
-              if (value.isSuccess) {
-                if (value.result != null) {
-                  if (value.result.result == 'Done') {
-                    //setState(() {});
-                    Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-                    Get.back(result: 'refreshUI');
-                    refresh();
-                  } else {
-                    Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-                    FlutterToast().getToast('UnSubscribe Failed', Colors.red);
-                  }
-                }
-              } else {
-                Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-                FlutterToast().getToast('UnSubscribe Failed', Colors.red);
-              }
-            }
-            
-          }); */
         }
       } else {
         // if its unsubscibed need to invoke discalimer dialog
         mDisclaimerAlertDialog(
             packageId: packageId,
             isSubscribed: isSubscribed,
+            providerId: providerId,
             refresh: refresh,
             context: context);
       }
@@ -2281,6 +2288,7 @@ class CommonUtil {
       String content,
       String packageId,
       String isSubscribed,
+      String providerId,
       Function() refresh}) async {
     await Get.dialog(
       AlertDialog(
@@ -2344,37 +2352,62 @@ class CommonUtil {
                           CommonUtil.showLoadingDialog(
                               context, _keyLoader, variable.Please_Wait);
                           if (isSubscribed == '0') {
-                            await subscribeViewModel
-                                .subScribePlan(packageId)
+                            String userId = PreferenceUtil.getStringValue(
+                                Constants.KEY_USERID);
+                            updateProvidersBloc
+                                .mappingHealthOrg(providerId, userId)
                                 .then((value) {
                               if (value != null) {
-                                if (value.isSuccess) {
-                                  if (value.result != null) {
-                                    if (value.result.result == 'Done') {
-                                      //provider API ll be added here
-                                      Navigator.of(_keyLoader.currentContext,
-                                              rootNavigator: true)
-                                          .pop();
-                                      Get.back();
-                                      Get.back(result: 'refreshUI');
-                                      refresh();
-                                    } else {
-                                      Navigator.of(_keyLoader.currentContext,
-                                              rootNavigator: true)
-                                          .pop();
-                                      Get.back();
-                                      Get.back(result: 'refreshUI');
-                                      FlutterToast().getToast(
-                                          'Already Subscribed', Colors.red);
+                                if (value.success) {
+                                  subscribeViewModel
+                                      .subScribePlan(packageId)
+                                      .then((value) {
+                                    if (value != null) {
+                                      if (value.isSuccess) {
+                                        if (value.result != null) {
+                                          if (value.result.result == 'Done') {
+                                            Navigator.of(
+                                                    _keyLoader.currentContext,
+                                                    rootNavigator: true)
+                                                .pop();
+                                            Get.back();
+                                            Get.back(result: 'refreshUI');
+                                            refresh();
+                                          } else {
+                                            Navigator.of(
+                                                    _keyLoader.currentContext,
+                                                    rootNavigator: true)
+                                                .pop();
+                                            Get.back();
+                                            Get.back(result: 'refreshUI');
+                                            FlutterToast().getToast(
+                                                'Already Subscribed',
+                                                Colors.red);
+                                          }
+                                        }
+                                      } else {
+                                        Navigator.of(_keyLoader.currentContext,
+                                                rootNavigator: true)
+                                            .pop();
+                                        FlutterToast()
+                                          ..getToast(
+                                              'Subscribe Failed', Colors.red);
+                                      }
                                     }
-                                  }
+                                  });
                                 } else {
                                   Navigator.of(_keyLoader.currentContext,
                                           rootNavigator: true)
                                       .pop();
-                                  FlutterToast()
-                                    ..getToast('Subscribe Failed', Colors.red);
+                                  FlutterToast().getToast(
+                                      'Subscribe Map Failed', Colors.red);
                                 }
+                              } else {
+                                Navigator.of(_keyLoader.currentContext,
+                                        rootNavigator: true)
+                                    .pop();
+                                FlutterToast().getToast(
+                                    'Subscribe Map Failed', Colors.red);
                               }
                             });
                           } else {

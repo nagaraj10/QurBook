@@ -155,164 +155,160 @@ class _MyPlanState extends State<PlanList> {
                     packageId: planList[i].packageid,
                     price: planList[i].price,
                     packageDuration: planList[i].packageDuration,
+                    providerId: planList[i].plinkid,
                   )),
         ).then((value) {
           if (value == 'refreshUI') {
             setState(() {});
           }
         });
-
-        /* Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => MyPlanDetail(
-                title: planList[i].title,
-                providerName: planList[i].providerName,
-                docName: planList[i].docNick,
-                packageId: planList[i].packageid,
-                startDate: planList[i].startdate,
-                endDate: planList[i].enddate,
-              )),
-        ); */
       },
       child: Container(
-        padding: EdgeInsets.all(4.0),
-        margin: EdgeInsets.only(left: 12, right: 12, top: 8),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFFe3e2e2),
-              blurRadius: 16, // has the effect of softening the shadow
-              spreadRadius: 5.0, // has the effect of extending the shadow
-              offset: Offset(
-                0.0, // horizontal, move right 10
-                0.0, // vertical, move down 10
-              ),
-            )
-          ],
-        ),
-        child: Row(
-          children: <Widget>[
-            SizedBox(
-              width: 15.0.w,
-            ),
-            CircleAvatar(
-              backgroundColor: Colors.grey[200],
-              radius: 20,
-              child: ClipOval(
-                  child: CircleAvatar(
-                backgroundImage: AssetImage('assets/launcher/myfhb1.png'),
-                radius: 18,
-                backgroundColor: Colors.transparent,
-              )),
-            ),
-            SizedBox(
-              width: 20.0.w,
-            ),
-            Expanded(
-              flex: 6,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  SizedBox(height: 5.0.h),
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 150,
-                        child: Text(
-                          planList[i].title != null
-                              ? toBeginningOfSentenceCase(planList[i].title)
-                              : '',
-                          style: TextStyle(
-                            fontSize: 15.0.sp,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          textAlign: TextAlign.start,
-                        ),
-                      ),
-                      SizedBox(width: 40.w),
-                      planList[i].price != null
-                          ? TextWidget(
-                              text: INR + planList[i].price,
-                              fontsize: 16.0.sp,
-                              fontWeight: FontWeight.w400,
-                              colors:
-                                  Color(new CommonUtil().getMyPrimaryColor()))
-                          : Container(),
-                    ],
+          padding: EdgeInsets.all(4.0),
+          margin: EdgeInsets.only(left: 12, right: 12, top: 8),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFFe3e2e2),
+                blurRadius: 16, // has the effect of softening the shadow
+                spreadRadius: 5.0, // has the effect of extending the shadow
+                offset: Offset(
+                  0.0, // horizontal, move right 10
+                  0.0, // vertical, move down 10
+                ),
+              )
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Row(
+                children: [
+                  SizedBox(
+                    width: 15.0.w,
                   ),
-                  Column(
-                    children: [
-                      SizedBox(
-                        width: 250.0.w,
-                        child: Text(
-                          planList[i].providerName != null
-                              ? toBeginningOfSentenceCase(
-                                  planList[i].providerName)
-                              : '',
-                          style: TextStyle(
-                              fontSize: 14.0.sp,
-                              fontWeight: FontWeight.w400,
-                              color: ColorUtils.lightgraycolor),
-                        ),
-                      ),
-                    ],
+                  CircleAvatar(
+                    backgroundColor: Colors.grey[200],
+                    radius: 20,
+                    child: ClipOval(
+                        child: CircleAvatar(
+                      backgroundImage: AssetImage('assets/launcher/myfhb1.png'),
+                      radius: 18,
+                      backgroundColor: Colors.transparent,
+                    )),
                   ),
-                  Column(
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            'Duration: ',
+                  SizedBox(
+                    width: 20.0.w,
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 150,
+                          child: Text(
+                            planList[i].title != null
+                                ? toBeginningOfSentenceCase(planList[i].title)
+                                : '',
                             style: TextStyle(
-                                fontSize: 10.0.sp, fontWeight: FontWeight.w400),
+                              fontSize: 15.0.sp,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            textAlign: TextAlign.start,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
                           ),
-                          planList[i].packageDuration != null
-                              ? Text(
-                                  planList[i].packageDuration + ' days',
-                                  maxLines: 1,
-                                  style: TextStyle(
-                                      fontSize: 10.0.sp,
-                                      fontWeight: FontWeight.w600),
-                                )
-                              : Container()
-                        ],
-                      ),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      Row(
-                        children: [
-                          planList[i].isSubscribed == '1'
-                              ? Text(
-                                  'Start Date: ',
+                        ),
+                        SizedBox(
+                          width: 250.0.w,
+                          child: Text(
+                            planList[i].providerName != null
+                                ? toBeginningOfSentenceCase(
+                                    planList[i].providerName)
+                                : '',
+                            style: TextStyle(
+                                fontSize: 14.0.sp,
+                                fontWeight: FontWeight.w400,
+                                color: ColorUtils.lightgraycolor),
+                          ),
+                        ),
+                        Column(
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  'Duration: ',
                                   style: TextStyle(
                                       fontSize: 10.0.sp,
                                       fontWeight: FontWeight.w400),
-                                )
-                              : SizedBox(width: 55.w),
-                          planList[i].isSubscribed == '1'
-                              ? Text(
-                                  new CommonUtil().dateFormatConversion(
-                                      planList[i].startDate),
-                                  maxLines: 1,
-                                  style: TextStyle(
-                                      fontSize: 10.0.sp,
-                                      fontWeight: FontWeight.w600),
-                                )
-                              : SizedBox(width: 55.w),
-                          planList[i].isSubscribed == '0'
-                              ? SizedBox(width: 60.w)
-                              : SizedBox(width: 55.w),
+                                ),
+                                planList[i].packageDuration != null
+                                    ? Text(
+                                        planList[i].packageDuration + ' days',
+                                        maxLines: 1,
+                                        style: TextStyle(
+                                            fontSize: 10.0.sp,
+                                            fontWeight: FontWeight.w600),
+                                      )
+                                    : Container()
+                              ],
+                            ),
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Row(
+                              children: [
+                                planList[i].isSubscribed == '1'
+                                    ? Text(
+                                        'Start Date: ',
+                                        style: TextStyle(
+                                            fontSize: 10.0.sp,
+                                            fontWeight: FontWeight.w400),
+                                      )
+                                    : SizedBox(width: 55.w),
+                                planList[i].isSubscribed == '1'
+                                    ? Text(
+                                        new CommonUtil().dateFormatConversion(
+                                            planList[i].startDate),
+                                        maxLines: 1,
+                                        style: TextStyle(
+                                            fontSize: 10.0.sp,
+                                            fontWeight: FontWeight.w600),
+                                      )
+                                    : SizedBox(width: 55.w),
+                                planList[i].isSubscribed == '0'
+                                    ? SizedBox(width: 60.w)
+                                    : SizedBox(width: 55.w),
+                              ],
+                            )
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Column(
+                        children: [
+                          planList[i].price != null
+                              ? TextWidget(
+                                  text: INR + planList[i].price,
+                                  fontsize: 16.0.sp,
+                                  fontWeight: FontWeight.w500,
+                                  colors: Color(
+                                      new CommonUtil().getMyPrimaryColor()))
+                              : Container(),
+                          SizedBox(height: 8.h),
                           Align(
                             alignment: Alignment.center,
                             child: SizedBoxWithChild(
-                              width: 110.0.w,
-                              height: 35.0.h,
+                              width: 95.0.w,
+                              height: 32.0.h,
                               child: FlatButton(
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(18.0),
@@ -326,12 +322,21 @@ class _MyPlanState extends State<PlanList> {
                                   8.0.sp,
                                 ),
                                 onPressed: () async {
-                                  CommonUtil().profileValidationCheck(context,
-                                      packageId: planList[i].packageid,
-                                      isSubscribed: planList[i].isSubscribed,
-                                      refresh: () {
-                                    setState(() {});
-                                  });
+                                  if (planList[i].isSubscribed == '0') {
+                                    CommonUtil().profileValidationCheck(context,
+                                        packageId: planList[i].packageid,
+                                        isSubscribed: planList[i].isSubscribed,
+                                        providerId: planList[i].plinkid,
+                                        refresh: () {
+                                      setState(() {});
+                                    });
+                                  } else {
+                                    CommonUtil().unSubcribeAlertDialog(context,
+                                        packageId: planList[i].packageid,
+                                        refresh: () {
+                                      setState(() {});
+                                    });
+                                  }
                                 },
                                 child: TextWidget(
                                   text: planList[i].isSubscribed == '0'
@@ -344,15 +349,14 @@ class _MyPlanState extends State<PlanList> {
                           ),
                         ],
                       ),
+                      SizedBox(width: 4.w),
                     ],
-                  ),
-                  SizedBox(height: 5.0.h),
+                  )
                 ],
               ),
-            ),
-          ],
-        ),
-      ),
+              SizedBox(height: 5.h),
+            ],
+          )),
     );
   }
 }
