@@ -156,7 +156,24 @@ class _MyPlanState extends State<PlanList> {
                     price: planList[i].price,
                     packageDuration: planList[i].packageDuration,
                   )),
-        );
+        ).then((value) {
+          if (value == 'refreshUI') {
+            setState(() {});
+          }
+        });
+
+        /* Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => MyPlanDetail(
+                title: planList[i].title,
+                providerName: planList[i].providerName,
+                docName: planList[i].docNick,
+                packageId: planList[i].packageid,
+                startDate: planList[i].startdate,
+                endDate: planList[i].enddate,
+              )),
+        ); */
       },
       child: Container(
         padding: EdgeInsets.all(4.0),

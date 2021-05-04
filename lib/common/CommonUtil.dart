@@ -119,7 +119,11 @@ class CommonUtil {
   MyProfileModel myProfile;
   AddFamilyUserInfoRepository addFamilyUserInfoRepository =
       AddFamilyUserInfoRepository();
-
+  SubscribeViewModel subscribeViewModel = SubscribeViewModel();
+  final String CONTENT_DISCALIMER =
+      'QurHealth is just the service provider, and the service provided as part of QurPlan depends on the sole discretion of your care provider and only works best as the information shared by you with your care provider. If the information shared by you is incorrect or untrue, or withheld from the care provider, then neither the care provider nor QurHealth can be held responsible for any untoward illness or sickness.';
+  final String CONTENT_PROFILE_CHECK =
+      'This profile is incomplete. please complete the profile before subscribing';
   static Future<dynamic> getResourceLoader() async {
     final Future<Secret> secret =
         SecretLoader(secretPath: "secrets.json").load();
@@ -1894,74 +1898,82 @@ class CommonUtil {
                             myProfile.result.userAddressCollection3[0], context,
                             packageId: packageId, isSubscribed: isSubscribed,refresh: refresh);
                       } else {
-                        //toast.getToast(noAddress, Colors.red);
-                        //CommonUtil().mSnackbar(context, noAddress, 'Add');
                         mCustomAlertDialog(context,
-                            content:
-                                'This profile is incomplete. please complete the profile before subscribing');
+                            content: CONTENT_PROFILE_CHECK,
+                            packageId: packageId,
+                            isSubscribed: isSubscribed);
                       }
                     } else {
-                      //toast.getToast(noAddress, Colors.red);
-                      //CommonUtil().mSnackbar(context, noAddress, 'Add');
-                      mCustomAlertDialog(context,
-                          content:
-                              'This profile is incomplete. please complete the profile before subscribing');
+                      mCustomAlertDialog(
+                        context,
+                        content: CONTENT_PROFILE_CHECK,
+                        packageId: packageId,
+                        isSubscribed: isSubscribed,
+                      );
                     }
                   } else {
-                    //toast.getToast(noWeight, Colors.red);
-                    //CommonUtil().mSnackbar(context, noWeight, 'Add');
-                    mCustomAlertDialog(context,
-                        content:
-                            'This profile is incomplete. please complete the profile before subscribing');
+                    mCustomAlertDialog(
+                      context,
+                      content: CONTENT_PROFILE_CHECK,
+                      packageId: packageId,
+                      isSubscribed: isSubscribed,
+                    );
                   }
                 } else {
-                  //toast.getToast(noHeight, Colors.red);
-                  //CommonUtil().mSnackbar(context, noHeight, 'Add');
-                  mCustomAlertDialog(context,
-                      content:
-                          'This profile is incomplete. please complete the profile before subscribing');
+                  mCustomAlertDialog(
+                    context,
+                    content: CONTENT_PROFILE_CHECK,
+                    packageId: packageId,
+                    isSubscribed: isSubscribed,
+                  );
                 }
               } else {
-                //toast.getToast(noAdditionalInfo, Colors.red);
-                //CommonUtil().mSnackbar(context, noAdditionalInfo, 'Add');
-                mCustomAlertDialog(context,
-                    content:
-                        'This profile is incomplete. please complete the profile before subscribing');
+                mCustomAlertDialog(
+                  context,
+                  content: CONTENT_PROFILE_CHECK,
+                  packageId: packageId,
+                  isSubscribed: isSubscribed,
+                );
               }
             } else {
-              //toast.getToast(noDOB, Colors.red);
-              //CommonUtil().mSnackbar(context, noDOB, 'Add');
-              mCustomAlertDialog(context,
-                  content:
-                      'This profile is incomplete. please complete the profile before subscribing');
+              mCustomAlertDialog(
+                context,
+                content: CONTENT_PROFILE_CHECK,
+                packageId: packageId,
+                isSubscribed: isSubscribed,
+              );
             }
           } else {
-            //CommonUtil().mSnackbar(context, noGender, 'Add');
-            //toast.getToast(noGender, Colors.red);
-            mCustomAlertDialog(context,
-                content:
-                    'This profile is incomplete. please complete the profile before subscribing');
+            mCustomAlertDialog(
+              context,
+              content: CONTENT_PROFILE_CHECK,
+              packageId: packageId,
+              isSubscribed: isSubscribed,
+            );
           }
         } else {
-          //toast.getToast(noAddress, Colors.red);
-          //CommonUtil().mSnackbar(context, noAddress, 'Add');
-          mCustomAlertDialog(context,
-              content:
-                  'This profile is incomplete. please complete the profile before subscribing');
+          mCustomAlertDialog(
+            context,
+            content: CONTENT_PROFILE_CHECK,
+            packageId: packageId,
+            isSubscribed: isSubscribed,
+          );
         }
       } else {
-        //toast.getToast(noAddress, Colors.red);
-        //CommonUtil().mSnackbar(context, noAddress, 'Add');
-        mCustomAlertDialog(context,
-            content:
-                'This profile is incomplete. please complete the profile before subscribing');
+        mCustomAlertDialog(
+          context,
+          content: CONTENT_PROFILE_CHECK,
+          packageId: packageId,
+          isSubscribed: isSubscribed,
+        );
       }
     } else {
-      //toast.getToast(noAddress, Colors.red);
-      //CommonUtil().mSnackbar(context, noAddress, 'Add');
-      mCustomAlertDialog(context,
-          content:
-              'This profile is incomplete. please complete the profile before subscribing');
+      mCustomAlertDialog(
+        context,
+        content: CONTENT_PROFILE_CHECK,
+        packageId: packageId,
+        isSubscribed: isSubscribed,
+      );
     }
   }
 
@@ -1979,16 +1991,62 @@ class CommonUtil {
         : '';
 
     if (address1 != '' && city != '' && state != '') {
-      mDisclaimerAlertDialog(packageId: packageId, isSubscribed: isSubscribed,refresh: refresh);
+      //check if its subcribed we need not to show disclimer alert
+      if (isSubscribed == '1') {
+        if (isSubscribed == '0') {
+          await subscribeViewModel.subScribePlan(packageId).then((value) {
+            if (value != null) {
+              if (value.isSuccess) {
+                if (value.result != null) {
+                  if (value.result.result == 'Done') {
+                    //provider API ll be added here
+                    Get.back(result: 'refreshUI');
+                  } else {
+                    FlutterToast().getToast('Subscribe Failed', Colors.red);
+                  }
+                }
+              } else {
+                FlutterToast()..getToast('Subscribe Failed', Colors.red);
+              }
+            }
+          });
+        } else {
+          await subscribeViewModel.UnsubScribePlan(packageId).then((value) {
+            if (value != null) {
+              if (value.isSuccess) {
+                if (value.result != null) {
+                  if (value.result.result == 'Done') {
+                    //setState(() {});
+                    Get.back(result: 'refreshUI');
+                  } else {
+                    FlutterToast().getToast('UnSubscribe Failed', Colors.red);
+                  }
+                }
+              } else {
+                FlutterToast().getToast('UnSubscribe Failed', Colors.red);
+              }
+            }
+          });
+        }
+      } else {
+        // if its unsubscibed need to invoke discalimer dialog
+        mDisclaimerAlertDialog(packageId: packageId, isSubscribed: isSubscribed,refresh: refresh);
+      }
     } else {
-      mCustomAlertDialog(context,
-          content:
-              'This profile is incomplete. please complete the profile before subscribing');
+      mCustomAlertDialog(
+        context,
+        content: CONTENT_PROFILE_CHECK,
+        packageId: packageId,
+        isSubscribed: isSubscribed,
+      );
     }
   }
 
   Future<dynamic> mCustomAlertDialog(BuildContext context,
-      {String title, String content}) async {
+      {String title,
+      String content,
+      String packageId,
+      String isSubscribed}) async {
     var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     showDialog<void>(
         context: context,
@@ -2054,13 +2112,13 @@ class CommonUtil {
                             Navigator.of(context).pop();
                             MyProfileModel myProfile =
                                 await fetchUserProfileInfo();
-                            Get.toNamed(
-                              router.rt_AddFamilyUserInfo,
-                              arguments: AddFamilyUserInfoArguments(
-                                  myProfileResult: myProfile?.result,
-                                  fromClass: CommonConstants.user_update,
-                                  isFromCSIR: true),
-                            );
+                            Get.toNamed(router.rt_AddFamilyUserInfo,
+                                arguments: AddFamilyUserInfoArguments(
+                                    myProfileResult: myProfile?.result,
+                                    fromClass: CommonConstants.user_update,
+                                    isFromCSIR: true,
+                                    packageId: packageId,
+                                    isSubscribed: isSubscribed));
                           },
                           borderSide: BorderSide(
                             color: Color(
@@ -2085,7 +2143,6 @@ class CommonUtil {
       String content,
       String packageId,
       String isSubscribed,Function() refresh}) async {
-    SubscribeViewModel subscribeViewModel = SubscribeViewModel();
     await Get.dialog(
       AlertDialog(
         content: Column(
@@ -2122,7 +2179,7 @@ class CommonUtil {
                     height: 400,
                     child: SingleChildScrollView(
                       child: Text(
-                        'You have a blog, and you\'ve been publishing since 2012 and continue to publish your own material in 2018. To add a copyright, you can add the disclaimer to the bottom of your homepage with the name of your blog or business, the copyright symbol, and the years 2012-2018. The disclaimer then provides blanket copyright across all content that appears on your site.When you place a copyright disclaimer on your work, you\'re providing yourself with five rights to your work that only you can transfer. Only you have the right to:',
+                        CONTENT_DISCALIMER,
                         style: TextStyle(
                             fontSize: 15, fontWeight: FontWeight.w300),
                       ),
@@ -2154,10 +2211,13 @@ class CommonUtil {
                                 if (value.isSuccess) {
                                   if (value.result != null) {
                                     if (value.result.result == 'Done') {
+                                      //provider API ll be added here
+                                      Get.back(result: 'refreshUI');
                                       refresh();
                                     } else {
+                                      Get.back(result: 'refreshUI');
                                       FlutterToast().getToast(
-                                          'Subscribe Failed', Colors.red);
+                                          'Already Subscribed', Colors.red);
                                     }
                                   }
                                 } else {
@@ -2173,8 +2233,10 @@ class CommonUtil {
                                 if (value.isSuccess) {
                                   if (value.result != null) {
                                     if (value.result.result == 'Done') {
+                                      Get.back(result: 'refreshUI');
                                       refresh();
                                     } else {
+                                      Get.back(result: 'refreshUI');
                                       FlutterToast().getToast(
                                           'UnSubscribe Failed', Colors.red);
                                     }
@@ -2211,6 +2273,7 @@ class CommonUtil {
                         onPressed: () async {
                           // open profile page
                           Get.back();
+                          Get.back(result: 'refreshUI');
                         },
                         borderSide: BorderSide(
                           color: Color(

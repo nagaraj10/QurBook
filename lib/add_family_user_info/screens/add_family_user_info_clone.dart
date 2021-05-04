@@ -154,6 +154,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   @override
   void dispose() {
+    checkCSIRPackageVaildation();
     super.dispose();
     fbaLog(eveName: 'qurbook_screen_event', eveParams: {
       'eventTime': '${DateTime.now()}',
@@ -175,20 +176,18 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     }
   }
 
-  void checkCSIRPackageVaildation() async{
+  void checkCSIRPackageVaildation() async {
     if (widget.arguments.isFromCSIR) {
       MyProfileModel myProfile = await CommonUtil().fetchUserProfileInfo();
       if (myProfile?.result?.userAddressCollection3?.isNotEmpty) {
         final callback = checkAddressValidation(
             myProfile?.result?.userAddressCollection3[0]);
         if (callback) {
-          // show the disclimer dialog
-          //FlutterToast().getToast('Disclaimer', Colors.green);
-          Navigator.of(context).pop();
-          CommonUtil().mDisclaimerAlertDialog();
+          CommonUtil().mDisclaimerAlertDialog(
+              packageId: widget.arguments.packageId,
+              isSubscribed: widget.arguments.isSubscribed
+              );
         } else {
-          // do nothing
-          Navigator.of(context).pop();
         }
       }
     }
@@ -199,25 +198,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     dialogContext = context;
     return WillPopScope(
       onWillPop: () async {
-        if (widget.arguments.isFromCSIR) {
-          MyProfileModel myProfile = await CommonUtil().fetchUserProfileInfo();
-          if (myProfile?.result?.userAddressCollection3?.isNotEmpty) {
-            final callback = checkAddressValidation(
-                myProfile?.result?.userAddressCollection3[0]);
-            if (callback) {
-              // show the disclimer dialog
-              //FlutterToast().getToast('Disclaimer', Colors.green);
-              Navigator.of(context).pop();
-              CommonUtil().mDisclaimerAlertDialog();
-            } else {
-              // do nothing\
-              //FlutterToast().getToast('Do nothing', Colors.red);
-              Navigator.of(context).pop();
-            }
-          }
-        }
-
-        //await checkCSIRPackageVaildation();
+        Navigator.of(context).pop();
         return Future.value(true);
       },
       child: Scaffold(
@@ -232,25 +213,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   size: 24.0.sp,
                 ),
                 onPressed: () async {
-                  if (widget.arguments.isFromCSIR) {
-                    MyProfileModel myProfile =
-                        await CommonUtil().fetchUserProfileInfo();
-                    if (myProfile?.result?.userAddressCollection3?.isNotEmpty) {
-                      final callback = checkAddressValidation(
-                          myProfile?.result?.userAddressCollection3[0]);
-                      if (callback) {
-                        // show the disclimer dialog
-                        Navigator.of(context).pop();
-                        CommonUtil().mDisclaimerAlertDialog();
-                      } else {
-                        // do nothing
-                        //FlutterToast().getToast('Do nothing', Colors.red);
-                        Navigator.of(context).pop();
-                      }
-                    }
-                  }
-                  //await checkCSIRPackageVaildation();
-                  //Navigator.of(context).pop();
+                  Navigator.of(context).pop();
                   //Navigator.of(context).pop();
                 },
               )),
@@ -1753,23 +1716,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               imageURI = null;
               Navigator.pop(dialogContext);
               Navigator.pop(dialogContext, true);
-              if (widget.arguments.isFromCSIR) {
-                    MyProfileModel myProfile =
-                        await CommonUtil().fetchUserProfileInfo();
-                    if (myProfile?.result?.userAddressCollection3?.isNotEmpty) {
-                      final callback = checkAddressValidation(
-                          myProfile?.result?.userAddressCollection3[0]);
-                      if (callback) {
-                        // show the disclimer dialog
-                        //Navigator.of(context).pop();
-                        CommonUtil().mDisclaimerAlertDialog();
-                      } else {
-                        // do nothing
-                        //FlutterToast().getToast('Do nothing', Colors.red);
-                        //Navigator.of(context).pop();
-                      }
-                    }
-                  }
             });
           } else {
             Navigator.pop(dialogContext);
