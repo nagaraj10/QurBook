@@ -1394,9 +1394,12 @@ class AddProvidersState extends State<AddProviders> {
           mediaType.result.insert(
               1, new MediaResult(name: 'Devices', isChecked: false, id: '2'));
 
-          setTheValuesForDropdown(mediaType.result);
+          List<MediaResult> mediaResultFiltered =
+              removeUnwantedCategories(mediaType);
+
+          setTheValuesForDropdown(mediaResultFiltered);
           return DropdownWithCategories(
-            mediaData: mediaType.result,
+            mediaData: mediaResultFiltered,
             onChecked: (result) {
               addSelectedcategoriesToList(result);
             },
@@ -1422,5 +1425,21 @@ class AddProvidersState extends State<AddProviders> {
         selectedCategories.add(mediaResultObj.id);
       }
     }
+  }
+
+  List<MediaResult> removeUnwantedCategories(MediaDataList mediaType) {
+    List<MediaResult> mediaResultDuplicate = new List();
+    for (int i = 0; i < mediaType.result.length; i++) {
+      print(mediaType.result[i].name + ' ***********************');
+      if (mediaType.result[i].name != Constants.STR_FEEDBACK &&
+          mediaType.result[i].name != Constants.STR_CLAIMSRECORD &&
+          mediaType.result[i].name != Constants.STR_WEARABLES &&
+          mediaType.result[i].name != Constants.STR_TELEHEALTH) {
+        if (!mediaResultDuplicate.contains(mediaType.result[i])) {
+          mediaResultDuplicate.add(mediaType.result[i]);
+        }
+      }
+    }
+    return mediaResultDuplicate;
   }
 }
