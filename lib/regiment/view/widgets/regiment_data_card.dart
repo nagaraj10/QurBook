@@ -142,80 +142,7 @@ class RegimentDataCard extends StatelessWidget {
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: getFieldWidgets(),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                              vertical: 10.0.h,
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                    Provider.of<ChatScreenViewModel>(context,
-                                            listen: false)
-                                        .startTTSEngine(
-                                      textToSpeak: regimentData.saytext,
-                                      isRegiment: true,
-                                    );
-                                  },
-                                  child: Icon(
-                                    Icons.play_circle_fill_rounded,
-                                    size: 30.0.sp,
-                                    color: color,
-                                  ),
-                                ),
-                                Visibility(
-                                  visible: !regimentData.hasform,
-                                  child: Padding(
-                                    padding: EdgeInsets.only(
-                                      top: 10.0.h,
-                                    ),
-                                    child: InkWell(
-                                      onTap: () async {
-                                        Provider.of<ChatScreenViewModel>(
-                                                context,
-                                                listen: false)
-                                            .stopTTSEngine();
-                                        bool canEdit = startTime
-                                                .difference(DateTime.now())
-                                                .inMinutes <=
-                                            15;
-                                        if (canEdit) {
-                                          SaveResponseModel saveResponse =
-                                              await Provider.of<
-                                                          RegimentViewModel>(
-                                                      context,
-                                                      listen: false)
-                                                  .saveFormData(
-                                            eid: eid,
-                                          );
-                                          if (saveResponse?.isSuccess ??
-                                              false) {
-                                            await Provider.of<
-                                                        RegimentViewModel>(
-                                                    context,
-                                                    listen: false)
-                                                .fetchRegimentData();
-                                          }
-                                        } else {
-                                          FlutterToast().getToast(
-                                            'Data for future events can be entered only 15 minutes prior to the event time',
-                                            Colors.red,
-                                          );
-                                        }
-                                      },
-                                      child: Icon(
-                                        Icons.check_circle_rounded,
-                                        size: 30.0.sp,
-                                        color: color,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
+                              children: getFieldWidgets(context),
                             ),
                           ),
                         ],
@@ -260,20 +187,45 @@ class RegimentDataCard extends StatelessWidget {
     );
   }
 
-  List<Widget> getFieldWidgets() {
+  List<Widget> getFieldWidgets(BuildContext context) {
     List<Widget> fieldWidgets = [];
     fieldWidgets.add(
-      Padding(
-        padding: EdgeInsets.only(
-          bottom: 5.0.h,
-        ),
-        child: Text(
-          '${title?.trim()}',
-          style: TextStyle(
-            fontSize: 16.0.sp,
-            fontWeight: FontWeight.w500,
+      Row(
+        children: [
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(
+                bottom: 5.0.h,
+              ),
+              child: Text(
+                '${title?.trim()}',
+                style: TextStyle(
+                  fontSize: 16.0.sp,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
           ),
-        ),
+          Padding(
+            padding: EdgeInsets.symmetric(
+              vertical: 10.0.h,
+            ),
+            child: InkWell(
+              onTap: () {
+                Provider.of<ChatScreenViewModel>(context, listen: false)
+                    .startTTSEngine(
+                  textToSpeak: regimentData.saytext,
+                  isRegiment: true,
+                );
+              },
+              child: Icon(
+                Icons.play_circle_fill_rounded,
+                size: 30.0.sp,
+                color: color,
+              ),
+            ),
+          ),
+        ],
       ),
     );
 
@@ -329,7 +281,7 @@ class RegimentDataCard extends StatelessWidget {
       fieldWidgets.add(
         Padding(
           padding: EdgeInsets.symmetric(
-            horizontal: 10.0.w,
+            horizontal: 0.0.w,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -380,6 +332,45 @@ class RegimentDataCard extends StatelessWidget {
                     //   true,
                     // );
                   },
+                ),
+              ),
+              Visibility(
+                visible: !regimentData.hasform,
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    left: 5.0.w,
+                  ),
+                  child: InkWell(
+                    onTap: () async {
+                      Provider.of<ChatScreenViewModel>(context, listen: false)
+                          .stopTTSEngine();
+                      bool canEdit =
+                          startTime.difference(DateTime.now()).inMinutes <= 15;
+                      if (canEdit) {
+                        SaveResponseModel saveResponse =
+                            await Provider.of<RegimentViewModel>(context,
+                                    listen: false)
+                                .saveFormData(
+                          eid: eid,
+                        );
+                        if (saveResponse?.isSuccess ?? false) {
+                          await Provider.of<RegimentViewModel>(context,
+                                  listen: false)
+                              .fetchRegimentData();
+                        }
+                      } else {
+                        FlutterToast().getToast(
+                          'Data for future events can be entered only 15 minutes prior to the event time',
+                          Colors.red,
+                        );
+                      }
+                    },
+                    child: Icon(
+                      Icons.check_circle_rounded,
+                      size: 30.0.sp,
+                      color: color,
+                    ),
+                  ),
                 ),
               ),
             ],

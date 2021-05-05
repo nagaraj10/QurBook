@@ -19,7 +19,13 @@ class MediaIconWidget extends StatelessWidget {
     return InkWell(
       onTap: onPressed,
       child: Padding(
-        padding: EdgeInsets.all(padding ?? 5.0.sp),
+        padding: padding != null
+            ? EdgeInsets.all(padding ?? 5.0.sp)
+            : EdgeInsets.only(
+                top: 5.0.sp,
+                left: 5.0.sp,
+                bottom: 5.0.sp,
+              ),
         child: Icon(
           icon,
           color: color,
