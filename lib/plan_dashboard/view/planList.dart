@@ -228,33 +228,27 @@ class _MyPlanState extends State<PlanList> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SizedBox(
-                          width: 150,
-                          child: Text(
-                            planList[i].title != null
-                                ? toBeginningOfSentenceCase(planList[i].title)
-                                : '',
-                            style: TextStyle(
-                              fontSize: 15.0.sp,
-                              fontWeight: FontWeight.w600,
-                            ),
-                            textAlign: TextAlign.start,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
+                        Text(
+                          planList[i].title != null
+                              ? toBeginningOfSentenceCase(planList[i].title)
+                              : '',
+                          style: TextStyle(
+                            fontSize: 15.0.sp,
+                            fontWeight: FontWeight.w600,
                           ),
+                          textAlign: TextAlign.start,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
                         ),
-                        SizedBox(
-                          width: 250.0.w,
-                          child: Text(
-                            planList[i].providerName != null
-                                ? toBeginningOfSentenceCase(
-                                    planList[i].providerName)
-                                : '',
-                            style: TextStyle(
-                                fontSize: 14.0.sp,
-                                fontWeight: FontWeight.w400,
-                                color: ColorUtils.lightgraycolor),
-                          ),
+                        Text(
+                          planList[i].providerName != null
+                              ? toBeginningOfSentenceCase(
+                                  planList[i].providerName)
+                              : '',
+                          style: TextStyle(
+                              fontSize: 14.0.sp,
+                              fontWeight: FontWeight.w400,
+                              color: ColorUtils.lightgraycolor),
                         ),
                         Column(
                           children: [
@@ -317,12 +311,22 @@ class _MyPlanState extends State<PlanList> {
                       Column(
                         children: [
                           planList[i].price != null
-                              ? TextWidget(
-                                  text: INR + planList[i].price,
-                                  fontsize: 16.0.sp,
-                                  fontWeight: FontWeight.w500,
-                                  colors: Color(
-                                      new CommonUtil().getMyPrimaryColor()))
+                              ? Visibility(
+                                  visible: planList[i].price.isNotEmpty &&
+                                      planList[i].price != '0',
+                                  child: TextWidget(
+                                      text: INR + planList[i].price,
+                                      fontsize: 16.0.sp,
+                                      fontWeight: FontWeight.w500,
+                                      colors: Color(new CommonUtil()
+                                          .getMyPrimaryColor())),
+                                  replacement: TextWidget(
+                                      text: FREE,
+                                      fontsize: 16.0.sp,
+                                      fontWeight: FontWeight.w500,
+                                      colors: Color(new CommonUtil()
+                                          .getMyPrimaryColor())),
+                                )
                               : Container(),
                           SizedBox(height: 8.h),
                           Align(
