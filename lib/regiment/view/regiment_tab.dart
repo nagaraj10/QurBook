@@ -30,9 +30,9 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
       true,
       isInitial: true,
     );
-    // Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
-    //   isInitial: true,
-    // );
+    Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
+      isInitial: true,
+    );
   }
 
   void didChangeAppLifecycleState(AppLifecycleState state) {
