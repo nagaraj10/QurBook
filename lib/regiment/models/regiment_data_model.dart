@@ -110,7 +110,7 @@ class RegimentDataModel {
         providername: json['providername'],
         hasform: (json['hasform'] ?? 0) == 1,
         saytext: json['saytext'],
-        doseMeal: (json['dosemeal'] ?? 0).toString() == '1',
+        doseMeal: (json['dosemeal'] ?? 0).toString() == '64',
         doseRepeat: json['doserepeat'],
         metadata: json['metadata'] is List
             ? Metadata()
