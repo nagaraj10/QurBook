@@ -2088,7 +2088,7 @@ class CommonUtil {
                       ),
                     ),
                     SizedBox(
-                      height: 10.0.h,
+                      height: 5.0.h,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -2101,7 +2101,7 @@ class CommonUtil {
                               color: Color(
                                 getMyPrimaryColor(),
                               ),
-                              fontSize: 13,
+                              fontSize: 10,
                             ),
                           ),
                           onPressed: () async {
@@ -2125,7 +2125,7 @@ class CommonUtil {
                             'complete profile'.toUpperCase(),
                             style: TextStyle(
                               color: Color(getMyPrimaryColor()),
-                              fontSize: 13,
+                              fontSize: 10,
                             ),
                           ),
                           onPressed: () async {
@@ -2203,7 +2203,7 @@ class CommonUtil {
                               color: Color(
                                 getMyPrimaryColor(),
                               ),
-                              fontSize: 13,
+                              fontSize: 10,
                             ),
                           ),
                           onPressed: () async {
@@ -2227,7 +2227,7 @@ class CommonUtil {
                             'yes'.toUpperCase(),
                             style: TextStyle(
                               color: Color(getMyPrimaryColor()),
-                              fontSize: 13,
+                              fontSize: 10,
                             ),
                           ),
                           onPressed: () async {
