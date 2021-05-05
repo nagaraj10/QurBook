@@ -407,6 +407,8 @@ const String noRegimentSymptomsData =
     'No Symptoms data available for the selected date';
 const String plansForFamily =
     'Regiment plans are not available for family members';
+    const String mplansForFamily =
+    'Plans are not available for family members';
 const String okButton = 'OK';
 const String saveButton = 'Save';
 const String select = 'Select';

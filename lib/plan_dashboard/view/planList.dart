@@ -42,33 +42,54 @@ class _MyPlanState extends State<PlanList> {
   @override
   void initState() {
     super.initState();
+    Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
+      isInitial: true,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
-            child: Column(
-      children: [
-        SearchWidget(
-          onChanged: (title) {
-            if (title != '' && title.length > 2) {
-              isSearch = true;
-              onSearchedNew(title);
-            } else {
-              setState(() {
-                isSearch = false;
-              });
-            }
-          },
+        body: Visibility(
+      visible: Provider.of<RegimentViewModel>(context).regimentsDataAvailable,
+      child: Container(
+        child: Column(
+          children: [
+            SearchWidget(
+              onChanged: (title) {
+                if (title != '' && title.length > 2) {
+                  isSearch = true;
+                  onSearchedNew(title);
+                } else {
+                  setState(() {
+                    isSearch = false;
+                  });
+                }
+              },
+            ),
+            Expanded(
+              child: myPlanListModel != null ?? myPlanListModel.isSuccess
+                  ? planList(myPlanListModel.result)
+                  : getPlanList(),
+            )
+          ],
         ),
-        Expanded(
-          child: myPlanListModel != null ?? myPlanListModel.isSuccess
-              ? planList(myPlanListModel.result)
-              : getPlanList(),
-        )
-      ],
-    )));
+      ),
+      replacement: Center(
+        child: Padding(
+          padding: EdgeInsets.all(
+            10.0.sp,
+          ),
+          child: Text(
+            Constants.mplansForFamily,
+            style: TextStyle(
+              fontSize: 16.0.sp,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ),
+    ));
   }
 
   onSearchedNew(String title) async {
