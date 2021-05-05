@@ -323,6 +323,7 @@ const String CONSULTING = 'CONSULTING';
 const String HealthOrg = 'Health Organization';
 const String HEALTH_RECORDIDS = 'healthRecordIds';
 const String INR = 'INR ';
+const String FREE = 'FREE';
 const String LAST_RECEIVED = 'Last Received: ';
 const String DATE_FORMAT = 'dd MMM kk:mm';
 const String NOTHING_SEND = 'Nothing to send';
@@ -407,8 +408,7 @@ const String noRegimentSymptomsData =
     'No Symptoms data available for the selected date';
 const String plansForFamily =
     'Regiment plans are not available for family members';
-    const String mplansForFamily =
-    'Plans are not available for family members';
+const String mplansForFamily = 'Plans are not available for family members';
 const String okButton = 'OK';
 const String saveButton = 'Save';
 const String select = 'Select';
