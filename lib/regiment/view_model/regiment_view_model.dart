@@ -13,8 +13,7 @@ enum RegimentMode { Schedule, Symptoms }
 
 class RegimentViewModel extends ChangeNotifier {
   Future<RegimentResponseModel> regimentsData;
-  List<RegimentDataModel> regimentsScheduledList;
-  List<RegimentDataModel> regimentsAsNeededList;
+  List<RegimentDataModel> regimentsList = [];
   bool regimentsDataAvailable = true;
   DateTime selectedDate = DateTime.now();
   String regimentDate = '${CommonUtil().regimentDateFormat(DateTime.now())}';
@@ -27,7 +26,7 @@ class RegimentViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> fetchRegimentData({bool isInitial = false}) async {
+  Future<void> fetchRegimentData({bool isInitial = false}) {
     if (PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN) ==
         PreferenceUtil.getStringValue(Constants.KEY_USERID)) {
       regimentsDataAvailable = true;
@@ -47,6 +46,14 @@ class RegimentViewModel extends ChangeNotifier {
     if (!isInitial) {
       notifyListeners();
     }
+  }
+
+  getRegimentList() async {
+    fetchRegimentData(
+      isInitial: true,
+    );
+    regimentsList = (await regimentsData).regimentsList;
+    notifyListeners();
   }
 
   void getRegimentDate({

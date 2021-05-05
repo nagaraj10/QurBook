@@ -144,6 +144,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
     mInitialTime = DateTime.now();
     _familyListBloc = new FamilyListBloc();
     getFamilyLength();
+    Provider.of<RegimentViewModel>(context, listen: false).getRegimentList();
 
     super.initState();
   }
@@ -480,7 +481,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
         child: DefaultTabController(
           length: 3,
           initialIndex:
-              Provider.of<RegimentViewModel>(context).regimentsDataAvailable
+              (Provider.of<RegimentViewModel>(context).regimentsList?.length ??
+                          0) >
+                      0
                   ? 0
                   : 2,
           child: Column(
