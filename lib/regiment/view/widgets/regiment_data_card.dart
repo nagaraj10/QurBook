@@ -107,16 +107,20 @@ class RegimentDataCard extends StatelessWidget {
                                     listen: false)
                                 .regimentMode ==
                             RegimentMode.Schedule,
-                        child: Text(
-                          //TODO: Replace with actual time
-                          time,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16.0.sp,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            top: 2.0.h,
                           ),
-                          textAlign: TextAlign.center,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
+                          child: Text(
+                            time,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16.0.sp,
+                            ),
+                            textAlign: TextAlign.center,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                       ),
                     ],

@@ -56,91 +56,100 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
   Color getColor(
       Activityname activityname, Uformname uformName, Metadata metadata) {
     Color cardColor;
-    switch (activityname) {
-      case Activityname.DIET:
-        cardColor = Colors.green;
-        break;
-      case Activityname.VITALS:
-        if (uformName == Uformname.BLOODPRESSURE) {
-          cardColor = Color(0xFF059192);
-        } else if (uformName == Uformname.BLOODSUGAR) {
-          cardColor = Color(0xFFb70a80);
-        } else if (uformName == Uformname.PULSE) {
-          cardColor = Color(0xFF8600bd);
-        } else {
-          cardColor = Colors.lightBlueAccent;
+    try {
+      if ((metadata?.color?.length ?? 0) == 7) {
+        cardColor = Color(int.parse(metadata?.color.replaceFirst('#', '0xFF')));
+      } else {
+        switch (activityname) {
+          case Activityname.DIET:
+            cardColor = Colors.green;
+            break;
+          case Activityname.VITALS:
+            if (uformName == Uformname.BLOODPRESSURE) {
+              cardColor = Color(0xFF059192);
+            } else if (uformName == Uformname.BLOODSUGAR) {
+              cardColor = Color(0xFFb70a80);
+            } else if (uformName == Uformname.PULSE) {
+              cardColor = Color(0xFF8600bd);
+            } else {
+              cardColor = Colors.lightBlueAccent;
+            }
+            break;
+          case Activityname.MEDICATION:
+            cardColor = Colors.blue;
+            break;
+          case Activityname.SCREENING:
+            cardColor = Colors.teal;
+            break;
+          default:
+            cardColor = Color(CommonUtil().getMyPrimaryColor());
         }
-        break;
-      case Activityname.MEDICATION:
-        cardColor = Colors.blue;
-        break;
-      case Activityname.SCREENING:
-        cardColor = Colors.teal;
-        break;
-      default:
-        cardColor = Color(CommonUtil().getMyPrimaryColor());
+      }
+    } catch (e) {
+      cardColor = Color(CommonUtil().getMyPrimaryColor());
     }
     return cardColor;
   }
 
   dynamic getIcon(
       Activityname activityname, Uformname uformName, Metadata metadata) {
-    dynamic cardIcon;
-
-    if (metadata?.icon != null) {
-      cardIcon = metadata.icon;
-    }
     try {
       return CachedNetworkImage(
-        imageUrl: cardIcon,
-        height: 24.0.sp,
-        width: 24.0.sp,
+        imageUrl: metadata?.icon,
+        height: 30.0.sp,
+        width: 30.0.sp,
         errorWidget: (context, url, error) {
-          return Image.asset(
-            'assets/launcher/myfhb1.png',
-            height: 24.0.sp,
-            width: 24.0.sp,
-          );
+          return getDefaultIcon(activityname, uformName);
         },
       );
     } catch (e) {
-      return Image.asset(
-        'assets/launcher/myfhb1.png',
-        height: 24.0.sp,
-        width: 24.0.sp,
-      );
+      return getDefaultIcon(activityname, uformName);
     }
-    // if (metadata?.icon != null) {
-    //   cardIcon = metadata.icon;
-    // }
-    // else {
-    // switch (activityname) {
-    //   case Activityname.DIET:
-    //     cardIcon = Icons.fastfood_rounded;
-    //     break;
-    //   case Activityname.VITALS:
-    //     if (uformName == Uformname.BLOODPRESSURE) {
-    //       cardIcon = 'assets/devices/bp_dashboard.png';
-    //     } else if (uformName == Uformname.BLOODSUGAR) {
-    //       cardIcon = 'assets/devices/gulcose_dashboard.png';
-    //     } else if (uformName == Uformname.PULSE) {
-    //       cardIcon = 'assets/devices/os_dashboard.png';
-    //     } else {
-    //       cardIcon = Icons.lock_clock;
-    //     }
-    //
-    //     break;
-    //   case Activityname.MEDICATION:
-    //     cardIcon = Icons.medical_services;
-    //     break;
-    //   case Activityname.SCREENING:
-    //     cardIcon = Icons.screen_search_desktop;
-    //     break;
-    //   default:
-    //     cardIcon = Icons.lock_clock;
-    // }
-    // }
-    // return cardIcon;
+  }
+
+  dynamic getDefaultIcon(
+    Activityname activityname,
+    Uformname uformName,
+  ) {
+    bool isDefault = true;
+    dynamic cardIcon = 'assets/launcher/myfhb1.png';
+    switch (activityname) {
+      case Activityname.DIET:
+        cardIcon = Icons.fastfood_rounded;
+        break;
+      case Activityname.VITALS:
+        if (uformName == Uformname.BLOODPRESSURE) {
+          cardIcon = 'assets/devices/bp_dashboard.png';
+          isDefault = false;
+        } else if (uformName == Uformname.BLOODSUGAR) {
+          isDefault = false;
+          cardIcon = 'assets/devices/gulcose_dashboard.png';
+        } else if (uformName == Uformname.PULSE) {
+          isDefault = false;
+          cardIcon = 'assets/devices/os_dashboard.png';
+        }
+        break;
+      case Activityname.MEDICATION:
+        cardIcon = Icons.medical_services;
+        break;
+      case Activityname.SCREENING:
+        cardIcon = Icons.screen_search_desktop;
+        break;
+      default:
+        cardIcon = 'assets/launcher/myfhb1.png';
+    }
+    Widget cardIconWidget = (cardIcon is String)
+        ? Image.asset(
+            cardIcon,
+            height: isDefault ? 30.0.sp : 24.0.sp,
+            width: isDefault ? 30.0.sp : 24.0.sp,
+          )
+        : Icon(
+            cardIcon,
+            size: 24.0.sp,
+            color: Colors.white,
+          );
+    return cardIconWidget;
   }
 
   @override
