@@ -82,149 +82,155 @@ class PlanDetail extends State<MyPlanDetailView> {
       body: Builder(
         builder: (contxt) => Container(
           alignment: Alignment.center,
-          child: Column(
-            children: [
-              CircleAvatar(
-                backgroundImage: AssetImage('assets/launcher/myfhb1.png'),
-                radius: 50.sp,
-                backgroundColor: Colors.transparent,
-              ),
-              SizedBox(
-                height: 20.h,
-              ),
-              Text(
-                title != null && title != '' ? title : '-',
-                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500),
-              ),
-              SizedBox(
-                height: 10.h,
-              ),
-              Text(
-                providerName != null && providerName != '' ? providerName : '-',
-                style: TextStyle(fontSize: 14.sp, color: Colors.grey[600]),
-              ),
-              SizedBox(
-                height: 10.h,
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        'Duration: ',
-                        style:
-                            TextStyle(color: Colors.grey[600], fontSize: 14.sp),
-                      ),
-                      Text(
-                        packageDuration != null && packageDuration != ''
-                            ? '$packageDuration days'
-                            : '-',
-                        style: TextStyle(
-                            color: Color(CommonUtil().getMyPrimaryColor()),
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w600),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        'Price: ',
-                        style:
-                            TextStyle(color: Colors.grey[600], fontSize: 14.sp),
-                      ),
-                      Text(
-                        price != null && price != '' ? 'INR $price' : '-',
-                        style: TextStyle(
-                            color: Color(CommonUtil().getMyPrimaryColor()),
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w600),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                height: 0.55.sh,
-                child: SingleChildScrollView(
-                  child: Html(
-                    data: description.replaceAll('src="//', 'src="'),
-                    shrinkWrap: true,
-                    onLinkTap: (linkUrl) {
-                      CommonUtil().openWebViewNew(widget.title, linkUrl, false);
-                    },
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                CircleAvatar(
+                  backgroundImage: AssetImage('assets/launcher/myfhb1.png'),
+                  radius: 50.sp,
+                  backgroundColor: Colors.transparent,
+                ),
+                SizedBox(
+                  height: 20.h,
+                ),
+                Text(
+                  title != null && title != '' ? title : '-',
+                  style:
+                      TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500),
+                ),
+                SizedBox(
+                  height: 10.h,
+                ),
+                Text(
+                  providerName != null && providerName != ''
+                      ? providerName
+                      : '-',
+                  style: TextStyle(fontSize: 14.sp, color: Colors.grey[600]),
+                ),
+                SizedBox(
+                  height: 10.h,
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          'Duration: ',
+                          style: TextStyle(
+                              color: Colors.grey[600], fontSize: 14.sp),
+                        ),
+                        Text(
+                          packageDuration != null && packageDuration != ''
+                              ? '$packageDuration days'
+                              : '-',
+                          style: TextStyle(
+                              color: Color(CommonUtil().getMyPrimaryColor()),
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          'Price: ',
+                          style: TextStyle(
+                              color: Colors.grey[600], fontSize: 14.sp),
+                        ),
+                        Text(
+                          price != null && price != '' ? 'INR $price' : '-',
+                          style: TextStyle(
+                              color: Color(CommonUtil().getMyPrimaryColor()),
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  height: 0.55.sh,
+                  child: SingleChildScrollView(
+                    child: Html(
+                      data: description.replaceAll('src="//', 'src="'),
+                      shrinkWrap: true,
+                      onLinkTap: (linkUrl) {
+                        CommonUtil()
+                            .openWebViewNew(widget.title, linkUrl, false);
+                      },
+                    ),
                   ),
                 ),
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  OutlineButton(
-                    //hoverColor: Color(getMyPrimaryColor()),
-                    child: Text(
-                      issubscription == '0'
-                          ? 'subscribe'.toUpperCase()
-                          : 'unsubscribe'.toUpperCase(),
-                      style: TextStyle(
-                        color: Color(CommonUtil().getMyPrimaryColor()),
-                        fontSize: 13.sp,
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    OutlineButton(
+                      //hoverColor: Color(getMyPrimaryColor()),
+                      child: Text(
+                        issubscription == '0'
+                            ? 'subscribe'.toUpperCase()
+                            : 'unsubscribe'.toUpperCase(),
+                        style: TextStyle(
+                          color: Color(CommonUtil().getMyPrimaryColor()),
+                          fontSize: 13.sp,
+                        ),
+                      ),
+                      onPressed: () async {
+                        if (issubscription == '0') {
+                          CommonUtil().profileValidationCheck(contxt,
+                              packageId: packageId,
+                              isSubscribed: issubscription,
+                              providerId: providerId);
+                        } else {
+                          CommonUtil().unSubcribeAlertDialog(context,
+                              packageId: packageId, refresh: () {
+                            setState(() {});
+                          });
+                        }
+                      },
+                      borderSide: BorderSide(
+                        color: Color(
+                          CommonUtil().getMyPrimaryColor(),
+                        ),
+                        style: BorderStyle.solid,
+                        width: 1,
                       ),
                     ),
-                    onPressed: () async {
-                      if (issubscription == '0') {
-                        CommonUtil().profileValidationCheck(contxt,
-                            packageId: packageId,
-                            isSubscribed: issubscription,
-                            providerId: providerId);
-                      } else {
-                        CommonUtil().unSubcribeAlertDialog(context,
-                            packageId: packageId, refresh: () {
-                          setState(() {});
-                        });
-                      }
-                    },
-                    borderSide: BorderSide(
-                      color: Color(
-                        CommonUtil().getMyPrimaryColor(),
-                      ),
-                      style: BorderStyle.solid,
-                      width: 1,
+                    SizedBox(
+                      width: 10,
                     ),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  OutlineButton(
-                    //hoverColor: Color(getMyPrimaryColor()),
-                    child: Text(
-                      'cancel'.toUpperCase(),
-                      style: TextStyle(
-                        color: Color(CommonUtil().getMyPrimaryColor()),
-                        fontSize: 13.sp,
+                    OutlineButton(
+                      //hoverColor: Color(getMyPrimaryColor()),
+                      child: Text(
+                        'cancel'.toUpperCase(),
+                        style: TextStyle(
+                          color: Color(CommonUtil().getMyPrimaryColor()),
+                          fontSize: 13.sp,
+                        ),
+                      ),
+                      onPressed: () async {
+                        // open profile page
+                        Navigator.of(context).pop();
+                      },
+                      borderSide: BorderSide(
+                        color: Color(
+                          CommonUtil().getMyPrimaryColor(),
+                        ),
+                        style: BorderStyle.solid,
+                        width: 1,
                       ),
                     ),
-                    onPressed: () async {
-                      // open profile page
-                      Navigator.of(context).pop();
-                    },
-                    borderSide: BorderSide(
-                      color: Color(
-                        CommonUtil().getMyPrimaryColor(),
-                      ),
-                      style: BorderStyle.solid,
-                      width: 1,
-                    ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
