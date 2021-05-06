@@ -69,7 +69,7 @@ class FormDataDialogState extends State<FormDataDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Flexible(
             child: Text(
