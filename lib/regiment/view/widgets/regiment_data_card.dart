@@ -67,8 +67,7 @@ class RegimentDataCard extends StatelessWidget {
                     eid: eid,
                     color: color,
                     mediaData: mediaData,
-                    formTitle:
-                        '${DateFormat('hh:mm a').format(regimentData.estart)},${regimentData.title}',
+                    formTitle: getDialogTitle(context),
                   ),
                 );
                 if (value != null && (value ?? false)) {
@@ -380,5 +379,17 @@ class RegimentDataCard extends StatelessWidget {
     }
 
     return fieldWidgets;
+  }
+
+  String getDialogTitle(BuildContext context) {
+    String title = '';
+    if (Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
+        RegimentMode.Schedule) {
+      title =
+          '${DateFormat('hh:mm a').format(regimentData.estart)},${regimentData.title}';
+    } else {
+      title = '${regimentData.title}';
+    }
+    return title;
   }
 }
