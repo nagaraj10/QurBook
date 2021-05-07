@@ -29,6 +29,16 @@ import AVFoundation
     
     let speechSynthesizer = AVSpeechSynthesizer()
     
+    let reminderChannel = Constants.reminderMethodChannel
+    let addReminderMethod = Constants.addReminderMethod
+    let removeReminderMethod = Constants.removeReminderMethod
+    
+    
+    let notificationCenter = UNUserNotificationCenter.current()
+    var listOfScheduledNotificaitons:[UNNotificationRequest] = []
+    let showBothButtonsCat = "showBothButtonsCat"
+    let showSingleButtonCat = "showSingleButtonCat"
+    
     override func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
@@ -49,7 +59,25 @@ import AVFoundation
         let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
         
         requestAuthorization();
+        notificationCenter.getPendingNotificationRequests { [weak self](data) in
+            guard let self = self else { return }
+            self.listOfScheduledNotificaitons = data
+            print(data.count)
+        }
+        //Add Action button the Notification
         
+        let snoozeAction = UNNotificationAction(identifier: "Snooze", title: "Snooze", options: [])
+        let declineAction = UNNotificationAction(identifier: "Dismiss", title: "Dismiss", options: [.destructive])
+        let showBothButtonscategory = UNNotificationCategory(identifier: showBothButtonsCat,
+                                                             actions:  [snoozeAction, declineAction],
+                                                             intentIdentifiers: [],
+                                                             options: [])
+        
+        let showSingleButtonCategory = UNNotificationCategory(identifier: showSingleButtonCat,
+                                                              actions:  [declineAction],
+                                                              intentIdentifiers: [],
+                                                              options: [])
+        notificationCenter.setNotificationCategories([showBothButtonscategory,showSingleButtonCategory])
         // 2 a)
         // Speech to Text
         let sttChannel = FlutterMethodChannel(name: STT_CHANNEL,
@@ -61,15 +89,10 @@ import AVFoundation
                 result(FlutterMethodNotImplemented)
                 return
             }
-            
             print(Constants.speechToText)
-            
-            print(Constants.STT, result);
-            
+            print(Constants.STT, result)
             Loading.sharedInstance.showLoader()
-            
             self?.STT_Result = result;
-            
             do{
                 try self?.startRecording();
             }catch(let error){
@@ -158,20 +181,16 @@ import AVFoundation
                         // pull out the best transcription...
                         print(result.bestTranscription.formattedString as Any)
                         print(result.isFinal)
-                        
                         timer.invalidate()
                         self.STT_Result!(result.bestTranscription.formattedString as Any);
                         self.message = "";
-                        
                         self.stopRecording()
                     }
                 } else {
                     self.detectionTimer = Timer.scheduledTimer(withTimeInterval: 1.5, repeats: false, block: { (timer) in
                         //                    isFinal = true
                         Loading.sharedInstance.hideLoader()
-                        
                         print(self.message)
-                        
                         timer.invalidate()
                         self.STT_Result!(self.message);
                         self.message = "";
@@ -196,17 +215,13 @@ import AVFoundation
         }catch{
             
         }
-        
         speechSynthesizer.delegate = self
-        
         let speechUtterance = AVSpeechUtterance(string: messageToSpeak)
         speechUtterance.voice = AVSpeechSynthesisVoice(language: Constants.enUS) // en-GB -> MAle , en-US -> Female
-        
         speechUtterance.rate = 0.5
         //        speechUtterance.pitchMultiplier = 0.5
         //        speechUtterance.preUtteranceDelay = 0
         speechUtterance.volume = 1
-        
         if (isClose){
             speechSynthesizer.stopSpeaking(at: AVSpeechBoundary.immediate)
         }else{
@@ -220,15 +235,183 @@ import AVFoundation
         self.audioEngine.inputNode.removeTap(onBus: 0)
         self.audioEngine.stop()
         self.recognitionRequest?.endAudio()
-        
         self.recognitionRequest = nil
         self.recognitionTask = nil
+    }
+    
+    func setUpReminders(messanger:FlutterBinaryMessenger){
+        let notifiationChannel = FlutterMethodChannel(name: reminderChannel, binaryMessenger: messanger)
+        notifiationChannel.setMethodCallHandler {[weak self] (call, result) in
+            guard let self = self else{
+                result(FlutterMethodNotImplemented)
+                return
+            }
+            if call.method == self.addReminderMethod{
+                let notificationArray = call.arguments as! NSArray
+                if let notifiationToShow = notificationArray[0] as? NSDictionary{
+                    self.scheduleNotification(message: notifiationToShow)
+                }
+            }else if call.method == self.removeReminderMethod,let dataArray = call.arguments as? NSArray,let id = dataArray[0] as? String{
+                
+                self.notificationCenter.removePendingNotificationRequests(withIdentifiers: [id])
+            }
+            else if call.method == Constants.removeAllReminderMethod{
+                self.notificationCenter.removeAllDeliveredNotifications()
+                self.notificationCenter.removeAllPendingNotificationRequests()
+            }else{
+                result(FlutterMethodNotImplemented)
+                return
+            }
+        }
+    }
+    
+    var id = "";
+    var title = "";
+    var des = "";
+    var dateComponent:DateComponents = DateComponents();
+    //Prepare New Notificaion with deatils and trigger
+    func scheduleNotification(message: NSDictionary,snooze:Bool = false) {
+        if let _id =  message["eid"] as? String {
+            id = _id
+        }else{
+            return
+        }
+        if let _title = message[Constants.title] as? String { title = _title}
+        if let _des = message[Constants.description] as? String {des = _des}
+        
+        if !snooze{
+            if let dateNotifiation = message["estart"] as? String{
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                var dateFromString = dateFormatter.date(from: dateNotifiation)?.toLocalTime()
+                print(dateNotifiation)
+                print(dateFromString as Any)
+                if let dateToBeTriggered = dateFromString{
+                    if let remindInStr = message["remindin"] as? String, let remindIn = Int(remindInStr){
+                        dateFromString = Calendar.current.date(byAdding: .minute, value: -remindIn, to: dateToBeTriggered) ?? dateToBeTriggered
+                    }
+                }
+                if let dateForSchedule = dateFromString{
+                    let strOfDateAndTime = "\(dateForSchedule)"
+                    let strSplitDateTime = strOfDateAndTime.components(separatedBy: " ")
+                    let strDates = strSplitDateTime[0].components(separatedBy: "-")
+                    let strTime = strSplitDateTime[1].components(separatedBy: ":")
+                    if let year = Int(strDates[0]),let month = Int(strDates[1]),let day = Int(strDates[2]),let hour = Int(strTime[0]),let min = Int(strTime[1]),let sec = Int(strTime[2]){
+                        dateComponent.year = year
+                        dateComponent.month = month
+                        dateComponent.day = day
+                        dateComponent.hour = hour
+                        dateComponent.minute = min
+                        dateComponent.second = sec
+                    }
+                }
+                print(dateComponent.description)
+            }
+            if let alreadyScheduled = message["alreadyScheduled"] as? Bool,alreadyScheduled{
+                let ids = listOfScheduledNotificaitons.filter({$0.identifier == id})
+                if ids.count > 0{
+                    return
+                }
+            }
+        }
+        //Compose New Notificaion
+        let content = UNMutableNotificationContent()
+        content.title = title
+        content.body = des
+        let identifier = id
+        if snooze,let snoozcount = message["snoozeCount"] as? Int{
+            if (snoozcount > 1){
+                content.categoryIdentifier = showSingleButtonCat
+            }else{
+                content.categoryIdentifier = showBothButtonsCat
+            }
+            // identifier = id + "\(snoozcount)"
+        }else{
+            content.categoryIdentifier = showBothButtonsCat
+        }
+        
+        content.userInfo = message as! [AnyHashable : Any]
+        var request:UNNotificationRequest;
+        
+        
+        if snooze{
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 300, repeats: false)
+            request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
+        }else{
+            let dateTrigger = UNCalendarNotificationTrigger(dateMatching: dateComponent, repeats: false)
+            request = UNNotificationRequest(identifier: identifier, content: content, trigger: dateTrigger)
+        }
+        //adding the notification
+        notificationCenter.add(request) { (error) in
+            if let error = error {
+                print("Error \(error.localizedDescription)")
+            }
+        }
+    }
+    //Handle Notification Center Delegate methods
+    override func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                         willPresent notification: UNNotification,
+                                         withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.alert, .sound])
+    }
+    
+    override func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                         didReceive response: UNNotificationResponse,
+                                         withCompletionHandler completionHandler: @escaping () -> Void) {
+        //            if (response.actionIdentifier == "Accept") || (response.actionIdentifier == "Decline"){
+        //
+        //            }
+        print(response.actionIdentifier)
+        let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
+        if let data = response.notification.request.content.userInfo as? NSDictionary{
+            if let eId = data["eid"] as? String{
+                if response.actionIdentifier == "Snooze" {
+                    
+                    if let count = data["snoozeCount"] as? Int{
+                        if count < 2{
+                            var newData = response.notification.request.content.userInfo
+                            newData["snoozeCount"] = count + 1
+                            self.scheduleNotification(message:newData as NSDictionary, snooze: true)
+                        }
+                    }else{
+                        var newData = response.notification.request.content.userInfo
+                        newData["snoozeCount"] = 1
+                        self.scheduleNotification(message:newData as NSDictionary, snooze: true)
+                    }
+                }else if response.actionIdentifier == "Dismiss"{
+                    
+                }else{
+                    let reminderChannel = FlutterMethodChannel.init(name: self.reminderChannel, binaryMessenger: controller.binaryMessenger)
+                    reminderChannel.invokeMethod(Constants.navigateToRegimentMethod, arguments: nil)
+                }
+            }
+            else{
+                let notificationResponseChannel = FlutterMethodChannel.init(name: Constants.reponseToRemoteNotificationMethodChannel, binaryMessenger: controller.binaryMessenger)
+                notificationResponseChannel.invokeMethod(Constants.notificationResponseMethod, arguments:data)
+            }
+        }
+        completionHandler()
     }
 }
 
 extension AppDelegate: AVSpeechSynthesizerDelegate {
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
-        
         TTS_Result!(1);
     }
+}
+extension Date {
+    // Convert local time to UTC (or GMT)
+    func toGlobalTime() -> Date {
+        let timezone = TimeZone.current
+        let seconds = -TimeInterval(timezone.secondsFromGMT(for: self))
+        return Date(timeInterval: seconds, since: self)
+    }
+    
+    // Convert UTC (or GMT) to local time
+    func toLocalTime() -> Date {
+        let timezone = TimeZone.current
+        let seconds = TimeInterval(timezone.secondsFromGMT(for: self))
+        return Date(timeInterval: seconds, since: self)
+    }
+    
 }

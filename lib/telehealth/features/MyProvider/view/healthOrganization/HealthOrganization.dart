@@ -105,118 +105,116 @@ class _HealthOrganizationState extends State<HealthOrganization> {
   Widget getDoctorBar(List<Doctors> doctors, int index) {
     return AppBar(
         automaticallyImplyLeading: false,
-        flexibleSpace: SafeArea(
-          child: Container(
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                    colors: <Color>[
-                  Color(new CommonUtil().getMyPrimaryColor()),
-                  Color(new CommonUtil().getMyGredientColor())
-                ],
-                    stops: [
-                  0.3,
-                  1.0
-                ])),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(left: 10),
-                      child: GestureDetector(
-                        child: Icon(
-                          Icons.arrow_back_ios,
-                          color: Colors.white,
-                          size: 24.0.sp,
-                        ),
-                        onTap: () {
-                          //Add code for tapping back
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    ClipOval(
-                      child: Image.network(
-                          doctors[index].user.profilePicThumbnailUrl != null
-                              ? doctors[index].user.profilePicThumbnailUrl
-                              : '',
-                          height: 40.0.h,
-                          width: 40.0.h,
-                          fit: BoxFit.cover, errorBuilder:
-                              (BuildContext context, Object exception,
-                                  StackTrace stackTrace) {
-                        return Container(
-                          height: 40.0.h,
-                          width: 40.0.h,
-                          color: Colors.grey[200],
-                          child: Center(
-                            child: commonWidgets
-                                .getFirstLastNameText(doctors[index]),
-                          ),
-                        );
-                      }),
-                    ),
-                    SizedBox(
-                      width: 15,
-                    ),
-                    Container(
-                        child: Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          commonWidgets
-                              .setDoctornameForTabBar(doctors[index].user),
-                          Text(
-                            (doctors[index].doctorProfessionalDetailCollection !=
-                                        null &&
-                                    doctors[index]
-                                            .doctorProfessionalDetailCollection
-                                            .length >
-                                        0)
-                                ? doctors[index]
-                                            .doctorProfessionalDetailCollection[
-                                                0]
-                                            .specialty !=
-                                        null
-                                    ? doctors[index]
-                                                .doctorProfessionalDetailCollection[
-                                                    0]
-                                                .specialty
-                                                .name !=
-                                            null
-                                        ? '${doctors[index].doctorProfessionalDetailCollection[0].specialty.name}'
-                                        : ''
-                                    : ''
-                                : '',
-                            style: TextStyle(
-                                fontFamily: variable.font_poppins,
-                                fontSize: 14.0.sp,
-                                color: Colors.white),
-                          ),
-                          Text(
-                            '' +
-                                commonWidgets
-                                    .getCityDoctorsModel(doctors[index]),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                            style: TextStyle(
-                                fontFamily: variable.font_poppins,
-                                fontSize: 14.0.sp,
-                                color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    ))
-                  ],
-                ),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: <Color>[
+                Color(new CommonUtil().getMyPrimaryColor()),
+                Color(new CommonUtil().getMyGredientColor())
               ],
-            ),
+                  stops: [
+                0.3,
+                1.0
+              ])),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(left: 10),
+                    child: GestureDetector(
+                      child: Icon(
+                        Icons.arrow_back_ios,
+                        color: Colors.white,
+                        size: 24.0.sp,
+                      ),
+                      onTap: () {
+                        //Add code for tapping back
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  ClipOval(
+                    child: Image.network(
+                        doctors[index].user.profilePicThumbnailUrl != null
+                            ? doctors[index].user.profilePicThumbnailUrl
+                            : '',
+                        height: 40.0.h,
+                        width: 40.0.h,
+                        fit: BoxFit.cover, errorBuilder:
+                            (BuildContext context, Object exception,
+                                StackTrace stackTrace) {
+                      return Container(
+                        height: 40.0.h,
+                        width: 40.0.h,
+                        color: Colors.grey[200],
+                        child: Center(
+                          child: commonWidgets
+                              .getFirstLastNameText(doctors[index]),
+                        ),
+                      );
+                    }),
+                  ),
+                  SizedBox(
+                    width: 15,
+                  ),
+                  Container(
+                      child: Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        commonWidgets
+                            .setDoctornameForTabBar(doctors[index].user),
+                        Text(
+                          (doctors[index].doctorProfessionalDetailCollection !=
+                                      null &&
+                                  doctors[index]
+                                          .doctorProfessionalDetailCollection
+                                          .length >
+                                      0)
+                              ? doctors[index]
+                                          .doctorProfessionalDetailCollection[
+                                              0]
+                                          .specialty !=
+                                      null
+                                  ? doctors[index]
+                                              .doctorProfessionalDetailCollection[
+                                                  0]
+                                              .specialty
+                                              .name !=
+                                          null
+                                      ? '${doctors[index].doctorProfessionalDetailCollection[0].specialty.name}'
+                                      : ''
+                                  : ''
+                              : '',
+                          style: TextStyle(
+                              fontFamily: variable.font_poppins,
+                              fontSize: 14.0.sp,
+                              color: Colors.white),
+                        ),
+                        Text(
+                          '' +
+                              commonWidgets
+                                  .getCityDoctorsModel(doctors[index]),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          style: TextStyle(
+                              fontFamily: variable.font_poppins,
+                              fontSize: 14.0.sp,
+                              color: Colors.white),
+                        ),
+                      ],
+                    ),
+                  ))
+                ],
+              ),
+            ],
           ),
         ));
   }

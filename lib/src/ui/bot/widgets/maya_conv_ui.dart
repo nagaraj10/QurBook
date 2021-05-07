@@ -30,8 +30,8 @@ class MayaConvUI extends StatelessWidget {
                     );
                   },
                   child: Card(
-                    color: (buttonData.isPlaying ?? false)
-                        ? Colors.redAccent
+                    color: ((buttonData.isPlaying ?? false) && c.isSpeaking)
+                        ? Colors.lightBlueAccent
                         : Colors.white,
                     margin: const EdgeInsets.only(top: 10),
                     shape: RoundedRectangleBorder(
@@ -45,9 +45,10 @@ class MayaConvUI extends StatelessWidget {
                       child: Text(
                         buttonData.title,
                         style: TextStyle(
-                          color: (buttonData.isPlaying ?? false)
-                              ? Colors.white
-                              : Color(new CommonUtil().getMyPrimaryColor()),
+                          color:
+                              ((buttonData.isPlaying ?? false) && c.isSpeaking)
+                                  ? Colors.white
+                                  : Color(new CommonUtil().getMyPrimaryColor()),
                           fontSize: 16.0.sp,
                         ),
                       ),
@@ -120,18 +121,22 @@ class MayaConvUI extends StatelessWidget {
                   textToSpeak: c.text + textToSpeak,
                   index: index,
                   langCode: c.langCode,
-                  stopPrevious: (c.buttons?.length ?? 0) == 0,
+                  isButtonText: (c.buttons?.length ?? 0) > 0,
                 );
+                // if (!Provider.of<ChatScreenViewModel>(context, listen: false)
+                //     .stopTTS) {
                 await Provider.of<ChatScreenViewModel>(context, listen: false)
                     .startButtonsSpeech(
                   index: index,
                   langCode: c.langCode,
                   buttons: c.buttons,
                 );
+                // }
               } else {
                 Provider.of<ChatScreenViewModel>(context, listen: false)
                     .stopTTSEngine(
                   index: index,
+                  langCode: c.langCode,
                 );
               }
             },

@@ -20,6 +20,18 @@ struct Constants {
     static let STT = "STT : ";
     static let TSS = "TTS : ";
     static let errorIs = "error is";
+    static let reponseToRemoteNotificationMethodChannel =
+        "flutter.native.QurBook/notificationResponse";
+    static let notificationResponseMethod = "notificationResponse";
+    
+    static let reminderMethodChannel = "flutter.native/reminder"
+    static let addReminderMethod = "addReminder"
+    static let removeReminderMethod = "removeReminder"
+    static let removeAllReminderMethod = "removeAllReminder"
+    static let navigateToRegimentMethod = "navigateToRegiment"
+    static let title = "title";
+    static let description = "description";
+    static let notification = "notification";
     
     struct paramaters {
         static let message = "message"

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/services.dart';
+import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/utils/alert.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
@@ -552,20 +553,21 @@ class FHBBasicWidget {
 
   static Widget getRefreshContainerButton(
       String errorMsg, Function onRefreshPressed) {
-    return Container(
-      color: Color(fhbColors.bgColorContainer),
-      padding: EdgeInsets.only(left: 20, right: 20),
-      alignment: Alignment.center,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text(errorMsg,
-              style: TextStyle(
-                fontSize: 15.0.sp,
-              )),
-        ],
-      ),
-    );
+    return ErrorsWidget();
+    // return Container(
+    //   color: Color(fhbColors.bgColorContainer),
+    //   padding: EdgeInsets.only(left: 20, right: 20),
+    //   alignment: Alignment.center,
+    //   child: Column(
+    //     mainAxisAlignment: MainAxisAlignment.center,
+    //     children: <Widget>[
+    //       Text(errorMsg,
+    //           style: TextStyle(
+    //             fontSize: 15.0.sp,
+    //           )),
+    //     ],
+    //   ),
+    // );
   }
 
   Future<bool> showDialogWithTwoButtons(

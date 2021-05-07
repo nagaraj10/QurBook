@@ -3,6 +3,8 @@ import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
+import 'package:myfhb/src/blocs/Media/MediaTypeBlock.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart'
     as Constants;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
@@ -61,6 +63,9 @@ class _AppointmentsState extends State<Appointments> {
       'screenSessionTime':
           '${DateTime.now().difference(mInitialTime).inSeconds} secs'
     });
+    try {
+      getCategoryList();
+    } catch (e) {}
   }
 
   @override
@@ -69,6 +74,15 @@ class _AppointmentsState extends State<Appointments> {
         body: body(),
         appBar: appBar(),
         floatingActionButton: commonWidget.floatingButton(context));
+  }
+
+  getCategoryList() {
+    CategoryListBlock _categoryListBlock = new CategoryListBlock();
+    MediaTypeBlock _mediaTypeBlock = new MediaTypeBlock();
+
+    _categoryListBlock.getCategoryLists().then((value) {});
+
+    _mediaTypeBlock.getMediTypesList().then((value) {});
   }
 
   Widget search() {

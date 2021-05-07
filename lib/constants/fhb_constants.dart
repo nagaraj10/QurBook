@@ -323,6 +323,7 @@ const String CONSULTING = 'CONSULTING';
 const String HealthOrg = 'Health Organization';
 const String HEALTH_RECORDIDS = 'healthRecordIds';
 const String INR = 'INR ';
+const String FREE = 'FREE';
 const String LAST_RECEIVED = 'Last Received: ';
 const String DATE_FORMAT = 'dd MMM kk:mm';
 const String NOTHING_SEND = 'Nothing to send';
@@ -399,6 +400,39 @@ const PLAY_STORE_URL =
 const String STR_HOS_ID = 'Hospital IDs';
 const String STR_OTHER_ID = 'Other IDs';
 const String STR_INSURE_ID = 'Insurance IDs';
+const String noRegimentData =
+    'No Regiments data available for the selected date';
+const String noRegimentScheduleData =
+    'No Scheduled data available for the selected date';
+const String noRegimentSymptomsData =
+    'No Symptoms data available for the selected date';
+const String plansForFamily =
+    'Regiment plans are not available for family members';
+const String mplansForFamily = 'Plans are not available for family members';
+const String okButton = 'OK';
+const String saveButton = 'Save';
+const String select = 'Select';
+const String scheduled = 'Scheduled';
+const String symptoms = 'Symptoms';
+const String scheduleTitle = 'Daily Schedule';
+
+const strJpgDot = '.jpg';
+const strJpegDot = '.jpeg';
+const strPdfDot = '.pdf';
+const strPngDot = '.png';
+
+const strJpg = 'jpg';
+const strPdf = 'pdf';
+const strPng = 'png';
+
+const strGallery = 'photo';
+const strVideo = 'video';
+const strFiles = 'file';
+const strAudio = 'audio';
+
+const strUploading = 'Uploading...';
+const strSubscribe = 'Subscribe';
+const strUnSubscribe = 'UnSubscribe';
 
 FirebaseAnalytics _firebaseAnalytics = FirebaseAnalytics();
 var mInitialTime;

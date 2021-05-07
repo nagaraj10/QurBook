@@ -38,6 +38,7 @@ class _ReceiverLayoutState extends State<ReceiverLayout> {
       if (widget?.c?.screen == parameters.strDashboard && widget?.c?.redirect) {
         Provider.of<ChatScreenViewModel>(context, listen: false).stopTTSEngine(
           index: widget.index,
+          langCode: widget.c.langCode,
         );
         Future.delayed(Duration(seconds: 9), () => Navigator.pop(context));
       }
@@ -89,18 +90,24 @@ class _ReceiverLayoutState extends State<ReceiverLayout> {
                   ),
                 ),
                 child: FutureBuilder(
-                  future: Future.delayed(
-                      Duration(
-                        seconds: (widget.c.loadingDots ?? false) ? 3 : 0,
-                      ),
-                      () => MayaConvUI(widget.c, widget.index)),
+                  future: (widget.c.loadingDots ?? false)
+                      ? Future.delayed(
+                          Duration(
+                            seconds: 3,
+                          ),
+                          () => MayaConvUI(widget.c, widget.index),
+                        )
+                      : Future.value(
+                          MayaConvUI(widget.c, widget.index),
+                        ),
                   builder: (BuildContext context, snapshot) {
                     return snapshot.hasData
                         ? snapshot.data
                         : Loading(
                             indicator: BallPulseIndicator(),
                             size: 20.0,
-                            color: Colors.white);
+                            color: Colors.white,
+                          );
                   },
                 ),
               ),

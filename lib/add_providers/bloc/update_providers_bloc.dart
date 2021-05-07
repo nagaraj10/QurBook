@@ -163,6 +163,25 @@ class UpdateProvidersBloc implements BaseBloc {
     return updateProvidersId;
   }
 
+  //providerMapping after subscribe
+  Future<UpdateProvidersId> mappingHealthOrg(String providerId,String userId) async {
+    UpdateProvidersId updateProvidersId;
+    try {
+      updateProvidersId =
+      await updateProvidersRepository.updateHospitalsIdWithUserDetails(
+          providerId,
+          false,
+          '',
+          userId,
+          []);
+//      doctorsSink.add(ApiResponse.completed(updateProvidersId));
+    } catch (e) {
+      doctorsSink.add(ApiResponse.error(e.toString()));
+    }
+
+    return updateProvidersId;
+  }
+
   @override
   void dispose() {
     // TODO: implement dispose

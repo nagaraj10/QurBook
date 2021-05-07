@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io' show Platform;
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 // import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:camera/camera.dart';
 import 'package:connectivity/connectivity.dart';
@@ -24,6 +25,7 @@ import 'package:myfhb/schedules/add_reminders.dart';
 import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
 import 'package:myfhb/src/model/Category/catergory_result.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
+import 'package:myfhb/src/ui/Dashboard.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/ui/MyRecordsArguments.dart';
 import 'package:myfhb/src/ui/SplashScreen.dart';
@@ -228,6 +230,7 @@ class _MyFHBState extends State<MyFHB> {
   var globalContext;
   AuthService authService = AuthService();
   ChatViewModel chatViewModel = new ChatViewModel();
+
   @override
   void initState() {
     // TODO: implement initState
@@ -244,6 +247,8 @@ class _MyFHBState extends State<MyFHB> {
       // Push Notifications
       final provider = PushNotificationsProvider();
       provider.initNotification();
+      provider.setUpListerForTheNotification();
+      provider.isAlreadyLoaded = true;
       provider.pushController.listen((callarguments) {
         fbaLog(eveParams: {
           'eventTime': '${DateTime.now()}',
@@ -328,6 +333,54 @@ class _MyFHBState extends State<MyFHB> {
               Get.toNamed(router.rt_HomeScreen,
                       arguments: HomeScreenArguments(selectedIndex: 1))
                   .then((value) => setState(() {}));
+            } else if (event == 'regiment_screen') {
+              //this need to be navigte to Regiment screen
+              fbaLog(eveParams: {
+                'eventTime': '${DateTime.now()}',
+                'ns_type': 'regiment_screen',
+                'navigationPage': 'Regiment Screen',
+              });
+              Get.to(DashboardScreen());
+            } else if (event == 'dashboard') {
+              fbaLog(eveParams: {
+                'eventTime': '${DateTime.now()}',
+                'ns_type': 'dashboard',
+                'navigationPage': 'Device List Screen',
+              });
+              Get.toNamed(router.rt_Dashboard);
+            } else if (event == 'th_provider_hospital') {
+              fbaLog(eveParams: {
+                'eventTime': '${DateTime.now()}',
+                'ns_type': 'th_provider_hospital',
+                'navigationPage': 'TH provider Hospital Screen',
+              });
+              Get.toNamed(router.rt_TelehealthProvider,
+                  arguments:
+                      HomeScreenArguments(selectedIndex: 1, thTabIndex: 1));
+            } else if (event == 'myfamily_list') {
+              fbaLog(eveParams: {
+                'eventTime': '${DateTime.now()}',
+                'ns_type': 'myfamily_list',
+                'navigationPage': 'MyFamily List Screen',
+              });
+              Get.toNamed(router.rt_UserAccounts,
+                  arguments: UserAccountsArguments(selectedIndex: 1));
+            } else if (event == 'myprovider_list') {
+              fbaLog(eveParams: {
+                'eventTime': '${DateTime.now()}',
+                'ns_type': 'myprovider_list',
+                'navigationPage': 'MyProvider List Screen',
+              });
+              Get.toNamed(router.rt_UserAccounts,
+                  arguments: UserAccountsArguments(selectedIndex: 2));
+            } else if (event == 'myplans') {
+              fbaLog(eveParams: {
+                'eventTime': '${DateTime.now()}',
+                'ns_type': 'myplans',
+                'navigationPage': 'MyPlans Screen',
+              });
+              Get.toNamed(router.rt_UserAccounts,
+                  arguments: UserAccountsArguments(selectedIndex: 3));
             } else {
               fbaLog(eveParams: {
                 'eventTime': '${DateTime.now()}',
@@ -378,11 +431,45 @@ class _MyFHBState extends State<MyFHB> {
               Get.to(SplashScreen(
                 nsRoute: 'my_record',
               ));
+            } else if (event == 'regiment_screen') {
+              //this need to be navigte to Regiment screen
+              return SplashScreen(
+                nsRoute: 'regiment_screen',
+              );
+            } else if (event == 'th_provider_hospital') {
+              //this need to be navigte to TH provider screen
+              return SplashScreen(
+                nsRoute: 'th_provider_hospital',
+              );
+            } else if (event == 'myfamily_list') {
+              //this need to be navigte to My Family List screen
+              return SplashScreen(
+                nsRoute: 'myfamily_list',
+              );
+            } else if (event == 'myprovider_list') {
+              //this need to be navigte to My Provider screen
+              return SplashScreen(
+                nsRoute: 'myprovider_list',
+              );
+            } else if (event == 'myplans') {
+              //this need to be navigte to My Plans screen
+              return SplashScreen(
+                nsRoute: 'myplans',
+              );
             } else {
               Get.to(SplashScreen(
                 nsRoute: '',
               ));
             }
+          }
+        }
+      });
+      variable.reminderMethodChannel.setMethodCallHandler((call) {
+        if (call.method == variable.navigateToRegimentMethod) {
+          if (isAlreadyLoaded) {
+            Get.to(DashboardScreen());
+          } else {
+            Get.to(SplashScreen());
           }
         }
       });
@@ -475,6 +562,53 @@ class _MyFHBState extends State<MyFHB> {
           Get.toNamed(router.rt_HomeScreen,
                   arguments: HomeScreenArguments(selectedIndex: 1))
               .then((value) => setState(() {}));
+        } else if (passedValArr[1] == 'regiment_screen') {
+          //this need to be navigte to Regiment screen
+          fbaLog(eveParams: {
+            'eventTime': '${DateTime.now()}',
+            'ns_type': 'regiment_screen',
+            'navigationPage': 'Regiment Screen',
+          });
+          Get.to(DashboardScreen());
+        } else if (passedValArr[1] == 'dashboard') {
+          fbaLog(eveParams: {
+            'eventTime': '${DateTime.now()}',
+            'ns_type': 'dashboard',
+            'navigationPage': 'Device List Screen',
+          });
+          Get.toNamed(router.rt_Dashboard);
+        } else if (passedValArr[1] == 'th_provider_hospital') {
+          fbaLog(eveParams: {
+            'eventTime': '${DateTime.now()}',
+            'ns_type': 'th_provider_hospital',
+            'navigationPage': 'TH provider Hospital Screen',
+          });
+          Get.toNamed(router.rt_TelehealthProvider,
+              arguments: HomeScreenArguments(selectedIndex: 1, thTabIndex: 1));
+        } else if (passedValArr[1] == 'myfamily_list') {
+          fbaLog(eveParams: {
+            'eventTime': '${DateTime.now()}',
+            'ns_type': 'myfamily_list',
+            'navigationPage': 'MyFamily List Screen',
+          });
+          Get.toNamed(router.rt_UserAccounts,
+              arguments: UserAccountsArguments(selectedIndex: 1));
+        } else if (passedValArr[1] == 'myprovider_list') {
+          fbaLog(eveParams: {
+            'eventTime': '${DateTime.now()}',
+            'ns_type': 'myprovider_list',
+            'navigationPage': 'MyProvider List Screen',
+          });
+          Get.toNamed(router.rt_UserAccounts,
+              arguments: UserAccountsArguments(selectedIndex: 2));
+        } else if (passedValArr[1] == 'myplans') {
+          fbaLog(eveParams: {
+            'eventTime': '${DateTime.now()}',
+            'ns_type': 'myplans',
+            'navigationPage': 'MyPlans Screen',
+          });
+          Get.toNamed(router.rt_UserAccounts,
+              arguments: UserAccountsArguments(selectedIndex: 3));
         } else {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
@@ -632,6 +766,9 @@ class _MyFHBState extends State<MyFHB> {
         provider.ChangeNotifierProvider<ChatScreenViewModel>(
           create: (_) => ChatScreenViewModel(),
         ),
+        provider.ChangeNotifierProvider<RegimentViewModel>(
+          create: (_) => RegimentViewModel(),
+        ),
       ],
       child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
@@ -707,6 +844,31 @@ class _MyFHBState extends State<MyFHB> {
           } else if (parsedData[1] == 'my_record') {
             return SplashScreen(
               nsRoute: 'my_record',
+            );
+          } else if (parsedData[1] == 'regiment_screen') {
+            //this need to be navigte to Regiment screen
+            return SplashScreen(
+              nsRoute: 'regiment_screen',
+            );
+          } else if (parsedData[1] == 'th_provider_hospital') {
+            //this need to be navigte to TH provider screen
+            return SplashScreen(
+              nsRoute: 'th_provider_hospital',
+            );
+          } else if (parsedData[1] == 'myfamily_list') {
+            //this need to be navigte to My Family List screen
+            return SplashScreen(
+              nsRoute: 'myfamily_list',
+            );
+          } else if (parsedData[1] == 'myprovider_list') {
+            //this need to be navigte to My Provider screen
+            return SplashScreen(
+              nsRoute: 'myprovider_list',
+            );
+          } else if (parsedData[1] == 'myplans') {
+            //this need to be navigte to My Plans screen
+            return SplashScreen(
+              nsRoute: 'myplans',
             );
           } else {
             return SplashScreen(

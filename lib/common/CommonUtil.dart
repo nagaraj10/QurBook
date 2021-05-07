@@ -20,12 +20,14 @@ import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments.dart';
 import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
+import 'package:myfhb/add_providers/bloc/update_providers_bloc.dart';
 import 'package:myfhb/bookmark_record/bloc/bookmarkRecordBloc.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
 import 'package:myfhb/device_integration/viewModel/deviceDataHelper.dart';
@@ -36,7 +38,9 @@ import 'package:myfhb/my_family/models/ProfileData.dart';
 import 'package:myfhb/my_family/models/Sharedbyme.dart';
 import 'package:myfhb/my_providers/models/ProfilePicThumbnail.dart';
 import 'package:myfhb/myfhb_weview/myfhb_webview.dart';
+import 'package:myfhb/plan_dashboard/viewModel/subscribeViewModel.dart';
 import 'package:myfhb/record_detail/model/DoctorImageResponse.dart';
+import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
 import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
 import 'package:myfhb/src/blocs/Media/MediaTypeBlock.dart';
@@ -67,6 +71,7 @@ import 'package:myfhb/src/model/user/LaboratoryIds.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/model/user/MyProfileResult.dart';
 import 'package:myfhb/src/model/user/ProfileCompletedata.dart';
+import 'package:myfhb/src/model/user/UserAddressCollection.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/src/resources/repository/CategoryRepository/CategoryResponseListRepository.dart';
@@ -106,12 +111,24 @@ class CommonUtil {
 
   CategoryResult categoryDataObjClone = new CategoryResult();
   CategoryResponseListRepository _categoryResponseListRepository;
+  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
 
   static bool audioPage = false;
 
   static List<String> recordIds = new List();
   static List<String> notesId = new List();
   static List<String> voiceIds = new List();
+  MyProfileModel myProfile;
+  AddFamilyUserInfoRepository addFamilyUserInfoRepository =
+      AddFamilyUserInfoRepository();
+  UpdateProvidersBloc updateProvidersBloc = UpdateProvidersBloc();
+  SubscribeViewModel subscribeViewModel = SubscribeViewModel();
+  final String CONTENT_DISCALIMER =
+      'QurHealth is just the service provider, and the service provided as part of QurPlan depends on the sole discretion of your care provider and only works best as the information shared by you with your care provider. If the information shared by you is incorrect or untrue, or withheld from the care provider, then neither the care provider nor QurHealth can be held responsible for any untoward illness or sickness.';
+  final String CONTENT_PROFILE_CHECK =
+      'Oops! Your profile is incomplete. Please complete the profile to subscribe to a QurPlan.';
+  final String CONTENT_UNSUBSCRIBE_PACKAGE =
+      'Are you sure you want to unsubscribe?';
 
   static Future<dynamic> getResourceLoader() async {
     final Future<Secret> secret =
@@ -147,8 +164,8 @@ class CommonUtil {
 
     if (mediaMetaInfoObj.length > 0) {
       mediaMetaInfoObj.sort((mediaMetaInfoObjCopy, mediaMetaInfoObjClone) {
-        return mediaMetaInfoObjCopy.createdOn
-            .compareTo(mediaMetaInfoObjClone.createdOn);
+        return mediaMetaInfoObjCopy.dateTimeValue
+            .compareTo(mediaMetaInfoObjClone.dateTimeValue);
       });
 
       //NOTE show the bookmarked data as first
@@ -442,7 +459,7 @@ class CommonUtil {
       MyProfileModel myProfile =
           PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
       MyProfileResult profileResult = myProfile.result;
-
+      QurPlanReminders.deleteAllLocalReminders();
       CommonUtil()
           .sendDeviceToken(
               PreferenceUtil.getStringValue(Constants.KEY_USERID),
@@ -1198,6 +1215,37 @@ class CommonUtil {
     return updatedDate;
   }
 
+  regimentDateFormat(
+    DateTime newDateTime, {
+    bool isAck = false,
+  }) {
+    DateFormat newFormat;
+    String updatedDate = '';
+    DateTime currentTime = DateTime.now();
+    if (newDateTime.day == currentTime.day &&
+        newDateTime.month == currentTime.month &&
+        newDateTime.year == currentTime.year) {
+      if (isAck) {
+        newFormat = DateFormat("hh:mm a");
+      } else {
+        newFormat = DateFormat("MMM d, yyyy");
+      }
+      if (isAck) {
+        updatedDate = 'Today at ';
+      } else {
+        updatedDate = 'Today, ';
+      }
+    } else {
+      if (isAck) {
+        newFormat = DateFormat("hh:mm a");
+      } else {
+        newFormat = DateFormat("EEE, MMM d, yyyy");
+      }
+    }
+    updatedDate = updatedDate + newFormat.format(newDateTime);
+    return updatedDate;
+  }
+
   dateConversionToDayMonthYear(DateTime dateTime) {
     var newFormat = DateFormat('d MMM, ' 'yyyy');
     String updatedDate = newFormat.format(dateTime);
@@ -1227,6 +1275,12 @@ class CommonUtil {
 
   dateConversionToApiFormat(DateTime dateTime) {
     var newFormat = DateFormat('yyyy-MM-dd');
+    String updatedDate = newFormat.format(dateTime);
+    return updatedDate;
+  }
+
+  dateConversionToApiFormatClone(DateTime dateTime) {
+    var newFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
     String updatedDate = newFormat.format(dateTime);
     return updatedDate;
   }
@@ -1803,10 +1857,639 @@ class CommonUtil {
       return 'undef';
     }
   }
+
+  String dateFormatConversion(String datetime) {
+    String formattedDate = '';
+    if (datetime != null && datetime != '') {
+      DateTime dateTimeStamp = DateTime.parse(datetime);
+      formattedDate = DateFormat('MMM dd yyyy').format(dateTimeStamp);
+    } else {
+      formattedDate = '';
+    }
+    return formattedDate;
+  }
+
+  profileValidationCheck(BuildContext context,
+      {String packageId,
+      String isSubscribed,
+      String providerId,
+      Function() refresh}) async {
+    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    await addFamilyUserInfoRepository.getMyProfileInfoNew(userId).then((value) {
+      myProfile = value;
+    });
+
+    if (myProfile != null) {
+      addressValidation(context,
+          packageId: packageId,
+          isSubscribed: isSubscribed,
+          providerId: providerId,
+          refresh: refresh);
+    } else {
+      FlutterToast().getToast(noGender, Colors.red);
+    }
+  }
+
+  addressValidation(BuildContext context,
+      {String packageId,
+      String isSubscribed,
+      String providerId,
+      Function() refresh}) {
+    if (myProfile != null) {
+      if (myProfile.isSuccess) {
+        if (myProfile.result != null) {
+          if (myProfile.result.gender != null &&
+              myProfile.result.gender.isNotEmpty) {
+            if (myProfile.result.dateOfBirth != null &&
+                myProfile.result.dateOfBirth.isNotEmpty) {
+              if (myProfile.result.additionalInfo != null) {
+                if (myProfile.result.additionalInfo.height != null &&
+                    myProfile.result.additionalInfo.height.isNotEmpty) {
+                  if (myProfile.result.additionalInfo.weight != null &&
+                      myProfile.result.additionalInfo.weight.isNotEmpty) {
+                    if (myProfile.result.userAddressCollection3 != null) {
+                      if (myProfile.result.userAddressCollection3.length > 0) {
+                        patientAddressCheck(
+                            myProfile.result.userAddressCollection3[0], context,
+                            packageId: packageId,
+                            isSubscribed: isSubscribed,
+                            providerId: providerId,
+                            refresh: refresh);
+                      } else {
+                        mCustomAlertDialog(context,
+                            content: CONTENT_PROFILE_CHECK,
+                            packageId: packageId,
+                            isSubscribed: isSubscribed,
+                            refresh: refresh);
+                      }
+                    } else {
+                      mCustomAlertDialog(context,
+                          content: CONTENT_PROFILE_CHECK,
+                          packageId: packageId,
+                          isSubscribed: isSubscribed,
+                          refresh: refresh);
+                    }
+                  } else {
+                    mCustomAlertDialog(context,
+                        content: CONTENT_PROFILE_CHECK,
+                        packageId: packageId,
+                        isSubscribed: isSubscribed,
+                        refresh: refresh);
+                  }
+                } else {
+                  mCustomAlertDialog(context,
+                      content: CONTENT_PROFILE_CHECK,
+                      packageId: packageId,
+                      isSubscribed: isSubscribed,
+                      refresh: refresh);
+                }
+              } else {
+                mCustomAlertDialog(context,
+                    content: CONTENT_PROFILE_CHECK,
+                    packageId: packageId,
+                    isSubscribed: isSubscribed,
+                    refresh: refresh);
+              }
+            } else {
+              mCustomAlertDialog(context,
+                  content: CONTENT_PROFILE_CHECK,
+                  packageId: packageId,
+                  isSubscribed: isSubscribed,
+                  refresh: refresh);
+            }
+          } else {
+            mCustomAlertDialog(context,
+                content: CONTENT_PROFILE_CHECK,
+                packageId: packageId,
+                isSubscribed: isSubscribed,
+                refresh: refresh);
+          }
+        } else {
+          mCustomAlertDialog(context,
+              content: CONTENT_PROFILE_CHECK,
+              packageId: packageId,
+              isSubscribed: isSubscribed,
+              refresh: refresh);
+        }
+      } else {
+        mCustomAlertDialog(context,
+            content: CONTENT_PROFILE_CHECK,
+            packageId: packageId,
+            isSubscribed: isSubscribed,
+            refresh: refresh);
+      }
+    } else {
+      mCustomAlertDialog(context,
+          content: CONTENT_PROFILE_CHECK,
+          packageId: packageId,
+          isSubscribed: isSubscribed,
+          refresh: refresh);
+    }
+  }
+
+  patientAddressCheck(
+      UserAddressCollection3 userAddressCollection, BuildContext context,
+      {String packageId,
+      String isSubscribed,
+      String providerId,
+      Function() refresh}) {
+    String address1 = userAddressCollection.addressLine1 != null
+        ? userAddressCollection.addressLine1
+        : '';
+    String city = userAddressCollection.city.name != null
+        ? userAddressCollection.city.name
+        : '';
+    String state = userAddressCollection.state.name != null
+        ? userAddressCollection.state.name
+        : '';
+
+    if (address1 != '' && city != '' && state != '') {
+      //check if its subcribed we need not to show disclimer alert
+      if (isSubscribed == '1') {
+        if (isSubscribed == '0') {
+          String userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+          updateProvidersBloc
+              .mappingHealthOrg(providerId, userId)
+              .then((value) {
+            if (value != null) {
+              if (value.success) {
+                subscribeViewModel.subScribePlan(packageId).then((value) {
+                  if (value != null) {
+                    if (value.isSuccess) {
+                      if (value.result != null) {
+                        if (value.result.result == 'Done') {
+                          Get.back(result: 'refreshUI');
+                        } else {
+                          FlutterToast()
+                              .getToast('Subscribe Failed', Colors.red);
+                        }
+                      }
+                    } else {
+                      FlutterToast()..getToast('Subscribe Failed', Colors.red);
+                    }
+                  }
+                });
+              } else {
+                FlutterToast().getToast('Subscribe Map Failed', Colors.red);
+              }
+            } else {
+              FlutterToast().getToast('Subscribe Map Failed', Colors.red);
+            }
+          });
+        } else {
+          unSubcribeAlertDialog(context,
+              packageId: packageId, refresh: refresh);
+        }
+      } else {
+        // if its unsubscibed need to invoke discalimer dialog
+        mDisclaimerAlertDialog(
+            packageId: packageId,
+            isSubscribed: isSubscribed,
+            providerId: providerId,
+            refresh: refresh,
+            context: context);
+      }
+    } else {
+      mCustomAlertDialog(context,
+          content: CONTENT_PROFILE_CHECK,
+          packageId: packageId,
+          isSubscribed: isSubscribed,
+          refresh: refresh);
+    }
+  }
+
+  Future<dynamic> mCustomAlertDialog(BuildContext context,
+      {String title,
+      String content,
+      String packageId,
+      String isSubscribed,
+      Function() refresh}) async {
+    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return new WillPopScope(
+            onWillPop: () async => false,
+            child: SimpleDialog(children: <Widget>[
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 20),
+                child: Center(
+                  child: Column(children: [
+                    //CircularProgressIndicator(),
+                    SizedBox(
+                      height: 10.0.h,
+                    ),
+                    Text(
+                      content,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16.0.sp,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5.0.h,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        OutlineButton(
+                          child: Text(
+                            'cancel'.toUpperCase(),
+                            style: TextStyle(
+                              color: Color(
+                                getMyPrimaryColor(),
+                              ),
+                              fontSize: 10,
+                            ),
+                          ),
+                          onPressed: () async {
+                            // open profile page
+                            Navigator.of(context).pop();
+                          },
+                          borderSide: BorderSide(
+                            color: Color(
+                              getMyPrimaryColor(),
+                            ),
+                            style: BorderStyle.solid,
+                            width: 1,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10.0.h,
+                        ),
+                        OutlineButton(
+                          //hoverColor: Color(getMyPrimaryColor()),
+                          child: Text(
+                            'complete profile'.toUpperCase(),
+                            style: TextStyle(
+                              color: Color(getMyPrimaryColor()),
+                              fontSize: 10,
+                            ),
+                          ),
+                          onPressed: () async {
+                            // open profile page
+                            Navigator.of(context).pop();
+                            MyProfileModel myProfile =
+                                await fetchUserProfileInfo();
+                            Get.toNamed(router.rt_AddFamilyUserInfo,
+                                arguments: AddFamilyUserInfoArguments(
+                                    myProfileResult: myProfile?.result,
+                                    fromClass: CommonConstants.user_update,
+                                    isFromCSIR: true,
+                                    packageId: packageId,
+                                    isSubscribed: isSubscribed,
+                                    refresh: refresh));
+                          },
+                          borderSide: BorderSide(
+                            color: Color(
+                              getMyPrimaryColor(),
+                            ),
+                            style: BorderStyle.solid,
+                            width: 1,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ]),
+                ),
+              ),
+            ]),
+          );
+        });
+  }
+
+  Future<dynamic> unSubcribeAlertDialog(BuildContext context,
+      {String title,
+      String content,
+      String packageId,
+      String isSubscribed,
+      Function() refresh}) async {
+    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return new WillPopScope(
+            onWillPop: () async => false,
+            child: SimpleDialog(children: <Widget>[
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 20),
+                child: Center(
+                  child: Column(children: [
+                    //CircularProgressIndicator(),
+                    SizedBox(
+                      height: 10.0.h,
+                    ),
+                    Text(
+                      CONTENT_UNSUBSCRIBE_PACKAGE,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16.0.sp,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10.0.h,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        OutlineButton(
+                          child: Text(
+                            'no'.toUpperCase(),
+                            style: TextStyle(
+                              color: Color(
+                                getMyPrimaryColor(),
+                              ),
+                              fontSize: 10,
+                            ),
+                          ),
+                          onPressed: () async {
+                            // open profile page
+                            Navigator.of(context).pop();
+                          },
+                          borderSide: BorderSide(
+                            color: Color(
+                              getMyPrimaryColor(),
+                            ),
+                            style: BorderStyle.solid,
+                            width: 1,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10.0.h,
+                        ),
+                        OutlineButton(
+                          //hoverColor: Color(getMyPrimaryColor()),
+                          child: Text(
+                            'yes'.toUpperCase(),
+                            style: TextStyle(
+                              color: Color(getMyPrimaryColor()),
+                              fontSize: 10,
+                            ),
+                          ),
+                          onPressed: () async {
+                            CommonUtil.showLoadingDialog(
+                                context, _keyLoader, variable.Please_Wait);
+                            subscribeViewModel.UnsubScribePlan(packageId)
+                                .then((value) {
+                              if (value != null) {
+                                if (value.isSuccess) {
+                                  if (value.result != null) {
+                                    if (value.result.result == 'Done') {
+                                      //setState(() {});
+                                      Navigator.of(_keyLoader.currentContext,
+                                              rootNavigator: true)
+                                          .pop();
+                                      Get.back();
+                                      Get.back(result: 'refreshUI');
+                                      refresh();
+                                    } else {
+                                      Navigator.of(_keyLoader.currentContext,
+                                              rootNavigator: true)
+                                          .pop();
+                                      FlutterToast().getToast(
+                                          'UnSubscribe Failed', Colors.red);
+                                    }
+                                  }
+                                } else {
+                                  Navigator.of(_keyLoader.currentContext,
+                                          rootNavigator: true)
+                                      .pop();
+                                  FlutterToast().getToast(
+                                      'UnSubscribe Failed', Colors.red);
+                                }
+                              }
+                            });
+                          },
+                          borderSide: BorderSide(
+                            color: Color(
+                              getMyPrimaryColor(),
+                            ),
+                            style: BorderStyle.solid,
+                            width: 1,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ]),
+                ),
+              ),
+            ]),
+          );
+        });
+  }
+
+  Future<dynamic> mDisclaimerAlertDialog(
+      {BuildContext context,
+      String title,
+      String content,
+      String packageId,
+      String isSubscribed,
+      String providerId,
+      Function() refresh}) async {
+    await Get.dialog(
+      AlertDialog(
+        content: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 5),
+                width: double.infinity,
+                child: Column(children: [
+                  //CircularProgressIndicator(),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: IconButton(
+                        icon: Icon(Icons.close_rounded),
+                        onPressed: () {
+                          Get.back();
+                        }),
+                  ),
+                  SizedBox(
+                    height: 10.0.h,
+                  ),
+                  Text(
+                    'Disclaimer',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20.0.sp,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10.0.h,
+                  ),
+                  Container(
+                    height: 400,
+                    child: SingleChildScrollView(
+                      child: Text(
+                        CONTENT_DISCALIMER,
+                        style: TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.w300),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      OutlineButton(
+                        //hoverColor: Color(getMyPrimaryColor()),
+                        child: Text(
+                          'accept'.toUpperCase(),
+                          style: TextStyle(
+                            color: Color(CommonUtil().getMyPrimaryColor()),
+                            fontSize: 13,
+                          ),
+                        ),
+                        onPressed: () async {
+                          // open profile page
+                          CommonUtil.showLoadingDialog(
+                              context, _keyLoader, variable.Please_Wait);
+                          if (isSubscribed == '0') {
+                            String userId = PreferenceUtil.getStringValue(
+                                Constants.KEY_USERID);
+                            updateProvidersBloc
+                                .mappingHealthOrg(providerId, userId)
+                                .then((value) {
+                              if (value != null) {
+                                if (value.success) {
+                                  subscribeViewModel
+                                      .subScribePlan(packageId)
+                                      .then((value) {
+                                    if (value != null) {
+                                      if (value.isSuccess) {
+                                        if (value.result != null) {
+                                          if (value.result.result == 'Done') {
+                                            Navigator.of(
+                                                    _keyLoader.currentContext,
+                                                    rootNavigator: true)
+                                                .pop();
+                                            Get.back();
+                                            Get.back(result: 'refreshUI');
+                                            refresh();
+                                          } else {
+                                            Navigator.of(
+                                                    _keyLoader.currentContext,
+                                                    rootNavigator: true)
+                                                .pop();
+                                            Get.back();
+                                            Get.back(result: 'refreshUI');
+                                            FlutterToast().getToast(
+                                                'Already Subscribed',
+                                                Colors.red);
+                                          }
+                                        }
+                                      } else {
+                                        Navigator.of(_keyLoader.currentContext,
+                                                rootNavigator: true)
+                                            .pop();
+                                        FlutterToast()
+                                          ..getToast(
+                                              'Subscribe Failed', Colors.red);
+                                      }
+                                    }
+                                  });
+                                } else {
+                                  Navigator.of(_keyLoader.currentContext,
+                                          rootNavigator: true)
+                                      .pop();
+                                  FlutterToast().getToast(
+                                      'Subscribe Map Failed', Colors.red);
+                                }
+                              } else {
+                                Navigator.of(_keyLoader.currentContext,
+                                        rootNavigator: true)
+                                    .pop();
+                                FlutterToast().getToast(
+                                    'Subscribe Map Failed', Colors.red);
+                              }
+                            });
+                          } else {
+                            await subscribeViewModel.UnsubScribePlan(packageId)
+                                .then((value) {
+                              if (value != null) {
+                                if (value.isSuccess) {
+                                  if (value.result != null) {
+                                    if (value.result.result == 'Done') {
+                                      Navigator.of(_keyLoader.currentContext,
+                                              rootNavigator: true)
+                                          .pop();
+                                      Get.back(result: 'refreshUI');
+                                      refresh();
+                                    } else {
+                                      Navigator.of(_keyLoader.currentContext,
+                                              rootNavigator: true)
+                                          .pop();
+                                      Get.back(result: 'refreshUI');
+                                      FlutterToast().getToast(
+                                          'UnSubscribe Failed', Colors.red);
+                                    }
+                                  }
+                                } else {
+                                  Navigator.of(_keyLoader.currentContext,
+                                          rootNavigator: true)
+                                      .pop();
+                                  FlutterToast().getToast(
+                                      'UnSubscribe Failed', Colors.red);
+                                }
+                              }
+                            });
+                          }
+                        },
+                        borderSide: BorderSide(
+                          color: Color(
+                            CommonUtil().getMyPrimaryColor(),
+                          ),
+                          style: BorderStyle.solid,
+                          width: 1,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      OutlineButton(
+                        child: Text(
+                          'Reject'.toUpperCase(),
+                          style: TextStyle(
+                            color: Color(
+                              CommonUtil().getMyPrimaryColor(),
+                            ),
+                            fontSize: 13,
+                          ),
+                        ),
+                        onPressed: () async {
+                          // open profile page
+                          Get.back();
+                          Get.back(result: 'refreshUI');
+                        },
+                        borderSide: BorderSide(
+                          color: Color(
+                            CommonUtil().getMyPrimaryColor(),
+                          ),
+                          style: BorderStyle.solid,
+                          width: 1,
+                        ),
+                      ),
+                    ],
+                  ),
+                ]),
+              ),
+            ]),
+      ),
+      barrierDismissible: false,
+    );
+  }
 }
 
 extension CapExtension on String {
-  String get inCaps => '${this[0].toUpperCase()}${this.substring(1)}';
+  String get inCaps =>
+      this.length > 0 ? '${this[0].toUpperCase()}${this.substring(1)}' : '';
   String get allInCaps => toUpperCase();
   String get capitalizeFirstofEach => this != null && this.isNotEmpty
       ? trim().toLowerCase().split(' ').map((str) => str.inCaps).join(' ')

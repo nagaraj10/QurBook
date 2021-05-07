@@ -214,7 +214,8 @@ class CommonWidgets {
 
     if (hospital != null) {
       if (hospital.healthOrganizationAddressCollection.isNotEmpty) {
-        if (hospital.healthOrganizationAddressCollection.length > 0) {
+        if (((hospital.healthOrganizationAddressCollection?.length ?? 0) > 0) &&
+            hospital.healthOrganizationAddressCollection[0].state != null) {
           if (hospital.healthOrganizationAddressCollection[0].city != null) {
             city = hospital.healthOrganizationAddressCollection[0].city.name;
           } else {
@@ -231,7 +232,8 @@ class CommonWidgets {
     if (hospital != null &&
         hospital.healthOrganizationContactCollection.isNotEmpty &&
         hospital.healthOrganizationContactCollection.length > 0) {
-      if (hospital.healthOrganizationAddressCollection[0].state != null) {
+      if (((hospital.healthOrganizationAddressCollection?.length ?? 0) > 0) &&
+          hospital.healthOrganizationAddressCollection[0].state != null) {
         city = city +
             "," +
             hospital.healthOrganizationAddressCollection[0].state.name;

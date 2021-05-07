@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:math';
+import 'package:get/get.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/cupertino.dart';
@@ -153,6 +154,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   @override
   void dispose() {
+    checkCSIRPackageVaildation();
     super.dispose();
     fbaLog(eveName: 'qurbook_screen_event', eveParams: {
       'eventTime': '${DateTime.now()}',
@@ -162,13 +164,41 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     });
   }
 
+  dynamic checkAddressValidation(
+      UserAddressCollection3 userAddressCollection3) {
+    var addrLine1 = userAddressCollection3?.addressLine1;
+    var city = userAddressCollection3?.city?.name;
+    var state = userAddressCollection3?.state?.name;
+    if (addrLine1 != '' && city != '' && state != '') {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  void checkCSIRPackageVaildation() async {
+    if (widget.arguments.isFromCSIR) {
+      MyProfileModel myProfile = await CommonUtil().fetchUserProfileInfo();
+      if (myProfile?.result?.userAddressCollection3?.isNotEmpty) {
+        final callback = checkAddressValidation(
+            myProfile?.result?.userAddressCollection3[0]);
+        if (callback) {
+          CommonUtil().mDisclaimerAlertDialog(
+              context: Get.context,
+              packageId: widget.arguments.packageId,
+              isSubscribed: widget.arguments.isSubscribed,
+              refresh: widget.arguments.refresh,);
+        } else {}
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     dialogContext = context;
     return WillPopScope(
       onWillPop: () async {
         Navigator.of(context).pop();
-        //Navigator.of(context).pop();
         return Future.value(true);
       },
       child: Scaffold(
@@ -182,7 +212,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   color: Colors.black,
                   size: 24.0.sp,
                 ),
-                onPressed: () {
+                onPressed: () async {
                   Navigator.of(context).pop();
                   //Navigator.of(context).pop();
                 },
@@ -1663,7 +1693,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           if (value != null && value.isSuccess) {
             chatViewModel.upateUserNickname(myProf.result.id,
                 firstNameController.text + ' ' + lastNameController.text);
-            _familyListBloc.getFamilyMembersListNew().then((value) {
+            _familyListBloc.getFamilyMembersListNew().then((value) async {
               /*MySliverAppBar.imageURI = null;
                     fetchedProfileData = null;*/
 

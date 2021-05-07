@@ -9,6 +9,7 @@ class HomeScreenArguments {
   String dialogType;
   final Map providerMap;
   String templateName;
+  int thTabIndex;
 
-  HomeScreenArguments({this.selectedIndex,this.isCancelDialogShouldShow,this.bookingId,this.date,this.doctorID,this.doctorSessionId,this.healthOrganizationId,this.dialogType,this.providerMap,this.templateName});
+  HomeScreenArguments({this.selectedIndex,this.isCancelDialogShouldShow,this.bookingId,this.date,this.doctorID,this.doctorSessionId,this.healthOrganizationId,this.dialogType,this.providerMap,this.templateName,this.thTabIndex});
 }

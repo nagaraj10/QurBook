@@ -233,8 +233,13 @@ class AddFamilyUserInfoBloc extends BaseBloc {
     try {
       if (preferredLanguage != null && preferredLanguage.isNotEmpty) {
         await updateDeviceSelectionModel(preferredLanguage: preferredLanguage);
-        PreferenceUtil.saveString(SHEELA_LANG,
-            CommonUtil.langaugeCodes[preferredLanguage ?? 'undef']);
+
+        String currentLanguage = '';
+        if (preferredLanguage != "undef") {
+          currentLanguage = preferredLanguage.split("-").first;
+        }
+        PreferenceUtil.saveString(
+            SHEELA_LANG, CommonUtil.langaugeCodes[currentLanguage] ?? 'undef');
       }
 
       updateAddFamilyInfo = await addFamilyUserInfoRepository.updateUserInfoNew(

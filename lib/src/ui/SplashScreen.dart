@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/authentication/view/login_screen.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -12,6 +16,7 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
+import 'package:myfhb/src/ui/Dashboard.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/city.dart';
@@ -63,6 +68,22 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     PreferenceUtil.init();
+    //setReminder();
+  }
+
+  void setReminder() {
+    var selecteTimeInDate =
+        "${TimeOfDay.now().hour}-${TimeOfDay.now().minute + 3}";
+    print('currentTime#######${selecteTimeInDate}');
+    var ch_android = const MethodChannel('android/notification');
+    var mappedReminder = {
+      'id': 001,
+      'title': 'Take BP tablet',
+      'desc': 'dont forgot to take tablets',
+      'date': '2021-04-13',
+      'time': '$selecteTimeInDate',
+    };
+    ch_android.invokeMethod('remindMe', {'data': jsonEncode(mappedReminder)});
   }
 
   @override
@@ -226,6 +247,59 @@ class _SplashScreenState extends State<SplashScreen> {
                         });
                         CommonUtil().navigateToMyRecordsCategory(
                             widget.templateName, [widget.bundle], true);
+                      } else if (widget.nsRoute == 'regiment_screen') {
+                        fbaLog(eveParams: {
+                          'eventTime': '${DateTime.now()}',
+                          'ns_type': 'regiment_screen',
+                          'navigationPage': 'Regiment Screen',
+                        });
+                        Get.to(DashboardScreen()).then((value) =>
+                            PageNavigator.goToPermanent(
+                                context, router.rt_Dashboard));
+                      } else if (widget.nsRoute == 'th_provider_hospital') {
+                        fbaLog(eveParams: {
+                          'eventTime': '${DateTime.now()}',
+                          'ns_type': 'th_provider_hospital',
+                          'navigationPage': 'TH provider Hospital Screen',
+                        });
+                        Get.toNamed(router.rt_TelehealthProvider,
+                                arguments: HomeScreenArguments(
+                                    selectedIndex: 1, thTabIndex: 1))
+                            .then((value) => PageNavigator.goToPermanent(
+                                context, router.rt_Dashboard));
+                      } else if (widget.nsRoute == 'myfamily_list') {
+                        fbaLog(eveParams: {
+                          'eventTime': '${DateTime.now()}',
+                          'ns_type': 'myfamily_list',
+                          'navigationPage': 'MyFamily List Screen',
+                        });
+                        Get.toNamed(router.rt_UserAccounts,
+                                arguments:
+                                    UserAccountsArguments(selectedIndex: 1))
+                            .then((value) => PageNavigator.goToPermanent(
+                                context, router.rt_Dashboard));
+                      } else if (widget.nsRoute == 'myprovider_list') {
+                        fbaLog(eveParams: {
+                          'eventTime': '${DateTime.now()}',
+                          'ns_type': 'myprovider_list',
+                          'navigationPage': 'MyProvider List Screen',
+                        });
+                        Get.toNamed(router.rt_UserAccounts,
+                                arguments:
+                                    UserAccountsArguments(selectedIndex: 2))
+                            .then((value) => PageNavigator.goToPermanent(
+                                context, router.rt_Dashboard));
+                      } else if (widget.nsRoute == 'myplans') {
+                        fbaLog(eveParams: {
+                          'eventTime': '${DateTime.now()}',
+                          'ns_type': 'myplans',
+                          'navigationPage': 'MyPlans Screen',
+                        });
+                        Get.toNamed(router.rt_UserAccounts,
+                                arguments:
+                                    UserAccountsArguments(selectedIndex: 3))
+                            .then((value) => PageNavigator.goToPermanent(
+                                context, router.rt_Dashboard));
                       } else {
                         fbaLog(eveParams: {
                           'eventTime': '${DateTime.now()}',

@@ -19,6 +19,8 @@ import 'package:myfhb/device_integration/viewModel/deviceDataHelper.dart';
 import 'package:myfhb/devices/device_dashboard_arguments.dart';
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/screens/MyFamily.dart';
+import 'package:myfhb/plan_dashboard/view/planList.dart';
+import 'package:myfhb/regiment/view/regiment_tab.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/common_response.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
@@ -28,6 +30,8 @@ import 'package:myfhb/src/ui/HomeScreen.dart';
 import 'package:myfhb/src/ui/user/UserAccounts.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:provider/provider.dart';
+import 'package:myfhb/src/ui/bot/common/botutils.dart';
+import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
@@ -140,6 +144,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
     mInitialTime = DateTime.now();
     _familyListBloc = new FamilyListBloc();
     getFamilyLength();
+    Provider.of<RegimentViewModel>(context, listen: false).getRegimentList();
 
     super.initState();
   }
@@ -236,6 +241,17 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                   ? selectionResult.result[0].profileSetting.weighScale
                   : true;
           if (selectionResult.result[0].profileSetting != null) {
+            if (selectionResult.result[0].profileSetting.preferred_language !=
+                null) {
+              String preferredLanguage =
+                  selectionResult.result[0].profileSetting.preferred_language;
+              String currentLanguage = '';
+              if (preferredLanguage != "undef") {
+                currentLanguage = preferredLanguage.split("-").first;
+              }
+              PreferenceUtil.saveString(Constants.SHEELA_LANG,
+                  Utils.langaugeCodes[currentLanguage ?? 'undef']);
+            }
             if (selectionResult.result[0].profileSetting.preColor != null &&
                 selectionResult.result[0].profileSetting.greColor != null) {
               PreferenceUtil.saveTheme(Constants.keyPriColor,
@@ -459,14 +475,169 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
 
   Widget getBody(BuildContext context) {
     DevicesViewModel _devicesmodel = Provider.of<DevicesViewModel>(context);
-    return SafeArea(
-      child: SingleChildScrollView(
-        child: Container(
-          alignment: Alignment.center,
-          child: getValues(context, _devicesmodel),
+    return LayoutBuilder(builder: (context, constraints) {
+      return Container(
+        height: constraints.maxHeight,
+        child: DefaultTabController(
+          length: 3,
+          initialIndex:
+              (Provider.of<RegimentViewModel>(context).regimentsList?.length ??
+                          0) >
+                      0
+                  ? 0
+                  : 2,
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                        colors: <Color>[
+                      Color(new CommonUtil().getMyPrimaryColor()),
+                      Color(new CommonUtil().getMyGredientColor())
+                    ],
+                        stops: [
+                      0.3,
+                      1.0
+                    ])),
+                child: IntrinsicHeight(
+                  child: SafeArea(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        PreferredSize(
+                          preferredSize: Size.fromHeight(1.sh * 0.15),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                    begin: Alignment.centerLeft,
+                                    end: Alignment.centerRight,
+                                    colors: <Color>[
+                                  Color(new CommonUtil().getMyPrimaryColor()),
+                                  Color(new CommonUtil().getMyGredientColor())
+                                ],
+                                    stops: [
+                                  0.3,
+                                  1.0
+                                ])),
+                            child: SafeArea(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Container(
+                                    child: Row(
+                                      children: <Widget>[
+                                        SizedBox(
+                                          width: 0.05.sw,
+                                        ),
+                                        Container(
+                                          width: 0.66.sw,
+                                          child: _getUserName(),
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            toast.getToastForLongTime(
+                                                strSync, Colors.green);
+                                            Platform.isIOS
+                                                ? _deviceDataHelper
+                                                    .syncHealthKit()
+                                                    .then((value) {
+                                                    setState(() {});
+                                                  })
+                                                : _deviceDataHelper
+                                                    .syncGoogleFit()
+                                                    .then((value) {
+                                                    setState(() {});
+                                                  });
+                                          },
+                                          child: Image.asset(
+                                            icon_refresh_dash,
+                                            height: 26.0.h,
+                                            width: 26.0.h,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 0.03.sw,
+                                        ),
+                                        isFamilyAvail
+                                            ? SwitchProfile().buildActions(
+                                                context,
+                                                _key,
+                                                callBackToRefresh,
+                                                true)
+                                            : getMaterialPlusIcon(context),
+                                      ],
+                                    ),
+                                  ),
+                                  Container(
+                                    alignment: Alignment.centerLeft,
+                                    child: TabBar(
+                                      indicatorWeight: 2.0.h,
+                                      isScrollable: true,
+                                      labelColor: Colors.white,
+                                      indicatorSize: TabBarIndicatorSize.label,
+                                      unselectedLabelColor: Colors.white70,
+                                      tabs: [
+                                        Tab(
+                                          child: Text(
+                                            'Regiment',
+                                            style: TextStyle(
+                                              fontSize: 16.0.sp,
+                                            ),
+                                          ),
+                                        ),
+                                        Tab(
+                                          child: Text(
+                                            'Devices',
+                                            style: TextStyle(
+                                              fontSize: 16.0.sp,
+                                            ),
+                                          ),
+                                        ),
+                                        Tab(
+                                          child: Text(
+                                            'Plans',
+                                            style: TextStyle(
+                                              fontSize: 16.0.sp,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: TabBarView(
+                  children: [
+                    RegimentTab(),
+                    SingleChildScrollView(
+                      child: Container(
+                        width: 1.sw,
+                        alignment: Alignment.center,
+                        child: getValues(context, _devicesmodel),
+                      ),
+                    ),
+                    PlanList(),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   Widget getValues(BuildContext context, DevicesViewModel devicesViewModel) {
@@ -941,95 +1112,95 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Container(
-            height: 1.sw * 0.18,
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                    colors: <Color>[
-                  Color(new CommonUtil().getMyPrimaryColor()),
-                  Color(new CommonUtil().getMyGredientColor())
-                ],
-                    stops: [
-                  0.3,
-                  1.0
-                ])),
-            child: SafeArea(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  PreferredSize(
-                    preferredSize: Size.fromHeight(1.sh * 0.15),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                              begin: Alignment.centerLeft,
-                              end: Alignment.centerRight,
-                              colors: <Color>[
-                            Color(new CommonUtil().getMyPrimaryColor()),
-                            Color(new CommonUtil().getMyGredientColor())
-                          ],
-                              stops: [
-                            0.3,
-                            1.0
-                          ])),
-                      child: SafeArea(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Container(
-                              child: Row(
-                                children: <Widget>[
-                                  SizedBox(
-                                    width: 0.05.sw,
-                                  ),
-                                  Container(
-                                    width: 0.66.sw,
-                                    child: _getUserName(),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      toast.getToastForLongTime(
-                                          strSync, Colors.green);
-                                      Platform.isIOS
-                                          ? _deviceDataHelper
-                                              .syncHealthKit()
-                                              .then((value) {
-                                              setState(() {});
-                                            })
-                                          : _deviceDataHelper
-                                              .syncGoogleFit()
-                                              .then((value) {
-                                              setState(() {});
-                                            });
-                                    },
-                                    child: Image.asset(
-                                      icon_refresh_dash,
-                                      height: 26.0.h,
-                                      width: 26.0.h,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 0.03.sw,
-                                  ),
-                                  isFamilyAvail
-                                      ? SwitchProfile().buildActions(context,
-                                          _key, callBackToRefresh, true)
-                                      : getMaterialPlusIcon(context),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
+          // Container(
+          //   height: 1.sw * 0.18,
+          //   decoration: BoxDecoration(
+          //       gradient: LinearGradient(
+          //           begin: Alignment.centerLeft,
+          //           end: Alignment.centerRight,
+          //           colors: <Color>[
+          //         Color(new CommonUtil().getMyPrimaryColor()),
+          //         Color(new CommonUtil().getMyGredientColor())
+          //       ],
+          //           stops: [
+          //         0.3,
+          //         1.0
+          //       ])),
+          //   child: SafeArea(
+          //     child: Column(
+          //       mainAxisAlignment: MainAxisAlignment.center,
+          //       children: <Widget>[
+          //         PreferredSize(
+          //           preferredSize: Size.fromHeight(1.sh * 0.15),
+          //           child: Container(
+          //             decoration: BoxDecoration(
+          //                 gradient: LinearGradient(
+          //                     begin: Alignment.centerLeft,
+          //                     end: Alignment.centerRight,
+          //                     colors: <Color>[
+          //                   Color(new CommonUtil().getMyPrimaryColor()),
+          //                   Color(new CommonUtil().getMyGredientColor())
+          //                 ],
+          //                     stops: [
+          //                   0.3,
+          //                   1.0
+          //                 ])),
+          //             child: SafeArea(
+          //               child: Column(
+          //                 mainAxisAlignment: MainAxisAlignment.center,
+          //                 children: <Widget>[
+          //                   Container(
+          //                     child: Row(
+          //                       children: <Widget>[
+          //                         SizedBox(
+          //                           width: 0.05.sw,
+          //                         ),
+          //                         Container(
+          //                           width: 0.66.sw,
+          //                           child: _getUserName(),
+          //                         ),
+          //                         GestureDetector(
+          //                           onTap: () {
+          //                             toast.getToastForLongTime(
+          //                                 strSync, Colors.green);
+          //                             Platform.isIOS
+          //                                 ? _deviceDataHelper
+          //                                     .syncHealthKit()
+          //                                     .then((value) {
+          //                                     setState(() {});
+          //                                   })
+          //                                 : _deviceDataHelper
+          //                                     .syncGoogleFit()
+          //                                     .then((value) {
+          //                                     setState(() {});
+          //                                   });
+          //                           },
+          //                           child: Image.asset(
+          //                             icon_refresh_dash,
+          //                             height: 26.0.h,
+          //                             width: 26.0.h,
+          //                             color: Colors.white,
+          //                           ),
+          //                         ),
+          //                         SizedBox(
+          //                           width: 0.03.sw,
+          //                         ),
+          //                         isFamilyAvail
+          //                             ? SwitchProfile().buildActions(context,
+          //                                 _key, callBackToRefresh, true)
+          //                             : getMaterialPlusIcon(context),
+          //                       ],
+          //                     ),
+          //                   ),
+          //                 ],
+          //               ),
+          //             ),
+          //           ),
+          //         )
+          //       ],
+          //     ),
+          //   ),
+          // ),
           SizedBoxWidget(
             height: 10.0.h,
           ),

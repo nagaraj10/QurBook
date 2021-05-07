@@ -100,6 +100,21 @@ class FHBUtils {
     return formattedDate;
   }
 
+  String getFormattedDateStringClone(DateTime strDate) {
+    String formattedDate = '';
+
+    if (strDate != null && strDate != '') {
+      if (CURRENT_DATE_CODE == 'MDY') {
+        formattedDate = DateFormat('MMM dd yyyy, hh:mm aa').format(strDate);
+      } else if (CURRENT_DATE_CODE == 'YMD') {
+        formattedDate = DateFormat('yyyy MMM dd, hh:mm aa').format(strDate);
+      } else {
+        formattedDate = DateFormat('dd MMM yyyy, hh:mm aa').format(strDate);
+      }
+    }
+    return formattedDate;
+  }
+
   String getFormattedDateForUser(String strDate) {
     String formattedDate;
     try {
@@ -271,11 +286,11 @@ class FHBUtils {
     }
   }
 
-   static Future<String> createFolderInAppDocDirClone(String folderName) async {
+  static Future<String> createFolderInAppDocDirClone(String folderName) async {
     Directory _appDocDirFolder;
     //Create Directory with app name
-     final Directory _appDocDir = await getTemporaryDirectory();
-      _appDocDirFolder = Directory(_appDocDir.path);
+    final Directory _appDocDir = await getTemporaryDirectory();
+    _appDocDirFolder = Directory(_appDocDir.path);
 
     if (await _appDocDirFolder.exists()) {
       //if folder already exists return path
@@ -287,7 +302,30 @@ class FHBUtils {
       return _appDocDirNewFolder.path;
     }
   }
-  
+
+  static Future<String> abstractUserData() async {
+    Directory _appDocDirFolder;
+    //Create Directory with app name
+    final Directory _appDocDir = await getApplicationSupportDirectory();
+    _appDocDirFolder = Directory(_appDocDir.path);
+
+    if (await _appDocDirFolder.exists()) {
+      //if folder already exists return path
+      return _appDocDirFolder.path;
+    } else {
+      //if folder not exists create folder and then return its path
+      final Directory _appDocDirNewFolder =
+          await _appDocDirFolder.create(recursive: true);
+      return _appDocDirNewFolder.path;
+    }
+  }
+
+  static Future<String> getInAppDocDirForReminders() async {
+    final Directory _appDocDir = await getApplicationDocumentsDirectory();
+    final Directory _appDocDirFolder =
+        Directory('${_appDocDir.path}/NotificationReminders/');
+    return _appDocDirFolder.path;
+  }
 
   static Future<String> createFolderInAppDocDirForIOS(String folderName) async {
     final Directory _appDocDir = await getApplicationDocumentsDirectory();

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,7 @@ import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/constants/fhb_constants.dart' as ConstantKey;
 
 class AppointmentsCommonWidget {
   List<CategoryResult> filteredCategoryData = new List();
@@ -139,7 +141,7 @@ class AppointmentsCommonWidget {
             Constants.Appointments_notesImage,
             Color(new CommonUtil().getMyPrimaryColor()),
             Constants.Appointments_notes, () async {
-          int position = getCategoryPosition(Constants.STR_NOTES);
+          int position = await getCategoryPosition(Constants.STR_NOTES);
 
           await Navigator.of(context)
               .push(MaterialPageRoute(
@@ -185,7 +187,7 @@ class AppointmentsCommonWidget {
             Constants.Appointments_voiceNotesImage,
             Color(new CommonUtil().getMyPrimaryColor()),
             Constants.STR_VOICE_NOTES, () async {
-          int position = getCategoryPosition(Constants.STR_VOICERECORDS);
+          int position = await getCategoryPosition(Constants.STR_VOICERECORDS);
 
           await Navigator.of(context)
               .push(MaterialPageRoute(
@@ -232,7 +234,8 @@ class AppointmentsCommonWidget {
             Color(new CommonUtil().getMyPrimaryColor()),
             Constants.Appointments_records, () async {
           if (rxCount != null /*&& isUpcoming*/) {
-            int position = getCategoryPosition(Constants.STR_PRESCRIPTION);
+            int position =
+                await getCategoryPosition(Constants.STR_PRESCRIPTION);
 
             await Navigator.of(context)
                 .push(MaterialPageRoute(
@@ -484,6 +487,10 @@ class AppointmentsCommonWidget {
   }
 
   List<CategoryResult> getCategoryList() {
+    try {
+      filteredCategoryData = PreferenceUtil.getCategoryTypeDisplay(
+          ConstantKey.KEY_CATEGORYLIST_VISIBLE);
+    } catch (e) {}
     if (filteredCategoryData == null || filteredCategoryData.length == 0) {
       _categoryListBlock.getCategoryLists().then((value) {
         filteredCategoryData = new CommonUtil().fliterCategories(value.result);
@@ -520,23 +527,20 @@ class AppointmentsCommonWidget {
             child: //Container(color: Color(fhbColors.bgColorContainer)),
                 doc?.doctor?.user?.profilePicThumbnailUrl == null
                     ? Container(color: Color(fhbColors.bgColorContainer))
-                    : Image.network(
-                        doc.doctor.user.profilePicThumbnailUrl,
+                    : Image.network(doc.doctor.user.profilePicThumbnailUrl,
                         fit: BoxFit.cover,
                         height: 40.0.h,
-                        width: 40.0.h,
-                    errorBuilder:
-                        (BuildContext context, Object exception, StackTrace stackTrace) {
-                      return Container(
-                        height: 50.0.h,
-                        width: 50.0.h,
-                        color: Colors.grey[200],
-                        child: Center(
-                          child: getFirstLastNameText(doc),
-                        ),
-                      );
-                    }
-                      ),
+                        width: 40.0.h, errorBuilder: (BuildContext context,
+                            Object exception, StackTrace stackTrace) {
+                        return Container(
+                          height: 50.0.h,
+                          width: 50.0.h,
+                          color: Colors.grey[200],
+                          child: Center(
+                            child: getFirstLastNameText(doc),
+                          ),
+                        );
+                      }),
             color: Color(fhbColors.bgColorContainer),
             height: 50.0.h,
             width: 50.0.h,

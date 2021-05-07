@@ -110,139 +110,138 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
   Widget getDoctorBar(List<Hospitals> hospitals, int index) {
     return AppBar(
         automaticallyImplyLeading: false,
-        flexibleSpace: SafeArea(
-          child: Container(
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                    colors: <Color>[
-                  Color(new CommonUtil().getMyPrimaryColor()),
-                  Color(new CommonUtil().getMyGredientColor())
-                ],
-                    stops: [
-                  0.3,
-                  1.0
-                ])),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(left: 20),
-                      child: GestureDetector(
-                        child: Icon(
-                          Icons.arrow_back_ios,
-                          color: Colors.white,
-                          size: 24.0.sp,
-                        ),
-                        onTap: () {
-                          //Add code for tapping back
-                          Navigator.pop(context);
-                        },
+        flexibleSpace: 
+        Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: <Color>[
+                Color(new CommonUtil().getMyPrimaryColor()),
+                Color(new CommonUtil().getMyGredientColor())
+              ],
+                  stops: [
+                0.3,
+                1.0
+              ])),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(left: 20),
+                    child: GestureDetector(
+                      child: Icon(
+                        Icons.arrow_back_ios,
+                        color: Colors.white,
+                        size: 24.0.sp,
                       ),
+                      onTap: () {
+                        //Add code for tapping back
+                        Navigator.pop(context);
+                      },
                     ),
-                    SizedBox(
-                      width: 2.0.w,
-                    ),
-                    CircleAvatar(
-                      radius: 20.0.sp,
-                      child: ClipOval(
-                          child: hospitals != null
-                              ? hospitals[index] != null
-                                  ? Container(
-                                      height: 50.0.h,
-                                      width: 50.0.h,
-                                      color: Color(fhbColors.bgColorContainer),
-                                      child: Center(
-                                        child: Text(
-                                          hospitals[index].name != null
-                                              ? hospitals[index]
-                                                  .name[0]
-                                                  .toUpperCase()
-                                              : '',
-                                          style: TextStyle(
-                                              color: Color(CommonUtil()
-                                                  .getMyPrimaryColor())),
-                                        ),
-                                      ))
-                                  : Container(
-                                      height: 50.0.h,
-                                      width: 50.0.h,
-                                      color: Color(fhbColors.bgColorContainer),
-                                    )
-                              : Container(
-                                  height: 50.0.h,
-                                  width: 50.0.h,
-                                  color: Color(fhbColors.bgColorContainer),
-                                )),
-                    ),
-                    SizedBoxWidget(
-                      width: 10.0.w,
-                    ),
-                    Container(
-                        child: Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                              hospitals[index].name != null
-                                  ? hospitals[index].name
+                  ),
+                  SizedBox(
+                    width: 2.0.w,
+                  ),
+                  CircleAvatar(
+                    radius: 20.0.sp,
+                    child: ClipOval(
+                        child: hospitals != null
+                            ? hospitals[index] != null
+                                ? Container(
+                                    height: 50.0.h,
+                                    width: 50.0.h,
+                                    color: Color(fhbColors.bgColorContainer),
+                                    child: Center(
+                                      child: Text(
+                                        hospitals[index].name != null
+                                            ? hospitals[index]
+                                                .name[0]
+                                                .toUpperCase()
+                                            : '',
+                                        style: TextStyle(
+                                            color: Color(CommonUtil()
+                                                .getMyPrimaryColor())),
+                                      ),
+                                    ))
+                                : Container(
+                                    height: 50.0.h,
+                                    width: 50.0.h,
+                                    color: Color(fhbColors.bgColorContainer),
+                                  )
+                            : Container(
+                                height: 50.0.h,
+                                width: 50.0.h,
+                                color: Color(fhbColors.bgColorContainer),
+                              )),
+                  ),
+                  SizedBoxWidget(
+                    width: 10.0.w,
+                  ),
+                  Container(
+                      child: Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                            hospitals[index].name != null
+                                ? hospitals[index].name
+                                : '',
+                            textAlign: TextAlign.left,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: TextStyle(
+                                fontFamily: variable.font_poppins,
+                                fontSize: 16.0.sp,
+                                color: Colors.white)),
+                        /*Text(
+                              (doctors[index].doctorProfessionalDetailCollection !=
+                                  null &&
+                                  doctors[index]
+                                      .doctorProfessionalDetailCollection
+                                      .length >
+                                      0)
+                                  ? doctors[index]
+                                  .doctorProfessionalDetailCollection[
+                              0]
+                                  .specialty !=
+                                  null
+                                  ? doctors[index]
+                                  .doctorProfessionalDetailCollection[
+                              0]
+                                  .specialty
+                                  .name !=
+                                  null
+                                  ? '${doctors[index].doctorProfessionalDetailCollection[0].specialty.name}'
+                                  : ''
+                                  : ''
                                   : '',
-                              textAlign: TextAlign.left,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
                               style: TextStyle(
                                   fontFamily: variable.font_poppins,
-                                  fontSize: 16.0.sp,
-                                  color: Colors.white)),
-                          /*Text(
-                                (doctors[index].doctorProfessionalDetailCollection !=
-                                    null &&
-                                    doctors[index]
-                                        .doctorProfessionalDetailCollection
-                                        .length >
-                                        0)
-                                    ? doctors[index]
-                                    .doctorProfessionalDetailCollection[
-                                0]
-                                    .specialty !=
-                                    null
-                                    ? doctors[index]
-                                    .doctorProfessionalDetailCollection[
-                                0]
-                                    .specialty
-                                    .name !=
-                                    null
-                                    ? '${doctors[index].doctorProfessionalDetailCollection[0].specialty.name}'
-                                    : ''
-                                    : ''
-                                    : '',
+                                  fontSize: 14.0.sp,
+                                  color: Colors.white),
+                            ),*/
+                        commonWidgets.getCityHospital(hospitals[index]) != ''
+                            ? Text(
+                                commonWidgets
+                                    .getCityHospital(hospitals[index]),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
                                 style: TextStyle(
                                     fontFamily: variable.font_poppins,
                                     fontSize: 14.0.sp,
                                     color: Colors.white),
-                              ),*/
-                          commonWidgets.getCityHospital(hospitals[index]) != ''
-                              ? Text(
-                                  commonWidgets
-                                      .getCityHospital(hospitals[index]),
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                  style: TextStyle(
-                                      fontFamily: variable.font_poppins,
-                                      fontSize: 14.0.sp,
-                                      color: Colors.white),
-                                )
-                              : Container(),
-                        ],
-                      ),
-                    ))
-                  ],
-                ),
-              ],
-            ),
+                              )
+                            : Container(),
+                      ],
+                    ),
+                  ))
+                ],
+              ),
+            ],
           ),
         ));
   }

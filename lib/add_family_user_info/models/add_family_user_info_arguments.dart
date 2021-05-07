@@ -15,6 +15,10 @@ class AddFamilyUserInfoArguments {
   SharedByUsers sharedbyme;
   String fromClass;
   MyProfileResult myProfileResult;
+  bool isFromCSIR;
+  String packageId;
+  String isSubscribed;
+  Function () refresh;
 
   AddFamilyUserInfoArguments(
       {this.addFamilyUserInfo,
@@ -26,5 +30,10 @@ class AddFamilyUserInfoArguments {
       this.id,
       this.isPrimaryNoSelected,
       this.sharedbyme,
-      this.fromClass,this.myProfileResult});
+      this.fromClass,
+      this.myProfileResult,
+      this.isFromCSIR = false,
+      this.packageId,
+      this.isSubscribed,
+      this.refresh});
 }
