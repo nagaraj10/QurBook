@@ -355,11 +355,10 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                           10.0.sp,
                         ),
                         child: Text(
-                          regimentViewModel.regimentsData?.message ??
-                              (regimentViewModel.regimentMode ==
-                                      RegimentMode.Schedule
-                                  ? noRegimentScheduleData
-                                  : noRegimentSymptomsData),
+                          (regimentViewModel.regimentMode ==
+                                  RegimentMode.Schedule
+                              ? noRegimentScheduleData
+                              : noRegimentSymptomsData),
                           style: TextStyle(
                             fontSize: 16.0.sp,
                           ),
@@ -379,9 +378,11 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                         10.0.sp,
                       ),
                       child: Text(
-                        regimentViewModel.regimentMode == RegimentMode.Schedule
-                            ? noRegimentScheduleData
-                            : noRegimentSymptomsData,
+                        regimentViewModel.regimentsData?.message ??
+                            (regimentViewModel.regimentMode ==
+                                    RegimentMode.Schedule
+                                ? noRegimentScheduleData
+                                : noRegimentSymptomsData),
                         style: TextStyle(
                           fontSize: 16.0.sp,
                         ),
