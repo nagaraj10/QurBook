@@ -9,15 +9,28 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class SearchWidget extends StatefulWidget {
   final void Function(String) onChanged;
+  final TextEditingController searchController;
+  final FocusNode searchFocus;
 
-  const SearchWidget({Key key, this.onChanged}) : super(key: key);
+  const SearchWidget({
+    Key key,
+    this.onChanged,
+    this.searchController,
+    this.searchFocus,
+  }) : super(key: key);
 
   @override
   SearchWdigetState createState() => SearchWdigetState();
 }
 
 class SearchWdigetState extends State<SearchWidget> {
-  TextEditingController _searchQueryController = TextEditingController();
+  TextEditingController _searchQueryController;
+
+  @override
+  void initState() {
+    super.initState();
+    _searchQueryController = widget.searchController ?? TextEditingController();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +47,7 @@ class SearchWdigetState extends State<SearchWidget> {
                   decoration: BoxDecoration(color: Colors.white),
                   child: TextField(
                     controller: _searchQueryController,
+                    focusNode: widget.searchFocus,
                     autofocus: false,
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.all(4),
