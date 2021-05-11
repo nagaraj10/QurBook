@@ -12,6 +12,7 @@ import 'package:myfhb/regiment/view/widgets/event_list_widget.dart';
 import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class RegimentTab extends StatefulWidget {
   @override
@@ -100,14 +101,28 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
   dynamic getIcon(
       Activityname activityname, Uformname uformName, Metadata metadata) {
     try {
-      return CachedNetworkImage(
-        imageUrl: metadata?.icon,
-        height: 30.0.sp,
-        width: 30.0.sp,
-        errorWidget: (context, url, error) {
-          return getDefaultIcon(activityname, uformName);
-        },
-      );
+      if (metadata?.icon != null) {
+        if (metadata?.icon?.toLowerCase()?.contains('.svg') ?? false) {
+          return SvgPicture.network(
+            metadata?.icon,
+            height: 30.0.sp,
+            width: 30.0.sp,
+            color: Colors.white,
+          );
+        } else {
+          return CachedNetworkImage(
+            imageUrl: metadata?.icon,
+            height: 30.0.sp,
+            width: 30.0.sp,
+            color: Colors.white,
+            errorWidget: (context, url, error) {
+              return getDefaultIcon(activityname, uformName);
+            },
+          );
+        }
+      } else {
+        return getDefaultIcon(activityname, uformName);
+      }
     } catch (e) {
       return getDefaultIcon(activityname, uformName);
     }

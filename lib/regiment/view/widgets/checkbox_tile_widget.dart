@@ -3,6 +3,7 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:myfhb/constants/fhb_query.dart' as variable;
+import 'package:flutter_svg/flutter_svg.dart';
 
 class CheckboxTileWidget extends StatefulWidget {
   CheckboxTileWidget({
@@ -62,13 +63,24 @@ class _CheckboxTileWidgetState extends State<CheckboxTileWidget> {
                     ),
                   ),
                   if (imagePath.toString().split('!').length == 2)
-                    CachedNetworkImage(
-                      imageUrl: variable.regimentImagePath +
-                          imagePath.toString().split('!')[1],
-                      placeholder: (context, url) =>
-                          new CircularProgressIndicator(),
-                      errorWidget: (context, url, error) => SizedBox.shrink(),
-                    ),
+                    (imagePath
+                                .toString()
+                                .split('!')[1]
+                                .toLowerCase()
+                                ?.contains('.svg') ??
+                            false)
+                        ? SvgPicture.network(
+                            variable.regimentImagePath +
+                                imagePath.toString().split('!')[1],
+                          )
+                        : CachedNetworkImage(
+                            imageUrl: variable.regimentImagePath +
+                                imagePath.toString().split('!')[1],
+                            placeholder: (context, url) =>
+                                new CircularProgressIndicator(),
+                            errorWidget: (context, url, error) =>
+                                SizedBox.shrink(),
+                          ),
                 ],
               ),
             ),

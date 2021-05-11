@@ -229,4 +229,4 @@ const String qr_UnsubscribePlan = 'Action=UnSubscribe&packageid=';
 const String qr_get = 'get';
 const String regiment = 'plan-package-master/wrapperApi';
 const String qr_save_regi_media = 'media-details/store-media';
-const String regimentImagePath = 'https://heyr2.com/assets/';
+const String regimentImagePath = 'https://qurplan.com/assets/images/';
