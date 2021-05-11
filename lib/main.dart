@@ -338,7 +338,7 @@ class _MyFHBState extends State<MyFHB> {
               fbaLog(eveParams: {
                 'eventTime': '${DateTime.now()}',
                 'ns_type': 'regiment_screen',
-                'navigationPage': 'Regiment Screen',
+                'navigationPage': 'Regimen Screen',
               });
               Get.to(DashboardScreen());
             } else if (event == 'dashboard') {
@@ -567,7 +567,7 @@ class _MyFHBState extends State<MyFHB> {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
             'ns_type': 'regiment_screen',
-            'navigationPage': 'Regiment Screen',
+            'navigationPage': 'Regimen Screen',
           });
           Get.to(DashboardScreen());
         } else if (passedValArr[1] == 'dashboard') {

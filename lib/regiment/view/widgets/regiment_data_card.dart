@@ -75,11 +75,6 @@ class RegimentDataCard extends StatelessWidget {
                     await Provider.of<RegimentViewModel>(context, listen: false)
                         .fetchRegimentData();
                   }
-                } else {
-                  FlutterToast().getToast(
-                    'No plans associated with this event',
-                    Colors.red,
-                  );
                 }
               } else {
                 FlutterToast().getToast(
