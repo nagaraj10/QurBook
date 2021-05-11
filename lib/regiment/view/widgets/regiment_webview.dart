@@ -34,7 +34,7 @@ class _RegimentWebViewState extends State<RegimentWebView> {
     super.dispose();
     fbaLog(eveName: 'qurbook_screen_event', eveParams: {
       'eventTime': '${DateTime.now()}',
-      'pageName': 'Regiment WebView Screen',
+      'pageName': 'Regimen WebView Screen',
       'screenSessionTime':
           '${DateTime.now().difference(mInitialTime).inSeconds} secs'
     });
