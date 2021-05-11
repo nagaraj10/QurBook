@@ -14,6 +14,7 @@ class MyPlanDetailView extends StatefulWidget {
   final String providerName;
   final String packageDuration;
   final String providerId;
+  final bool isDisable;
 
   MyPlanDetailView({
     Key key,
@@ -25,6 +26,7 @@ class MyPlanDetailView extends StatefulWidget {
     @required this.providerName,
     @required this.packageDuration,
     @required this.providerId,
+    @required this.isDisable,
   }) : super(key: key);
 
   @override
@@ -42,6 +44,7 @@ class PlanDetail extends State<MyPlanDetailView> {
   String providerName;
   String packageDuration;
   String providerId;
+  bool isDisable;
 
   @override
   void initState() {
@@ -58,6 +61,7 @@ class PlanDetail extends State<MyPlanDetailView> {
     providerName = widget.providerName;
     packageDuration = widget.packageDuration;
     providerId = widget.providerId;
+    isDisable = widget.isDisable;
   }
 
   @override
@@ -178,23 +182,27 @@ class PlanDetail extends State<MyPlanDetailView> {
                             ? 'subscribe'.toUpperCase()
                             : 'unsubscribe'.toUpperCase(),
                         style: TextStyle(
-                          color: Color(CommonUtil().getMyPrimaryColor()),
+                          color: isDisable
+                              ? Colors.grey
+                              : Color(CommonUtil().getMyPrimaryColor()),
                           fontSize: 13.sp,
                         ),
                       ),
-                      onPressed: () async {
-                        if (issubscription == '0') {
-                          CommonUtil().profileValidationCheck(contxt,
-                              packageId: packageId,
-                              isSubscribed: issubscription,
-                              providerId: providerId);
-                        } else {
-                          CommonUtil().unSubcribeAlertDialog(context,
-                              packageId: packageId, refresh: () {
-                            setState(() {});
-                          });
-                        }
-                      },
+                      onPressed: isDisable
+                          ? null
+                          : () async {
+                              if (issubscription == '0') {
+                                CommonUtil().profileValidationCheck(contxt,
+                                    packageId: packageId,
+                                    isSubscribed: issubscription,
+                                    providerId: providerId);
+                              } else {
+                                CommonUtil().unSubcribeAlertDialog(context,
+                                    packageId: packageId, refresh: () {
+                                  setState(() {});
+                                });
+                              }
+                            },
                       borderSide: BorderSide(
                         color: Color(
                           CommonUtil().getMyPrimaryColor(),

@@ -409,6 +409,7 @@ const String noRegimentSymptomsData =
 const String plansForFamily =
     'Regimen plans are not available for family members';
 const String mplansForFamily = 'Plans are not available for family members';
+const String categoriesForFamily = 'Categories are not available for family members';
 const String okButton = 'OK';
 const String saveButton = 'Save';
 const String select = 'Select';
