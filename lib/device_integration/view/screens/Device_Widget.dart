@@ -17,8 +17,10 @@ import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/device_integration/view/screens/Clipper.dart';
 import 'package:myfhb/device_integration/viewModel/deviceDataHelper.dart';
 import 'package:myfhb/devices/device_dashboard_arguments.dart';
+import 'package:myfhb/myPlan/view/myPlanList.dart';
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/screens/MyFamily.dart';
+import 'package:myfhb/plan_dashboard/view/categoryList.dart';
 import 'package:myfhb/plan_dashboard/view/planList.dart';
 import 'package:myfhb/regiment/view/regiment_tab.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
@@ -479,7 +481,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       return Container(
         height: constraints.maxHeight,
         child: DefaultTabController(
-          length: 3,
+          length: 4,
           initialIndex:
               (Provider.of<RegimentViewModel>(context).regimentsList?.length ??
                           0) >
@@ -605,6 +607,14 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                             ),
                                           ),
                                         ),
+                                        Tab(
+                                          child: Text(
+                                            'My Plans',
+                                            style: TextStyle(
+                                              fontSize: 16.0.sp,
+                                            ),
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   ),
@@ -629,7 +639,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                         child: getValues(context, _devicesmodel),
                       ),
                     ),
-                    PlanList(),
+                    CategoryList(),
+                    MyPlanList(),
                   ],
                 ),
               ),
