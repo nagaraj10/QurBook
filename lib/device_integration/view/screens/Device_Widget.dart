@@ -144,8 +144,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
     mInitialTime = DateTime.now();
     _familyListBloc = new FamilyListBloc();
     getFamilyLength();
-    Provider.of<RegimentViewModel>(context, listen: false).getRegimentList();
-
+    Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
+      isInitial: true,
+    );
     super.initState();
   }
 
@@ -480,12 +481,14 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
         height: constraints.maxHeight,
         child: DefaultTabController(
           length: 3,
-          initialIndex:
-              (Provider.of<RegimentViewModel>(context).regimentsList?.length ??
-                          0) >
-                      0
-                  ? 0
-                  : 2,
+          initialIndex: (Provider.of<RegimentViewModel>(
+                        context,
+                        listen: false,
+                      ).regimentsData?.regimentsList?.length ??
+                      0) >
+                  0
+              ? 0
+              : 2,
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -644,6 +647,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
     return FutureBuilder<LastMeasureSyncValues>(
         future: devicesViewModel.fetchDeviceDetails(),
         builder: (context, snapshot) {
+          Provider.of<RegimentViewModel>(
+            context,
+            listen: false,
+          ).handleSearchField();
           if (snapshot.hasData) {
             deviceValues = snapshot.data;
             return projectWidget(context);
