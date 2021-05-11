@@ -27,6 +27,8 @@ class RegimentViewModel extends ChangeNotifier {
   RegimentMode regimentMode = RegimentMode.Schedule;
   TextEditingController searchController = TextEditingController();
   FocusNode searchFocus = FocusNode();
+  ScrollController scrollController = ScrollController();
+  double scrollOffset;
 
   Future<void> switchRegimentMode() {
     regimentMode = (regimentMode == RegimentMode.Schedule)
@@ -137,6 +139,24 @@ class RegimentViewModel extends ChangeNotifier {
     } else {
       searchController?.clear();
       searchFocus?.unfocus();
+    }
+  }
+
+  updateScroll({bool isReset = false}) {
+    if (isReset) {
+      scrollOffset = 0.0;
+    } else if (scrollController?.hasClients) {
+      scrollOffset = scrollController.offset;
+    }
+  }
+
+  handleScroll({
+    ScrollController controller,
+  }) {
+    if (controller != null) {
+      scrollController = controller;
+    } else if (scrollController?.hasClients) {
+      scrollController.jumpTo(scrollOffset ?? 0.0);
     }
   }
 

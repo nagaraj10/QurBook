@@ -4,9 +4,6 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:provider/provider.dart';
 import 'widgets/regiment_data_card.dart';
-import 'widgets/event_time_tile.dart';
-import 'package:myfhb/common/errors_widget.dart';
-import 'package:myfhb/regiment/models/regiment_response_model.dart';
 import 'package:myfhb/regiment/models/regiment_data_model.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
@@ -25,6 +22,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
   RegimentViewModel _regimentViewModel;
   TextEditingController searchController = TextEditingController();
   FocusNode searchFocus = FocusNode();
+  ScrollController scrollController = ScrollController();
   @override
   void initState() {
     super.initState();
@@ -32,6 +30,9 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
     Provider.of<ChatScreenViewModel>(context, listen: false)?.updateAppState(
       true,
       isInitial: true,
+    );
+    Provider.of<RegimentViewModel>(context, listen: false).updateScroll(
+      isReset: true,
     );
     Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
       isInitial: true,
@@ -53,6 +54,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
   @override
   void dispose() {
     searchController?.dispose();
+    scrollController?.dispose();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
@@ -162,6 +164,9 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
     _regimentViewModel.handleSearchField(
       controller: searchController,
       focusNode: searchFocus,
+    );
+    _regimentViewModel.handleScroll(
+      controller: scrollController,
     );
     return Column(
       children: [
@@ -320,7 +325,11 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
               } else if ((regimentViewModel.regimentsList?.length ?? 0) > 0) {
                 var regimentsList = regimentViewModel.regimentsList;
                 if ((regimentsList?.length ?? 0) > 0) {
+                  Future.delayed(Duration(microseconds: 1), () {
+                    regimentViewModel.handleScroll();
+                  });
                   return ListView.builder(
+                    controller: scrollController,
                     shrinkWrap: true,
                     padding: EdgeInsets.only(
                       bottom: 10.0.h,

@@ -52,6 +52,8 @@ class RegimentDataCard extends StatelessWidget {
                   .stopTTSEngine();
               bool canEdit =
                   startTime.difference(DateTime.now()).inMinutes <= 15;
+              Provider.of<RegimentViewModel>(context, listen: false)
+                  .updateScroll();
               if (canEdit) {
                 FieldsResponseModel fieldsResponseModel =
                     await Provider.of<RegimentViewModel>(context, listen: false)
@@ -348,6 +350,8 @@ class RegimentDataCard extends StatelessWidget {
                           eid: eid,
                         );
                         if (saveResponse?.isSuccess ?? false) {
+                          Provider.of<RegimentViewModel>(context, listen: false)
+                              .updateScroll();
                           await Provider.of<RegimentViewModel>(context,
                                   listen: false)
                               .fetchRegimentData();
