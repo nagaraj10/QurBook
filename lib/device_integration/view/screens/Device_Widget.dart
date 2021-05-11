@@ -583,7 +583,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                       tabs: [
                                         Tab(
                                           child: Text(
-                                            'Regiment',
+                                            'Regimen',
                                             style: TextStyle(
                                               fontSize: 16.0.sp,
                                             ),

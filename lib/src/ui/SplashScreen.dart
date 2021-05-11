@@ -251,7 +251,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         fbaLog(eveParams: {
                           'eventTime': '${DateTime.now()}',
                           'ns_type': 'regiment_screen',
-                          'navigationPage': 'Regiment Screen',
+                          'navigationPage': 'Regimen Screen',
                         });
                         Get.to(DashboardScreen()).then((value) =>
                             PageNavigator.goToPermanent(
