@@ -8,52 +8,156 @@ import 'package:myfhb/regiment/models/profile_response_model.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/regiment/models/regiment_data_model.dart';
+import 'package:flutter/material.dart';
 
 enum RegimentMode { Schedule, Symptoms }
 
+enum RegimentStatus { Loading, Loaded }
+
 class RegimentViewModel extends ChangeNotifier {
-  Future<RegimentResponseModel> regimentsData;
+  RegimentResponseModel regimentsData;
   List<RegimentDataModel> regimentsList = [];
+  List<RegimentDataModel> regimentsScheduledList = [];
+  List<RegimentDataModel> regimentsAsNeededList = [];
+  List<RegimentDataModel> regimentsFilteredList = [];
   bool regimentsDataAvailable = true;
+  RegimentStatus regimentStatus = RegimentStatus.Loaded;
   DateTime selectedDate = DateTime.now();
   String regimentDate = '${CommonUtil().regimentDateFormat(DateTime.now())}';
   RegimentMode regimentMode = RegimentMode.Schedule;
+  TextEditingController searchController = TextEditingController();
+  FocusNode searchFocus = FocusNode();
+  ScrollController scrollController = ScrollController();
+  double scrollOffset;
 
   Future<void> switchRegimentMode() {
     regimentMode = (regimentMode == RegimentMode.Schedule)
         ? RegimentMode.Symptoms
         : RegimentMode.Schedule;
+    setViewRegimentsData();
     notifyListeners();
   }
 
-  Future<void> fetchRegimentData({bool isInitial = false}) {
-    if (PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN) ==
-        PreferenceUtil.getStringValue(Constants.KEY_USERID)) {
-      regimentsDataAvailable = true;
-      regimentsData = RegimentService.getRegimentData(
-        dateSelected: CommonUtil().dateConversionToApiFormat(selectedDate),
-      );
+  void setViewRegimentsData({List<RegimentDataModel> filteredList}) {
+    if (filteredList != null) {
+      regimentsList = filteredList;
     } else {
-      regimentsDataAvailable = false;
-      regimentsData = Future.value(
-        RegimentResponseModel(
-          isSuccess: true,
-          regimentsList: [],
-          message: Constants.plansForFamily,
-        ),
+      if (regimentMode == RegimentMode.Schedule) {
+        regimentsList = regimentsScheduledList;
+      } else {
+        regimentsList = regimentsAsNeededList;
+      }
+    }
+    notifyListeners();
+  }
+
+  void updateRegimentStatus(RegimentStatus newStatus) {
+    regimentStatus = newStatus;
+    notifyListeners();
+  }
+
+  void onSearch(String searchText) {
+    updateRegimentStatus(RegimentStatus.Loading);
+    if (searchText.isEmpty) {
+      setViewRegimentsData();
+    } else {
+      regimentsFilteredList.clear();
+      setViewRegimentsData();
+      try {
+        regimentsList.forEach((event) {
+          bool displayTextMatch = false;
+          event.uformdata?.vitalsData?.forEach((vitals) {
+            if ((vitals.display
+                        ?.toLowerCase()
+                        ?.contains(searchText.toLowerCase()) ??
+                    false) ||
+                (vitals.vitalName
+                        ?.toLowerCase()
+                        ?.contains(searchText.toLowerCase()) ??
+                    false)) {
+              displayTextMatch = true;
+            }
+          });
+
+          if (event.title?.toLowerCase().contains(searchText.toLowerCase()) ||
+              displayTextMatch) {
+            regimentsFilteredList.add(event);
+          }
+        });
+      } catch (e) {
+        print(e);
+      }
+      setViewRegimentsData(
+        filteredList: regimentsFilteredList,
       );
     }
+    updateRegimentStatus(RegimentStatus.Loaded);
+    notifyListeners();
+  }
+
+  Future<void> fetchRegimentData({bool isInitial = false}) async {
+    handleSearchField();
+    regimentsList.clear();
+    regimentsAsNeededList.clear();
+    regimentsScheduledList.clear();
+    if (PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN) ==
+        PreferenceUtil.getStringValue(Constants.KEY_USERID)) {
+      updateRegimentStatus(RegimentStatus.Loading);
+      regimentsDataAvailable = true;
+      regimentsData = await RegimentService.getRegimentData(
+        dateSelected: CommonUtil().dateConversionToApiFormat(selectedDate),
+      );
+      updateRegimentStatus(RegimentStatus.Loaded);
+    } else {
+      regimentsDataAvailable = false;
+      regimentsData = RegimentResponseModel(
+        isSuccess: true,
+        regimentsList: [],
+        message: Constants.plansForFamily,
+      );
+    }
+    regimentsData?.regimentsList?.forEach((event) {
+      if (event.doseMeal) {
+        regimentsAsNeededList.add(event);
+      } else {
+        regimentsScheduledList.add(event);
+      }
+    });
+    setViewRegimentsData();
     if (!isInitial) {
       notifyListeners();
     }
   }
 
-  getRegimentList() async {
-    fetchRegimentData(
-      isInitial: true,
-    );
-    regimentsList = (await regimentsData).regimentsList;
-    notifyListeners();
+  handleSearchField({
+    TextEditingController controller,
+    FocusNode focusNode,
+  }) {
+    if (controller != null) {
+      searchController = controller;
+      searchFocus = focusNode;
+    } else {
+      searchController?.clear();
+      searchFocus?.unfocus();
+    }
+  }
+
+  updateScroll({bool isReset = false}) {
+    if (isReset) {
+      scrollOffset = 0.0;
+    } else if (scrollController?.hasClients) {
+      scrollOffset = scrollController.offset;
+    }
+  }
+
+  handleScroll({
+    ScrollController controller,
+  }) {
+    if (controller != null) {
+      scrollController = controller;
+    } else if (scrollController?.hasClients) {
+      scrollController.jumpTo(scrollOffset ?? 0.0);
+    }
   }
 
   void getRegimentDate({

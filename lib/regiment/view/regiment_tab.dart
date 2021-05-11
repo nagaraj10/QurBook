@@ -4,9 +4,6 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:provider/provider.dart';
 import 'widgets/regiment_data_card.dart';
-import 'widgets/event_time_tile.dart';
-import 'package:myfhb/common/errors_widget.dart';
-import 'package:myfhb/regiment/models/regiment_response_model.dart';
 import 'package:myfhb/regiment/models/regiment_data_model.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
@@ -14,6 +11,8 @@ import 'package:myfhb/regiment/models/profile_response_model.dart';
 import 'package:myfhb/regiment/view/widgets/event_list_widget.dart';
 import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class RegimentTab extends StatefulWidget {
   @override
@@ -22,6 +21,9 @@ class RegimentTab extends StatefulWidget {
 
 class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
   RegimentViewModel _regimentViewModel;
+  TextEditingController searchController = TextEditingController();
+  FocusNode searchFocus = FocusNode();
+  ScrollController scrollController = ScrollController();
   @override
   void initState() {
     super.initState();
@@ -29,6 +31,9 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
     Provider.of<ChatScreenViewModel>(context, listen: false)?.updateAppState(
       true,
       isInitial: true,
+    );
+    Provider.of<RegimentViewModel>(context, listen: false).updateScroll(
+      isReset: true,
     );
     Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
       isInitial: true,
@@ -49,6 +54,8 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
 
   @override
   void dispose() {
+    searchController?.dispose();
+    scrollController?.dispose();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
@@ -94,14 +101,28 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
   dynamic getIcon(
       Activityname activityname, Uformname uformName, Metadata metadata) {
     try {
-      return CachedNetworkImage(
-        imageUrl: metadata?.icon,
-        height: 30.0.sp,
-        width: 30.0.sp,
-        errorWidget: (context, url, error) {
-          return getDefaultIcon(activityname, uformName);
-        },
-      );
+      if (metadata?.icon != null) {
+        if (metadata?.icon?.toLowerCase()?.contains('.svg') ?? false) {
+          return SvgPicture.network(
+            metadata?.icon,
+            height: 30.0.sp,
+            width: 30.0.sp,
+            color: Colors.white,
+          );
+        } else {
+          return CachedNetworkImage(
+            imageUrl: metadata?.icon,
+            height: 30.0.sp,
+            width: 30.0.sp,
+            color: Colors.white,
+            errorWidget: (context, url, error) {
+              return getDefaultIcon(activityname, uformName);
+            },
+          );
+        }
+      } else {
+        return getDefaultIcon(activityname, uformName);
+      }
     } catch (e) {
       return getDefaultIcon(activityname, uformName);
     }
@@ -155,6 +176,13 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     _regimentViewModel = Provider.of<RegimentViewModel>(context);
+    _regimentViewModel.handleSearchField(
+      controller: searchController,
+      focusNode: searchFocus,
+    );
+    _regimentViewModel.handleScroll(
+      controller: scrollController,
+    );
     return Column(
       children: [
         Visibility(
@@ -175,6 +203,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                         color: Color(CommonUtil().getMyPrimaryColor()),
                       ),
                       onTap: () {
+                        _regimentViewModel.handleSearchField();
                         _regimentViewModel.getRegimentDate(isPrevious: true);
                       },
                     ),
@@ -190,6 +219,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                           initialDate: _regimentViewModel.selectedDate,
                         );
                         if (selectedDate != null) {
+                          _regimentViewModel.handleSearchField();
                           _regimentViewModel.getRegimentDate(
                             dateTime: selectedDate,
                           );
@@ -213,6 +243,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                         color: Color(CommonUtil().getMyPrimaryColor()),
                       ),
                       onTap: () {
+                        _regimentViewModel.handleSearchField();
                         _regimentViewModel.getRegimentDate(isNext: true);
                       },
                     ),
@@ -226,6 +257,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                     children: [
                       InkWell(
                         onTap: () {
+                          _regimentViewModel.handleSearchField();
                           _regimentViewModel.switchRegimentMode();
                         },
                         child: Padding(
@@ -282,115 +314,106 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
             ),
           ),
         ),
+        Visibility(
+          visible: _regimentViewModel.regimentsDataAvailable,
+          child: SearchWidget(
+            searchController: searchController,
+            searchFocus: searchFocus,
+            onChanged: _regimentViewModel.onSearch,
+          ),
+        ),
+        SizedBox(
+          height: 10.0.h,
+        ),
         Expanded(
-          child: FutureBuilder<RegimentResponseModel>(
-            future: _regimentViewModel.regimentsData,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                if (snapshot.hasError) {
-                  return ErrorsWidget();
-                } else {
-                  if (snapshot.hasData &&
-                      (snapshot?.data?.regimentsList?.length ?? 0) > 0) {
-                    List<RegimentDataModel> regimentsScheduledList = [];
-                    List<RegimentDataModel> regimentsAsNeededList = [];
-                    snapshot?.data?.regimentsList?.forEach((event) {
-                      if (event.doseMeal) {
-                        regimentsAsNeededList.add(event);
-                      } else {
-                        regimentsScheduledList.add(event);
-                      }
-                    });
-                    var regimentsList = [];
-                    if (_regimentViewModel.regimentMode ==
-                        RegimentMode.Schedule) {
-                      regimentsList = regimentsScheduledList;
-                    } else {
-                      regimentsList = regimentsAsNeededList;
-                    }
-                    if ((regimentsList?.length ?? 0) > 0) {
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        padding: EdgeInsets.only(
-                          bottom: 10.0.h,
-                        ),
-                        // physics: NeverScrollableScrollPhysics(),
-                        itemCount: regimentsList?.length ?? 0,
-                        itemBuilder: (context, index) {
-                          var regimentData = regimentsList[index];
-                          return RegimentDataCard(
-                            title: regimentData.title,
-                            time: DateFormat('hh:mm\na')
-                                .format(regimentData.estart),
-                            color: getColor(regimentData.activityname,
-                                regimentData.uformname, regimentData.metadata),
-                            icon: getIcon(regimentData.activityname,
-                                regimentData.uformname, regimentData.metadata),
-                            vitalsData: regimentData.uformdata.vitalsData,
-                            eid: regimentData.eid,
-                            mediaData: regimentData.otherinfo,
-                            startTime: regimentData.estart,
-                            regimentData: regimentData,
-                          );
-                        },
-                      );
-                    } else {
-                      return Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.all(
-                              10.0.sp,
-                            ),
-                            child: Text(
-                              _regimentViewModel.regimentMode ==
-                                      RegimentMode.Schedule
-                                  ? noRegimentScheduleData
-                                  : noRegimentSymptomsData,
-                              style: TextStyle(
-                                fontSize: 16.0.sp,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ],
-                      );
-                    }
-                  } else {
-                    return Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.all(
-                            10.0.sp,
-                          ),
-                          child: Text(
-                            snapshot?.data?.message ??
-                                (_regimentViewModel.regimentMode ==
-                                        RegimentMode.Schedule
-                                    ? noRegimentScheduleData
-                                    : noRegimentSymptomsData),
-                            style: TextStyle(
-                              fontSize: 16.0.sp,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ],
-                    );
-                  }
-                }
-              } else if (snapshot.hasError) {
-                return ErrorsWidget();
-              } else {
+          child: Consumer<RegimentViewModel>(
+            builder: (context, regimentViewModel, child) {
+              print(regimentViewModel.regimentsData?.message);
+              if (regimentViewModel.regimentStatus == RegimentStatus.Loading) {
                 return Center(
                   child: CircularProgressIndicator(
                     valueColor: AlwaysStoppedAnimation<Color>(
                       Color(CommonUtil().getMyPrimaryColor()),
                     ),
                   ),
+                );
+              } else if ((regimentViewModel.regimentsList?.length ?? 0) > 0) {
+                var regimentsList = regimentViewModel.regimentsList;
+                if ((regimentsList?.length ?? 0) > 0) {
+                  Future.delayed(Duration(microseconds: 1), () {
+                    regimentViewModel.handleScroll();
+                  });
+                  return ListView.builder(
+                    controller: scrollController,
+                    shrinkWrap: true,
+                    padding: EdgeInsets.only(
+                      bottom: 10.0.h,
+                    ),
+                    // physics: NeverScrollableScrollPhysics(),
+                    itemCount: regimentsList?.length ?? 0,
+                    itemBuilder: (context, index) {
+                      var regimentData = regimentsList[index];
+                      return RegimentDataCard(
+                        title: regimentData.title,
+                        time:
+                            DateFormat('hh:mm\na').format(regimentData.estart),
+                        color: getColor(regimentData.activityname,
+                            regimentData.uformname, regimentData.metadata),
+                        icon: getIcon(regimentData.activityname,
+                            regimentData.uformname, regimentData.metadata),
+                        vitalsData: regimentData.uformdata.vitalsData,
+                        eid: regimentData.eid,
+                        mediaData: regimentData.otherinfo,
+                        startTime: regimentData.estart,
+                        regimentData: regimentData,
+                      );
+                    },
+                  );
+                } else {
+                  return Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.all(
+                          10.0.sp,
+                        ),
+                        child: Text(
+                          (regimentViewModel.regimentMode ==
+                                  RegimentMode.Schedule
+                              ? noRegimentScheduleData
+                              : noRegimentSymptomsData),
+                          style: TextStyle(
+                            fontSize: 16.0.sp,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
+                  );
+                }
+              } else {
+                return Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(
+                        10.0.sp,
+                      ),
+                      child: Text(
+                        regimentViewModel.regimentsData?.message ??
+                            (regimentViewModel.regimentMode ==
+                                    RegimentMode.Schedule
+                                ? noRegimentScheduleData
+                                : noRegimentSymptomsData),
+                        style: TextStyle(
+                          fontSize: 16.0.sp,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ],
                 );
               }
             },

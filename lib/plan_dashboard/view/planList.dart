@@ -47,6 +47,10 @@ class _MyPlanState extends State<PlanList> {
     Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
       isInitial: true,
     );
+    Provider.of<RegimentViewModel>(
+      context,
+      listen: false,
+    ).handleSearchField();
     categoryId = widget.categoryId;
     planListResult = widget.planListResult;
   }
