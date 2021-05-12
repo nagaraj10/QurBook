@@ -41,8 +41,8 @@ class EventListWidget extends StatelessWidget {
           );
           if (saveResponse?.isSuccess ?? false) {
             if (Provider.of<RegimentViewModel>(context, listen: false)
-                    .regimentStatus !=
-                RegimentStatus.Processing) {
+                    .regimentStatus ==
+                RegimentStatus.DialogOpened) {
               Navigator.pop(context, true);
             }
           }

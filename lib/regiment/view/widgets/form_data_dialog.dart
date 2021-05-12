@@ -332,7 +332,12 @@ class FormDataDialogState extends State<FormDataDialog> {
                         events: events,
                       );
                       if (saveResponse?.isSuccess ?? false) {
-                        Navigator.pop(context, true);
+                        if (Provider.of<RegimentViewModel>(context,
+                                    listen: false)
+                                .regimentStatus ==
+                            RegimentStatus.DialogOpened) {
+                          Navigator.pop(context, true);
+                        }
                       }
                     },
                     color: Color(CommonUtil().getMyPrimaryColor()),

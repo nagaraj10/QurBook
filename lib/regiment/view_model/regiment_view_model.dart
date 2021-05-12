@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 
 enum RegimentMode { Schedule, Symptoms }
 
-enum RegimentStatus { Loading, Loaded, Processing, ProcessingDone }
+enum RegimentStatus { Loading, Loaded, DialogOpened, DialogClosed }
 
 class RegimentViewModel extends ChangeNotifier {
   RegimentResponseModel regimentsData;
@@ -183,41 +183,30 @@ class RegimentViewModel extends ChangeNotifier {
     String eid,
     String events,
   }) async {
-    updateRegimentStatus(RegimentStatus.Processing);
-    final response = await RegimentService.saveFormData(
+    return await RegimentService.saveFormData(
       eid: eid,
       events: events,
     );
-    updateRegimentStatus(RegimentStatus.ProcessingDone);
-    return response;
   }
 
   Future<FieldsResponseModel> getFormData({
     String eid,
   }) async {
-    updateRegimentStatus(RegimentStatus.Processing);
     final response = await RegimentService.getFormData(
       eid: eid,
     );
-    updateRegimentStatus(RegimentStatus.ProcessingDone);
     return response;
   }
 
   Future<ProfileResponseModel> getProfile() async {
-    updateRegimentStatus(RegimentStatus.Processing);
-    final response = await RegimentService.getProfile();
-    updateRegimentStatus(RegimentStatus.ProcessingDone);
-    return response;
+    return await RegimentService.getProfile();
   }
 
   Future<SaveResponseModel> saveProfile({
     String schedules,
   }) async {
-    updateRegimentStatus(RegimentStatus.Processing);
-    final response = await RegimentService.saveProfile(
+    return await RegimentService.saveProfile(
       schedules: schedules,
     );
-    updateRegimentStatus(RegimentStatus.ProcessingDone);
-    return response;
   }
 }
