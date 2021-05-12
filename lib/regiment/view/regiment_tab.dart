@@ -102,7 +102,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
       Activityname activityname, Uformname uformName, Metadata metadata) {
     double iconSize = (_regimentViewModel.regimentMode == RegimentMode.Schedule)
         ? 40.0.sp
-        : 50.0.sp;
+        : 40.0.sp;
     try {
       if (metadata?.icon != null) {
         if (metadata?.icon?.toLowerCase()?.contains('.svg') ?? false) {
