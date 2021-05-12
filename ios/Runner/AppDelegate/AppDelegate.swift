@@ -3,6 +3,7 @@ import Flutter
 import GoogleMaps
 import Speech
 import AVFoundation
+import Firebase
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate, SFSpeechRecognizerDelegate {
@@ -51,8 +52,25 @@ import AVFoundation
         // 1
         // Local Notification
         if #available(iOS 10.0, *) {
-            UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
-        }
+            // For iOS 10 display notification (sent via APNS)
+            UNUserNotificationCenter.current().delegate = self
+
+            let authOptions: UNAuthorizationOptions = [.alert,  .sound]
+            UNUserNotificationCenter.current().requestAuthorization(
+              options: authOptions,
+              completionHandler: {_, _ in })
+          } else {
+            let settings: UIUserNotificationSettings =
+            UIUserNotificationSettings(types: [.alert,  .sound], categories: nil)
+            application.registerUserNotificationSettings(settings)
+          }
+
+          application.registerForRemoteNotifications()
+          
+          // Use Firebase library to configure APIs
+          FirebaseApp.configure()
+          Messaging.messaging().delegate = self
+
         
         // 2
         // Speech Recognization
@@ -123,7 +141,7 @@ import AVFoundation
             self?.TTS_Result = result;
             self?.textToSpeech(messageToSpeak: message, isClose: isClose)
         })
-        
+        print("fcm token \(Messaging.messaging().fcmToken)")
         GeneratedPluginRegistrant.register(with: self)
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
@@ -169,7 +187,7 @@ import AVFoundation
         
         recognitionTask = speechRecognizer.recognitionTask(with: recognitionRequest) { result, error in
             if let result = result {
-       
+                
                 self.message = result.bestTranscription.formattedString
                 self.detectionTimer?.invalidate()
                 
@@ -348,12 +366,31 @@ import AVFoundation
             }
         }
     }
+    override func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        let tokenParts = deviceToken.map { data in String(format: "%02.2hhx", data) }
+        let token = tokenParts.joined()
+        print("Device Token: \(token)")
+        Messaging.messaging().apnsToken = deviceToken
+        print("fcm token \(Messaging.messaging().fcmToken)")
+    }
+    
+    override func application(
+        _ application: UIApplication,
+        didFailToRegisterForRemoteNotificationsWithError error: Error
+    ) {
+        print("Failed to register: \(error)")
+    }
     //Handle Notification Center Delegate methods
     override func userNotificationCenter(_ center: UNUserNotificationCenter,
                                          willPresent notification: UNNotification,
                                          withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         completionHandler([.alert, .sound])
     }
+    
+    override func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        print(userInfo)
+    }
+    
     
     override func userNotificationCenter(_ center: UNUserNotificationCenter,
                                          didReceive response: UNNotificationResponse,
@@ -394,10 +431,15 @@ import AVFoundation
     }
 }
 
-extension AppDelegate: AVSpeechSynthesizerDelegate {
+extension AppDelegate: AVSpeechSynthesizerDelegate,MessagingDelegate {
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
         TTS_Result!(1);
     }
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
+        print("Firebase registration token: \(String(describing: fcmToken))")
+        
+    }
+
 }
 extension Date {
     // Convert local time to UTC (or GMT)

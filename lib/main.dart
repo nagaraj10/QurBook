@@ -42,6 +42,7 @@ import 'package:myfhb/telehealth/features/chat/view/home.dart';
 import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'package:myfhb/telehealth/features/chat/viewModel/notificationController.dart';
 import 'package:myfhb/video_call/pages/callmain.dart';
+import 'package:myfhb/video_call/services/iOS_Notification_Handler.dart';
 import 'package:myfhb/video_call/services/push_notification_provider.dart';
 import 'package:myfhb/video_call/utils/callstatus.dart';
 import 'package:myfhb/video_call/utils/hideprovider.dart';
@@ -245,8 +246,7 @@ class _MyFHBState extends State<MyFHB> {
     isAlreadyLoaded = true;
     if (Platform.isIOS) {
       // Push Notifications
-      final provider = PushNotificationsProvider();
-      provider.initNotification();
+      final provider = IosNotificationHandler();
       provider.setUpListerForTheNotification();
       provider.isAlreadyLoaded = true;
       provider.pushController.listen((callarguments) {
