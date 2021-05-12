@@ -42,6 +42,7 @@ class PlanListResult {
   String packcatid;
   String catname;
   String catdesc;
+  String catselecttype;
   String userpackid;
   String isSubscribed;
   String startDate;
@@ -64,6 +65,7 @@ class PlanListResult {
         this.packcatid,
         this.catname,
         this.catdesc,
+        this.catselecttype,
         this.userpackid,
         this.isSubscribed,this.startDate});
 
@@ -85,6 +87,7 @@ class PlanListResult {
     packcatid = json['packcatid'];
     catname = json['catname'];
     catdesc = json['catdesc'];
+    catselecttype = json['catselecttype'];
     userpackid = json['userpackid'];
     isSubscribed = json['IsSubscribed'];
     startDate = json['startdate'];
@@ -109,6 +112,7 @@ class PlanListResult {
     data['packcatid'] = this.packcatid;
     data['catname'] = this.catname;
     data['catdesc'] = this.catdesc;
+    data['catselecttype'] = this.catselecttype;
     data['userpackid'] = this.userpackid;
     data['IsSubscribed'] = this.isSubscribed;
     data['startdate'] = this.startDate;
