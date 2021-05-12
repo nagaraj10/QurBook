@@ -100,37 +100,41 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
 
   dynamic getIcon(
       Activityname activityname, Uformname uformName, Metadata metadata) {
+    double iconSize = (_regimentViewModel.regimentMode == RegimentMode.Schedule)
+        ? 40.0.sp
+        : 50.0.sp;
     try {
       if (metadata?.icon != null) {
         if (metadata?.icon?.toLowerCase()?.contains('.svg') ?? false) {
           return SvgPicture.network(
             metadata?.icon,
-            height: 30.0.sp,
-            width: 30.0.sp,
+            height: iconSize,
+            width: iconSize,
             color: Colors.white,
           );
         } else {
           return CachedNetworkImage(
             imageUrl: metadata?.icon,
-            height: 30.0.sp,
-            width: 30.0.sp,
+            height: iconSize,
+            width: iconSize,
             color: Colors.white,
             errorWidget: (context, url, error) {
-              return getDefaultIcon(activityname, uformName);
+              return getDefaultIcon(activityname, uformName, iconSize);
             },
           );
         }
       } else {
-        return getDefaultIcon(activityname, uformName);
+        return getDefaultIcon(activityname, uformName, iconSize);
       }
     } catch (e) {
-      return getDefaultIcon(activityname, uformName);
+      return getDefaultIcon(activityname, uformName, iconSize);
     }
   }
 
   dynamic getDefaultIcon(
     Activityname activityname,
     Uformname uformName,
+    double iconSize,
   ) {
     bool isDefault = true;
     dynamic cardIcon = 'assets/launcher/myfhb1.png';
@@ -162,12 +166,12 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
     Widget cardIconWidget = (cardIcon is String)
         ? Image.asset(
             cardIcon,
-            height: isDefault ? 30.0.sp : 24.0.sp,
-            width: isDefault ? 30.0.sp : 24.0.sp,
+            height: isDefault ? iconSize : iconSize - 5.0.sp,
+            width: isDefault ? iconSize : iconSize - 5.0.sp,
           )
         : Icon(
             cardIcon,
-            size: 24.0.sp,
+            size: iconSize - 5.0.sp,
             color: Colors.white,
           );
     return cardIconWidget;
