@@ -49,6 +49,7 @@ const String STR_VOICERECORDS = 'Voice Records';
 const String STR_CLAIMSRECORD = 'Claim Records';
 const String STR_FEEDBACK = 'Feedback';
 const String STR_WEARABLES = 'Wearable';
+const String STR_TELEHEALTH = 'Telehealth';
 const String STR_HOSPITALDOCUMENT = 'Hospital Documents';
 
 const String STR_VOICE_NOTES = 'Voice Notes';
