@@ -34,6 +34,7 @@ class RegimentViewModel extends ChangeNotifier {
     regimentMode = (regimentMode == RegimentMode.Schedule)
         ? RegimentMode.Symptoms
         : RegimentMode.Schedule;
+    updateScroll(isReset: true);
     setViewRegimentsData();
     notifyListeners();
   }
@@ -173,6 +174,7 @@ class RegimentViewModel extends ChangeNotifier {
       selectedDate = selectedDate.add(Duration(days: 1));
     }
     regimentDate = '${CommonUtil().regimentDateFormat(selectedDate)}';
+    updateScroll(isReset: true);
     fetchRegimentData();
     notifyListeners();
   }
