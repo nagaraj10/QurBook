@@ -1875,6 +1875,8 @@ class CommonUtil {
       String providerId,
       Function() refresh}) async {
     var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    showLoadingDialog(
+        context, _keyLoader, variable.Please_Wait);
     await addFamilyUserInfoRepository.getMyProfileInfoNew(userId).then((value) {
       myProfile = value;
     });
@@ -2004,6 +2006,9 @@ class CommonUtil {
         : '';
 
     if (address1 != '' && city != '' && state != '') {
+      Navigator.of(_keyLoader.currentContext,
+          rootNavigator: true)
+          .pop();
       //check if its subcribed we need not to show disclimer alert
       if (isSubscribed == '1') {
         if (isSubscribed == '0') {
