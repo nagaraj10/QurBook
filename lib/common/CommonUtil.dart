@@ -1875,7 +1875,12 @@ class CommonUtil {
       String providerId,
       Function() refresh}) async {
     var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    showLoadingDialog(
+        context, _keyLoader, variable.Please_Wait);
     await addFamilyUserInfoRepository.getMyProfileInfoNew(userId).then((value) {
+      Navigator.of(_keyLoader.currentContext,
+          rootNavigator: true)
+          .pop();
       myProfile = value;
     });
 
