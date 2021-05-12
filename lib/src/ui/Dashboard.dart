@@ -74,7 +74,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     });
     */
     dbInitialize();
-    QurPlanReminders.getTheRemindersFromAPI();
+
     callImportantsMethod();
 
     print(
@@ -454,9 +454,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     try {
       getProfileData();
     } catch (e) {}
-    /*try {
+    try {
       syncDevices();
-    } catch (e) {}*/
+    } catch (e) {}
 
     try {
       await new CommonUtil().getMedicalPreference();
@@ -483,9 +483,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     } catch (e) {}
   }
 
-  /*void syncDevices() async {
+  void syncDevices() async {
     await new CommonUtil().syncDevices();
-  }*/
+  }
 
   Future<void> _handleCameraAndMic() async {
     await Permission.microphone.request();

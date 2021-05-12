@@ -17,8 +17,10 @@ import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/device_integration/view/screens/Clipper.dart';
 import 'package:myfhb/device_integration/viewModel/deviceDataHelper.dart';
 import 'package:myfhb/devices/device_dashboard_arguments.dart';
+import 'package:myfhb/myPlan/view/myPlanList.dart';
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/screens/MyFamily.dart';
+import 'package:myfhb/plan_dashboard/view/categoryList.dart';
 import 'package:myfhb/plan_dashboard/view/planList.dart';
 import 'package:myfhb/regiment/view/regiment_tab.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
@@ -144,8 +146,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
     mInitialTime = DateTime.now();
     _familyListBloc = new FamilyListBloc();
     getFamilyLength();
-    Provider.of<RegimentViewModel>(context, listen: false).getRegimentList();
-
+    Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
+      isInitial: true,
+    );
     super.initState();
   }
 
@@ -479,13 +482,15 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       return Container(
         height: constraints.maxHeight,
         child: DefaultTabController(
-          length: 3,
-          initialIndex:
-              (Provider.of<RegimentViewModel>(context).regimentsList?.length ??
-                          0) >
-                      0
-                  ? 0
-                  : 2,
+          length: 4,
+          initialIndex: (Provider.of<RegimentViewModel>(
+                        context,
+                        listen: false,
+                      ).regimentsData?.regimentsList?.length ??
+                      0) >
+                  0
+              ? 0
+              : 2,
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -583,7 +588,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                       tabs: [
                                         Tab(
                                           child: Text(
-                                            'Regiment',
+                                            'Regimen',
                                             style: TextStyle(
                                               fontSize: 16.0.sp,
                                             ),
@@ -600,6 +605,14 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                         Tab(
                                           child: Text(
                                             'Plans',
+                                            style: TextStyle(
+                                              fontSize: 16.0.sp,
+                                            ),
+                                          ),
+                                        ),
+                                        Tab(
+                                          child: Text(
+                                            'My Plans',
                                             style: TextStyle(
                                               fontSize: 16.0.sp,
                                             ),
@@ -629,7 +642,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                         child: getValues(context, _devicesmodel),
                       ),
                     ),
-                    PlanList(),
+                    CategoryList(),
+                    MyPlanList(),
                   ],
                 ),
               ),
@@ -644,6 +658,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
     return FutureBuilder<LastMeasureSyncValues>(
         future: devicesViewModel.fetchDeviceDetails(),
         builder: (context, snapshot) {
+          Provider.of<RegimentViewModel>(
+            context,
+            listen: false,
+          ).handleSearchField();
           if (snapshot.hasData) {
             deviceValues = snapshot.data;
             return projectWidget(context);

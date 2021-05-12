@@ -14,6 +14,7 @@ class MyPlanDetailView extends StatefulWidget {
   final String providerName;
   final String packageDuration;
   final String providerId;
+  final bool isDisable;
 
   MyPlanDetailView({
     Key key,
@@ -25,6 +26,7 @@ class MyPlanDetailView extends StatefulWidget {
     @required this.providerName,
     @required this.packageDuration,
     @required this.providerId,
+    @required this.isDisable,
   }) : super(key: key);
 
   @override
@@ -42,6 +44,7 @@ class PlanDetail extends State<MyPlanDetailView> {
   String providerName;
   String packageDuration;
   String providerId;
+  bool isDisable;
 
   @override
   void initState() {
@@ -58,6 +61,7 @@ class PlanDetail extends State<MyPlanDetailView> {
     providerName = widget.providerName;
     packageDuration = widget.packageDuration;
     providerId = widget.providerId;
+    isDisable = widget.isDisable;
   }
 
   @override
@@ -80,160 +84,179 @@ class PlanDetail extends State<MyPlanDetailView> {
         ),
       ),
       body: Builder(
-        builder: (contxt) => Container(
-          alignment: Alignment.center,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                CircleAvatar(
-                  backgroundImage: AssetImage('assets/launcher/myfhb1.png'),
-                  radius: 50.sp,
-                  backgroundColor: Colors.transparent,
-                ),
-                SizedBox(
-                  height: 20.h,
-                ),
-                Text(
-                  title != null && title != '' ? title : '-',
-                  style:
+        builder: (contxt) =>
+            Container(
+              alignment: Alignment.center,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    CircleAvatar(
+                      backgroundImage: AssetImage('assets/launcher/myfhb1.png'),
+                      radius: 50.sp,
+                      backgroundColor: Colors.transparent,
+                    ),
+                    SizedBox(
+                      height: 20.h,
+                    ),
+                    Text(
+                      title != null && title != '' ? title : '-',
+                      style:
                       TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500),
-                ),
-                SizedBox(
-                  height: 10.h,
-                ),
-                Text(
-                  providerName != null && providerName != ''
-                      ? providerName
-                      : '-',
-                  style: TextStyle(fontSize: 14.sp, color: Colors.grey[600]),
-                ),
-                SizedBox(
-                  height: 10.h,
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+                    ),
+                    SizedBox(
+                      height: 10.h,
+                    ),
+                    Text(
+                      providerName != null && providerName != ''
+                          ? providerName
+                          : '-',
+                      style: TextStyle(
+                          fontSize: 14.sp, color: Colors.grey[600]),
+                    ),
+                    SizedBox(
+                      height: 10.h,
+                    ),
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          'Duration: ',
-                          style: TextStyle(
-                              color: Colors.grey[600], fontSize: 14.sp),
+                        Row(
+                          children: [
+                            Text(
+                              'Duration: ',
+                              style: TextStyle(
+                                  color: Colors.grey[600], fontSize: 14.sp),
+                            ),
+                            Text(
+                              packageDuration != null && packageDuration != ''
+                                  ? '$packageDuration days'
+                                  : '-',
+                              style: TextStyle(
+                                  color: Color(
+                                      CommonUtil().getMyPrimaryColor()),
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          ],
                         ),
-                        Text(
-                          packageDuration != null && packageDuration != ''
-                              ? '$packageDuration days'
-                              : '-',
-                          style: TextStyle(
-                              color: Color(CommonUtil().getMyPrimaryColor()),
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.w600),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              'Price: ',
+                              style: TextStyle(
+                                  color: Colors.grey[600], fontSize: 14.sp),
+                            ),
+                            Text(
+                              price != null && price != '' ? 'INR $price' : '-',
+                              style: TextStyle(
+                                  color: Color(
+                                      CommonUtil().getMyPrimaryColor()),
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                    SizedBox(
-                      width: 20,
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 10),
+                      height: 0.55.sh,
+                      child: SingleChildScrollView(
+                        child: Html(
+                          data: description.replaceAll('src="//', 'src="'),
+                          shrinkWrap: true,
+                          onLinkTap: (linkUrl) {
+                            CommonUtil()
+                                .openWebViewNew(widget.title, linkUrl, false);
+                          },
+                        ),
+                      ),
                     ),
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          'Price: ',
-                          style: TextStyle(
-                              color: Colors.grey[600], fontSize: 14.sp),
+                        OutlineButton(
+                          //hoverColor: Color(getMyPrimaryColor()),
+                          child: Text(
+                            issubscription == '0'
+                                ? 'subscribe'.toUpperCase()
+                                : 'unsubscribe'.toUpperCase(),
+                            style: TextStyle(
+                              color: getTextColor(isDisable, issubscription),
+                              fontSize: 13.sp,
+                            ),
+                          ),
+                          onPressed: isDisable
+                              ? null
+                              : () async {
+                            if (issubscription == '0') {
+                              CommonUtil().profileValidationCheck(contxt,
+                                  packageId: packageId,
+                                  isSubscribed: issubscription,
+                                  providerId: providerId);
+                            } else {
+                              CommonUtil().unSubcribeAlertDialog(context,
+                                  packageId: packageId, refresh: () {
+                                    setState(() {});
+                                  });
+                            }
+                          },
+                          borderSide: BorderSide(
+                            color: issubscription == '0' ? Color(
+                              CommonUtil().getMyPrimaryColor(),
+                            ) : Colors.red,
+                            style: BorderStyle.solid,
+                            width: 1,
+                          ),
                         ),
-                        Text(
-                          price != null && price != '' ? 'INR $price' : '-',
-                          style: TextStyle(
+                        SizedBox(
+                          width: 10,
+                        ),
+                        OutlineButton(
+                          //hoverColor: Color(getMyPrimaryColor()),
+                          child: Text(
+                            'cancel'.toUpperCase(),
+                            style: TextStyle(
                               color: Color(CommonUtil().getMyPrimaryColor()),
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.w600),
+                              fontSize: 13.sp,
+                            ),
+                          ),
+                          onPressed: () async {
+                            // open profile page
+                            Navigator.of(context).pop();
+                          },
+                          borderSide: BorderSide(
+                            color: Color(
+                              CommonUtil().getMyPrimaryColor(),
+                            ),
+                            style: BorderStyle.solid,
+                            width: 1,
+                          ),
                         ),
                       ],
                     ),
                   ],
                 ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                  height: 0.55.sh,
-                  child: SingleChildScrollView(
-                    child: Html(
-                      data: description.replaceAll('src="//', 'src="'),
-                      shrinkWrap: true,
-                      onLinkTap: (linkUrl) {
-                        CommonUtil()
-                            .openWebViewNew(widget.title, linkUrl, false);
-                      },
-                    ),
-                  ),
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    OutlineButton(
-                      //hoverColor: Color(getMyPrimaryColor()),
-                      child: Text(
-                        issubscription == '0'
-                            ? 'subscribe'.toUpperCase()
-                            : 'unsubscribe'.toUpperCase(),
-                        style: TextStyle(
-                          color: Color(CommonUtil().getMyPrimaryColor()),
-                          fontSize: 13.sp,
-                        ),
-                      ),
-                      onPressed: () async {
-                        if (issubscription == '0') {
-                          CommonUtil().profileValidationCheck(contxt,
-                              packageId: packageId,
-                              isSubscribed: issubscription,
-                              providerId: providerId);
-                        } else {
-                          CommonUtil().unSubcribeAlertDialog(context,
-                              packageId: packageId, refresh: () {
-                            setState(() {});
-                          });
-                        }
-                      },
-                      borderSide: BorderSide(
-                        color: Color(
-                          CommonUtil().getMyPrimaryColor(),
-                        ),
-                        style: BorderStyle.solid,
-                        width: 1,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    OutlineButton(
-                      //hoverColor: Color(getMyPrimaryColor()),
-                      child: Text(
-                        'cancel'.toUpperCase(),
-                        style: TextStyle(
-                          color: Color(CommonUtil().getMyPrimaryColor()),
-                          fontSize: 13.sp,
-                        ),
-                      ),
-                      onPressed: () async {
-                        // open profile page
-                        Navigator.of(context).pop();
-                      },
-                      borderSide: BorderSide(
-                        color: Color(
-                          CommonUtil().getMyPrimaryColor(),
-                        ),
-                        style: BorderStyle.solid,
-                        width: 1,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+              ),
             ),
-          ),
-        ),
       ),
     );
+  }
+
+  Color getTextColor(bool disable, String isSubscribe) {
+    if (isDisable) {
+      return Colors.grey;
+    } else {
+      if (isSubscribe == '0') {
+        return Color(CommonUtil().getMyPrimaryColor());
+      } else {
+        return Colors.red;
+      }
+    }
   }
 }

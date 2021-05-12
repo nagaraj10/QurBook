@@ -39,153 +39,149 @@ class RegimentDataCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    return IntrinsicHeight(
-      child: Padding(
-        padding: EdgeInsets.only(
-          left: 10.0.w,
-          right: 10.0.w,
-          top: 10.0.h,
-        ),
-        child: InkWell(
-          onTap: () async {
-            Provider.of<ChatScreenViewModel>(context, listen: false)
-                .stopTTSEngine();
-            bool canEdit = startTime.difference(DateTime.now()).inMinutes <= 15;
-            if (canEdit) {
-              FieldsResponseModel fieldsResponseModel =
-                  await Provider.of<RegimentViewModel>(context, listen: false)
-                      .getFormData(eid: eid);
-              print(fieldsResponseModel);
-              if (fieldsResponseModel.isSuccess &&
-                  (fieldsResponseModel.result.fields.length > 0 ||
-                      mediaData.toJson().toString().contains('1'))) {
-                bool value = await showDialog(
-                  context: context,
-                  builder: (context) => FormDataDialog(
-                    fieldsData: fieldsResponseModel.result.fields,
-                    eid: eid,
-                    color: color,
-                    mediaData: mediaData,
-                    formTitle:
-                        '${DateFormat('hh:mm a').format(regimentData.estart)},${regimentData.title}',
-                  ),
-                );
-                if (value != null && (value ?? false)) {
-                  await Provider.of<RegimentViewModel>(context, listen: false)
-                      .fetchRegimentData();
+  Widget build(BuildContext context) => IntrinsicHeight(
+        child: Padding(
+          padding: EdgeInsets.only(
+            left: 10.0.w,
+            right: 10.0.w,
+            bottom: 10.0.h,
+          ),
+          child: InkWell(
+            onTap: () async {
+              Provider.of<ChatScreenViewModel>(context, listen: false)
+                  .stopTTSEngine();
+              bool canEdit =
+                  startTime.difference(DateTime.now()).inMinutes <= 15;
+              Provider.of<RegimentViewModel>(context, listen: false)
+                  .updateScroll();
+              if (canEdit) {
+                FieldsResponseModel fieldsResponseModel =
+                    await Provider.of<RegimentViewModel>(context, listen: false)
+                        .getFormData(eid: eid);
+                print(fieldsResponseModel);
+                if (fieldsResponseModel.isSuccess &&
+                    (fieldsResponseModel.result.fields.length > 0 ||
+                        mediaData.toJson().toString().contains('1'))) {
+                  bool value = await showDialog(
+                    context: context,
+                    builder: (context) => FormDataDialog(
+                      fieldsData: fieldsResponseModel.result.fields,
+                      eid: eid,
+                      color: color,
+                      mediaData: mediaData,
+                      formTitle:
+                          '${DateFormat('hh:mm a').format(regimentData.estart)},${regimentData.title}',
+                    ),
+                  );
+                  if (value != null && (value ?? false)) {
+                    await Provider.of<RegimentViewModel>(context, listen: false)
+                        .fetchRegimentData();
+                  }
                 }
               } else {
                 FlutterToast().getToast(
-                  'No plans associated with this event',
+                  'Data for future events can be entered only 15 minutes prior to the event time',
                   Colors.red,
                 );
               }
-            } else {
-              FlutterToast().getToast(
-                'Data for future events can be entered only 15 minutes prior to the event time',
-                Colors.red,
-              );
-            }
-          },
-          child: Row(
-            children: [
-              Expanded(
-                flex: 1,
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 10.0.h,
-                  ),
-                  color: color,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      icon,
-                      Visibility(
-                        visible: Provider.of<RegimentViewModel>(context,
-                                    listen: false)
-                                .regimentMode ==
-                            RegimentMode.Schedule,
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                            top: 2.0.h,
-                          ),
-                          child: Text(
-                            time,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16.0.sp,
+            },
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 10.0.h,
+                    ),
+                    color: color,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        icon,
+                        Visibility(
+                          visible: Provider.of<RegimentViewModel>(context,
+                                      listen: false)
+                                  .regimentMode ==
+                              RegimentMode.Schedule,
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                              top: 2.0.h,
                             ),
-                            textAlign: TextAlign.center,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 5,
-                child: Container(
-                  color: Colors.white,
-                  padding: EdgeInsets.symmetric(
-                    vertical: 5.0.h,
-                    horizontal: 20.0.w,
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: getFieldWidgets(context),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Visibility(
-                        visible: regimentData.ack != null,
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                            top: 5.0.h,
-                            bottom: 5.0.h,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Text(
-                                '${CommonUtil().regimentDateFormat(
-                                  regimentData.ack ?? DateTime.now(),
-                                  isAck: true,
-                                )}',
-                                style: TextStyle(
-                                  fontSize: 12.0.sp,
-                                ),
+                            child: Text(
+                              time,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16.0.sp,
                               ),
-                            ],
+                              textAlign: TextAlign.center,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(
-                width: 3.0.w,
-                child: Container(
-                  color: color,
+                Expanded(
+                  flex: 5,
+                  child: Container(
+                    color: Colors.white,
+                    padding: EdgeInsets.symmetric(
+                      vertical: 5.0.h,
+                      horizontal: 20.0.w,
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: getFieldWidgets(context),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Visibility(
+                          visible: regimentData.ack != null,
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                              top: 5.0.h,
+                              bottom: 5.0.h,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text(
+                                  '${CommonUtil().regimentDateFormat(
+                                    regimentData.ack ?? DateTime.now(),
+                                    isAck: true,
+                                  )}',
+                                  style: TextStyle(
+                                    fontSize: 12.0.sp,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-            ],
+                SizedBox(
+                  width: 3.0.w,
+                  child: Container(
+                    color: color,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-    );
-  }
+      );
 
   List<Widget> getFieldWidgets(BuildContext context) {
     List<Widget> fieldWidgets = [];
@@ -354,6 +350,8 @@ class RegimentDataCard extends StatelessWidget {
                           eid: eid,
                         );
                         if (saveResponse?.isSuccess ?? false) {
+                          Provider.of<RegimentViewModel>(context, listen: false)
+                              .updateScroll();
                           await Provider.of<RegimentViewModel>(context,
                                   listen: false)
                               .fetchRegimentData();
@@ -380,5 +378,17 @@ class RegimentDataCard extends StatelessWidget {
     }
 
     return fieldWidgets;
+  }
+
+  String getDialogTitle(BuildContext context) {
+    String title = '';
+    if (Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
+        RegimentMode.Schedule) {
+      title =
+          '${DateFormat('hh:mm a').format(regimentData.estart)},${regimentData.title}';
+    } else {
+      title = '${regimentData.title}';
+    }
+    return title;
   }
 }

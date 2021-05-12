@@ -583,8 +583,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                               right: -5.0,
                                               child: Icon(
                                                 Icons.check_circle,
-                                                color: Color(new CommonUtil()
-                                                    .getMyPrimaryColor()),
+                                                color: Colors.green,
                                                 size: 15,
                                               ),
                                             )
@@ -632,8 +631,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                               right: -5.0,
                                               child: Icon(
                                                 Icons.check_circle,
-                                                color: Color(new CommonUtil()
-                                                    .getMyPrimaryColor()),
+                                                color: Colors.green,
                                                 size: 15,
                                               ),
                                             )

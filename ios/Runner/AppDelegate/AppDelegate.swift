@@ -51,7 +51,7 @@ import AVFoundation
         // 1
         // Local Notification
         if #available(iOS 10.0, *) {
-            UNUserNotificationCenter.current().delegate = self
+            UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
         }
         
         // 2
@@ -123,7 +123,7 @@ import AVFoundation
             self?.TTS_Result = result;
             self?.textToSpeech(messageToSpeak: message, isClose: isClose)
         })
-        setUpReminders(messanger: controller.binaryMessenger)
+        
         GeneratedPluginRegistrant.register(with: self)
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
@@ -169,7 +169,7 @@ import AVFoundation
         
         recognitionTask = speechRecognizer.recognitionTask(with: recognitionRequest) { result, error in
             if let result = result {
-                
+       
                 self.message = result.bestTranscription.formattedString
                 self.detectionTimer?.invalidate()
                 
