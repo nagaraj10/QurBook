@@ -92,6 +92,7 @@ class CommonDialogBox {
 
   String fromClassNew = '';
   HealthResult deviceHealthResult;
+  bool forNotes = false;
 
   Future<Widget> getDialogBoxForPrescription(
       BuildContext context,
@@ -1100,6 +1101,10 @@ class CommonDialogBox {
       } else {
         fileName.text = fileNameClone;
       }
+    }
+
+    if (forNotes) {
+      categoryName = Constants.STR_NOTES;
     }
   }
 
@@ -2421,6 +2426,7 @@ class CommonDialogBox {
     modeOfSave = modeOfSaveClone;
     containsAudioMain = containsAudio;
     audioPathMain = audioPath;
+    forNotes = true;
 
     if (imagePath != null) imagePathMain.addAll(imagePath);
     if (modeOfSave) {
@@ -2569,7 +2575,8 @@ class CommonDialogBox {
     if (filteredCategoryData == null || filteredCategoryData.length == 0) {
       _categoryListBlock.getCategoryLists().then((value) {
         filteredCategoryData = new CommonUtil().fliterCategories(value.result);
-
+        PreferenceUtil.saveCategoryList(
+            Constants.KEY_CATEGORYLIST_VISIBLE, filteredCategoryData);
         //filteredCategoryData.add(categoryDataObjClone);
         return filteredCategoryData;
       });
