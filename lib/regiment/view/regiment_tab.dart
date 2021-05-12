@@ -295,7 +295,11 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                                     .getProfile();
                             if (profileResponseModel.isSuccess &&
                                 profileResponseModel?.result?.profileData !=
-                                    null) {
+                                    null &&
+                                _regimentViewModel.regimentStatus !=
+                                    RegimentStatus.DialogOpened) {
+                              _regimentViewModel.updateRegimentStatus(
+                                  RegimentStatus.DialogOpened);
                               await showDialog(
                                 context: context,
                                 builder: (context) => EventListWidget(
@@ -303,6 +307,8 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                                       profileResponseModel.result,
                                 ),
                               );
+                              _regimentViewModel.updateRegimentStatus(
+                                  RegimentStatus.DialogClosed);
                             }
                           },
                           child: Icon(

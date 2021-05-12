@@ -61,7 +61,12 @@ class RegimentDataCard extends StatelessWidget {
                 print(fieldsResponseModel);
                 if (fieldsResponseModel.isSuccess &&
                     (fieldsResponseModel.result.fields.length > 0 ||
-                        mediaData.toJson().toString().contains('1'))) {
+                        mediaData.toJson().toString().contains('1')) &&
+                    Provider.of<RegimentViewModel>(context, listen: false)
+                            .regimentStatus !=
+                        RegimentStatus.DialogOpened) {
+                  Provider.of<RegimentViewModel>(context, listen: false)
+                      .updateRegimentStatus(RegimentStatus.DialogOpened);
                   bool value = await showDialog(
                     context: context,
                     builder: (context) => FormDataDialog(
@@ -77,6 +82,8 @@ class RegimentDataCard extends StatelessWidget {
                     await Provider.of<RegimentViewModel>(context, listen: false)
                         .fetchRegimentData();
                   }
+                  Provider.of<RegimentViewModel>(context, listen: false)
+                      .updateRegimentStatus(RegimentStatus.DialogClosed);
                 }
               } else {
                 FlutterToast().getToast(

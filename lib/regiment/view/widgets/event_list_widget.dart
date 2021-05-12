@@ -30,21 +30,21 @@ class EventListWidget extends StatelessWidget {
           }
         },
         onSave: () async {
-          // Navigator.pop(context);
-          print(saveMap);
           String schedules = '';
-          print(saveMap.toString());
           saveMap.forEach((key, value) {
             schedules += '&$key=$value';
           });
-          print(schedules);
           SaveResponseModel saveResponse =
               await Provider.of<RegimentViewModel>(context, listen: false)
                   .saveProfile(
             schedules: schedules,
           );
           if (saveResponse?.isSuccess ?? false) {
-            Navigator.pop(context, true);
+            if (Provider.of<RegimentViewModel>(context, listen: false)
+                    .regimentStatus ==
+                RegimentStatus.DialogOpened) {
+              Navigator.pop(context, true);
+            }
           }
         },
       ),
@@ -119,9 +119,7 @@ class EventListWidget extends StatelessWidget {
           ],
         ),
       );
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
 
     return dialogItems;
   }

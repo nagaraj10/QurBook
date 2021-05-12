@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 
 enum RegimentMode { Schedule, Symptoms }
 
-enum RegimentStatus { Loading, Loaded }
+enum RegimentStatus { Loading, Loaded, DialogOpened, DialogClosed }
 
 class RegimentViewModel extends ChangeNotifier {
   RegimentResponseModel regimentsData;
@@ -192,9 +192,10 @@ class RegimentViewModel extends ChangeNotifier {
   Future<FieldsResponseModel> getFormData({
     String eid,
   }) async {
-    return await RegimentService.getFormData(
+    final response = await RegimentService.getFormData(
       eid: eid,
     );
+    return response;
   }
 
   Future<ProfileResponseModel> getProfile() async {
