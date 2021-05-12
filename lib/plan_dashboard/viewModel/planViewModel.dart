@@ -24,9 +24,9 @@ class PlanViewModel extends ChangeNotifier {
     } catch (e) {}
   }
 
-  List<PlanListResult> getSearch(String title) {
+  List<PlanListResult> getSearch(String title,List<PlanListResult> planListOld) {
     List<PlanListResult> filterDoctorData = new List();
-    for (PlanListResult planList in myPLanListResult) {
+    for (PlanListResult planList in planListOld) {
       if (planList.title != null && planList.title != '') {
         if (planList.title
             .toLowerCase()

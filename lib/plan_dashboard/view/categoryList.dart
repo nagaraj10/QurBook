@@ -30,6 +30,8 @@ class _CategoryState extends State<CategoryList> {
   SubscribeViewModel subscribeViewModel = new SubscribeViewModel();
   FlutterToast toast = new FlutterToast();
 
+  List<PlanListResult> categoryListUniq = [];
+
   @override
   void initState() {
     super.initState();
@@ -50,7 +52,7 @@ class _CategoryState extends State<CategoryList> {
               onChanged: (title) {
                 if (title != '' && title.length > 2) {
                   isSearch = true;
-                  onSearchedNew(title);
+                  onSearchedNew(title,categoryListUniq);
                 } else {
                   setState(() {
                     isSearch = false;
@@ -84,16 +86,16 @@ class _CategoryState extends State<CategoryList> {
     ));
   }
 
-  onSearchedNew(String title) async {
+  onSearchedNew(String title,List<PlanListResult> planListOld) async {
     myPLanListResult.clear();
     if (title != null) {
-      myPLanListResult = await myPlanViewModel.getSearch(title);
+      myPLanListResult = await myPlanViewModel.getSearch(title,planListOld);
     }
     setState(() {});
   }
 
   Widget categoryList(List<PlanListResult> planList) {
-    List<PlanListResult> categoryListUniq = [];
+    categoryListUniq = [];
     if (planList != null && planList.length > 0) {
       planList.forEach((element) {
         bool keysUniq = true;
