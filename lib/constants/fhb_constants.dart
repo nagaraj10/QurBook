@@ -438,6 +438,9 @@ const strAudio = 'audio';
 const strUploading = 'Uploading...';
 const strSubscribe = 'Subscribe';
 const strUnSubscribe = 'UnSubscribe';
+const strSelectedPlan = 'Selected Plan - ';
+const strSelectedPlans = 'Selected Plan(s) - ';
+const strSelectPlan = 'Select Plan - ';
 
 FirebaseAnalytics _firebaseAnalytics = FirebaseAnalytics();
 var mInitialTime;

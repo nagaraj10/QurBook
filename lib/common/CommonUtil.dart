@@ -1875,12 +1875,9 @@ class CommonUtil {
       String providerId,
       Function() refresh}) async {
     var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    showLoadingDialog(
-        context, _keyLoader, variable.Please_Wait);
+    showLoadingDialog(context, _keyLoader, variable.Please_Wait);
     await addFamilyUserInfoRepository.getMyProfileInfoNew(userId).then((value) {
-      Navigator.of(_keyLoader.currentContext,
-          rootNavigator: true)
-          .pop();
+      Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
       myProfile = value;
     });
 
@@ -2001,58 +1998,67 @@ class CommonUtil {
     String address1 = userAddressCollection.addressLine1 != null
         ? userAddressCollection.addressLine1
         : '';
-    String city = userAddressCollection.city.name != null
-        ? userAddressCollection.city.name
-        : '';
-    String state = userAddressCollection.state.name != null
-        ? userAddressCollection.state.name
-        : '';
+    if (userAddressCollection.city != null) {
+      String city = userAddressCollection.city.name != null
+          ? userAddressCollection.city.name
+          : '';
+      String state = userAddressCollection.state.name != null
+          ? userAddressCollection.state.name
+          : '';
 
-    if (address1 != '' && city != '' && state != '') {
-      //check if its subcribed we need not to show disclimer alert
-      if (isSubscribed == '1') {
-        if (isSubscribed == '0') {
-          String userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-          updateProvidersBloc
-              .mappingHealthOrg(providerId, userId)
-              .then((value) {
-            if (value != null) {
-              if (value.success) {
-                subscribeViewModel.subScribePlan(packageId).then((value) {
-                  if (value != null) {
-                    if (value.isSuccess) {
-                      if (value.result != null) {
-                        if (value.result.result == 'Done') {
-                          Get.back(result: 'refreshUI');
-                        } else {
-                          FlutterToast()
-                              .getToast('Subscribe Failed', Colors.red);
+      if (address1 != '' && city != '' && state != '') {
+        //check if its subcribed we need not to show disclimer alert
+        if (isSubscribed == '1') {
+          if (isSubscribed == '0') {
+            String userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+            updateProvidersBloc
+                .mappingHealthOrg(providerId, userId)
+                .then((value) {
+              if (value != null) {
+                if (value.success) {
+                  subscribeViewModel.subScribePlan(packageId).then((value) {
+                    if (value != null) {
+                      if (value.isSuccess) {
+                        if (value.result != null) {
+                          if (value.result.result == 'Done') {
+                            Get.back(result: 'refreshUI');
+                          } else {
+                            FlutterToast()
+                                .getToast('Subscribe Failed', Colors.red);
+                          }
                         }
+                      } else {
+                        FlutterToast()
+                          ..getToast('Subscribe Failed', Colors.red);
                       }
-                    } else {
-                      FlutterToast()..getToast('Subscribe Failed', Colors.red);
                     }
-                  }
-                });
+                  });
+                } else {
+                  FlutterToast().getToast('Subscribe Map Failed', Colors.red);
+                }
               } else {
                 FlutterToast().getToast('Subscribe Map Failed', Colors.red);
               }
-            } else {
-              FlutterToast().getToast('Subscribe Map Failed', Colors.red);
-            }
-          });
+            });
+          } else {
+            unSubcribeAlertDialog(context,
+                packageId: packageId, refresh: refresh);
+          }
         } else {
-          unSubcribeAlertDialog(context,
-              packageId: packageId, refresh: refresh);
+          // if its unsubscibed need to invoke discalimer dialog
+          mDisclaimerAlertDialog(
+              packageId: packageId,
+              isSubscribed: isSubscribed,
+              providerId: providerId,
+              refresh: refresh,
+              context: context);
         }
       } else {
-        // if its unsubscibed need to invoke discalimer dialog
-        mDisclaimerAlertDialog(
+        mCustomAlertDialog(context,
+            content: CONTENT_PROFILE_CHECK,
             packageId: packageId,
             isSubscribed: isSubscribed,
-            providerId: providerId,
-            refresh: refresh,
-            context: context);
+            refresh: refresh);
       }
     } else {
       mCustomAlertDialog(context,
@@ -2495,7 +2501,9 @@ class CommonUtil {
 extension CapExtension on String {
   String get inCaps =>
       this.length > 0 ? '${this[0].toUpperCase()}${this.substring(1)}' : '';
+
   String get allInCaps => toUpperCase();
+
   String get capitalizeFirstofEach => this != null && this.isNotEmpty
       ? trim().toLowerCase().split(' ').map((str) => str.inCaps).join(' ')
       : '';

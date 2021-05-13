@@ -85,13 +85,16 @@ class _MyPlanState extends State<PlanList> {
                   onChanged: (title) {
                     if (title != '' && title.length > 2) {
                       isSearch = true;
-                      onSearchedNew(title,planListUniq);
+                      onSearchedNew(title, planListUniq);
                     } else {
                       setState(() {
                         isSearch = false;
                       });
                     }
                   },
+                ),
+                SizedBox(
+                  height: 5.0.h,
                 ),
                 Expanded(child: planList(planListResult)),
                 SizedBox(height: 10)
@@ -115,10 +118,10 @@ class _MyPlanState extends State<PlanList> {
         ));
   }
 
-  onSearchedNew(String title,List<PlanListResult> planListOld) async {
+  onSearchedNew(String title, List<PlanListResult> planListOld) async {
     myPLanListResult.clear();
     if (title != null) {
-      myPLanListResult = await myPlanViewModel.getSearch(title,planListOld);
+      myPLanListResult = await myPlanViewModel.getSearch(title, planListOld);
     }
     setState(() {});
   }
@@ -140,6 +143,9 @@ class _MyPlanState extends State<PlanList> {
     return (planListUniq != null && planListUniq.length > 0)
         ? ListView.builder(
             shrinkWrap: true,
+            padding: EdgeInsets.only(
+              bottom: 8.0.h,
+            ),
             itemBuilder: (BuildContext ctx, int i) => planListItem(
                 ctx, i, isSearch ? myPLanListResult : planListUniq),
             itemCount: isSearch ? myPLanListResult.length : planListUniq.length,
