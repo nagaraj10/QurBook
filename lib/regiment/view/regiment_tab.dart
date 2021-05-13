@@ -199,56 +199,65 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
               children: [
                 Row(
                   children: [
-                    InkWell(
-                      child: Icon(
-                        Icons.chevron_left_rounded,
-                        size: 24.0.sp,
-                        color: Color(CommonUtil().getMyPrimaryColor()),
+                    Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        child: Icon(
+                          Icons.chevron_left_rounded,
+                          size: 24.0.sp,
+                          color: Color(CommonUtil().getMyPrimaryColor()),
+                        ),
+                        onTap: () {
+                          _regimentViewModel.handleSearchField();
+                          _regimentViewModel.getRegimentDate(isPrevious: true);
+                        },
                       ),
-                      onTap: () {
-                        _regimentViewModel.handleSearchField();
-                        _regimentViewModel.getRegimentDate(isPrevious: true);
-                      },
                     ),
                     SizedBox(
                       width: 5.0.w,
                     ),
-                    InkWell(
-                      onTap: () async {
-                        DateTime selectedDate = await showDatePicker(
-                          context: context,
-                          firstDate: DateTime(2015, 8),
-                          lastDate: DateTime(2101),
-                          initialDate: _regimentViewModel.selectedDate,
-                        );
-                        if (selectedDate != null) {
-                          _regimentViewModel.handleSearchField();
-                          _regimentViewModel.getRegimentDate(
-                            dateTime: selectedDate,
+                    Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () async {
+                          DateTime selectedDate = await showDatePicker(
+                            context: context,
+                            firstDate: DateTime(2015, 8),
+                            lastDate: DateTime(2101),
+                            initialDate: _regimentViewModel.selectedDate,
                           );
-                        }
-                      },
-                      child: Text(
-                        '${_regimentViewModel.regimentDate}',
-                        style: TextStyle(
-                          fontSize: 14.0.sp,
-                          color: Color(CommonUtil().getMyPrimaryColor()),
+                          if (selectedDate != null) {
+                            _regimentViewModel.handleSearchField();
+                            _regimentViewModel.getRegimentDate(
+                              dateTime: selectedDate,
+                            );
+                          }
+                        },
+                        child: Text(
+                          '${_regimentViewModel.regimentDate}',
+                          style: TextStyle(
+                            fontSize: 14.0.sp,
+                            color: Color(CommonUtil().getMyPrimaryColor()),
+                          ),
                         ),
                       ),
                     ),
                     SizedBox(
                       width: 5.0.w,
                     ),
-                    InkWell(
-                      child: Icon(
-                        Icons.chevron_right_rounded,
-                        size: 24.0.sp,
-                        color: Color(CommonUtil().getMyPrimaryColor()),
+                    Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        child: Icon(
+                          Icons.chevron_right_rounded,
+                          size: 24.0.sp,
+                          color: Color(CommonUtil().getMyPrimaryColor()),
+                        ),
+                        onTap: () {
+                          _regimentViewModel.handleSearchField();
+                          _regimentViewModel.getRegimentDate(isNext: true);
+                        },
                       ),
-                      onTap: () {
-                        _regimentViewModel.handleSearchField();
-                        _regimentViewModel.getRegimentDate(isNext: true);
-                      },
                     ),
                   ],
                 ),
@@ -258,26 +267,29 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                   ),
                   child: Row(
                     children: [
-                      InkWell(
-                        onTap: () {
-                          _regimentViewModel.handleSearchField();
-                          _regimentViewModel.switchRegimentMode();
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 10.0.sp,
-                            vertical: 2.0.sp,
-                          ),
-                          child: Text(
-                            _regimentViewModel.regimentMode ==
-                                    RegimentMode.Schedule
-                                ? symptoms
-                                : scheduled,
-                            style: TextStyle(
-                              fontSize: 14.0.sp,
-                              fontWeight: FontWeight.w500,
-                              decoration: TextDecoration.underline,
-                              color: Color(CommonUtil().getMyPrimaryColor()),
+                      Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () {
+                            _regimentViewModel.handleSearchField();
+                            _regimentViewModel.switchRegimentMode();
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 10.0.sp,
+                              vertical: 2.0.sp,
+                            ),
+                            child: Text(
+                              _regimentViewModel.regimentMode ==
+                                      RegimentMode.Schedule
+                                  ? symptoms
+                                  : scheduled,
+                              style: TextStyle(
+                                fontSize: 14.0.sp,
+                                fontWeight: FontWeight.w500,
+                                decoration: TextDecoration.underline,
+                                color: Color(CommonUtil().getMyPrimaryColor()),
+                              ),
                             ),
                           ),
                         ),
@@ -286,33 +298,36 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                         padding: EdgeInsets.only(
                           left: 5.0.w,
                         ),
-                        child: InkWell(
-                          onTap: () async {
-                            ProfileResponseModel profileResponseModel =
-                                await Provider.of<RegimentViewModel>(context,
-                                        listen: false)
-                                    .getProfile();
-                            if (profileResponseModel.isSuccess &&
-                                profileResponseModel?.result?.profileData !=
-                                    null &&
-                                _regimentViewModel.regimentStatus !=
-                                    RegimentStatus.DialogOpened) {
-                              _regimentViewModel.updateRegimentStatus(
-                                  RegimentStatus.DialogOpened);
-                              await showDialog(
-                                context: context,
-                                builder: (context) => EventListWidget(
-                                  profileResultModel:
-                                      profileResponseModel.result,
-                                ),
-                              );
-                              _regimentViewModel.updateRegimentStatus(
-                                  RegimentStatus.DialogClosed);
-                            }
-                          },
-                          child: Icon(
-                            Icons.access_time,
-                            size: 30.0.sp,
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: () async {
+                              ProfileResponseModel profileResponseModel =
+                                  await Provider.of<RegimentViewModel>(context,
+                                          listen: false)
+                                      .getProfile();
+                              if (profileResponseModel.isSuccess &&
+                                  profileResponseModel?.result?.profileData !=
+                                      null &&
+                                  _regimentViewModel.regimentStatus !=
+                                      RegimentStatus.DialogOpened) {
+                                _regimentViewModel.updateRegimentStatus(
+                                    RegimentStatus.DialogOpened);
+                                await showDialog(
+                                  context: context,
+                                  builder: (context) => EventListWidget(
+                                    profileResultModel:
+                                        profileResponseModel.result,
+                                  ),
+                                );
+                                _regimentViewModel.updateRegimentStatus(
+                                    RegimentStatus.DialogClosed);
+                              }
+                            },
+                            child: Icon(
+                              Icons.access_time,
+                              size: 30.0.sp,
+                            ),
                           ),
                         ),
                       ),
@@ -326,7 +341,10 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
         Visibility(
           visible: _regimentViewModel.regimentsDataAvailable,
           child: Padding(
-            padding: EdgeInsets.all(10.0.sp),
+            padding: EdgeInsets.symmetric(
+              horizontal: 10.0.w,
+              vertical: 5.0.h,
+            ),
             child: Visibility(
               visible: _regimentViewModel.searchExpanded,
               child: Row(
