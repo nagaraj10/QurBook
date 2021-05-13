@@ -404,17 +404,18 @@ const String STR_INSURE_ID = 'Insurance IDs';
 const String noRegimentData =
     'No Regiments data available for the selected date';
 const String noRegimentScheduleData =
-    'No Scheduled data available for the selected date';
+    'No Activities data available for the selected date';
 const String noRegimentSymptomsData =
     'No Symptoms data available for the selected date';
 const String plansForFamily =
     'Regimen plans are not available for family members';
 const String mplansForFamily = 'Plans are not available for family members';
-const String categoriesForFamily = 'Categories are not available for family members';
+const String categoriesForFamily =
+    'Categories are not available for family members';
 const String okButton = 'OK';
 const String saveButton = 'Save';
 const String select = 'Select';
-const String scheduled = 'Scheduled';
+const String scheduled = 'Activities';
 const String symptoms = 'Symptoms';
 const String scheduleTitle = 'Daily Schedule';
 
