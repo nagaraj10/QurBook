@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:path/path.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:get/get.dart';
@@ -198,6 +199,7 @@ class PlanDetail extends State<MyPlanDetailView> {
                               CommonUtil().profileValidationCheck(contxt,
                                   packageId: packageId,
                                   isSubscribed: issubscription,
+                                  isFrom: strIsFromSubscibe,
                                   providerId: providerId);
                             } else {
                               CommonUtil().unSubcribeAlertDialog(context,
