@@ -301,8 +301,8 @@ class _CategoryState extends State<CategoryList> {
                               : '',
                           style: TextStyle(
                               fontSize: 15.0.sp,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.red),
+                              fontWeight: FontWeight.w400,
+                              color: ColorUtils.lightgraycolor),
                           textAlign: TextAlign.start,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
