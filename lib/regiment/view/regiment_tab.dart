@@ -263,76 +263,21 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                           _regimentViewModel.handleSearchField();
                           _regimentViewModel.switchRegimentMode();
                         },
-                        child: Container(
-                          width: 130.0.w,
-                          child: Card(
-                            color: _regimentViewModel.regimentMode ==
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 10.0.sp,
+                            vertical: 2.0.sp,
+                          ),
+                          child: Text(
+                            _regimentViewModel.regimentMode ==
                                     RegimentMode.Schedule
-                                ? Color(CommonUtil().getMyPrimaryColor())
-                                : Color(CommonUtil().getMyGredientColor()),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20.0.sp),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Visibility(
-                                  visible: _regimentViewModel.regimentMode ==
-                                      RegimentMode.Schedule,
-                                  child: Padding(
-                                    padding: EdgeInsets.only(
-                                      left: 3.0.w,
-                                    ),
-                                    child: CircleAvatar(
-                                      radius: 12.0.sp,
-                                      backgroundColor: Colors.white,
-                                      child: Icon(
-                                        Icons.local_activity_outlined,
-                                        color: Color(
-                                            CommonUtil().getMyPrimaryColor()),
-                                        size: 20.0.sp,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 5.0.h,
-                                    horizontal: 5.0.w,
-                                  ),
-                                  child: Text(
-                                    _regimentViewModel.regimentMode ==
-                                            RegimentMode.Schedule
-                                        ? scheduled
-                                        : symptoms,
-                                    style: TextStyle(
-                                      fontSize: 14.0.sp,
-                                      fontWeight: FontWeight.w500,
-                                      // decoration: TextDecoration.underline,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                                Visibility(
-                                  visible: _regimentViewModel.regimentMode ==
-                                      RegimentMode.Symptoms,
-                                  child: Padding(
-                                    padding: EdgeInsets.only(
-                                      right: 3.0.w,
-                                    ),
-                                    child: CircleAvatar(
-                                      radius: 12.0.sp,
-                                      backgroundColor: Colors.white,
-                                      child: Icon(
-                                        Icons.local_hospital_outlined,
-                                        color: Color(
-                                            CommonUtil().getMyGredientColor()),
-                                        size: 20.0.sp,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
+                                ? symptoms
+                                : scheduled,
+                            style: TextStyle(
+                              fontSize: 14.0.sp,
+                              fontWeight: FontWeight.w500,
+                              decoration: TextDecoration.underline,
+                              color: Color(CommonUtil().getMyPrimaryColor()),
                             ),
                           ),
                         ),
