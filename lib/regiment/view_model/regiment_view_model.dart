@@ -21,6 +21,7 @@ class RegimentViewModel extends ChangeNotifier {
   List<RegimentDataModel> regimentsAsNeededList = [];
   List<RegimentDataModel> regimentsFilteredList = [];
   bool regimentsDataAvailable = true;
+  bool searchExpanded = false;
   RegimentStatus regimentStatus = RegimentStatus.Loaded;
   DateTime selectedDate = DateTime.now();
   String regimentDate = '${CommonUtil().regimentDateFormat(DateTime.now())}';
@@ -30,13 +31,24 @@ class RegimentViewModel extends ChangeNotifier {
   ScrollController scrollController = ScrollController();
   double scrollOffset;
 
+  void changeSearchExpanded(bool newValue) {
+    searchExpanded = newValue;
+    notifyListeners();
+  }
+
   Future<void> switchRegimentMode() {
     regimentMode = (regimentMode == RegimentMode.Schedule)
         ? RegimentMode.Symptoms
         : RegimentMode.Schedule;
-    updateScroll(isReset: true);
-    setViewRegimentsData();
+    resetRegimenTab();
     notifyListeners();
+  }
+
+  void resetRegimenTab() {
+    changeSearchExpanded(false);
+    updateScroll(isReset: true);
+    handleSearchField();
+    setViewRegimentsData();
   }
 
   void setViewRegimentsData({List<RegimentDataModel> filteredList}) {
@@ -174,7 +186,7 @@ class RegimentViewModel extends ChangeNotifier {
       selectedDate = selectedDate.add(Duration(days: 1));
     }
     regimentDate = '${CommonUtil().regimentDateFormat(selectedDate)}';
-    updateScroll(isReset: true);
+    resetRegimenTab();
     fetchRegimentData();
     notifyListeners();
   }

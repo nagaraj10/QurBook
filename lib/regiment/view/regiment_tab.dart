@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -32,9 +33,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
       true,
       isInitial: true,
     );
-    Provider.of<RegimentViewModel>(context, listen: false).updateScroll(
-      isReset: true,
-    );
+    Provider.of<RegimentViewModel>(context, listen: false).resetRegimenTab();
     Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
       isInitial: true,
     );
@@ -255,7 +254,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                 ),
                 Padding(
                   padding: EdgeInsets.only(
-                    right: 5.0.w,
+                    right: 2.0.w,
                   ),
                   child: Row(
                     children: [
@@ -264,28 +263,83 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                           _regimentViewModel.handleSearchField();
                           _regimentViewModel.switchRegimentMode();
                         },
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 10.0.sp,
-                            vertical: 2.0.sp,
-                          ),
-                          child: Text(
-                            _regimentViewModel.regimentMode ==
+                        child: Container(
+                          width: 130.0.w,
+                          child: Card(
+                            color: _regimentViewModel.regimentMode ==
                                     RegimentMode.Schedule
-                                ? symptoms
-                                : scheduled,
-                            style: TextStyle(
-                              fontSize: 14.0.sp,
-                              fontWeight: FontWeight.w500,
-                              decoration: TextDecoration.underline,
-                              color: Color(CommonUtil().getMyPrimaryColor()),
+                                ? Color(CommonUtil().getMyPrimaryColor())
+                                : Color(CommonUtil().getMyGredientColor()),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0.sp),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Visibility(
+                                  visible: _regimentViewModel.regimentMode ==
+                                      RegimentMode.Schedule,
+                                  child: Padding(
+                                    padding: EdgeInsets.only(
+                                      left: 3.0.w,
+                                    ),
+                                    child: CircleAvatar(
+                                      radius: 12.0.sp,
+                                      backgroundColor: Colors.white,
+                                      child: Icon(
+                                        Icons.local_activity_outlined,
+                                        color: Color(
+                                            CommonUtil().getMyPrimaryColor()),
+                                        size: 20.0.sp,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 5.0.h,
+                                    horizontal: 5.0.w,
+                                  ),
+                                  child: Text(
+                                    _regimentViewModel.regimentMode ==
+                                            RegimentMode.Schedule
+                                        ? scheduled
+                                        : symptoms,
+                                    style: TextStyle(
+                                      fontSize: 14.0.sp,
+                                      fontWeight: FontWeight.w500,
+                                      // decoration: TextDecoration.underline,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: _regimentViewModel.regimentMode ==
+                                      RegimentMode.Symptoms,
+                                  child: Padding(
+                                    padding: EdgeInsets.only(
+                                      right: 3.0.w,
+                                    ),
+                                    child: CircleAvatar(
+                                      radius: 12.0.sp,
+                                      backgroundColor: Colors.white,
+                                      child: Icon(
+                                        Icons.local_hospital_outlined,
+                                        color: Color(
+                                            CommonUtil().getMyGredientColor()),
+                                        size: 20.0.sp,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
                       ),
                       Padding(
                         padding: EdgeInsets.only(
-                          left: 15.0.w,
+                          left: 5.0.w,
                         ),
                         child: InkWell(
                           onTap: () async {
@@ -326,14 +380,71 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
         ),
         Visibility(
           visible: _regimentViewModel.regimentsDataAvailable,
-          child: SearchWidget(
-            searchController: searchController,
-            searchFocus: searchFocus,
-            onChanged: _regimentViewModel.onSearch,
+          child: Padding(
+            padding: EdgeInsets.all(10.0.sp),
+            child: Visibility(
+              visible: _regimentViewModel.searchExpanded,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      _regimentViewModel.changeSearchExpanded(false);
+                    },
+                    child: Center(
+                      child: Icon(
+                        Icons.cancel,
+                        color: Colors.black,
+                        size: 30.0.sp,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10.0.w,
+                  ),
+                  Expanded(
+                    child: SearchWidget(
+                      searchController: searchController,
+                      searchFocus: searchFocus,
+                      onChanged: _regimentViewModel.onSearch,
+                      padding: 0.0,
+                    ),
+                  ),
+                ],
+              ),
+              replacement: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Flexible(
+                    child: Text(
+                      _regimentViewModel.regimentMode == RegimentMode.Schedule
+                          ? planActivities
+                          : planSymptoms,
+                      style: TextStyle(
+                        fontSize: 16.0.sp,
+                        color: Color(CommonUtil().getMyPrimaryColor()),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      _regimentViewModel.changeSearchExpanded(true);
+                    },
+                    child: Center(
+                      child: Icon(
+                        Icons.search,
+                        color: Colors.black,
+                        size: 30.0.sp,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-        ),
-        SizedBox(
-          height: 10.0.h,
         ),
         Expanded(
           child: Consumer<RegimentViewModel>(

@@ -410,13 +410,16 @@ const String noRegimentSymptomsData =
 const String plansForFamily =
     'Regimen plans are not available for family members';
 const String mplansForFamily = 'Plans are not available for family members';
-const String categoriesForFamily = 'Categories are not available for family members';
+const String categoriesForFamily =
+    'Categories are not available for family members';
 const String okButton = 'OK';
 const String saveButton = 'Save';
 const String select = 'Select';
 const String scheduled = 'Scheduled';
 const String symptoms = 'Symptoms';
 const String scheduleTitle = 'Daily Schedule';
+const String planActivities = 'Plan Activities';
+const String planSymptoms = 'Plan Symptoms';
 
 const strJpgDot = '.jpg';
 const strJpegDot = '.jpeg';
