@@ -175,21 +175,25 @@ class PlanDetail extends State<MyPlanDetail> {
                       ),
                       SizedBox(height: 20),
                       Divider(color: Colors.grey[500]),
-                      SizedBox(height: 3),
                       InkWell(
                         onTap: () {
                           Navigator.pop(context);
                         },
-                        child: Text(
-                          "OK",
-                          style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color:
-                                  Color(new CommonUtil().getMyPrimaryColor())),
+                        child: Container(
+                          height: 40.0.h,
+                          width: 100.0.w,
+                          alignment: Alignment.center,
+                          child: Text(
+                            "OK",
+                            style: TextStyle(
+                                fontSize: 14.0.sp,
+                                fontWeight: FontWeight.w500,
+                                color: Color(
+                                    new CommonUtil().getMyPrimaryColor())),
+                          ),
                         ),
                       ),
-                      SizedBox(height: 10),
+                      SizedBox(height: 3.0.h),
                     ],
                   )),
             ),
