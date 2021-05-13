@@ -441,6 +441,7 @@ const strUnSubscribe = 'UnSubscribe';
 const strSelectedPlan = 'Selected Plan - ';
 const strSelectedPlans = 'Selected Plan(s) - ';
 const strSelectPlan = 'Select Plan - ';
+const strIsFromSubscibe = 'fromSubscribe';
 
 FirebaseAnalytics _firebaseAnalytics = FirebaseAnalytics();
 var mInitialTime;

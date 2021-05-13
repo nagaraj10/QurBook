@@ -1873,6 +1873,7 @@ class CommonUtil {
       {String packageId,
       String isSubscribed,
       String providerId,
+      String isFrom,
       Function() refresh}) async {
     var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     showLoadingDialog(context, _keyLoader, variable.Please_Wait);
@@ -1886,6 +1887,7 @@ class CommonUtil {
           packageId: packageId,
           isSubscribed: isSubscribed,
           providerId: providerId,
+          isFrom: isFrom,
           refresh: refresh);
     } else {
       FlutterToast().getToast(noGender, Colors.red);
@@ -1896,6 +1898,7 @@ class CommonUtil {
       {String packageId,
       String isSubscribed,
       String providerId,
+      String isFrom,
       Function() refresh}) {
     if (myProfile != null) {
       if (myProfile.isSuccess) {
@@ -1905,18 +1908,51 @@ class CommonUtil {
             if (myProfile.result.dateOfBirth != null &&
                 myProfile.result.dateOfBirth.isNotEmpty) {
               if (myProfile.result.additionalInfo != null) {
-                if (myProfile.result.additionalInfo.height != null &&
-                    myProfile.result.additionalInfo.height.isNotEmpty) {
-                  if (myProfile.result.additionalInfo.weight != null &&
-                      myProfile.result.additionalInfo.weight.isNotEmpty) {
-                    if (myProfile.result.userAddressCollection3 != null) {
-                      if (myProfile.result.userAddressCollection3.length > 0) {
-                        patientAddressCheck(
-                            myProfile.result.userAddressCollection3[0], context,
-                            packageId: packageId,
-                            isSubscribed: isSubscribed,
-                            providerId: providerId,
-                            refresh: refresh);
+                if (isFrom == strIsFromSubscibe) {
+                  if (myProfile.result.userAddressCollection3 != null) {
+                    if (myProfile.result.userAddressCollection3.length > 0) {
+                      patientAddressCheck(
+                          myProfile.result.userAddressCollection3[0], context,
+                          packageId: packageId,
+                          isSubscribed: isSubscribed,
+                          providerId: providerId,
+                          refresh: refresh);
+                    } else {
+                      mCustomAlertDialog(context,
+                          content: CONTENT_PROFILE_CHECK,
+                          packageId: packageId,
+                          isSubscribed: isSubscribed,
+                          refresh: refresh);
+                    }
+                  } else {
+                    mCustomAlertDialog(context,
+                        content: CONTENT_PROFILE_CHECK,
+                        packageId: packageId,
+                        isSubscribed: isSubscribed,
+                        refresh: refresh);
+                  }
+                } else {
+                  if (myProfile.result.additionalInfo.height != null &&
+                      myProfile.result.additionalInfo.height.isNotEmpty) {
+                    if (myProfile.result.additionalInfo.weight != null &&
+                        myProfile.result.additionalInfo.weight.isNotEmpty) {
+                      if (myProfile.result.userAddressCollection3 != null) {
+                        if (myProfile.result.userAddressCollection3.length >
+                            0) {
+                          patientAddressCheck(
+                              myProfile.result.userAddressCollection3[0],
+                              context,
+                              packageId: packageId,
+                              isSubscribed: isSubscribed,
+                              providerId: providerId,
+                              refresh: refresh);
+                        } else {
+                          mCustomAlertDialog(context,
+                              content: CONTENT_PROFILE_CHECK,
+                              packageId: packageId,
+                              isSubscribed: isSubscribed,
+                              refresh: refresh);
+                        }
                       } else {
                         mCustomAlertDialog(context,
                             content: CONTENT_PROFILE_CHECK,
@@ -1938,12 +1974,6 @@ class CommonUtil {
                         isSubscribed: isSubscribed,
                         refresh: refresh);
                   }
-                } else {
-                  mCustomAlertDialog(context,
-                      content: CONTENT_PROFILE_CHECK,
-                      packageId: packageId,
-                      isSubscribed: isSubscribed,
-                      refresh: refresh);
                 }
               } else {
                 mCustomAlertDialog(context,
