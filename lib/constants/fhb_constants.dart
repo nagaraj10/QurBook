@@ -418,6 +418,8 @@ const String select = 'Select';
 const String scheduled = 'Activities';
 const String symptoms = 'Symptoms';
 const String scheduleTitle = 'Daily Schedule';
+const String planActivities = 'Plan Activities';
+const String planSymptoms = 'Plan Symptoms';
 
 const strJpgDot = '.jpg';
 const strJpegDot = '.jpeg';
