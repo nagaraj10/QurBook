@@ -148,6 +148,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
     getFamilyLength();
     Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
       isInitial: true,
+      setIndex: true,
     );
     super.initState();
   }
