@@ -41,6 +41,10 @@ class _CategoryState extends State<CategoryList> {
   @override
   void initState() {
     super.initState();
+    Provider.of<RegimentViewModel>(
+      context,
+      listen: false,
+    ).updateTabIndex(currentIndex: 2);
     Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
       isInitial: true,
     );
@@ -288,7 +292,9 @@ class _CategoryState extends State<CategoryList> {
                           selectTitle[planList[i].packcatid] != null
                               ? isSubscribedOne &&
                                       planList[i].isSubscribed == '1'
-                                  ? selectedTitle[planList[i].packcatid].length > 1
+                                  ? selectedTitle[planList[i].packcatid]
+                                              .length >
+                                          1
                                       ? strSelectedPlans +
                                           selectedTitle[planList[i].packcatid]
                                               .join(', ')

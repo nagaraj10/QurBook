@@ -483,14 +483,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
         height: constraints.maxHeight,
         child: DefaultTabController(
           length: 4,
-          initialIndex: (Provider.of<RegimentViewModel>(
-                        context,
-                        listen: false,
-                      ).regimentsData?.regimentsList?.length ??
-                      0) >
-                  0
-              ? 0
-              : 2,
+          initialIndex:
+              Provider.of<RegimentViewModel>(context, listen: false).tabIndex,
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -662,6 +656,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
             context,
             listen: false,
           ).handleSearchField();
+          Provider.of<RegimentViewModel>(
+            context,
+            listen: false,
+          ).updateTabIndex(currentIndex: 1);
           if (snapshot.hasData) {
             deviceValues = snapshot.data;
             return projectWidget(context);

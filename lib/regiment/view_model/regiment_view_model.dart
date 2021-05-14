@@ -29,7 +29,16 @@ class RegimentViewModel extends ChangeNotifier {
   TextEditingController searchController = TextEditingController();
   FocusNode searchFocus = FocusNode();
   ScrollController scrollController = ScrollController();
+  int tabIndex;
   double scrollOffset;
+
+  void updateTabIndex({int currentIndex, bool isInitial = false}) {
+    if (isInitial) {
+      tabIndex = (regimentsData?.regimentsList?.length ?? 0) > 0 ? 0 : 2;
+    } else {
+      tabIndex = currentIndex;
+    }
+  }
 
   void changeSearchExpanded(bool newValue) {
     searchExpanded = newValue;
@@ -137,6 +146,9 @@ class RegimentViewModel extends ChangeNotifier {
       }
     });
     setViewRegimentsData();
+    if (isInitial) {
+      updateTabIndex(isInitial: true);
+    }
     if (!isInitial) {
       notifyListeners();
     }
