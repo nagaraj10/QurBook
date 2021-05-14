@@ -44,6 +44,7 @@ class FormDataDialogState extends State<FormDataDialog> {
   String eid;
   Color color;
   Otherinfo mediaData;
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   String videoFileName = 'Add Video';
   String audioFileName = 'Add Audio';
@@ -106,47 +107,50 @@ class FormDataDialogState extends State<FormDataDialog> {
                 left: 10.0.w,
                 right: 10.0.w,
               ),
-              child: ListView.builder(
-                shrinkWrap: true,
-                padding: EdgeInsets.only(
-                  bottom: 10.0.h,
-                  top: 0.0.h,
-                ),
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: fieldsData.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: EdgeInsets.only(
-                      bottom: 10.0.h,
-                    ),
-                    child: FormFieldWidget(
-                      fieldData: fieldsData[index],
-                      updateValue: (
-                        FieldModel updatedFieldData, {
-                        bool isAdd,
-                        String title,
-                      }) {
-                        if (isAdd == null || isAdd) {
-                          isAdd = isAdd ?? false;
-                          var oldValue = saveMap.putIfAbsent(
-                            isAdd
-                                ? 'pf_${title}'
-                                : 'pf_${updatedFieldData.title}',
-                            () => updatedFieldData.value,
-                          );
-                          if (oldValue != null) {
-                            saveMap[isAdd
-                                    ? 'pf_${title}'
-                                    : 'pf_${updatedFieldData.title}'] =
-                                updatedFieldData.value;
+              child: Form(
+                key: _formKey,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  padding: EdgeInsets.only(
+                    bottom: 10.0.h,
+                    top: 0.0.h,
+                  ),
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: fieldsData.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: EdgeInsets.only(
+                        bottom: 10.0.h,
+                      ),
+                      child: FormFieldWidget(
+                        fieldData: fieldsData[index],
+                        updateValue: (
+                          FieldModel updatedFieldData, {
+                          bool isAdd,
+                          String title,
+                        }) {
+                          if (isAdd == null || isAdd) {
+                            isAdd = isAdd ?? false;
+                            var oldValue = saveMap.putIfAbsent(
+                              isAdd
+                                  ? 'pf_${title}'
+                                  : 'pf_${updatedFieldData.title}',
+                              () => updatedFieldData.value,
+                            );
+                            if (oldValue != null) {
+                              saveMap[isAdd
+                                      ? 'pf_${title}'
+                                      : 'pf_${updatedFieldData.title}'] =
+                                  updatedFieldData.value;
+                            }
+                          } else {
+                            saveMap.remove('pf_${title}');
                           }
-                        } else {
-                          saveMap.remove('pf_${title}');
-                        }
-                      },
-                    ),
-                  );
-                },
+                        },
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
             Container(
@@ -318,25 +322,25 @@ class FormDataDialogState extends State<FormDataDialog> {
                       ),
                     ),
                     onPressed: () async {
-                      String events = '';
-                      print(saveMap.toString());
-                      saveMap.forEach((key, value) {
-                        events += '&$key=$value';
-                      });
-                      print(events);
-                      SaveResponseModel saveResponse =
-                          await Provider.of<RegimentViewModel>(context,
-                                  listen: false)
-                              .saveFormData(
-                        eid: eid,
-                        events: events,
-                      );
-                      if (saveResponse?.isSuccess ?? false) {
-                        if (Provider.of<RegimentViewModel>(context,
+                      if (_formKey.currentState.validate()) {
+                        String events = '';
+                        saveMap.forEach((key, value) {
+                          events += '&$key=$value';
+                        });
+                        SaveResponseModel saveResponse =
+                            await Provider.of<RegimentViewModel>(context,
                                     listen: false)
-                                .regimentStatus ==
-                            RegimentStatus.DialogOpened) {
-                          Navigator.pop(context, true);
+                                .saveFormData(
+                          eid: eid,
+                          events: events,
+                        );
+                        if (saveResponse?.isSuccess ?? false) {
+                          if (Provider.of<RegimentViewModel>(context,
+                                      listen: false)
+                                  .regimentStatus ==
+                              RegimentStatus.DialogOpened) {
+                            Navigator.pop(context, true);
+                          }
                         }
                       }
                     },
