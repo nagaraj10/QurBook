@@ -82,6 +82,7 @@ import Firebase
             self.listOfScheduledNotificaitons = data
             print(data.count)
         }
+        setUpReminders(messanger: controller.binaryMessenger)
         //Add Action button the Notification
         
         let snoozeAction = UNNotificationAction(identifier: "Snooze", title: "Snooze", options: [])
@@ -141,7 +142,7 @@ import Firebase
             self?.TTS_Result = result;
             self?.textToSpeech(messageToSpeak: message, isClose: isClose)
         })
-        print("fcm token \(Messaging.messaging().fcmToken)")
+        print("fcm token \(String(describing: Messaging.messaging().fcmToken))")
         GeneratedPluginRegistrant.register(with: self)
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
