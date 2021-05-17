@@ -71,6 +71,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
     if (lan != "undef") {
       final langCode = lan.split("-").first;
       currentLanguage = langCode;
+    } else {
+      currentLanguage = 'en';
     }
     if (currentLanguage.isNotEmpty) {
       CommonUtil.supportedLanguages.forEach((language, languageCode) {
