@@ -326,9 +326,12 @@ class RegimentDataCard extends StatelessWidget {
                             eid: eid,
                           );
                           if (saveResponse?.isSuccess ?? false) {
-                            await Provider.of<RegimentViewModel>(context,
-                                    listen: false)
-                                .fetchRegimentData();
+                            Future.delayed(Duration(milliseconds: 300),
+                                () async {
+                              await Provider.of<RegimentViewModel>(context,
+                                      listen: false)
+                                  .fetchRegimentData();
+                            });
                           }
                         } else {
                           FlutterToast().getToast(
@@ -395,9 +398,12 @@ class RegimentDataCard extends StatelessWidget {
           ),
         );
         if (value != null && (value ?? false)) {
-          await Provider.of<RegimentViewModel>(context, listen: false)
-              .fetchRegimentData();
+          Future.delayed(Duration(milliseconds: 300), () async {
+            await Provider.of<RegimentViewModel>(context, listen: false)
+                .fetchRegimentData();
+          });
         }
+
         Provider.of<RegimentViewModel>(context, listen: false)
             .updateRegimentStatus(RegimentStatus.DialogClosed);
       }
