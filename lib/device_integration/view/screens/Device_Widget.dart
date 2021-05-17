@@ -148,6 +148,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
     getFamilyLength();
     Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
       isInitial: true,
+      setIndex: true,
     );
     super.initState();
   }
@@ -251,9 +252,11 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
               String currentLanguage = '';
               if (preferredLanguage != "undef") {
                 currentLanguage = preferredLanguage.split("-").first;
+              } else {
+                currentLanguage = 'en';
               }
               PreferenceUtil.saveString(Constants.SHEELA_LANG,
-                  Utils.langaugeCodes[currentLanguage ?? 'undef']);
+                  Utils.langaugeCodes[currentLanguage] ?? 'en-IN');
             }
             if (selectionResult.result[0].profileSetting.preColor != null &&
                 selectionResult.result[0].profileSetting.greColor != null) {

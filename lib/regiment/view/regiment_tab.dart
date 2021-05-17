@@ -4,6 +4,7 @@ import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:provider/provider.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 import 'widgets/regiment_data_card.dart';
 import 'package:myfhb/regiment/models/regiment_data_model.dart';
 import 'package:intl/intl.dart';
@@ -24,7 +25,8 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
   RegimentViewModel _regimentViewModel;
   TextEditingController searchController = TextEditingController();
   FocusNode searchFocus = FocusNode();
-  ScrollController scrollController = ScrollController();
+  final scrollController =
+      AutoScrollController(axis: Axis.vertical, suggestedRowHeight: 150);
   @override
   void initState() {
     super.initState();
@@ -182,9 +184,6 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
     _regimentViewModel.handleSearchField(
       controller: searchController,
       focusNode: searchFocus,
-    );
-    _regimentViewModel.handleScroll(
-      controller: scrollController,
     );
     return Column(
       children: [
@@ -424,9 +423,17 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
               } else if ((regimentViewModel.regimentsList?.length ?? 0) > 0) {
                 var regimentsList = regimentViewModel.regimentsList;
                 if ((regimentsList?.length ?? 0) > 0) {
-                  Future.delayed(Duration(microseconds: 1), () {
-                    regimentViewModel.handleScroll();
-                  });
+                  if (regimentViewModel.initialShowIndex != null) {
+                    Future.delayed(Duration(microseconds: 1), () {
+                      scrollController.scrollToIndex(
+                        regimentViewModel.initialShowIndex,
+                        preferPosition: AutoScrollPosition.middle,
+                      );
+                      regimentViewModel.updateInitialShowIndex(
+                        isDone: true,
+                      );
+                    });
+                  }
                   return ListView.builder(
                     controller: scrollController,
                     shrinkWrap: true,
@@ -437,19 +444,24 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                     itemCount: regimentsList?.length ?? 0,
                     itemBuilder: (context, index) {
                       var regimentData = regimentsList[index];
-                      return RegimentDataCard(
-                        title: regimentData.title,
-                        time:
-                            DateFormat('hh:mm\na').format(regimentData.estart),
-                        color: getColor(regimentData.activityname,
-                            regimentData.uformname, regimentData.metadata),
-                        icon: getIcon(regimentData.activityname,
-                            regimentData.uformname, regimentData.metadata),
-                        vitalsData: regimentData.uformdata.vitalsData,
-                        eid: regimentData.eid,
-                        mediaData: regimentData.otherinfo,
-                        startTime: regimentData.estart,
-                        regimentData: regimentData,
+                      return AutoScrollTag(
+                        key: ValueKey(index),
+                        index: index,
+                        controller: scrollController,
+                        child: RegimentDataCard(
+                          title: regimentData.title,
+                          time: DateFormat('hh:mm\na')
+                              .format(regimentData.estart),
+                          color: getColor(regimentData.activityname,
+                              regimentData.uformname, regimentData.metadata),
+                          icon: getIcon(regimentData.activityname,
+                              regimentData.uformname, regimentData.metadata),
+                          vitalsData: regimentData.uformdata.vitalsData,
+                          eid: regimentData.eid,
+                          mediaData: regimentData.otherinfo,
+                          startTime: regimentData.estart,
+                          regimentData: regimentData,
+                        ),
                       );
                     },
                   );

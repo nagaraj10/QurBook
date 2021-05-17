@@ -30,6 +30,26 @@ class RegimentViewModel extends ChangeNotifier {
   FocusNode searchFocus = FocusNode();
   ScrollController scrollController = ScrollController();
   double scrollOffset;
+  int initialShowIndex;
+
+  void updateInitialShowIndex({bool isDone: false}) {
+    if (isDone) {
+      initialShowIndex = null;
+    } else if ((regimentsScheduledList?.length ?? 0) > 0) {
+      int index = 0;
+      for (final event in regimentsScheduledList) {
+        if (event.estart.isAfter(DateTime.now()) ||
+            event.estart.isAtSameMomentAs(DateTime.now())) {
+          initialShowIndex = index;
+          break;
+        } else {
+          index++;
+        }
+      }
+      initialShowIndex ??= regimentsScheduledList.length - 1;
+    }
+    notifyListeners();
+  }
 
   void changeSearchExpanded(bool newValue) {
     searchExpanded = newValue;
@@ -46,7 +66,6 @@ class RegimentViewModel extends ChangeNotifier {
 
   void resetRegimenTab() {
     changeSearchExpanded(false);
-    updateScroll(isReset: true);
     handleSearchField();
     setViewRegimentsData();
   }
@@ -108,14 +127,17 @@ class RegimentViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> fetchRegimentData({bool isInitial = false}) async {
+  Future<void> fetchRegimentData(
+      {bool isInitial = false, bool setIndex = false}) async {
     handleSearchField();
     regimentsList.clear();
     regimentsAsNeededList.clear();
     regimentsScheduledList.clear();
     if (PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN) ==
         PreferenceUtil.getStringValue(Constants.KEY_USERID)) {
-      updateRegimentStatus(RegimentStatus.Loading);
+      if (isInitial) {
+        updateRegimentStatus(RegimentStatus.Loading);
+      }
       regimentsDataAvailable = true;
       regimentsData = await RegimentService.getRegimentData(
         dateSelected: CommonUtil().dateConversionToApiFormat(selectedDate),
@@ -136,10 +158,10 @@ class RegimentViewModel extends ChangeNotifier {
         regimentsScheduledList.add(event);
       }
     });
-    setViewRegimentsData();
-    if (!isInitial) {
-      notifyListeners();
+    if (setIndex) {
+      updateInitialShowIndex();
     }
+    setViewRegimentsData();
   }
 
   handleSearchField({
@@ -152,24 +174,6 @@ class RegimentViewModel extends ChangeNotifier {
     } else {
       searchController?.clear();
       searchFocus?.unfocus();
-    }
-  }
-
-  updateScroll({bool isReset = false}) {
-    if (isReset) {
-      scrollOffset = 0.0;
-    } else if (scrollController?.hasClients) {
-      scrollOffset = scrollController.offset;
-    }
-  }
-
-  handleScroll({
-    ScrollController controller,
-  }) {
-    if (controller != null) {
-      scrollController = controller;
-    } else if (scrollController?.hasClients) {
-      scrollController.jumpTo(scrollOffset ?? 0.0);
     }
   }
 

@@ -326,9 +326,6 @@ class RegimentDataCard extends StatelessWidget {
                             eid: eid,
                           );
                           if (saveResponse?.isSuccess ?? false) {
-                            Provider.of<RegimentViewModel>(context,
-                                    listen: false)
-                                .updateScroll();
                             await Provider.of<RegimentViewModel>(context,
                                     listen: false)
                                 .fetchRegimentData();
@@ -373,7 +370,6 @@ class RegimentDataCard extends StatelessWidget {
   Future<void> onCardPressed(BuildContext context) async {
     Provider.of<ChatScreenViewModel>(context, listen: false).stopTTSEngine();
     bool canEdit = startTime.difference(DateTime.now()).inMinutes <= 15;
-    Provider.of<RegimentViewModel>(context, listen: false).updateScroll();
     if (canEdit) {
       FieldsResponseModel fieldsResponseModel =
           await Provider.of<RegimentViewModel>(context, listen: false)

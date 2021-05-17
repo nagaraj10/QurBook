@@ -110,6 +110,7 @@ dependencies:
   firebase_remote_config: ^0.2.1
   firebase_analytics: ^5.0.16
   flutter_html: ^1.0.1
+  scroll_to_index: ^1.0.6
 
 
 
