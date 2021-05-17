@@ -191,7 +191,7 @@ class RegimentViewModel extends ChangeNotifier {
     }
     regimentDate = '${CommonUtil().regimentDateFormat(selectedDate)}';
     resetRegimenTab();
-    fetchRegimentData();
+    fetchRegimentData(isInitial: true);
     notifyListeners();
   }
 
