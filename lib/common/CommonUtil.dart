@@ -1073,7 +1073,7 @@ class CommonUtil {
           myProfileModel = profileData;
         });
       } else {
-        logout(moveToLoginPage);
+        //logout(moveToLoginPage);
       }
       //return profileData;
     });

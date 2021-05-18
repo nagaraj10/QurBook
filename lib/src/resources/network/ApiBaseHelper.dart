@@ -1477,15 +1477,12 @@ class ApiBaseHelper {
           'userId': userId,
         });
 
-          File fileName = new File(imagePaths);
-          String fileNoun = fileName.path.split('/').last;
-          formData.files.addAll([
-            MapEntry(
-                "file",
-                await MultipartFile.fromFile(fileName.path,
-                    filename: fileNoun)),
-          ]);
-
+        File fileName = new File(imagePaths);
+        String fileNoun = fileName.path.split('/').last;
+        formData.files.addAll([
+          MapEntry("file",
+              await MultipartFile.fromFile(fileName.path, filename: fileNoun)),
+        ]);
 
         response = await dio.post(_baseUrl + url, data: formData);
 
@@ -1494,6 +1491,20 @@ class ApiBaseHelper {
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
     }
+  }
+
+  Future<dynamic> getLanguageList(String url) async {
+    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+
+    var responseJson;
+    try {
+      final response = await http.get(_baseUrl + url.trim(),
+          headers: await headerRequest.getAuths());
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
   }
 }
 

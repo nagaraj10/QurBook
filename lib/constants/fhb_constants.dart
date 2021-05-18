@@ -52,6 +52,8 @@ const String STR_WEARABLES = 'Wearable';
 const String STR_TELEHEALTH = 'Telehealth';
 const String STR_HOSPITALDOCUMENT = 'Hospital Documents';
 
+const String KEY_LANGUAGE = 'languageList';
+
 const String STR_VOICE_NOTES = 'Voice Notes';
 const String KEY_USERID_MAIN = 'mainUserUD';
 const String KEY_PROFILE_MAIN = 'profileMain';

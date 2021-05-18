@@ -107,6 +107,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
   var weightController = TextEditingController();
   FocusNode weightFocus = FocusNode();
+  MyProfileModel myProfile = new MyProfileModel();
 
   @override
   void initState() {
@@ -114,9 +115,18 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     super.initState();
     addFamilyUserInfoBloc = new AddFamilyUserInfoBloc();
     getAllCustomRoles();
+    fetchUserProfileInfo();
     setState(() {
       _currentPage = widget.arguments.currentPage;
     });
+  }
+
+  fetchUserProfileInfo() async {
+    addFamilyUserInfoRepository = new AddFamilyUserInfoRepository();
+    var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+    myProfile = widget.arguments.myProfile;
+
+    return myProfile;
   }
 
   @override
@@ -271,16 +281,29 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     if (sharedbyme?.child?.isVirtualUser != null) {
       try {
         if (sharedbyme.child.isVirtualUser) {
-          MyProfileModel myProf =
-              PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) != null
-                  ? PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN)
-                  : PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
-          if (myProf.result.userContactCollection3 != null) {
-            if (myProf.result.userContactCollection3.length > 0) {
+          try {
+            MyProfileModel myProf =
+                PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) !=
+                        null
+                    ? PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN)
+                    : PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+            if (myProf.result.userContactCollection3 != null) {
+              if (myProf.result.userContactCollection3.length > 0) {
+                mobileNoController.text =
+                    myProf.result.userContactCollection3[0].phoneNumber;
+                emailController.text =
+                    myProf.result.userContactCollection3[0].email;
+              }
+            }
+          } catch (e) {
+            if (sharedbyme?.child?.isVirtualUser) {
               mobileNoController.text =
-                  myProf.result.userContactCollection3[0].phoneNumber;
+                  myProfile?.result?.userContactCollection3[0].phoneNumber;
               emailController.text =
-                  myProf.result.userContactCollection3[0].email;
+                  myProfile?.result?.userContactCollection3[0].email;
+            } else {
+              mobileNoController.text = '';
+              emailController.text = '';
             }
           }
         } else {
@@ -293,8 +316,15 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
           }
         }
       } catch (e) {
-        mobileNoController.text = '';
-        emailController.text = '';
+        if (sharedbyme?.child?.isVirtualUser) {
+          mobileNoController.text =
+              myProfile?.result?.userContactCollection3[0].phoneNumber;
+          emailController.text =
+              myProfile?.result?.userContactCollection3[0].email;
+        } else {
+          mobileNoController.text = '';
+          emailController.text = '';
+        }
       }
     } else {
       // this is non primary user
