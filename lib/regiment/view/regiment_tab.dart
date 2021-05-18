@@ -31,6 +31,10 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    Provider.of<RegimentViewModel>(
+      context,
+      listen: false,
+    ).updateTabIndex(currentIndex: 0);
     Provider.of<ChatScreenViewModel>(context, listen: false)?.updateAppState(
       true,
       isInitial: true,
@@ -443,12 +447,15 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                     // physics: NeverScrollableScrollPhysics(),
                     itemCount: regimentsList?.length ?? 0,
                     itemBuilder: (context, index) {
-                      var regimentData = regimentsList[index];
+                      var regimentData = (index < regimentsList.length)
+                          ? regimentsList[index]
+                          : RegimentDataModel();
                       return AutoScrollTag(
                         key: ValueKey(index),
                         index: index,
                         controller: scrollController,
                         child: RegimentDataCard(
+                          index: index,
                           title: regimentData.title,
                           time: DateFormat('hh:mm\na')
                               .format(regimentData.estart),

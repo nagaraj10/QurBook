@@ -57,7 +57,7 @@ import AVFoundation
         // 2
         // Speech Recognization
         let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
-        
+        setUpReminders(messanger: controller.binaryMessenger)
         requestAuthorization();
         notificationCenter.getPendingNotificationRequests { [weak self](data) in
             guard let self = self else { return }

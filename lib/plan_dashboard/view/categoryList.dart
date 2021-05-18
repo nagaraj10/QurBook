@@ -48,6 +48,10 @@ class _CategoryState extends State<CategoryList> {
   @override
   void initState() {
     super.initState();
+    Provider.of<RegimentViewModel>(
+      context,
+      listen: false,
+    ).updateTabIndex(currentIndex: 2);
     Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
       isInitial: true,
     );

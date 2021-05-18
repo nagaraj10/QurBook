@@ -162,6 +162,7 @@ class ChatScreenViewModel extends ChangeNotifier {
     bool stopPrevious: true,
     bool isRegiment: false,
     bool isButtonText: false,
+    Function onStop,
   }) async {
     print('newAudioPlay1.state == ${newAudioPlay1.state}');
     if (stopPrevious) {
@@ -192,6 +193,9 @@ class ChatScreenViewModel extends ChangeNotifier {
               conversations[index].isSpeaking = false;
               isSheelaSpeaking = false;
               notifyListeners();
+              if (isRegiment) {
+                onStop();
+              }
             }
           }
         });
@@ -213,6 +217,9 @@ class ChatScreenViewModel extends ChangeNotifier {
               conversations[index].isSpeaking = false;
               isSheelaSpeaking = false;
               notifyListeners();
+            }
+            if (isRegiment) {
+              onStop();
             }
           }
           if (event == AudioPlayerState.PLAYING) {
