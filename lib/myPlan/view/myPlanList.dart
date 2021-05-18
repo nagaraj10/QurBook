@@ -52,6 +52,9 @@ class _MyPlanState extends State<MyPlanList> {
               }
             },
           ),
+          SizedBox(
+            height: 5.0.h,
+          ),
           Expanded(
             child: myPlanListModel != null ?? myPlanListModel.isSuccess
                 ? hospitalList(myPlanListModel.result)
@@ -88,6 +91,9 @@ class _MyPlanState extends State<MyPlanList> {
     return (planList != null && planList.length > 0)
         ? ListView.builder(
             shrinkWrap: true,
+            padding: EdgeInsets.only(
+              bottom: 8.0.h,
+            ),
             itemBuilder: (BuildContext ctx, int i) => hospitalListItem(
                 ctx, i, isSearch ? myPLanListResult : planList),
             itemCount: isSearch ? myPLanListResult.length : planList.length,

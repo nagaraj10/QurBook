@@ -22,6 +22,7 @@ import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/screens/MyFamily.dart';
 import 'package:myfhb/plan_dashboard/view/categoryList.dart';
 import 'package:myfhb/plan_dashboard/view/planList.dart';
+import 'package:myfhb/plan_dashboard/view/searchListHome.dart';
 import 'package:myfhb/regiment/view/regiment_tab.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/common_response.dart';
@@ -645,7 +646,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                         child: getValues(context, _devicesmodel),
                       ),
                     ),
-                    CategoryList(),
+                    SearchListHome(),
                     MyPlanList(),
                   ],
                 ),
