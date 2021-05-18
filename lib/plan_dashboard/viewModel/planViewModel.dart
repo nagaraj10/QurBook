@@ -5,18 +5,21 @@ import 'package:myfhb/myPlan/model/myPlanListModel.dart';
 import 'package:myfhb/myPlan/services/myPlanService.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
+import 'package:myfhb/plan_dashboard/model/SearchListModel.dart';
+import 'package:myfhb/plan_dashboard/services/SearchListService.dart';
 import 'package:myfhb/plan_dashboard/services/planService.dart';
 
 class PlanViewModel extends ChangeNotifier {
 
   PlanService myPlanService = new PlanService();
+  SearchListService searchListService = new SearchListService();
 
   List<PlanListResult> myPLanListResult = List();
 
-  Future<PlanListModel> getPlanList() async {
+  Future<PlanListModel> getPlanList(String providerId) async {
     try {
       PlanListModel myPlanListModel =
-      await myPlanService.getPlanList();
+      await myPlanService.getPlanList(providerId);
       if(myPlanListModel.isSuccess){
         myPLanListResult = myPlanListModel.result;
       }
@@ -37,6 +40,14 @@ class PlanViewModel extends ChangeNotifier {
       }
     }
     return filterDoctorData;
+  }
+
+  Future<SearchListModel> getSearchListBasedOnValue(String title) async {
+    try {
+      SearchListModel searchListModel =
+      await searchListService.getSearchList(title);
+      return searchListModel;
+    } catch (e) {}
   }
 
 }

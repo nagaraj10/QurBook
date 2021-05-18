@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -21,6 +22,10 @@ import 'package:provider/provider.dart';
 class CategoryList extends StatefulWidget {
   @override
   _CategoryState createState() => _CategoryState();
+
+  final String providerId;
+
+  CategoryList(this.providerId);
 }
 
 class _CategoryState extends State<CategoryList> {
@@ -38,6 +43,8 @@ class _CategoryState extends State<CategoryList> {
 
   bool isSubscribedOne = false;
 
+  String providerId = '';
+
   @override
   void initState() {
     super.initState();
@@ -48,54 +55,73 @@ class _CategoryState extends State<CategoryList> {
     Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
       isInitial: true,
     );
+
+    providerId = widget.providerId;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Visibility(
-      visible: Provider.of<RegimentViewModel>(context).regimentsDataAvailable,
-      child: Container(
-        child: Column(
-          children: [
-            SearchWidget(
-              onChanged: (title) {
-                if (title != '' && title.length > 2) {
-                  isSearch = true;
-                  onSearchedNew(title, categoryListUniq);
-                } else {
-                  setState(() {
-                    isSearch = false;
-                  });
-                }
-              },
+        appBar: AppBar(
+          leading: GestureDetector(
+            onTap: () => Get.back(),
+            child: Icon(
+              Icons.arrow_back_ios, // add custom icons also
+              size: 24.0,
             ),
-            SizedBox(
-              height: 5.0.h,
-            ),
-            Expanded(
-              child: myPlanListModel != null ?? myPlanListModel.isSuccess
-                  ? categoryList(myPlanListModel.result)
-                  : getCategoryList(),
-            ),
-          ],
-        ),
-      ),
-      replacement: Center(
-        child: Padding(
-          padding: EdgeInsets.all(
-            10.0.sp,
           ),
-          child: Text(
-            Constants.categoriesForFamily,
+          title: Text(
+            'Packages',
             style: TextStyle(
-              fontSize: 16.0.sp,
+              fontSize: 18.0,
+              fontWeight: FontWeight.w500,
             ),
-            textAlign: TextAlign.center,
           ),
         ),
-      ),
-    ));
+        body: Visibility(
+          visible:
+              Provider.of<RegimentViewModel>(context).regimentsDataAvailable,
+          child: Container(
+            child: Column(
+              children: [
+                SearchWidget(
+                  onChanged: (title) {
+                    if (title != '' && title.length > 2) {
+                      isSearch = true;
+                      onSearchedNew(title, categoryListUniq);
+                    } else {
+                      setState(() {
+                        isSearch = false;
+                      });
+                    }
+                  },
+                ),
+                SizedBox(
+                  height: 5.0.h,
+                ),
+                Expanded(
+                  child: myPlanListModel != null ?? myPlanListModel.isSuccess
+                      ? categoryList(myPlanListModel.result)
+                      : getCategoryList(providerId),
+                ),
+              ],
+            ),
+          ),
+          replacement: Center(
+            child: Padding(
+              padding: EdgeInsets.all(
+                10.0.sp,
+              ),
+              child: Text(
+                Constants.categoriesForFamily,
+                style: TextStyle(
+                  fontSize: 16.0.sp,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+        ));
   }
 
   onSearchedNew(String title, List<PlanListResult> planListOld) async {
@@ -165,9 +191,9 @@ class _CategoryState extends State<CategoryList> {
           );
   }
 
-  Widget getCategoryList() {
+  Widget getCategoryList(String providerId) {
     return new FutureBuilder<PlanListModel>(
-      future: myPlanViewModel.getPlanList(),
+      future: myPlanViewModel.getPlanList(providerId),
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return SafeArea(
@@ -288,30 +314,37 @@ class _CategoryState extends State<CategoryList> {
                               color: ColorUtils.lightgraycolor),
                         ),
                         SizedBox(height: 2.h),
-                        Text(
-                          selectTitle[planList[i].packcatid] != null
-                              ? isSubscribedOne &&
-                                      planList[i].isSubscribed == '1'
-                                  ? selectedTitle[planList[i].packcatid]
-                                              .length >
-                                          1
-                                      ? strSelectedPlans +
-                                          selectedTitle[planList[i].packcatid]
-                                              .join(', ')
-                                      : strSelectedPlan +
-                                          selectedTitle[planList[i].packcatid]
-                                              .join(', ')
-                                  : strSelectPlan +
-                                      selectTitle[planList[i].packcatid]
-                                          .join(', ')
-                              : '',
-                          style: TextStyle(
-                              fontSize: 15.0.sp,
-                              fontWeight: FontWeight.w400,
-                              color: ColorUtils.lightgraycolor),
-                          textAlign: TextAlign.start,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 2,
+                        InkWell(
+                          child: Text(
+                            selectTitle[planList[i].packcatid] != null
+                                ? isSubscribedOne &&
+                                        planList[i].isSubscribed == '1'
+                                    ? selectedTitle[planList[i].packcatid]
+                                                .length >
+                                            1
+                                        ? strSelectedPlans +
+                                            selectedTitle[planList[i].packcatid]
+                                                .join(', ')
+                                        : strSelectedPlan +
+                                            selectedTitle[planList[i].packcatid]
+                                                .join(', ')
+                                    : planList[i].catselecttype == '1'
+                                ? strSelectPlan +
+                                        selectTitle[planList[i].packcatid]
+                                            .join(', ')
+                                : strSelectPlans +
+                                selectTitle[planList[i].packcatid]
+                                    .join(', '):'',
+                            style: TextStyle(
+                                fontSize: 15.0.sp,
+                                fontWeight: FontWeight.w400,
+                                color: isSubscribedOne &&
+                                    planList[i].isSubscribed == '1'?Color(
+                                    new CommonUtil().getMyPrimaryColor()):Colors.black),
+                            textAlign: TextAlign.start,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                          ),
                         ),
                       ],
                     ),

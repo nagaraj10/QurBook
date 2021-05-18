@@ -412,6 +412,10 @@ const String plansForFamily =
 const String mplansForFamily = 'Plans are not available for family members';
 const String categoriesForFamily =
     'Categories are not available for family members';
+const String searchTextFirst =
+    'Use the search option to enter a Hospital name or its location that offer care plans for you to subscribe';
+const String searchTextSecond =
+    'Choose Qurhealth as your provider to subscribe to care plans for free';
 const String okButton = 'OK';
 const String saveButton = 'Save';
 const String select = 'Select';
@@ -440,7 +444,8 @@ const strSubscribe = 'Subscribe';
 const strUnSubscribe = 'UnSubscribe';
 const strSelectedPlan = 'Selected Plan - ';
 const strSelectedPlans = 'Selected Plan(s) - ';
-const strSelectPlan = 'Select Plan - ';
+const strSelectPlan = 'Select a Plan';
+const strSelectPlans = 'Select your Plan(s)';
 const strIsFromSubscibe = 'fromSubscribe';
 
 FirebaseAnalytics _firebaseAnalytics = FirebaseAnalytics();
