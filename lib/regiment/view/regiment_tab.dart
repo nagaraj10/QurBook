@@ -35,6 +35,8 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
       context,
       listen: false,
     ).updateTabIndex(currentIndex: 0);
+    Provider.of<RegimentViewModel>(context, listen: false)
+        .updateInitialShowIndex();
     Provider.of<ChatScreenViewModel>(context, listen: false)?.updateAppState(
       true,
       isInitial: true,
@@ -431,7 +433,10 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                     Future.delayed(Duration(microseconds: 1), () {
                       scrollController.scrollToIndex(
                         regimentViewModel.initialShowIndex,
-                        preferPosition: AutoScrollPosition.middle,
+                        preferPosition: AutoScrollPosition.begin,
+                        duration: const Duration(
+                          milliseconds: 1,
+                        ),
                       );
                       regimentViewModel.updateInitialShowIndex(
                         isDone: true,

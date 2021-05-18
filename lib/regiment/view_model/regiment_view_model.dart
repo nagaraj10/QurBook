@@ -36,9 +36,11 @@ class RegimentViewModel extends ChangeNotifier {
   double scrollOffset;
   int initialShowIndex;
 
-  void updateInitialShowIndex({bool isDone: false}) {
+  void updateInitialShowIndex({bool isDone: false, int index}) {
     if (isDone) {
       initialShowIndex = null;
+    } else if (index != null) {
+      initialShowIndex = index;
     } else if ((regimentsScheduledList?.length ?? 0) > 0) {
       int index = 0;
       for (final event in regimentsScheduledList) {
@@ -74,6 +76,9 @@ class RegimentViewModel extends ChangeNotifier {
     regimentMode = (regimentMode == RegimentMode.Schedule)
         ? RegimentMode.Symptoms
         : RegimentMode.Schedule;
+    if (regimentMode == RegimentMode.Symptoms) {
+      updateInitialShowIndex(index: 0);
+    }
     resetRegimenTab();
     notifyListeners();
   }
@@ -246,6 +251,7 @@ class RegimentViewModel extends ChangeNotifier {
     String eid,
     String events,
   }) async {
+    updateInitialShowIndex(isDone: true);
     return await RegimentService.saveFormData(
       eid: eid,
       events: events,
