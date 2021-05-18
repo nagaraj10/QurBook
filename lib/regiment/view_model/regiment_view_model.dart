@@ -32,7 +32,7 @@ class RegimentViewModel extends ChangeNotifier {
   TextEditingController searchController = TextEditingController();
   FocusNode searchFocus = FocusNode();
   ScrollController scrollController = ScrollController();
-  int tabIndex;
+  int tabIndex = 0;
   double scrollOffset;
   int initialShowIndex;
 
@@ -59,7 +59,7 @@ class RegimentViewModel extends ChangeNotifier {
     if (isInitial) {
       tabIndex = (regimentsData?.regimentsList?.length ?? 0) > 0 ? 0 : 2;
     } else {
-      tabIndex = currentIndex;
+      tabIndex = currentIndex ?? 0;
     }
     stopRegimenTTS();
   }
@@ -270,6 +270,14 @@ class RegimentViewModel extends ChangeNotifier {
   }) async {
     return await RegimentService.saveProfile(
       schedules: schedules,
+    );
+  }
+
+  Future<SaveResponseModel> undoSaveFormData({
+    String eid,
+  }) async {
+    return await RegimentService.undoSaveFormData(
+      eid: eid,
     );
   }
 }

@@ -170,4 +170,34 @@ class RegimentService {
       throw Exception('$e was thrown');
     }
   }
+
+  static Future<SaveResponseModel> undoSaveFormData({String eid}) async {
+    final urlForRegiment = Constants.BASE_URL + variable.regiment;
+    try {
+      final headerRequest =
+          await HeaderRequest().getRequestHeadersAuthContent();
+      final response = await http.post(
+        urlForRegiment,
+        headers: headerRequest,
+        body: json.encode(
+          {
+            "method": "post",
+            "data": "Action=UnDO&eid=$eid",
+          },
+        ),
+      );
+      if (response != null && response.statusCode == 200) {
+        print(response.body);
+        return SaveResponseModel.fromJson(json.decode(response.body));
+      } else {
+        return SaveResponseModel(
+          result: SaveResultModel(),
+          isSuccess: false,
+        );
+      }
+    } catch (e) {
+      print(e);
+      throw Exception('$e was thrown');
+    }
+  }
 }

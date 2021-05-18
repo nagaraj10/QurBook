@@ -463,7 +463,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                               regimentData.uformname, regimentData.metadata),
                           icon: getIcon(regimentData.activityname,
                               regimentData.uformname, regimentData.metadata),
-                          vitalsData: regimentData.uformdata.vitalsData,
+                          vitalsData: regimentData.uformdata?.vitalsData,
                           eid: regimentData.eid,
                           mediaData: regimentData.otherinfo,
                           startTime: regimentData.estart,

@@ -134,6 +134,42 @@ class RegimentDataCard extends StatelessWidget {
                                       fontSize: 12.0.sp,
                                     ),
                                   ),
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 5.0.w),
+                                    child: InkWell(
+                                      child: Text(
+                                        undo,
+                                        style: TextStyle(
+                                          fontSize: 14.0.sp,
+                                          fontWeight: FontWeight.w500,
+                                          decoration: TextDecoration.underline,
+                                          color: Color(
+                                              CommonUtil().getMyPrimaryColor()),
+                                        ),
+                                      ),
+                                      onTap: () async {
+                                        SaveResponseModel saveResponse =
+                                            await Provider.of<
+                                                        RegimentViewModel>(
+                                                    context,
+                                                    listen: false)
+                                                .undoSaveFormData(
+                                          eid: eid,
+                                        );
+                                        if (saveResponse?.isSuccess ?? false) {
+                                          Future.delayed(
+                                              Duration(milliseconds: 300),
+                                              () async {
+                                            await Provider.of<
+                                                        RegimentViewModel>(
+                                                    context,
+                                                    listen: false)
+                                                .fetchRegimentData();
+                                          });
+                                        }
+                                      },
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),

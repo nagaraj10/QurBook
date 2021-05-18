@@ -38,7 +38,9 @@ class ResultDataModel {
         row: RowModel.fromJson(json['row']),
         fields: List<FieldModel>.from(
             json['fields'].map((x) => FieldModel.fromJson(x))),
-        value: ValueModel.fromJson(json['value'] ?? {}),
+        value: json['value'] is List
+            ? null
+            : ValueModel.fromJson(json['value'] ?? {}),
       );
 
   Map<String, dynamic> toJson() => {
@@ -151,7 +153,10 @@ class RowModel {
         teidUser: json['teid_user'],
         custform: json['custform'],
         uformid: json['uformid'],
-        uformdata: UformData().fromJson(jsonDecode(json["uformdata"] ?? '{}')),
+        uformdata:
+            json['uformdata'] != null && json['uformdata'].toString().isNotEmpty
+                ? UformData().fromJson(jsonDecode(json["uformdata"] ?? '{}'))
+                : null,
         providerid: json['providerid'],
         providername: json['providername'],
       );

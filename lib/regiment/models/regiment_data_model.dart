@@ -99,7 +99,10 @@ class RegimentDataModel {
         remindinType: json['remindin_type'],
         ack: DateTime.tryParse(json['ack'] ?? ''),
         alarm: json['alarm'],
-        uformdata: UformData().fromJson(jsonDecode(json['uformdata'] ?? '{}')),
+        uformdata:
+            json['uformdata'] != null && json['uformdata'].toString().isNotEmpty
+                ? UformData().fromJson(jsonDecode(json['uformdata'] ?? '{}'))
+                : null,
         ts: DateTime.tryParse(json['ts'] ?? ''),
         deleted: json['deleted'],
         evDuration: json['ev_duration'],
