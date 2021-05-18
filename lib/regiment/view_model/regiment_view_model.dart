@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 
 enum RegimentMode { Schedule, Symptoms }
 
-enum RegimentStatus { Loading, Loaded }
+enum RegimentStatus { Loading, Loaded, DialogOpened, DialogClosed }
 
 class RegimentViewModel extends ChangeNotifier {
   RegimentResponseModel regimentsData;
@@ -21,6 +21,7 @@ class RegimentViewModel extends ChangeNotifier {
   List<RegimentDataModel> regimentsAsNeededList = [];
   List<RegimentDataModel> regimentsFilteredList = [];
   bool regimentsDataAvailable = true;
+  bool searchExpanded = false;
   RegimentStatus regimentStatus = RegimentStatus.Loaded;
   DateTime selectedDate = DateTime.now();
   String regimentDate = '${CommonUtil().regimentDateFormat(DateTime.now())}';
@@ -28,14 +29,54 @@ class RegimentViewModel extends ChangeNotifier {
   TextEditingController searchController = TextEditingController();
   FocusNode searchFocus = FocusNode();
   ScrollController scrollController = ScrollController();
+  int tabIndex;
   double scrollOffset;
+  int initialShowIndex;
+
+  void updateInitialShowIndex({bool isDone: false}) {
+    if (isDone) {
+      initialShowIndex = null;
+    } else if ((regimentsScheduledList?.length ?? 0) > 0) {
+      int index = 0;
+      for (final event in regimentsScheduledList) {
+        if (event.estart.isAfter(DateTime.now()) ||
+            event.estart.isAtSameMomentAs(DateTime.now())) {
+          initialShowIndex = index;
+          break;
+        } else {
+          index++;
+        }
+      }
+      initialShowIndex ??= regimentsScheduledList.length - 1;
+    }
+    notifyListeners();
+  }
+
+  void updateTabIndex({int currentIndex, bool isInitial = false}) {
+    if (isInitial) {
+      tabIndex = (regimentsData?.regimentsList?.length ?? 0) > 0 ? 0 : 2;
+    } else {
+      tabIndex = currentIndex;
+    }
+  }
+
+  void changeSearchExpanded(bool newValue) {
+    searchExpanded = newValue;
+    notifyListeners();
+  }
 
   Future<void> switchRegimentMode() {
     regimentMode = (regimentMode == RegimentMode.Schedule)
         ? RegimentMode.Symptoms
         : RegimentMode.Schedule;
-    setViewRegimentsData();
+    resetRegimenTab();
     notifyListeners();
+  }
+
+  void resetRegimenTab() {
+    changeSearchExpanded(false);
+    handleSearchField();
+    setViewRegimentsData();
   }
 
   void setViewRegimentsData({List<RegimentDataModel> filteredList}) {
@@ -95,14 +136,17 @@ class RegimentViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> fetchRegimentData({bool isInitial = false}) async {
+  Future<void> fetchRegimentData(
+      {bool isInitial = false, bool setIndex = false}) async {
     handleSearchField();
     regimentsList.clear();
     regimentsAsNeededList.clear();
     regimentsScheduledList.clear();
     if (PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN) ==
         PreferenceUtil.getStringValue(Constants.KEY_USERID)) {
-      updateRegimentStatus(RegimentStatus.Loading);
+      if (isInitial) {
+        updateRegimentStatus(RegimentStatus.Loading);
+      }
       regimentsDataAvailable = true;
       regimentsData = await RegimentService.getRegimentData(
         dateSelected: CommonUtil().dateConversionToApiFormat(selectedDate),
@@ -123,9 +167,12 @@ class RegimentViewModel extends ChangeNotifier {
         regimentsScheduledList.add(event);
       }
     });
+    if (setIndex) {
+      updateInitialShowIndex();
+    }
     setViewRegimentsData();
-    if (!isInitial) {
-      notifyListeners();
+    if (isInitial) {
+      updateTabIndex(isInitial: true);
     }
   }
 
@@ -142,24 +189,6 @@ class RegimentViewModel extends ChangeNotifier {
     }
   }
 
-  updateScroll({bool isReset = false}) {
-    if (isReset) {
-      scrollOffset = 0.0;
-    } else if (scrollController?.hasClients) {
-      scrollOffset = scrollController.offset;
-    }
-  }
-
-  handleScroll({
-    ScrollController controller,
-  }) {
-    if (controller != null) {
-      scrollController = controller;
-    } else if (scrollController?.hasClients) {
-      scrollController.jumpTo(scrollOffset ?? 0.0);
-    }
-  }
-
   void getRegimentDate({
     bool isPrevious: false,
     bool isNext: false,
@@ -173,7 +202,8 @@ class RegimentViewModel extends ChangeNotifier {
       selectedDate = selectedDate.add(Duration(days: 1));
     }
     regimentDate = '${CommonUtil().regimentDateFormat(selectedDate)}';
-    fetchRegimentData();
+    resetRegimenTab();
+    fetchRegimentData(isInitial: true);
     notifyListeners();
   }
 
@@ -190,9 +220,10 @@ class RegimentViewModel extends ChangeNotifier {
   Future<FieldsResponseModel> getFormData({
     String eid,
   }) async {
-    return await RegimentService.getFormData(
+    final response = await RegimentService.getFormData(
       eid: eid,
     );
+    return response;
   }
 
   Future<ProfileResponseModel> getProfile() async {

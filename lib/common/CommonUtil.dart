@@ -1873,9 +1873,12 @@ class CommonUtil {
       {String packageId,
       String isSubscribed,
       String providerId,
+      String isFrom,
       Function() refresh}) async {
     var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    showLoadingDialog(context, _keyLoader, variable.Please_Wait);
     await addFamilyUserInfoRepository.getMyProfileInfoNew(userId).then((value) {
+      Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
       myProfile = value;
     });
 
@@ -1884,6 +1887,7 @@ class CommonUtil {
           packageId: packageId,
           isSubscribed: isSubscribed,
           providerId: providerId,
+          isFrom: isFrom,
           refresh: refresh);
     } else {
       FlutterToast().getToast(noGender, Colors.red);
@@ -1894,6 +1898,7 @@ class CommonUtil {
       {String packageId,
       String isSubscribed,
       String providerId,
+      String isFrom,
       Function() refresh}) {
     if (myProfile != null) {
       if (myProfile.isSuccess) {
@@ -1903,18 +1908,51 @@ class CommonUtil {
             if (myProfile.result.dateOfBirth != null &&
                 myProfile.result.dateOfBirth.isNotEmpty) {
               if (myProfile.result.additionalInfo != null) {
-                if (myProfile.result.additionalInfo.height != null &&
-                    myProfile.result.additionalInfo.height.isNotEmpty) {
-                  if (myProfile.result.additionalInfo.weight != null &&
-                      myProfile.result.additionalInfo.weight.isNotEmpty) {
-                    if (myProfile.result.userAddressCollection3 != null) {
-                      if (myProfile.result.userAddressCollection3.length > 0) {
-                        patientAddressCheck(
-                            myProfile.result.userAddressCollection3[0], context,
-                            packageId: packageId,
-                            isSubscribed: isSubscribed,
-                            providerId: providerId,
-                            refresh: refresh);
+                if (isFrom == strIsFromSubscibe) {
+                  if (myProfile.result.userAddressCollection3 != null) {
+                    if (myProfile.result.userAddressCollection3.length > 0) {
+                      patientAddressCheck(
+                          myProfile.result.userAddressCollection3[0], context,
+                          packageId: packageId,
+                          isSubscribed: isSubscribed,
+                          providerId: providerId,
+                          refresh: refresh);
+                    } else {
+                      mCustomAlertDialog(context,
+                          content: CONTENT_PROFILE_CHECK,
+                          packageId: packageId,
+                          isSubscribed: isSubscribed,
+                          refresh: refresh);
+                    }
+                  } else {
+                    mCustomAlertDialog(context,
+                        content: CONTENT_PROFILE_CHECK,
+                        packageId: packageId,
+                        isSubscribed: isSubscribed,
+                        refresh: refresh);
+                  }
+                } else {
+                  if (myProfile.result.additionalInfo.height != null &&
+                      myProfile.result.additionalInfo.height.isNotEmpty) {
+                    if (myProfile.result.additionalInfo.weight != null &&
+                        myProfile.result.additionalInfo.weight.isNotEmpty) {
+                      if (myProfile.result.userAddressCollection3 != null) {
+                        if (myProfile.result.userAddressCollection3.length >
+                            0) {
+                          patientAddressCheck(
+                              myProfile.result.userAddressCollection3[0],
+                              context,
+                              packageId: packageId,
+                              isSubscribed: isSubscribed,
+                              providerId: providerId,
+                              refresh: refresh);
+                        } else {
+                          mCustomAlertDialog(context,
+                              content: CONTENT_PROFILE_CHECK,
+                              packageId: packageId,
+                              isSubscribed: isSubscribed,
+                              refresh: refresh);
+                        }
                       } else {
                         mCustomAlertDialog(context,
                             content: CONTENT_PROFILE_CHECK,
@@ -1936,12 +1974,6 @@ class CommonUtil {
                         isSubscribed: isSubscribed,
                         refresh: refresh);
                   }
-                } else {
-                  mCustomAlertDialog(context,
-                      content: CONTENT_PROFILE_CHECK,
-                      packageId: packageId,
-                      isSubscribed: isSubscribed,
-                      refresh: refresh);
                 }
               } else {
                 mCustomAlertDialog(context,
@@ -1996,58 +2028,67 @@ class CommonUtil {
     String address1 = userAddressCollection.addressLine1 != null
         ? userAddressCollection.addressLine1
         : '';
-    String city = userAddressCollection.city.name != null
-        ? userAddressCollection.city.name
-        : '';
-    String state = userAddressCollection.state.name != null
-        ? userAddressCollection.state.name
-        : '';
+    if (userAddressCollection.city != null) {
+      String city = userAddressCollection.city.name != null
+          ? userAddressCollection.city.name
+          : '';
+      String state = userAddressCollection.state.name != null
+          ? userAddressCollection.state.name
+          : '';
 
-    if (address1 != '' && city != '' && state != '') {
-      //check if its subcribed we need not to show disclimer alert
-      if (isSubscribed == '1') {
-        if (isSubscribed == '0') {
-          String userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-          updateProvidersBloc
-              .mappingHealthOrg(providerId, userId)
-              .then((value) {
-            if (value != null) {
-              if (value.success) {
-                subscribeViewModel.subScribePlan(packageId).then((value) {
-                  if (value != null) {
-                    if (value.isSuccess) {
-                      if (value.result != null) {
-                        if (value.result.result == 'Done') {
-                          Get.back(result: 'refreshUI');
-                        } else {
-                          FlutterToast()
-                              .getToast('Subscribe Failed', Colors.red);
+      if (address1 != '' && city != '' && state != '') {
+        //check if its subcribed we need not to show disclimer alert
+        if (isSubscribed == '1') {
+          if (isSubscribed == '0') {
+            String userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+            updateProvidersBloc
+                .mappingHealthOrg(providerId, userId)
+                .then((value) {
+              if (value != null) {
+                if (value.success) {
+                  subscribeViewModel.subScribePlan(packageId).then((value) {
+                    if (value != null) {
+                      if (value.isSuccess) {
+                        if (value.result != null) {
+                          if (value.result.result == 'Done') {
+                            Get.back(result: 'refreshUI');
+                          } else {
+                            FlutterToast()
+                                .getToast('Subscribe Failed', Colors.red);
+                          }
                         }
+                      } else {
+                        FlutterToast()
+                          ..getToast('Subscribe Failed', Colors.red);
                       }
-                    } else {
-                      FlutterToast()..getToast('Subscribe Failed', Colors.red);
                     }
-                  }
-                });
+                  });
+                } else {
+                  FlutterToast().getToast('Subscribe Map Failed', Colors.red);
+                }
               } else {
                 FlutterToast().getToast('Subscribe Map Failed', Colors.red);
               }
-            } else {
-              FlutterToast().getToast('Subscribe Map Failed', Colors.red);
-            }
-          });
+            });
+          } else {
+            unSubcribeAlertDialog(context,
+                packageId: packageId, refresh: refresh);
+          }
         } else {
-          unSubcribeAlertDialog(context,
-              packageId: packageId, refresh: refresh);
+          // if its unsubscibed need to invoke discalimer dialog
+          mDisclaimerAlertDialog(
+              packageId: packageId,
+              isSubscribed: isSubscribed,
+              providerId: providerId,
+              refresh: refresh,
+              context: context);
         }
       } else {
-        // if its unsubscibed need to invoke discalimer dialog
-        mDisclaimerAlertDialog(
+        mCustomAlertDialog(context,
+            content: CONTENT_PROFILE_CHECK,
             packageId: packageId,
             isSubscribed: isSubscribed,
-            providerId: providerId,
-            refresh: refresh,
-            context: context);
+            refresh: refresh);
       }
     } else {
       mCustomAlertDialog(context,
@@ -2490,7 +2531,9 @@ class CommonUtil {
 extension CapExtension on String {
   String get inCaps =>
       this.length > 0 ? '${this[0].toUpperCase()}${this.substring(1)}' : '';
+
   String get allInCaps => toUpperCase();
+
   String get capitalizeFirstofEach => this != null && this.isNotEmpty
       ? trim().toLowerCase().split(' ').map((str) => str.inCaps).join(' ')
       : '';

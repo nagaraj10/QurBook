@@ -46,138 +46,108 @@ class RegimentDataCard extends StatelessWidget {
             right: 10.0.w,
             bottom: 10.0.h,
           ),
-          child: InkWell(
-            onTap: () async {
-              Provider.of<ChatScreenViewModel>(context, listen: false)
-                  .stopTTSEngine();
-              bool canEdit =
-                  startTime.difference(DateTime.now()).inMinutes <= 15;
-              Provider.of<RegimentViewModel>(context, listen: false)
-                  .updateScroll();
-              if (canEdit) {
-                FieldsResponseModel fieldsResponseModel =
-                    await Provider.of<RegimentViewModel>(context, listen: false)
-                        .getFormData(eid: eid);
-                print(fieldsResponseModel);
-                if (fieldsResponseModel.isSuccess &&
-                    (fieldsResponseModel.result.fields.length > 0 ||
-                        mediaData.toJson().toString().contains('1'))) {
-                  bool value = await showDialog(
-                    context: context,
-                    builder: (context) => FormDataDialog(
-                      fieldsData: fieldsResponseModel.result.fields,
-                      eid: eid,
+          child: Material(
+            color: Colors.white,
+            child: InkWell(
+              onTap: () => onCardPressed(context),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: Material(
                       color: color,
-                      mediaData: mediaData,
-                      formTitle:
-                          '${DateFormat('hh:mm a').format(regimentData.estart)},${regimentData.title}',
-                    ),
-                  );
-                  if (value != null && (value ?? false)) {
-                    await Provider.of<RegimentViewModel>(context, listen: false)
-                        .fetchRegimentData();
-                  }
-                }
-              } else {
-                FlutterToast().getToast(
-                  'Data for future events can be entered only 15 minutes prior to the event time',
-                  Colors.red,
-                );
-              }
-            },
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      vertical: 10.0.h,
-                    ),
-                    color: color,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        icon,
-                        Visibility(
-                          visible: Provider.of<RegimentViewModel>(context,
-                                      listen: false)
-                                  .regimentMode ==
-                              RegimentMode.Schedule,
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                              top: 2.0.h,
-                            ),
-                            child: Text(
-                              time,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16.0.sp,
-                              ),
-                              textAlign: TextAlign.center,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
+                      child: InkWell(
+                        onTap: () => onCardPressed(context),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            vertical: 10.0.h,
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 5,
-                  child: Container(
-                    color: Colors.white,
-                    padding: EdgeInsets.symmetric(
-                      vertical: 5.0.h,
-                      horizontal: 20.0.w,
-                    ),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: getFieldWidgets(context),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Visibility(
-                          visible: regimentData.ack != null,
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                              top: 5.0.h,
-                              bottom: 5.0.h,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(
-                                  '${CommonUtil().regimentDateFormat(
-                                    regimentData.ack ?? DateTime.now(),
-                                    isAck: true,
-                                  )}',
-                                  style: TextStyle(
-                                    fontSize: 12.0.sp,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              icon,
+                              Visibility(
+                                visible: Provider.of<RegimentViewModel>(context,
+                                            listen: false)
+                                        .regimentMode ==
+                                    RegimentMode.Schedule,
+                                child: Padding(
+                                  padding: EdgeInsets.only(
+                                    top: 2.0.h,
+                                  ),
+                                  child: Text(
+                                    time,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16.0.sp,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  width: 3.0.w,
-                  child: Container(
-                    color: color,
+                  Expanded(
+                    flex: 5,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        vertical: 5.0.h,
+                        horizontal: 20.0.w,
+                      ),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: getFieldWidgets(context),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Visibility(
+                            visible: regimentData.ack != null,
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                top: 5.0.h,
+                                bottom: 5.0.h,
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    '${CommonUtil().regimentDateFormat(
+                                      regimentData.ack ?? DateTime.now(),
+                                      isAck: true,
+                                    )}',
+                                    style: TextStyle(
+                                      fontSize: 12.0.sp,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-              ],
+                  SizedBox(
+                    width: 3.0.w,
+                    child: Container(
+                      color: color,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -206,18 +176,21 @@ class RegimentDataCard extends StatelessWidget {
             padding: EdgeInsets.symmetric(
               vertical: 10.0.h,
             ),
-            child: InkWell(
-              onTap: () {
-                Provider.of<ChatScreenViewModel>(context, listen: false)
-                    .startTTSEngine(
-                  textToSpeak: regimentData.saytext,
-                  isRegiment: true,
-                );
-              },
-              child: Icon(
-                Icons.play_circle_fill_rounded,
-                size: 30.0.sp,
-                color: color,
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () {
+                  Provider.of<ChatScreenViewModel>(context, listen: false)
+                      .startTTSEngine(
+                    textToSpeak: regimentData.saytext,
+                    isRegiment: true,
+                  );
+                },
+                child: Icon(
+                  Icons.play_circle_fill_rounded,
+                  size: 30.0.sp,
+                  color: color,
+                ),
               ),
             ),
           ),
@@ -336,37 +309,42 @@ class RegimentDataCard extends StatelessWidget {
                   padding: EdgeInsets.only(
                     left: 5.0.w,
                   ),
-                  child: InkWell(
-                    onTap: () async {
-                      Provider.of<ChatScreenViewModel>(context, listen: false)
-                          .stopTTSEngine();
-                      bool canEdit =
-                          startTime.difference(DateTime.now()).inMinutes <= 15;
-                      if (canEdit) {
-                        SaveResponseModel saveResponse =
-                            await Provider.of<RegimentViewModel>(context,
-                                    listen: false)
-                                .saveFormData(
-                          eid: eid,
-                        );
-                        if (saveResponse?.isSuccess ?? false) {
-                          Provider.of<RegimentViewModel>(context, listen: false)
-                              .updateScroll();
-                          await Provider.of<RegimentViewModel>(context,
-                                  listen: false)
-                              .fetchRegimentData();
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: () async {
+                        Provider.of<ChatScreenViewModel>(context, listen: false)
+                            .stopTTSEngine();
+                        bool canEdit =
+                            startTime.difference(DateTime.now()).inMinutes <=
+                                15;
+                        if (canEdit) {
+                          SaveResponseModel saveResponse =
+                              await Provider.of<RegimentViewModel>(context,
+                                      listen: false)
+                                  .saveFormData(
+                            eid: eid,
+                          );
+                          if (saveResponse?.isSuccess ?? false) {
+                            Future.delayed(Duration(milliseconds: 300),
+                                () async {
+                              await Provider.of<RegimentViewModel>(context,
+                                      listen: false)
+                                  .fetchRegimentData();
+                            });
+                          }
+                        } else {
+                          FlutterToast().getToast(
+                            'Data for future events can be entered only 15 minutes prior to the event time',
+                            Colors.red,
+                          );
                         }
-                      } else {
-                        FlutterToast().getToast(
-                          'Data for future events can be entered only 15 minutes prior to the event time',
-                          Colors.red,
-                        );
-                      }
-                    },
-                    child: Icon(
-                      Icons.check_circle_rounded,
-                      size: 30.0.sp,
-                      color: color,
+                      },
+                      child: Icon(
+                        Icons.check_circle_rounded,
+                        size: 30.0.sp,
+                        color: color,
+                      ),
                     ),
                   ),
                 ),
@@ -390,5 +368,50 @@ class RegimentDataCard extends StatelessWidget {
       title = '${regimentData.title}';
     }
     return title;
+  }
+
+  Future<void> onCardPressed(BuildContext context) async {
+    Provider.of<ChatScreenViewModel>(context, listen: false).stopTTSEngine();
+    bool canEdit = startTime.difference(DateTime.now()).inMinutes <= 15;
+    if (canEdit) {
+      FieldsResponseModel fieldsResponseModel =
+          await Provider.of<RegimentViewModel>(context, listen: false)
+              .getFormData(eid: eid);
+      print(fieldsResponseModel);
+      if (fieldsResponseModel.isSuccess &&
+          (fieldsResponseModel.result.fields.length > 0 ||
+              mediaData.toJson().toString().contains('1')) &&
+          Provider.of<RegimentViewModel>(context, listen: false)
+                  .regimentStatus !=
+              RegimentStatus.DialogOpened) {
+        Provider.of<RegimentViewModel>(context, listen: false)
+            .updateRegimentStatus(RegimentStatus.DialogOpened);
+        bool value = await showDialog(
+          context: context,
+          builder: (context) => FormDataDialog(
+            fieldsData: fieldsResponseModel.result.fields,
+            eid: eid,
+            color: color,
+            mediaData: mediaData,
+            formTitle:
+                '${DateFormat('hh:mm a').format(regimentData.estart)},${regimentData.title}',
+          ),
+        );
+        if (value != null && (value ?? false)) {
+          Future.delayed(Duration(milliseconds: 300), () async {
+            await Provider.of<RegimentViewModel>(context, listen: false)
+                .fetchRegimentData();
+          });
+        }
+
+        Provider.of<RegimentViewModel>(context, listen: false)
+            .updateRegimentStatus(RegimentStatus.DialogClosed);
+      }
+    } else {
+      FlutterToast().getToast(
+        'Data for future events can be entered only 15 minutes prior to the event time',
+        Colors.red,
+      );
+    }
   }
 }

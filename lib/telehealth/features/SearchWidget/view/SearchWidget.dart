@@ -11,12 +11,14 @@ class SearchWidget extends StatefulWidget {
   final void Function(String) onChanged;
   final TextEditingController searchController;
   final FocusNode searchFocus;
+  final double padding;
 
   const SearchWidget({
     Key key,
     this.onChanged,
     this.searchController,
     this.searchFocus,
+    this.padding,
   }) : super(key: key);
 
   @override
@@ -35,9 +37,11 @@ class SearchWdigetState extends State<SearchWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: EdgeInsets.only(left: 20, right: 20),
+        margin: EdgeInsets.only(
+            left: widget.padding ?? 20, right: widget.padding ?? 20),
         child: Padding(
-          padding: EdgeInsets.only(top: 10, right: 10),
+          padding: EdgeInsets.only(
+              top: widget.padding ?? 10, right: widget.padding ?? 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[

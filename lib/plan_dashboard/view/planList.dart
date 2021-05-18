@@ -40,6 +40,7 @@ class _MyPlanState extends State<PlanList> {
   String categoryId = '';
   List<PlanListResult> planListResult;
   bool isSelected = false;
+  List<PlanListResult> planListUniq = [];
 
   @override
   void initState() {
@@ -84,13 +85,16 @@ class _MyPlanState extends State<PlanList> {
                   onChanged: (title) {
                     if (title != '' && title.length > 2) {
                       isSearch = true;
-                      onSearchedNew(title);
+                      onSearchedNew(title, planListUniq);
                     } else {
                       setState(() {
                         isSearch = false;
                       });
                     }
                   },
+                ),
+                SizedBox(
+                  height: 5.0.h,
                 ),
                 Expanded(child: planList(planListResult)),
                 SizedBox(height: 10)
@@ -114,16 +118,16 @@ class _MyPlanState extends State<PlanList> {
         ));
   }
 
-  onSearchedNew(String title) async {
+  onSearchedNew(String title, List<PlanListResult> planListOld) async {
     myPLanListResult.clear();
     if (title != null) {
-      myPLanListResult = await myPlanViewModel.getSearch(title);
+      myPLanListResult = await myPlanViewModel.getSearch(title, planListOld);
     }
     setState(() {});
   }
 
   Widget planList(List<PlanListResult> planList) {
-    List<PlanListResult> planListUniq = [];
+    planListUniq = [];
     isSelected = false;
     if (planList != null && planList.length > 0) {
       planList.where((element1) {
@@ -139,6 +143,9 @@ class _MyPlanState extends State<PlanList> {
     return (planListUniq != null && planListUniq.length > 0)
         ? ListView.builder(
             shrinkWrap: true,
+            padding: EdgeInsets.only(
+              bottom: 8.0.h,
+            ),
             itemBuilder: (BuildContext ctx, int i) => planListItem(
                 ctx, i, isSearch ? myPLanListResult : planListUniq),
             itemCount: isSearch ? myPLanListResult.length : planListUniq.length,
@@ -154,7 +161,7 @@ class _MyPlanState extends State<PlanList> {
           );
   }
 
-  Widget getPlanList() {
+  /*Widget getPlanList() {
     return new FutureBuilder<PlanListModel>(
       future: myPlanViewModel.getPlanList(),
       builder: (BuildContext context, snapshot) {
@@ -194,7 +201,7 @@ class _MyPlanState extends State<PlanList> {
         }
       },
     );
-  }
+  }*/
 
   Widget planListItem(
       BuildContext context, int i, List<PlanListResult> planList) {
@@ -376,17 +383,12 @@ class _MyPlanState extends State<PlanList> {
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(18.0),
                                     side: BorderSide(
-                                        color:
-                                            planList[i].catselecttype == '1' &&
-                                                    planList[i].isSubscribed ==
-                                                        '0' &&
-                                                    isSelected
-                                                ? Colors.grey
-                                                : Color(new CommonUtil()
-                                                    .getMyPrimaryColor()))),
+                                        color: getBorderColor(i, planList))),
                                 color: Colors.transparent,
-                                textColor:
-                                    Color(new CommonUtil().getMyPrimaryColor()),
+                                textColor: planList[i].isSubscribed == '0'
+                                    ? Color(
+                                        new CommonUtil().getMyPrimaryColor())
+                                    : Colors.red,
                                 padding: EdgeInsets.all(
                                   8.0.sp,
                                 ),
@@ -402,6 +404,7 @@ class _MyPlanState extends State<PlanList> {
                                               isSubscribed:
                                                   planList[i].isSubscribed,
                                               providerId: planList[i].plinkid,
+                                              isFrom: strIsFromSubscibe,
                                               refresh: () {
                                             setState(() {});
                                           });
@@ -434,5 +437,19 @@ class _MyPlanState extends State<PlanList> {
             ],
           )),
     );
+  }
+
+  Color getBorderColor(int i, List<PlanListResult> planList) {
+    if (planList[i].catselecttype == '1' &&
+        planList[i].isSubscribed == '0' &&
+        isSelected) {
+      return Colors.grey;
+    } else {
+      if (planList[i].isSubscribed == '0') {
+        return Color(new CommonUtil().getMyPrimaryColor());
+      } else {
+        return Colors.red;
+      }
+    }
   }
 }

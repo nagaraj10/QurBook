@@ -53,6 +53,13 @@ class FormDataTextField extends StatelessWidget {
           inputFormatters: [
             if (isNumberOnly) FilteringTextInputFormatter.digitsOnly,
           ],
+          validator: (value) {
+            if (fieldData.title.startsWith('_') && value.isEmpty) {
+              return '${fieldData.title} is required';
+            } else {
+              return null;
+            }
+          },
         ),
       ],
     );

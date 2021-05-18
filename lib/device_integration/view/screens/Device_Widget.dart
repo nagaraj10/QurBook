@@ -148,6 +148,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
     getFamilyLength();
     Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
       isInitial: true,
+      setIndex: true,
     );
     super.initState();
   }
@@ -251,9 +252,11 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
               String currentLanguage = '';
               if (preferredLanguage != "undef") {
                 currentLanguage = preferredLanguage.split("-").first;
+              } else {
+                currentLanguage = 'en';
               }
               PreferenceUtil.saveString(Constants.SHEELA_LANG,
-                  Utils.langaugeCodes[currentLanguage ?? 'undef']);
+                  Utils.langaugeCodes[currentLanguage] ?? 'en-IN');
             }
             if (selectionResult.result[0].profileSetting.preColor != null &&
                 selectionResult.result[0].profileSetting.greColor != null) {
@@ -483,14 +486,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
         height: constraints.maxHeight,
         child: DefaultTabController(
           length: 4,
-          initialIndex: (Provider.of<RegimentViewModel>(
-                        context,
-                        listen: false,
-                      ).regimentsData?.regimentsList?.length ??
-                      0) >
-                  0
-              ? 0
-              : 2,
+          initialIndex:
+              Provider.of<RegimentViewModel>(context, listen: false).tabIndex,
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -662,6 +659,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
             context,
             listen: false,
           ).handleSearchField();
+          Provider.of<RegimentViewModel>(
+            context,
+            listen: false,
+          ).updateTabIndex(currentIndex: 1);
           if (snapshot.hasData) {
             deviceValues = snapshot.data;
             return projectWidget(context);

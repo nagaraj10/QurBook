@@ -231,16 +231,20 @@ class AddFamilyUserInfoBloc extends BaseBloc {
     userProfileSink.add(ApiResponse.loading(variable.strUpdatedSelfProfile));
     UpdateSelfProfileModel updateAddFamilyInfo;
     try {
-      if (preferredLanguage != null && preferredLanguage.isNotEmpty) {
-        await updateDeviceSelectionModel(preferredLanguage: preferredLanguage);
+      preferredLanguage =
+          preferredLanguage == null || preferredLanguage == 'undef'
+              ? 'en-IN'
+              : preferredLanguage;
+      await updateDeviceSelectionModel(preferredLanguage: preferredLanguage);
 
-        String currentLanguage = '';
-        if (preferredLanguage != "undef") {
-          currentLanguage = preferredLanguage.split("-").first;
-        }
-        PreferenceUtil.saveString(
-            SHEELA_LANG, CommonUtil.langaugeCodes[currentLanguage] ?? 'undef');
+      String currentLanguage = '';
+      if (preferredLanguage != "undef") {
+        currentLanguage = preferredLanguage.split("-").first;
+      } else {
+        currentLanguage = 'en';
       }
+      PreferenceUtil.saveString(
+          SHEELA_LANG, CommonUtil.langaugeCodes[currentLanguage] ?? 'en-IN');
 
       updateAddFamilyInfo = await addFamilyUserInfoRepository.updateUserInfoNew(
           userId,

@@ -49,6 +49,7 @@ const String STR_VOICERECORDS = 'Voice Records';
 const String STR_CLAIMSRECORD = 'Claim Records';
 const String STR_FEEDBACK = 'Feedback';
 const String STR_WEARABLES = 'Wearable';
+const String STR_TELEHEALTH = 'Telehealth';
 const String STR_HOSPITALDOCUMENT = 'Hospital Documents';
 
 const String STR_VOICE_NOTES = 'Voice Notes';
@@ -403,19 +404,22 @@ const String STR_INSURE_ID = 'Insurance IDs';
 const String noRegimentData =
     'No Regiments data available for the selected date';
 const String noRegimentScheduleData =
-    'No Scheduled data available for the selected date';
+    'No Activities data available for the selected date';
 const String noRegimentSymptomsData =
     'No Symptoms data available for the selected date';
 const String plansForFamily =
     'Regimen plans are not available for family members';
 const String mplansForFamily = 'Plans are not available for family members';
-const String categoriesForFamily = 'Categories are not available for family members';
+const String categoriesForFamily =
+    'Categories are not available for family members';
 const String okButton = 'OK';
 const String saveButton = 'Save';
 const String select = 'Select';
-const String scheduled = 'Scheduled';
+const String scheduled = 'Activities';
 const String symptoms = 'Symptoms';
 const String scheduleTitle = 'Daily Schedule';
+const String planActivities = 'Plan Activities';
+const String planSymptoms = 'Plan Symptoms';
 
 const strJpgDot = '.jpg';
 const strJpegDot = '.jpeg';
@@ -434,6 +438,10 @@ const strAudio = 'audio';
 const strUploading = 'Uploading...';
 const strSubscribe = 'Subscribe';
 const strUnSubscribe = 'UnSubscribe';
+const strSelectedPlan = 'Selected Plan - ';
+const strSelectedPlans = 'Selected Plan(s) - ';
+const strSelectPlan = 'Select Plan - ';
+const strIsFromSubscibe = 'fromSubscribe';
 
 FirebaseAnalytics _firebaseAnalytics = FirebaseAnalytics();
 var mInitialTime;

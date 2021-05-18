@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:provider/provider.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 import 'widgets/regiment_data_card.dart';
 import 'package:myfhb/regiment/models/regiment_data_model.dart';
 import 'package:intl/intl.dart';
@@ -23,18 +25,21 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
   RegimentViewModel _regimentViewModel;
   TextEditingController searchController = TextEditingController();
   FocusNode searchFocus = FocusNode();
-  ScrollController scrollController = ScrollController();
+  final scrollController =
+      AutoScrollController(axis: Axis.vertical, suggestedRowHeight: 150);
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    Provider.of<RegimentViewModel>(
+      context,
+      listen: false,
+    ).updateTabIndex(currentIndex: 0);
     Provider.of<ChatScreenViewModel>(context, listen: false)?.updateAppState(
       true,
       isInitial: true,
     );
-    Provider.of<RegimentViewModel>(context, listen: false).updateScroll(
-      isReset: true,
-    );
+    Provider.of<RegimentViewModel>(context, listen: false).resetRegimenTab();
     Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
       isInitial: true,
     );
@@ -100,37 +105,41 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
 
   dynamic getIcon(
       Activityname activityname, Uformname uformName, Metadata metadata) {
+    double iconSize = (_regimentViewModel.regimentMode == RegimentMode.Schedule)
+        ? 40.0.sp
+        : 40.0.sp;
     try {
       if (metadata?.icon != null) {
         if (metadata?.icon?.toLowerCase()?.contains('.svg') ?? false) {
           return SvgPicture.network(
             metadata?.icon,
-            height: 30.0.sp,
-            width: 30.0.sp,
+            height: iconSize,
+            width: iconSize,
             color: Colors.white,
           );
         } else {
           return CachedNetworkImage(
             imageUrl: metadata?.icon,
-            height: 30.0.sp,
-            width: 30.0.sp,
+            height: iconSize,
+            width: iconSize,
             color: Colors.white,
             errorWidget: (context, url, error) {
-              return getDefaultIcon(activityname, uformName);
+              return getDefaultIcon(activityname, uformName, iconSize);
             },
           );
         }
       } else {
-        return getDefaultIcon(activityname, uformName);
+        return getDefaultIcon(activityname, uformName, iconSize);
       }
     } catch (e) {
-      return getDefaultIcon(activityname, uformName);
+      return getDefaultIcon(activityname, uformName, iconSize);
     }
   }
 
   dynamic getDefaultIcon(
     Activityname activityname,
     Uformname uformName,
+    double iconSize,
   ) {
     bool isDefault = true;
     dynamic cardIcon = 'assets/launcher/myfhb1.png';
@@ -162,12 +171,12 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
     Widget cardIconWidget = (cardIcon is String)
         ? Image.asset(
             cardIcon,
-            height: isDefault ? 30.0.sp : 24.0.sp,
-            width: isDefault ? 30.0.sp : 24.0.sp,
+            height: isDefault ? iconSize : iconSize - 5.0.sp,
+            width: isDefault ? iconSize : iconSize - 5.0.sp,
           )
         : Icon(
             cardIcon,
-            size: 24.0.sp,
+            size: iconSize - 5.0.sp,
             color: Colors.white,
           );
     return cardIconWidget;
@@ -179,9 +188,6 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
     _regimentViewModel.handleSearchField(
       controller: searchController,
       focusNode: searchFocus,
-    );
-    _regimentViewModel.handleScroll(
-      controller: scrollController,
     );
     return Column(
       children: [
@@ -196,114 +202,135 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
               children: [
                 Row(
                   children: [
-                    InkWell(
-                      child: Icon(
-                        Icons.chevron_left_rounded,
-                        size: 24.0.sp,
-                        color: Color(CommonUtil().getMyPrimaryColor()),
+                    Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        child: Icon(
+                          Icons.chevron_left_rounded,
+                          size: 24.0.sp,
+                          color: Color(CommonUtil().getMyPrimaryColor()),
+                        ),
+                        onTap: () {
+                          _regimentViewModel.handleSearchField();
+                          _regimentViewModel.getRegimentDate(isPrevious: true);
+                        },
                       ),
-                      onTap: () {
-                        _regimentViewModel.handleSearchField();
-                        _regimentViewModel.getRegimentDate(isPrevious: true);
-                      },
                     ),
                     SizedBox(
                       width: 5.0.w,
                     ),
-                    InkWell(
-                      onTap: () async {
-                        DateTime selectedDate = await showDatePicker(
-                          context: context,
-                          firstDate: DateTime(2015, 8),
-                          lastDate: DateTime(2101),
-                          initialDate: _regimentViewModel.selectedDate,
-                        );
-                        if (selectedDate != null) {
-                          _regimentViewModel.handleSearchField();
-                          _regimentViewModel.getRegimentDate(
-                            dateTime: selectedDate,
+                    Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () async {
+                          DateTime selectedDate = await showDatePicker(
+                            context: context,
+                            firstDate: DateTime(2015, 8),
+                            lastDate: DateTime(2101),
+                            initialDate: _regimentViewModel.selectedDate,
                           );
-                        }
-                      },
-                      child: Text(
-                        '${_regimentViewModel.regimentDate}',
-                        style: TextStyle(
-                          fontSize: 14.0.sp,
-                          color: Color(CommonUtil().getMyPrimaryColor()),
+                          if (selectedDate != null) {
+                            _regimentViewModel.handleSearchField();
+                            _regimentViewModel.getRegimentDate(
+                              dateTime: selectedDate,
+                            );
+                          }
+                        },
+                        child: Text(
+                          '${_regimentViewModel.regimentDate}',
+                          style: TextStyle(
+                            fontSize: 14.0.sp,
+                            color: Color(CommonUtil().getMyPrimaryColor()),
+                          ),
                         ),
                       ),
                     ),
                     SizedBox(
                       width: 5.0.w,
                     ),
-                    InkWell(
-                      child: Icon(
-                        Icons.chevron_right_rounded,
-                        size: 24.0.sp,
-                        color: Color(CommonUtil().getMyPrimaryColor()),
+                    Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        child: Icon(
+                          Icons.chevron_right_rounded,
+                          size: 24.0.sp,
+                          color: Color(CommonUtil().getMyPrimaryColor()),
+                        ),
+                        onTap: () {
+                          _regimentViewModel.handleSearchField();
+                          _regimentViewModel.getRegimentDate(isNext: true);
+                        },
                       ),
-                      onTap: () {
-                        _regimentViewModel.handleSearchField();
-                        _regimentViewModel.getRegimentDate(isNext: true);
-                      },
                     ),
                   ],
                 ),
                 Padding(
                   padding: EdgeInsets.only(
-                    right: 5.0.w,
+                    right: 2.0.w,
                   ),
                   child: Row(
                     children: [
-                      InkWell(
-                        onTap: () {
-                          _regimentViewModel.handleSearchField();
-                          _regimentViewModel.switchRegimentMode();
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 10.0.sp,
-                            vertical: 2.0.sp,
-                          ),
-                          child: Text(
-                            _regimentViewModel.regimentMode ==
-                                    RegimentMode.Schedule
-                                ? symptoms
-                                : scheduled,
-                            style: TextStyle(
-                              fontSize: 14.0.sp,
-                              fontWeight: FontWeight.w500,
-                              decoration: TextDecoration.underline,
-                              color: Color(CommonUtil().getMyPrimaryColor()),
+                      Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () {
+                            _regimentViewModel.handleSearchField();
+                            _regimentViewModel.switchRegimentMode();
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 10.0.sp,
+                              vertical: 2.0.sp,
+                            ),
+                            child: Text(
+                              _regimentViewModel.regimentMode ==
+                                      RegimentMode.Schedule
+                                  ? symptoms
+                                  : scheduled,
+                              style: TextStyle(
+                                fontSize: 14.0.sp,
+                                fontWeight: FontWeight.w500,
+                                decoration: TextDecoration.underline,
+                                color: Color(CommonUtil().getMyPrimaryColor()),
+                              ),
                             ),
                           ),
                         ),
                       ),
                       Padding(
                         padding: EdgeInsets.only(
-                          left: 15.0.w,
+                          left: 5.0.w,
                         ),
-                        child: InkWell(
-                          onTap: () async {
-                            ProfileResponseModel profileResponseModel =
-                                await Provider.of<RegimentViewModel>(context,
-                                        listen: false)
-                                    .getProfile();
-                            if (profileResponseModel.isSuccess &&
-                                profileResponseModel?.result?.profileData !=
-                                    null) {
-                              await showDialog(
-                                context: context,
-                                builder: (context) => EventListWidget(
-                                  profileResultModel:
-                                      profileResponseModel.result,
-                                ),
-                              );
-                            }
-                          },
-                          child: Icon(
-                            Icons.access_time,
-                            size: 30.0.sp,
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: () async {
+                              ProfileResponseModel profileResponseModel =
+                                  await Provider.of<RegimentViewModel>(context,
+                                          listen: false)
+                                      .getProfile();
+                              if (profileResponseModel.isSuccess &&
+                                  profileResponseModel?.result?.profileData !=
+                                      null &&
+                                  _regimentViewModel.regimentStatus !=
+                                      RegimentStatus.DialogOpened) {
+                                _regimentViewModel.updateRegimentStatus(
+                                    RegimentStatus.DialogOpened);
+                                await showDialog(
+                                  context: context,
+                                  builder: (context) => EventListWidget(
+                                    profileResultModel:
+                                        profileResponseModel.result,
+                                  ),
+                                );
+                                _regimentViewModel.updateRegimentStatus(
+                                    RegimentStatus.DialogClosed);
+                              }
+                            },
+                            child: Icon(
+                              Icons.access_time,
+                              size: 30.0.sp,
+                            ),
                           ),
                         ),
                       ),
@@ -316,14 +343,74 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
         ),
         Visibility(
           visible: _regimentViewModel.regimentsDataAvailable,
-          child: SearchWidget(
-            searchController: searchController,
-            searchFocus: searchFocus,
-            onChanged: _regimentViewModel.onSearch,
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: 10.0.w,
+              vertical: 5.0.h,
+            ),
+            child: Visibility(
+              visible: _regimentViewModel.searchExpanded,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      _regimentViewModel.changeSearchExpanded(false);
+                    },
+                    child: Center(
+                      child: Icon(
+                        Icons.cancel,
+                        color: Colors.black,
+                        size: 30.0.sp,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10.0.w,
+                  ),
+                  Expanded(
+                    child: SearchWidget(
+                      searchController: searchController,
+                      searchFocus: searchFocus,
+                      onChanged: _regimentViewModel.onSearch,
+                      padding: 0.0,
+                    ),
+                  ),
+                ],
+              ),
+              replacement: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Flexible(
+                    child: Text(
+                      _regimentViewModel.regimentMode == RegimentMode.Schedule
+                          ? planActivities
+                          : planSymptoms,
+                      style: TextStyle(
+                        fontSize: 16.0.sp,
+                        color: Color(CommonUtil().getMyPrimaryColor()),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      _regimentViewModel.changeSearchExpanded(true);
+                    },
+                    child: Center(
+                      child: Icon(
+                        Icons.search,
+                        color: Colors.black,
+                        size: 30.0.sp,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-        ),
-        SizedBox(
-          height: 10.0.h,
         ),
         Expanded(
           child: Consumer<RegimentViewModel>(
@@ -340,9 +427,17 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
               } else if ((regimentViewModel.regimentsList?.length ?? 0) > 0) {
                 var regimentsList = regimentViewModel.regimentsList;
                 if ((regimentsList?.length ?? 0) > 0) {
-                  Future.delayed(Duration(microseconds: 1), () {
-                    regimentViewModel.handleScroll();
-                  });
+                  if (regimentViewModel.initialShowIndex != null) {
+                    Future.delayed(Duration(microseconds: 1), () {
+                      scrollController.scrollToIndex(
+                        regimentViewModel.initialShowIndex,
+                        preferPosition: AutoScrollPosition.middle,
+                      );
+                      regimentViewModel.updateInitialShowIndex(
+                        isDone: true,
+                      );
+                    });
+                  }
                   return ListView.builder(
                     controller: scrollController,
                     shrinkWrap: true,
@@ -353,19 +448,24 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                     itemCount: regimentsList?.length ?? 0,
                     itemBuilder: (context, index) {
                       var regimentData = regimentsList[index];
-                      return RegimentDataCard(
-                        title: regimentData.title,
-                        time:
-                            DateFormat('hh:mm\na').format(regimentData.estart),
-                        color: getColor(regimentData.activityname,
-                            regimentData.uformname, regimentData.metadata),
-                        icon: getIcon(regimentData.activityname,
-                            regimentData.uformname, regimentData.metadata),
-                        vitalsData: regimentData.uformdata.vitalsData,
-                        eid: regimentData.eid,
-                        mediaData: regimentData.otherinfo,
-                        startTime: regimentData.estart,
-                        regimentData: regimentData,
+                      return AutoScrollTag(
+                        key: ValueKey(index),
+                        index: index,
+                        controller: scrollController,
+                        child: RegimentDataCard(
+                          title: regimentData.title,
+                          time: DateFormat('hh:mm\na')
+                              .format(regimentData.estart),
+                          color: getColor(regimentData.activityname,
+                              regimentData.uformname, regimentData.metadata),
+                          icon: getIcon(regimentData.activityname,
+                              regimentData.uformname, regimentData.metadata),
+                          vitalsData: regimentData.uformdata.vitalsData,
+                          eid: regimentData.eid,
+                          mediaData: regimentData.otherinfo,
+                          startTime: regimentData.estart,
+                          regimentData: regimentData,
+                        ),
                       );
                     },
                   );

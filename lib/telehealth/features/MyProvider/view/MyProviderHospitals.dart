@@ -133,6 +133,8 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
                   fromClass: router.cn_teleheathProvider,
                 )).then((value) {
               getHospitalsList();
+              _medicalPreferenceList =
+                  _providersBloc.getMedicalPreferencesList();
               setState(() {});
             });
           },

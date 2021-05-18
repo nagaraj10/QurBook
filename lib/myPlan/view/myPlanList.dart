@@ -30,6 +30,10 @@ class _MyPlanState extends State<MyPlanList> {
   @override
   void initState() {
     super.initState();
+    Provider.of<RegimentViewModel>(
+      context,
+      listen: false,
+    ).updateTabIndex(currentIndex: 3);
   }
 
   @override

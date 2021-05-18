@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
 import 'package:myfhb/plan_dashboard/view/planList.dart';
@@ -30,9 +31,20 @@ class _CategoryState extends State<CategoryList> {
   SubscribeViewModel subscribeViewModel = new SubscribeViewModel();
   FlutterToast toast = new FlutterToast();
 
+  List<PlanListResult> categoryListUniq = [];
+  List<String> selectPlan = [];
+  Map<String, List<String>> selectTitle = {};
+  Map<String, List<String>> selectedTitle = {};
+
+  bool isSubscribedOne = false;
+
   @override
   void initState() {
     super.initState();
+    Provider.of<RegimentViewModel>(
+      context,
+      listen: false,
+    ).updateTabIndex(currentIndex: 2);
     Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
       isInitial: true,
     );
@@ -50,7 +62,7 @@ class _CategoryState extends State<CategoryList> {
               onChanged: (title) {
                 if (title != '' && title.length > 2) {
                   isSearch = true;
-                  onSearchedNew(title);
+                  onSearchedNew(title, categoryListUniq);
                 } else {
                   setState(() {
                     isSearch = false;
@@ -58,12 +70,14 @@ class _CategoryState extends State<CategoryList> {
                 }
               },
             ),
+            SizedBox(
+              height: 5.0.h,
+            ),
             Expanded(
               child: myPlanListModel != null ?? myPlanListModel.isSuccess
                   ? categoryList(myPlanListModel.result)
                   : getCategoryList(),
             ),
-            SizedBox(height: 10)
           ],
         ),
       ),
@@ -84,16 +98,19 @@ class _CategoryState extends State<CategoryList> {
     ));
   }
 
-  onSearchedNew(String title) async {
+  onSearchedNew(String title, List<PlanListResult> planListOld) async {
     myPLanListResult.clear();
     if (title != null) {
-      myPLanListResult = await myPlanViewModel.getSearch(title);
+      myPLanListResult = await myPlanViewModel.getSearch(title, planListOld);
     }
     setState(() {});
   }
 
   Widget categoryList(List<PlanListResult> planList) {
-    List<PlanListResult> categoryListUniq = [];
+    categoryListUniq = [];
+    selectTitle = {};
+    selectedTitle = {};
+    isSubscribedOne = false;
     if (planList != null && planList.length > 0) {
       planList.forEach((element) {
         bool keysUniq = true;
@@ -106,10 +123,32 @@ class _CategoryState extends State<CategoryList> {
           categoryListUniq.add(element);
         }
       });
+      categoryListUniq.forEach((elementNew) {
+        selectTitle.putIfAbsent(
+          elementNew.packcatid,
+          () => [],
+        );
+        selectedTitle.putIfAbsent(
+          elementNew.packcatid,
+          () => [],
+        );
+        planList.where((elementWhere) {
+          return elementNew.packcatid == elementWhere.packcatid;
+        }).forEach((elementLast) {
+          if (elementLast.isSubscribed == '1') {
+            isSubscribedOne = true;
+            selectedTitle[elementLast.packcatid].add(elementLast.title);
+          }
+          selectTitle[elementLast.packcatid].add(elementLast.title);
+        });
+      });
     }
     return (categoryListUniq != null && categoryListUniq.length > 0)
         ? ListView.builder(
             shrinkWrap: true,
+            padding: EdgeInsets.only(
+              bottom: 8.0.h,
+            ),
             itemBuilder: (BuildContext ctx, int i) => categoryListItem(ctx, i,
                 isSearch ? myPLanListResult : categoryListUniq, planList),
             itemCount:
@@ -182,7 +221,7 @@ class _CategoryState extends State<CategoryList> {
         });
       },
       child: Container(
-          padding: EdgeInsets.all(12.0),
+          padding: EdgeInsets.all(8.0),
           margin: EdgeInsets.only(left: 12, right: 12, top: 8),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -237,6 +276,7 @@ class _CategoryState extends State<CategoryList> {
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
                         ),
+                        SizedBox(height: 2.h),
                         Text(
                           planList[i].providerName != null
                               ? toBeginningOfSentenceCase(
@@ -246,6 +286,32 @@ class _CategoryState extends State<CategoryList> {
                               fontSize: 14.0.sp,
                               fontWeight: FontWeight.w400,
                               color: ColorUtils.lightgraycolor),
+                        ),
+                        SizedBox(height: 2.h),
+                        Text(
+                          selectTitle[planList[i].packcatid] != null
+                              ? isSubscribedOne &&
+                                      planList[i].isSubscribed == '1'
+                                  ? selectedTitle[planList[i].packcatid]
+                                              .length >
+                                          1
+                                      ? strSelectedPlans +
+                                          selectedTitle[planList[i].packcatid]
+                                              .join(', ')
+                                      : strSelectedPlan +
+                                          selectedTitle[planList[i].packcatid]
+                                              .join(', ')
+                                  : strSelectPlan +
+                                      selectTitle[planList[i].packcatid]
+                                          .join(', ')
+                              : '',
+                          style: TextStyle(
+                              fontSize: 15.0.sp,
+                              fontWeight: FontWeight.w400,
+                              color: ColorUtils.lightgraycolor),
+                          textAlign: TextAlign.start,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
                         ),
                       ],
                     ),

@@ -115,6 +115,8 @@ class _MyProvidersState extends State<MyProviders> {
                   fromClass: router.cn_teleheathProvider,
                 )).then((value) {
               providerViewModel.doctorIdsList = null;
+              _medicalPreferenceList =
+                  _providersBloc.getMedicalPreferencesList();
               setState(() {});
             });
           },
