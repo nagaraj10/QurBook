@@ -63,6 +63,7 @@ class _CategoryState extends State<CategoryList> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
           leading: GestureDetector(
             onTap: () => Get.back(),
             child: Icon(
@@ -185,7 +186,7 @@ class _CategoryState extends State<CategoryList> {
               height: 1.sh / 1.3,
               child: Container(
                   child: Center(
-                child: Text(variable.strNoCategories),
+                child: Text(variable.strNoPackages),
               )),
             ),
           );
@@ -223,7 +224,7 @@ class _CategoryState extends State<CategoryList> {
                 height: 1.sh / 1.3,
                 child: Container(
                     child: Center(
-                  child: Text(variable.strNoCategories),
+                  child: Text(variable.strNoPackages),
                 )),
               ),
             );
@@ -319,28 +320,22 @@ class _CategoryState extends State<CategoryList> {
                             selectTitle[planList[i].packcatid] != null
                                 ? isSubscribedOne &&
                                         planList[i].isSubscribed == '1'
-                                    ? selectedTitle[planList[i].packcatid]
-                                                .length >
-                                            1
-                                        ? strSelectedPlans +
+                                    ? planList[i].catselecttype == '1'
+                                        ? strSelectedPlan +
                                             selectedTitle[planList[i].packcatid]
                                                 .join(', ')
-                                        : strSelectedPlan +
+                                        : strSelectedPlans +
                                             selectedTitle[planList[i].packcatid]
                                                 .join(', ')
                                     : planList[i].catselecttype == '1'
-                                ? strSelectPlan +
-                                        selectTitle[planList[i].packcatid]
-                                            .join(', ')
-                                : strSelectPlans +
-                                selectTitle[planList[i].packcatid]
-                                    .join(', '):'',
+                                        ? strSelectPlan
+                                        : strSelectPlans
+                                : '',
                             style: TextStyle(
                                 fontSize: 15.0.sp,
                                 fontWeight: FontWeight.w400,
-                                color: isSubscribedOne &&
-                                    planList[i].isSubscribed == '1'?Color(
-                                    new CommonUtil().getMyPrimaryColor()):Colors.black),
+                                color: Color(
+                                    new CommonUtil().getMyPrimaryColor())),
                             textAlign: TextAlign.start,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,
