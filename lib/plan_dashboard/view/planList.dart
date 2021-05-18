@@ -60,6 +60,7 @@ class _MyPlanState extends State<PlanList> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
           leading: GestureDetector(
             onTap: () => Get.back(),
             child: Icon(
