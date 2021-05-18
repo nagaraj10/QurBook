@@ -37,6 +37,7 @@ class RegimentDataModel {
     this.doseMeal,
     this.doseRepeat,
     this.metadata,
+    this.isPlaying = false,
   });
 
   final String eid;
@@ -74,6 +75,7 @@ class RegimentDataModel {
   final bool doseMeal;
   final String doseRepeat;
   final Metadata metadata;
+  bool isPlaying;
 
   factory RegimentDataModel.fromJson(Map<String, dynamic> json) =>
       RegimentDataModel(
@@ -115,6 +117,7 @@ class RegimentDataModel {
         metadata: json['metadata'] is List
             ? Metadata()
             : Metadata.fromJson(json['metadata'] ?? {}),
+        isPlaying: false,
       );
 
   Map<String, dynamic> toJson() => {

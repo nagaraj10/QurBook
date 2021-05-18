@@ -8,6 +8,7 @@ import 'package:myfhb/regiment/models/regiment_response_model.dart';
 import 'package:myfhb/regiment/models/save_response_model.dart';
 import 'package:myfhb/regiment/models/field_response_model.dart';
 import 'package:myfhb/regiment/models/profile_response_model.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 
 class RegimentService {
   static Future<RegimentResponseModel> getRegimentData(
@@ -16,13 +17,22 @@ class RegimentService {
     try {
       final headerRequest =
           await HeaderRequest().getRequestHeadersAuthContent();
+      String currentLanguage = '';
+      final lan = CommonUtil.getCurrentLanCode();
+      if (lan != "undef") {
+        final langCode = lan.split("-").first;
+        currentLanguage = langCode;
+      } else {
+        currentLanguage = 'en';
+      }
       final response = await http.post(
         urlForRegiment,
         headers: headerRequest,
         body: json.encode(
           {
             "method": "get",
-            "data": "Action=GetUserActivities&date=$dateSelected",
+            "data":
+                "Action=GetUserActivities&lang=$currentLanguage&date=$dateSelected",
           },
         ),
       );
