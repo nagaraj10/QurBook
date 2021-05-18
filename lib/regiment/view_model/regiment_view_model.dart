@@ -9,6 +9,9 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/regiment/models/regiment_data_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
+import 'package:get/get.dart';
 
 enum RegimentMode { Schedule, Symptoms }
 
@@ -58,10 +61,12 @@ class RegimentViewModel extends ChangeNotifier {
     } else {
       tabIndex = currentIndex;
     }
+    stopRegimenTTS();
   }
 
   void changeSearchExpanded(bool newValue) {
     searchExpanded = newValue;
+    stopRegimenTTS();
     notifyListeners();
   }
 
@@ -89,6 +94,36 @@ class RegimentViewModel extends ChangeNotifier {
         regimentsList = regimentsAsNeededList;
       }
     }
+    stopRegimenTTS();
+    notifyListeners();
+  }
+
+  void startRegimenTTS(int index, String saytext) {
+    stopRegimenTTS();
+    if (index < regimentsList.length) {
+      Future.delayed(
+          Duration(
+            milliseconds: 100,
+          ), () {
+        regimentsList[index].isPlaying = true;
+        notifyListeners();
+      });
+    }
+    Provider.of<ChatScreenViewModel>(Get.context, listen: false).startTTSEngine(
+      textToSpeak: saytext,
+      isRegiment: true,
+      onStop: () {
+        stopRegimenTTS();
+      },
+    );
+  }
+
+  void stopRegimenTTS() {
+    Provider.of<ChatScreenViewModel>(Get.context, listen: false)
+        .stopTTSEngine();
+    regimentsList?.forEach((regimenData) {
+      regimenData.isPlaying = false;
+    });
     notifyListeners();
   }
 

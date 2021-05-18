@@ -30,7 +30,15 @@ class EventListWidget extends StatelessWidget {
           }
         },
         onSave: () async {
-          String schedules = '';
+          String currentLanguage = '';
+          final lan = CommonUtil.getCurrentLanCode();
+          if (lan != "undef") {
+            final langCode = lan.split("-").first;
+            currentLanguage = langCode;
+          } else {
+            currentLanguage = 'en';
+          }
+          String schedules = '&Language=$currentLanguage';
           saveMap.forEach((key, value) {
             schedules += '&$key=$value';
           });
