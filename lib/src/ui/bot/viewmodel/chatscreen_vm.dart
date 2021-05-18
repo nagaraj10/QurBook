@@ -193,9 +193,9 @@ class ChatScreenViewModel extends ChangeNotifier {
               conversations[index].isSpeaking = false;
               isSheelaSpeaking = false;
               notifyListeners();
-              if (isRegiment) {
-                onStop();
-              }
+            }
+            if (isRegiment) {
+              onStop();
             }
           }
         });
