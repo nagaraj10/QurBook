@@ -4,6 +4,7 @@ import 'dart:core';
 
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/language/model/Language.dart';
 import 'package:myfhb/my_family/models/FamilyData.dart';
 import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
 import 'package:myfhb/my_family/models/RelationShip.dart';
@@ -265,6 +266,26 @@ class PreferenceUtil {
     }
   }
 
+  static Future<bool> saveLanguageList(
+      String membershipKey, List<LanguageResult> categoryList) async {
+    var instance = await _prefs;
+
+    return instance.setString(membershipKey, json.encode(categoryList));
+  }
+
+  static List<LanguageResult> getLanguagegeList(String keyLanguage) {
+    List<LanguageResult> categoryData = new List();
+
+    try {
+      if (_prefsInstance == null) {}
+      json.decode(_prefsInstance.getString(keyLanguage)).forEach((map) {
+        categoryData.add(new LanguageResult.fromJson(map));
+      });
+
+      return categoryData;
+    } catch (e) {}
+  }
+
   static FamilyMemberResult getFamilyDataNew(String keyFamily) {
     try {
       if (_prefsInstance == null) {}
@@ -305,7 +326,8 @@ class PreferenceUtil {
     return instance.setString(familyRelation, json.encode(relationShipAry));
   }
 
-  static List<RelationsShipModel> getFamilyRelationship(String keyFamilyRelation) {
+  static List<RelationsShipModel> getFamilyRelationship(
+      String keyFamilyRelation) {
     List<RelationsShipModel> categoryData = new List();
 
     try {
@@ -328,5 +350,4 @@ class PreferenceUtil {
     return UserModel.fromJson(
         json.decode(_prefsInstance.getString(keyProfile)));
   }
-
 }
