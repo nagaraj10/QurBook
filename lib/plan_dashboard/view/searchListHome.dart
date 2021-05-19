@@ -1,6 +1,8 @@
 import 'dart:math';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -71,7 +73,7 @@ class _SearchListState extends State<SearchListHome> {
                     width: 30.0.h,
                     height: 30.0.h,
                     child: new CircularProgressIndicator(
-                      strokeWidth: 1.5,
+                        strokeWidth: 1.5,
                         backgroundColor:
                             Color(new CommonUtil().getMyPrimaryColor())),
                   ),
@@ -176,12 +178,12 @@ class _SearchListState extends State<SearchListHome> {
               searchModel = value;
               isListVisible = true;
             });
-          }else{
+          } else {
             setState(() {
               isLoaderVisible = false;
             });
           }
-        }else{
+        } else {
           setState(() {
             isLoaderVisible = false;
           });
@@ -295,12 +297,49 @@ class _SearchListState extends State<SearchListHome> {
                   CircleAvatar(
                     backgroundColor: Colors.grey[200],
                     radius: 20,
-                    child: ClipOval(
-                        child: CircleAvatar(
-                      backgroundImage: AssetImage('assets/launcher/myfhb1.png'),
-                      radius: 18,
-                      backgroundColor: Colors.transparent,
-                    )),
+                    child: searchList[i] != null &&
+                            searchList[i].metadata != null &&
+                            searchList[i].metadata.icon != null
+                        ? searchList[i]
+                                ?.metadata
+                                ?.icon
+                                .toString()
+                                .toLowerCase()
+                                ?.contains('.svg')
+                            ? ClipOval(
+                                child: SvgPicture.network(
+                                searchList[i]?.metadata?.icon,
+                                placeholderBuilder: (BuildContext context) =>
+                                    new CircularProgressIndicator(
+                                        strokeWidth: 1.5,
+                                        backgroundColor: Color(new CommonUtil()
+                                            .getMyPrimaryColor())),
+                              ))
+                            : ClipOval(
+                                child: CachedNetworkImage(
+                                    imageUrl: searchList[i]?.metadata?.icon,
+                                    placeholder: (context, url) =>
+                                        new CircularProgressIndicator(
+                                            strokeWidth: 1.5,
+                                            backgroundColor: Color(
+                                                new CommonUtil()
+                                                    .getMyPrimaryColor())),
+                                    errorWidget: (context, url, error) =>
+                                        ClipOval(
+                                            child: CircleAvatar(
+                                          backgroundImage: AssetImage(
+                                              'assets/launcher/myfhb1.png'),
+                                          radius: 18,
+                                          backgroundColor: Colors.transparent,
+                                        ))),
+                              )
+                        : ClipOval(
+                            child: CircleAvatar(
+                            backgroundImage:
+                                AssetImage('assets/launcher/myfhb1.png'),
+                            radius: 18,
+                            backgroundColor: Colors.transparent,
+                          )),
                   ),
                   SizedBox(
                     width: 20.0.w,
@@ -324,7 +363,8 @@ class _SearchListState extends State<SearchListHome> {
                         ),
                         Text(
                           searchList[i].description != null
-                              ? toBeginningOfSentenceCase(searchList[i].description)
+                              ? toBeginningOfSentenceCase(
+                                  searchList[i].description)
                               : '',
                           style: TextStyle(
                             fontSize: 15.0.sp,
