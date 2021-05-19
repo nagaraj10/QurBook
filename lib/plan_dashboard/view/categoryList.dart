@@ -17,6 +17,7 @@ import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
+import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
 
 class CategoryList extends StatefulWidget {
@@ -63,7 +64,7 @@ class _CategoryState extends State<CategoryList> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
+          flexibleSpace: GradientAppBar(),
           leading: GestureDetector(
             onTap: () => Get.back(),
             child: Icon(
@@ -128,7 +129,7 @@ class _CategoryState extends State<CategoryList> {
   onSearchedNew(String title, List<PlanListResult> planListOld) async {
     myPLanListResult.clear();
     if (title != null) {
-      myPLanListResult = await myPlanViewModel.getSearch(title, planListOld);
+      myPLanListResult = await myPlanViewModel.getSearchForCategory(title, planListOld);
     }
     setState(() {});
   }

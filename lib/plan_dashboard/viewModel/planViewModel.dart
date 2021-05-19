@@ -27,7 +27,22 @@ class PlanViewModel extends ChangeNotifier {
     } catch (e) {}
   }
 
-  List<PlanListResult> getSearch(String title,List<PlanListResult> planListOld) {
+  List<PlanListResult> getSearchForCategory(String title,List<PlanListResult> planListOld) {
+    List<PlanListResult> filterDoctorData = new List();
+    for (PlanListResult planList in planListOld) {
+      if (planList.catname != null && planList.catname != '') {
+        if (planList.catname
+            .toLowerCase()
+            .trim()
+            .contains(title.toLowerCase().trim())) {
+          filterDoctorData.add(planList);
+        }
+      }
+    }
+    return filterDoctorData;
+  }
+
+  List<PlanListResult> getSearchForPlanList(String title,List<PlanListResult> planListOld) {
     List<PlanListResult> filterDoctorData = new List();
     for (PlanListResult planList in planListOld) {
       if (planList.title != null && planList.title != '') {

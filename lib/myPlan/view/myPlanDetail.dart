@@ -5,6 +5,7 @@ import 'package:myfhb/myPlan/viewModel/myPlanViewModel.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/widgets/GradientAppBar.dart';
 
 class MyPlanDetail extends StatefulWidget {
   final String title;
@@ -59,6 +60,7 @@ class PlanDetail extends State<MyPlanDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          flexibleSpace: GradientAppBar(),
           leading: GestureDetector(
             onTap: () => Navigator.pop(context),
             child: Icon(
