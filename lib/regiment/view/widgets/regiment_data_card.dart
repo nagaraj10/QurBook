@@ -435,8 +435,7 @@ class RegimentDataCard extends StatelessWidget {
             eid: eid,
             color: color,
             mediaData: mediaData,
-            formTitle:
-                '${DateFormat('hh:mm a').format(regimentData.estart)},${regimentData.title}',
+            formTitle: getDialogTitle(context),
           ),
         );
         if (value != null && (value ?? false)) {
