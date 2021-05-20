@@ -618,11 +618,11 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     await Navigator.of(context)
         .push(MaterialPageRoute(
             builder: (context) => SearchSpecificList(
-                  arguments: SearchArguments(
-                    searchWord: searchParam,
-                  ),
-                  toPreviousScreen: true,
-                )))
+                arguments: SearchArguments(
+                  searchWord: searchParam,
+                ),
+                toPreviousScreen: true,
+                isSkipUnknown: true)))
         .then((results) {
       if (results != null) {
         if (results.containsKey(Constants.keyDoctor)) {
