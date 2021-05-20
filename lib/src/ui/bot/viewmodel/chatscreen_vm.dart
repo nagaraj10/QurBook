@@ -141,15 +141,18 @@ class ChatScreenViewModel extends ChangeNotifier {
     final lan = langCode != null && langCode.isNotEmpty
         ? langCode
         : Utils.getCurrentLanCode();
-    if (Platform.isIOS ||
-        lan == "undef" ||
-        lan.toLowerCase() == "en-IN".toLowerCase() ||
-        lan.toLowerCase() == "en-US".toLowerCase()) {
-      await variable.tts_platform.invokeMethod(variable.strtts, {
-        parameters.strMessage: "",
-        parameters.strIsClose: true,
-        parameters.strLanguage: Utils.getCurrentLanCode()
-      });
+    if (Platform.isIOS) {
+      if (lan == "undef" ||
+          lan.toLowerCase() == "en-IN".toLowerCase() ||
+          lan.toLowerCase() == "en-US".toLowerCase()) {
+        await variable.tts_platform.invokeMethod(variable.strtts, {
+          parameters.strMessage: "",
+          parameters.strIsClose: true,
+          parameters.strLanguage: Utils.getCurrentLanCode()
+        });
+      } else {
+        notifyListeners();
+      }
     } else {
       notifyListeners();
     }
@@ -179,26 +182,69 @@ class ChatScreenViewModel extends ChangeNotifier {
       final lan = langCode != null && langCode.isNotEmpty
           ? langCode
           : Utils.getCurrentLanCode();
-      if (Platform.isIOS ||
-          lan == "undef" ||
-          lan.toLowerCase() == "en-IN".toLowerCase() ||
-          lan.toLowerCase() == "en-US".toLowerCase()) {
-        await variable.tts_platform.invokeMethod(variable.strtts, {
-          parameters.strMessage: textToSpeak,
-          parameters.strIsClose: false,
-          parameters.strLanguage: langCode ?? Utils.getCurrentLanCode(),
-        }).then((response) async {
-          if (response == 1) {
-            if (index != null) {
-              conversations[index].isSpeaking = false;
-              isSheelaSpeaking = false;
-              notifyListeners();
+      if (Platform.isIOS) {
+        if (lan == "undef" ||
+            lan.toLowerCase() == "en-IN".toLowerCase() ||
+            lan.toLowerCase() == "en-US".toLowerCase()) {
+          await variable.tts_platform.invokeMethod(variable.strtts, {
+            parameters.strMessage: textToSpeak,
+            parameters.strIsClose: false,
+            parameters.strLanguage: langCode ?? Utils.getCurrentLanCode(),
+          }).then((response) async {
+            if (response == 1) {
+              if (index != null) {
+                conversations[index].isSpeaking = false;
+                isSheelaSpeaking = false;
+                notifyListeners();
+              }
+              if (isRegiment) {
+                onStop();
+              }
             }
-            if (isRegiment) {
-              onStop();
-            }
+          });
+        } else if (isRegiment) {
+          String langCodeForRequest;
+          if (lan != "undef") {
+            final langCode = lan.split("-").first;
+            langCodeForRequest = langCode;
+            //print(langCode);
           }
-        });
+          newAudioPlay1 = AudioPlayer();
+          final languageForTTS =
+              langCodeForRequest ?? Utils.getCurrentLanCode();
+          newAudioPlay1.onPlayerStateChanged.listen((event) async {
+            print(event);
+            if (event == AudioPlayerState.COMPLETED ||
+                event == AudioPlayerState.PAUSED ||
+                event == AudioPlayerState.STOPPED) {
+              if (index != null && stopPrevious && !isButtonText) {
+                conversations[index].isSpeaking = false;
+                isSheelaSpeaking = false;
+                notifyListeners();
+              }
+              if (isRegiment) {
+                onStop();
+              }
+            }
+            if (event == AudioPlayerState.PLAYING) {
+              if (index != null) {
+                conversations[index].isSpeaking = true;
+                isSheelaSpeaking = true;
+                notifyListeners();
+              }
+              await setTimeDuration(newAudioPlay1);
+            }
+          });
+          if (isRegiment) {
+            await getGoogleTTSRegiment(
+              textToSpeak,
+              languageForTTS != null ? languageForTTS : "en",
+            );
+          } else {
+            await getGoogleTTSResponse(textToSpeak,
+                languageForTTS != null ? languageForTTS : "en", true);
+          }
+        }
       } else {
         String langCodeForRequest;
         if (lan != "undef") {
@@ -651,8 +697,12 @@ class ChatScreenViewModel extends ChangeNotifier {
   }
 
   stopAudioPlayer() {
-    audioPlayerForTTS?.stop();
-    newAudioPlay1?.stop();
+    if (audioPlayerForTTS.state == AudioPlayerState.PLAYING) {
+      audioPlayerForTTS?.stop();
+    }
+    if (newAudioPlay1.state == AudioPlayerState.PLAYING) {
+      newAudioPlay1?.stop();
+    }
   }
 
   Future<void> gettingReposnseFromNative() async {
@@ -840,11 +890,38 @@ class ChatScreenViewModel extends ChangeNotifier {
             if (audioContent != null) {
               final bytes = Base64Decoder().convert(audioContent);
               if (bytes != null) {
-                final dir = await getTemporaryDirectory();
-                final file = File('${dir.path}/wavenet.mp3');
-                await file.writeAsBytes(bytes);
-                final path = dir.path + "/wavenet.mp3";
+                String path;
+                if (Platform.isIOS) {
+                  final Directory dir = await getTemporaryDirectory();
+                  Directory dirFolder = Directory("${dir.path}/regiment");
+                  if (await dirFolder.exists()) {
+                    await dirFolder.delete(recursive: true);
+                  }
+                  dirFolder = await dirFolder.create(recursive: true);
+                  final id = DateTime.now().millisecondsSinceEpoch;
+                  if (await dir.exists()) {}
+                  var file = File(dirFolder.path + "/$id.mp3");
+                  if (await file.exists()) {
+                    print(await file.lastModified());
+                    await file.delete();
+                  }
+
+                  if (await file.exists()) {
+                    file.delete();
+                  } else {
+                    file = File(dirFolder.path + "/$id.mp3");
+                  }
+                  await file.writeAsBytes(bytes);
+                  print(await file.lastModified());
+                  path = file.path;
+                } else {
+                  final dir = await getTemporaryDirectory();
+                  final file = File('${dir.path}/wavenet.mp3');
+                  await file.writeAsBytes(bytes);
+                  path = dir.path + "/wavenet.mp3";
+                }
                 if (canSpeak) {
+                  print(path);
                   newAudioPlay1.play(path, isLocal: true);
                   await Future.delayed(Duration(milliseconds: 500), () async {
                     await Future.delayed(
