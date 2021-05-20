@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/common/CommonUtil.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:myfhb/constants/fhb_query.dart' as variable;
-import 'package:flutter_svg/flutter_svg.dart';
+import 'custom_image_network.dart';
 
 class CheckboxTileWidget extends StatefulWidget {
   CheckboxTileWidget({
@@ -62,25 +60,11 @@ class _CheckboxTileWidgetState extends State<CheckboxTileWidget> {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  if (imagePath.toString().split('!').length == 2)
-                    (imagePath
-                                .toString()
-                                .split('!')[1]
-                                .toLowerCase()
-                                ?.contains('.svg') ??
-                            false)
-                        ? SvgPicture.network(
-                            variable.regimentImagePath +
-                                imagePath.toString().split('!')[1],
-                          )
-                        : CachedNetworkImage(
-                            imageUrl: variable.regimentImagePath +
-                                imagePath.toString().split('!')[1],
-                            placeholder: (context, url) =>
-                                new CircularProgressIndicator(),
-                            errorWidget: (context, url, error) =>
-                                SizedBox.shrink(),
-                          ),
+                  CustomImageNetwork(
+                    imageUrl: (imagePath.toString().split('!').length == 2)
+                        ? imagePath.toString().split('!')[1]
+                        : '',
+                  ),
                 ],
               ),
             ),
