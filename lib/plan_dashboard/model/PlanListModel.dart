@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'MetaDataForURL.dart';
+
 class PlanListModel {
   bool isSuccess;
   List<PlanListResult> result;
@@ -46,51 +50,65 @@ class PlanListResult {
   String userpackid;
   String isSubscribed;
   String startDate;
+  MetaDataForURL metadata;
+  MetaDataForURL catmetadata;
 
   PlanListResult(
       {this.packageid,
-        this.title,
-        this.description,
-        this.docid,
-        this.price,
-        this.issubscription,
-        this.ispublic,
-        this.html,
-        this.packageDuration,
-        this.billingCycle,
-        this.ts,
-        this.providerid,
-        this.providerName,
-        this.plinkid,
-        this.packcatid,
-        this.catname,
-        this.catdesc,
-        this.catselecttype,
-        this.userpackid,
-        this.isSubscribed,this.startDate});
+      this.title,
+      this.description,
+      this.docid,
+      this.price,
+      this.issubscription,
+      this.ispublic,
+      this.html,
+      this.packageDuration,
+      this.billingCycle,
+      this.ts,
+      this.providerid,
+      this.providerName,
+      this.plinkid,
+      this.packcatid,
+      this.catname,
+      this.catdesc,
+      this.catselecttype,
+      this.userpackid,
+      this.isSubscribed,
+      this.startDate,
+      this.metadata,
+      this.catmetadata});
 
-  PlanListResult.fromJson(Map<String, dynamic> json) {
-    packageid = json['packageid'];
-    title = json['title'];
-    description = json['description'];
-    docid = json['docid'];
-    price = json['price'];
-    issubscription = json['issubscription'];
-    ispublic = json['ispublic'];
-    html = json['html'];
-    packageDuration = json['PackageDuration'];
-    billingCycle = json['BillingCycle'];
-    ts = json['ts'];
-    providerid = json['providerid'];
-    providerName = json['provider_name'];
-    plinkid = json['plinkid'];
-    packcatid = json['packcatid'];
-    catname = json['catname'];
-    catdesc = json['catdesc'];
-    catselecttype = json['catselecttype'];
-    userpackid = json['userpackid'];
-    isSubscribed = json['IsSubscribed'];
-    startDate = json['startdate'];
+  factory PlanListResult.fromJson(Map<String, dynamic> json) {
+    return PlanListResult(
+        packageid: json['packageid'],
+        title: json['title'],
+        description: json['description'],
+        docid: json['docid'],
+        price: json['price'],
+        issubscription: json['issubscription'],
+        ispublic: json['ispublic'],
+        html: json['html'],
+        packageDuration: json['PackageDuration'],
+        billingCycle: json['BillingCycle'],
+        ts: json['ts'],
+        providerid: json['providerid'],
+        providerName: json['provider_name'],
+        plinkid: json['plinkid'],
+        packcatid: json['packcatid'],
+        catname: json['catname'],
+        catdesc: json['catdesc'],
+        catselecttype: json['catselecttype'],
+        userpackid: json['userpackid'],
+        isSubscribed: json['IsSubscribed'],
+        startDate: json['startdate'],
+        metadata:
+            json['metadata'] != null && json['metadata'].toString().isNotEmpty
+                ? MetaDataForURL.fromJson(jsonDecode(json["metadata"] ?? '{}'))
+                : null,
+        catmetadata: json['catmetadata'] != null &&
+                json['catmetadata'].toString().isNotEmpty
+            ? MetaDataForURL.fromJson(jsonDecode(json["catmetadata"] ?? '{}'))
+            : null);
   }
 
   Map<String, dynamic> toJson() {
@@ -116,6 +134,8 @@ class PlanListResult {
     data['userpackid'] = this.userpackid;
     data['IsSubscribed'] = this.isSubscribed;
     data['startdate'] = this.startDate;
+    data['metadata'] = this.metadata;
+    data['catmetadata'] = this.catmetadata;
     return data;
   }
 }

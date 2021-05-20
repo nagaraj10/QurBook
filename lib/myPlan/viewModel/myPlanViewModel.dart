@@ -45,8 +45,8 @@ class MyPlanViewModel extends ChangeNotifier {
   List<MyPlanListResult> getProviderSearch(String doctorName) {
     List<MyPlanListResult> filterDoctorData = new List();
     for (MyPlanListResult doctorData in myPLanListResult) {
-      if (doctorData.providerName != null && doctorData.providerName != '') {
-        if (doctorData.providerName
+      if (doctorData.title != null && doctorData.title != '') {
+        if (doctorData.title
             .toLowerCase()
             .trim()
             .contains(doctorName.toLowerCase().trim())) {

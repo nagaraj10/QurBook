@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:myfhb/plan_dashboard/model/MetaDataForURL.dart';
+
 class MyPlanListModel {
   bool isSuccess;
   List<MyPlanListResult> result;
@@ -40,40 +44,47 @@ class MyPlanListResult {
   String duration;
   String enddate;
   String isexpired;
+  MetaDataForURL metadata;
 
   MyPlanListResult(
       {this.packageid,
-        this.title,
-        this.docid,
-        this.price,
-        this.paid,
-        this.packcatid,
-        this.catname,
-        this.catdesc,
-        this.docNick,
-        this.providerid,
-        this.providerName,
-        this.startdate,
-        this.duration,
-        this.enddate,
-        this.isexpired});
+      this.title,
+      this.docid,
+      this.price,
+      this.paid,
+      this.packcatid,
+      this.catname,
+      this.catdesc,
+      this.docNick,
+      this.providerid,
+      this.providerName,
+      this.startdate,
+      this.duration,
+      this.enddate,
+      this.isexpired,
+      this.metadata});
 
-  MyPlanListResult.fromJson(Map<String, dynamic> json) {
-    packageid = json['packageid'];
-    title = json['title'];
-    docid = json['docid'];
-    price = json['price'];
-    paid = json['paid'];
-    packcatid = json['packcatid'];
-    catname = json['catname'];
-    catdesc = json['catdesc'];
-    docNick = json['doc_nick'];
-    providerid = json['providerid'];
-    providerName = json['provider_name'];
-    startdate = json['startdate'];
-    duration = json['duration'];
-    enddate = json['enddate'];
-    isexpired = json['isexpired'];
+  factory MyPlanListResult.fromJson(Map<String, dynamic> json) {
+    return MyPlanListResult(
+        packageid: json['packageid'],
+        title: json['title'],
+        docid: json['docid'],
+        price: json['price'],
+        paid: json['paid'],
+        packcatid: json['packcatid'],
+        catname: json['catname'],
+        catdesc: json['catdesc'],
+        docNick: json['doc_nick'],
+        providerid: json['providerid'],
+        providerName: json['provider_name'],
+        startdate: json['startdate'],
+        duration: json['duration'],
+        enddate: json['enddate'],
+        isexpired: json['isexpired'],
+        metadata:
+            json['metadata'] != null && json['metadata'].toString().isNotEmpty
+                ? MetaDataForURL.fromJson(jsonDecode(json["metadata"] ?? '{}'))
+                : null);
   }
 
   Map<String, dynamic> toJson() {
@@ -93,6 +104,7 @@ class MyPlanListResult {
     data['duration'] = this.duration;
     data['enddate'] = this.enddate;
     data['isexpired'] = this.isexpired;
+    data['metadata'] = this.metadata;
     return data;
   }
 }

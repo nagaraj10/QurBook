@@ -9,6 +9,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
 import 'package:myfhb/plan_dashboard/model/SearchListModel.dart';
@@ -263,7 +264,7 @@ class _SearchListState extends State<SearchListHome> {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => CategoryList(searchList[i].providerid)),
+              builder: (context) => CategoryList(searchList[i].providerid,searchList[i]?.metadata?.icon)),
         ).then((value) {
           setState(() {});
         });
@@ -299,7 +300,7 @@ class _SearchListState extends State<SearchListHome> {
                     radius: 20,
                     child: searchList[i] != null &&
                             searchList[i].metadata != null &&
-                            searchList[i].metadata.icon != null
+                            searchList[i].metadata.icon != null && searchList[i].metadata.icon!=''
                         ? searchList[i]
                                 ?.metadata
                                 ?.icon
@@ -328,7 +329,7 @@ class _SearchListState extends State<SearchListHome> {
                                         ClipOval(
                                             child: CircleAvatar(
                                           backgroundImage: AssetImage(
-                                              'assets/launcher/myfhb1.png'),
+                                              qurHealthLogo),
                                           radius: 18,
                                           backgroundColor: Colors.transparent,
                                         ))),
@@ -336,7 +337,7 @@ class _SearchListState extends State<SearchListHome> {
                         : ClipOval(
                             child: CircleAvatar(
                             backgroundImage:
-                                AssetImage('assets/launcher/myfhb1.png'),
+                                AssetImage(qurHealthLogo),
                             radius: 18,
                             backgroundColor: Colors.transparent,
                           )),

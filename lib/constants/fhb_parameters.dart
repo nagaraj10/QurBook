@@ -665,3 +665,5 @@ const String errAssociateRecords =
 
 const String strMetaData = 'metadata';
 const String strMultipart = 'multipart/form-data';
+
+const String qurHealthLogo = 'assets/launcher/myfhb1.png';

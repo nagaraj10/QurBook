@@ -1,7 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:path/path.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
@@ -17,6 +20,8 @@ class MyPlanDetailView extends StatefulWidget {
   final String packageDuration;
   final String providerId;
   final bool isDisable;
+  final String icon;
+  final String iconApi;
 
   MyPlanDetailView({
     Key key,
@@ -29,6 +34,8 @@ class MyPlanDetailView extends StatefulWidget {
     @required this.packageDuration,
     @required this.providerId,
     @required this.isDisable,
+    @required this.icon,
+    @required this.iconApi,
   }) : super(key: key);
 
   @override
@@ -47,6 +54,8 @@ class PlanDetail extends State<MyPlanDetailView> {
   String packageDuration;
   String providerId;
   bool isDisable;
+  String icon='';
+  String iconApi='';
 
   @override
   void initState() {
@@ -64,6 +73,8 @@ class PlanDetail extends State<MyPlanDetailView> {
     packageDuration = widget.packageDuration;
     providerId = widget.providerId;
     isDisable = widget.isDisable;
+    icon = widget.icon;
+    iconApi = widget.iconApi;
   }
 
   @override
@@ -94,9 +105,80 @@ class PlanDetail extends State<MyPlanDetailView> {
                 child: Column(
                   children: [
                     CircleAvatar(
-                      backgroundImage: AssetImage('assets/launcher/myfhb1.png'),
-                      radius: 50.sp,
-                      backgroundColor: Colors.transparent,
+                      backgroundColor: Colors.grey[200],
+                      radius: 35,
+                      child: iconApi != null &&
+                          iconApi != ''
+                          ? iconApi
+                          .toString()
+                          .toLowerCase()
+                          ?.contains('.svg')
+                          ? ClipOval(
+                          child: SvgPicture.network(
+                            iconApi,
+                            placeholderBuilder: (BuildContext context) =>
+                            new CircularProgressIndicator(
+                                strokeWidth: 1.5,
+                                backgroundColor: Color(new CommonUtil()
+                                    .getMyPrimaryColor())),
+                          ))
+                          : ClipOval(
+                        child: CachedNetworkImage(
+                            imageUrl:iconApi,
+                            placeholder: (context, url) =>
+                            new CircularProgressIndicator(
+                                strokeWidth: 1.5,
+                                backgroundColor: Color(
+                                    new CommonUtil()
+                                        .getMyPrimaryColor())),
+                            errorWidget: (context, url, error) =>
+                                ClipOval(
+                                    child: CircleAvatar(
+                                      backgroundImage: AssetImage(
+                                          qurHealthLogo),
+                                      radius: 32,
+                                      backgroundColor: Colors.transparent,
+                                    ))),
+                      )
+                          : icon != null && icon != ''
+                          ? icon.toString().toLowerCase()?.contains('.svg')
+                          ? ClipOval(
+                          child: SvgPicture.network(
+                            icon,
+                            placeholderBuilder:
+                                (BuildContext context) =>
+                            new CircularProgressIndicator(
+                                strokeWidth: 1.5,
+                                backgroundColor: Color(
+                                    new CommonUtil()
+                                        .getMyPrimaryColor())),
+                          ))
+                          : ClipOval(
+                        child: CachedNetworkImage(
+                            imageUrl: icon,
+                            placeholder: (context, url) =>
+                            new CircularProgressIndicator(
+                                strokeWidth: 1.5,
+                                backgroundColor: Color(
+                                    new CommonUtil()
+                                        .getMyPrimaryColor())),
+                            errorWidget: (context, url, error) =>
+                                ClipOval(
+                                    child: CircleAvatar(
+                                      backgroundImage: AssetImage(
+                                          qurHealthLogo),
+                                      radius: 32,
+                                      backgroundColor:
+                                      Colors.transparent,
+                                    ))),
+                      )
+                          : ClipOval(
+                          child: CircleAvatar(
+                            backgroundImage:
+                            AssetImage(qurHealthLogo),
+                            radius: 32,
+                            backgroundColor: Colors.transparent,
+                          )),
                     ),
                     SizedBox(
                       height: 20.h,
