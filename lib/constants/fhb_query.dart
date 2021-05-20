@@ -29,6 +29,7 @@ const String qr_doctorpatientmapping = 'doctorpatientmapping/';
 const String qr_updateDefaultProvider = 'updateDefaultProvider';
 const String qr_isOriginalPicRequired = 'isOriginalPicRequired=false';
 const String qr_isOriginalPicRequiredTrue = 'isOriginalPicRequired=true';
+const String qr_language = 'reference-data?search-name=Language';
 
 const String qr_sendVerificationMail = '/sendVerificationMail';
 const String qr_sortByQ = '?sortBy=';
@@ -223,6 +224,9 @@ const String qr_Google_TTS_Regiment_URL = 'google-tts/google-translate/proxy';
 const String qr_plan_list = 'plan-package-master/wrapperApi';
 const String qr_getUserPack = 'Action=GetUserPackages';
 const String qr_getPack = 'Action=GetPackages';
+const String qr_getSearchList = 'Action=GetProviderList';
+const String qr_qEqaul = '&q=';
+const String qr_providerEqaul = '&providerid=';
 const String qr_getUserPackDetail = 'Action=GetUserPlanDetails&packageid=';
 const String qr_subscribePlan = 'Action=Subscribe&packageid=';
 const String qr_UnsubscribePlan = 'Action=UnSubscribe&packageid=';

@@ -167,67 +167,6 @@ class PushNotificationsProvider {
         payload: parameters.custom_sound);
   }
 
-  // showLocalNotificationNew(Map<String, dynamic> message) async {
-  //   var fcmToken = await AwesomeNotifications().firebaseAppToken;
-
-  //   print('fcm token by $fcmToken');
-  //   createNotificationWith(message,
-  //       addActions: ((message[parameters.strtype] == parameters.call) ||
-  //           (message[parameters.templateName] ==
-  //               parameters.doctorCancellation)));
-  // }
-
-  // void createNotificationWith(Map<String, dynamic> message,
-  //     {bool addActions = false}) {
-  //   meetingId = message[parameters.meetingId];
-
-  //   String keyForAccept;
-  //   String keyForDecline;
-
-  //   if (addActions) {
-  //     if (message[parameters.templateName] == parameters.doctorCancellation) {
-  //       keyForAccept = parameters.reschedule;
-  //       keyForDecline = parameters.cancel;
-  //       rescheduleDetails = Past(
-  //           doctorSessionId: message[parameters.strDoctorSessionId],
-  //           bookingId: message[parameters.strBookingId_S],
-  //           doctor: doc.Doctor(id: message[parameters.doctorId]),
-  //           healthOrganization:
-  //               City(id: message[parameters.healthOrganization]));
-  //       bookingId = message[parameters.strBookingId_S];
-  //       plannedStartDateTime = message[parameters.strPlannedStartDateTime];
-  //     } else {
-  //       keyForAccept = parameters.accept;
-  //       keyForDecline = parameters.decline;
-  //       callDetails = CallArguments(
-  //           userName: message[parameters.username],
-  //           doctorId: message[parameters.doctorId],
-  //           meetingId: message[parameters.meeting_id],
-  //           doctorPicture: message[parameters.doctorPicture],
-  //           role: ClientRole.Broadcaster,
-  //           isAppExists: true);
-  //     }
-  //   }
-
-  //   AwesomeNotifications().createNotification(
-  //     actionButtons: addActions
-  //         ? [
-  //             NotificationActionButton(
-  //               key: keyForAccept,
-  //               label: keyForAccept,
-  //               buttonType: ActionButtonType.KeepOnTop,
-  //             ),
-  //             NotificationActionButton(
-  //                 key: keyForDecline,
-  //                 label: keyForDecline,
-  //                 buttonType: ActionButtonType.Default),
-  //           ]
-  //         : [],
-  //     content: NotificationContent(
-  //         id: 1, channelKey: 'basic_channel', title: title, body: body),
-  //   );
-  // }
-
   onSelectNotificationFromNative(String payload) {
     // print(
     //     "----------------------------------------------------------- called on selection");

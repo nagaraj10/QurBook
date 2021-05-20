@@ -237,13 +237,7 @@ class WebserviceCall {
       };
       queryProfile.addAll(relationshipCollection);
     }
-    //?this has to be uncomment
-    // if(relationship!=null){
-    //   var relationshipCollection = {
-    //     'userRelationshipCollection': [relationship.toJson()]
-    //   };
-    //   queryProfile.addAll(relationshipCollection);
-    // }
+
     profileResult.userAddressCollection3[0].addressType = AddressType(
       id: '22f814a7-5b72-41aa-b5f7-7d2cd38d5da4',
       code: 'RESADD',

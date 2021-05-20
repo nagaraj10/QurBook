@@ -37,6 +37,7 @@ class RegimentDataModel {
     this.doseMeal,
     this.doseRepeat,
     this.metadata,
+    this.isPlaying = false,
   });
 
   final String eid;
@@ -74,6 +75,7 @@ class RegimentDataModel {
   final bool doseMeal;
   final String doseRepeat;
   final Metadata metadata;
+  bool isPlaying;
 
   factory RegimentDataModel.fromJson(Map<String, dynamic> json) =>
       RegimentDataModel(
@@ -97,7 +99,10 @@ class RegimentDataModel {
         remindinType: json['remindin_type'],
         ack: DateTime.tryParse(json['ack'] ?? ''),
         alarm: json['alarm'],
-        uformdata: UformData().fromJson(jsonDecode(json['uformdata'] ?? '{}')),
+        uformdata:
+            json['uformdata'] != null && json['uformdata'].toString().isNotEmpty
+                ? UformData().fromJson(jsonDecode(json['uformdata'] ?? '{}'))
+                : null,
         ts: DateTime.tryParse(json['ts'] ?? ''),
         deleted: json['deleted'],
         evDuration: json['ev_duration'],
@@ -115,6 +120,7 @@ class RegimentDataModel {
         metadata: json['metadata'] is List
             ? Metadata()
             : Metadata.fromJson(json['metadata'] ?? {}),
+        isPlaying: false,
       );
 
   Map<String, dynamic> toJson() => {

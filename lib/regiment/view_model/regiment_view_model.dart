@@ -9,6 +9,9 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/regiment/models/regiment_data_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
+import 'package:get/get.dart';
 
 enum RegimentMode { Schedule, Symptoms }
 
@@ -29,13 +32,15 @@ class RegimentViewModel extends ChangeNotifier {
   TextEditingController searchController = TextEditingController();
   FocusNode searchFocus = FocusNode();
   ScrollController scrollController = ScrollController();
-  int tabIndex;
+  int tabIndex = 0;
   double scrollOffset;
   int initialShowIndex;
 
-  void updateInitialShowIndex({bool isDone: false}) {
+  void updateInitialShowIndex({bool isDone: false, int index}) {
     if (isDone) {
       initialShowIndex = null;
+    } else if (index != null) {
+      initialShowIndex = index;
     } else if ((regimentsScheduledList?.length ?? 0) > 0) {
       int index = 0;
       for (final event in regimentsScheduledList) {
@@ -56,12 +61,14 @@ class RegimentViewModel extends ChangeNotifier {
     if (isInitial) {
       tabIndex = (regimentsData?.regimentsList?.length ?? 0) > 0 ? 0 : 2;
     } else {
-      tabIndex = currentIndex;
+      tabIndex = currentIndex ?? 0;
     }
+    stopRegimenTTS();
   }
 
   void changeSearchExpanded(bool newValue) {
     searchExpanded = newValue;
+    stopRegimenTTS();
     notifyListeners();
   }
 
@@ -69,6 +76,9 @@ class RegimentViewModel extends ChangeNotifier {
     regimentMode = (regimentMode == RegimentMode.Schedule)
         ? RegimentMode.Symptoms
         : RegimentMode.Schedule;
+    if (regimentMode == RegimentMode.Symptoms) {
+      updateInitialShowIndex(index: 0);
+    }
     resetRegimenTab();
     notifyListeners();
   }
@@ -89,6 +99,36 @@ class RegimentViewModel extends ChangeNotifier {
         regimentsList = regimentsAsNeededList;
       }
     }
+    stopRegimenTTS();
+    notifyListeners();
+  }
+
+  void startRegimenTTS(int index, String saytext) {
+    stopRegimenTTS();
+    if (index < regimentsList.length) {
+      Future.delayed(
+          Duration(
+            milliseconds: 100,
+          ), () {
+        regimentsList[index].isPlaying = true;
+        notifyListeners();
+      });
+    }
+    Provider.of<ChatScreenViewModel>(Get.context, listen: false).startTTSEngine(
+      textToSpeak: saytext,
+      isRegiment: true,
+      onStop: () {
+        stopRegimenTTS();
+      },
+    );
+  }
+
+  void stopRegimenTTS() {
+    Provider.of<ChatScreenViewModel>(Get.context, listen: false)
+        .stopTTSEngine();
+    regimentsList?.forEach((regimenData) {
+      regimenData.isPlaying = false;
+    });
     notifyListeners();
   }
 
@@ -211,6 +251,7 @@ class RegimentViewModel extends ChangeNotifier {
     String eid,
     String events,
   }) async {
+    updateInitialShowIndex(isDone: true);
     return await RegimentService.saveFormData(
       eid: eid,
       events: events,
@@ -235,6 +276,14 @@ class RegimentViewModel extends ChangeNotifier {
   }) async {
     return await RegimentService.saveProfile(
       schedules: schedules,
+    );
+  }
+
+  Future<SaveResponseModel> undoSaveFormData({
+    String eid,
+  }) async {
+    return await RegimentService.undoSaveFormData(
+      eid: eid,
     );
   }
 }

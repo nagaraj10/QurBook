@@ -8,6 +8,7 @@ import 'package:flutter_country_picker/flutter_country_picker.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/add_family_otp/models/add_family_otp_arguments.dart';
 import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments.dart';
+import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/authentication/view/verifypatient_screen.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
@@ -75,6 +76,10 @@ class _MyFamilyState extends State<MyFamily> {
   var dialogContext;
 
   String parentProfilePic;
+  AddFamilyUserInfoRepository addFamilyUserInfoRepository =
+      AddFamilyUserInfoRepository();
+
+  MyProfileModel myProfile = new MyProfileModel();
 
   @override
   void initState() {
@@ -86,6 +91,8 @@ class _MyFamilyState extends State<MyFamily> {
     parentProfilePic =
         PreferenceUtil.getStringValue(Constants.KEY_PROFILE_IMAGE);
     PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID, "");
+
+    fetchUserProfileInfo();
   }
 
   @override
@@ -269,6 +276,13 @@ class _MyFamilyState extends State<MyFamily> {
     return string[0].toUpperCase() + string.substring(1);
   }
 
+  fetchUserProfileInfo() async {
+    var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+    myProfile = await addFamilyUserInfoRepository.getMyProfileInfoNew(userid);
+
+    return myProfile;
+  }
+
   Widget getCardWidgetForUser(SharedByUsers data, int position,
       List<SharedByUsers> profilesSharedByMeAry,
       {FamilyMemberResult userCollection}) {
@@ -276,14 +290,17 @@ class _MyFamilyState extends State<MyFamily> {
     if (data?.child != null) {
       familyMemberName = '${data.child.firstName} ${data.child.lastName}';
     } */
-    MyProfileModel myProfile;
     String fulName = '';
     try {
       myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
       fulName = myProfile.result != null
           ? myProfile.result.firstName + ' ' + myProfile.result.lastName
           : '';
-    } catch (e) {}
+    } catch (e) {
+      fulName = myProfile.result != null
+          ? myProfile.result.firstName + ' ' + myProfile.result.lastName
+          : '';
+    }
 
     return InkWell(
       onTap: () {
@@ -293,6 +310,7 @@ class _MyFamilyState extends State<MyFamily> {
             router.rt_FamilyDetailScreen,
             arguments: MyFamilyDetailArguments(
                 profilesSharedByMe: profilesSharedByMeAry,
+                myProfile: myProfile,
                 currentPage: position - 1),
           ).then((value) {
             if (value) {

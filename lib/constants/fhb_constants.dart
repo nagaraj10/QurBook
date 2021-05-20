@@ -52,6 +52,8 @@ const String STR_WEARABLES = 'Wearable';
 const String STR_TELEHEALTH = 'Telehealth';
 const String STR_HOSPITALDOCUMENT = 'Hospital Documents';
 
+const String KEY_LANGUAGE = 'languageList';
+
 const String STR_VOICE_NOTES = 'Voice Notes';
 const String KEY_USERID_MAIN = 'mainUserUD';
 const String KEY_PROFILE_MAIN = 'profileMain';
@@ -412,6 +414,10 @@ const String plansForFamily =
 const String mplansForFamily = 'Plans are not available for family members';
 const String categoriesForFamily =
     'Categories are not available for family members';
+const String searchTextFirst =
+    'Use the search option to enter a Hospital name or its location that offer care plans for you to subscribe';
+const String searchTextSecond =
+    'Choose Qurhealth as your provider to subscribe to care plans for free';
 const String okButton = 'OK';
 const String saveButton = 'Save';
 const String select = 'Select';
@@ -420,6 +426,7 @@ const String symptoms = 'Symptoms';
 const String scheduleTitle = 'Daily Schedule';
 const String planActivities = 'Plan Activities';
 const String planSymptoms = 'Plan Symptoms';
+const String undo = 'Undo';
 
 const strJpgDot = '.jpg';
 const strJpegDot = '.jpeg';
@@ -440,7 +447,8 @@ const strSubscribe = 'Subscribe';
 const strUnSubscribe = 'UnSubscribe';
 const strSelectedPlan = 'Selected Plan - ';
 const strSelectedPlans = 'Selected Plan(s) - ';
-const strSelectPlan = 'Select Plan - ';
+const strSelectPlan = 'Select a Plan';
+const strSelectPlans = 'Select your Plan(s)';
 const strIsFromSubscibe = 'fromSubscribe';
 
 FirebaseAnalytics _firebaseAnalytics = FirebaseAnalytics();

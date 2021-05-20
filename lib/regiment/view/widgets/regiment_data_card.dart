@@ -16,6 +16,7 @@ import 'package:get/get.dart';
 import 'regiment_webview.dart';
 
 class RegimentDataCard extends StatelessWidget {
+  final int index;
   final String title;
   final String time;
   final Color color;
@@ -27,6 +28,7 @@ class RegimentDataCard extends StatelessWidget {
   final RegimentDataModel regimentData;
 
   const RegimentDataCard({
+    @required this.index,
     @required this.title,
     @required this.time,
     @required this.color,
@@ -132,6 +134,42 @@ class RegimentDataCard extends StatelessWidget {
                                       fontSize: 12.0.sp,
                                     ),
                                   ),
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 5.0.w),
+                                    child: InkWell(
+                                      child: Text(
+                                        undo,
+                                        style: TextStyle(
+                                          fontSize: 14.0.sp,
+                                          fontWeight: FontWeight.w500,
+                                          decoration: TextDecoration.underline,
+                                          color: Color(
+                                              CommonUtil().getMyPrimaryColor()),
+                                        ),
+                                      ),
+                                      onTap: () async {
+                                        SaveResponseModel saveResponse =
+                                            await Provider.of<
+                                                        RegimentViewModel>(
+                                                    context,
+                                                    listen: false)
+                                                .undoSaveFormData(
+                                          eid: eid,
+                                        );
+                                        if (saveResponse?.isSuccess ?? false) {
+                                          Future.delayed(
+                                              Duration(milliseconds: 300),
+                                              () async {
+                                            await Provider.of<
+                                                        RegimentViewModel>(
+                                                    context,
+                                                    listen: false)
+                                                .fetchRegimentData();
+                                          });
+                                        }
+                                      },
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -180,14 +218,17 @@ class RegimentDataCard extends StatelessWidget {
               color: Colors.transparent,
               child: InkWell(
                 onTap: () {
-                  Provider.of<ChatScreenViewModel>(context, listen: false)
-                      .startTTSEngine(
-                    textToSpeak: regimentData.saytext,
-                    isRegiment: true,
-                  );
+                  if (regimentData.isPlaying) {
+                    stopRegimenTTS();
+                  } else {
+                    Provider.of<RegimentViewModel>(context, listen: false)
+                        .startRegimenTTS(index, regimentData.saytext);
+                  }
                 },
                 child: Icon(
-                  Icons.play_circle_fill_rounded,
+                  regimentData.isPlaying
+                      ? Icons.stop_circle_outlined
+                      : Icons.play_circle_fill_rounded,
                   size: 30.0.sp,
                   color: color,
                 ),
@@ -313,8 +354,7 @@ class RegimentDataCard extends StatelessWidget {
                     color: Colors.transparent,
                     child: InkWell(
                       onTap: () async {
-                        Provider.of<ChatScreenViewModel>(context, listen: false)
-                            .stopTTSEngine();
+                        stopRegimenTTS();
                         bool canEdit =
                             startTime.difference(DateTime.now()).inMinutes <=
                                 15;
@@ -341,7 +381,9 @@ class RegimentDataCard extends StatelessWidget {
                         }
                       },
                       child: Icon(
-                        Icons.check_circle_rounded,
+                        regimentData.ack == null
+                            ? Icons.check_circle_outlined
+                            : Icons.check_circle_rounded,
                         size: 30.0.sp,
                         color: color,
                       ),
@@ -371,7 +413,7 @@ class RegimentDataCard extends StatelessWidget {
   }
 
   Future<void> onCardPressed(BuildContext context) async {
-    Provider.of<ChatScreenViewModel>(context, listen: false).stopTTSEngine();
+    stopRegimenTTS();
     bool canEdit = startTime.difference(DateTime.now()).inMinutes <= 15;
     if (canEdit) {
       FieldsResponseModel fieldsResponseModel =
@@ -393,8 +435,7 @@ class RegimentDataCard extends StatelessWidget {
             eid: eid,
             color: color,
             mediaData: mediaData,
-            formTitle:
-                '${DateFormat('hh:mm a').format(regimentData.estart)},${regimentData.title}',
+            formTitle: getDialogTitle(context),
           ),
         );
         if (value != null && (value ?? false)) {
@@ -413,5 +454,9 @@ class RegimentDataCard extends StatelessWidget {
         Colors.red,
       );
     }
+  }
+
+  stopRegimenTTS() {
+    Provider.of<RegimentViewModel>(Get.context, listen: false).stopRegimenTTS();
   }
 }

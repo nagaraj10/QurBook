@@ -181,20 +181,56 @@ class MyProfileResult {
 }
 
 class AdditionalInfo {
+  int age;
   String height;
   String weight;
+  List<String> language;
+  String mrdNumber;
+  String uhidNumber;
+  String visitReason;
+  String patientHistory;
 
-  AdditionalInfo({this.height, this.weight});
+  AdditionalInfo(
+      {this.age,
+      this.height,
+      this.weight,
+      this.language,
+      this.mrdNumber,
+      this.uhidNumber,
+      this.visitReason,
+      this.patientHistory});
 
   AdditionalInfo.fromJson(Map<String, dynamic> json) {
+    if (json.containsKey('age')) if (json.containsKey('age') is String) {
+      age = 0;
+    } else {
+      age = json['age'];
+    }
+
     height = json['height'];
     weight = json['weight'];
+    try {
+      if (json.containsKey('language'))
+        language = json['language'].cast<String>();
+    } catch (e) {}
+
+    if (json.containsKey('mrdNumber')) mrdNumber = json['mrdNumber'];
+    if (json.containsKey('uhidNumber')) uhidNumber = json['uhidNumber'];
+    if (json.containsKey('visitReason')) visitReason = json['visitReason'];
+    if (json.containsKey('patientHistory'))
+      patientHistory = json['patientHistory'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['age'] = this.age;
     data['height'] = this.height;
     data['weight'] = this.weight;
+    data['language'] = this.language;
+    data['mrdNumber'] = this.mrdNumber;
+    data['uhidNumber'] = this.uhidNumber;
+    data['visitReason'] = this.visitReason;
+    data['patientHistory'] = this.patientHistory;
     return data;
   }
 }
