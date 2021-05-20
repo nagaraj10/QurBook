@@ -64,6 +64,7 @@ class CommonDialogBox {
   String selectedID;
 
   String categoryID;
+  String categoryIDForNotes = '257b24f5-e0a7-419d-9e23-826b4c52497c';
 
   var doctorsData, hospitalData, labData;
   String audioPathMain = '';
@@ -1105,6 +1106,7 @@ class CommonDialogBox {
 
     if (forNotes) {
       categoryName = Constants.STR_NOTES;
+      categoryID = categoryIDForNotes;
     }
   }
 
