@@ -321,6 +321,7 @@ class FetchHealthKitData {
           print(
               "-------------------------Temp-------------------------------------");
           print(params);
+          return params;
         }
       } catch (exception) {
         throw "Unable to fetch Body Temperature from HealthKit $exception";
