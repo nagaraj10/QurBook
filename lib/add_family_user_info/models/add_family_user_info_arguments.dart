@@ -18,6 +18,7 @@ class AddFamilyUserInfoArguments {
   bool isFromCSIR;
   String packageId;
   String isSubscribed;
+  String providerId;
   Function () refresh;
 
   AddFamilyUserInfoArguments(
@@ -35,5 +36,6 @@ class AddFamilyUserInfoArguments {
       this.isFromCSIR = false,
       this.packageId,
       this.isSubscribed,
+      this.providerId,
       this.refresh});
 }

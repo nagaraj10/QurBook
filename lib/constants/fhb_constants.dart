@@ -450,6 +450,7 @@ const strSelectedPlans = 'Selected Plan(s) - ';
 const strSelectPlan = 'Select a Plan';
 const strSelectPlans = 'Select your Plan(s)';
 const strIsFromSubscibe = 'fromSubscribe';
+const strIsRenew = 'Renew';
 
 FirebaseAnalytics _firebaseAnalytics = FirebaseAnalytics();
 var mInitialTime;
