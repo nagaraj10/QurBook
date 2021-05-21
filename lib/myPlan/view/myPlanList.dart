@@ -1,9 +1,12 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/errors_widget.dart';
+import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/myPlan/model/myPlanListModel.dart';
 import 'package:myfhb/myPlan/services/myPlanService.dart';
 import 'package:myfhb/myPlan/view/myPlanDetail.dart';
@@ -169,6 +172,7 @@ class _MyPlanState extends State<MyPlanList> {
                     packageId: planList[i].packageid,
                     startDate: planList[i].startdate,
                     endDate: planList[i].enddate,
+                    icon: planList[i]?.metadata?.icon,
                   )),
         );
       },
@@ -198,12 +202,46 @@ class _MyPlanState extends State<MyPlanList> {
             CircleAvatar(
               backgroundColor: Colors.grey[200],
               radius: 20,
-              child: ClipOval(
-                  child: CircleAvatar(
-                backgroundImage: AssetImage('assets/launcher/myfhb1.png'),
-                radius: 18,
-                backgroundColor: Colors.transparent,
-              )),
+              child: planList[i] != null &&
+                      planList[i].metadata != null &&
+                      planList[i].metadata.icon != null &&
+                      planList[i].metadata.icon != ''
+                  ? planList[i]
+                          ?.metadata
+                          ?.icon
+                          .toString()
+                          .toLowerCase()
+                          ?.contains('.svg')
+                      ? ClipOval(
+                          child: SvgPicture.network(
+                          planList[i]?.metadata?.icon,
+                          placeholderBuilder: (BuildContext context) =>
+                              new CircularProgressIndicator(
+                                  strokeWidth: 1.5,
+                                  backgroundColor: Color(
+                                      new CommonUtil().getMyPrimaryColor())),
+                        ))
+                      : ClipOval(
+                          child: CachedNetworkImage(
+                              imageUrl: planList[i]?.metadata?.icon,
+                              placeholder: (context, url) =>
+                                  new CircularProgressIndicator(
+                                      strokeWidth: 1.5,
+                                      backgroundColor: Color(new CommonUtil()
+                                          .getMyPrimaryColor())),
+                              errorWidget: (context, url, error) => ClipOval(
+                                      child: CircleAvatar(
+                                    backgroundImage: AssetImage(qurHealthLogo),
+                                    radius: 18,
+                                    backgroundColor: Colors.transparent,
+                                  ))),
+                        )
+                  : ClipOval(
+                      child: CircleAvatar(
+                      backgroundImage: AssetImage(qurHealthLogo),
+                      radius: 18,
+                      backgroundColor: Colors.transparent,
+                    )),
             ),
             SizedBox(
               width: 20.0.w,

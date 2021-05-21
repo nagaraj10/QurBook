@@ -1,6 +1,8 @@
 import 'dart:math';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
@@ -8,6 +10,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
 import 'package:myfhb/plan_dashboard/view/planList.dart';
@@ -25,8 +28,9 @@ class CategoryList extends StatefulWidget {
   _CategoryState createState() => _CategoryState();
 
   final String providerId;
+  final String icon;
 
-  CategoryList(this.providerId);
+  CategoryList(this.providerId, this.icon);
 }
 
 class _CategoryState extends State<CategoryList> {
@@ -45,6 +49,9 @@ class _CategoryState extends State<CategoryList> {
   bool isSubscribedOne = false;
 
   String providerId = '';
+  String icon = '';
+
+  Future<PlanListModel> planListModel;
 
   @override
   void initState() {
@@ -58,6 +65,10 @@ class _CategoryState extends State<CategoryList> {
     );
 
     providerId = widget.providerId;
+    icon = widget.icon;
+
+    planListModel = myPlanViewModel.getPlanList(providerId);
+
   }
 
   @override
@@ -129,7 +140,8 @@ class _CategoryState extends State<CategoryList> {
   onSearchedNew(String title, List<PlanListResult> planListOld) async {
     myPLanListResult.clear();
     if (title != null) {
-      myPLanListResult = await myPlanViewModel.getSearchForCategory(title, planListOld);
+      myPLanListResult =
+          await myPlanViewModel.getSearchForCategory(title, planListOld);
     }
     setState(() {});
   }
@@ -195,7 +207,7 @@ class _CategoryState extends State<CategoryList> {
 
   Widget getCategoryList(String providerId) {
     return new FutureBuilder<PlanListModel>(
-      future: myPlanViewModel.getPlanList(providerId),
+      future: planListModel,
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return SafeArea(
@@ -243,9 +255,11 @@ class _CategoryState extends State<CategoryList> {
           context,
           MaterialPageRoute(
               builder: (context) =>
-                  PlanList(planList[i].packcatid, planListFull)),
+                  PlanList(planList[i].packcatid, planListFull,icon)),
         ).then((value) {
-          setState(() {});
+          setState(() {
+            planListModel = myPlanViewModel.getPlanList(providerId);
+          });
         });
       },
       child: Container(
@@ -277,12 +291,82 @@ class _CategoryState extends State<CategoryList> {
                   CircleAvatar(
                     backgroundColor: Colors.grey[200],
                     radius: 20,
-                    child: ClipOval(
-                        child: CircleAvatar(
-                      backgroundImage: AssetImage('assets/launcher/myfhb1.png'),
-                      radius: 18,
-                      backgroundColor: Colors.transparent,
-                    )),
+                    child: planList[i] != null &&
+                            planList[i].catmetadata != null &&
+                            planList[i].catmetadata.icon != null &&
+                            planList[i].catmetadata.icon != ''
+                        ? planList[i]
+                                ?.catmetadata
+                                ?.icon
+                                .toString()
+                                .toLowerCase()
+                                ?.contains('.svg')
+                            ? ClipOval(
+                                child: SvgPicture.network(
+                                planList[i]?.catmetadata?.icon,
+                                placeholderBuilder: (BuildContext context) =>
+                                    new CircularProgressIndicator(
+                                        strokeWidth: 1.5,
+                                        backgroundColor: Color(new CommonUtil()
+                                            .getMyPrimaryColor())),
+                              ))
+                            : ClipOval(
+                                child: CachedNetworkImage(
+                                    imageUrl: planList[i]?.catmetadata?.icon,
+                                    placeholder: (context, url) =>
+                                        new CircularProgressIndicator(
+                                            strokeWidth: 1.5,
+                                            backgroundColor: Color(
+                                                new CommonUtil()
+                                                    .getMyPrimaryColor())),
+                                    errorWidget: (context, url, error) =>
+                                        ClipOval(
+                                            child: CircleAvatar(
+                                          backgroundImage: AssetImage(
+                                              qurHealthLogo),
+                                          radius: 18,
+                                          backgroundColor: Colors.transparent,
+                                        ))),
+                              )
+                        : icon != null && icon != ''
+                            ? icon.toString().toLowerCase()?.contains('.svg')
+                                ? ClipOval(
+                                    child: SvgPicture.network(
+                                    icon,
+                                    placeholderBuilder:
+                                        (BuildContext context) =>
+                                            new CircularProgressIndicator(
+                                                strokeWidth: 1.5,
+                                                backgroundColor: Color(
+                                                    new CommonUtil()
+                                                        .getMyPrimaryColor())),
+                                  ))
+                                : ClipOval(
+                                    child: CachedNetworkImage(
+                                        imageUrl: icon,
+                                        placeholder: (context, url) =>
+                                            new CircularProgressIndicator(
+                                                strokeWidth: 1.5,
+                                                backgroundColor: Color(
+                                                    new CommonUtil()
+                                                        .getMyPrimaryColor())),
+                                        errorWidget: (context, url, error) =>
+                                            ClipOval(
+                                                child: CircleAvatar(
+                                              backgroundImage: AssetImage(
+                                                  qurHealthLogo),
+                                              radius: 18,
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                            ))),
+                                  )
+                            : ClipOval(
+                                child: CircleAvatar(
+                                backgroundImage:
+                                    AssetImage(qurHealthLogo),
+                                radius: 18,
+                                backgroundColor: Colors.transparent,
+                              )),
                   ),
                   SizedBox(
                     width: 20.0.w,
