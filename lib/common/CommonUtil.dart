@@ -1923,6 +1923,7 @@ class CommonUtil {
                           content: CONTENT_PROFILE_CHECK,
                           packageId: packageId,
                           isSubscribed: isSubscribed,
+                          providerId: providerId,
                           refresh: refresh);
                     }
                   } else {
@@ -1930,9 +1931,12 @@ class CommonUtil {
                         content: CONTENT_PROFILE_CHECK,
                         packageId: packageId,
                         isSubscribed: isSubscribed,
+                        providerId: providerId,
                         refresh: refresh);
                   }
-                } else {
+                }
+                //// for appointment book we need to check height weight
+                else {
                   if (myProfile.result.additionalInfo.height != null &&
                       myProfile.result.additionalInfo.height.isNotEmpty) {
                     if (myProfile.result.additionalInfo.weight != null &&
@@ -1951,6 +1955,7 @@ class CommonUtil {
                           mCustomAlertDialog(context,
                               content: CONTENT_PROFILE_CHECK,
                               packageId: packageId,
+                              providerId: providerId,
                               isSubscribed: isSubscribed,
                               refresh: refresh);
                         }
@@ -1958,6 +1963,7 @@ class CommonUtil {
                         mCustomAlertDialog(context,
                             content: CONTENT_PROFILE_CHECK,
                             packageId: packageId,
+                            providerId: providerId,
                             isSubscribed: isSubscribed,
                             refresh: refresh);
                       }
@@ -1965,6 +1971,7 @@ class CommonUtil {
                       mCustomAlertDialog(context,
                           content: CONTENT_PROFILE_CHECK,
                           packageId: packageId,
+                          providerId: providerId,
                           isSubscribed: isSubscribed,
                           refresh: refresh);
                     }
@@ -1972,6 +1979,7 @@ class CommonUtil {
                     mCustomAlertDialog(context,
                         content: CONTENT_PROFILE_CHECK,
                         packageId: packageId,
+                        providerId: providerId,
                         isSubscribed: isSubscribed,
                         refresh: refresh);
                   }
@@ -1980,6 +1988,7 @@ class CommonUtil {
                 mCustomAlertDialog(context,
                     content: CONTENT_PROFILE_CHECK,
                     packageId: packageId,
+                    providerId: providerId,
                     isSubscribed: isSubscribed,
                     refresh: refresh);
               }
@@ -1987,6 +1996,7 @@ class CommonUtil {
               mCustomAlertDialog(context,
                   content: CONTENT_PROFILE_CHECK,
                   packageId: packageId,
+                  providerId: providerId,
                   isSubscribed: isSubscribed,
                   refresh: refresh);
             }
@@ -1994,6 +2004,7 @@ class CommonUtil {
             mCustomAlertDialog(context,
                 content: CONTENT_PROFILE_CHECK,
                 packageId: packageId,
+                providerId: providerId,
                 isSubscribed: isSubscribed,
                 refresh: refresh);
           }
@@ -2001,6 +2012,7 @@ class CommonUtil {
           mCustomAlertDialog(context,
               content: CONTENT_PROFILE_CHECK,
               packageId: packageId,
+              providerId: providerId,
               isSubscribed: isSubscribed,
               refresh: refresh);
         }
@@ -2008,6 +2020,7 @@ class CommonUtil {
         mCustomAlertDialog(context,
             content: CONTENT_PROFILE_CHECK,
             packageId: packageId,
+            providerId: providerId,
             isSubscribed: isSubscribed,
             refresh: refresh);
       }
@@ -2015,6 +2028,7 @@ class CommonUtil {
       mCustomAlertDialog(context,
           content: CONTENT_PROFILE_CHECK,
           packageId: packageId,
+          providerId: providerId,
           isSubscribed: isSubscribed,
           refresh: refresh);
     }
@@ -2089,6 +2103,7 @@ class CommonUtil {
             content: CONTENT_PROFILE_CHECK,
             packageId: packageId,
             isSubscribed: isSubscribed,
+            providerId: providerId,
             refresh: refresh);
       }
     } else {
@@ -2096,6 +2111,7 @@ class CommonUtil {
           content: CONTENT_PROFILE_CHECK,
           packageId: packageId,
           isSubscribed: isSubscribed,
+          providerId: providerId,
           refresh: refresh);
     }
   }
@@ -2105,7 +2121,8 @@ class CommonUtil {
       String content,
       String packageId,
       String isSubscribed,
-      Function() refresh}) async {
+      Function() refresh,
+      String providerId}) async {
     var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     showDialog<void>(
         context: context,
@@ -2181,6 +2198,7 @@ class CommonUtil {
                                     fromClass: CommonConstants.user_update,
                                     isFromCSIR: true,
                                     packageId: packageId,
+                                    providerId: providerId,
                                     isSubscribed: isSubscribed,
                                     refresh: refresh));
                           },
@@ -2425,7 +2443,9 @@ class CommonUtil {
                                             Get.back();
                                             Get.back(result: 'refreshUI');
                                             FlutterToast().getToast(
-                                                'Already Subscribed',
+                                                value?.result?.message != null
+                                                    ? value?.result?.message
+                                                    : 'Subscribe Failed',
                                                 Colors.red);
                                           }
                                         }
