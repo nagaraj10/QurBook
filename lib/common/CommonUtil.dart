@@ -129,6 +129,7 @@ class CommonUtil {
       'Oops! Your profile is incomplete. Please complete the profile to subscribe to a QurPlan.';
   final String CONTENT_UNSUBSCRIBE_PACKAGE =
       'Are you sure you want to unsubscribe?';
+  final String CONTENT_RENEW_PACKAGE = 'Are you sure you want to renew?';
 
   static Future<dynamic> getResourceLoader() async {
     final Future<Secret> secret =
@@ -2291,6 +2292,7 @@ class CommonUtil {
                                       Navigator.of(_keyLoader.currentContext,
                                               rootNavigator: true)
                                           .pop();
+                                      Get.back();
                                       FlutterToast().getToast(
                                           'UnSubscribe Failed', Colors.red);
                                     }
@@ -2299,6 +2301,7 @@ class CommonUtil {
                                   Navigator.of(_keyLoader.currentContext,
                                           rootNavigator: true)
                                       .pop();
+                                  Get.back();
                                   FlutterToast().getToast(
                                       'UnSubscribe Failed', Colors.red);
                                 }
@@ -2525,6 +2528,130 @@ class CommonUtil {
       ),
       barrierDismissible: false,
     );
+  }
+
+  Future<dynamic> renewAlertDialog(BuildContext context,
+      {String title,
+      String content,
+      String packageId,
+      String isSubscribed,
+      Function() refresh}) async {
+    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return new WillPopScope(
+            onWillPop: () async => false,
+            child: SimpleDialog(children: <Widget>[
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 20),
+                child: Center(
+                  child: Column(children: [
+                    //CircularProgressIndicator(),
+                    SizedBox(
+                      height: 10.0.h,
+                    ),
+                    Text(
+                      CONTENT_RENEW_PACKAGE,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16.0.sp,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10.0.h,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        OutlineButton(
+                          child: Text(
+                            'no'.toUpperCase(),
+                            style: TextStyle(
+                              color: Color(
+                                getMyPrimaryColor(),
+                              ),
+                              fontSize: 10,
+                            ),
+                          ),
+                          onPressed: () async {
+                            // open profile page
+                            Navigator.of(context).pop();
+                          },
+                          borderSide: BorderSide(
+                            color: Color(
+                              getMyPrimaryColor(),
+                            ),
+                            style: BorderStyle.solid,
+                            width: 1,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10.0.h,
+                        ),
+                        OutlineButton(
+                          //hoverColor: Color(getMyPrimaryColor()),
+                          child: Text(
+                            'yes'.toUpperCase(),
+                            style: TextStyle(
+                              color: Color(getMyPrimaryColor()),
+                              fontSize: 10,
+                            ),
+                          ),
+                          onPressed: () async {
+                            CommonUtil.showLoadingDialog(
+                                context, _keyLoader, variable.Please_Wait);
+                            subscribeViewModel
+                                .subScribePlan(packageId)
+                                .then((value) {
+                              if (value != null) {
+                                if (value.isSuccess) {
+                                  if (value.result != null) {
+                                    if (value.result.result == 'Done') {
+                                      Navigator.of(_keyLoader.currentContext,
+                                              rootNavigator: true)
+                                          .pop();
+                                      Get.back();
+                                      Get.back(result: 'refreshUI');
+                                      refresh();
+                                    } else {
+                                      Navigator.of(_keyLoader.currentContext,
+                                              rootNavigator: true)
+                                          .pop();
+                                      Get.back();
+                                      FlutterToast()
+                                          .getToast('Renew Failed', Colors.red);
+                                    }
+                                  }
+                                } else {
+                                  Navigator.of(_keyLoader.currentContext,
+                                          rootNavigator: true)
+                                      .pop();
+                                  Get.back();
+                                  FlutterToast()
+                                      .getToast('Renew Failed', Colors.red);
+                                }
+                              }
+                            });
+                          },
+                          borderSide: BorderSide(
+                            color: Color(
+                              getMyPrimaryColor(),
+                            ),
+                            style: BorderStyle.solid,
+                            width: 1,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ]),
+                ),
+              ),
+            ]),
+          );
+        });
   }
 }
 
