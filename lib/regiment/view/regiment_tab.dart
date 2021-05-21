@@ -29,6 +29,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
       AutoScrollController(axis: Axis.vertical, suggestedRowHeight: 150);
   @override
   void initState() {
+    FocusManager.instance.primaryFocus.unfocus();
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     Provider.of<RegimentViewModel>(

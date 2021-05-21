@@ -51,6 +51,7 @@ class _MyPlanState extends State<PlanList> {
 
   @override
   void initState() {
+    FocusManager.instance.primaryFocus.unfocus();
     super.initState();
     Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
       isInitial: true,
@@ -62,6 +63,12 @@ class _MyPlanState extends State<PlanList> {
     categoryId = widget.categoryId;
     icon = widget.icon;
     planListResult = widget.planListResult;
+  }
+
+  @override
+  void dispose() {
+    FocusManager.instance.primaryFocus.unfocus();
+    super.dispose();
   }
 
   @override

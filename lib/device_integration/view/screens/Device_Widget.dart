@@ -144,6 +144,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
 
   @override
   void initState() {
+    FocusManager.instance.primaryFocus.unfocus();
     mInitialTime = DateTime.now();
     _familyListBloc = new FamilyListBloc();
     getFamilyLength();
@@ -156,6 +157,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
 
   @override
   void dispose() {
+    FocusManager.instance.primaryFocus.unfocus();
     super.dispose();
     fbaLog(eveName: 'qurbook_screen_event', eveParams: {
       'eventTime': '${DateTime.now()}',
@@ -683,6 +685,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
   }
 
   Widget projectWidget(BuildContext context) {
+    FocusManager.instance.primaryFocus.unfocus();
     if (deviceValues.toString() == null) {
       return new Center(
         child: new CircularProgressIndicator(

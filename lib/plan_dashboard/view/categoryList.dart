@@ -55,6 +55,7 @@ class _CategoryState extends State<CategoryList> {
 
   @override
   void initState() {
+    FocusManager.instance.primaryFocus.unfocus();
     super.initState();
     Provider.of<RegimentViewModel>(
       context,
@@ -69,6 +70,12 @@ class _CategoryState extends State<CategoryList> {
 
     planListModel = myPlanViewModel.getPlanList(providerId);
 
+  }
+
+  @override
+  void dispose() {
+    FocusManager.instance.primaryFocus.unfocus();
+    super.dispose();
   }
 
   @override

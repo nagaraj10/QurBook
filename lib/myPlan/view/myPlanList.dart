@@ -33,10 +33,17 @@ class _MyPlanState extends State<MyPlanList> {
   @override
   void initState() {
     super.initState();
+    FocusManager.instance.primaryFocus.unfocus();
     Provider.of<RegimentViewModel>(
       context,
       listen: false,
     ).updateTabIndex(currentIndex: 3);
+  }
+
+  @override
+  void dispose() {
+    FocusManager.instance.primaryFocus.unfocus();
+    super.dispose();
   }
 
   @override
