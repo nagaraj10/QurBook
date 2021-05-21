@@ -234,6 +234,7 @@ class _MyPlanState extends State<PlanList> {
                         isSelected,
                     icon: icon,
                     iconApi: planList[i]?.metadata?.icon,
+                    metaDataForURL: planList[i]?.metadata,
                   )),
         ).then((value) {
           if (value == 'refreshUI') {
