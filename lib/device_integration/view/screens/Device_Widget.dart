@@ -541,29 +541,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                           width: 0.66.sw,
                                           child: _getUserName(),
                                         ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            toast.getToastForLongTime(
-                                                strSync, Colors.green);
-                                            Platform.isIOS
-                                                ? _deviceDataHelper
-                                                    .syncHealthKit()
-                                                    .then((value) {
-                                                    setState(() {});
-                                                  })
-                                                : _deviceDataHelper
-                                                    .syncGoogleFit()
-                                                    .then((value) {
-                                                    setState(() {});
-                                                  });
-                                          },
-                                          child: Image.asset(
-                                            icon_refresh_dash,
-                                            height: 26.0.h,
-                                            width: 26.0.h,
-                                            color: Colors.white,
-                                          ),
-                                        ),
+                                        CommonUtil()
+                                            .getNotificationIcon(context),
                                         SizedBox(
                                           width: 0.03.sw,
                                         ),
@@ -1224,30 +1203,48 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           //     ),
           //   ),
           // ),
-          SizedBoxWidget(
-            height: 10.0.h,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBoxWidget(
-                width: 0.08.sw,
-              ),
-              Container(
-                child: Text(
-                  'Devices',
-                  style: TextStyle(
-                    fontSize: 16.0.sp,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w500,
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: 25.0.w,
+              vertical: 10.0.h,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  child: Text(
+                    vitalsSummary,
+                    style: TextStyle(
+                      fontSize: 16.0.sp,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          SizedBoxWidget(
-            height: 10.0.h,
+                Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () {
+                      toast.getToastForLongTime(strSync, Colors.green);
+                      Platform.isIOS
+                          ? _deviceDataHelper.syncHealthKit().then((value) {
+                              setState(() {});
+                            })
+                          : _deviceDataHelper.syncGoogleFit().then((value) {
+                              setState(() {});
+                            });
+                    },
+                    child: Image.asset(
+                      icon_refresh_dash,
+                      height: 26.0.h,
+                      width: 26.0.h,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
           Visibility(
             visible: bpMonitor,

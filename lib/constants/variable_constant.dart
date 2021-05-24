@@ -595,6 +595,7 @@ const String icon_whatsapp = 'assets/icons/ic_whatsapp.png';
 
 const String strAdd = 'Add';
 const String strSync = 'Syncing...';
+const String vitalsSummary = 'Vitals Summary';
 
 //Reminders
 //

@@ -1569,7 +1569,7 @@ class CommonUtil {
                     icon: Icon(
                       Icons.notifications,
                       color: Colors.white,
-                      size: 30,
+                      size: 30.0.sp,
                     ),
                     badgeColor: ColorUtils.countColor,
                     badgeCount: count),
@@ -1586,7 +1586,7 @@ class CommonUtil {
                     icon: Icon(
                       Icons.notifications,
                       color: Colors.white,
-                      size: 30,
+                      size: 30.0.sp,
                     ),
                     badgeColor: ColorUtils.countColor,
                     badgeCount: 0),
@@ -1605,7 +1605,7 @@ class CommonUtil {
             icon: Icon(
               Icons.notifications,
               color: Colors.white,
-              size: 30,
+              size: 30.0.sp,
             ),
             badgeColor: ColorUtils.countColor,
             badgeCount: 0),
