@@ -306,42 +306,15 @@ class PlanDetail extends State<MyPlanDetailView> {
                         ),
                       ),
                     ) */
-                widget.metaDataForURL.descriptionURL != null &&
-                        widget.metaDataForURL.descriptionURL != ''
+                widget?.metaDataForURL?.descriptionURL != null &&
+                        widget?.metaDataForURL?.descriptionURL != ''
                     ? Container(
                         padding:
                             EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                         height: 0.55.sh,
-                        //child: SingleChildScrollView(
-                        /* child: Html(
-                      data: description.replaceAll('src="//', 'src="'),
-                      shrinkWrap: true,
-                      onLinkTap: (linkUrl) {
-                        CommonUtil()
-                            .openWebViewNew(widget.title, linkUrl, false);
-                      },
-                    ), */
-                        // child: WebView(
-                        //   initialUrl: 'http://www.devnarfoundationfortheblind.org/e-brouchure/',
-                        //   javascriptMode: JavascriptMode.unrestricted,
-                        //   onWebViewCreated: (WebViewController webViewController) {
-                        //     webViewController.loadUrl('http://www.devnarfoundationfortheblind.org/e-brouchure/');
-                        //     //_controller = webViewController;
-                        //     // widget.isLocalAsset
-                        //     //     ? _loadHtmlFromAssets(widget.selectedUrl)
-                        //     //     : _controller.loadUrl(widget.selectedUrl);
-                        //   },
-                        //   onPageFinished: (_) {
-                        //     // setState(() {
-                        //     //   isLoading = false;
-                        //     // });
-                        //   },
-                        // ),
-
                         child: InAppWebView(
                             initialUrl:
-                                //"${widget.metaDataForURL.descriptionURL}",
-                                'http://www.devnarfoundationfortheblind.org/e-brouchure/',
+                                "${widget?.metaDataForURL?.descriptionURL}",
                             initialHeaders: {},
                             initialOptions: InAppWebViewGroupOptions(
                               crossPlatform: InAppWebViewOptions(
@@ -356,7 +329,6 @@ class PlanDetail extends State<MyPlanDetailView> {
                             onLoadStop: (InAppWebViewController controller,
                                 String url) {},
                             onDownloadStart: (controller, url) async {
-                              print("onDownloadStart $url");
                               final taskId = await FlutterDownloader.enqueue(
                                 url: url,
                                 savedDir:
@@ -393,11 +365,13 @@ class PlanDetail extends State<MyPlanDetailView> {
                                     packageId: packageId,
                                     isSubscribed: issubscription,
                                     isFrom: strIsFromSubscibe,
-                                    providerId: providerId);
+                                    providerId: providerId,refresh: (){
+                                      Navigator.of(context).pop();
+                                    });
                               } else {
                                 CommonUtil().unSubcribeAlertDialog(context,
                                     packageId: packageId, refresh: () {
-                                  setState(() {});
+                                  Navigator.of(context).pop();
                                 });
                               }
                             },
@@ -425,6 +399,7 @@ class PlanDetail extends State<MyPlanDetailView> {
                       ),
                       onPressed: () async {
                         // open profile page
+                        Navigator.of(context).pop();
                         Navigator.of(context).pop();
                       },
                       borderSide: BorderSide(
