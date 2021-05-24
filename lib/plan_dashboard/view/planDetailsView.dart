@@ -15,6 +15,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:myfhb/plan_dashboard/model/MetaDataForURL.dart';
 
 class MyPlanDetailView extends StatefulWidget {
+  
   final String title;
   final String description;
   final String price;
