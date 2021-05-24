@@ -141,21 +141,21 @@ class ChatScreenViewModel extends ChangeNotifier {
     final lan = langCode != null && langCode.isNotEmpty
         ? langCode
         : Utils.getCurrentLanCode();
-    if (Platform.isIOS) {
-      if (lan == "undef" ||
-          lan.toLowerCase() == "en-IN".toLowerCase() ||
-          lan.toLowerCase() == "en-US".toLowerCase()) {
-        await variable.tts_platform.invokeMethod(variable.strtts, {
-          parameters.strMessage: "",
-          parameters.strIsClose: true,
-          parameters.strLanguage: Utils.getCurrentLanCode()
-        });
-      } else {
-        notifyListeners();
-      }
+    // if (Platform.isIOS) {
+    if (lan == "undef" ||
+        lan.toLowerCase() == "en-IN".toLowerCase() ||
+        lan.toLowerCase() == "en-US".toLowerCase()) {
+      await variable.tts_platform.invokeMethod(variable.strtts, {
+        parameters.strMessage: "",
+        parameters.strIsClose: true,
+        parameters.strLanguage: Utils.getCurrentLanCode()
+      });
     } else {
       notifyListeners();
     }
+    // } else {
+    //   notifyListeners();
+    // }
   }
 
   Future<bool> startTTSEngine({
@@ -213,7 +213,6 @@ class ChatScreenViewModel extends ChangeNotifier {
           final languageForTTS =
               langCodeForRequest ?? Utils.getCurrentLanCode();
           newAudioPlay1.onPlayerStateChanged.listen((event) async {
-            print(event);
             if (event == AudioPlayerState.COMPLETED ||
                 event == AudioPlayerState.PAUSED ||
                 event == AudioPlayerState.STOPPED) {
@@ -246,45 +245,65 @@ class ChatScreenViewModel extends ChangeNotifier {
           }
         }
       } else {
-        String langCodeForRequest;
-        if (lan != "undef") {
-          final langCode = lan.split("-").first;
-          langCodeForRequest = langCode;
-          //print(langCode);
-        }
-        newAudioPlay1 = AudioPlayer();
-        final languageForTTS = langCodeForRequest ?? Utils.getCurrentLanCode();
-        newAudioPlay1.onPlayerStateChanged.listen((event) async {
-          print(event);
-          if (event == AudioPlayerState.COMPLETED ||
-              event == AudioPlayerState.PAUSED ||
-              event == AudioPlayerState.STOPPED) {
-            if (index != null && stopPrevious && !isButtonText) {
-              conversations[index].isSpeaking = false;
-              isSheelaSpeaking = false;
-              notifyListeners();
+        if (lan == "undef" ||
+            lan.toLowerCase() == "en-IN".toLowerCase() ||
+            lan.toLowerCase() == "en-US".toLowerCase()) {
+          await variable.tts_platform.invokeMethod(variable.strtts, {
+            parameters.strMessage: textToSpeak,
+            parameters.strIsClose: false,
+            parameters.strLanguage: langCode ?? Utils.getCurrentLanCode(),
+          }).then((response) async {
+            if (response == 1) {
+              if (index != null) {
+                conversations[index].isSpeaking = false;
+                isSheelaSpeaking = false;
+                notifyListeners();
+              }
+              if (isRegiment) {
+                onStop();
+              }
             }
-            if (isRegiment) {
-              onStop();
-            }
-          }
-          if (event == AudioPlayerState.PLAYING) {
-            if (index != null) {
-              conversations[index].isSpeaking = true;
-              isSheelaSpeaking = true;
-              notifyListeners();
-            }
-            await setTimeDuration(newAudioPlay1);
-          }
-        });
-        if (isRegiment) {
-          await getGoogleTTSRegiment(
-            textToSpeak,
-            languageForTTS != null ? languageForTTS : "en",
-          );
+          });
         } else {
-          await getGoogleTTSResponse(textToSpeak,
-              languageForTTS != null ? languageForTTS : "en", true);
+          String langCodeForRequest;
+          if (lan != "undef") {
+            final langCode = lan.split("-").first;
+            langCodeForRequest = langCode;
+          }
+          newAudioPlay1 = AudioPlayer();
+          final languageForTTS =
+              langCodeForRequest ?? Utils.getCurrentLanCode();
+          newAudioPlay1.onPlayerStateChanged.listen((event) async {
+            if (event == AudioPlayerState.COMPLETED ||
+                event == AudioPlayerState.PAUSED ||
+                event == AudioPlayerState.STOPPED) {
+              if (index != null && stopPrevious && !isButtonText) {
+                conversations[index].isSpeaking = false;
+                isSheelaSpeaking = false;
+                notifyListeners();
+              }
+              if (isRegiment) {
+                onStop();
+              }
+            }
+            if (event == AudioPlayerState.PLAYING) {
+              if (index != null) {
+                conversations[index].isSpeaking = true;
+                isSheelaSpeaking = true;
+                notifyListeners();
+              }
+              await setTimeDuration(newAudioPlay1);
+            }
+          });
+          if (isRegiment) {
+            await getGoogleTTSRegiment(
+              textToSpeak,
+              languageForTTS != null ? languageForTTS : "en",
+            );
+          } else {
+            await getGoogleTTSResponse(textToSpeak,
+                languageForTTS != null ? languageForTTS : "en", true);
+          }
         }
       }
     }
