@@ -12,8 +12,10 @@ import 'package:path/path.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:myfhb/plan_dashboard/model/MetaDataForURL.dart';
 
 class MyPlanDetailView extends StatefulWidget {
+  
   final String title;
   final String description;
   final String price;
@@ -25,6 +27,7 @@ class MyPlanDetailView extends StatefulWidget {
   final bool isDisable;
   final String icon;
   final String iconApi;
+  final MetaDataForURL metaDataForURL;
 
   MyPlanDetailView({
     Key key,
@@ -39,6 +42,7 @@ class MyPlanDetailView extends StatefulWidget {
     @required this.isDisable,
     @required this.icon,
     @required this.iconApi,
+    @required this.metaDataForURL,
   }) : super(key: key);
 
   @override
@@ -103,141 +107,190 @@ class PlanDetail extends State<MyPlanDetailView> {
       ),
       body: Builder(
         builder: (contxt) => Container(
-          alignment: Alignment.center,
+          margin: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+          //alignment: Alignment.center,
           child: SingleChildScrollView(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CircleAvatar(
-                  backgroundColor: Colors.grey[200],
-                  radius: 35,
-                  child: iconApi != null && iconApi != ''
-                      ? iconApi.toString().toLowerCase()?.contains('.svg')
-                          ? ClipOval(
-                              child: SvgPicture.network(
-                              iconApi,
-                              placeholderBuilder: (BuildContext context) =>
-                                  new CircularProgressIndicator(
-                                      strokeWidth: 1.5,
-                                      backgroundColor: Color(new CommonUtil()
-                                          .getMyPrimaryColor())),
-                            ))
-                          : ClipOval(
-                              child: CachedNetworkImage(
-                                  imageUrl: iconApi,
-                                  placeholder: (context, url) =>
-                                      new CircularProgressIndicator(
-                                          strokeWidth: 1.5,
-                                          backgroundColor: Color(
-                                              new CommonUtil()
-                                                  .getMyPrimaryColor())),
-                                  errorWidget: (context, url, error) =>
-                                      ClipOval(
-                                          child: CircleAvatar(
-                                        backgroundImage:
-                                            AssetImage(qurHealthLogo),
-                                        radius: 32,
-                                        backgroundColor: Colors.transparent,
-                                      ))),
-                            )
-                      : icon != null && icon != ''
-                          ? icon.toString().toLowerCase()?.contains('.svg')
-                              ? ClipOval(
-                                  child: SvgPicture.network(
-                                  icon,
-                                  placeholderBuilder: (BuildContext context) =>
-                                      new CircularProgressIndicator(
-                                          strokeWidth: 1.5,
-                                          backgroundColor: Color(
-                                              new CommonUtil()
-                                                  .getMyPrimaryColor())),
-                                ))
-                              : ClipOval(
-                                  child: CachedNetworkImage(
-                                      imageUrl: icon,
-                                      placeholder: (context, url) =>
-                                          new CircularProgressIndicator(
-                                              strokeWidth: 1.5,
-                                              backgroundColor: Color(
-                                                  new CommonUtil()
-                                                      .getMyPrimaryColor())),
-                                      errorWidget: (context, url, error) =>
-                                          ClipOval(
-                                              child: CircleAvatar(
-                                            backgroundImage:
-                                                AssetImage(qurHealthLogo),
-                                            radius: 32,
-                                            backgroundColor: Colors.transparent,
-                                          ))),
-                                )
-                          : ClipOval(
-                              child: CircleAvatar(
-                              backgroundImage: AssetImage(qurHealthLogo),
-                              radius: 32,
-                              backgroundColor: Colors.transparent,
-                            )),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: CircleAvatar(
+                        backgroundColor: Colors.grey[200],
+                        radius: 35,
+                        child: iconApi != null && iconApi != ''
+                            ? iconApi.toString().toLowerCase()?.contains('.svg')
+                                ? ClipOval(
+                                    child: SvgPicture.network(
+                                    iconApi,
+                                    placeholderBuilder:
+                                        (BuildContext context) =>
+                                            new CircularProgressIndicator(
+                                                strokeWidth: 1.5,
+                                                backgroundColor: Color(
+                                                    new CommonUtil()
+                                                        .getMyPrimaryColor())),
+                                  ))
+                                : ClipOval(
+                                    child: CachedNetworkImage(
+                                        imageUrl: iconApi,
+                                        placeholder: (context, url) =>
+                                            new CircularProgressIndicator(
+                                                strokeWidth: 1.5,
+                                                backgroundColor: Color(
+                                                    new CommonUtil()
+                                                        .getMyPrimaryColor())),
+                                        errorWidget: (context, url, error) =>
+                                            ClipOval(
+                                                child: CircleAvatar(
+                                              backgroundImage:
+                                                  AssetImage(qurHealthLogo),
+                                              radius: 32,
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                            ))),
+                                  )
+                            : icon != null && icon != ''
+                                ? icon
+                                        .toString()
+                                        .toLowerCase()
+                                        ?.contains('.svg')
+                                    ? ClipOval(
+                                        child: SvgPicture.network(
+                                        icon,
+                                        placeholderBuilder: (BuildContext
+                                                context) =>
+                                            new CircularProgressIndicator(
+                                                strokeWidth: 1.5,
+                                                backgroundColor: Color(
+                                                    new CommonUtil()
+                                                        .getMyPrimaryColor())),
+                                      ))
+                                    : ClipOval(
+                                        child: CachedNetworkImage(
+                                            imageUrl: icon,
+                                            placeholder: (context, url) =>
+                                                new CircularProgressIndicator(
+                                                    strokeWidth: 1.5,
+                                                    backgroundColor: Color(
+                                                        new CommonUtil()
+                                                            .getMyPrimaryColor())),
+                                            errorWidget: (context, url,
+                                                    error) =>
+                                                ClipOval(
+                                                    child: CircleAvatar(
+                                                  backgroundImage:
+                                                      AssetImage(qurHealthLogo),
+                                                  radius: 32,
+                                                  backgroundColor:
+                                                      Colors.transparent,
+                                                ))),
+                                      )
+                                : ClipOval(
+                                    child: CircleAvatar(
+                                    backgroundImage: AssetImage(qurHealthLogo),
+                                    radius: 32,
+                                    backgroundColor: Colors.transparent,
+                                  )),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            title != null && title != '' ? title : '-',
+                            style: TextStyle(
+                                fontSize: 18.sp, fontWeight: FontWeight.w500),
+                          ),
+                          SizedBox(
+                            height: 5.h,
+                          ),
+                          Text(
+                            providerName != null && providerName != ''
+                                ? providerName
+                                : '-',
+                            style: TextStyle(
+                                fontSize: 14.sp, color: Colors.grey[600]),
+                          ),
+                          SizedBox(
+                            height: 5.h,
+                          ),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Text(
+                                    'Duration: ',
+                                    style: TextStyle(
+                                        color: Colors.grey[600],
+                                        fontSize: 14.sp),
+                                  ),
+                                  Text(
+                                    packageDuration != null &&
+                                            packageDuration != ''
+                                        ? '$packageDuration days'
+                                        : '-',
+                                    style: TextStyle(
+                                        color: Color(
+                                            CommonUtil().getMyPrimaryColor()),
+                                        fontSize: 16.sp,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    'Price: ',
+                                    style: TextStyle(
+                                        color: Colors.grey[600],
+                                        fontSize: 14.sp),
+                                  ),
+                                  Text(
+                                    price != null && price != ''
+                                        ? 'INR $price'
+                                        : '-',
+                                    style: TextStyle(
+                                        color: Color(
+                                            CommonUtil().getMyPrimaryColor()),
+                                        fontSize: 16.sp,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
                 ),
                 SizedBox(
                   height: 20.h,
                 ),
-                Text(
-                  title != null && title != '' ? title : '-',
-                  style:
-                      TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Text(
+                    description != null && description != '' ? description : '-',
+                    style:
+                        TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500,color: Colors.black),
+                  ),
                 ),
                 SizedBox(
-                  height: 10.h,
-                ),
-                Text(
-                  providerName != null && providerName != ''
-                      ? providerName
-                      : '-',
-                  style: TextStyle(fontSize: 14.sp, color: Colors.grey[600]),
-                ),
-                SizedBox(
-                  height: 10.h,
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          'Duration: ',
-                          style: TextStyle(
-                              color: Colors.grey[600], fontSize: 14.sp),
-                        ),
-                        Text(
-                          packageDuration != null && packageDuration != ''
-                              ? '$packageDuration days'
-                              : '-',
-                          style: TextStyle(
-                              color: Color(CommonUtil().getMyPrimaryColor()),
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.w600),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      width: 20,
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          'Price: ',
-                          style: TextStyle(
-                              color: Colors.grey[600], fontSize: 14.sp),
-                        ),
-                        Text(
-                          price != null && price != '' ? 'INR $price' : '-',
-                          style: TextStyle(
-                              color: Color(CommonUtil().getMyPrimaryColor()),
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.w600),
-                        ),
-                      ],
-                    ),
-                  ],
+                  height: 20.h,
                 ),
                 /* Container(
                       padding: EdgeInsets.symmetric(
@@ -254,64 +307,42 @@ class PlanDetail extends State<MyPlanDetailView> {
                         ),
                       ),
                     ) */
-                Container(
-                  color: Colors.blue,
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                  height: 0.55.sh,
-                  //child: SingleChildScrollView(
-                  /* child: Html(
-                      data: description.replaceAll('src="//', 'src="'),
-                      shrinkWrap: true,
-                      onLinkTap: (linkUrl) {
-                        CommonUtil()
-                            .openWebViewNew(widget.title, linkUrl, false);
-                      },
-                    ), */
-                  // child: WebView(
-                  //   initialUrl: 'http://www.devnarfoundationfortheblind.org/e-brouchure/',
-                  //   javascriptMode: JavascriptMode.unrestricted,
-                  //   onWebViewCreated: (WebViewController webViewController) {
-                  //     webViewController.loadUrl('http://www.devnarfoundationfortheblind.org/e-brouchure/');
-                  //     //_controller = webViewController;
-                  //     // widget.isLocalAsset
-                  //     //     ? _loadHtmlFromAssets(widget.selectedUrl)
-                  //     //     : _controller.loadUrl(widget.selectedUrl);
-                  //   },
-                  //   onPageFinished: (_) {
-                  //     // setState(() {
-                  //     //   isLoading = false;
-                  //     // });
-                  //   },
-                  // ),
-
-                  child: InAppWebView(
-                      initialUrl:
-                          "http://www.devnarfoundationfortheblind.org/e-brouchure/",
-                      initialHeaders: {},
-                      initialOptions: InAppWebViewGroupOptions(
-                        crossPlatform: InAppWebViewOptions(
-                            debuggingEnabled: true, useOnDownloadStart: true),
-                      ),
-                      onWebViewCreated: (controller) {
-                        webView = controller;
-                      },
-                      onLoadStart:
-                          (InAppWebViewController controller, String url) {},
-                      onLoadStop:
-                          (InAppWebViewController controller, String url) {},
-                      onDownloadStart: (controller, url) async {
-                        print("onDownloadStart $url");
-                        final taskId = await FlutterDownloader.enqueue(
-                          url: url,
-                          savedDir: (await getExternalStorageDirectory()).path,
-                          showNotification:
-                              true, // show download progress in status bar (for Android)
-                          openFileFromNotification:
-                              true, // click on notification to open downloaded file (for Android)
-                        );
-                      }),
-                  //),
-                ),
+                widget?.metaDataForURL?.descriptionURL != null &&
+                        widget?.metaDataForURL?.descriptionURL != ''
+                    ? Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                        height: 0.55.sh,
+                        child: InAppWebView(
+                            initialUrl:
+                                "${widget?.metaDataForURL?.descriptionURL}",
+                            initialHeaders: {},
+                            initialOptions: InAppWebViewGroupOptions(
+                              crossPlatform: InAppWebViewOptions(
+                                  debuggingEnabled: true,
+                                  useOnDownloadStart: true),
+                            ),
+                            onWebViewCreated: (controller) {
+                              webView = controller;
+                            },
+                            onLoadStart: (InAppWebViewController controller,
+                                String url) {},
+                            onLoadStop: (InAppWebViewController controller,
+                                String url) {},
+                            onDownloadStart: (controller, url) async {
+                              final taskId = await FlutterDownloader.enqueue(
+                                url: url,
+                                savedDir:
+                                    (await getExternalStorageDirectory()).path,
+                                showNotification:
+                                    true, // show download progress in status bar (for Android)
+                                openFileFromNotification:
+                                    true, // click on notification to open downloaded file (for Android)
+                              );
+                            }),
+                        //),
+                      )
+                    : Container(),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -335,11 +366,13 @@ class PlanDetail extends State<MyPlanDetailView> {
                                     packageId: packageId,
                                     isSubscribed: issubscription,
                                     isFrom: strIsFromSubscibe,
-                                    providerId: providerId);
+                                    providerId: providerId,refresh: (){
+                                      Navigator.of(context).pop();
+                                    });
                               } else {
                                 CommonUtil().unSubcribeAlertDialog(context,
                                     packageId: packageId, refresh: () {
-                                  setState(() {});
+                                  Navigator.of(context).pop();
                                 });
                               }
                             },
@@ -367,6 +400,7 @@ class PlanDetail extends State<MyPlanDetailView> {
                       ),
                       onPressed: () async {
                         // open profile page
+                        Navigator.of(context).pop();
                         Navigator.of(context).pop();
                       },
                       borderSide: BorderSide(
