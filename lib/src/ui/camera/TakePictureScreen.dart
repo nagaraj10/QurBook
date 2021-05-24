@@ -130,6 +130,15 @@ class TakePictureScreenState extends State<TakePictureScreen> {
       return Scaffold(
           appBar: AppBar(
             flexibleSpace: GradientAppBar(),
+            leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back_ios,
+                size: 24.0.sp,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
             title: getWidgetForTitle(context),
             actions: <Widget>[
               IconButton(

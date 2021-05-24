@@ -92,7 +92,7 @@ class _UserAccountsState extends State<UserAccounts>
 //    } catch (e) {}
 
     return new WillPopScope(
-        onWillPop: () async => false,
+        onWillPop: () async => true,
         child: Scaffold(
           backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
           appBar: AppBar(
@@ -177,7 +177,12 @@ class _UserAccountsState extends State<UserAccounts>
           body: Container(
             child: TabBarView(
               controller: _sliverTabController,
-              children: <Widget>[MyProfilePage(), MyFamily(), MyProvider(),MyPlanList()],
+              children: <Widget>[
+                MyProfilePage(),
+                MyFamily(),
+                MyProvider(),
+                MyPlanList()
+              ],
             ),
           ),
 //          body: NestedScrollView(
