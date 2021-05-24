@@ -111,6 +111,8 @@ dependencies:
   firebase_analytics: ^5.0.16
   flutter_html: ^1.0.1
   scroll_to_index: ^1.0.6
+  flutter_inappwebview: ^4.0.0+4
+  flutter_downloader: ^1.5.2
 
 
 
