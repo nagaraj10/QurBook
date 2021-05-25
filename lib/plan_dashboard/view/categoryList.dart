@@ -407,31 +407,29 @@ class _CategoryState extends State<CategoryList> {
                               color: ColorUtils.lightgraycolor),
                         ),
                         SizedBox(height: 2.h),
-                        InkWell(
-                          child: Text(
-                            selectTitle[planList[i].packcatid] != null
-                                ? isSubscribedOne &&
-                                        planList[i].isSubscribed == '1'
-                                    ? planList[i].catselecttype == '1'
-                                        ? strSelectedPlan +
-                                            selectedTitle[planList[i].packcatid]
-                                                .join(', ')
-                                        : strSelectedPlans +
-                                            selectedTitle[planList[i].packcatid]
-                                                .join(', ')
-                                    : planList[i].catselecttype == '1'
-                                        ? strSelectPlan
-                                        : strSelectPlans
-                                : '',
-                            style: TextStyle(
-                                fontSize: 15.0.sp,
-                                fontWeight: FontWeight.w400,
-                                color: Color(
-                                    new CommonUtil().getMyPrimaryColor())),
-                            textAlign: TextAlign.start,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                          ),
+                        Text(
+                          selectTitle[planList[i].packcatid] != null
+                              ? isSubscribedOne &&
+                                      planList[i].isSubscribed == '1'
+                                  ? planList[i].catselecttype == '1'
+                                      ? strSelectedPlan +
+                                          selectedTitle[planList[i].packcatid]
+                                              .join(', ')
+                                      : strSelectedPlans +
+                                          selectedTitle[planList[i].packcatid]
+                                              .join(', ')
+                                  : planList[i].catselecttype == '1'
+                                      ? strSelectPlan
+                                      : strSelectPlans
+                              : '',
+                          style: TextStyle(
+                              fontSize: 15.0.sp,
+                              fontWeight: FontWeight.w400,
+                              color: Color(
+                                  new CommonUtil().getMyPrimaryColor())),
+                          textAlign: TextAlign.start,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
                         ),
                       ],
                     ),

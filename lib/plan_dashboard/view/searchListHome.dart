@@ -365,6 +365,20 @@ class _SearchListState extends State<SearchListHome> {
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
                         ),
+                        searchList[i].title != null &&
+                                searchList[i].title != '' &&
+                                searchList[i].title == strQurhealth
+                            ? Text(
+                                'Click for free Covid Plans',
+                                style: TextStyle(
+                                  fontSize: 15.0.sp,
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(
+                                      new CommonUtil().getMyPrimaryColor()),
+                                ),
+                                textAlign: TextAlign.start,
+                              )
+                            : SizedBox.shrink()
                       ],
                     ),
                   ),

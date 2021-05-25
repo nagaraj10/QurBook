@@ -452,6 +452,8 @@ const strSelectPlans = 'Select your Plan(s)';
 const strIsFromSubscibe = 'fromSubscribe';
 const strIsRenew = 'Renew';
 
+const strQurhealth = 'QurHealth';
+
 FirebaseAnalytics _firebaseAnalytics = FirebaseAnalytics();
 var mInitialTime;
 
