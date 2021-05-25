@@ -664,7 +664,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
   }
 
   Widget projectWidget(BuildContext context) {
-    FocusManager.instance.primaryFocus.unfocus();
+    FocusScopeNode currentFocus = FocusScope.of(context);
+    if (!currentFocus.hasPrimaryFocus) {
+      currentFocus.unfocus();
+    }
     if (deviceValues.toString() == null) {
       return new Center(
         child: new CircularProgressIndicator(
