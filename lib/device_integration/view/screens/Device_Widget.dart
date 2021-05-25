@@ -1220,7 +1220,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                     vitalsSummary,
                     style: TextStyle(
                       fontSize: 16.0.sp,
-                      color: Colors.black,
+                      color: Color(CommonUtil().getMyPrimaryColor()),
                       fontWeight: FontWeight.w500,
                     ),
                   ),
