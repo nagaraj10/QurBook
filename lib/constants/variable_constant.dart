@@ -362,6 +362,7 @@ const String strGetLabList = 'Getting Laboratory List';
 const String strGetLabById = 'Getting laboratoty by Id';
 
 const String strSearch = 'Search';
+const String strSearchByHosLoc = 'Search by Hospital/Location';
 const String strNoLoadtabls = 'Unable To load Tabs';
 
 const String strSignUp = 'Sign Up';

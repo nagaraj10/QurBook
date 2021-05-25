@@ -72,6 +72,7 @@ class _SearchListState extends State<SearchListHome> {
                   onSearchedNew(title);
                 }
               },
+              hintText: variable.strSearchByHosLoc,
             ),
             SizedBox(
               height: 5.0.h,
@@ -369,7 +370,7 @@ class _SearchListState extends State<SearchListHome> {
                                 searchList[i].title != '' &&
                                 searchList[i].title == strQurhealth
                             ? Text(
-                                'Click for free Covid Plans',
+                                strCovidFree,
                                 style: TextStyle(
                                   fontSize: 15.0.sp,
                                   fontWeight: FontWeight.w600,
