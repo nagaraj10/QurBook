@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'package:get/get.dart';
+import 'package:myfhb/src/ui/loader_class.dart';
 
 enum RegimentMode { Schedule, Symptoms }
 
@@ -261,22 +262,39 @@ class RegimentViewModel extends ChangeNotifier {
   Future<FieldsResponseModel> getFormData({
     String eid,
   }) async {
+    LoaderClass.showLoadingDialog(
+      Get.context,
+      canDismiss: false,
+    );
     final response = await RegimentService.getFormData(
       eid: eid,
     );
+    LoaderClass.hideLoadingDialog(Get.context);
     return response;
   }
 
   Future<ProfileResponseModel> getProfile() async {
-    return await RegimentService.getProfile();
+    LoaderClass.showLoadingDialog(
+      Get.context,
+      canDismiss: false,
+    );
+    final response = await RegimentService.getProfile();
+    LoaderClass.hideLoadingDialog(Get.context);
+    return response;
   }
 
   Future<SaveResponseModel> saveProfile({
     String schedules,
   }) async {
-    return await RegimentService.saveProfile(
+    LoaderClass.showLoadingDialog(
+      Get.context,
+      canDismiss: false,
+    );
+    final response = await RegimentService.saveProfile(
       schedules: schedules,
     );
+    LoaderClass.hideLoadingDialog(Get.context);
+    return response;
   }
 
   Future<SaveResponseModel> undoSaveFormData({

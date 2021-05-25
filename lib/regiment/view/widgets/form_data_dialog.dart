@@ -19,6 +19,8 @@ import 'package:myfhb/regiment/models/save_response_model.dart';
 import 'package:provider/provider.dart';
 import 'media_icon_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/src/ui/loader_class.dart';
+import 'package:get/get.dart';
 
 class FormDataDialog extends StatefulWidget {
   FormDataDialog({
@@ -327,6 +329,10 @@ class FormDataDialogState extends State<FormDataDialog> {
                         saveMap.forEach((key, value) {
                           events += '&$key=$value';
                         });
+                        LoaderClass.showLoadingDialog(
+                          Get.context,
+                          canDismiss: false,
+                        );
                         SaveResponseModel saveResponse =
                             await Provider.of<RegimentViewModel>(context,
                                     listen: false)
@@ -335,6 +341,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                           events: events,
                         );
                         if (saveResponse?.isSuccess ?? false) {
+                          LoaderClass.hideLoadingDialog(Get.context);
                           if (Provider.of<RegimentViewModel>(context,
                                       listen: false)
                                   .regimentStatus ==
