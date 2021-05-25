@@ -207,41 +207,9 @@ class PlanDetail extends State<MyPlanDetail> {
                   )),
             ),
             CircleAvatar(
-              backgroundColor: Colors.grey[200],
-              radius: 30,
-              child: icon != null && icon != ''
-                  ? icon.toString().toLowerCase()?.contains('.svg')
-                      ? ClipOval(
-                          child: SvgPicture.network(
-                          icon,
-                          placeholderBuilder: (BuildContext context) =>
-                              new CircularProgressIndicator(
-                                  strokeWidth: 1.5,
-                                  backgroundColor: Color(
-                                      new CommonUtil().getMyPrimaryColor())),
-                        ))
-                      : ClipOval(
-                          child: CachedNetworkImage(
-                              imageUrl: icon,
-                              placeholder: (context, url) =>
-                                  new CircularProgressIndicator(
-                                      strokeWidth: 1.5,
-                                      backgroundColor: Color(new CommonUtil()
-                                          .getMyPrimaryColor())),
-                              errorWidget: (context, url, error) => ClipOval(
-                                      child: CircleAvatar(
-                                    backgroundImage: AssetImage(qurHealthLogo),
-                                    radius: 28,
-                                    backgroundColor: Colors.transparent,
-                                  ))),
-                        )
-                  : ClipOval(
-                      child: CircleAvatar(
-                      backgroundImage: AssetImage(qurHealthLogo),
-                      radius: 28,
-                      backgroundColor: Colors.transparent,
-                    )),
-            ),
+                backgroundColor: Colors.grey[200],
+                radius: 30,
+                child: CommonUtil().customImage(icon ?? '')),
           ],
         ),
       ],

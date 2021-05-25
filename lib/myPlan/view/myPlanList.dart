@@ -217,49 +217,8 @@ class _MyPlanState extends State<MyPlanList> {
                   CircleAvatar(
                     backgroundColor: Colors.grey[200],
                     radius: 20,
-                    child: planList[i] != null &&
-                            planList[i].metadata != null &&
-                            planList[i].metadata.icon != null &&
-                            planList[i].metadata.icon != ''
-                        ? planList[i]
-                                ?.metadata
-                                ?.icon
-                                .toString()
-                                .toLowerCase()
-                                ?.contains('.svg')
-                            ? ClipOval(
-                                child: SvgPicture.network(
-                                planList[i]?.metadata?.icon,
-                                placeholderBuilder: (BuildContext context) =>
-                                    new CircularProgressIndicator(
-                                        strokeWidth: 1.5,
-                                        backgroundColor: Color(new CommonUtil()
-                                            .getMyPrimaryColor())),
-                              ))
-                            : ClipOval(
-                                child: CachedNetworkImage(
-                                    imageUrl: planList[i]?.metadata?.icon,
-                                    placeholder: (context, url) =>
-                                        new CircularProgressIndicator(
-                                            strokeWidth: 1.5,
-                                            backgroundColor: Color(
-                                                new CommonUtil()
-                                                    .getMyPrimaryColor())),
-                                    errorWidget: (context, url, error) =>
-                                        ClipOval(
-                                            child: CircleAvatar(
-                                          backgroundImage:
-                                              AssetImage(qurHealthLogo),
-                                          radius: 18,
-                                          backgroundColor: Colors.transparent,
-                                        ))),
-                              )
-                        : ClipOval(
-                            child: CircleAvatar(
-                            backgroundImage: AssetImage(qurHealthLogo),
-                            radius: 18,
-                            backgroundColor: Colors.transparent,
-                          )),
+                    child: CommonUtil()
+                        .customImage(planList[i]?.metadata?.icon ?? ''),
                   ),
                   SizedBox(
                     width: 20.0.w,

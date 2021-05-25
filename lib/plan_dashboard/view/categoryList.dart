@@ -69,7 +69,6 @@ class _CategoryState extends State<CategoryList> {
     icon = widget.icon;
 
     planListModel = myPlanViewModel.getPlanList(providerId);
-
   }
 
   @override
@@ -262,7 +261,7 @@ class _CategoryState extends State<CategoryList> {
           context,
           MaterialPageRoute(
               builder: (context) =>
-                  PlanList(planList[i].packcatid, planListFull,icon)),
+                  PlanList(planList[i].packcatid, planListFull, icon)),
         ).then((value) {
           setState(() {
             planListModel = myPlanViewModel.getPlanList(providerId);
@@ -296,85 +295,10 @@ class _CategoryState extends State<CategoryList> {
                     width: 15.0.w,
                   ),
                   CircleAvatar(
-                    backgroundColor: Colors.grey[200],
-                    radius: 20,
-                    child: planList[i] != null &&
-                            planList[i].catmetadata != null &&
-                            planList[i].catmetadata.icon != null &&
-                            planList[i].catmetadata.icon != ''
-                        ? planList[i]
-                                ?.catmetadata
-                                ?.icon
-                                .toString()
-                                .toLowerCase()
-                                ?.contains('.svg')
-                            ? ClipOval(
-                                child: SvgPicture.network(
-                                planList[i]?.catmetadata?.icon,
-                                placeholderBuilder: (BuildContext context) =>
-                                    new CircularProgressIndicator(
-                                        strokeWidth: 1.5,
-                                        backgroundColor: Color(new CommonUtil()
-                                            .getMyPrimaryColor())),
-                              ))
-                            : ClipOval(
-                                child: CachedNetworkImage(
-                                    imageUrl: planList[i]?.catmetadata?.icon,
-                                    placeholder: (context, url) =>
-                                        new CircularProgressIndicator(
-                                            strokeWidth: 1.5,
-                                            backgroundColor: Color(
-                                                new CommonUtil()
-                                                    .getMyPrimaryColor())),
-                                    errorWidget: (context, url, error) =>
-                                        ClipOval(
-                                            child: CircleAvatar(
-                                          backgroundImage: AssetImage(
-                                              qurHealthLogo),
-                                          radius: 18,
-                                          backgroundColor: Colors.transparent,
-                                        ))),
-                              )
-                        : icon != null && icon != ''
-                            ? icon.toString().toLowerCase()?.contains('.svg')
-                                ? ClipOval(
-                                    child: SvgPicture.network(
-                                    icon,
-                                    placeholderBuilder:
-                                        (BuildContext context) =>
-                                            new CircularProgressIndicator(
-                                                strokeWidth: 1.5,
-                                                backgroundColor: Color(
-                                                    new CommonUtil()
-                                                        .getMyPrimaryColor())),
-                                  ))
-                                : ClipOval(
-                                    child: CachedNetworkImage(
-                                        imageUrl: icon,
-                                        placeholder: (context, url) =>
-                                            new CircularProgressIndicator(
-                                                strokeWidth: 1.5,
-                                                backgroundColor: Color(
-                                                    new CommonUtil()
-                                                        .getMyPrimaryColor())),
-                                        errorWidget: (context, url, error) =>
-                                            ClipOval(
-                                                child: CircleAvatar(
-                                              backgroundImage: AssetImage(
-                                                  qurHealthLogo),
-                                              radius: 18,
-                                              backgroundColor:
-                                                  Colors.transparent,
-                                            ))),
-                                  )
-                            : ClipOval(
-                                child: CircleAvatar(
-                                backgroundImage:
-                                    AssetImage(qurHealthLogo),
-                                radius: 18,
-                                backgroundColor: Colors.transparent,
-                              )),
-                  ),
+                      backgroundColor: Colors.grey[200],
+                      radius: 20,
+                      child: CommonUtil().customImage(
+                          planList[i]?.catmetadata?.icon ?? icon ?? '')),
                   SizedBox(
                     width: 20.0.w,
                   ),
@@ -425,8 +349,8 @@ class _CategoryState extends State<CategoryList> {
                           style: TextStyle(
                               fontSize: 15.0.sp,
                               fontWeight: FontWeight.w400,
-                              color: Color(
-                                  new CommonUtil().getMyPrimaryColor())),
+                              color:
+                                  Color(new CommonUtil().getMyPrimaryColor())),
                           textAlign: TextAlign.start,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
