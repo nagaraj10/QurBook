@@ -1484,15 +1484,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                               '',
                               getFormattedTime(translist[index].startDateTime),
                               '',
-                              deviceFullList[index]
-                                          .heartRateCollection[0]
-                                          .bpm !=
-                                      null
-                                  ? deviceFullList[index]
-                                      .heartRateCollection[0]
-                                      .bpm
-                                      .toString()
-                                  : '',
+                              translist[index].bpm,
                               translist[index].deviceId);
                         },
                       )
