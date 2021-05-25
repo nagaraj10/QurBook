@@ -235,7 +235,6 @@ class AddFamilyUserInfoBloc extends BaseBloc {
           preferredLanguage == null || preferredLanguage == 'undef'
               ? 'en-IN'
               : preferredLanguage;
-      await updateDeviceSelectionModel(preferredLanguage: preferredLanguage);
 
       String currentLanguage = '';
       if (preferredLanguage != "undef") {
@@ -268,6 +267,8 @@ class AddFamilyUserInfoBloc extends BaseBloc {
           myProfileModel,
           relationship);
       //userProfileSink.add(ApiResponse.completed(updateAddFamilyInfo));
+
+      await updateDeviceSelectionModel(preferredLanguage: preferredLanguage);
     } catch (e) {
       userProfileSink.add(ApiResponse.error(e.toString()));
     }
