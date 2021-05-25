@@ -115,7 +115,8 @@ class RegimentViewModel extends ChangeNotifier {
         notifyListeners();
       });
     }
-    Provider.of<ChatScreenViewModel>(Get.context, listen: false).startTTSEngine(
+    Provider.of<ChatScreenViewModel>(Get.context, listen: false)
+        ?.startTTSEngine(
       textToSpeak: saytext,
       isRegiment: true,
       onStop: () {
@@ -126,7 +127,8 @@ class RegimentViewModel extends ChangeNotifier {
 
   void stopRegimenTTS() {
     Provider.of<ChatScreenViewModel>(Get.context, listen: false)
-        .stopTTSEngine();
+        ?.stopTTSEngine();
+
     regimentsList?.forEach((regimenData) {
       regimenData.isPlaying = false;
     });
