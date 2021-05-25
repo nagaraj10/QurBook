@@ -286,52 +286,10 @@ class _SearchListState extends State<SearchListHome> {
                     width: 15.0.w,
                   ),
                   CircleAvatar(
-                    backgroundColor: Colors.grey[200],
-                    radius: 20,
-                    child: searchList[i] != null &&
-                            searchList[i].metadata != null &&
-                            searchList[i].metadata.icon != null &&
-                            searchList[i].metadata.icon != ''
-                        ? searchList[i]
-                                ?.metadata
-                                ?.icon
-                                .toString()
-                                .toLowerCase()
-                                ?.contains('.svg')
-                            ? ClipOval(
-                                child: SvgPicture.network(
-                                searchList[i]?.metadata?.icon,
-                                placeholderBuilder: (BuildContext context) =>
-                                    new CircularProgressIndicator(
-                                        strokeWidth: 1.5,
-                                        backgroundColor: Color(new CommonUtil()
-                                            .getMyPrimaryColor())),
-                              ))
-                            : ClipOval(
-                                child: CachedNetworkImage(
-                                    imageUrl: searchList[i]?.metadata?.icon,
-                                    placeholder: (context, url) =>
-                                        new CircularProgressIndicator(
-                                            strokeWidth: 1.5,
-                                            backgroundColor: Color(
-                                                new CommonUtil()
-                                                    .getMyPrimaryColor())),
-                                    errorWidget: (context, url, error) =>
-                                        ClipOval(
-                                            child: CircleAvatar(
-                                          backgroundImage:
-                                              AssetImage(qurHealthLogo),
-                                          radius: 18,
-                                          backgroundColor: Colors.transparent,
-                                        ))),
-                              )
-                        : ClipOval(
-                            child: CircleAvatar(
-                            backgroundImage: AssetImage(qurHealthLogo),
-                            radius: 18,
-                            backgroundColor: Colors.transparent,
-                          )),
-                  ),
+                      backgroundColor: Colors.grey[200],
+                      radius: 20,
+                      child: CommonUtil()
+                          .customImage(searchList[i]?.metadata?.icon ?? '')),
                   SizedBox(
                     width: 20.0.w,
                   ),
