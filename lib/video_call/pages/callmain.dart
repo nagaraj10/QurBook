@@ -12,6 +12,7 @@ import 'package:myfhb/video_call/model/CallArguments.dart';
 import 'package:myfhb/video_call/pages/call.dart';
 import 'package:myfhb/video_call/pages/controllers.dart';
 import 'package:myfhb/video_call/pages/customappbar.dart';
+import 'package:myfhb/video_call/pages/localpreview.dart';
 import 'package:myfhb/video_call/pages/prescription_module.dart';
 import 'package:myfhb/video_call/utils/callstatus.dart';
 import 'package:myfhb/video_call/utils/hideprovider.dart';
@@ -79,7 +80,7 @@ class CallMain extends StatelessWidget {
                 arguments: arguments,
                 isAppExists: isAppExists,
               ),
-              InkWell(
+              /* InkWell(
                 onTap: () {
                   if (hideStatus.isControlStatus) {
                     hideStatus.hideMe();
@@ -91,7 +92,8 @@ class CallMain extends StatelessWidget {
                   }
                 },
                 child: Container(),
-              ),
+              ), */
+              LocalPreview(),
               CustomAppBar(Platform.isIOS ? arguments.userName : doctorName),
               Consumer<HideProvider>(
                 builder: (context, status, child) {

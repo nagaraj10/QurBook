@@ -624,7 +624,7 @@ class _CallPageState extends State<CallPage> {
       alignment: Alignment.bottomRight,
       children: [
         Container(child: attendees[1]),
-        Container(
+        /* Container(
             decoration: BoxDecoration(
               //color: Color(CommonUtil.primaryColor).withOpacity(0.3),
               borderRadius: BorderRadius.all(Radius.circular(8)),
@@ -632,7 +632,7 @@ class _CallPageState extends State<CallPage> {
             height: 125.0.h,
             width: 125.0.w,
             margin: EdgeInsets.symmetric(vertical: 120, horizontal: 10),
-            child: attendees[0]),
+            child: attendees[0]), */
       ],
     );
   }
