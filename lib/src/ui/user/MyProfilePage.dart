@@ -241,11 +241,13 @@ class _MyProfilePageState extends State<MyProfilePage> {
       }
     }
     try {
-      String profileImageFile =
-          PreferenceUtil.getStringValue(Constants.KEY_PROFILE_IMAGE);
-      if (profileImageFile != null) {
-        profileImage = File(profileImageFile);
-      }
+      try {
+        String profileImageFile =
+            PreferenceUtil.getStringValue(Constants.KEY_PROFILE_IMAGE);
+        if (profileImageFile != null) {
+          profileImage = File(profileImageFile);
+        }
+      } catch (e) {}
       return Container(
           color: Colors.white,
           padding: EdgeInsets.all(20),
@@ -266,12 +268,14 @@ class _MyProfilePageState extends State<MyProfilePage> {
                                   Color(new CommonUtil().getMyPrimaryColor()))),
                     ),
                     child: ClipOval(
-                      child: profileImage != null
+                      child:
+                          /*profileImage != null
                           ? Image.file(
                               profileImage,
                               fit: BoxFit.cover,
                             )
-                          : data.profilePicThumbnailUrl != null
+                          :*/
+                          data.profilePicThumbnailUrl != null
                               ? FHBBasicWidget()
                                   .getProfilePicWidgeUsingUrlForProfile(
                                       myProfile)

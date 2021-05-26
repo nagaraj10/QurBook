@@ -455,6 +455,8 @@ const goToRegimen = 'Go to Regimen';
 
 const strQurhealth = 'QurHealth';
 
+const strCovidFree = 'Click for free Covid Plans';
+
 FirebaseAnalytics _firebaseAnalytics = FirebaseAnalytics();
 var mInitialTime;
 

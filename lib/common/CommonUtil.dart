@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -10,6 +11,7 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
@@ -2687,6 +2689,98 @@ class CommonUtil {
             ]),
           );
         });
+  }
+
+  Widget customImage(String iconApi) {
+    return ClipOval(
+      child: Container(
+        alignment: Alignment.center,
+        height: 70,
+        width: 70,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.transparent,
+        ),
+        child: iconApi != null && iconApi != ''
+            ? iconApi.toString().toLowerCase()?.contains('.svg')
+                ? Center(
+                    child: SizedBox(
+                      height: 50,
+                      width: 50,
+                      child: SvgPicture.network(
+                        iconApi,
+                        placeholderBuilder: (BuildContext context) =>
+                            new CircularProgressIndicator(
+                                strokeWidth: 1.5,
+                                backgroundColor: Color(
+                                    new CommonUtil().getMyPrimaryColor())),
+                      ),
+                    ),
+                  )
+                : CachedNetworkImage(
+                    imageUrl: iconApi,
+                    placeholder: (context, url) =>
+                        new CircularProgressIndicator(
+                            strokeWidth: 1.5,
+                            backgroundColor:
+                                Color(new CommonUtil().getMyPrimaryColor())),
+                    errorWidget: (context, url, error) => ClipOval(
+                        child: CircleAvatar(
+                      backgroundImage: AssetImage(qurHealthLogo),
+                      radius: 32,
+                      backgroundColor: Colors.transparent,
+                    )),
+                    imageBuilder: (context, imageProvider) => Container(
+                      width: 80.0,
+                      height: 80.0,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                            image: imageProvider, fit: BoxFit.fill),
+                      ),
+                    ),
+                  )
+            : iconApi != null && iconApi != ''
+                ? iconApi.toString().toLowerCase()?.contains('.svg')
+                    ? SvgPicture.network(
+                        iconApi,
+                        placeholderBuilder: (BuildContext context) =>
+                            new CircularProgressIndicator(
+                                strokeWidth: 1.5,
+                                backgroundColor: Color(
+                                    new CommonUtil().getMyPrimaryColor())),
+                      )
+                    : CachedNetworkImage(
+                        imageUrl: iconApi,
+                        placeholder: (context, url) =>
+                            new CircularProgressIndicator(
+                                strokeWidth: 1.5,
+                                backgroundColor: Color(
+                                    new CommonUtil().getMyPrimaryColor())),
+                        errorWidget: (context, url, error) => ClipOval(
+                            child: CircleAvatar(
+                          backgroundImage: AssetImage(qurHealthLogo),
+                          radius: 32,
+                          backgroundColor: Colors.transparent,
+                        )),
+                        imageBuilder: (context, imageProvider) => Container(
+                          width: 80.0,
+                          height: 80.0,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                                image: imageProvider, fit: BoxFit.fill),
+                          ),
+                        ),
+                      )
+                : ClipOval(
+                    child: CircleAvatar(
+                    backgroundImage: AssetImage(qurHealthLogo),
+                    radius: 32,
+                    backgroundColor: Colors.transparent,
+                  )),
+      ),
+    );
   }
 }
 

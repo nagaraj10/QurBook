@@ -553,13 +553,11 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                         SizedBox(
                                           width: 0.03.sw,
                                         ),
-                                        isFamilyAvail
-                                            ? SwitchProfile().buildActions(
-                                                context,
-                                                _key,
-                                                callBackToRefresh,
-                                                true)
-                                            : getMaterialPlusIcon(context),
+                                        /*isFamilyAvail
+                                            ?*/
+                                        SwitchProfile().buildActions(context,
+                                            _key, callBackToRefresh, true)
+                                        /* : getMaterialPlusIcon(context)*/,
                                       ],
                                     ),
                                   ),

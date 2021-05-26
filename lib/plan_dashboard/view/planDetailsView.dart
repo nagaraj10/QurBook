@@ -15,7 +15,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:myfhb/plan_dashboard/model/MetaDataForURL.dart';
 
 class MyPlanDetailView extends StatefulWidget {
-  
   final String title;
   final String description;
   final String price;
@@ -122,82 +121,122 @@ class PlanDetail extends State<MyPlanDetailView> {
                       flex: 1,
                       child: CircleAvatar(
                         backgroundColor: Colors.grey[200],
-                        radius: 35,
-                        child: iconApi != null && iconApi != ''
-                            ? iconApi.toString().toLowerCase()?.contains('.svg')
-                                ? ClipOval(
-                                    child: SvgPicture.network(
-                                    iconApi,
-                                    placeholderBuilder:
-                                        (BuildContext context) =>
-                                            new CircularProgressIndicator(
-                                                strokeWidth: 1.5,
-                                                backgroundColor: Color(
-                                                    new CommonUtil()
-                                                        .getMyPrimaryColor())),
-                                  ))
-                                : ClipOval(
-                                    child: CachedNetworkImage(
-                                        imageUrl: iconApi,
-                                        placeholder: (context, url) =>
-                                            new CircularProgressIndicator(
-                                                strokeWidth: 1.5,
-                                                backgroundColor: Color(
-                                                    new CommonUtil()
-                                                        .getMyPrimaryColor())),
-                                        errorWidget: (context, url, error) =>
-                                            ClipOval(
-                                                child: CircleAvatar(
-                                              backgroundImage:
-                                                  AssetImage(qurHealthLogo),
-                                              radius: 32,
-                                              backgroundColor:
-                                                  Colors.transparent,
-                                            ))),
-                                  )
-                            : icon != null && icon != ''
-                                ? icon
-                                        .toString()
-                                        .toLowerCase()
-                                        ?.contains('.svg')
-                                    ? ClipOval(
-                                        child: SvgPicture.network(
-                                        icon,
-                                        placeholderBuilder: (BuildContext
-                                                context) =>
-                                            new CircularProgressIndicator(
-                                                strokeWidth: 1.5,
-                                                backgroundColor: Color(
-                                                    new CommonUtil()
-                                                        .getMyPrimaryColor())),
-                                      ))
-                                    : ClipOval(
-                                        child: CachedNetworkImage(
-                                            imageUrl: icon,
-                                            placeholder: (context, url) =>
-                                                new CircularProgressIndicator(
-                                                    strokeWidth: 1.5,
-                                                    backgroundColor: Color(
-                                                        new CommonUtil()
-                                                            .getMyPrimaryColor())),
-                                            errorWidget: (context, url,
-                                                    error) =>
-                                                ClipOval(
-                                                    child: CircleAvatar(
-                                                  backgroundImage:
-                                                      AssetImage(qurHealthLogo),
-                                                  radius: 32,
-                                                  backgroundColor:
-                                                      Colors.transparent,
-                                                ))),
-                                      )
-                                : ClipOval(
-                                    child: CircleAvatar(
-                                    backgroundImage: AssetImage(qurHealthLogo),
-                                    radius: 32,
-                                    backgroundColor: Colors.transparent,
-                                  )),
-                      ),
+                        radius: 30,
+                          child: CommonUtil()
+                              .customImage(iconApi != null ? iconApi : icon)),
+                      // child: ClipOval(
+                      //   // backgroundColor: Colors.grey[200],
+                      //   // radius: 35,
+                      //   child: Container(
+                      //     alignment: Alignment.center,
+                      //     height: 70,
+                      //     width: 70,
+                      //     decoration: BoxDecoration(
+                      //       shape: BoxShape.circle,
+                      //       color: Colors.transparent,
+                      //     ),
+                      //     child: iconApi != null && iconApi != ''
+                      //         ? iconApi
+                      //                 .toString()
+                      //                 .toLowerCase()
+                      //                 ?.contains('.svg')
+                      //             ? Center(
+                      //                 child: SizedBox(
+                      //                   height: 50,
+                      //                   width: 50,
+                      //                   child: SvgPicture.network(
+                      //                     iconApi,
+                      //                     placeholderBuilder: (BuildContext
+                      //                             context) =>
+                      //                         new CircularProgressIndicator(
+                      //                             strokeWidth: 1.5,
+                      //                             backgroundColor: Color(
+                      //                                 new CommonUtil()
+                      //                                     .getMyPrimaryColor())),
+                      //                   ),
+                      //                 ),
+                      //               )
+                      //             : CachedNetworkImage(
+                      //                 imageUrl: iconApi,
+                      //                 placeholder: (context, url) =>
+                      //                     new CircularProgressIndicator(
+                      //                         strokeWidth: 1.5,
+                      //                         backgroundColor: Color(
+                      //                             new CommonUtil()
+                      //                                 .getMyPrimaryColor())),
+                      //                 errorWidget: (context, url, error) =>
+                      //                     ClipOval(
+                      //                         child: CircleAvatar(
+                      //                   backgroundImage:
+                      //                       AssetImage(qurHealthLogo),
+                      //                   radius: 32,
+                      //                   backgroundColor: Colors.transparent,
+                      //                 )),
+                      //                 imageBuilder: (context, imageProvider) =>
+                      //                     Container(
+                      //                   width: 80.0,
+                      //                   height: 80.0,
+                      //                   decoration: BoxDecoration(
+                      //                     shape: BoxShape.circle,
+                      //                     image: DecorationImage(
+                      //                         image: imageProvider,
+                      //                         fit: BoxFit.fill),
+                      //                   ),
+                      //                 ),
+                      //               )
+                      //         : icon != null && icon != ''
+                      //             ? icon
+                      //                     .toString()
+                      //                     .toLowerCase()
+                      //                     ?.contains('.svg')
+                      //                 ? SvgPicture.network(
+                      //                     icon,
+                      //                     placeholderBuilder: (BuildContext
+                      //                             context) =>
+                      //                         new CircularProgressIndicator(
+                      //                             strokeWidth: 1.5,
+                      //                             backgroundColor: Color(
+                      //                                 new CommonUtil()
+                      //                                     .getMyPrimaryColor())),
+                      //                   )
+                      //                 : CachedNetworkImage(
+                      //                     imageUrl: icon,
+                      //                     placeholder: (context, url) =>
+                      //                         new CircularProgressIndicator(
+                      //                             strokeWidth: 1.5,
+                      //                             backgroundColor: Color(
+                      //                                 new CommonUtil()
+                      //                                     .getMyPrimaryColor())),
+                      //                     errorWidget: (context, url, error) =>
+                      //                         ClipOval(
+                      //                             child: CircleAvatar(
+                      //                       backgroundImage:
+                      //                           AssetImage(qurHealthLogo),
+                      //                       radius: 32,
+                      //                       backgroundColor: Colors.transparent,
+                      //                     )),
+                      //                     imageBuilder:
+                      //                         (context, imageProvider) =>
+                      //                             Container(
+                      //                       width: 80.0,
+                      //                       height: 80.0,
+                      //                       decoration: BoxDecoration(
+                      //                         shape: BoxShape.circle,
+                      //                         image: DecorationImage(
+                      //                             image: imageProvider,
+                      //                             fit: BoxFit.fill),
+                      //                       ),
+                      //                     ),
+                      //                   )
+                      //             : ClipOval(
+                      //                 child: CircleAvatar(
+                      //                 backgroundImage:
+                      //                     AssetImage(qurHealthLogo),
+                      //                 radius: 32,
+                      //                 backgroundColor: Colors.transparent,
+                      //               )),
+                      //   ),
+                      // ),
                     ),
                     Expanded(
                       flex: 2,
@@ -284,9 +323,13 @@ class PlanDetail extends State<MyPlanDetailView> {
                 Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Text(
-                    description != null && description != '' ? description : '-',
-                    style:
-                        TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500,color: Colors.black),
+                    description != null && description != ''
+                        ? description
+                        : '-',
+                    style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black),
                   ),
                 ),
                 SizedBox(
@@ -366,9 +409,9 @@ class PlanDetail extends State<MyPlanDetailView> {
                                     packageId: packageId,
                                     isSubscribed: issubscription,
                                     isFrom: strIsFromSubscibe,
-                                    providerId: providerId,refresh: (){
-                                      Navigator.of(context).pop();
-                                    });
+                                    providerId: providerId, refresh: () {
+                                  Navigator.of(context).pop();
+                                });
                               } else {
                                 CommonUtil().unSubcribeAlertDialog(context,
                                     packageId: packageId, refresh: () {
