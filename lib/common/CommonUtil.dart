@@ -90,6 +90,7 @@ import 'package:package_info/package_info.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:showcaseview/showcase.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
@@ -2761,6 +2762,37 @@ class CommonUtil {
       ),
     );
   }
+
+  Future<void> isFirstTime() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool firstTime = prefs.getBool('first_time');
+    if (firstTime != null && !firstTime) {
+      // Not first time
+      
+    } else {
+      // First time
+      prefs.setBool('first_time', false);
+      _deleteCacheDir();
+      _deleteAppDir();
+    }
+  }
+
+   Future<void> _deleteCacheDir() async {
+    final cacheDir = await getTemporaryDirectory();
+
+    if (cacheDir.existsSync()) {
+      cacheDir.deleteSync(recursive: true);
+    }
+  }
+
+  Future<void> _deleteAppDir() async {
+    final appDir = await getApplicationSupportDirectory();
+
+    if(appDir.existsSync()){
+      appDir.deleteSync(recursive: true);
+    }
+  }
+  
 }
 
 extension CapExtension on String {

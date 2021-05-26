@@ -158,6 +158,9 @@ Future<void> main() async {
         );
     await Permission.storage.request();
   }
+  
+  // check if the app install on first time
+  CommonUtil().isFirstTime();
 
   runApp(
     MyFHB(),
