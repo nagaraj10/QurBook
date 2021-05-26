@@ -64,13 +64,17 @@ class HeartRateEntity {
 
 class DeviceHealthRecord {
   SourceType sourceType;
+  DateTime createdOn;
 
-  DeviceHealthRecord({this.sourceType});
+
+  DeviceHealthRecord({this.sourceType,this.createdOn});
 
   DeviceHealthRecord.fromJson(Map<String, dynamic> json) {
     sourceType = json['sourceType'] != null
         ? new SourceType.fromJson(json['sourceType'])
         : null;
+    createdOn = DateTime.parse(json[param.strCreatedOn]);
+
   }
 
   Map<String, dynamic> toJson() {
@@ -78,6 +82,8 @@ class DeviceHealthRecord {
     if (this.sourceType != null) {
       data['sourceType'] = this.sourceType.toJson();
     }
+    data[param.strCreatedOn] = createdOn.toIso8601String();
+
     return data;
   }
 }

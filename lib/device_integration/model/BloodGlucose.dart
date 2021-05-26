@@ -23,17 +23,17 @@ class BloodGlucose {
 }
 
 class BloodGlucoseEntity {
-  BloodGlucoseEntity({
-    //this.id,
-    this.startDateTime,
-    this.endDateTime,
-    this.bloodGlucoseLevel,
-    this.bgUnit,
-    this.mealContext,
-    this.mealType,
-    this.deviceHealthRecord,
-    this.averageAsOfNow
-  });
+  BloodGlucoseEntity(
+      {
+      //this.id,
+      this.startDateTime,
+      this.endDateTime,
+      this.bloodGlucoseLevel,
+      this.bgUnit,
+      this.mealContext,
+      this.mealType,
+      this.deviceHealthRecord,
+      this.averageAsOfNow});
 
   //String id;
   DateTime startDateTime;
@@ -59,7 +59,8 @@ class BloodGlucoseEntity {
             ? null
             : RefrenceValueMeta.fromJson(json[param.strParamBGMealType]),
         deviceHealthRecord: json[param.strParamDeviceHealthRecord] != null
-            ? new DeviceHealthRecord.fromJson(json[param.strParamDeviceHealthRecord])
+            ? new DeviceHealthRecord.fromJson(
+                json[param.strParamDeviceHealthRecord])
             : null,
         averageAsOfNow: json['averageAsOfNow'] != null
             ? new AverageAsOfNow.fromJson(json['averageAsOfNow'])
@@ -74,20 +75,22 @@ class BloodGlucoseEntity {
         param.strParamBGUnit: bgUnit.toJson(),
         param.strParamBGMealContext: mealContext.toJson(),
         param.strParamBGMealType: mealType.toJson(),
-        param.strParamDeviceHealthRecord:deviceHealthRecord.toJson(),
-        param.strParamAverageAsOfNow:averageAsOfNow.toJson(),
+        param.strParamDeviceHealthRecord: deviceHealthRecord.toJson(),
+        param.strParamAverageAsOfNow: averageAsOfNow.toJson(),
       };
 }
 
 class DeviceHealthRecord {
   SourceType sourceType;
+  DateTime createdOn;
 
-  DeviceHealthRecord({this.sourceType});
+  DeviceHealthRecord({this.sourceType, this.createdOn});
 
   DeviceHealthRecord.fromJson(Map<String, dynamic> json) {
     sourceType = json['sourceType'] != null
         ? new SourceType.fromJson(json['sourceType'])
         : null;
+    createdOn = DateTime.parse(json[param.strCreatedOn]);
   }
 
   Map<String, dynamic> toJson() {
@@ -95,6 +98,8 @@ class DeviceHealthRecord {
     if (this.sourceType != null) {
       data['sourceType'] = this.sourceType.toJson();
     }
+    data[param.strCreatedOn] = createdOn.toIso8601String();
+
     return data;
   }
 }
