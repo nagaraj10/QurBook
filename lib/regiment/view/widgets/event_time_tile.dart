@@ -23,8 +23,8 @@ class _EventTimeTileState extends State<EventTimeTile> {
 
   getTimeAsString(TimeOfDay timeOfDay) {
     selectedTimePeriod = timeOfDay.period;
-    int hour = timeOfDay.hourOfPeriod;
-    if (timeOfDay.hour == 12) {
+    int hour = timeOfDay?.hourOfPeriod;
+    if (timeOfDay?.hour == 12) {
       hour = 12;
     }
     return '${hour > 9 ? '' : '0'}${hour}:${timeOfDay.minute > 9 ? '' : '0'}${timeOfDay.minute}';
