@@ -247,7 +247,8 @@ class RegimentViewModel extends ChangeNotifier {
     } else if (isNext) {
       selectedDate = selectedDate.add(Duration(days: 1));
     }
-    regimentDate = '${CommonUtil().regimentDateFormat(selectedDate)}';
+    regimentDate =
+        '${CommonUtil().regimentDateFormat(selectedDate ?? DateTime.now())}';
     resetRegimenTab();
     fetchRegimentData(isInitial: true);
     notifyListeners();

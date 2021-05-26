@@ -127,7 +127,7 @@ class RegimentDataCard extends StatelessWidget {
                                 children: [
                                   Text(
                                     '${CommonUtil().regimentDateFormat(
-                                      regimentData.ack ?? DateTime.now(),
+                                      regimentData?.ack ?? DateTime.now(),
                                       isAck: true,
                                     )}',
                                     style: TextStyle(
@@ -296,7 +296,7 @@ class RegimentDataCard extends StatelessWidget {
       }
     });
 
-    if (mediaData != null || regimentData.hashtml) {
+    if (mediaData != null || (regimentData?.hashtml ?? false)) {
       fieldWidgets.add(
         Padding(
           padding: EdgeInsets.symmetric(
@@ -421,7 +421,7 @@ class RegimentDataCard extends StatelessWidget {
     if (Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
         RegimentMode.Schedule) {
       title =
-          '${DateFormat('hh:mm a').format(regimentData.estart)},${regimentData.title}';
+          '${regimentData?.estart != null ? DateFormat('hh:mm a').format(regimentData.estart) : ''},${regimentData.title}';
     } else {
       title = '${regimentData.title}';
     }

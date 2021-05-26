@@ -463,8 +463,10 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                         child: RegimentDataCard(
                           index: index,
                           title: regimentData.title,
-                          time: DateFormat('hh:mm\na')
-                              .format(regimentData.estart),
+                          time: regimentData?.estart != null
+                              ? DateFormat('hh:mm\na')
+                                  .format(regimentData?.estart)
+                              : '',
                           color: getColor(regimentData.activityname,
                               regimentData.uformname, regimentData.metadata),
                           icon: getIcon(regimentData.activityname,
