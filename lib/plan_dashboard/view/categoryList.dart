@@ -261,7 +261,7 @@ class _CategoryState extends State<CategoryList> {
           context,
           MaterialPageRoute(
               builder: (context) =>
-                  PlanList(planList[i].packcatid, planListFull, icon)),
+                  PlanList(planList[i].packcatid, planListFull, icon,planList[i]?.catmetadata?.icon)),
         ).then((value) {
           setState(() {
             planListModel = myPlanViewModel.getPlanList(providerId);
@@ -298,7 +298,7 @@ class _CategoryState extends State<CategoryList> {
                       backgroundColor: Colors.grey[200],
                       radius: 20,
                       child: CommonUtil().customImage(
-                          planList[i]?.catmetadata?.icon ?? icon ?? '')),
+                          (planList[i]?.catmetadata?.icon??'').isNotEmpty?planList[i]?.catmetadata?.icon : icon)),
                   SizedBox(
                     width: 20.0.w,
                   ),

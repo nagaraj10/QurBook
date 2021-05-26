@@ -227,6 +227,7 @@ class _MyPlanState extends State<MyPlanList> {
                     startDate: planList[i].startdate,
                     endDate: planList[i].enddate,
                     icon: planList[i]?.metadata?.icon,
+                    catIcon: planList[i]?.catmetadata?.icon,
                   )),
         );
       },
@@ -259,8 +260,7 @@ class _MyPlanState extends State<MyPlanList> {
                   CircleAvatar(
                     backgroundColor: Colors.grey[200],
                     radius: 20,
-                    child: CommonUtil()
-                        .customImage(planList[i]?.metadata?.icon ?? ''),
+                    child: CommonUtil().customImage(getImage(i, planList)),
                   ),
                   SizedBox(
                     width: 20.0.w,
@@ -385,5 +385,53 @@ class _MyPlanState extends State<MyPlanList> {
             ],
           )),
     );
+  }
+
+  String getImage(int i, List<MyPlanListResult> planList) {
+    String image = '';
+    if (planList[i] != null) {
+      if (planList[i].metadata != null && planList[i].metadata != '') {
+        if (planList[i].metadata.icon != null &&
+            planList[i].metadata.icon != '') {
+          image = planList[i].metadata.icon;
+        } else {
+          if (planList[i].catmetadata != null &&
+              planList[i].catmetadata != '') {
+            if (planList[i].catmetadata.icon != null &&
+                planList[i].catmetadata.icon != '') {
+              image = planList[i].catmetadata.icon;
+            } else {
+              image = '';
+            }
+          } else {
+            image = '';
+          }
+        }
+      } else {
+        if (planList[i].catmetadata != null && planList[i].catmetadata != '') {
+          if (planList[i].catmetadata.icon != null &&
+              planList[i].catmetadata.icon != '') {
+            image = planList[i].catmetadata.icon;
+          } else {
+            image = '';
+          }
+        } else {
+          image = '';
+        }
+      }
+    } else {
+      if (planList[i].catmetadata != null && planList[i].catmetadata != '') {
+        if (planList[i].catmetadata.icon != null &&
+            planList[i].catmetadata.icon != '') {
+          image = planList[i].catmetadata.icon;
+        } else {
+          image = '';
+        }
+      } else {
+        image = '';
+      }
+    }
+
+    return image;
   }
 }
