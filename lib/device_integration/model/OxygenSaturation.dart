@@ -64,8 +64,10 @@ class OxygenSaturationEntity {
 class DeviceHealthRecord {
     SourceType sourceType;
     List<HeartRateCollection> heartRateCollection;
+    DateTime createdOn;
 
-    DeviceHealthRecord({this.sourceType,this.heartRateCollection});
+
+    DeviceHealthRecord({this.sourceType,this.heartRateCollection,this.createdOn});
 
     DeviceHealthRecord.fromJson(Map<String, dynamic> json) {
         sourceType = json['sourceType'] != null
@@ -77,6 +79,8 @@ class DeviceHealthRecord {
                 heartRateCollection.add(new HeartRateCollection.fromJson(v));
             });
         }
+        createdOn = DateTime.parse(json[param.strCreatedOn]);
+
     }
 
     Map<String, dynamic> toJson() {
@@ -88,6 +92,8 @@ class DeviceHealthRecord {
             data['heartRateCollection'] =
                 this.heartRateCollection.map((v) => v.toJson()).toList();
         }
+        data[param.strCreatedOn] = createdOn.toIso8601String();
+
         return data;
     }
 }
