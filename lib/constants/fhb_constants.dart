@@ -451,6 +451,7 @@ const strSelectPlan = 'Select a Plan';
 const strSelectPlans = 'Select your Plan(s)';
 const strIsFromSubscibe = 'fromSubscribe';
 const strIsRenew = 'Renew';
+const goToRegimen = 'Go to Regimen';
 
 const strQurhealth = 'QurHealth';
 

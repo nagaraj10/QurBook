@@ -179,8 +179,11 @@ class RegimentViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> fetchRegimentData(
-      {bool isInitial = false, bool setIndex = false}) async {
+  Future<void> fetchRegimentData({
+    bool isInitial = false,
+    bool setIndex = false,
+    bool fromPlans = false,
+  }) async {
     handleSearchField();
     regimentsList.clear();
     regimentsAsNeededList.clear();
@@ -214,7 +217,7 @@ class RegimentViewModel extends ChangeNotifier {
       updateInitialShowIndex();
     }
     setViewRegimentsData();
-    if (isInitial) {
+    if (isInitial && !fromPlans) {
       updateTabIndex(isInitial: true);
     }
   }
@@ -244,7 +247,8 @@ class RegimentViewModel extends ChangeNotifier {
     } else if (isNext) {
       selectedDate = selectedDate.add(Duration(days: 1));
     }
-    regimentDate = '${CommonUtil().regimentDateFormat(selectedDate)}';
+    regimentDate =
+        '${CommonUtil().regimentDateFormat(selectedDate ?? DateTime.now())}';
     resetRegimenTab();
     fetchRegimentData(isInitial: true);
     notifyListeners();

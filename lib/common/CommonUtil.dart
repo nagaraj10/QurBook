@@ -96,6 +96,9 @@ import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/authentication/view/login_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
+import 'package:myfhb/src/ui/Dashboard.dart';
 
 class CommonUtil {
   static String SHEELA_URL = "";
@@ -2434,15 +2437,33 @@ class CommonUtil {
                                       Navigator.of(_keyLoader.currentContext,
                                               rootNavigator: true)
                                           .pop();
-                                      Get.back();
-                                      Get.back(result: 'refreshUI');
-                                      refresh();
+                                      // Get.back();
+                                      // Get.back(result: 'refreshUI');
+                                      Provider.of<RegimentViewModel>(
+                                        context,
+                                        listen: false,
+                                      ).updateTabIndex(currentIndex: 3);
+                                      Get.offAll(
+                                        DashboardScreen(
+                                          fromPlans: true,
+                                        ),
+                                      );
+                                      // refresh();
                                     } else {
                                       Navigator.of(_keyLoader.currentContext,
                                               rootNavigator: true)
                                           .pop();
-                                      Get.back();
-                                      Get.back(result: 'refreshUI');
+                                      // Get.back();
+                                      // Get.back(result: 'refreshUI');
+                                      Provider.of<RegimentViewModel>(
+                                        context,
+                                        listen: false,
+                                      ).updateTabIndex(currentIndex: 3);
+                                      Get.offAll(
+                                        DashboardScreen(
+                                          fromPlans: true,
+                                        ),
+                                      );
                                       FlutterToast().getToast(
                                           'Already Subscribed', Colors.red);
                                     }

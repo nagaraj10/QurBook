@@ -133,7 +133,7 @@ class EventListWidget extends StatelessWidget {
   }
 
   getTimeAsString(TimeOfDay timeOfDay) {
-    int hour = timeOfDay.hour;
+    int hour = timeOfDay?.hour;
     return '${hour > 9 ? '' : '0'}${hour}:${timeOfDay.minute > 9 ? '' : '0'}${timeOfDay.minute}';
   }
 }

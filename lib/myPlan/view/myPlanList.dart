@@ -23,6 +23,8 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
 import 'package:provider/provider.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/src/ui/Dashboard.dart';
+import 'package:get/get.dart';
 
 class MyPlanList extends StatefulWidget {
   @override
@@ -113,9 +115,49 @@ class _MyPlanState extends State<MyPlanList> {
             padding: EdgeInsets.only(
               bottom: 8.0.h,
             ),
-            itemBuilder: (BuildContext ctx, int i) =>
-                myPlanListItem(ctx, i, isSearch ? myPLanListResult : planList),
-            itemCount: isSearch ? myPLanListResult.length : planList.length,
+            itemBuilder: (BuildContext ctx, int i) {
+              if (i == planList.length) {
+                return Padding(
+                  padding: EdgeInsets.only(
+                    top: 10.0.h,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      FlatButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                        ),
+                        color: Color(new CommonUtil().getMyPrimaryColor()),
+                        textColor: Colors.white,
+                        padding: EdgeInsets.all(
+                          10.0.sp,
+                        ),
+                        onPressed: () async {
+                          Provider.of<RegimentViewModel>(
+                            context,
+                            listen: false,
+                          ).updateTabIndex(currentIndex: 0);
+                          Get.offAll(
+                            DashboardScreen(
+                              fromPlans: true,
+                            ),
+                          );
+                        },
+                        child: TextWidget(
+                          text: goToRegimen,
+                          fontsize: 14.0.sp,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              } else {
+                return myPlanListItem(
+                    ctx, i, isSearch ? myPLanListResult : planList);
+              }
+            },
+            itemCount: isSearch ? myPLanListResult.length : planList.length + 1,
           )
         : SafeArea(
             child: SizedBox(

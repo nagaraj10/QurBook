@@ -51,6 +51,12 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/authentication/view/login_screen.dart';
 
 class ShowDevicesNew extends StatefulWidget {
+  ShowDevicesNew({
+    this.fromPlans = false,
+  });
+
+  final bool fromPlans;
+
   @override
   _ShowDevicesNewState createState() => _ShowDevicesNewState();
 }
@@ -151,6 +157,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
     Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
       isInitial: true,
       setIndex: true,
+      fromPlans: widget.fromPlans,
     );
     super.initState();
   }
