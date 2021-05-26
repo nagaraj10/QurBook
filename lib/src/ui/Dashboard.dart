@@ -31,6 +31,11 @@ import 'package:myfhb/device_integration/viewModel/Device_model.dart';
 import 'package:provider/provider.dart';
 
 class DashboardScreen extends StatefulWidget {
+  DashboardScreen({
+    this.fromPlans = false,
+  });
+
+  final bool fromPlans;
   @override
   _DashboardScreenState createState() => _DashboardScreenState();
 }
@@ -88,7 +93,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       imageURIProfile = File(profilebanner);
     }
     try {
-      commonUtil.versionCheck(context);
+      if (!widget.fromPlans) commonUtil.versionCheck(context);
     } catch (e) {}
   }
 
@@ -279,7 +284,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
               backgroundColor: Colors.grey[200],
               body: ChangeNotifierProvider(
                 create: (context) => DevicesViewModel(),
-                child: ShowDevicesNew(),
+                child: ShowDevicesNew(
+                  fromPlans: widget.fromPlans,
+                ),
               ));
         },
       ),
