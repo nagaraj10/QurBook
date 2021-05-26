@@ -28,11 +28,12 @@ class PlanList extends StatefulWidget {
   _MyPlanState createState() => _MyPlanState();
 
   final String categoryId;
-  final String icon;
+  final String hosIcon;
+  final String catIcon;
 
   final List<PlanListResult> planListResult;
 
-  PlanList(this.categoryId, this.planListResult, this.icon);
+  PlanList(this.categoryId, this.planListResult, this.hosIcon, this.catIcon);
 }
 
 class _MyPlanState extends State<PlanList> {
@@ -44,7 +45,8 @@ class _MyPlanState extends State<PlanList> {
   FlutterToast toast = new FlutterToast();
 
   String categoryId = '';
-  String icon = '';
+  String hosIcon = '';
+  String catIcon = '';
   List<PlanListResult> planListResult;
   bool isSelected = false;
   List<PlanListResult> planListUniq = [];
@@ -61,7 +63,8 @@ class _MyPlanState extends State<PlanList> {
       listen: false,
     ).handleSearchField();
     categoryId = widget.categoryId;
-    icon = widget.icon;
+    hosIcon = widget.hosIcon;
+    catIcon = widget.catIcon;
     planListResult = widget.planListResult;
   }
 
@@ -239,8 +242,9 @@ class _MyPlanState extends State<PlanList> {
                     isDisable: planList[i].catselecttype == '1' &&
                         planList[i].isSubscribed == '0' &&
                         isSelected,
-                    icon: icon,
+                    hosIcon: hosIcon,
                     iconApi: planList[i]?.metadata?.icon,
+                    catIcon: catIcon,
                     metaDataForURL: planList[i]?.metadata,
                   )),
         ).then((value) {
@@ -278,7 +282,7 @@ class _MyPlanState extends State<PlanList> {
                   CircleAvatar(
                     backgroundColor: Colors.grey[200],
                     radius: 20,
-                    child: CommonUtil().customImage(planList[i]?.metadata?.icon ?? icon ?? ''),
+                    child: CommonUtil().customImage(getImage(i,planList)),
                   ),
                   SizedBox(
                     width: 20.0.w,
@@ -452,6 +456,49 @@ class _MyPlanState extends State<PlanList> {
             ],
           )),
     );
+  }
+
+  String getImage(int i, List<PlanListResult> planList){
+    String image;
+    if(planList[i]!=null){
+      if(planList[i].metadata!=null && planList[i].metadata!=''){
+        if(planList[i].metadata.icon!=null && planList[i].metadata.icon!=''){
+          image = planList[i].metadata.icon;
+        }else{
+          if(catIcon!=null && catIcon !=''){
+            image = catIcon;
+          }else{
+            if(hosIcon!=null && hosIcon!=''){
+              image = hosIcon;
+            }else{
+              image = '';
+            }
+          }
+        }
+      }else{
+        if(catIcon!=null && catIcon !=''){
+          image = catIcon;
+        }else{
+          if(hosIcon!=null && hosIcon!=''){
+            image = hosIcon;
+          }else{
+            image = '';
+          }
+        }
+      }
+    }else{
+      if(catIcon!=null && catIcon !=''){
+        image = catIcon;
+      }else{
+        if(hosIcon!=null && hosIcon!=''){
+          image = hosIcon;
+        }else{
+          image = '';
+        }
+      }
+    }
+
+    return image;
   }
 
   Color getBorderColor(int i, List<PlanListResult> planList) {

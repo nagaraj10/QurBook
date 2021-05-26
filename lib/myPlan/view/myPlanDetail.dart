@@ -18,6 +18,7 @@ class MyPlanDetail extends StatefulWidget {
   final String endDate;
   final String packageId;
   final String icon;
+  final String catIcon;
 
   MyPlanDetail(
       {Key key,
@@ -27,7 +28,8 @@ class MyPlanDetail extends StatefulWidget {
       @required this.startDate,
       @required this.endDate,
       @required this.packageId,
-      @required this.icon})
+      @required this.icon,
+      @required this.catIcon})
       : super(key: key);
 
   @override
@@ -46,6 +48,7 @@ class PlanDetail extends State<MyPlanDetail> {
   String endDate;
   String packageId;
   String icon = '';
+  String catIcon = '';
 
   @override
   void initState() {
@@ -61,6 +64,7 @@ class PlanDetail extends State<MyPlanDetail> {
     endDate = widget.endDate;
     packageId = widget.packageId;
     icon = widget.icon;
+    catIcon = widget.catIcon;
   }
 
   @override
@@ -209,7 +213,7 @@ class PlanDetail extends State<MyPlanDetail> {
             CircleAvatar(
                 backgroundColor: Colors.grey[200],
                 radius: 30,
-                child: CommonUtil().customImage(icon ?? '')),
+                child: CommonUtil().customImage(getImage())),
           ],
         ),
       ],
@@ -322,5 +326,20 @@ class PlanDetail extends State<MyPlanDetail> {
             ),
           ],
         ));
+  }
+
+  String getImage() {
+    String image;
+    if (icon != null && icon != '') {
+      image = icon;
+    } else {
+      if (catIcon != null && catIcon != '') {
+        image = catIcon;
+      } else {
+        image = '';
+      }
+    }
+
+    return image;
   }
 }

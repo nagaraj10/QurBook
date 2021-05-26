@@ -24,8 +24,9 @@ class MyPlanDetailView extends StatefulWidget {
   final String packageDuration;
   final String providerId;
   final bool isDisable;
-  final String icon;
+  final String hosIcon;
   final String iconApi;
+  final String catIcon;
   final MetaDataForURL metaDataForURL;
 
   MyPlanDetailView({
@@ -39,8 +40,9 @@ class MyPlanDetailView extends StatefulWidget {
     @required this.packageDuration,
     @required this.providerId,
     @required this.isDisable,
-    @required this.icon,
+    @required this.hosIcon,
     @required this.iconApi,
+    @required this.catIcon,
     @required this.metaDataForURL,
   }) : super(key: key);
 
@@ -60,8 +62,9 @@ class PlanDetail extends State<MyPlanDetailView> {
   String packageDuration;
   String providerId;
   bool isDisable;
-  String icon = '';
+  String hosIcon = '';
   String iconApi = '';
+  String catIcon = '';
   InAppWebViewController webView;
 
   @override
@@ -80,8 +83,9 @@ class PlanDetail extends State<MyPlanDetailView> {
     packageDuration = widget.packageDuration;
     providerId = widget.providerId;
     isDisable = widget.isDisable;
-    icon = widget.icon;
+    hosIcon = widget.hosIcon;
     iconApi = widget.iconApi;
+    catIcon = widget.catIcon;
   }
 
   @override
@@ -120,10 +124,9 @@ class PlanDetail extends State<MyPlanDetailView> {
                     Expanded(
                       flex: 1,
                       child: CircleAvatar(
-                        backgroundColor: Colors.grey[200],
-                        radius: 30,
-                          child: CommonUtil()
-                              .customImage(iconApi != null ? iconApi : icon)),
+                          backgroundColor: Colors.grey[200],
+                          radius: 30,
+                          child: CommonUtil().customImage(getImage())),
                       // child: ClipOval(
                       //   // backgroundColor: Colors.grey[200],
                       //   // radius: 35,
@@ -377,8 +380,8 @@ class PlanDetail extends State<MyPlanDetailView> {
                                 url: url,
                                 savedDir:
                                     (await getExternalStorageDirectory()).path,
-                                showNotification:
-                                    true, // show download progress in status bar (for Android)
+                                showNotification: true,
+                                // show download progress in status bar (for Android)
                                 openFileFromNotification:
                                     true, // click on notification to open downloaded file (for Android)
                               );
@@ -462,6 +465,25 @@ class PlanDetail extends State<MyPlanDetailView> {
         ),
       ),
     );
+  }
+
+  String getImage() {
+    String image;
+    if (iconApi != null && iconApi != '') {
+      image = iconApi;
+    } else {
+      if (catIcon != null && catIcon != '') {
+        image = catIcon;
+      } else {
+        if (hosIcon != null && hosIcon != '') {
+          image = hosIcon;
+        } else {
+          image = '';
+        }
+      }
+    }
+
+    return image;
   }
 
   Color getTextColor(bool disable, String isSubscribe) {
