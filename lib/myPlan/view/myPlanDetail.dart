@@ -19,6 +19,7 @@ class MyPlanDetail extends StatefulWidget {
   final String packageId;
   final String icon;
   final String catIcon;
+  final String providerIcon;
 
   MyPlanDetail(
       {Key key,
@@ -29,7 +30,8 @@ class MyPlanDetail extends StatefulWidget {
       @required this.endDate,
       @required this.packageId,
       @required this.icon,
-      @required this.catIcon})
+      @required this.catIcon,
+      @required this.providerIcon})
       : super(key: key);
 
   @override
@@ -49,6 +51,7 @@ class PlanDetail extends State<MyPlanDetail> {
   String packageId;
   String icon = '';
   String catIcon = '';
+  String providerIcon = '';
 
   @override
   void initState() {
@@ -65,6 +68,7 @@ class PlanDetail extends State<MyPlanDetail> {
     packageId = widget.packageId;
     icon = widget.icon;
     catIcon = widget.catIcon;
+    providerIcon = widget.providerIcon;
   }
 
   @override
@@ -336,7 +340,11 @@ class PlanDetail extends State<MyPlanDetail> {
       if (catIcon != null && catIcon != '') {
         image = catIcon;
       } else {
-        image = '';
+        if (providerIcon != null && providerIcon != '') {
+          image = providerIcon;
+        } else {
+          image = '';
+        }
       }
     }
 

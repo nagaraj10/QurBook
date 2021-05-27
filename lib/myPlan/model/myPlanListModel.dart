@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:myfhb/plan_dashboard/model/MetaDataForURL.dart';
 
+import 'ProviderMetaModel.dart';
+
 class MyPlanListModel {
   bool isSuccess;
   List<MyPlanListResult> result;
@@ -46,6 +48,7 @@ class MyPlanListResult {
   String isexpired;
   MetaDataForURL metadata;
   MetaDataForURL catmetadata;
+  ProviderMetaModel providermetadata;
 
   MyPlanListResult(
       {this.packageid,
@@ -64,7 +67,7 @@ class MyPlanListResult {
       this.enddate,
       this.isexpired,
       this.metadata,
-      this.catmetadata});
+      this.catmetadata,this.providermetadata});
 
   factory MyPlanListResult.fromJson(Map<String, dynamic> json) {
     return MyPlanListResult(
@@ -90,7 +93,11 @@ class MyPlanListResult {
         catmetadata: json['catmetadata'] != null &&
                 json['catmetadata'].toString().isNotEmpty
             ? MetaDataForURL.fromJson(jsonDecode(json["catmetadata"] ?? '{}'))
-            : null);
+            : null,
+    providermetadata: json['providermetadata'] != null &&
+        json['providermetadata'].toString().isNotEmpty
+        ? ProviderMetaModel.fromJson(jsonDecode(json["providermetadata"] ?? '{}'))
+        : null);
   }
 
   Map<String, dynamic> toJson() {
@@ -111,7 +118,8 @@ class MyPlanListResult {
     data['enddate'] = this.enddate;
     data['isexpired'] = this.isexpired;
     data['metadata'] = this.metadata;
-    data['metadata'] = this.catmetadata;
+    data['catmetadata'] = this.catmetadata;
+    data['providermetadata'] = this.providermetadata;
     return data;
   }
 }

@@ -228,6 +228,7 @@ class _MyPlanState extends State<MyPlanList> {
                     endDate: planList[i].enddate,
                     icon: planList[i]?.metadata?.icon,
                     catIcon: planList[i]?.catmetadata?.icon,
+                    providerIcon: planList[i]?.providermetadata.icon,
                   )),
         );
       },
@@ -401,10 +402,30 @@ class _MyPlanState extends State<MyPlanList> {
                 planList[i].catmetadata.icon != '') {
               image = planList[i].catmetadata.icon;
             } else {
-              image = '';
+              if (planList[i].providermetadata != null &&
+                  planList[i].providermetadata != '') {
+                if (planList[i].providermetadata.icon != null &&
+                    planList[i].providermetadata.icon != '') {
+                  image = planList[i].providermetadata.icon;
+                } else {
+                  image = '';
+                }
+              } else {
+                image = '';
+              }
             }
           } else {
-            image = '';
+            if (planList[i].providermetadata != null &&
+                planList[i].providermetadata != '') {
+              if (planList[i].providermetadata.icon != null &&
+                  planList[i].providermetadata.icon != '') {
+                image = planList[i].providermetadata.icon;
+              } else {
+                image = '';
+              }
+            } else {
+              image = '';
+            }
           }
         }
       } else {
@@ -413,10 +434,30 @@ class _MyPlanState extends State<MyPlanList> {
               planList[i].catmetadata.icon != '') {
             image = planList[i].catmetadata.icon;
           } else {
-            image = '';
+            if (planList[i].providermetadata != null &&
+                planList[i].providermetadata != '') {
+              if (planList[i].providermetadata.icon != null &&
+                  planList[i].providermetadata.icon != '') {
+                image = planList[i].providermetadata.icon;
+              } else {
+                image = '';
+              }
+            } else {
+              image = '';
+            }
           }
         } else {
-          image = '';
+          if (planList[i].providermetadata != null &&
+              planList[i].providermetadata != '') {
+            if (planList[i].providermetadata.icon != null &&
+                planList[i].providermetadata.icon != '') {
+              image = planList[i].providermetadata.icon;
+            } else {
+              image = '';
+            }
+          } else {
+            image = '';
+          }
         }
       }
     } else {
@@ -425,10 +466,30 @@ class _MyPlanState extends State<MyPlanList> {
             planList[i].catmetadata.icon != '') {
           image = planList[i].catmetadata.icon;
         } else {
-          image = '';
+          if (planList[i].providermetadata != null &&
+              planList[i].providermetadata != '') {
+            if (planList[i].providermetadata.icon != null &&
+                planList[i].providermetadata.icon != '') {
+              image = planList[i].providermetadata.icon;
+            } else {
+              image = '';
+            }
+          } else {
+            image = '';
+          }
         }
       } else {
-        image = '';
+        if (planList[i].providermetadata != null &&
+            planList[i].providermetadata != '') {
+          if (planList[i].providermetadata.icon != null &&
+              planList[i].providermetadata.icon != '') {
+            image = planList[i].providermetadata.icon;
+          } else {
+            image = '';
+          }
+        } else {
+          image = '';
+        }
       }
     }
 
