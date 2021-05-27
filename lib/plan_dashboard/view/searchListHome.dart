@@ -44,13 +44,18 @@ class _SearchListState extends State<SearchListHome> {
 
   @override
   void initState() {
+    FocusManager.instance.primaryFocus.unfocus();
     super.initState();
     Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
       isInitial: true,
     );
-
-    searchFocus.requestFocus();
     providerList = myPlanViewModel.getSearchListInit('');
+  }
+
+  @override
+  void dispose() {
+    FocusManager.instance.primaryFocus.unfocus();
+    super.dispose();
   }
 
   @override
