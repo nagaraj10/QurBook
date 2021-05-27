@@ -39,21 +39,18 @@ class _SearchListState extends State<SearchListHome> {
 
   Future<SearchListModel> providerList;
 
+  TextEditingController searchController = TextEditingController();
+  FocusNode searchFocus = FocusNode();
+
   @override
   void initState() {
-    FocusManager.instance.primaryFocus.unfocus();
     super.initState();
     Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
       isInitial: true,
     );
 
+    searchFocus.requestFocus();
     providerList = myPlanViewModel.getSearchListInit('');
-  }
-
-  @override
-  void dispose() {
-    FocusManager.instance.primaryFocus.unfocus();
-    super.dispose();
   }
 
   @override
@@ -65,6 +62,8 @@ class _SearchListState extends State<SearchListHome> {
         child: Column(
           children: [
             SearchWidget(
+              searchController: searchController,
+              searchFocus: searchFocus,
               onChanged: (title) {
                 if (title != '' && title.length > 2) {
                   onSearchedNew(title);

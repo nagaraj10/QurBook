@@ -684,8 +684,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
     }
 
     if (deviceValues.bloodPressure.entities.isNotEmpty) {
-      dateTimeStampForBp =
-          deviceValues.bloodPressure.entities[0].startDateTime.toLocal();
+      dateTimeStampForBp = deviceValues
+          .bloodPressure.entities[0].deviceHealthRecord?.createdOn
+          .toLocal();
 
       //deviceValues.bloodPressure.entities[0].lastsyncdatetime;
       dateForBp =
@@ -776,8 +777,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       averageForPulForBp = '';
     }
     if (deviceValues.bloodGlucose.entities.isNotEmpty) {
-      dateTimeStampForGulcose =
-          deviceValues.bloodGlucose.entities[0].startDateTime.toLocal();
+      dateTimeStampForGulcose = deviceValues
+          .bloodGlucose.entities[0].deviceHealthRecord?.createdOn
+          .toLocal();
 
       dateForGulcose =
           "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForGulcose)}";
@@ -831,8 +833,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       averageForPP = '';
     }
     if (deviceValues.oxygenSaturation.entities.isNotEmpty) {
-      dateTimeStampForOs =
-          deviceValues.oxygenSaturation.entities[0].startDateTime.toLocal();
+      dateTimeStampForOs = deviceValues
+          .oxygenSaturation.entities[0].deviceHealthRecord?.createdOn
+          .toLocal();
 
       dateForOs =
           "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForOs)}";
@@ -929,8 +932,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       averageForSPO2 = '';
     }
     if (deviceValues.bodyTemperature.entities.isNotEmpty) {
-      dateTimeStampForTemp =
-          deviceValues.bodyTemperature.entities[0].startDateTime.toLocal();
+      dateTimeStampForTemp = deviceValues
+          .bodyTemperature.entities[0].deviceHealthRecord?.createdOn
+          .toLocal();
 
       dateForTemp =
           "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForTemp)}";
@@ -963,8 +967,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       averageForTemp = '';
     }
     if (deviceValues.bodyWeight.entities.isNotEmpty) {
-      dateTimeStampForWeight =
-          deviceValues.bodyWeight.entities[0].startDateTime.toLocal();
+      dateTimeStampForWeight = deviceValues
+          .bodyWeight.entities[0].deviceHealthRecord?.createdOn
+          .toLocal();
 
       dateForWeight =
           "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForWeight)}";
