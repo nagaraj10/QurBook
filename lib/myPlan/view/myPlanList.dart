@@ -27,6 +27,11 @@ import 'package:myfhb/src/ui/Dashboard.dart';
 import 'package:get/get.dart';
 
 class MyPlanList extends StatefulWidget {
+  MyPlanList({
+    this.fromDashBoard = false,
+  });
+
+  bool fromDashBoard;
   @override
   _MyPlanState createState() => _MyPlanState();
 }
@@ -41,10 +46,12 @@ class _MyPlanState extends State<MyPlanList> {
   void initState() {
     super.initState();
     FocusManager.instance.primaryFocus.unfocus();
-    Provider.of<RegimentViewModel>(
-      context,
-      listen: false,
-    ).updateTabIndex(currentIndex: 3);
+    if (widget.fromDashBoard) {
+      Provider.of<RegimentViewModel>(
+        context,
+        listen: false,
+      ).updateTabIndex(currentIndex: 3);
+    }
   }
 
   @override
