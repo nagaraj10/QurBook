@@ -54,14 +54,7 @@ class _SearchListState extends State<SearchListHome> {
   }
 
   @override
-  void dispose() {
-    //FocusManager.instance.primaryFocus.unfocus();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    searchFocus.requestFocus();
     return Scaffold(
         body: Visibility(
       visible: Provider.of<RegimentViewModel>(context).regimentsDataAvailable,
