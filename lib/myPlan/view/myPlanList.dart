@@ -1,20 +1,30 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/errors_widget.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/myPlan/model/myPlanListModel.dart';
 import 'package:myfhb/myPlan/services/myPlanService.dart';
 import 'package:myfhb/myPlan/view/myPlanDetail.dart';
 import 'package:myfhb/myPlan/viewModel/myPlanViewModel.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/plan_dashboard/viewModel/subscribeViewModel.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
 import 'package:provider/provider.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/src/ui/Dashboard.dart';
+import 'package:get/get.dart';
 
 class MyPlanList extends StatefulWidget {
   @override
@@ -30,10 +40,17 @@ class _MyPlanState extends State<MyPlanList> {
   @override
   void initState() {
     super.initState();
+    FocusManager.instance.primaryFocus.unfocus();
     Provider.of<RegimentViewModel>(
       context,
       listen: false,
     ).updateTabIndex(currentIndex: 3);
+  }
+
+  @override
+  void dispose() {
+    FocusManager.instance.primaryFocus.unfocus();
+    super.dispose();
   }
 
   @override
@@ -98,9 +115,49 @@ class _MyPlanState extends State<MyPlanList> {
             padding: EdgeInsets.only(
               bottom: 8.0.h,
             ),
-            itemBuilder: (BuildContext ctx, int i) => hospitalListItem(
-                ctx, i, isSearch ? myPLanListResult : planList),
-            itemCount: isSearch ? myPLanListResult.length : planList.length,
+            itemBuilder: (BuildContext ctx, int i) {
+              if (i == planList.length) {
+                return Padding(
+                  padding: EdgeInsets.only(
+                    top: 10.0.h,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      FlatButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                        ),
+                        color: Color(new CommonUtil().getMyPrimaryColor()),
+                        textColor: Colors.white,
+                        padding: EdgeInsets.all(
+                          10.0.sp,
+                        ),
+                        onPressed: () async {
+                          Provider.of<RegimentViewModel>(
+                            context,
+                            listen: false,
+                          ).updateTabIndex(currentIndex: 0);
+                          Get.offAll(
+                            DashboardScreen(
+                              fromPlans: true,
+                            ),
+                          );
+                        },
+                        child: TextWidget(
+                          text: goToRegimen,
+                          fontsize: 14.0.sp,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              } else {
+                return myPlanListItem(
+                    ctx, i, isSearch ? myPLanListResult : planList);
+              }
+            },
+            itemCount: isSearch ? myPLanListResult.length : planList.length + 1,
           )
         : SafeArea(
             child: SizedBox(
@@ -155,7 +212,7 @@ class _MyPlanState extends State<MyPlanList> {
     );
   }
 
-  Widget hospitalListItem(
+  Widget myPlanListItem(
       BuildContext context, int i, List<MyPlanListResult> planList) {
     return InkWell(
       onTap: () {
@@ -169,107 +226,273 @@ class _MyPlanState extends State<MyPlanList> {
                     packageId: planList[i].packageid,
                     startDate: planList[i].startdate,
                     endDate: planList[i].enddate,
+                    icon: planList[i]?.metadata?.icon,
+                    catIcon: planList[i]?.catmetadata?.icon,
+                    providerIcon: planList[i]?.providermetadata.icon,
                   )),
         );
       },
       child: Container(
-        padding: EdgeInsets.all(4.0),
-        margin: EdgeInsets.only(left: 12, right: 12, top: 8),
-        decoration: BoxDecoration(
-          color: planList[i].isexpired == '1' ? Colors.grey[400] : Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFFe3e2e2),
-              blurRadius: 16, // has the effect of softening the shadow
-              spreadRadius: 5.0, // has the effect of extending the shadow
-              offset: Offset(
-                0.0, // horizontal, move right 10
-                0.0, // vertical, move down 10
-              ),
-            )
-          ],
-        ),
-        child: Row(
-          children: <Widget>[
-            SizedBox(
-              width: 15.0.w,
-            ),
-            CircleAvatar(
-              backgroundColor: Colors.grey[200],
-              radius: 20,
-              child: ClipOval(
-                  child: CircleAvatar(
-                backgroundImage: AssetImage('assets/launcher/myfhb1.png'),
-                radius: 18,
-                backgroundColor: Colors.transparent,
-              )),
-            ),
-            SizedBox(
-              width: 20.0.w,
-            ),
-            Expanded(
-              flex: 6,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  SizedBox(height: 5.0.h),
-                  Text(
-                    planList[i].title != null
-                        ? toBeginningOfSentenceCase(planList[i].title)
-                        : '',
-                    style: TextStyle(
-                      fontSize: 15.0.sp,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    textAlign: TextAlign.start,
-                    overflow: TextOverflow.ellipsis,
+          padding: EdgeInsets.all(4.0),
+          margin: EdgeInsets.only(left: 12, right: 12, top: 8),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFFe3e2e2),
+                blurRadius: 16, // has the effect of softening the shadow
+                spreadRadius: 5.0, // has the effect of extending the shadow
+                offset: Offset(
+                  0.0, // horizontal, move right 10
+                  0.0, // vertical, move down 10
+                ),
+              )
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Row(
+                children: [
+                  SizedBox(
+                    width: 15.0.w,
                   ),
-                  Column(
-                    children: [
-                      SizedBox(
-                        width: 250.0.w,
-                        child: Text(
-                          planList[i].providerName != null
-                              ? toBeginningOfSentenceCase(
-                                  planList[i].providerName)
+                  CircleAvatar(
+                    backgroundColor: Colors.grey[200],
+                    radius: 20,
+                    child: CommonUtil().customImage(getImage(i, planList)),
+                  ),
+                  SizedBox(
+                    width: 20.0.w,
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          planList[i].title != null
+                              ? toBeginningOfSentenceCase(planList[i].title)
                               : '',
                           style: TextStyle(
-                              fontSize: 14.0.sp,
-                              fontWeight: FontWeight.w400,
-                              color: ColorUtils.lightgraycolor),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            'Start Date:',
-                            style: TextStyle(
-                                fontSize: 10.0.sp, fontWeight: FontWeight.w400),
+                            fontSize: 15.0.sp,
+                            fontWeight: FontWeight.w600,
                           ),
-                          Text(
-                            new CommonUtil()
-                                .dateFormatConversion(planList[i].startdate),
-                            maxLines: 1,
-                            style: TextStyle(
-                                fontSize: 10.0.sp, fontWeight: FontWeight.w600),
+                          textAlign: TextAlign.start,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                        ),
+                        Column(
+                          children: [
+                            SizedBox(
+                              width: 180.0.w,
+                              child: Text(
+                                planList[i].providerName != null
+                                    ? toBeginningOfSentenceCase(
+                                        planList[i].providerName)
+                                    : '',
+                                maxLines: 2,
+                                style: TextStyle(
+                                    fontSize: 14.0.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: ColorUtils.lightgraycolor),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  'Start Date: ',
+                                  style: TextStyle(
+                                      fontSize: 10.0.sp,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                                Text(
+                                  new CommonUtil().dateFormatConversion(
+                                      planList[i].startdate),
+                                  maxLines: 1,
+                                  style: TextStyle(
+                                      fontSize: 10.0.sp,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Column(
+                        children: [
+                          Align(
+                            alignment: Alignment.center,
+                            child: SizedBoxWithChild(
+                              width: 95.0.w,
+                              height: 32.0.h,
+                              child: FlatButton(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(18.0),
+                                    side: BorderSide(
+                                        color: planList[i].isexpired == '1'
+                                            ? Color(new CommonUtil()
+                                                .getMyPrimaryColor())
+                                            : Colors.red)),
+                                color: Colors.transparent,
+                                textColor: planList[i].isexpired == '1'
+                                    ? Color(
+                                        new CommonUtil().getMyPrimaryColor())
+                                    : Colors.red,
+                                padding: EdgeInsets.all(
+                                  8.0.sp,
+                                ),
+                                onPressed: () async {
+                                  if (planList[i].isexpired == '1') {
+                                    CommonUtil().renewAlertDialog(context,
+                                        packageId: planList[i].packageid,
+                                        refresh: () {
+                                      setState(() {});
+                                    });
+                                  } else {
+                                    CommonUtil().unSubcribeAlertDialog(context,
+                                        packageId: planList[i].packageid,
+                                        refresh: () {
+                                      setState(() {});
+                                    });
+                                  }
+                                },
+                                child: TextWidget(
+                                  text: planList[i].isexpired == '1'
+                                      ? strIsRenew
+                                      : strUnSubscribe,
+                                  fontsize: 12.0.sp,
+                                ),
+                              ),
+                            ),
                           ),
                         ],
                       ),
+                      SizedBox(width: 4.w),
                     ],
-                  ),
-                  SizedBox(height: 5.0.h),
+                  )
                 ],
               ),
-            ),
-          ],
-        ),
-      ),
+              SizedBox(height: 5.h),
+            ],
+          )),
     );
+  }
+
+  String getImage(int i, List<MyPlanListResult> planList) {
+    String image = '';
+    if (planList[i] != null) {
+      if (planList[i].metadata != null && planList[i].metadata != '') {
+        if (planList[i].metadata.icon != null &&
+            planList[i].metadata.icon != '') {
+          image = planList[i].metadata.icon;
+        } else {
+          if (planList[i].catmetadata != null &&
+              planList[i].catmetadata != '') {
+            if (planList[i].catmetadata.icon != null &&
+                planList[i].catmetadata.icon != '') {
+              image = planList[i].catmetadata.icon;
+            } else {
+              if (planList[i].providermetadata != null &&
+                  planList[i].providermetadata != '') {
+                if (planList[i].providermetadata.icon != null &&
+                    planList[i].providermetadata.icon != '') {
+                  image = planList[i].providermetadata.icon;
+                } else {
+                  image = '';
+                }
+              } else {
+                image = '';
+              }
+            }
+          } else {
+            if (planList[i].providermetadata != null &&
+                planList[i].providermetadata != '') {
+              if (planList[i].providermetadata.icon != null &&
+                  planList[i].providermetadata.icon != '') {
+                image = planList[i].providermetadata.icon;
+              } else {
+                image = '';
+              }
+            } else {
+              image = '';
+            }
+          }
+        }
+      } else {
+        if (planList[i].catmetadata != null && planList[i].catmetadata != '') {
+          if (planList[i].catmetadata.icon != null &&
+              planList[i].catmetadata.icon != '') {
+            image = planList[i].catmetadata.icon;
+          } else {
+            if (planList[i].providermetadata != null &&
+                planList[i].providermetadata != '') {
+              if (planList[i].providermetadata.icon != null &&
+                  planList[i].providermetadata.icon != '') {
+                image = planList[i].providermetadata.icon;
+              } else {
+                image = '';
+              }
+            } else {
+              image = '';
+            }
+          }
+        } else {
+          if (planList[i].providermetadata != null &&
+              planList[i].providermetadata != '') {
+            if (planList[i].providermetadata.icon != null &&
+                planList[i].providermetadata.icon != '') {
+              image = planList[i].providermetadata.icon;
+            } else {
+              image = '';
+            }
+          } else {
+            image = '';
+          }
+        }
+      }
+    } else {
+      if (planList[i].catmetadata != null && planList[i].catmetadata != '') {
+        if (planList[i].catmetadata.icon != null &&
+            planList[i].catmetadata.icon != '') {
+          image = planList[i].catmetadata.icon;
+        } else {
+          if (planList[i].providermetadata != null &&
+              planList[i].providermetadata != '') {
+            if (planList[i].providermetadata.icon != null &&
+                planList[i].providermetadata.icon != '') {
+              image = planList[i].providermetadata.icon;
+            } else {
+              image = '';
+            }
+          } else {
+            image = '';
+          }
+        }
+      } else {
+        if (planList[i].providermetadata != null &&
+            planList[i].providermetadata != '') {
+          if (planList[i].providermetadata.icon != null &&
+              planList[i].providermetadata.icon != '') {
+            image = planList[i].providermetadata.icon;
+          } else {
+            image = '';
+          }
+        } else {
+          image = '';
+        }
+      }
+    }
+
+    return image;
   }
 }

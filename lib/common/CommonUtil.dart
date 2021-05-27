@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -10,6 +11,7 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
@@ -88,12 +90,16 @@ import 'package:package_info/package_info.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:showcaseview/showcase.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/authentication/view/login_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
+import 'package:myfhb/src/ui/Dashboard.dart';
 
 class CommonUtil {
   static String SHEELA_URL = "";
@@ -129,6 +135,7 @@ class CommonUtil {
       'Oops! Your profile is incomplete. Please complete the profile to subscribe to a QurPlan.';
   final String CONTENT_UNSUBSCRIBE_PACKAGE =
       'Are you sure you want to unsubscribe?';
+  final String CONTENT_RENEW_PACKAGE = 'Are you sure you want to renew?';
 
   static Future<dynamic> getResourceLoader() async {
     final Future<Secret> secret =
@@ -1010,7 +1017,7 @@ class CommonUtil {
       } else {
         _familyListBloc.getCustomRoles().then((relationShip) {
           PreferenceUtil.saveRelationshipArray(
-              Constants.keyFamily, relationShip.relationShipAry);
+              Constants.keyFamily, relationShip?.relationShipAry);
         });
       }
     } catch (e) {
@@ -1568,7 +1575,7 @@ class CommonUtil {
                     icon: Icon(
                       Icons.notifications,
                       color: Colors.white,
-                      size: 30,
+                      size: 30.0.sp,
                     ),
                     badgeColor: ColorUtils.countColor,
                     badgeCount: count),
@@ -1585,7 +1592,7 @@ class CommonUtil {
                     icon: Icon(
                       Icons.notifications,
                       color: Colors.white,
-                      size: 30,
+                      size: 30.0.sp,
                     ),
                     badgeColor: ColorUtils.countColor,
                     badgeCount: 0),
@@ -1604,7 +1611,7 @@ class CommonUtil {
             icon: Icon(
               Icons.notifications,
               color: Colors.white,
-              size: 30,
+              size: 30.0.sp,
             ),
             badgeColor: ColorUtils.countColor,
             badgeCount: 0),
@@ -1922,6 +1929,7 @@ class CommonUtil {
                           content: CONTENT_PROFILE_CHECK,
                           packageId: packageId,
                           isSubscribed: isSubscribed,
+                          providerId: providerId,
                           refresh: refresh);
                     }
                   } else {
@@ -1929,9 +1937,12 @@ class CommonUtil {
                         content: CONTENT_PROFILE_CHECK,
                         packageId: packageId,
                         isSubscribed: isSubscribed,
+                        providerId: providerId,
                         refresh: refresh);
                   }
-                } else {
+                }
+                //// for appointment book we need to check height weight
+                else {
                   if (myProfile.result.additionalInfo.height != null &&
                       myProfile.result.additionalInfo.height.isNotEmpty) {
                     if (myProfile.result.additionalInfo.weight != null &&
@@ -1950,6 +1961,7 @@ class CommonUtil {
                           mCustomAlertDialog(context,
                               content: CONTENT_PROFILE_CHECK,
                               packageId: packageId,
+                              providerId: providerId,
                               isSubscribed: isSubscribed,
                               refresh: refresh);
                         }
@@ -1957,6 +1969,7 @@ class CommonUtil {
                         mCustomAlertDialog(context,
                             content: CONTENT_PROFILE_CHECK,
                             packageId: packageId,
+                            providerId: providerId,
                             isSubscribed: isSubscribed,
                             refresh: refresh);
                       }
@@ -1964,6 +1977,7 @@ class CommonUtil {
                       mCustomAlertDialog(context,
                           content: CONTENT_PROFILE_CHECK,
                           packageId: packageId,
+                          providerId: providerId,
                           isSubscribed: isSubscribed,
                           refresh: refresh);
                     }
@@ -1971,6 +1985,7 @@ class CommonUtil {
                     mCustomAlertDialog(context,
                         content: CONTENT_PROFILE_CHECK,
                         packageId: packageId,
+                        providerId: providerId,
                         isSubscribed: isSubscribed,
                         refresh: refresh);
                   }
@@ -1979,6 +1994,7 @@ class CommonUtil {
                 mCustomAlertDialog(context,
                     content: CONTENT_PROFILE_CHECK,
                     packageId: packageId,
+                    providerId: providerId,
                     isSubscribed: isSubscribed,
                     refresh: refresh);
               }
@@ -1986,6 +2002,7 @@ class CommonUtil {
               mCustomAlertDialog(context,
                   content: CONTENT_PROFILE_CHECK,
                   packageId: packageId,
+                  providerId: providerId,
                   isSubscribed: isSubscribed,
                   refresh: refresh);
             }
@@ -1993,6 +2010,7 @@ class CommonUtil {
             mCustomAlertDialog(context,
                 content: CONTENT_PROFILE_CHECK,
                 packageId: packageId,
+                providerId: providerId,
                 isSubscribed: isSubscribed,
                 refresh: refresh);
           }
@@ -2000,6 +2018,7 @@ class CommonUtil {
           mCustomAlertDialog(context,
               content: CONTENT_PROFILE_CHECK,
               packageId: packageId,
+              providerId: providerId,
               isSubscribed: isSubscribed,
               refresh: refresh);
         }
@@ -2007,6 +2026,7 @@ class CommonUtil {
         mCustomAlertDialog(context,
             content: CONTENT_PROFILE_CHECK,
             packageId: packageId,
+            providerId: providerId,
             isSubscribed: isSubscribed,
             refresh: refresh);
       }
@@ -2014,6 +2034,7 @@ class CommonUtil {
       mCustomAlertDialog(context,
           content: CONTENT_PROFILE_CHECK,
           packageId: packageId,
+          providerId: providerId,
           isSubscribed: isSubscribed,
           refresh: refresh);
     }
@@ -2088,6 +2109,7 @@ class CommonUtil {
             content: CONTENT_PROFILE_CHECK,
             packageId: packageId,
             isSubscribed: isSubscribed,
+            providerId: providerId,
             refresh: refresh);
       }
     } else {
@@ -2095,6 +2117,7 @@ class CommonUtil {
           content: CONTENT_PROFILE_CHECK,
           packageId: packageId,
           isSubscribed: isSubscribed,
+          providerId: providerId,
           refresh: refresh);
     }
   }
@@ -2104,7 +2127,8 @@ class CommonUtil {
       String content,
       String packageId,
       String isSubscribed,
-      Function() refresh}) async {
+      Function() refresh,
+      String providerId}) async {
     var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     showDialog<void>(
         context: context,
@@ -2180,6 +2204,7 @@ class CommonUtil {
                                     fromClass: CommonConstants.user_update,
                                     isFromCSIR: true,
                                     packageId: packageId,
+                                    providerId: providerId,
                                     isSubscribed: isSubscribed,
                                     refresh: refresh));
                           },
@@ -2291,6 +2316,7 @@ class CommonUtil {
                                       Navigator.of(_keyLoader.currentContext,
                                               rootNavigator: true)
                                           .pop();
+                                      Get.back();
                                       FlutterToast().getToast(
                                           'UnSubscribe Failed', Colors.red);
                                     }
@@ -2299,6 +2325,7 @@ class CommonUtil {
                                   Navigator.of(_keyLoader.currentContext,
                                           rootNavigator: true)
                                       .pop();
+                                  Get.back();
                                   FlutterToast().getToast(
                                       'UnSubscribe Failed', Colors.red);
                                 }
@@ -2333,126 +2360,76 @@ class CommonUtil {
       Function() refresh}) async {
     await Get.dialog(
       AlertDialog(
-        content: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 5),
-                width: double.infinity,
-                child: Column(children: [
-                  //CircularProgressIndicator(),
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: IconButton(
-                        icon: Icon(Icons.close_rounded),
-                        onPressed: () {
-                          Get.back();
-                        }),
-                  ),
-                  SizedBox(
-                    height: 10.0.h,
-                  ),
-                  Text(
-                    'Disclaimer',
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Spacer(),
+            Text(
+              'Disclaimer',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 20.0.sp,
+              ),
+            ),
+            Expanded(
+              child: IconButton(
+                  icon: Icon(Icons.close_rounded),
+                  onPressed: () {
+                    Get.back();
+                  }),
+            ),
+          ],
+        ),
+        content: SingleChildScrollView(
+          child: Column(
+              //mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  //color: Colors.blue,
+                  margin: EdgeInsets.symmetric(horizontal: 1),
+                  width: double.infinity,
+                  child: Column(children: [
+                    Text(
+                      CONTENT_DISCALIMER,
+                      style: const TextStyle(
+                          fontSize: 15, fontWeight: FontWeight.w300),
+                    ),
+                  ]),
+                ),
+              ]),
+        ),
+        actions: [
+          SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                OutlineButton(
+                  //hoverColor: Color(getMyPrimaryColor()),
+                  child: Text(
+                    'accept'.toUpperCase(),
                     style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20.0.sp,
+                      color: Color(CommonUtil().getMyPrimaryColor()),
+                      fontSize: 13,
                     ),
                   ),
-                  SizedBox(
-                    height: 10.0.h,
-                  ),
-                  Container(
-                    height: 400,
-                    child: SingleChildScrollView(
-                      child: Text(
-                        CONTENT_DISCALIMER,
-                        style: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.w300),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      OutlineButton(
-                        //hoverColor: Color(getMyPrimaryColor()),
-                        child: Text(
-                          'accept'.toUpperCase(),
-                          style: TextStyle(
-                            color: Color(CommonUtil().getMyPrimaryColor()),
-                            fontSize: 13,
-                          ),
-                        ),
-                        onPressed: () async {
-                          // open profile page
-                          CommonUtil.showLoadingDialog(
-                              context, _keyLoader, variable.Please_Wait);
-                          if (isSubscribed == '0') {
-                            String userId = PreferenceUtil.getStringValue(
-                                Constants.KEY_USERID);
-                            updateProvidersBloc
-                                .mappingHealthOrg(providerId, userId)
-                                .then((value) {
-                              if (value != null) {
-                                if (value.success) {
-                                  subscribeViewModel
-                                      .subScribePlan(packageId)
-                                      .then((value) {
-                                    if (value != null) {
-                                      if (value.isSuccess) {
-                                        if (value.result != null) {
-                                          if (value.result.result == 'Done') {
-                                            Navigator.of(
-                                                    _keyLoader.currentContext,
-                                                    rootNavigator: true)
-                                                .pop();
-                                            Get.back();
-                                            Get.back(result: 'refreshUI');
-                                            refresh();
-                                          } else {
-                                            Navigator.of(
-                                                    _keyLoader.currentContext,
-                                                    rootNavigator: true)
-                                                .pop();
-                                            Get.back();
-                                            Get.back(result: 'refreshUI');
-                                            FlutterToast().getToast(
-                                                'Already Subscribed',
-                                                Colors.red);
-                                          }
-                                        }
-                                      } else {
-                                        Navigator.of(_keyLoader.currentContext,
-                                                rootNavigator: true)
-                                            .pop();
-                                        FlutterToast()
-                                          ..getToast(
-                                              'Subscribe Failed', Colors.red);
-                                      }
-                                    }
-                                  });
-                                } else {
-                                  Navigator.of(_keyLoader.currentContext,
-                                          rootNavigator: true)
-                                      .pop();
-                                  FlutterToast().getToast(
-                                      'Subscribe Map Failed', Colors.red);
-                                }
-                              } else {
-                                Navigator.of(_keyLoader.currentContext,
-                                        rootNavigator: true)
-                                    .pop();
-                                FlutterToast().getToast(
-                                    'Subscribe Map Failed', Colors.red);
-                              }
-                            });
-                          } else {
-                            await subscribeViewModel.UnsubScribePlan(packageId)
+                  onPressed: () async {
+                    // open profile page
+                    CommonUtil.showLoadingDialog(
+                        context, _keyLoader, variable.Please_Wait);
+                    if (isSubscribed == '0') {
+                      String userId =
+                          PreferenceUtil.getStringValue(Constants.KEY_USERID);
+                      updateProvidersBloc
+                          .mappingHealthOrg(providerId, userId)
+                          .then((value) {
+                        if (value != null) {
+                          if (value.success) {
+                            subscribeViewModel
+                                .subScribePlan(packageId)
                                 .then((value) {
                               if (value != null) {
                                 if (value.isSuccess) {
@@ -2461,71 +2438,382 @@ class CommonUtil {
                                       Navigator.of(_keyLoader.currentContext,
                                               rootNavigator: true)
                                           .pop();
-                                      Get.back(result: 'refreshUI');
-                                      refresh();
+                                      // Get.back();
+                                      // Get.back(result: 'refreshUI');
+                                      Provider.of<RegimentViewModel>(
+                                        context,
+                                        listen: false,
+                                      ).updateTabIndex(currentIndex: 3);
+                                      Get.offAll(
+                                        DashboardScreen(
+                                          fromPlans: true,
+                                        ),
+                                      );
+                                      // refresh();
                                     } else {
                                       Navigator.of(_keyLoader.currentContext,
                                               rootNavigator: true)
                                           .pop();
-                                      Get.back(result: 'refreshUI');
+                                      // Get.back();
+                                      // Get.back(result: 'refreshUI');
+                                      Provider.of<RegimentViewModel>(
+                                        context,
+                                        listen: false,
+                                      ).updateTabIndex(currentIndex: 3);
+                                      Get.offAll(
+                                        DashboardScreen(
+                                          fromPlans: true,
+                                        ),
+                                      );
                                       FlutterToast().getToast(
-                                          'UnSubscribe Failed', Colors.red);
+                                          'Already Subscribed', Colors.red);
                                     }
                                   }
                                 } else {
                                   Navigator.of(_keyLoader.currentContext,
                                           rootNavigator: true)
                                       .pop();
-                                  FlutterToast().getToast(
-                                      'UnSubscribe Failed', Colors.red);
+                                  FlutterToast()
+                                    ..getToast('Subscribe Failed', Colors.red);
                                 }
                               }
                             });
+                          } else {
+                            Navigator.of(_keyLoader.currentContext,
+                                    rootNavigator: true)
+                                .pop();
+                            FlutterToast()
+                                .getToast('Subscribe Map Failed', Colors.red);
                           }
-                        },
-                        borderSide: BorderSide(
-                          color: Color(
-                            CommonUtil().getMyPrimaryColor(),
-                          ),
-                          style: BorderStyle.solid,
-                          width: 1,
-                        ),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      OutlineButton(
-                        child: Text(
-                          'Reject'.toUpperCase(),
-                          style: TextStyle(
-                            color: Color(
-                              CommonUtil().getMyPrimaryColor(),
-                            ),
-                            fontSize: 13,
-                          ),
-                        ),
-                        onPressed: () async {
-                          // open profile page
-                          Get.back();
-                          Get.back(result: 'refreshUI');
-                        },
-                        borderSide: BorderSide(
-                          color: Color(
-                            CommonUtil().getMyPrimaryColor(),
-                          ),
-                          style: BorderStyle.solid,
-                          width: 1,
-                        ),
-                      ),
-                    ],
+                        } else {
+                          Navigator.of(_keyLoader.currentContext,
+                                  rootNavigator: true)
+                              .pop();
+                          FlutterToast()
+                              .getToast('Subscribe Map Failed', Colors.red);
+                        }
+                      });
+                    } else {
+                      await subscribeViewModel.UnsubScribePlan(packageId)
+                          .then((value) {
+                        if (value != null) {
+                          if (value.isSuccess) {
+                            if (value.result != null) {
+                              if (value.result.result == 'Done') {
+                                Navigator.of(_keyLoader.currentContext,
+                                        rootNavigator: true)
+                                    .pop();
+                                Get.back(result: 'refreshUI');
+                                refresh();
+                              } else {
+                                Navigator.of(_keyLoader.currentContext,
+                                        rootNavigator: true)
+                                    .pop();
+                                Get.back(result: 'refreshUI');
+                                FlutterToast()
+                                    .getToast('UnSubscribe Failed', Colors.red);
+                              }
+                            }
+                          } else {
+                            Navigator.of(_keyLoader.currentContext,
+                                    rootNavigator: true)
+                                .pop();
+                            FlutterToast()
+                                .getToast('UnSubscribe Failed', Colors.red);
+                          }
+                        }
+                      });
+                    }
+                  },
+                  borderSide: BorderSide(
+                    color: Color(
+                      CommonUtil().getMyPrimaryColor(),
+                    ),
+                    style: BorderStyle.solid,
+                    width: 1,
                   ),
-                ]),
-              ),
-            ]),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                OutlineButton(
+                  child: Text(
+                    'Reject'.toUpperCase(),
+                    style: TextStyle(
+                      color: Color(
+                        CommonUtil().getMyPrimaryColor(),
+                      ),
+                      fontSize: 13,
+                    ),
+                  ),
+                  onPressed: () async {
+                    // open profile page
+                    Get.back();
+                    Get.back(result: 'refreshUI');
+                  },
+                  borderSide: BorderSide(
+                    color: Color(
+                      CommonUtil().getMyPrimaryColor(),
+                    ),
+                    style: BorderStyle.solid,
+                    width: 1,
+                  ),
+                ),
+              ],
+            ),
+          )
+        ],
       ),
       barrierDismissible: false,
     );
   }
+
+  Future<dynamic> renewAlertDialog(BuildContext context,
+      {String title,
+      String content,
+      String packageId,
+      String isSubscribed,
+      Function() refresh}) async {
+    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return new WillPopScope(
+            onWillPop: () async => false,
+            child: SimpleDialog(children: <Widget>[
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 20),
+                child: Center(
+                  child: Column(children: [
+                    //CircularProgressIndicator(),
+                    SizedBox(
+                      height: 10.0.h,
+                    ),
+                    Text(
+                      CONTENT_RENEW_PACKAGE,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16.0.sp,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10.0.h,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        OutlineButton(
+                          child: Text(
+                            'no'.toUpperCase(),
+                            style: TextStyle(
+                              color: Color(
+                                getMyPrimaryColor(),
+                              ),
+                              fontSize: 10,
+                            ),
+                          ),
+                          onPressed: () async {
+                            // open profile page
+                            Navigator.of(context).pop();
+                          },
+                          borderSide: BorderSide(
+                            color: Color(
+                              getMyPrimaryColor(),
+                            ),
+                            style: BorderStyle.solid,
+                            width: 1,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10.0.h,
+                        ),
+                        OutlineButton(
+                          //hoverColor: Color(getMyPrimaryColor()),
+                          child: Text(
+                            'yes'.toUpperCase(),
+                            style: TextStyle(
+                              color: Color(getMyPrimaryColor()),
+                              fontSize: 10,
+                            ),
+                          ),
+                          onPressed: () async {
+                            CommonUtil.showLoadingDialog(
+                                context, _keyLoader, variable.Please_Wait);
+                            subscribeViewModel
+                                .subScribePlan(packageId)
+                                .then((value) {
+                              if (value != null) {
+                                if (value.isSuccess) {
+                                  if (value.result != null) {
+                                    if (value.result.result == 'Done') {
+                                      Navigator.of(_keyLoader.currentContext,
+                                              rootNavigator: true)
+                                          .pop();
+                                      Get.back();
+                                      Get.back(result: 'refreshUI');
+                                      refresh();
+                                    } else {
+                                      Navigator.of(_keyLoader.currentContext,
+                                              rootNavigator: true)
+                                          .pop();
+                                      Get.back();
+                                      FlutterToast()
+                                          .getToast('Renew Failed', Colors.red);
+                                    }
+                                  }
+                                } else {
+                                  Navigator.of(_keyLoader.currentContext,
+                                          rootNavigator: true)
+                                      .pop();
+                                  Get.back();
+                                  FlutterToast()
+                                      .getToast('Renew Failed', Colors.red);
+                                }
+                              }
+                            });
+                          },
+                          borderSide: BorderSide(
+                            color: Color(
+                              getMyPrimaryColor(),
+                            ),
+                            style: BorderStyle.solid,
+                            width: 1,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ]),
+                ),
+              ),
+            ]),
+          );
+        });
+  }
+
+  Widget customImage(String iconApi) {
+    return ClipOval(
+      child: Container(
+        alignment: Alignment.center,
+        height: 70,
+        width: 70,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.transparent,
+        ),
+        child: iconApi != null && iconApi != ''
+            ? iconApi.toString().toLowerCase()?.contains('.svg')
+                ? Center(
+                    child: SizedBox(
+                      height: 50,
+                      width: 50,
+                      child: SvgPicture.network(
+                        iconApi,
+                        placeholderBuilder: (BuildContext context) =>
+                            new CircularProgressIndicator(
+                                strokeWidth: 1.5,
+                                backgroundColor: Color(
+                                    new CommonUtil().getMyPrimaryColor())),
+                      ),
+                    ),
+                  )
+                : CachedNetworkImage(
+                    imageUrl: iconApi,
+                    placeholder: (context, url) =>
+                        new CircularProgressIndicator(
+                            strokeWidth: 1.5,
+                            backgroundColor:
+                                Color(new CommonUtil().getMyPrimaryColor())),
+                    errorWidget: (context, url, error) => ClipOval(
+                        child: CircleAvatar(
+                      backgroundImage: AssetImage(qurHealthLogo),
+                      radius: 32,
+                      backgroundColor: Colors.transparent,
+                    )),
+                    imageBuilder: (context, imageProvider) => Container(
+                      width: 80.0,
+                      height: 80.0,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                            image: imageProvider, fit: BoxFit.fill),
+                      ),
+                    ),
+                  )
+            : iconApi != null && iconApi != ''
+                ? iconApi.toString().toLowerCase()?.contains('.svg')
+                    ? SvgPicture.network(
+                        iconApi,
+                        placeholderBuilder: (BuildContext context) =>
+                            new CircularProgressIndicator(
+                                strokeWidth: 1.5,
+                                backgroundColor: Color(
+                                    new CommonUtil().getMyPrimaryColor())),
+                      )
+                    : CachedNetworkImage(
+                        imageUrl: iconApi,
+                        placeholder: (context, url) =>
+                            new CircularProgressIndicator(
+                                strokeWidth: 1.5,
+                                backgroundColor: Color(
+                                    new CommonUtil().getMyPrimaryColor())),
+                        errorWidget: (context, url, error) => ClipOval(
+                            child: CircleAvatar(
+                          backgroundImage: AssetImage(qurHealthLogo),
+                          radius: 32,
+                          backgroundColor: Colors.transparent,
+                        )),
+                        imageBuilder: (context, imageProvider) => Container(
+                          width: 80.0,
+                          height: 80.0,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                                image: imageProvider, fit: BoxFit.fill),
+                          ),
+                        ),
+                      )
+                : ClipOval(
+                    child: CircleAvatar(
+                    backgroundImage: AssetImage(qurHealthLogo),
+                    radius: 32,
+                    backgroundColor: Colors.transparent,
+                  )),
+      ),
+    );
+  }
+
+  Future<void> isFirstTime() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool firstTime = prefs.getBool('first_time');
+    if (firstTime != null && !firstTime) {
+      // Not first time
+      
+    } else {
+      // First time
+      prefs.setBool('first_time', false);
+      _deleteCacheDir();
+      _deleteAppDir();
+    }
+  }
+
+   Future<void> _deleteCacheDir() async {
+    final cacheDir = await getTemporaryDirectory();
+
+    if (cacheDir.existsSync()) {
+      cacheDir.deleteSync(recursive: true);
+    }
+  }
+
+  Future<void> _deleteAppDir() async {
+    final appDir = await getApplicationSupportDirectory();
+
+    if(appDir.existsSync()){
+      appDir.deleteSync(recursive: true);
+    }
+  }
+  
 }
 
 extension CapExtension on String {

@@ -214,7 +214,7 @@ class DevicesViewModel with ChangeNotifier {
       List<DeviceIntervalData> deviceIntervalData =
           parsedResponse.map((e) => DeviceIntervalData.fromJson(e)).toList();
       List<dynamic> finalResult;
-      List<OxyResult> ret = new List();
+      List<OxyResult> ret = [];
       //List<HeartRateEntity> heartRate = new List();
       deviceIntervalData.forEach((dataElement) {
         if (dataElement.oxygenSaturationCollection.isEmpty &&
@@ -223,12 +223,18 @@ class DevicesViewModel with ChangeNotifier {
         }
         dataElement.oxygenSaturationCollection.forEach((oxyValue) {
           final oxyList = OxyResult(
-              sourceType: dataElement.sourceType.description,
-              startDateTime: oxyValue.startDateTime.toIso8601String(),
-              endDateTime: oxyValue.endDateTime.toIso8601String(),
-              oxygenSaturation: oxyValue.oxygenSaturation,
-              deviceId: dataElement.deviceId,
-              dateTimeValue: oxyValue.startDateTime);
+            sourceType: dataElement.sourceType.description,
+            startDateTime: oxyValue.startDateTime.toIso8601String(),
+            endDateTime: oxyValue.endDateTime.toIso8601String(),
+            oxygenSaturation: oxyValue.oxygenSaturation,
+            deviceId: dataElement.deviceId,
+            dateTimeValue: oxyValue.startDateTime,
+            bpm: dataElement.heartRateCollection.isEmpty
+                ? ""
+                : dataElement.heartRateCollection[0].bpm != null
+                    ? dataElement.heartRateCollection[0].bpm.toString()
+                    : '',
+          );
           ret.add(oxyList);
         });
         /* dataElement.heartRateCollection.forEach((element) {

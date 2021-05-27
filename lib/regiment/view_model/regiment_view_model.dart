@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'package:get/get.dart';
+import 'package:myfhb/src/ui/loader_class.dart';
 
 enum RegimentMode { Schedule, Symptoms }
 
@@ -36,7 +37,11 @@ class RegimentViewModel extends ChangeNotifier {
   double scrollOffset;
   int initialShowIndex;
 
-  void updateInitialShowIndex({bool isDone: false, int index}) {
+  void updateInitialShowIndex({
+    bool isDone = false,
+    int index,
+    bool isInitial = false,
+  }) {
     if (isDone) {
       initialShowIndex = null;
     } else if (index != null) {
@@ -54,7 +59,9 @@ class RegimentViewModel extends ChangeNotifier {
       }
       initialShowIndex ??= regimentsScheduledList.length - 1;
     }
-    notifyListeners();
+    if (!isInitial) {
+      notifyListeners();
+    }
   }
 
   void updateTabIndex({int currentIndex, bool isInitial = false}) {
@@ -63,13 +70,18 @@ class RegimentViewModel extends ChangeNotifier {
     } else {
       tabIndex = currentIndex ?? 0;
     }
-    stopRegimenTTS();
+    stopRegimenTTS(isInitial: true);
   }
 
-  void changeSearchExpanded(bool newValue) {
+  void changeSearchExpanded(
+    bool newValue, {
+    bool isInitial = false,
+  }) {
     searchExpanded = newValue;
-    stopRegimenTTS();
-    notifyListeners();
+    stopRegimenTTS(isInitial: isInitial);
+    if (!isInitial) {
+      notifyListeners();
+    }
   }
 
   Future<void> switchRegimentMode() {
@@ -83,13 +95,16 @@ class RegimentViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void resetRegimenTab() {
-    changeSearchExpanded(false);
+  void resetRegimenTab({bool isInitial = false}) {
+    changeSearchExpanded(false, isInitial: isInitial);
     handleSearchField();
-    setViewRegimentsData();
+    setViewRegimentsData(isInitial: isInitial);
   }
 
-  void setViewRegimentsData({List<RegimentDataModel> filteredList}) {
+  void setViewRegimentsData({
+    List<RegimentDataModel> filteredList,
+    bool isInitial = false,
+  }) {
     if (filteredList != null) {
       regimentsList = filteredList;
     } else {
@@ -99,8 +114,10 @@ class RegimentViewModel extends ChangeNotifier {
         regimentsList = regimentsAsNeededList;
       }
     }
-    stopRegimenTTS();
-    notifyListeners();
+    stopRegimenTTS(isInitial: isInitial);
+    if (!isInitial) {
+      notifyListeners();
+    }
   }
 
   void startRegimenTTS(int index, String saytext) {
@@ -114,7 +131,8 @@ class RegimentViewModel extends ChangeNotifier {
         notifyListeners();
       });
     }
-    Provider.of<ChatScreenViewModel>(Get.context, listen: false).startTTSEngine(
+    Provider.of<ChatScreenViewModel>(Get.context, listen: false)
+        ?.startTTSEngine(
       textToSpeak: saytext,
       isRegiment: true,
       onStop: () {
@@ -123,18 +141,25 @@ class RegimentViewModel extends ChangeNotifier {
     );
   }
 
-  void stopRegimenTTS() {
-    Provider.of<ChatScreenViewModel>(Get.context, listen: false)
-        .stopTTSEngine();
+  void stopRegimenTTS({bool isInitial = false}) {
+    Provider.of<ChatScreenViewModel>(Get.context, listen: false)?.stopTTSEngine(
+      isInitial: isInitial,
+    );
+
     regimentsList?.forEach((regimenData) {
       regimenData.isPlaying = false;
     });
-    notifyListeners();
+    if (!isInitial) {
+      notifyListeners();
+    }
   }
 
-  void updateRegimentStatus(RegimentStatus newStatus) {
+  void updateRegimentStatus(RegimentStatus newStatus,
+      {bool isInitial = false}) {
     regimentStatus = newStatus;
-    notifyListeners();
+    if (!isInitial) {
+      notifyListeners();
+    }
   }
 
   void onSearch(String searchText) {
@@ -176,8 +201,11 @@ class RegimentViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> fetchRegimentData(
-      {bool isInitial = false, bool setIndex = false}) async {
+  Future<void> fetchRegimentData({
+    bool isInitial = false,
+    bool setIndex = false,
+    bool fromPlans = false,
+  }) async {
     handleSearchField();
     regimentsList.clear();
     regimentsAsNeededList.clear();
@@ -185,7 +213,7 @@ class RegimentViewModel extends ChangeNotifier {
     if (PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN) ==
         PreferenceUtil.getStringValue(Constants.KEY_USERID)) {
       if (isInitial) {
-        updateRegimentStatus(RegimentStatus.Loading);
+        updateRegimentStatus(RegimentStatus.Loading, isInitial: isInitial);
       }
       regimentsDataAvailable = true;
       regimentsData = await RegimentService.getRegimentData(
@@ -210,9 +238,9 @@ class RegimentViewModel extends ChangeNotifier {
     if (setIndex) {
       updateInitialShowIndex();
     }
-    setViewRegimentsData();
-    if (isInitial) {
-      updateTabIndex(isInitial: true);
+    setViewRegimentsData(isInitial: isInitial);
+    if (isInitial && !fromPlans) {
+      updateTabIndex(isInitial: isInitial);
     }
   }
 
@@ -241,7 +269,8 @@ class RegimentViewModel extends ChangeNotifier {
     } else if (isNext) {
       selectedDate = selectedDate.add(Duration(days: 1));
     }
-    regimentDate = '${CommonUtil().regimentDateFormat(selectedDate)}';
+    regimentDate =
+        '${CommonUtil().regimentDateFormat(selectedDate ?? DateTime.now())}';
     resetRegimenTab();
     fetchRegimentData(isInitial: true);
     notifyListeners();
@@ -261,22 +290,39 @@ class RegimentViewModel extends ChangeNotifier {
   Future<FieldsResponseModel> getFormData({
     String eid,
   }) async {
+    LoaderClass.showLoadingDialog(
+      Get.context,
+      canDismiss: false,
+    );
     final response = await RegimentService.getFormData(
       eid: eid,
     );
+    LoaderClass.hideLoadingDialog(Get.context);
     return response;
   }
 
   Future<ProfileResponseModel> getProfile() async {
-    return await RegimentService.getProfile();
+    LoaderClass.showLoadingDialog(
+      Get.context,
+      canDismiss: false,
+    );
+    final response = await RegimentService.getProfile();
+    LoaderClass.hideLoadingDialog(Get.context);
+    return response;
   }
 
   Future<SaveResponseModel> saveProfile({
     String schedules,
   }) async {
-    return await RegimentService.saveProfile(
+    LoaderClass.showLoadingDialog(
+      Get.context,
+      canDismiss: false,
+    );
+    final response = await RegimentService.saveProfile(
       schedules: schedules,
     );
+    LoaderClass.hideLoadingDialog(Get.context);
+    return response;
   }
 
   Future<SaveResponseModel> undoSaveFormData({

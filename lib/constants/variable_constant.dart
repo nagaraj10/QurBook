@@ -362,6 +362,7 @@ const String strGetLabList = 'Getting Laboratory List';
 const String strGetLabById = 'Getting laboratoty by Id';
 
 const String strSearch = 'Search';
+const String strSearchByHosLoc = 'Search by Hospital/Location';
 const String strNoLoadtabls = 'Unable To load Tabs';
 
 const String strSignUp = 'Sign Up';
@@ -595,6 +596,7 @@ const String icon_whatsapp = 'assets/icons/ic_whatsapp.png';
 
 const String strAdd = 'Add';
 const String strSync = 'Syncing...';
+const String vitalsSummary = 'Vitals Summary';
 
 //Reminders
 //

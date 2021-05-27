@@ -11,7 +11,10 @@ import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/language/model/Language.dart';
+import 'package:myfhb/language/repository/LanguageRepository.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/model/user/MyProfileResult.dart';
 import 'package:myfhb/src/ui/authentication/OtpVerifyScreen.dart';
@@ -53,11 +56,15 @@ class _MyProfilePageState extends State<MyProfilePage> {
   var cntrlr_addr_state = TextEditingController(text: '');
   var cntrlr_addr_zip = TextEditingController(text: '');
 
+  LanguageModel languageModelList;
+  LanguageRepository languageBlock = new LanguageRepository();
+
   @override
   void initState() {
     PreferenceUtil.init();
     // getPreferredLanguage();
     super.initState();
+    languageBlock = new LanguageRepository();
   }
 
   @override
@@ -65,22 +72,60 @@ class _MyProfilePageState extends State<MyProfilePage> {
     return Scaffold(key: scaffold_state, body: getProfileDetailClone());
   }
 
-  void getPreferredLanguage() {
-    String currentLanguage = '';
-    final lan = CommonUtil.getCurrentLanCode();
-    if (lan != "undef") {
-      final langCode = lan.split("-").first;
-      currentLanguage = langCode;
-    } else {
-      currentLanguage = 'en';
+  void getPreferredLanguage(MyProfileResult myProfile) async {
+    try {
+      try {
+        languageModelList = await languageBlock.getLanguage();
+      } catch (e) {}
+
+      PreferenceUtil.saveString(
+          SHEELA_LANG,
+          CommonUtil.langaugeCodes[myProfile?.additionalInfo.language[0]] ??
+              'en-IN');
+
+      setValueLanguages(myProfile);
+    } catch (e) {
+      String currentLanguage = '';
+      final lan = CommonUtil.getCurrentLanCode();
+      if (lan != "undef") {
+        final langCode = lan.split("-").first;
+        currentLanguage = langCode;
+      } else {
+        currentLanguage = 'en';
+      }
+      if (currentLanguage.isNotEmpty) {
+        CommonUtil.supportedLanguages.forEach((language, languageCode) {
+          if (currentLanguage == languageCode) {
+            languageController.text = toBeginningOfSentenceCase(language);
+            return;
+          }
+        });
+      }
     }
-    if (currentLanguage.isNotEmpty) {
-      CommonUtil.supportedLanguages.forEach((language, languageCode) {
-        if (currentLanguage == languageCode) {
-          languageController.text = toBeginningOfSentenceCase(language);
-          return;
+  }
+
+  void setValueLanguages(MyProfileResult myProfile) {
+    for (LanguageResult languageResultObj in languageModelList.result) {
+      if (languageResultObj.referenceValueCollection.length > 0) {
+        for (ReferenceValueCollection referenceValueCollection
+            in languageResultObj.referenceValueCollection) {
+          if (myProfile?.additionalInfo.language != null &&
+              myProfile?.additionalInfo.language.length > 0) {
+            if (referenceValueCollection.id ==
+                myProfile?.additionalInfo.language[0]) {
+              // selectedLanguage = referenceValueCollection.code;
+              String languageCode =
+                  referenceValueCollection.code.substring(0, 2).toLowerCase();
+
+              languageController.text =
+                  toBeginningOfSentenceCase(referenceValueCollection.name);
+
+              PreferenceUtil.saveString(SHEELA_LANG,
+                  CommonUtil.langaugeCodes[languageCode] ?? 'en-IN');
+            }
+          }
         }
-      });
+      }
     }
   }
 
@@ -105,7 +150,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
         if (snapshot.hasData) {
           //* its done with fetching the data from remote
           if (snapshot.hasData && snapshot.data != null) {
-            getPreferredLanguage();
+            getPreferredLanguage(snapshot.data.result);
             return getProfileWidget(snapshot.data, snapshot.data.result);
           } else {
             //todo proper error msg to users
@@ -241,11 +286,13 @@ class _MyProfilePageState extends State<MyProfilePage> {
       }
     }
     try {
-      String profileImageFile =
-          PreferenceUtil.getStringValue(Constants.KEY_PROFILE_IMAGE);
-      if (profileImageFile != null) {
-        profileImage = File(profileImageFile);
-      }
+      try {
+        String profileImageFile =
+            PreferenceUtil.getStringValue(Constants.KEY_PROFILE_IMAGE);
+        if (profileImageFile != null) {
+          profileImage = File(profileImageFile);
+        }
+      } catch (e) {}
       return Container(
           color: Colors.white,
           padding: EdgeInsets.all(20),
@@ -266,12 +313,14 @@ class _MyProfilePageState extends State<MyProfilePage> {
                                   Color(new CommonUtil().getMyPrimaryColor()))),
                     ),
                     child: ClipOval(
-                      child: profileImage != null
+                      child:
+                          /*profileImage != null
                           ? Image.file(
                               profileImage,
                               fit: BoxFit.cover,
                             )
-                          : data.profilePicThumbnailUrl != null
+                          :*/
+                          data.profilePicThumbnailUrl != null
                               ? FHBBasicWidget()
                                   .getProfilePicWidgeUsingUrlForProfile(
                                       myProfile)

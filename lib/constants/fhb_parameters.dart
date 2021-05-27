@@ -612,6 +612,14 @@ const String cancel_appointment = 'Are you want cancel Appointment?';
 const String warning = 'warning!';
 const String Yes = 'Yes';
 const String No = 'No';
+const String patientName = 'patientName';
+const String doctorName = 'doctorName';
+const String planName = 'planName';
+const String healthOrganizationName = 'healthOrganizationName';
+const String healthOrganizationLogo = 'healthOrganizationLogo';
+const String userPlanStartDate = 'userPlanStartDate';
+const String userPlanEndDate = 'userPlanEndDate';
+const String UserPlanPackageAssociation = 'UserPlanPackageAssociation';
 
 const String id = 'doctorId';
 const String healthOrganization = 'healthOrganization';
@@ -665,3 +673,5 @@ const String errAssociateRecords =
 
 const String strMetaData = 'metadata';
 const String strMultipart = 'multipart/form-data';
+
+const String qurHealthLogo = 'assets/launcher/myfhb1.png';

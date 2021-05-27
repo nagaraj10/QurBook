@@ -129,6 +129,15 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
           getStringValue(),
           style: TextStyle(fontSize: 18.0.sp),
         ),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios,
+            size: 24.0.sp,
+          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
         actions: <Widget>[
           Image.asset(
             widget.device_icon,
@@ -1475,15 +1484,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                               '',
                               getFormattedTime(translist[index].startDateTime),
                               '',
-                              deviceFullList[index]
-                                          .heartRateCollection[0]
-                                          .bpm !=
-                                      null
-                                  ? deviceFullList[index]
-                                      .heartRateCollection[0]
-                                      .bpm
-                                      .toString()
-                                  : '',
+                              translist[index].bpm,
                               translist[index].deviceId);
                         },
                       )

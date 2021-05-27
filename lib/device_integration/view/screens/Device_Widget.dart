@@ -51,6 +51,12 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/authentication/view/login_screen.dart';
 
 class ShowDevicesNew extends StatefulWidget {
+  ShowDevicesNew({
+    this.fromPlans = false,
+  });
+
+  final bool fromPlans;
+
   @override
   _ShowDevicesNewState createState() => _ShowDevicesNewState();
 }
@@ -144,18 +150,21 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
 
   @override
   void initState() {
+    FocusManager.instance.primaryFocus.unfocus();
     mInitialTime = DateTime.now();
     _familyListBloc = new FamilyListBloc();
     getFamilyLength();
     Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
       isInitial: true,
       setIndex: true,
+      fromPlans: widget.fromPlans,
     );
     super.initState();
   }
 
   @override
   void dispose() {
+    FocusManager.instance.primaryFocus.unfocus();
     super.dispose();
     fbaLog(eveName: 'qurbook_screen_event', eveParams: {
       'eventTime': '${DateTime.now()}',
@@ -167,17 +176,19 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
 
   getFamilyLength() async {
     _familyListBloc.getFamilyMembersListNew().then((familyMembersList) {
-      setState(() {
-        if (familyMembersList != null && familyMembersList.result != null) {
-          if (familyMembersList.result.sharedByUsers != null) {
-            isFamilyAvail = true;
+      if (mounted) {
+        setState(() {
+          if (familyMembersList != null && familyMembersList.result != null) {
+            if (familyMembersList.result.sharedByUsers != null) {
+              isFamilyAvail = true;
+            } else {
+              isFamilyAvail = false;
+            }
           } else {
             isFamilyAvail = false;
           }
-        } else {
-          isFamilyAvail = false;
-        }
-      });
+        });
+      }
     });
   }
 
@@ -539,39 +550,16 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                           width: 0.66.sw,
                                           child: _getUserName(),
                                         ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            toast.getToastForLongTime(
-                                                strSync, Colors.green);
-                                            Platform.isIOS
-                                                ? _deviceDataHelper
-                                                    .syncHealthKit()
-                                                    .then((value) {
-                                                    setState(() {});
-                                                  })
-                                                : _deviceDataHelper
-                                                    .syncGoogleFit()
-                                                    .then((value) {
-                                                    setState(() {});
-                                                  });
-                                          },
-                                          child: Image.asset(
-                                            icon_refresh_dash,
-                                            height: 26.0.h,
-                                            width: 26.0.h,
-                                            color: Colors.white,
-                                          ),
-                                        ),
+                                        CommonUtil()
+                                            .getNotificationIcon(context),
                                         SizedBox(
                                           width: 0.03.sw,
                                         ),
-                                        isFamilyAvail
-                                            ? SwitchProfile().buildActions(
-                                                context,
-                                                _key,
-                                                callBackToRefresh,
-                                                true)
-                                            : getMaterialPlusIcon(context),
+                                        /*isFamilyAvail
+                                            ?*/
+                                        SwitchProfile().buildActions(context,
+                                            _key, callBackToRefresh, true)
+                                        /* : getMaterialPlusIcon(context)*/,
                                       ],
                                     ),
                                   ),
@@ -683,6 +671,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
   }
 
   Widget projectWidget(BuildContext context) {
+    FocusScopeNode currentFocus = FocusScope.of(context);
+    if (!currentFocus.hasPrimaryFocus) {
+      currentFocus.unfocus();
+    }
     if (deviceValues.toString() == null) {
       return new Center(
         child: new CircularProgressIndicator(
@@ -692,8 +684,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
     }
 
     if (deviceValues.bloodPressure.entities.isNotEmpty) {
-      dateTimeStampForBp =
-          deviceValues.bloodPressure.entities[0].startDateTime.toLocal();
+      dateTimeStampForBp = deviceValues
+          .bloodPressure.entities[0].deviceHealthRecord?.createdOn
+          .toLocal();
 
       //deviceValues.bloodPressure.entities[0].lastsyncdatetime;
       dateForBp =
@@ -784,8 +777,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       averageForPulForBp = '';
     }
     if (deviceValues.bloodGlucose.entities.isNotEmpty) {
-      dateTimeStampForGulcose =
-          deviceValues.bloodGlucose.entities[0].startDateTime.toLocal();
+      dateTimeStampForGulcose = deviceValues
+          .bloodGlucose.entities[0].deviceHealthRecord?.createdOn
+          .toLocal();
 
       dateForGulcose =
           "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForGulcose)}";
@@ -839,8 +833,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       averageForPP = '';
     }
     if (deviceValues.oxygenSaturation.entities.isNotEmpty) {
-      dateTimeStampForOs =
-          deviceValues.oxygenSaturation.entities[0].startDateTime.toLocal();
+      dateTimeStampForOs = deviceValues
+          .oxygenSaturation.entities[0].deviceHealthRecord?.createdOn
+          .toLocal();
 
       dateForOs =
           "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForOs)}";
@@ -937,8 +932,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       averageForSPO2 = '';
     }
     if (deviceValues.bodyTemperature.entities.isNotEmpty) {
-      dateTimeStampForTemp =
-          deviceValues.bodyTemperature.entities[0].startDateTime.toLocal();
+      dateTimeStampForTemp = deviceValues
+          .bodyTemperature.entities[0].deviceHealthRecord?.createdOn
+          .toLocal();
 
       dateForTemp =
           "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForTemp)}";
@@ -971,8 +967,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       averageForTemp = '';
     }
     if (deviceValues.bodyWeight.entities.isNotEmpty) {
-      dateTimeStampForWeight =
-          deviceValues.bodyWeight.entities[0].startDateTime.toLocal();
+      dateTimeStampForWeight = deviceValues
+          .bodyWeight.entities[0].deviceHealthRecord?.createdOn
+          .toLocal();
 
       dateForWeight =
           "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForWeight)}";
@@ -1221,30 +1218,48 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           //     ),
           //   ),
           // ),
-          SizedBoxWidget(
-            height: 10.0.h,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBoxWidget(
-                width: 0.08.sw,
-              ),
-              Container(
-                child: Text(
-                  'Devices',
-                  style: TextStyle(
-                    fontSize: 16.0.sp,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w500,
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: 25.0.w,
+              vertical: 10.0.h,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  child: Text(
+                    vitalsSummary,
+                    style: TextStyle(
+                      fontSize: 16.0.sp,
+                      color: Color(CommonUtil().getMyPrimaryColor()),
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          SizedBoxWidget(
-            height: 10.0.h,
+                Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () {
+                      toast.getToastForLongTime(strSync, Colors.green);
+                      Platform.isIOS
+                          ? _deviceDataHelper.syncHealthKit().then((value) {
+                              setState(() {});
+                            })
+                          : _deviceDataHelper.syncGoogleFit().then((value) {
+                              setState(() {});
+                            });
+                    },
+                    child: Image.asset(
+                      icon_refresh_dash,
+                      height: 26.0.h,
+                      width: 26.0.h,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
           Visibility(
             visible: bpMonitor,

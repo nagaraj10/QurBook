@@ -29,19 +29,27 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
       AutoScrollController(axis: Axis.vertical, suggestedRowHeight: 150);
   @override
   void initState() {
+    FocusManager.instance.primaryFocus.unfocus();
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     Provider.of<RegimentViewModel>(
       context,
       listen: false,
-    ).updateTabIndex(currentIndex: 0);
+    ).updateTabIndex(
+      currentIndex: 0,
+      isInitial: true,
+    );
     Provider.of<RegimentViewModel>(context, listen: false)
-        .updateInitialShowIndex();
+        .updateInitialShowIndex(
+      isInitial: true,
+    );
     Provider.of<ChatScreenViewModel>(context, listen: false)?.updateAppState(
       true,
       isInitial: true,
     );
-    Provider.of<RegimentViewModel>(context, listen: false).resetRegimenTab();
+    Provider.of<RegimentViewModel>(context, listen: false).resetRegimenTab(
+      isInitial: true,
+    );
     Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
       isInitial: true,
     );
@@ -462,8 +470,10 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                         child: RegimentDataCard(
                           index: index,
                           title: regimentData.title,
-                          time: DateFormat('hh:mm\na')
-                              .format(regimentData.estart),
+                          time: regimentData?.estart != null
+                              ? DateFormat('hh:mm\na')
+                                  .format(regimentData?.estart)
+                              : '',
                           color: getColor(regimentData.activityname,
                               regimentData.uformname, regimentData.metadata),
                           icon: getIcon(regimentData.activityname,

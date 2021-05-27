@@ -450,6 +450,12 @@ const strSelectedPlans = 'Selected Plan(s) - ';
 const strSelectPlan = 'Select a Plan';
 const strSelectPlans = 'Select your Plan(s)';
 const strIsFromSubscibe = 'fromSubscribe';
+const strIsRenew = 'Renew';
+const goToRegimen = 'Go to Regimen';
+
+const strQurhealth = 'QurHealth';
+
+const strCovidFree = 'Click for free Covid Plans';
 
 FirebaseAnalytics _firebaseAnalytics = FirebaseAnalytics();
 var mInitialTime;

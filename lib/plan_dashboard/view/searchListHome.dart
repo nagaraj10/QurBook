@@ -1,12 +1,15 @@
 import 'dart:math';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
 import 'package:myfhb/plan_dashboard/model/SearchListModel.dart';
@@ -31,15 +34,28 @@ class _SearchListState extends State<SearchListHome> {
   SearchListModel searchModel;
   SearchListService searchListService = new SearchListService();
 
-  bool isListVisible = false;
+  //bool isListVisible = false;
   bool isLoaderVisible = false;
+
+  Future<SearchListModel> providerList;
+
+  TextEditingController searchController = TextEditingController();
+  FocusNode searchFocus = FocusNode();
 
   @override
   void initState() {
+    FocusManager.instance.primaryFocus.unfocus();
     super.initState();
     Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
       isInitial: true,
     );
+    providerList = myPlanViewModel.getSearchListInit('');
+  }
+
+  @override
+  void dispose() {
+    FocusManager.instance.primaryFocus.unfocus();
+    super.dispose();
   }
 
   @override
@@ -51,15 +67,16 @@ class _SearchListState extends State<SearchListHome> {
         child: Column(
           children: [
             SearchWidget(
+              searchController: searchController,
+              searchFocus: searchFocus,
               onChanged: (title) {
                 if (title != '' && title.length > 2) {
                   onSearchedNew(title);
                 } else {
-                  setState(() {
-                    isListVisible = false;
-                  });
+                  onSearchedNew(title);
                 }
               },
+              hintText: variable.strSearchByHosLoc,
             ),
             SizedBox(
               height: 5.0.h,
@@ -71,78 +88,15 @@ class _SearchListState extends State<SearchListHome> {
                     width: 30.0.h,
                     height: 30.0.h,
                     child: new CircularProgressIndicator(
-                      strokeWidth: 1.5,
+                        strokeWidth: 1.5,
                         backgroundColor:
                             Color(new CommonUtil().getMyPrimaryColor())),
                   ),
                 )),
-            Visibility(
-                visible: isListVisible,
-                child: Expanded(
-                    child: searchModel != null
-                        ? searchModel.isSuccess
-                            ? searchListView(searchModel.result)
-                            : Container()
-                        : Container()),
-                replacement: Container(
-                    padding: EdgeInsets.all(20.0),
-                    margin: EdgeInsets.only(left: 12, right: 12, top: 8),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color(0xFFe3e2e2),
-                          blurRadius: 16,
-                          // has the effect of softening the shadow
-                          spreadRadius: 5.0,
-                          // has the effect of extending the shadow
-                          offset: Offset(
-                            0.0, // horizontal, move right 10
-                            0.0, // vertical, move down 10
-                          ),
-                        )
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    searchTextFirst,
-                                    style: TextStyle(
-                                      fontSize: 16.0.sp,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                    textAlign: TextAlign.start,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 3,
-                                  ),
-                                  SizedBox(height: 30.h),
-                                  Text(
-                                    searchTextSecond,
-                                    style: TextStyle(
-                                      fontSize: 16.0.sp,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                    textAlign: TextAlign.start,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 3,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 30.h),
-                      ],
-                    )))
+            Expanded(
+                child: searchModel != null ?? searchModel.isSuccess
+                    ? searchListView(searchModel.result)
+                    : getProviderList())
           ],
         ),
       ),
@@ -163,6 +117,48 @@ class _SearchListState extends State<SearchListHome> {
     ));
   }
 
+  Widget getProviderList() {
+    return new FutureBuilder<SearchListModel>(
+      future: providerList,
+      builder: (BuildContext context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return SafeArea(
+            child: SizedBox(
+              height: 1.sh / 4.5,
+              child: new Center(
+                child: SizedBox(
+                  width: 30.0.h,
+                  height: 30.0.h,
+                  child: new CircularProgressIndicator(
+                      backgroundColor:
+                          Color(new CommonUtil().getMyPrimaryColor())),
+                ),
+              ),
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return ErrorsWidget();
+        } else {
+          if (snapshot?.hasData &&
+              snapshot?.data?.result != null &&
+              snapshot?.data?.result?.length > 0) {
+            return searchListView(snapshot.data.result);
+          } else {
+            return SafeArea(
+              child: SizedBox(
+                height: 1.sh / 1.3,
+                child: Container(
+                    child: Center(
+                  child: Text(variable.strNodata),
+                )),
+              ),
+            );
+          }
+        }
+      },
+    );
+  }
+
   onSearchedNew(String title) async {
     if (title != null) {
       setState(() {
@@ -174,14 +170,14 @@ class _SearchListState extends State<SearchListHome> {
             setState(() {
               isLoaderVisible = false;
               searchModel = value;
-              isListVisible = true;
+              //isListVisible = true;
             });
-          }else{
+          } else {
             setState(() {
               isLoaderVisible = false;
             });
           }
-        }else{
+        } else {
           setState(() {
             isLoaderVisible = false;
           });
@@ -261,7 +257,8 @@ class _SearchListState extends State<SearchListHome> {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => CategoryList(searchList[i].providerid)),
+              builder: (context) => CategoryList(
+                  searchList[i].providerid, searchList[i]?.metadata?.icon)),
         ).then((value) {
           setState(() {});
         });
@@ -293,15 +290,10 @@ class _SearchListState extends State<SearchListHome> {
                     width: 15.0.w,
                   ),
                   CircleAvatar(
-                    backgroundColor: Colors.grey[200],
-                    radius: 20,
-                    child: ClipOval(
-                        child: CircleAvatar(
-                      backgroundImage: AssetImage('assets/launcher/myfhb1.png'),
-                      radius: 18,
-                      backgroundColor: Colors.transparent,
-                    )),
-                  ),
+                      backgroundColor: Colors.grey[200],
+                      radius: 20,
+                      child: CommonUtil()
+                          .customImage(searchList[i]?.metadata?.icon ?? '')),
                   SizedBox(
                     width: 20.0.w,
                   ),
@@ -324,7 +316,8 @@ class _SearchListState extends State<SearchListHome> {
                         ),
                         Text(
                           searchList[i].description != null
-                              ? toBeginningOfSentenceCase(searchList[i].description)
+                              ? toBeginningOfSentenceCase(
+                                  searchList[i].description)
                               : '',
                           style: TextStyle(
                             fontSize: 15.0.sp,
@@ -335,6 +328,20 @@ class _SearchListState extends State<SearchListHome> {
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
                         ),
+                        searchList[i].title != null &&
+                                searchList[i].title != '' &&
+                                searchList[i].title == strQurhealth
+                            ? Text(
+                                strCovidFree,
+                                style: TextStyle(
+                                  fontSize: 15.0.sp,
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(
+                                      new CommonUtil().getMyPrimaryColor()),
+                                ),
+                                textAlign: TextAlign.start,
+                              )
+                            : SizedBox.shrink()
                       ],
                     ),
                   ),

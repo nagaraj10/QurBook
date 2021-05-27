@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -8,6 +10,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
 import 'package:myfhb/plan_dashboard/view/planDetailsView.dart';
@@ -25,9 +28,12 @@ class PlanList extends StatefulWidget {
   _MyPlanState createState() => _MyPlanState();
 
   final String categoryId;
+  final String hosIcon;
+  final String catIcon;
+
   final List<PlanListResult> planListResult;
 
-  PlanList(this.categoryId, this.planListResult);
+  PlanList(this.categoryId, this.planListResult, this.hosIcon, this.catIcon);
 }
 
 class _MyPlanState extends State<PlanList> {
@@ -39,12 +45,15 @@ class _MyPlanState extends State<PlanList> {
   FlutterToast toast = new FlutterToast();
 
   String categoryId = '';
+  String hosIcon = '';
+  String catIcon = '';
   List<PlanListResult> planListResult;
   bool isSelected = false;
   List<PlanListResult> planListUniq = [];
 
   @override
   void initState() {
+    FocusManager.instance.primaryFocus.unfocus();
     super.initState();
     Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
       isInitial: true,
@@ -54,7 +63,15 @@ class _MyPlanState extends State<PlanList> {
       listen: false,
     ).handleSearchField();
     categoryId = widget.categoryId;
+    hosIcon = widget.hosIcon;
+    catIcon = widget.catIcon;
     planListResult = widget.planListResult;
+  }
+
+  @override
+  void dispose() {
+    FocusManager.instance.primaryFocus.unfocus();
+    super.dispose();
   }
 
   @override
@@ -123,7 +140,8 @@ class _MyPlanState extends State<PlanList> {
   onSearchedNew(String title, List<PlanListResult> planListOld) async {
     myPLanListResult.clear();
     if (title != null) {
-      myPLanListResult = await myPlanViewModel.getSearchForPlanList(title, planListOld);
+      myPLanListResult =
+          await myPlanViewModel.getSearchForPlanList(title, planListOld);
     }
     setState(() {});
   }
@@ -224,6 +242,10 @@ class _MyPlanState extends State<PlanList> {
                     isDisable: planList[i].catselecttype == '1' &&
                         planList[i].isSubscribed == '0' &&
                         isSelected,
+                    hosIcon: hosIcon,
+                    iconApi: planList[i]?.metadata?.icon,
+                    catIcon: catIcon,
+                    metaDataForURL: planList[i]?.metadata,
                   )),
         ).then((value) {
           if (value == 'refreshUI') {
@@ -260,12 +282,7 @@ class _MyPlanState extends State<PlanList> {
                   CircleAvatar(
                     backgroundColor: Colors.grey[200],
                     radius: 20,
-                    child: ClipOval(
-                        child: CircleAvatar(
-                      backgroundImage: AssetImage('assets/launcher/myfhb1.png'),
-                      radius: 18,
-                      backgroundColor: Colors.transparent,
-                    )),
+                    child: CommonUtil().customImage(getImage(i,planList)),
                   ),
                   SizedBox(
                     width: 20.0.w,
@@ -439,6 +456,49 @@ class _MyPlanState extends State<PlanList> {
             ],
           )),
     );
+  }
+
+  String getImage(int i, List<PlanListResult> planList){
+    String image;
+    if(planList[i]!=null){
+      if(planList[i].metadata!=null && planList[i].metadata!=''){
+        if(planList[i].metadata.icon!=null && planList[i].metadata.icon!=''){
+          image = planList[i].metadata.icon;
+        }else{
+          if(catIcon!=null && catIcon !=''){
+            image = catIcon;
+          }else{
+            if(hosIcon!=null && hosIcon!=''){
+              image = hosIcon;
+            }else{
+              image = '';
+            }
+          }
+        }
+      }else{
+        if(catIcon!=null && catIcon !=''){
+          image = catIcon;
+        }else{
+          if(hosIcon!=null && hosIcon!=''){
+            image = hosIcon;
+          }else{
+            image = '';
+          }
+        }
+      }
+    }else{
+      if(catIcon!=null && catIcon !=''){
+        image = catIcon;
+      }else{
+        if(hosIcon!=null && hosIcon!=''){
+          image = hosIcon;
+        }else{
+          image = '';
+        }
+      }
+    }
+
+    return image;
   }
 
   Color getBorderColor(int i, List<PlanListResult> planList) {

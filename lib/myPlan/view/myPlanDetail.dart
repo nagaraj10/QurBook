@@ -1,5 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/errors_widget.dart';
+import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/myPlan/model/myPlanDetailModel.dart';
 import 'package:myfhb/myPlan/viewModel/myPlanViewModel.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
@@ -14,6 +17,9 @@ class MyPlanDetail extends StatefulWidget {
   final String startDate;
   final String endDate;
   final String packageId;
+  final String icon;
+  final String catIcon;
+  final String providerIcon;
 
   MyPlanDetail(
       {Key key,
@@ -22,7 +28,10 @@ class MyPlanDetail extends StatefulWidget {
       @required this.docName,
       @required this.startDate,
       @required this.endDate,
-      @required this.packageId})
+      @required this.packageId,
+      @required this.icon,
+      @required this.catIcon,
+      @required this.providerIcon})
       : super(key: key);
 
   @override
@@ -40,6 +49,9 @@ class PlanDetail extends State<MyPlanDetail> {
   String startDate;
   String endDate;
   String packageId;
+  String icon = '';
+  String catIcon = '';
+  String providerIcon = '';
 
   @override
   void initState() {
@@ -54,6 +66,9 @@ class PlanDetail extends State<MyPlanDetail> {
     startDate = widget.startDate;
     endDate = widget.endDate;
     packageId = widget.packageId;
+    icon = widget.icon;
+    catIcon = widget.catIcon;
+    providerIcon = widget.providerIcon;
   }
 
   @override
@@ -200,10 +215,9 @@ class PlanDetail extends State<MyPlanDetail> {
                   )),
             ),
             CircleAvatar(
-              backgroundImage: AssetImage('assets/launcher/myfhb1.png'),
-              radius: 24,
-              backgroundColor: Colors.transparent,
-            )
+                backgroundColor: Colors.grey[200],
+                radius: 30,
+                child: CommonUtil().customImage(getImage())),
           ],
         ),
       ],
@@ -316,5 +330,24 @@ class PlanDetail extends State<MyPlanDetail> {
             ),
           ],
         ));
+  }
+
+  String getImage() {
+    String image;
+    if (icon != null && icon != '') {
+      image = icon;
+    } else {
+      if (catIcon != null && catIcon != '') {
+        image = catIcon;
+      } else {
+        if (providerIcon != null && providerIcon != '') {
+          image = providerIcon;
+        } else {
+          image = '';
+        }
+      }
+    }
+
+    return image;
   }
 }

@@ -1,6 +1,8 @@
 import 'dart:math';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
@@ -8,6 +10,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
 import 'package:myfhb/plan_dashboard/view/planList.dart';
@@ -25,8 +28,9 @@ class CategoryList extends StatefulWidget {
   _CategoryState createState() => _CategoryState();
 
   final String providerId;
+  final String icon;
 
-  CategoryList(this.providerId);
+  CategoryList(this.providerId, this.icon);
 }
 
 class _CategoryState extends State<CategoryList> {
@@ -45,9 +49,13 @@ class _CategoryState extends State<CategoryList> {
   bool isSubscribedOne = false;
 
   String providerId = '';
+  String icon = '';
+
+  Future<PlanListModel> planListModel;
 
   @override
   void initState() {
+    FocusManager.instance.primaryFocus.unfocus();
     super.initState();
     Provider.of<RegimentViewModel>(
       context,
@@ -58,6 +66,15 @@ class _CategoryState extends State<CategoryList> {
     );
 
     providerId = widget.providerId;
+    icon = widget.icon;
+
+    planListModel = myPlanViewModel.getPlanList(providerId);
+  }
+
+  @override
+  void dispose() {
+    FocusManager.instance.primaryFocus.unfocus();
+    super.dispose();
   }
 
   @override
@@ -129,7 +146,8 @@ class _CategoryState extends State<CategoryList> {
   onSearchedNew(String title, List<PlanListResult> planListOld) async {
     myPLanListResult.clear();
     if (title != null) {
-      myPLanListResult = await myPlanViewModel.getSearchForCategory(title, planListOld);
+      myPLanListResult =
+          await myPlanViewModel.getSearchForCategory(title, planListOld);
     }
     setState(() {});
   }
@@ -195,7 +213,7 @@ class _CategoryState extends State<CategoryList> {
 
   Widget getCategoryList(String providerId) {
     return new FutureBuilder<PlanListModel>(
-      future: myPlanViewModel.getPlanList(providerId),
+      future: planListModel,
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return SafeArea(
@@ -243,9 +261,11 @@ class _CategoryState extends State<CategoryList> {
           context,
           MaterialPageRoute(
               builder: (context) =>
-                  PlanList(planList[i].packcatid, planListFull)),
+                  PlanList(planList[i].packcatid, planListFull, icon,planList[i]?.catmetadata?.icon)),
         ).then((value) {
-          setState(() {});
+          setState(() {
+            planListModel = myPlanViewModel.getPlanList(providerId);
+          });
         });
       },
       child: Container(
@@ -275,15 +295,10 @@ class _CategoryState extends State<CategoryList> {
                     width: 15.0.w,
                   ),
                   CircleAvatar(
-                    backgroundColor: Colors.grey[200],
-                    radius: 20,
-                    child: ClipOval(
-                        child: CircleAvatar(
-                      backgroundImage: AssetImage('assets/launcher/myfhb1.png'),
-                      radius: 18,
-                      backgroundColor: Colors.transparent,
-                    )),
-                  ),
+                      backgroundColor: Colors.grey[200],
+                      radius: 20,
+                      child: CommonUtil().customImage(
+                          (planList[i]?.catmetadata?.icon??'').isNotEmpty?planList[i]?.catmetadata?.icon : icon)),
                   SizedBox(
                     width: 20.0.w,
                   ),
@@ -316,31 +331,29 @@ class _CategoryState extends State<CategoryList> {
                               color: ColorUtils.lightgraycolor),
                         ),
                         SizedBox(height: 2.h),
-                        InkWell(
-                          child: Text(
-                            selectTitle[planList[i].packcatid] != null
-                                ? isSubscribedOne &&
-                                        planList[i].isSubscribed == '1'
-                                    ? planList[i].catselecttype == '1'
-                                        ? strSelectedPlan +
-                                            selectedTitle[planList[i].packcatid]
-                                                .join(', ')
-                                        : strSelectedPlans +
-                                            selectedTitle[planList[i].packcatid]
-                                                .join(', ')
-                                    : planList[i].catselecttype == '1'
-                                        ? strSelectPlan
-                                        : strSelectPlans
-                                : '',
-                            style: TextStyle(
-                                fontSize: 15.0.sp,
-                                fontWeight: FontWeight.w400,
-                                color: Color(
-                                    new CommonUtil().getMyPrimaryColor())),
-                            textAlign: TextAlign.start,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                          ),
+                        Text(
+                          selectTitle[planList[i].packcatid] != null
+                              ? isSubscribedOne &&
+                                      planList[i].isSubscribed == '1'
+                                  ? planList[i].catselecttype == '1'
+                                      ? strSelectedPlan +
+                                          selectedTitle[planList[i].packcatid]
+                                              .join(', ')
+                                      : strSelectedPlans +
+                                          selectedTitle[planList[i].packcatid]
+                                              .join(', ')
+                                  : planList[i].catselecttype == '1'
+                                      ? strSelectPlan
+                                      : strSelectPlans
+                              : '',
+                          style: TextStyle(
+                              fontSize: 15.0.sp,
+                              fontWeight: FontWeight.w400,
+                              color:
+                                  Color(new CommonUtil().getMyPrimaryColor())),
+                          textAlign: TextAlign.start,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
                         ),
                       ],
                     ),

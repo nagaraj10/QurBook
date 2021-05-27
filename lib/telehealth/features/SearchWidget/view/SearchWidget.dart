@@ -12,6 +12,7 @@ class SearchWidget extends StatefulWidget {
   final TextEditingController searchController;
   final FocusNode searchFocus;
   final double padding;
+  final String hintText;
 
   const SearchWidget({
     Key key,
@@ -19,6 +20,7 @@ class SearchWidget extends StatefulWidget {
     this.searchController,
     this.searchFocus,
     this.padding,
+    this.hintText,
   }) : super(key: key);
 
   @override
@@ -55,7 +57,9 @@ class SearchWdigetState extends State<SearchWidget> {
                     autofocus: false,
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.all(4),
-                      hintText: variable.strSearch,
+                      hintText: widget.hintText != null && widget.hintText != ''
+                          ? widget.hintText
+                          : variable.strSearch,
                       prefixIcon: Icon(
                         Icons.search,
                         color: Colors.black54,

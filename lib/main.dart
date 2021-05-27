@@ -2,6 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io' show Platform;
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+//import 'package:myfhb/QurPlan/WelcomeScreens/qurplan_welcome_screen.dart';
 // import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
@@ -42,9 +45,11 @@ import 'package:myfhb/telehealth/features/chat/view/home.dart';
 import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'package:myfhb/telehealth/features/chat/viewModel/notificationController.dart';
 import 'package:myfhb/video_call/pages/callmain.dart';
+import 'package:myfhb/video_call/services/iOS_Notification_Handler.dart';
 import 'package:myfhb/video_call/services/push_notification_provider.dart';
 import 'package:myfhb/video_call/utils/callstatus.dart';
 import 'package:myfhb/video_call/utils/hideprovider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart' as provider;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:myfhb/src/ui/bot/SuperMaya.dart';
@@ -146,6 +151,17 @@ Future<void> main() async {
     registerConversionDataCallback: true,
     registerOnAppOpenAttributionCallback: true,
   );
+
+  if (Platform.isAndroid) {
+    await FlutterDownloader.initialize(
+        debug: true // optional: set false to disable printing logs to console
+        );
+    await Permission.storage.request();
+  }
+  
+  // check if the app install on first time
+  CommonUtil().isFirstTime();
+
   runApp(
     MyFHB(),
   );
@@ -245,8 +261,7 @@ class _MyFHBState extends State<MyFHB> {
     isAlreadyLoaded = true;
     if (Platform.isIOS) {
       // Push Notifications
-      final provider = PushNotificationsProvider();
-      provider.initNotification();
+      final provider = IosNotificationHandler();
       provider.setUpListerForTheNotification();
       provider.isAlreadyLoaded = true;
       provider.pushController.listen((callarguments) {

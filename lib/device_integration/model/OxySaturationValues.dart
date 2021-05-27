@@ -33,13 +33,15 @@ class OxyResult {
   int oxygenSaturation;
   String deviceId;
   DateTime dateTimeValue;
+  String bpm;
   OxyResult(
       {this.sourceType,
       this.startDateTime,
       this.endDateTime,
       this.oxygenSaturation,
       this.deviceId,
-      this.dateTimeValue});
+      this.dateTimeValue,
+      this.bpm});
 
   OxyResult.fromJson(Map<String, dynamic> json) {
     sourceType = json[strsourcetype];

@@ -207,6 +207,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             context: Get.context,
             packageId: widget.arguments.packageId,
             isSubscribed: widget.arguments.isSubscribed,
+            providerId: widget.arguments.providerId,
             refresh: widget.arguments.refresh,
           );
         } else {}
@@ -1316,6 +1317,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           selectedGender = widget.arguments.myProfileResult.gender;
         }
       }
+      setValueLanguages();
     } else if (widget.arguments.fromClass == CommonConstants.my_family) {
       //* my-family member details update sections
       addFamilyUserInfoBloc.userId = widget
@@ -1593,9 +1595,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       additionalInfo.language = new List();
     }
 
-    /* List<String> languageSelectedList = getLanguageList();
+    List<String> languageSelectedList = getLanguageList();
     additionalInfo.language = languageSelectedList;
-*/
+
     profileResult.additionalInfo = additionalInfo;
 
     if (currentselectedBloodGroup != null &&
@@ -2255,7 +2257,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       if (languageResultObj.referenceValueCollection.length > 0) {
         for (ReferenceValueCollection referenceValueCollection
             in languageResultObj.referenceValueCollection) {
-          if (selectedLanguage == referenceValueCollection.name) {
+          if (selectedLanguage == referenceValueCollection.code) {
             languageList.add(referenceValueCollection.id);
           }
         }
@@ -2269,5 +2271,27 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     mobileNoController.text =
         myProfile?.result?.userContactCollection3[0].phoneNumber;
     emailController.text = myProfile?.result?.userContactCollection3[0].email;
+  }
+
+  void setValueLanguages() {
+    for (LanguageResult languageResultObj in languageModelList.result) {
+      if (languageResultObj.referenceValueCollection.length > 0) {
+        for (ReferenceValueCollection referenceValueCollection
+            in languageResultObj.referenceValueCollection) {
+          if (myProfile?.result?.additionalInfo.language != null &&
+              myProfile?.result?.additionalInfo.language.length > 0) {
+            if (referenceValueCollection.id ==
+                myProfile?.result?.additionalInfo.language[0]) {
+              // selectedLanguage = referenceValueCollection.code;
+              String languageCode =
+                  referenceValueCollection.code.substring(0, 2).toLowerCase();
+              selectedLanguage = languageCode;
+              PreferenceUtil.saveString(SHEELA_LANG,
+                  CommonUtil.langaugeCodes[languageCode] ?? 'en-IN');
+            }
+          }
+        }
+      }
+    }
   }
 }

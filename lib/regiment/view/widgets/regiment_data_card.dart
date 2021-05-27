@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 import 'media_icon_widget.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
+import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:intl/intl.dart';
 import 'package:get/get.dart';
 import 'regiment_webview.dart';
@@ -127,7 +127,7 @@ class RegimentDataCard extends StatelessWidget {
                                 children: [
                                   Text(
                                     '${CommonUtil().regimentDateFormat(
-                                      regimentData.ack ?? DateTime.now(),
+                                      regimentData?.ack ?? DateTime.now(),
                                       isAck: true,
                                     )}',
                                     style: TextStyle(
@@ -148,6 +148,10 @@ class RegimentDataCard extends StatelessWidget {
                                         ),
                                       ),
                                       onTap: () async {
+                                        LoaderClass.showLoadingDialog(
+                                          Get.context,
+                                          canDismiss: false,
+                                        );
                                         SaveResponseModel saveResponse =
                                             await Provider.of<
                                                         RegimentViewModel>(
@@ -165,7 +169,12 @@ class RegimentDataCard extends StatelessWidget {
                                                     context,
                                                     listen: false)
                                                 .fetchRegimentData();
+                                            LoaderClass.hideLoadingDialog(
+                                                Get.context);
                                           });
+                                        } else {
+                                          LoaderClass.hideLoadingDialog(
+                                              Get.context);
                                         }
                                       },
                                     ),
@@ -287,7 +296,7 @@ class RegimentDataCard extends StatelessWidget {
       }
     });
 
-    if (mediaData != null || regimentData.hashtml) {
+    if (mediaData != null || (regimentData?.hashtml ?? false)) {
       fieldWidgets.add(
         Padding(
           padding: EdgeInsets.symmetric(
@@ -359,6 +368,10 @@ class RegimentDataCard extends StatelessWidget {
                             startTime.difference(DateTime.now()).inMinutes <=
                                 15;
                         if (canEdit) {
+                          LoaderClass.showLoadingDialog(
+                            Get.context,
+                            canDismiss: false,
+                          );
                           SaveResponseModel saveResponse =
                               await Provider.of<RegimentViewModel>(context,
                                       listen: false)
@@ -371,7 +384,10 @@ class RegimentDataCard extends StatelessWidget {
                               await Provider.of<RegimentViewModel>(context,
                                       listen: false)
                                   .fetchRegimentData();
+                              LoaderClass.hideLoadingDialog(Get.context);
                             });
+                          } else {
+                            LoaderClass.hideLoadingDialog(Get.context);
                           }
                         } else {
                           FlutterToast().getToast(
@@ -405,7 +421,7 @@ class RegimentDataCard extends StatelessWidget {
     if (Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
         RegimentMode.Schedule) {
       title =
-          '${DateFormat('hh:mm a').format(regimentData.estart)},${regimentData.title}';
+          '${regimentData?.estart != null ? DateFormat('hh:mm a').format(regimentData.estart) : ''},${regimentData.title}';
     } else {
       title = '${regimentData.title}';
     }
@@ -439,9 +455,14 @@ class RegimentDataCard extends StatelessWidget {
           ),
         );
         if (value != null && (value ?? false)) {
+          LoaderClass.showLoadingDialog(
+            Get.context,
+            canDismiss: false,
+          );
           Future.delayed(Duration(milliseconds: 300), () async {
             await Provider.of<RegimentViewModel>(context, listen: false)
                 .fetchRegimentData();
+            LoaderClass.hideLoadingDialog(Get.context);
           });
         }
 
