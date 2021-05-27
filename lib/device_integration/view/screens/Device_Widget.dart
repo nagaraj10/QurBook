@@ -629,7 +629,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                       ),
                     ),
                     SearchListHome(),
-                    MyPlanList(),
+                    MyPlanList(
+                      fromDashBoard: true,
+                    ),
                   ],
                 ),
               ),
