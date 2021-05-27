@@ -176,17 +176,19 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
 
   getFamilyLength() async {
     _familyListBloc.getFamilyMembersListNew().then((familyMembersList) {
-      setState(() {
-        if (familyMembersList != null && familyMembersList.result != null) {
-          if (familyMembersList.result.sharedByUsers != null) {
-            isFamilyAvail = true;
+      if (mounted) {
+        setState(() {
+          if (familyMembersList != null && familyMembersList.result != null) {
+            if (familyMembersList.result.sharedByUsers != null) {
+              isFamilyAvail = true;
+            } else {
+              isFamilyAvail = false;
+            }
           } else {
             isFamilyAvail = false;
           }
-        } else {
-          isFamilyAvail = false;
-        }
-      });
+        });
+      }
     });
   }
 

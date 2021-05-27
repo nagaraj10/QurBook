@@ -117,9 +117,12 @@ class ChatScreenViewModel extends ChangeNotifier {
   Future<void> stopTTSEngine({
     int index,
     String langCode,
+    bool isInitial = false,
   }) async {
     stopTTS = true;
-    notifyListeners();
+    if (!isInitial) {
+      notifyListeners();
+    }
     if (index != null) {
       conversations[index].isSpeaking = false;
       isSheelaSpeaking = false;
@@ -135,7 +138,9 @@ class ChatScreenViewModel extends ChangeNotifier {
       });
     });
     isSheelaSpeaking = false;
-    notifyListeners();
+    if (!isInitial) {
+      notifyListeners();
+    }
 
     stopAudioPlayer();
     final lan = langCode != null && langCode.isNotEmpty
@@ -151,7 +156,9 @@ class ChatScreenViewModel extends ChangeNotifier {
         parameters.strLanguage: Utils.getCurrentLanCode()
       });
     } else {
-      notifyListeners();
+      if (!isInitial) {
+        notifyListeners();
+      }
     }
     // } else {
     //   notifyListeners();
