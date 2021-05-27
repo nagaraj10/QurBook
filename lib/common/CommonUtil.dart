@@ -1017,7 +1017,7 @@ class CommonUtil {
       } else {
         _familyListBloc.getCustomRoles().then((relationShip) {
           PreferenceUtil.saveRelationshipArray(
-              Constants.keyFamily, relationShip.relationShipAry);
+              Constants.keyFamily, relationShip?.relationShipAry);
         });
       }
     } catch (e) {

@@ -35,14 +35,21 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
     Provider.of<RegimentViewModel>(
       context,
       listen: false,
-    ).updateTabIndex(currentIndex: 0);
+    ).updateTabIndex(
+      currentIndex: 0,
+      isInitial: true,
+    );
     Provider.of<RegimentViewModel>(context, listen: false)
-        .updateInitialShowIndex();
+        .updateInitialShowIndex(
+      isInitial: true,
+    );
     Provider.of<ChatScreenViewModel>(context, listen: false)?.updateAppState(
       true,
       isInitial: true,
     );
-    Provider.of<RegimentViewModel>(context, listen: false).resetRegimenTab();
+    Provider.of<RegimentViewModel>(context, listen: false).resetRegimenTab(
+      isInitial: true,
+    );
     Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
       isInitial: true,
     );
