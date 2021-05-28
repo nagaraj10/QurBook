@@ -237,7 +237,7 @@ class _MyPlanState extends State<MyPlanList> {
                     endDate: planList[i].enddate,
                     icon: planList[i]?.metadata?.icon,
                     catIcon: planList[i]?.catmetadata?.icon,
-                    providerIcon: planList[i]?.providermetadata.icon,
+                    providerIcon: planList[i]?.providermetadata?.icon,
                     descriptionURL: planList[i]?.metadata?.descriptionURL,
                   )),
         ).then((value) {

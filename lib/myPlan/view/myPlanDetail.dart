@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
@@ -113,195 +114,202 @@ class PlanDetail extends State<MyPlanDetail> {
 
   Widget getMainWidget() {
     return Builder(
-      builder: (contxt) => Container(
-        margin: EdgeInsets.symmetric(horizontal: 2, vertical: 10),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: CircleAvatar(
-                        backgroundColor: Colors.grey[200],
-                        radius: 26,
-                        child: CommonUtil().customImage(getImage())),
-                  ),
-                  Expanded(
-                    flex: 3,
-                    child: Column(
+      builder: (contxt) => Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              margin: EdgeInsets.symmetric(horizontal: 2, vertical: 10),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          title != null && title != ''
-                              ? toBeginningOfSentenceCase(title)
-                              : '-',
-                          style: TextStyle(
-                              fontSize: 20.sp, fontWeight: FontWeight.w500),
+                        Expanded(
+                          flex: 1,
+                          child: CircleAvatar(
+                              backgroundColor: Colors.grey[200],
+                              radius: 26,
+                              child: CommonUtil().customImage(getImage())),
                         ),
-                        Text(
-                          providerName != null && providerName != ''
-                              ? toBeginningOfSentenceCase(providerName)
-                              : '-',
-                          style: TextStyle(
-                              fontSize: 16.sp, color: Colors.grey[600]),
-                        ),
-                        SizedBox(
-                          height: 3.h,
-                        ),
-                        Text(
-                            docName != null && docName != ''
-                                ? toBeginningOfSentenceCase(docName)
-                                : '-',
-                            style: TextStyle(fontSize: 16.sp)),
-                        SizedBox(
-                          height: 3.h,
-                        ),
-                        Row(
-                          children: [
-                            Text("Start Date: ", style: TextStyle(fontSize: 9)),
-                            Text(
-                                startDate != null && startDate != ''
-                                    ? new CommonUtil()
-                                        .dateFormatConversion(startDate)
+                        Expanded(
+                          flex: 3,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                title != null && title != ''
+                                    ? toBeginningOfSentenceCase(title)
                                     : '-',
                                 style: TextStyle(
-                                    fontSize: 9, fontWeight: FontWeight.bold)),
-                            SizedBox(width: 5),
-                            Text("End Date: ", style: TextStyle(fontSize: 9)),
-                            Text(
-                                endDate != null && endDate != ''
-                                    ? new CommonUtil()
-                                        .dateFormatConversion(endDate)
+                                    fontSize: 20.sp, fontWeight: FontWeight.w500),
+                              ),
+                              Text(
+                                providerName != null && providerName != ''
+                                    ? toBeginningOfSentenceCase(providerName)
                                     : '-',
                                 style: TextStyle(
-                                    fontSize: 9, fontWeight: FontWeight.bold)),
-                          ],
-                        ),
+                                    fontSize: 16.sp, color: Colors.grey[600]),
+                              ),
+                              SizedBox(
+                                height: 3.h,
+                              ),
+                              Text(
+                                  docName != null && docName != ''
+                                      ? toBeginningOfSentenceCase(docName)
+                                      : '-',
+                                  style: TextStyle(fontSize: 16.sp)),
+                              SizedBox(
+                                height: 3.h,
+                              ),
+                              Row(
+                                children: [
+                                  Text("Start Date: ", style: TextStyle(fontSize: 9)),
+                                  Text(
+                                      startDate != null && startDate != ''
+                                          ? new CommonUtil()
+                                              .dateFormatConversion(startDate)
+                                          : '-',
+                                      style: TextStyle(
+                                          fontSize: 9, fontWeight: FontWeight.bold)),
+                                  SizedBox(width: 5),
+                                  Text("End Date: ", style: TextStyle(fontSize: 9)),
+                                  Text(
+                                      endDate != null && endDate != ''
+                                          ? new CommonUtil()
+                                              .dateFormatConversion(endDate)
+                                          : '-',
+                                      style: TextStyle(
+                                          fontSize: 9, fontWeight: FontWeight.bold)),
+                                ],
+                              ),
+                            ],
+                          ),
+                        )
                       ],
                     ),
-                  )
-                ],
-              ),
-              descriptionURL != null && descriptionURL != ''
-                  ? Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                      height: 0.65.sh,
-                      child: InAppWebView(
-                          initialUrl: "${descriptionURL}",
-                          initialHeaders: {},
-                          initialOptions: InAppWebViewGroupOptions(
-                            crossPlatform: InAppWebViewOptions(
-                                debuggingEnabled: true,
-                                useOnDownloadStart: true),
-                          ),
-                          onWebViewCreated: (controller) {
-                            webView = controller;
-                          },
-                          onLoadStart: (InAppWebViewController controller,
-                              String url) {},
-                          onLoadStop: (InAppWebViewController controller,
-                              String url) {},
-                          onDownloadStart: (controller, url) async {
-                            final taskId = await FlutterDownloader.enqueue(
-                              url: url,
-                              savedDir:
-                                  (await getExternalStorageDirectory()).path,
-                              showNotification: true,
-                              // show download progress in status bar (for Android)
-                              openFileFromNotification:
-                                  true, // click on notification to open downloaded file (for Android)
-                            );
-                          }),
-                      //),
-                    )
-                  : Column(
-                    children: [
-                      SizedBox(height: 20.h),
-                      Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
+                    descriptionURL != null && descriptionURL != ''
+                        ? Container(
+                            padding:
+                                EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                            height: 0.65.sh,
+                            child: InAppWebView(
+                                initialUrl: "${descriptionURL}",
+                                initialHeaders: {},
+                                initialOptions: InAppWebViewGroupOptions(
+                                  crossPlatform: InAppWebViewOptions(
+                                      debuggingEnabled: true,
+                                      useOnDownloadStart: true),
+                                ),
+                                onWebViewCreated: (controller) {
+                                  webView = controller;
+                                },
+                                onLoadStart: (InAppWebViewController controller,
+                                    String url) {},
+                                onLoadStop: (InAppWebViewController controller,
+                                    String url) {},
+                                onDownloadStart: (controller, url) async {
+                                  final taskId = await FlutterDownloader.enqueue(
+                                    url: url,
+                                    savedDir:
+                                        (await getExternalStorageDirectory()).path,
+                                    showNotification: true,
+                                    // show download progress in status bar (for Android)
+                                    openFileFromNotification:
+                                        true, // click on notification to open downloaded file (for Android)
+                                  );
+                                }),
+                            //),
+                          )
+                        : Column(
                           children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.grey[400])
+                            SizedBox(height: 20.h),
+                            Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        border: Border.all(color: Colors.grey[400])
+                                    ),
+                                    height: 0.62.sh,
+                                    width: 0.45.sh,
+                                    child:
+                                        Center(child: Text(strEmptyWebView)),
+                                    //),
+                                  ),
+                                ],
                               ),
-                              height: 0.55.sh,
-                              width: 0.42.sh,
-                              child:
-                                  Center(child: Text('Content is getting ready')),
-                              //),
-                            ),
                           ],
                         ),
-                    ],
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              OutlineButton(
+                child: Text(
+                  isExpired == '1' ? strIsRenew : strUnSubscribe,
+                  style: TextStyle(
+                    color: isExpired == '1'
+                        ? Color(new CommonUtil().getMyPrimaryColor())
+                        : Colors.red,
+                    fontSize: 13.sp,
                   ),
-              SizedBox(height: 5.h),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  OutlineButton(
-                    child: Text(
-                      isExpired == '1' ? strIsRenew : strUnSubscribe,
-                      style: TextStyle(
-                        color: isExpired == '1'
-                            ? Color(new CommonUtil().getMyPrimaryColor())
-                            : Colors.red,
-                        fontSize: 13.sp,
-                      ),
-                    ),
-                    onPressed: () async {
-                      if (isExpired == '1') {
-                        CommonUtil().renewAlertDialog(context,
-                            packageId: packageId);
-                      } else {
-                        CommonUtil().unSubcribeAlertDialog(context,
-                            packageId: packageId);
-                      }
-                    },
-                    borderSide: BorderSide(
-                      color: isExpired == '1'
-                          ? Color(new CommonUtil().getMyPrimaryColor())
-                          : Colors.red,
-                      style: BorderStyle.solid,
-                      width: 1,
-                    ),
+                ),
+                onPressed: () async {
+                  if (isExpired == '1') {
+                    CommonUtil().renewAlertDialog(context,
+                        packageId: packageId);
+                  } else {
+                    CommonUtil().unSubcribeAlertDialog(context,
+                        packageId: packageId);
+                  }
+                },
+                borderSide: BorderSide(
+                  color: isExpired == '1'
+                      ? Color(new CommonUtil().getMyPrimaryColor())
+                      : Colors.red,
+                  style: BorderStyle.solid,
+                  width: 1,
+                ),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              OutlineButton(
+                //hoverColor: Color(getMyPrimaryColor()),
+                child: Text(
+                  'cancel'.toUpperCase(),
+                  style: TextStyle(
+                    color: Color(CommonUtil().getMyPrimaryColor()),
+                    fontSize: 13.sp,
                   ),
-                  SizedBox(
-                    width: 10,
+                ),
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                },
+                borderSide: BorderSide(
+                  color: Color(
+                    CommonUtil().getMyPrimaryColor(),
                   ),
-                  OutlineButton(
-                    //hoverColor: Color(getMyPrimaryColor()),
-                    child: Text(
-                      'cancel'.toUpperCase(),
-                      style: TextStyle(
-                        color: Color(CommonUtil().getMyPrimaryColor()),
-                        fontSize: 13.sp,
-                      ),
-                    ),
-                    onPressed: () async {
-                      Navigator.of(context).pop();
-                    },
-                    borderSide: BorderSide(
-                      color: Color(
-                        CommonUtil().getMyPrimaryColor(),
-                      ),
-                      style: BorderStyle.solid,
-                      width: 1,
-                    ),
-                  ),
-                ],
+                  style: BorderStyle.solid,
+                  width: 1,
+                ),
               ),
             ],
           ),
-        ),
+        ],
       ),
     );
   }
