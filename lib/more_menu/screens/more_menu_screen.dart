@@ -187,9 +187,12 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                           ' ' +
                           toBeginningOfSentenceCase(
                               myProfile.result.lastName ?? '') */
-                      myProfile?.result?.firstName?.capitalizeFirstofEach ?? '' +
-                          ' ' +
-                          myProfile?.result?.lastName?.capitalizeFirstofEach ?? ''
+                      myProfile?.result?.firstName?.capitalizeFirstofEach ??
+                          '' +
+                              ' ' +
+                              myProfile
+                                  ?.result?.lastName?.capitalizeFirstofEach ??
+                          ''
                       : '',
                   style: TextStyle(fontWeight: FontWeight.w500),
                 ),
@@ -678,19 +681,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     );
   }
 
-  void moveToLoginPage() {
-    print('inside loout');
-    PreferenceUtil.clearAllData().then((value) {
-      // PageNavigator.goToPermanent(context,router.rt_SignIn);
-      if (Platform.isIOS) {
-        PreferenceUtil.saveString(Constants.KEY_INTRO_SLIDER, variable.strtrue);
-      }
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-              builder: (BuildContext context) => PatientSignInScreen()),
-          (route) => false);
-    });
+  moveToLoginPage() {
+    new CommonUtil().moveToLoginPage();
   }
 
   void launchWhatsApp({

@@ -2784,12 +2784,12 @@ class CommonUtil {
     );
   }
 
-  Future<void> isFirstTime() async{
+  Future<void> isFirstTime() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool firstTime = prefs.getBool('first_time');
     if (firstTime != null && !firstTime) {
       // Not first time
-      
+
     } else {
       // First time
       prefs.setBool('first_time', false);
@@ -2798,7 +2798,7 @@ class CommonUtil {
     }
   }
 
-   Future<void> _deleteCacheDir() async {
+  Future<void> _deleteCacheDir() async {
     final cacheDir = await getTemporaryDirectory();
 
     if (cacheDir.existsSync()) {
@@ -2809,11 +2809,10 @@ class CommonUtil {
   Future<void> _deleteAppDir() async {
     final appDir = await getApplicationSupportDirectory();
 
-    if(appDir.existsSync()){
+    if (appDir.existsSync()) {
       appDir.deleteSync(recursive: true);
     }
   }
-  
 }
 
 extension CapExtension on String {
