@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:intl/intl.dart';
 import 'package:myfhb/add_family_otp/models/add_family_otp_response.dart';
 import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
+import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments.dart';
 import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -21,6 +22,7 @@ import 'package:myfhb/src/ui/authentication/OtpVerifyScreen.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import 'package:myfhb/constants/router_variable.dart' as router;
 
 class MyProfilePage extends StatefulWidget {
   @override
@@ -58,6 +60,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
 
   LanguageModel languageModelList;
   LanguageRepository languageBlock = new LanguageRepository();
+
+  bool _isEditable = false;
+  double sliverBarHeight = 220;
 
   @override
   void initState() {
@@ -128,19 +133,6 @@ class _MyProfilePageState extends State<MyProfilePage> {
       }
     }
   }
-
-  /* Widget getProfileDetailClone() {
-    Widget profileWidget;
-    MyProfileModel myProfile;
-    try {
-      myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
-      profileWidget = getProfileWidget(myProfile.result);
-    } catch (e) {
-      profileWidget = getProfileWidget(null);
-    }
-
-    return profileWidget;
-  } */
 
   Widget getProfileDetailClone() {
     var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
@@ -300,34 +292,70 @@ class _MyProfilePageState extends State<MyProfilePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Container(
-                    height: 100.0.h,
-                    width: 100.0.h,
-                    decoration: ShapeDecoration(
-                      shape: CircleBorder(
-                          side: BorderSide(
-                              width: 1.5.w,
-                              color:
-                                  Color(new CommonUtil().getMyPrimaryColor()))),
-                    ),
-                    child: ClipOval(
-                      child:
-                          /*profileImage != null
-                          ? Image.file(
-                              profileImage,
-                              fit: BoxFit.cover,
-                            )
-                          :*/
-                          data.profilePicThumbnailUrl != null
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Container(
+                        height: 100.0.h,
+                        width: 100.0.h,
+                        decoration: ShapeDecoration(
+                          shape: CircleBorder(
+                              side: BorderSide(
+                                  width: 1.5.w,
+                                  color: Color(
+                                      new CommonUtil().getMyPrimaryColor()))),
+                        ),
+                        child: ClipOval(
+                          child: data.profilePicThumbnailUrl != null
                               ? FHBBasicWidget()
                                   .getProfilePicWidgeUsingUrlForProfile(
                                       myProfile)
                               : Container(),
+                        ),
+                      ),
                     ),
-                  ),
+                    IconButton(
+                        icon: _isEditable
+                            ? Visibility(
+                                visible: false, child: Icon(Icons.save))
+                            : Icon(Icons.edit),
+                        onPressed: () {
+                          setState(() {
+                            if (_isEditable) {
+                              _isEditable = false;
+                            } else {
+                              _isEditable = true;
+                              //sliverBarHeight = 50;
+                              if (myProfile?.result != null) {
+                                Navigator.pushNamed(
+                                        context, router.rt_AddFamilyUserInfo,
+                                        arguments: AddFamilyUserInfoArguments(
+                                            myProfileResult: myProfile?.result,
+                                            fromClass:
+                                                CommonConstants.user_update))
+                                    .then((value) {
+                                  setState(() {
+                                    _isEditable = false;
+                                  });
+                                });
+                              } else {
+                                FlutterToast().getToast(
+                                    'Unable to Fetch User Profile data',
+                                    Colors.red);
+                                setState(() {
+                                  _isEditable = false;
+                                });
+                              }
+                            }
+                            sliverBarHeight = 220;
+                          });
+                        })
+                  ],
                 ),
+
                 Padding(
                     padding: EdgeInsets.all(10),
                     child: TextField(

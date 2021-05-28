@@ -216,13 +216,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
   }
 
   void moveToLoginPage() {
-    PreferenceUtil.clearAllData().then((value) {
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-              builder: (BuildContext context) => PatientSignInScreen()),
-          (route) => false);
-    });
+    new CommonUtil().moveToLoginPage();
   }
 
   Future<GetDeviceSelectionModel> getDeviceSelectionValues() async {

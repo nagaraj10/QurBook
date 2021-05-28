@@ -115,7 +115,17 @@ class _UserAccountsState extends State<UserAccounts>
               },
             ),
             actions: <Widget>[
-              selectedTab == 0
+              IconButton(
+                  icon: Icon(
+                    Icons.exit_to_app,
+                    size: 24.0.sp,
+                  ),
+                  onPressed: () {
+                    new FHBBasicWidget().exitApp(context, () {
+                      new CommonUtil().logout(moveToLoginPage);
+                    });
+                  })
+              /* selectedTab == 0
                   ? IconButton(
                       icon: _isEditable
                           ? Visibility(visible: false, child: Icon(Icons.save))
@@ -154,7 +164,7 @@ class _UserAccountsState extends State<UserAccounts>
                   : Container(
                       height: 0.0.h,
                       width: 0.0.h,
-                    )
+                    )*/
             ],
             bottom: PreferredSize(
               preferredSize: Size.fromHeight(50.0.h),
@@ -341,6 +351,10 @@ class _UserAccountsState extends State<UserAccounts>
 //            ),
 //          ),
         ));
+  }
+
+  moveToLoginPage() {
+    new CommonUtil().moveToLoginPage();
   }
 }
 
