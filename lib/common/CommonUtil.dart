@@ -460,13 +460,14 @@ class CommonUtil {
 
     //loginBloc.logout().then((signOutResponse) {
     // moveToLoginPage(signOutResponse);
-    FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-    final token = await _firebaseMessaging.getToken();
+    QurPlanReminders.deleteAllLocalReminders();
+    // FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+    // final token = await _firebaseMessaging.getToken();
     try {
       MyProfileModel myProfile =
           PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
       MyProfileResult profileResult = myProfile.result;
-      QurPlanReminders.deleteAllLocalReminders();
+
       CommonUtil()
           .sendDeviceToken(
               PreferenceUtil.getStringValue(Constants.KEY_USERID),
@@ -475,15 +476,15 @@ class CommonUtil {
               token,
               false)
           .then((value) {
-        if (Platform.isIOS) {
-          _firebaseMessaging.deleteInstanceID();
-        }
+        // if (Platform.isIOS) {
+        //   _firebaseMessaging.deleteInstanceID();
+        // }
         moveToLoginPage();
       });
     } catch (e) {
-      if (Platform.isIOS) {
-        _firebaseMessaging.deleteInstanceID();
-      }
+      // if (Platform.isIOS) {
+      //   _firebaseMessaging.deleteInstanceID();
+      // }
       moveToLoginPage();
     }
     //}
