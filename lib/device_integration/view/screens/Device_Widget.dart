@@ -2208,7 +2208,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                           value1ForTemp != '' &&
                                                                   value1ForTemp !=
                                                                       null
-                                                              ? 'F'
+                                                              ? 'C'
                                                               : '-',
                                                           style: TextStyle(
                                                             fontSize: 12.0.sp,
@@ -2277,7 +2277,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                                             '' &&
                                                                         averageForTemp !=
                                                                             null
-                                                                    ? 'F'
+                                                                    ? 'C'
                                                                     : '-',
                                                                 style:
                                                                     TextStyle(
