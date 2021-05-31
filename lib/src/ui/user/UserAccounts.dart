@@ -105,13 +105,18 @@ class _UserAccountsState extends State<UserAccounts>
               ),
               onPressed: () {
                 Navigator.popUntil(context, (Route<dynamic> route) {
-                  bool shouldPop = false;
-                  if (route.settings.name == router.rt_Dashboard ||
-                      route.settings == null) {
-                    shouldPop = true;
+                  if (Navigator.canPop(context)) {
+                    bool shouldPop = false;
+                    if (route.settings.name == router.rt_Dashboard ||
+                        route.settings == null) {
+                      shouldPop = true;
+                    }
+                    return shouldPop;
+                  } else {
+                    return true;
                   }
-                  return shouldPop;
                 });
+                // Navigator.pop(context);
               },
             ),
             actions: <Widget>[
