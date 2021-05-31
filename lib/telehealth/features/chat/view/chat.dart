@@ -420,9 +420,19 @@ class ChatScreenState extends State<ChatScreen> {
     });
   }
 
-  void onSendMessage(String content, int type) {
+  void onSendMessage(String content, int type) async {
     // type: 0 = text, 1 = image, 2 = sticker
     if (content.trim() != '') {
+      bool isMuted = false;
+      final snapShot = await Firestore.instance
+          .collection(STR_CHAT_LIST)
+          .document(peerId)
+          .collection(STR_USER_LIST)
+          .document(patientId)
+          .get();
+      if (snapShot.data != null) {
+        isMuted = snapShot.data[STR_IS_MUTED] ?? false;
+      }
       textValue = textEditingController.text;
       textEditingController.clear();
       var documentReference = Firestore.instance
@@ -444,7 +454,7 @@ class ChatScreenState extends State<ChatScreen> {
           },
         );
       });
-      addChatList(content, type);
+      addChatList(content, type, isMuted);
     } else {
       Fluttertoast.showToast(msg: NOTHING_SEND, backgroundColor: Colors.red);
     }
@@ -469,7 +479,7 @@ class ChatScreenState extends State<ChatScreen> {
     return count;
   }
 
-  void addChatList(String content, int type) async {
+  void addChatList(String content, int type, bool isMuted) async {
     await Firestore.instance
         .collection(STR_CHAT_LIST)
         .document(patientId)
@@ -481,7 +491,8 @@ class ChatScreenState extends State<ChatScreen> {
       STR_ID: peerId,
       STR_CREATED_AT: FieldValue.serverTimestamp(),
       STR_LAST_MESSAGE: content,
-      STR_IS_READ_COUNT: 0
+      STR_IS_READ_COUNT: 0,
+      STR_IS_MUTED: isMuted
     });
 
     await getReadCount().then((value) async {
@@ -496,11 +507,12 @@ class ChatScreenState extends State<ChatScreen> {
         STR_ID: patientId,
         STR_CREATED_AT: FieldValue.serverTimestamp(),
         STR_LAST_MESSAGE: content,
-        STR_IS_READ_COUNT: value != 0 ? value + 1 : 1
+        STR_IS_READ_COUNT: value != 0 ? value + 1 : 1,
+        STR_IS_MUTED: isMuted
       });
     });
 
-    if (doctorDeviceToken != null && doctorDeviceToken != '') {
+    if (doctorDeviceToken != null && doctorDeviceToken != '' && !isMuted) {
       _pushNotification(type, patientName);
     }
   }
@@ -1458,7 +1470,9 @@ class ChatScreenState extends State<ChatScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(widget?.peerName?.capitalizeFirstofEach/* toBeginningOfSentenceCase(widget.peerName) */,
+                    Text(
+                        widget?.peerName
+                            ?.capitalizeFirstofEach /* toBeginningOfSentenceCase(widget.peerName) */,
                         textAlign: TextAlign.left,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
