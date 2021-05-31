@@ -32,6 +32,7 @@ class MyPlanList extends StatefulWidget {
   });
 
   bool fromDashBoard;
+
   @override
   _MyPlanState createState() => _MyPlanState();
 }
@@ -231,13 +232,19 @@ class _MyPlanState extends State<MyPlanList> {
                     providerName: planList[i].providerName,
                     docName: planList[i].docNick,
                     packageId: planList[i].packageid,
+                    isExpired: planList[i].isexpired,
                     startDate: planList[i].startdate,
                     endDate: planList[i].enddate,
                     icon: planList[i]?.metadata?.icon,
                     catIcon: planList[i]?.catmetadata?.icon,
-                    providerIcon: planList[i]?.providermetadata.icon,
+                    providerIcon: planList[i]?.providermetadata?.icon,
+                    descriptionURL: planList[i]?.metadata?.descriptionURL,
                   )),
-        );
+        ).then((value) {
+          if(value=='refreshUI'){
+            setState(() {});
+          }
+        });
       },
       child: Container(
           padding: EdgeInsets.all(4.0),

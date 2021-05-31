@@ -1,7 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
+import 'package:gmiwidgetspackage/widgets/text_widget.dart';
+import 'package:intl/intl.dart';
+import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/errors_widget.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/myPlan/model/myPlanDetailModel.dart';
 import 'package:myfhb/myPlan/viewModel/myPlanViewModel.dart';
@@ -9,6 +16,7 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/widgets/GradientAppBar.dart';
+import 'package:path_provider/path_provider.dart';
 
 class MyPlanDetail extends StatefulWidget {
   final String title;
@@ -17,9 +25,11 @@ class MyPlanDetail extends StatefulWidget {
   final String startDate;
   final String endDate;
   final String packageId;
+  final String isExpired;
   final String icon;
   final String catIcon;
   final String providerIcon;
+  final String descriptionURL;
 
   MyPlanDetail(
       {Key key,
@@ -29,9 +39,11 @@ class MyPlanDetail extends StatefulWidget {
       @required this.startDate,
       @required this.endDate,
       @required this.packageId,
+      @required this.isExpired,
       @required this.icon,
       @required this.catIcon,
-      @required this.providerIcon})
+      @required this.providerIcon,
+      @required this.descriptionURL})
       : super(key: key);
 
   @override
@@ -49,9 +61,13 @@ class PlanDetail extends State<MyPlanDetail> {
   String startDate;
   String endDate;
   String packageId;
+  String isExpired;
   String icon = '';
   String catIcon = '';
   String providerIcon = '';
+  String descriptionURL = '';
+
+  InAppWebViewController webView;
 
   @override
   void initState() {
@@ -66,9 +82,11 @@ class PlanDetail extends State<MyPlanDetail> {
     startDate = widget.startDate;
     endDate = widget.endDate;
     packageId = widget.packageId;
+    isExpired = widget.isExpired;
     icon = widget.icon;
     catIcon = widget.catIcon;
     providerIcon = widget.providerIcon;
+    descriptionURL = widget.descriptionURL;
   }
 
   @override
@@ -95,136 +113,210 @@ class PlanDetail extends State<MyPlanDetail> {
   }
 
   Widget getMainWidget() {
-    return Column(
-      children: [
-        SizedBox(height: 30),
-        Stack(
-          alignment: Alignment.topCenter,
-          children: <Widget>[
-            Container(
-              margin: EdgeInsets.only(top: 20, left: 15, right: 15),
-              child: Card(
-                  color: Colors.white,
-                  child: Column(
-                    children: [
-                      SizedBox(height: 30),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Column(
+    return Builder(
+      builder: (contxt) => Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              margin: EdgeInsets.symmetric(horizontal: 2, vertical: 10),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: CircleAvatar(
+                              backgroundColor: Colors.grey[200],
+                              radius: 26,
+                              child: CommonUtil().customImage(getImage())),
+                        ),
+                        Expanded(
+                          flex: 3,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              SizedBox(
-                                width: 200,
-                                child: Text(
-                                  title != null && title != '' ? title : '-',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500),
-                                ),
+                            children: [
+                              Text(
+                                title != null && title != ''
+                                    ? toBeginningOfSentenceCase(title)
+                                    : '-',
+                                style: TextStyle(
+                                    fontSize: 20.sp, fontWeight: FontWeight.w500),
                               ),
-                              SizedBox(height: 5),
-                              SizedBox(
-                                width: 200,
-                                child: Text(
-                                    providerName != null && providerName != ''
-                                        ? providerName
-                                        : '-',
-                                    style: TextStyle(color: Colors.grey[600])),
+                              Text(
+                                providerName != null && providerName != ''
+                                    ? toBeginningOfSentenceCase(providerName)
+                                    : '-',
+                                style: TextStyle(
+                                    fontSize: 16.sp, color: Colors.grey[600]),
                               ),
-                              SizedBox(height: 5),
                               SizedBox(
-                                width: 200,
-                                child: Text(
-                                    docName != null && docName != ''
-                                        ? docName
-                                        : '-',
-                                    style: TextStyle()),
+                                height: 3.h,
                               ),
-                              SizedBox(height: 8),
-                              Column(
+                              Text(
+                                  docName != null && docName != ''
+                                      ? toBeginningOfSentenceCase(docName)
+                                      : '-',
+                                  style: TextStyle(fontSize: 16.sp)),
+                              SizedBox(
+                                height: 3.h,
+                              ),
+                              Row(
                                 children: [
-                                  Row(
-                                    children: [
-                                      Text("Start Date: ",
-                                          style: TextStyle(fontSize: 9)),
-                                      Text(
-                                          startDate != null && startDate != ''
-                                              ? new CommonUtil()
-                                                  .dateFormatConversion(
-                                                      startDate)
-                                              : '-',
-                                          style: TextStyle(
-                                              fontSize: 9,
-                                              fontWeight: FontWeight.bold)),
-                                      SizedBox(width: 5),
-                                      Text("End Date: ",
-                                          style: TextStyle(fontSize: 9)),
-                                      Text(
-                                          endDate != null && endDate != ''
-                                              ? new CommonUtil()
-                                                  .dateFormatConversion(endDate)
-                                              : '-',
-                                          style: TextStyle(
-                                              fontSize: 9,
-                                              fontWeight: FontWeight.bold)),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                children: [
-                                  SizedBox(height: 10),
-                                  Text("Activities Associated",
+                                  Text("Start Date: ", style: TextStyle(fontSize: 9)),
+                                  Text(
+                                      startDate != null && startDate != ''
+                                          ? new CommonUtil()
+                                              .dateFormatConversion(startDate)
+                                          : '-',
                                       style: TextStyle(
-                                          color: Colors.grey[500],
-                                          fontSize: 10)),
+                                          fontSize: 9, fontWeight: FontWeight.bold)),
+                                  SizedBox(width: 5),
+                                  Text("End Date: ", style: TextStyle(fontSize: 9)),
+                                  Text(
+                                      endDate != null && endDate != ''
+                                          ? new CommonUtil()
+                                              .dateFormatConversion(endDate)
+                                          : '-',
+                                      style: TextStyle(
+                                          fontSize: 9, fontWeight: FontWeight.bold)),
                                 ],
                               ),
                             ],
                           ),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [getActivityList()],
-                      ),
-                      SizedBox(height: 20),
-                      Divider(color: Colors.grey[500]),
-                      InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                          height: 40.0.h,
-                          width: 100.0.w,
-                          alignment: Alignment.center,
-                          child: Text(
-                            "OK",
-                            style: TextStyle(
-                                fontSize: 14.0.sp,
-                                fontWeight: FontWeight.w500,
-                                color: Color(
-                                    new CommonUtil().getMyPrimaryColor())),
-                          ),
+                        )
+                      ],
+                    ),
+                    descriptionURL != null && descriptionURL != ''
+                        ? Container(
+                            padding:
+                                EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                            height: 0.65.sh,
+                            child: InAppWebView(
+                                initialUrl: "${descriptionURL}",
+                                initialHeaders: {},
+                                initialOptions: InAppWebViewGroupOptions(
+                                  crossPlatform: InAppWebViewOptions(
+                                      debuggingEnabled: true,
+                                      useOnDownloadStart: true),
+                                ),
+                                onWebViewCreated: (controller) {
+                                  webView = controller;
+                                },
+                                onLoadStart: (InAppWebViewController controller,
+                                    String url) {},
+                                onLoadStop: (InAppWebViewController controller,
+                                    String url) {},
+                                onDownloadStart: (controller, url) async {
+                                  final taskId = await FlutterDownloader.enqueue(
+                                    url: url,
+                                    savedDir:
+                                        (await getExternalStorageDirectory()).path,
+                                    showNotification: true,
+                                    // show download progress in status bar (for Android)
+                                    openFileFromNotification:
+                                        true, // click on notification to open downloaded file (for Android)
+                                  );
+                                }),
+                            //),
+                          )
+                        : Column(
+                          children: [
+                            SizedBox(height: 20.h),
+                            Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        border: Border.all(color: Colors.grey[400])
+                                    ),
+                                    height: 0.62.sh,
+                                    width: 0.45.sh,
+                                    child:
+                                        Center(child: Text(strEmptyWebView)),
+                                    //),
+                                  ),
+                                ],
+                              ),
+                          ],
                         ),
-                      ),
-                      SizedBox(height: 3.0.h),
-                    ],
-                  )),
+                  ],
+                ),
+              ),
             ),
-            CircleAvatar(
-                backgroundColor: Colors.grey[200],
-                radius: 30,
-                child: CommonUtil().customImage(getImage())),
-          ],
-        ),
-      ],
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              OutlineButton(
+                child: Text(
+                  isExpired == '1' ? strIsRenew : strUnSubscribe,
+                  style: TextStyle(
+                    color: isExpired == '1'
+                        ? Color(new CommonUtil().getMyPrimaryColor())
+                        : Colors.red,
+                    fontSize: 13.sp,
+                  ),
+                ),
+                onPressed: () async {
+                  if (isExpired == '1') {
+                    CommonUtil().renewAlertDialog(context,
+                        packageId: packageId);
+                  } else {
+                    CommonUtil().unSubcribeAlertDialog(context,
+                        packageId: packageId);
+                  }
+                },
+                borderSide: BorderSide(
+                  color: isExpired == '1'
+                      ? Color(new CommonUtil().getMyPrimaryColor())
+                      : Colors.red,
+                  style: BorderStyle.solid,
+                  width: 1,
+                ),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              OutlineButton(
+                //hoverColor: Color(getMyPrimaryColor()),
+                child: Text(
+                  'cancel'.toUpperCase(),
+                  style: TextStyle(
+                    color: Color(CommonUtil().getMyPrimaryColor()),
+                    fontSize: 13.sp,
+                  ),
+                ),
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                },
+                borderSide: BorderSide(
+                  color: Color(
+                    CommonUtil().getMyPrimaryColor(),
+                  ),
+                  style: BorderStyle.solid,
+                  width: 1,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
-  Widget getActivityList() {
+  ///// removed activities list for new UI screen changed
+
+  /*Widget getActivityList() {
     return new FutureBuilder<MyPlanDetailModel>(
       future: myPlanViewModel.getMyPlanDetails(packageId),
       builder: (BuildContext context, snapshot) {
@@ -239,7 +331,7 @@ class PlanDetail extends State<MyPlanDetail> {
                   child: new CircularProgressIndicator(
                       strokeWidth: 1.0,
                       backgroundColor:
-                          Color(new CommonUtil().getMyPrimaryColor())),
+                      Color(new CommonUtil().getMyPrimaryColor())),
                 ),
               ),
             ),
@@ -257,11 +349,11 @@ class PlanDetail extends State<MyPlanDetail> {
                 height: 1.sh / 5.0,
                 child: Container(
                     child: Center(
-                  child: Text(
-                    variable.strNoActivities,
-                    style: TextStyle(fontSize: 12.sp),
-                  ),
-                )),
+                      child: Text(
+                        variable.strNoActivities,
+                        style: TextStyle(fontSize: 12.sp),
+                      ),
+                    )),
               ),
             );
           }
@@ -273,29 +365,29 @@ class PlanDetail extends State<MyPlanDetail> {
   Widget activitiesList(List<MyPlanDetailResult> actList) {
     return (actList != null && actList.length > 0)
         ? new Container(
-            constraints: BoxConstraints(minHeight: 20, maxHeight: 280),
-            margin: new EdgeInsets.symmetric(horizontal: 50.0),
-            child: Scrollbar(
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: actList.length,
-                itemBuilder: (BuildContext ctx, int i) =>
-                    getEventCardWidget(ctx, i, actList),
-              ),
-            ),
-          )
+      constraints: BoxConstraints(minHeight: 20, maxHeight: 280),
+      margin: new EdgeInsets.symmetric(horizontal: 50.0),
+      child: Scrollbar(
+        child: ListView.builder(
+          shrinkWrap: true,
+          itemCount: actList.length,
+          itemBuilder: (BuildContext ctx, int i) =>
+              getEventCardWidget(ctx, i, actList),
+        ),
+      ),
+    )
         : SafeArea(
-            child: SizedBox(
-              height: 1.sh / 5.0,
-              child: Container(
-                  child: Center(
-                child: Text(
-                  variable.strNoActivities,
-                  style: TextStyle(fontSize: 12.sp),
-                ),
-              )),
-            ),
-          );
+      child: SizedBox(
+        height: 1.sh / 5.0,
+        child: Container(
+            child: Center(
+              child: Text(
+                variable.strNoActivities,
+                style: TextStyle(fontSize: 12.sp),
+              ),
+            )),
+      ),
+    );
   }
 
   Widget getEventCardWidget(
@@ -330,7 +422,7 @@ class PlanDetail extends State<MyPlanDetail> {
             ),
           ],
         ));
-  }
+  }*/
 
   String getImage() {
     String image;

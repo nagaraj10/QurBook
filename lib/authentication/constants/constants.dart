@@ -169,6 +169,9 @@ const String strIsSkipMFA = 'isSkipMFA';
 const String strsupportEmail =
     'If OTP is not received within 5mins, please contact to support at support@qurhealth.in';
 
+const String strEmptyWebView =
+    'Plan summary will be available soon';
+
 void openEmail({String sub = 'App Feedback', String body = ''}) async {
   final Uri params = Uri(
     scheme: 'mailto',
