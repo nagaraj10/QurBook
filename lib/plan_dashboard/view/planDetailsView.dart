@@ -291,7 +291,7 @@ class PlanDetail extends State<MyPlanDetailView> {
                                 ],
                               ),
                               SizedBox(
-                                width: 20,
+                                width: 10,
                               ),
                               Row(
                                 children: [
@@ -397,8 +397,8 @@ class PlanDetail extends State<MyPlanDetailView> {
                       //hoverColor: Color(getMyPrimaryColor()),
                       child: Text(
                         issubscription == '0'
-                            ? 'subscribe'.toUpperCase()
-                            : 'unsubscribe'.toUpperCase(),
+                            ? strSubscribe
+                            : strSubscribed,
                         style: TextStyle(
                           color: getTextColor(isDisable, issubscription),
                           fontSize: 13.sp,
@@ -415,19 +415,19 @@ class PlanDetail extends State<MyPlanDetailView> {
                                     providerId: providerId, refresh: () {
                                   Navigator.of(context).pop();
                                 });
-                              } else {
+                              } /*else {
                                 CommonUtil().unSubcribeAlertDialog(context,
                                     packageId: packageId, refresh: () {
                                   Navigator.of(context).pop();
                                 });
-                              }
+                              }*/
                             },
                       borderSide: BorderSide(
                         color: issubscription == '0'
                             ? Color(
                                 CommonUtil().getMyPrimaryColor(),
                               )
-                            : Colors.red,
+                            : Colors.grey,
                         style: BorderStyle.solid,
                         width: 1,
                       ),
@@ -493,7 +493,7 @@ class PlanDetail extends State<MyPlanDetailView> {
       if (isSubscribe == '0') {
         return Color(CommonUtil().getMyPrimaryColor());
       } else {
-        return Colors.red;
+        return Colors.grey;
       }
     }
   }
