@@ -277,6 +277,9 @@ import Firebase
             else if call.method == Constants.removeAllReminderMethod{
                 self.notificationCenter.removeAllDeliveredNotifications()
                 self.notificationCenter.removeAllPendingNotificationRequests()
+                Messaging.messaging().deleteToken { (err) in
+                    print(err?.localizedDescription)
+                }
             }else{
                 result(FlutterMethodNotImplemented)
                 return
