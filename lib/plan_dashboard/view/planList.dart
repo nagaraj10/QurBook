@@ -405,9 +405,8 @@ class _MyPlanState extends State<PlanList> {
                                         color: getBorderColor(i, planList))),
                                 color: Colors.transparent,
                                 textColor: planList[i].isSubscribed == '0'
-                                    ? Color(
-                                        new CommonUtil().getMyPrimaryColor())
-                                    : Colors.red,
+                                    ? Color(new CommonUtil().getMyPrimaryColor())
+                                    : Colors.grey,
                                 padding: EdgeInsets.all(
                                   8.0.sp,
                                 ),
@@ -427,19 +426,19 @@ class _MyPlanState extends State<PlanList> {
                                               refresh: () {
                                             setState(() {});
                                           });
-                                        } else {
+                                        } /*else {
                                           CommonUtil().unSubcribeAlertDialog(
                                               context,
                                               packageId: planList[i].packageid,
                                               refresh: () {
                                             setState(() {});
                                           });
-                                        }
+                                        }*/
                                       },
                                 child: TextWidget(
                                   text: planList[i].isSubscribed == '0'
                                       ? strSubscribe
-                                      : strUnSubscribe,
+                                      : strSubscribed,
                                   fontsize: 12.0.sp,
                                 ),
                               ),
@@ -510,7 +509,7 @@ class _MyPlanState extends State<PlanList> {
       if (planList[i].isSubscribed == '0') {
         return Color(new CommonUtil().getMyPrimaryColor());
       } else {
-        return Colors.red;
+        return Colors.grey;
       }
     }
   }

@@ -445,6 +445,7 @@ const strAudio = 'audio';
 const strUploading = 'Uploading...';
 const strSubscribe = 'Subscribe';
 const strUnSubscribe = 'UnSubscribe';
+const strSubscribed = 'Subscribed';
 const strSelectedPlan = 'Selected Plan - ';
 const strSelectedPlans = 'Selected Plan(s) - ';
 const strSelectPlan = 'Select a Plan';
