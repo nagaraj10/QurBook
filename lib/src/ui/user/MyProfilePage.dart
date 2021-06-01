@@ -80,7 +80,10 @@ class _MyProfilePageState extends State<MyProfilePage> {
   void getPreferredLanguage(MyProfileResult myProfile) async {
     try {
       try {
-        languageModelList = await languageBlock.getLanguage();
+        var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+        if (userid != null) {
+          languageModelList = await languageBlock.getLanguage();
+        }
       } catch (e) {}
 
       PreferenceUtil.saveString(
