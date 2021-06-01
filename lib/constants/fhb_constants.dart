@@ -454,6 +454,8 @@ const strSelectPlans = 'Select your Plan(s)';
 const strIsFromSubscibe = 'fromSubscribe';
 const strIsRenew = 'Renew';
 const goToRegimen = 'Go to Regimen';
+const symptomsError = 'Data for Symptoms cannot be entered for future dates';
+const activitiesError = 'Data for future events can be entered only 15 minutes prior to the event time';
 
 const strQurhealth = 'QurHealth';
 
