@@ -6,26 +6,27 @@ import 'package:myfhb/myPlan/services/myPlanService.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 class MyPlanViewModel extends ChangeNotifier {
-
   MyPlanService myPlanService = new MyPlanService();
 
   List<MyPlanListResult> myPLanListResult = List();
 
   Future<MyPlanListModel> getMyPlanList() async {
-    try {
-      MyPlanListModel myPlanListModel =
-      await myPlanService.getMyPlanList();
-      if(myPlanListModel.isSuccess){
-        myPLanListResult = myPlanListModel.result;
-      }
-      return myPlanListModel;
-    } catch (e) {}
+    var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+    if (userid != null) {
+      try {
+        MyPlanListModel myPlanListModel = await myPlanService.getMyPlanList();
+        if (myPlanListModel.isSuccess) {
+          myPLanListResult = myPlanListModel.result;
+        }
+        return myPlanListModel;
+      } catch (e) {}
+    }
   }
 
   Future<MyPlanDetailModel> getMyPlanDetails(String packageId) async {
     try {
       MyPlanDetailModel myPlanDetailModel =
-      await myPlanService.getMyPlanDetails(packageId);
+          await myPlanService.getMyPlanDetails(packageId);
       return myPlanDetailModel;
     } catch (e) {}
   }
@@ -35,9 +36,9 @@ class MyPlanViewModel extends ChangeNotifier {
     List<MyPlanListResult> dummyPlanList = List();
     dummyPlanList = planList
         .where((element) => element.providerName
-        .toLowerCase()
-        .trim()
-        .contains(query.toLowerCase().trim()))
+            .toLowerCase()
+            .trim()
+            .contains(query.toLowerCase().trim()))
         .toList();
     return dummyPlanList;
   }
@@ -56,5 +57,4 @@ class MyPlanViewModel extends ChangeNotifier {
     }
     return filterDoctorData;
   }
-
 }

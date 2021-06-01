@@ -41,9 +41,11 @@ class AddFamilyUserInfoRepository {
   }
 
   Future<MyProfileModel> getMyProfileInfoNew(String userID) async {
-    final response = await _helper.getProfileInfo(
-        query.qr_user + userID + query.qr_sections + query.qr_generalInfo);
-    return MyProfileModel.fromJson(response);
+    if (userID != null) {
+      final response = await _helper.getProfileInfo(
+          query.qr_user + userID + query.qr_sections + query.qr_generalInfo);
+      return MyProfileModel.fromJson(response);
+    }
   }
 
   Future<UpdateAddFamilyInfo> updateUserProfileInfo(
@@ -298,14 +300,16 @@ class AddFamilyUserInfoRepository {
   }
 
   Future<CommonResponse> getUserProfilePic(String userId) async {
-    String responseQuery = '${CommonConstants.strUserQuery}$userId${CommonConstants.strQueryString}${CommonConstants.strGetProfilePic}';
+    String responseQuery =
+        '${CommonConstants.strUserQuery}$userId${CommonConstants.strQueryString}${CommonConstants.strGetProfilePic}';
     CommonResponse response = await _helper.getUserProfilePic(responseQuery);
 
     return response;
   }
 
-  Future<CommonResponse> updateUserProfilePic(String userId,File image) async {
-    String responseQuery = '${CommonConstants.strUserQuery}$userId${CommonConstants.strQueryString}${CommonConstants.strGetProfilePic}';
+  Future<CommonResponse> updateUserProfilePic(String userId, File image) async {
+    String responseQuery =
+        '${CommonConstants.strUserQuery}$userId${CommonConstants.strQueryString}${CommonConstants.strGetProfilePic}';
     var res = await _helper.uploadUserProfilePicToServer(responseQuery, image);
     CommonResponse response = CommonResponse.fromJson(res);
     return response;

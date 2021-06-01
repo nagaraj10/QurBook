@@ -278,7 +278,8 @@ class _MyFamilyState extends State<MyFamily> {
 
   fetchUserProfileInfo() async {
     var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
-    myProfile = await addFamilyUserInfoRepository.getMyProfileInfoNew(userid);
+    if (userid != null)
+      myProfile = await addFamilyUserInfoRepository.getMyProfileInfoNew(userid);
 
     return myProfile;
   }
