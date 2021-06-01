@@ -295,4 +295,18 @@ class AuthService {
     }
     return responseJson;
   }
+
+  Future<dynamic> getIVRNumbers() async {
+    var responseJson;
+    try {
+      final response = await http.get(
+        'https://qurplan.com/assets/data/ivr.json',
+      );
+
+      responseJson = jsonDecode(response.body);
+    } on SocketException {
+      return spocketException();
+    }
+    return responseJson;
+  }
 }
