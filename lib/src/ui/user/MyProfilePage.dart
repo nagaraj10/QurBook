@@ -16,6 +16,7 @@ import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/language/model/Language.dart';
 import 'package:myfhb/language/repository/LanguageRepository.dart';
+import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/model/user/MyProfileResult.dart';
 import 'package:myfhb/src/ui/authentication/OtpVerifyScreen.dart';
@@ -113,26 +114,15 @@ class _MyProfilePageState extends State<MyProfilePage> {
   }
 
   void setValueLanguages(MyProfileResult myProfile) {
-    for (LanguageResult languageResultObj in languageModelList.result) {
-      if (languageResultObj.referenceValueCollection.length > 0) {
-        for (ReferenceValueCollection referenceValueCollection
-            in languageResultObj.referenceValueCollection) {
-          if (myProfile?.additionalInfo.language != null &&
-              myProfile?.additionalInfo.language.length > 0) {
-            if (referenceValueCollection.id ==
-                myProfile?.additionalInfo.language[0]) {
-              // selectedLanguage = referenceValueCollection.code;
-              String languageCode =
-                  referenceValueCollection.code.substring(0, 2).toLowerCase();
-
-              languageController.text =
-                  toBeginningOfSentenceCase(referenceValueCollection.name);
-
-              PreferenceUtil.saveString(SHEELA_LANG,
-                  CommonUtil.langaugeCodes[languageCode] ?? 'en-IN');
-            }
+    if (myProfile?.userProfileSettingCollection3?.isNotEmpty) {
+      ProfileSetting profileSetting =
+          myProfile?.userProfileSettingCollection3[0].profileSetting;
+      if (profileSetting != null) {
+        CommonUtil.langaugeCodes.forEach((language, languageCode) {
+          if (language == profileSetting.preferred_language) {
+            setLanguageToField(language, languageCode);
           }
-        }
+        });
       }
     }
   }
@@ -652,5 +642,22 @@ class _MyProfilePageState extends State<MyProfilePage> {
             .then((value) {});
       }
     });
+  }
+
+  void setLanguageToField(String language, String languageCode) {
+    final langCode = language.split("-").first;
+    String currentLanguage = langCode;
+
+    if (currentLanguage.isNotEmpty) {
+      CommonUtil.supportedLanguages.forEach((language, languageCode) {
+        if (currentLanguage == languageCode) {
+          languageController.text = toBeginningOfSentenceCase(language);
+          return;
+        }
+      });
+    }
+
+    PreferenceUtil.saveString(
+        SHEELA_LANG, CommonUtil.langaugeCodes[languageCode] ?? 'en-IN');
   }
 }

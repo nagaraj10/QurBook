@@ -1,4 +1,5 @@
 import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
+import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/user/UserAddressCollection.dart';
 import 'package:myfhb/src/model/user/userrelationshipcollection.dart';
 
@@ -36,40 +37,41 @@ class MyProfileResult {
   List<UserRoleCollection3> userRoleCollection3;
   List<UserRelationshipCollection> userRelationshipCollection;
   AdditionalInfo additionalInfo;
+  List<UserProfileSettingCollection3> userProfileSettingCollection3;
 
-  MyProfileResult({
-    this.id,
-    this.name,
-    this.userName,
-    this.firstName,
-    this.middleName,
-    this.lastName,
-    this.gender,
-    this.dateOfBirth,
-    this.bloodGroup,
-    this.countryCode,
-    this.profilePicThumbnailUrl,
-    this.isTempUser,
-    this.isVirtualUser,
-    this.isMigrated,
-    this.isClaimed,
-    this.isIeUser,
-    this.isEmailVerified,
-    this.isCpUser,
-    this.communicationPreferences,
-    this.medicalPreferences,
-    this.isSignedIn,
-    this.isActive,
-    // this.createdBy,
-    // this.createdOn,
-    this.lastModifiedBy,
-    this.lastModifiedOn,
-    this.userAddressCollection3,
-    this.userContactCollection3,
-    this.userRoleCollection3,
-    this.userRelationshipCollection,
-    this.additionalInfo,
-  });
+  MyProfileResult(
+      {this.id,
+      this.name,
+      this.userName,
+      this.firstName,
+      this.middleName,
+      this.lastName,
+      this.gender,
+      this.dateOfBirth,
+      this.bloodGroup,
+      this.countryCode,
+      this.profilePicThumbnailUrl,
+      this.isTempUser,
+      this.isVirtualUser,
+      this.isMigrated,
+      this.isClaimed,
+      this.isIeUser,
+      this.isEmailVerified,
+      this.isCpUser,
+      this.communicationPreferences,
+      this.medicalPreferences,
+      this.isSignedIn,
+      this.isActive,
+      // this.createdBy,
+      // this.createdOn,
+      this.lastModifiedBy,
+      this.lastModifiedOn,
+      this.userAddressCollection3,
+      this.userContactCollection3,
+      this.userRoleCollection3,
+      this.userRelationshipCollection,
+      this.additionalInfo,
+      this.userProfileSettingCollection3});
 
   MyProfileResult.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -121,6 +123,13 @@ class MyProfileResult {
       json['userRelationshipCollection'].forEach((v) {
         userRelationshipCollection
             .add(new UserRelationshipCollection.fromJson(v));
+      });
+    }
+    if (json['userProfileSettingCollection3'] != null) {
+      userProfileSettingCollection3 = new List<UserProfileSettingCollection3>();
+      json['userProfileSettingCollection3'].forEach((v) {
+        userProfileSettingCollection3
+            .add(new UserProfileSettingCollection3.fromJson(v));
       });
     }
 
@@ -175,6 +184,10 @@ class MyProfileResult {
     }
     if (this.additionalInfo != null) {
       data['additionalInfo'] = this.additionalInfo.toJson();
+    }
+    if (this.userProfileSettingCollection3 != null) {
+      data['userProfileSettingCollection3'] =
+          this.userProfileSettingCollection3.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -360,6 +373,47 @@ class Role {
     data['description'] = this.description;
     data['isSystemRole'] = this.isSystemRole;
     data['isEnabled'] = this.isEnabled;
+    return data;
+  }
+}
+
+class UserProfileSettingCollection3 {
+  String id;
+  String userId;
+  ProfileSetting profileSetting;
+  bool isActive;
+  String createdOn;
+  String lastModifiedOn;
+
+  UserProfileSettingCollection3(
+      {this.id,
+      this.userId,
+      this.profileSetting,
+      this.isActive,
+      this.createdOn,
+      this.lastModifiedOn});
+
+  UserProfileSettingCollection3.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    userId = json['userId'];
+    profileSetting = json['profileSetting'] != null
+        ? new ProfileSetting.fromJson(json['profileSetting'])
+        : null;
+    isActive = json['isActive'];
+    createdOn = json['createdOn'];
+    lastModifiedOn = json['lastModifiedOn'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['userId'] = this.userId;
+    if (this.profileSetting != null) {
+      data['profileSetting'] = this.profileSetting.toJson();
+    }
+    data['isActive'] = this.isActive;
+    data['createdOn'] = this.createdOn;
+    data['lastModifiedOn'] = this.lastModifiedOn;
     return data;
   }
 }
