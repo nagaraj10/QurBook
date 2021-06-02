@@ -378,7 +378,7 @@ class _MyProvidersState extends State<MyProviders> {
                 new Positioned(
                   bottom: 0.0,
                   right: 2.0,
-                  child: commonWidgets.getDoctorStatusWidgetNew(docs[i], i),
+                  child: commonWidgets.getDoctorStatusWidgetNew(docs[i],i),
                 )
               ],
             ),

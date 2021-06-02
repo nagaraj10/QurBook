@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/my_providers/models/DoctorLanguageCollection.dart';
 import 'package:myfhb/my_providers/models/Doctors.dart';
+import 'package:myfhb/my_providers/models/GetDoctorsByIdModel.dart';
 import 'package:myfhb/my_providers/models/Hospitals.dart';
 import 'package:myfhb/my_providers/models/User.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
@@ -94,6 +95,23 @@ class CommonWidgets {
     );
   }
 
+  Widget getDoctoSpecialistForReschedule(DoctorResult eachDoctorModel) {
+    return Text(
+      (eachDoctorModel.doctorProfessionalDetailCollection != null &&
+          eachDoctorModel.doctorProfessionalDetailCollection.length > 0)
+          ? eachDoctorModel.doctorProfessionalDetailCollection[0].specialty !=
+          null
+          ? toBeginningOfSentenceCase(eachDoctorModel
+          .doctorProfessionalDetailCollection[0].specialty.name)
+          : ''
+          : '',
+      style: TextStyle(
+          color: Color(0xFF8C8C8C), fontSize: fhbStyles.fnt_doc_specialist),
+      softWrap: false,
+      overflow: TextOverflow.ellipsis,
+    );
+  }
+
   Widget getDoctoSpecialistOnlyForHos(DoctorFromHos eachDoctorModel) {
     return Text(
       (eachDoctorModel.doctorProfessionalDetailCollection != null &&
@@ -148,6 +166,25 @@ class CommonWidgets {
   }
 
   String getCityDoctorsModel(Doctors doctors) {
+    String city;
+
+    if (doctors.user.userAddressCollection3.isNotEmpty) {
+      if (doctors.user.userAddressCollection3.length > 0) {
+        if (doctors.user.userAddressCollection3[0].city != null) {
+          city = doctors.user.userAddressCollection3[0].city.name;
+        } else {
+          city = '';
+        }
+      } else {
+        city = '';
+      }
+    } else {
+      city = '';
+    }
+    return city;
+  }
+
+  String getCityDoctorsModelForReschedule(DoctorResult doctors) {
     String city;
 
     if (doctors.user.userAddressCollection3.isNotEmpty) {
@@ -377,6 +414,10 @@ class CommonWidgets {
     return ClipOval(child: getProfilePicWidget(docs));
   }
 
+  Widget getClipOvalImageForReschedule(DoctorResult docs) {
+    return ClipOval(child: getProfilePicWidgetForReschedule(docs));
+  }
+
   Widget getClipOvalImageForDoctorIds(DoctorIds docs) {
     return ClipOval(child: getProfilePicWidgetForDoctorIds(docs));
   }
@@ -482,6 +523,29 @@ class CommonWidgets {
             height: 40.0.h,
             width: 40.0.h,
           );
+  }
+
+  Widget getProfilePicWidgetForReschedule(DoctorResult docs) {
+    return docs.user.profilePicThumbnailUrl != null
+        ? Image.network(docs.user.profilePicThumbnailUrl,
+        height: 40.0.h,
+        width: 40.0.h,
+        fit: BoxFit.cover, errorBuilder: (BuildContext context,
+            Object exception, StackTrace stackTrace) {
+          return Container(
+            height: 40.0.h,
+            width: 40.0.h,
+            color: Colors.grey[200],
+            child: Center(
+              child: getFirstLastNameForReschedule(docs),
+            ),
+          );
+        })
+        : Container(
+      color: Color(fhbColors.bgColorContainer),
+      height: 40.0.h,
+      width: 40.0.h,
+    );
   }
 
   Widget showDoctorDetailView(DoctorIds docs, BuildContext context) {
@@ -649,7 +713,7 @@ class CommonWidgets {
     );
   }
 
-  Widget getDoctorStatusWidgetNew(Doctors docs, int position) {
+  Widget getDoctorStatusWidgetNew(Doctors docs,int position) {
     return Container(
       alignment: Alignment.bottomRight,
       child: Container(
@@ -660,6 +724,21 @@ class CommonWidgets {
             color: getDoctorStatus('${docs.isActive}', position)
             //color: getDoctorStatus('5'),
             ),
+      ),
+    );
+  }
+
+  Widget getDoctorStatusWidgetForReschedule(DoctorResult docReschedule, int position) {
+    return Container(
+      alignment: Alignment.bottomRight,
+      child: Container(
+        width: 10.0.h,
+        height: 10.0.h,
+        decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: getDoctorStatus('${docReschedule.isActive}', position)
+          //color: getDoctorStatus('5'),
+        ),
       ),
     );
   }
@@ -727,6 +806,21 @@ class CommonWidgets {
   }
 
   getLanguagesNew(Doctors docs) {
+    List<Widget> languageWidget = new List();
+    if (docs.doctorLanguageCollection != null &&
+        docs.doctorLanguageCollection.length > 0) {
+      for (int i = 0; i < docs.doctorLanguageCollection.length; i++) {
+        languageWidget.add(getDoctorsAddress(
+            docs.doctorLanguageCollection[i].language.name + ','));
+      }
+    } else {
+      languageWidget.add(SizedBox());
+    }
+
+    return languageWidget;
+  }
+
+  getLanguagesForReschedule(DoctorResult docs) {
     List<Widget> languageWidget = new List();
     if (docs.doctorLanguageCollection != null &&
         docs.doctorLanguageCollection.length > 0) {
@@ -989,6 +1083,122 @@ class CommonWidgets {
         });
   }
 
+  Widget showDoctorDetailViewForReschedule(DoctorResult docs, BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            content: Container(
+              width: 1.sw - 20,
+              child: Stack(
+                overflow: Overflow.visible,
+                children: <Widget>[
+                  /*Positioned(
+                    top: -1.0,
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.close,
+                        color: Colors.black,
+                        size: 20,
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ),*/
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child: getClipOvalImageForReschedule(docs),
+                          ),
+                          getSizeBoxWidth(10.0),
+                          Expanded(
+                            // flex: 4,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                setDoctorname(docs.user),
+                                AutoSizeText(
+                                  (docs.doctorProfessionalDetailCollection !=
+                                      null &&
+                                      docs.doctorProfessionalDetailCollection
+                                          .length >
+                                          0)
+                                      ? docs
+                                      .doctorProfessionalDetailCollection[
+                                  0]
+                                      .specialty !=
+                                      null
+                                      ? docs
+                                      .doctorProfessionalDetailCollection[
+                                  0]
+                                      .specialty
+                                      .name !=
+                                      null
+                                      ? docs
+                                      .doctorProfessionalDetailCollection[
+                                  0]
+                                      .specialty
+                                      .name
+                                      : ''
+                                      : ''
+                                      : '',
+                                  maxLines: 1,
+                                  style: TextStyle(
+                                      fontSize: 15.0.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: ColorUtils.lightgraycolor),
+                                ),
+                                getDoctorsAddress(
+                                    docs.user.userAddressCollection3[0].city !=
+                                        null
+                                        ? docs.user.userAddressCollection3[0]
+                                        .city.name
+                                        : ''),
+                                (docs.doctorLanguageCollection != null &&
+                                    docs.doctorLanguageCollection.length >
+                                        0)
+                                    ? getTextForDoctors('Can Speak:')
+                                    : SizedBox(),
+                                (docs.doctorLanguageCollection != null &&
+                                    docs.doctorLanguageCollection.length >
+                                        0)
+                                    ? Row(children: getLanguagesForReschedule(docs))
+                                    : SizedBox(),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      getSizedBox(15),
+                      getTextForDoctors('About: '),
+                      getTextAbout((docs.doctorProfessionalDetailCollection
+                          .isNotEmpty ??
+                          docs.doctorProfessionalDetailCollection.length >
+                              0 ??
+                          docs.doctorProfessionalDetailCollection[0]
+                              .aboutMe !=
+                              null)
+                          ? docs.doctorProfessionalDetailCollection[0].aboutMe
+                          : ''),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
   String getMoneyWithForamt(String amount) {
     if (amount != null && amount != '') {
       var amountDouble = double.parse(amount);
@@ -1151,6 +1361,40 @@ class CommonWidgets {
   }
 
   Widget getFirstLastNameText(Doctors myProfile) {
+    if (myProfile.user != null &&
+        myProfile.user.firstName != null &&
+        myProfile.user.lastName != null) {
+      return Text(
+        myProfile.user.firstName[0].toUpperCase() +
+            myProfile.user.lastName[0].toUpperCase(),
+        style: TextStyle(
+          color: Color(new CommonUtil().getMyPrimaryColor()),
+          fontSize: 16.0.sp,
+          fontWeight: FontWeight.w400,
+        ),
+      );
+    } else if (myProfile.user != null && myProfile.user.firstName != null) {
+      return Text(
+        myProfile.user.firstName[0].toUpperCase(),
+        style: TextStyle(
+          color: Color(new CommonUtil().getMyPrimaryColor()),
+          fontSize: 16.0.sp,
+          fontWeight: FontWeight.w400,
+        ),
+      );
+    } else {
+      return Text(
+        '',
+        style: TextStyle(
+          color: Color(new CommonUtil().getMyPrimaryColor()),
+          fontSize: 16.0.sp,
+          fontWeight: FontWeight.w200,
+        ),
+      );
+    }
+  }
+
+  Widget getFirstLastNameForReschedule(DoctorResult myProfile) {
     if (myProfile.user != null &&
         myProfile.user.firstName != null &&
         myProfile.user.lastName != null) {

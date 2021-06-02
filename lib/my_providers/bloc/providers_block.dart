@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:myfhb/my_providers/models/Doctors.dart';
+import 'package:myfhb/my_providers/models/GetDoctorsByIdModel.dart';
 import 'package:myfhb/my_providers/models/Hospitals.dart';
 import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
 import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
@@ -89,5 +90,17 @@ class ProvidersBloc implements BaseBloc {
       }
     }
     return filterDoctorData;
+  }
+
+  Future<GetDoctorsByIdModel> getDoctorsById({String doctorId}) async {
+    GetDoctorsByIdModel getDoctorsByIdModel;
+    try {
+      getDoctorsByIdModel = await _providersListRepository
+          .getDoctorsByID(doctorId: doctorId);
+    } catch (e) {
+      providersListSink.add(ApiResponse.error(e.toString()));
+    }
+
+    return getDoctorsByIdModel;
   }
 }
