@@ -7,6 +7,7 @@ import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/constants/fhb_query.dart' as query;
 import 'package:myfhb/my_providers/models/Doctors.dart';
+import 'package:myfhb/my_providers/models/GetDoctorsByIdModel.dart';
 import 'package:myfhb/my_providers/models/Hospitals.dart';
 import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
@@ -175,5 +176,10 @@ class ProvidersListRepository {
         doctorIdEqualTo +
         doctorId);
     return AppointmentDetailModel.fromJson(response);
+  }
+
+  Future<GetDoctorsByIdModel> getDoctorsByID({String doctorId}) async {
+    final response = await _helper.getDoctorsByIdNew(qr_doctor+doctorId);
+    return GetDoctorsByIdModel.fromJson(response);
   }
 }

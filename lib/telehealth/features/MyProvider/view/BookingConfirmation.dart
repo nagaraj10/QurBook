@@ -19,6 +19,7 @@ import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
+import 'package:myfhb/my_providers/models/GetDoctorsByIdModel.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/my_providers/models/Doctors.dart';
 import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
@@ -50,6 +51,7 @@ class BookingConfirmation extends StatefulWidget {
   final followUpFee;
   bool isNewAppointment;
   final List<Doctors> docs;
+  final List<DoctorResult> docsReschedule;
   final int i;
   final int doctorListIndex;
   final DateTime selectedDate;
@@ -64,9 +66,11 @@ class BookingConfirmation extends StatefulWidget {
   Function(String) closePage;
   Function() refresh;
   bool isFromHospital;
+  bool isFromFollowReschedule;
 
   BookingConfirmation(
       {this.docs,
+      this.docsReschedule,
       this.i,
       this.doctorListIndex,
       this.selectedDate,
@@ -82,7 +86,8 @@ class BookingConfirmation extends StatefulWidget {
       this.doctorListPos,
       this.closePage,
       this.refresh,
-      this.isFromHospital});
+      this.isFromHospital,
+      this.isFromFollowReschedule});
 
   @override
   BookingConfirmationState createState() => BookingConfirmationState();
@@ -211,7 +216,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
     doctorId = widget.isFromHospital
         ? widget.resultFromHospitalList[widget.doctorListIndex].doctor.user.id
-        : widget.docs[widget.doctorListPos].user.id;
+        : widget.isFromFollowReschedule
+            ? widget.docsReschedule[widget.doctorListPos].user.id
+            : widget.docs[widget.doctorListPos].user.id;
   }
 
   Widget getDropdown() {
@@ -267,7 +274,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     try {
       myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
       fulName = myProfile.result != null
-          ? myProfile.result.firstName?.capitalizeFirstofEach + ' ' + myProfile.result.lastName?.capitalizeFirstofEach
+          ? myProfile.result.firstName?.capitalizeFirstofEach +
+              ' ' +
+              myProfile.result.lastName?.capitalizeFirstofEach
           : '';
     } catch (e) {}
 
@@ -324,7 +333,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                     child: Row(
                       children: <Widget>[
                         SizedBoxWidget(width: 20),
-                        Text(user.nickName == null ? 'Self' : user.nickName?.capitalizeFirstofEach,
+                        Text(
+                            user.nickName == null
+                                ? 'Self'
+                                : user.nickName?.capitalizeFirstofEach,
                             style: TextStyle(
                               fontSize: 14.0.sp,
                             )),
@@ -1163,8 +1175,11 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                   widget.isFromHospital
                       ? widget.resultFromHospitalList[widget.doctorListIndex]
                           .doctor.user.profilePicThumbnailUrl
-                      : widget.docs[widget.doctorListPos].user
-                          .profilePicThumbnailUrl),
+                      : widget.isFromFollowReschedule
+                          ? widget.docsReschedule[widget.doctorListPos].user
+                              .profilePicThumbnailUrl
+                          : widget.docs[widget.doctorListPos].user
+                              .profilePicThumbnailUrl),
             ),
             /* Container(
               alignment: Alignment.center,
@@ -1179,8 +1194,11 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       widget.resultFromHospitalList[widget.doctorListIndex]
                           .doctor,
                       widget.i)
-                  : commonWidgets.getDoctorStatusWidgetNew(
-                      widget.docs[widget.doctorListPos], widget.i),
+                  : widget.isFromFollowReschedule
+                      ? commonWidgets.getDoctorStatusWidgetForReschedule(
+                          widget.docsReschedule[widget.doctorListPos], widget.i)
+                      : commonWidgets.getDoctorStatusWidgetNew(
+                          widget.docs[widget.doctorListPos], widget.i),
             )
           ],
         ),
@@ -1201,8 +1219,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                               .resultFromHospitalList[widget.doctorListIndex]
                               .doctor
                               .user)
-                          : commonWidgets.setDoctorname(
-                              widget.docs[widget.doctorListPos].user),
+                          : commonWidgets.setDoctorname(widget
+                                  .isFromFollowReschedule
+                              ? widget.docsReschedule[widget.doctorListPos].user
+                              : widget.docs[widget.doctorListPos].user),
                       commonWidgets.getSizeBoxWidth(10.0),
                       commonWidgets.getIcon(
                           width: fhbStyles.imageWidth,
@@ -1216,8 +1236,15 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                             widget.doctorListIndex]
                                         .doctor,
                                     context)
-                                : commonWidgets.showDoctorDetailViewNew(
-                                    widget.docs[widget.doctorListPos], context);
+                                : widget.isFromFollowReschedule
+                                    ? commonWidgets
+                                        .showDoctorDetailViewForReschedule(
+                                            widget.docsReschedule[
+                                                widget.doctorListPos],
+                                            context)
+                                    : commonWidgets.showDoctorDetailViewNew(
+                                        widget.docs[widget.doctorListPos],
+                                        context);
                           }),
                     ],
                   )),
@@ -1229,12 +1256,21 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                               height: fhbStyles.imageHeight,
                               icon: Icons.check_circle,
                               onTap: () {})
-                          : widget.docs[widget.doctorListPos].isActive
-                              ? commonWidgets.getIcon(
-                                  width: fhbStyles.imageWidth,
-                                  height: fhbStyles.imageHeight,
-                                  icon: Icons.check_circle,
-                                  onTap: () {})
+                          : widget.isFromFollowReschedule
+                              ? widget.docsReschedule[widget.doctorListIndex]
+                                      .isActive
+                                  ? commonWidgets.getIcon(
+                                      width: fhbStyles.imageWidth,
+                                      height: fhbStyles.imageHeight,
+                                      icon: Icons.check_circle,
+                                      onTap: () {})
+                                  : widget.docs[widget.doctorListPos].isActive
+                                      ? commonWidgets.getIcon(
+                                          width: fhbStyles.imageWidth,
+                                          height: fhbStyles.imageHeight,
+                                          icon: Icons.check_circle,
+                                          onTap: () {})
+                                      : SizedBox()
                               : SizedBox()
                       : SizedBox(),
                 ],
@@ -1246,8 +1282,11 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                         ? commonWidgets.getDoctoSpecialistOnlyForHos(widget
                             .resultFromHospitalList[widget.doctorListIndex]
                             .doctor)
-                        : commonWidgets.getDoctoSpecialistOnly(
-                            widget.docs[widget.doctorListPos])),
+                        : widget.isFromFollowReschedule
+                            ? commonWidgets.getDoctoSpecialistForReschedule(
+                                widget.docsReschedule[widget.doctorListPos])
+                            : commonWidgets.getDoctoSpecialistOnly(
+                                widget.docs[widget.doctorListPos])),
               ]),
               commonWidgets.getSizedBox(5.0),
               Row(
@@ -1260,8 +1299,11 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                             commonWidgets.getCityDoctorsModelForHos(widget
                                 .resultFromHospitalList[widget.doctorListIndex]
                                 .doctor)
-                        : '' +
-                            commonWidgets.getCityDoctorsModel(
+                        : widget.isFromFollowReschedule
+                            ? '' +
+                                commonWidgets.getCityDoctorsModelForReschedule(
+                                    widget.docsReschedule[widget.doctorListPos])
+                            : commonWidgets.getCityDoctorsModel(
                                 widget.docs[widget.doctorListPos]),
                     overflow: TextOverflow.ellipsis,
                     softWrap: false,
@@ -1299,27 +1341,52 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                       .doctor
                                       .isMciVerified,
                               'Not Verified')
-                      : widget.docs[widget.doctorListPos].isMciVerified
-                          ? commonWidgets.getMCVerified(
-                              widget.isFromHospital
-                                  ? widget
-                                      .resultFromHospitalList[
-                                          widget.doctorListPos]
-                                      .doctor
-                                      .isMciVerified
-                                  : widget
-                                      .docs[widget.doctorListPos].isMciVerified,
-                              'Verified')
-                          : commonWidgets.getMCVerified(
-                              widget.isFromHospital
-                                  ? widget
-                                      .resultFromHospitalList[
-                                          widget.doctorListPos]
-                                      .doctor
-                                      .isMciVerified
-                                  : widget
-                                      .docs[widget.doctorListPos].isMciVerified,
-                              'Not Verified'),
+                      : widget.isFromFollowReschedule
+                          ? widget.docsReschedule[widget.doctorListPos]
+                                  .isMciVerified
+                              ? commonWidgets.getMCVerified(
+                                  widget.isFromHospital
+                                      ? widget
+                                          .resultFromHospitalList[
+                                              widget.doctorListPos]
+                                          .doctor
+                                          .isMciVerified
+                                      : widget
+                                          .docsReschedule[widget.doctorListPos]
+                                          .isMciVerified,
+                                  'Verified')
+                              : commonWidgets.getMCVerified(
+                                  widget.isFromHospital
+                                      ? widget
+                                          .resultFromHospitalList[
+                                              widget.doctorListPos]
+                                          .doctor
+                                          .isMciVerified
+                                      : widget
+                                          .docsReschedule[widget.doctorListPos]
+                                          .isMciVerified,
+                                  'Not Verified')
+                          : widget.docs[widget.doctorListPos].isMciVerified
+                              ? commonWidgets.getMCVerified(
+                                  widget.isFromHospital
+                                      ? widget
+                                          .resultFromHospitalList[
+                                              widget.doctorListPos]
+                                          .doctor
+                                          .isMciVerified
+                                      : widget.docs[widget.doctorListPos]
+                                          .isMciVerified,
+                                  'Verified')
+                              : commonWidgets.getMCVerified(
+                                  widget.isFromHospital
+                                      ? widget
+                                          .resultFromHospitalList[
+                                              widget.doctorListPos]
+                                          .doctor
+                                          .isMciVerified
+                                      : widget.docs[widget.doctorListPos]
+                                          .isMciVerified,
+                                  'Not Verified'),
                   commonWidgets.getSizeBoxWidth(10.0),
                 ],
               )

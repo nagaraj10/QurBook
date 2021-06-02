@@ -1519,6 +1519,18 @@ class ApiBaseHelper {
     }
     return responseJson;
   }
+
+  Future<dynamic> getDoctorsByIdNew(String url) async {
+    var responseJson;
+    try {
+      final response = await http.get(_baseUrl + url,
+          headers: await headerRequest.getRequestHeadersAuthAcceptNew());
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
 }
 
 void exitFromApp() async {

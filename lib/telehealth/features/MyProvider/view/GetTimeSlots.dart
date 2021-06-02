@@ -10,6 +10,7 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/my_providers/models/Doctors.dart';
+import 'package:myfhb/my_providers/models/GetDoctorsByIdModel.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/model/user/UserAddressCollection.dart';
@@ -33,6 +34,7 @@ import 'package:provider/provider.dart';
 class GetTimeSlots extends StatelessWidget {
   SlotsResultModel dateSlotTimingsObj;
   final List<Doctors> docs;
+  final List<DoctorResult> docsReschedule;
   final int j;
   final int doctorListIndex;
   Past doctorsData;
@@ -48,6 +50,7 @@ class GetTimeSlots extends StatelessWidget {
   bool isFromNotification;
   bool isFromHospital;
   dynamic body;
+  bool isFromFollowReschedule;
 
   MyProfileModel myProfile;
   AddFamilyUserInfoRepository addFamilyUserInfoRepository =
@@ -56,6 +59,7 @@ class GetTimeSlots extends StatelessWidget {
   GetTimeSlots(
       {this.dateSlotTimingsObj,
       this.docs,
+      this.docsReschedule,
       this.j,
       this.doctorListIndex,
       this.selectedDate,
@@ -68,7 +72,8 @@ class GetTimeSlots extends StatelessWidget {
       this.isRefresh,
       this.isFromNotification,
       this.isFromHospital,
-      this.body});
+      this.body,
+      this.isFromFollowReschedule});
 
   @override
   Widget build(BuildContext context) {
@@ -155,6 +160,7 @@ class GetTimeSlots extends StatelessWidget {
         MaterialPageRoute(
           builder: (context) => BookingConfirmation(
             docs: docs,
+            docsReschedule: docsReschedule,
             followUpFee: followUpFee,
             isNewAppointment: isNewAppointment,
             i: j,
@@ -175,6 +181,7 @@ class GetTimeSlots extends StatelessWidget {
               isRefresh();
             },
             isFromHospital: isFromHospital,
+            isFromFollowReschedule: isFromFollowReschedule,
           ),
         ));
   }
