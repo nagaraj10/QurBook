@@ -1,17 +1,25 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
+import 'package:myfhb/telehealth/features/chat/view/pdfiosViewer.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:path/path.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:get/get.dart';
+import 'package:path/path.dart';
+import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:http/http.dart' as http;
 import 'package:myfhb/plan_dashboard/model/MetaDataForURL.dart';
 
 class MyPlanDetailView extends StatefulWidget {
@@ -66,7 +74,11 @@ class PlanDetail extends State<MyPlanDetailView> {
   String iconApi = '';
   String catIcon = '';
   InAppWebViewController webView;
-
+  String path;
+  String planUrl;
+  FlutterToast toast = new FlutterToast();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  String FileName;
   @override
   void initState() {
     super.initState();
@@ -90,7 +102,9 @@ class PlanDetail extends State<MyPlanDetailView> {
 
   @override
   Widget build(BuildContext context) {
+    planUrl = widget?.metaDataForURL?.descriptionURL;
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         flexibleSpace: GradientAppBar(),
         leading: GestureDetector(
@@ -352,6 +366,54 @@ class PlanDetail extends State<MyPlanDetailView> {
                   ),
                 ),
               ),
+              Material(
+                color: Colors.transparent,
+                child: widget?.metaDataForURL?.descriptionURL != null
+                    ? InkWell(
+                        onTap: () {
+                          if (Platform.isIOS) {
+                            String url = widget?.metaDataForURL?.descriptionURL
+                                .replaceAll('.html', '.pdf');
+                            url = widget?.metaDataForURL?.descriptionURL
+                                .replaceAll('.htm', '.pdf');
+                            planUrl = url;
+                            //'https://docs.oracle.com/en/cloud/get-started/subscriptions-cloud/csgsg/getting-started-oracle-cloud.pdf';
+                            FileName = planUrl.split('/')?.last;
+                            if (FileName != null && FileName.contains('.pdf')) {
+                              loadPdf();
+                            }
+                          } else {
+                            if (widget?.metaDataForURL?.descriptionURL !=
+                                null) {
+                              String url = widget
+                                  ?.metaDataForURL?.descriptionURL
+                                  .replaceAll('.html', '.pdf');
+                              url = widget?.metaDataForURL?.descriptionURL
+                                  .replaceAll('.htm', '.pdf');
+                              // final url =
+                              //     'https://docs.oracle.com/en/cloud/get-started/subscriptions-cloud/csgsg/getting-started-oracle-cloud.pdf';
+                              downloader(url);
+                            }
+                          }
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 10.0.sp,
+                            vertical: 2.0.sp,
+                          ),
+                          child: Text(
+                            'Download Plan',
+                            style: TextStyle(
+                              fontSize: 14.0.sp,
+                              fontWeight: FontWeight.w500,
+                              decoration: TextDecoration.underline,
+                              color: Color(CommonUtil().getMyPrimaryColor()),
+                            ),
+                          ),
+                        ),
+                      )
+                    : Container(),
+              ),
               SizedBox(
                 height: 10.h,
               ),
@@ -393,15 +455,7 @@ class PlanDetail extends State<MyPlanDetailView> {
                             onLoadStop: (InAppWebViewController controller,
                                 String url) {},
                             onDownloadStart: (controller, url) async {
-                              final taskId = await FlutterDownloader.enqueue(
-                                url: url,
-                                savedDir:
-                                    (await getExternalStorageDirectory()).path,
-                                showNotification: true,
-                                // show download progress in status bar (for Android)
-                                openFileFromNotification:
-                                    true, // click on notification to open downloaded file (for Android)
-                              );
+                              final taskId = await downloader(url);
                             }),
                         //),
                       )
@@ -483,6 +537,19 @@ class PlanDetail extends State<MyPlanDetailView> {
     );
   }
 
+  Future<String> downloader(String url) async {
+    final path =
+        await getExternalStorageDirectories(type: StorageDirectory.downloads);
+    return await FlutterDownloader.enqueue(
+      url: url,
+      savedDir: '/storage/emulated/0/Download/',
+      showNotification: true,
+      // show download progress in status bar (for Android)
+      openFileFromNotification:
+          true, // click on notification to open downloaded file (for Android)
+    );
+  }
+
   String getImage() {
     String image;
     if (iconApi != null && iconApi != '') {
@@ -500,6 +567,56 @@ class PlanDetail extends State<MyPlanDetailView> {
     }
 
     return image;
+  }
+
+  Future<String> get _localPath async {
+    final directory = await getApplicationDocumentsDirectory();
+    return directory.path;
+  }
+
+  Future<File> get _localFile async {
+    final path = await _localPath;
+    return File('$path/$FileName');
+  }
+
+  Future<File> writeCounter(Uint8List stream) async {
+    final file = await _localFile;
+    try {
+      return file.writeAsBytes(stream);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future<Uint8List> fetchPost() async {
+    try {
+      final response = await http.get(planUrl);
+      final responseJson = response.bodyBytes;
+      return responseJson;
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  loadPdf() async {
+    writeCounter(await fetchPost());
+    path = (await _localFile).path;
+    print(path);
+    if (!mounted) return;
+    path = "file://" + path;
+    print(path);
+    //toast.getToast('Download completed', Colors.green);
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
+      content: Text('Downloaded'),
+      action: SnackBarAction(
+        label: 'Open',
+        onPressed: () {
+          Get.to(PDFiOSViewer(
+            path: path,
+          ));
+        },
+      ),
+    ));
   }
 
   Color getTextColor(bool disable, String isSubscribe) {
