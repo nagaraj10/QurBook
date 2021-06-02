@@ -26,4 +26,14 @@ class LabsListRepository {
         await _helper.getHospitalAndLabUsingId(query.qr_lab, labId);
     return LabsListResponse.fromJson(response);
   }
+
+  Future<LabsSearchListResponse> getExistingLabsFromSearchNew(
+      String healthOrganizationId) async {
+    int limit = 50;
+    int skip = 1;
+
+    final response = await _helper.getHospitalListFromSearchNew(
+        "${query.qr_patient_update_default}${query.qr_list}${query.qr_healthOrganizationList}${query.qr_skip}${skip.toString()}${query.qr_And}${query.qr_limit}${limit.toString()}${query.qr_And}${query.qr_halthOrganization}${healthOrganizationId}");
+    return LabsSearchListResponse.fromJson(response);
+  }
 }

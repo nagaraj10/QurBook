@@ -112,253 +112,270 @@ class PlanDetail extends State<MyPlanDetailView> {
         builder: (contxt) => Container(
           margin: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
           //alignment: Alignment.center,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: CircleAvatar(
-                          backgroundColor: Colors.grey[200],
-                          radius: 30,
-                          child: CommonUtil().customImage(getImage())),
-                      // child: ClipOval(
-                      //   // backgroundColor: Colors.grey[200],
-                      //   // radius: 35,
-                      //   child: Container(
-                      //     alignment: Alignment.center,
-                      //     height: 70,
-                      //     width: 70,
-                      //     decoration: BoxDecoration(
-                      //       shape: BoxShape.circle,
-                      //       color: Colors.transparent,
-                      //     ),
-                      //     child: iconApi != null && iconApi != ''
-                      //         ? iconApi
-                      //                 .toString()
-                      //                 .toLowerCase()
-                      //                 ?.contains('.svg')
-                      //             ? Center(
-                      //                 child: SizedBox(
-                      //                   height: 50,
-                      //                   width: 50,
-                      //                   child: SvgPicture.network(
-                      //                     iconApi,
-                      //                     placeholderBuilder: (BuildContext
-                      //                             context) =>
-                      //                         new CircularProgressIndicator(
-                      //                             strokeWidth: 1.5,
-                      //                             backgroundColor: Color(
-                      //                                 new CommonUtil()
-                      //                                     .getMyPrimaryColor())),
-                      //                   ),
-                      //                 ),
-                      //               )
-                      //             : CachedNetworkImage(
-                      //                 imageUrl: iconApi,
-                      //                 placeholder: (context, url) =>
-                      //                     new CircularProgressIndicator(
-                      //                         strokeWidth: 1.5,
-                      //                         backgroundColor: Color(
-                      //                             new CommonUtil()
-                      //                                 .getMyPrimaryColor())),
-                      //                 errorWidget: (context, url, error) =>
-                      //                     ClipOval(
-                      //                         child: CircleAvatar(
-                      //                   backgroundImage:
-                      //                       AssetImage(qurHealthLogo),
-                      //                   radius: 32,
-                      //                   backgroundColor: Colors.transparent,
-                      //                 )),
-                      //                 imageBuilder: (context, imageProvider) =>
-                      //                     Container(
-                      //                   width: 80.0,
-                      //                   height: 80.0,
-                      //                   decoration: BoxDecoration(
-                      //                     shape: BoxShape.circle,
-                      //                     image: DecorationImage(
-                      //                         image: imageProvider,
-                      //                         fit: BoxFit.fill),
-                      //                   ),
-                      //                 ),
-                      //               )
-                      //         : icon != null && icon != ''
-                      //             ? icon
-                      //                     .toString()
-                      //                     .toLowerCase()
-                      //                     ?.contains('.svg')
-                      //                 ? SvgPicture.network(
-                      //                     icon,
-                      //                     placeholderBuilder: (BuildContext
-                      //                             context) =>
-                      //                         new CircularProgressIndicator(
-                      //                             strokeWidth: 1.5,
-                      //                             backgroundColor: Color(
-                      //                                 new CommonUtil()
-                      //                                     .getMyPrimaryColor())),
-                      //                   )
-                      //                 : CachedNetworkImage(
-                      //                     imageUrl: icon,
-                      //                     placeholder: (context, url) =>
-                      //                         new CircularProgressIndicator(
-                      //                             strokeWidth: 1.5,
-                      //                             backgroundColor: Color(
-                      //                                 new CommonUtil()
-                      //                                     .getMyPrimaryColor())),
-                      //                     errorWidget: (context, url, error) =>
-                      //                         ClipOval(
-                      //                             child: CircleAvatar(
-                      //                       backgroundImage:
-                      //                           AssetImage(qurHealthLogo),
-                      //                       radius: 32,
-                      //                       backgroundColor: Colors.transparent,
-                      //                     )),
-                      //                     imageBuilder:
-                      //                         (context, imageProvider) =>
-                      //                             Container(
-                      //                       width: 80.0,
-                      //                       height: 80.0,
-                      //                       decoration: BoxDecoration(
-                      //                         shape: BoxShape.circle,
-                      //                         image: DecorationImage(
-                      //                             image: imageProvider,
-                      //                             fit: BoxFit.fill),
-                      //                       ),
-                      //                     ),
-                      //                   )
-                      //             : ClipOval(
-                      //                 child: CircleAvatar(
-                      //                 backgroundImage:
-                      //                     AssetImage(qurHealthLogo),
-                      //                 radius: 32,
-                      //                 backgroundColor: Colors.transparent,
-                      //               )),
-                      //   ),
-                      // ),
+          height: 1.sh - AppBar().preferredSize.height,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: CircleAvatar(
+                        backgroundColor: Colors.grey[200],
+                        radius: 30,
+                        child: CommonUtil().customImage(getImage())),
+                    // child: ClipOval(
+                    //   // backgroundColor: Colors.grey[200],
+                    //   // radius: 35,
+                    //   child: Container(
+                    //     alignment: Alignment.center,
+                    //     height: 70,
+                    //     width: 70,
+                    //     decoration: BoxDecoration(
+                    //       shape: BoxShape.circle,
+                    //       color: Colors.transparent,
+                    //     ),
+                    //     child: iconApi != null && iconApi != ''
+                    //         ? iconApi
+                    //                 .toString()
+                    //                 .toLowerCase()
+                    //                 ?.contains('.svg')
+                    //             ? Center(
+                    //                 child: SizedBox(
+                    //                   height: 50,
+                    //                   width: 50,
+                    //                   child: SvgPicture.network(
+                    //                     iconApi,
+                    //                     placeholderBuilder: (BuildContext
+                    //                             context) =>
+                    //                         new CircularProgressIndicator(
+                    //                             strokeWidth: 1.5,
+                    //                             backgroundColor: Color(
+                    //                                 new CommonUtil()
+                    //                                     .getMyPrimaryColor())),
+                    //                   ),
+                    //                 ),
+                    //               )
+                    //             : CachedNetworkImage(
+                    //                 imageUrl: iconApi,
+                    //                 placeholder: (context, url) =>
+                    //                     new CircularProgressIndicator(
+                    //                         strokeWidth: 1.5,
+                    //                         backgroundColor: Color(
+                    //                             new CommonUtil()
+                    //                                 .getMyPrimaryColor())),
+                    //                 errorWidget: (context, url, error) =>
+                    //                     ClipOval(
+                    //                         child: CircleAvatar(
+                    //                   backgroundImage:
+                    //                       AssetImage(qurHealthLogo),
+                    //                   radius: 32,
+                    //                   backgroundColor: Colors.transparent,
+                    //                 )),
+                    //                 imageBuilder: (context, imageProvider) =>
+                    //                     Container(
+                    //                   width: 80.0,
+                    //                   height: 80.0,
+                    //                   decoration: BoxDecoration(
+                    //                     shape: BoxShape.circle,
+                    //                     image: DecorationImage(
+                    //                         image: imageProvider,
+                    //                         fit: BoxFit.fill),
+                    //                   ),
+                    //                 ),
+                    //               )
+                    //         : icon != null && icon != ''
+                    //             ? icon
+                    //                     .toString()
+                    //                     .toLowerCase()
+                    //                     ?.contains('.svg')
+                    //                 ? SvgPicture.network(
+                    //                     icon,
+                    //                     placeholderBuilder: (BuildContext
+                    //                             context) =>
+                    //                         new CircularProgressIndicator(
+                    //                             strokeWidth: 1.5,
+                    //                             backgroundColor: Color(
+                    //                                 new CommonUtil()
+                    //                                     .getMyPrimaryColor())),
+                    //                   )
+                    //                 : CachedNetworkImage(
+                    //                     imageUrl: icon,
+                    //                     placeholder: (context, url) =>
+                    //                         new CircularProgressIndicator(
+                    //                             strokeWidth: 1.5,
+                    //                             backgroundColor: Color(
+                    //                                 new CommonUtil()
+                    //                                     .getMyPrimaryColor())),
+                    //                     errorWidget: (context, url, error) =>
+                    //                         ClipOval(
+                    //                             child: CircleAvatar(
+                    //                       backgroundImage:
+                    //                           AssetImage(qurHealthLogo),
+                    //                       radius: 32,
+                    //                       backgroundColor: Colors.transparent,
+                    //                     )),
+                    //                     imageBuilder:
+                    //                         (context, imageProvider) =>
+                    //                             Container(
+                    //                       width: 80.0,
+                    //                       height: 80.0,
+                    //                       decoration: BoxDecoration(
+                    //                         shape: BoxShape.circle,
+                    //                         image: DecorationImage(
+                    //                             image: imageProvider,
+                    //                             fit: BoxFit.fill),
+                    //                       ),
+                    //                     ),
+                    //                   )
+                    //             : ClipOval(
+                    //                 child: CircleAvatar(
+                    //                 backgroundImage:
+                    //                     AssetImage(qurHealthLogo),
+                    //                 radius: 32,
+                    //                 backgroundColor: Colors.transparent,
+                    //               )),
+                    //   ),
+                    // ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title != null && title != '' ? title.trim() : '-',
+                          style: TextStyle(
+                              fontSize: 18.sp, fontWeight: FontWeight.w500),
+                        ),
+                        SizedBox(
+                          height: 5.h,
+                        ),
+                        Text(
+                          providerName != null && providerName != ''
+                              ? providerName
+                              : '-',
+                          style: TextStyle(
+                              fontSize: 14.sp, color: Colors.grey[600]),
+                        ),
+                        SizedBox(
+                          height: 5.h,
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  'Duration: ',
+                                  style: TextStyle(
+                                      color: Colors.grey[600], fontSize: 14.sp),
+                                ),
+                                Text(
+                                  packageDuration != null &&
+                                          packageDuration != ''
+                                      ? '$packageDuration days'
+                                      : '-',
+                                  style: TextStyle(
+                                      color: Color(
+                                          CommonUtil().getMyPrimaryColor()),
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  'Price: ',
+                                  style: TextStyle(
+                                      color: Colors.grey[600], fontSize: 14.sp),
+                                ),
+                                Text(
+                                  price != null && price != ''
+                                      ? 'INR $price'
+                                      : '-',
+                                  style: TextStyle(
+                                      color: Color(
+                                          CommonUtil().getMyPrimaryColor()),
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                    Expanded(
-                      flex: 2,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            title != null && title != '' ? title : '-',
-                            style: TextStyle(
-                                fontSize: 18.sp, fontWeight: FontWeight.w500),
-                          ),
-                          SizedBox(
-                            height: 5.h,
-                          ),
-                          Text(
-                            providerName != null && providerName != ''
-                                ? providerName
-                                : '-',
-                            style: TextStyle(
-                                fontSize: 14.sp, color: Colors.grey[600]),
-                          ),
-                          SizedBox(
-                            height: 5.h,
-                          ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    'Duration: ',
-                                    style: TextStyle(
-                                        color: Colors.grey[600],
-                                        fontSize: 14.sp),
-                                  ),
-                                  Text(
-                                    packageDuration != null &&
-                                            packageDuration != ''
-                                        ? '$packageDuration days'
-                                        : '-',
-                                    style: TextStyle(
-                                        color: Color(
-                                            CommonUtil().getMyPrimaryColor()),
-                                        fontSize: 16.sp,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    'Price: ',
-                                    style: TextStyle(
-                                        color: Colors.grey[600],
-                                        fontSize: 14.sp),
-                                  ),
-                                  Text(
-                                    price != null && price != ''
-                                        ? 'INR $price'
-                                        : '-',
-                                    style: TextStyle(
-                                        color: Color(
-                                            CommonUtil().getMyPrimaryColor()),
-                                        fontSize: 16.sp,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 20.h,
+              ),
+              Visibility(
+                visible: description != null && description != '',
+                child: Container(
+                  width: 1.sw,
+                  constraints: BoxConstraints(
+                    maxHeight: 0.15.sh,
+                  ),
+                  decoration: BoxDecoration(
+                    border: Border(
+                      top: BorderSide(
+                        width: 1.0.h,
+                        color: Colors.grey,
                       ),
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: 20.h,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Text(
-                    description != null && description != ''
-                        ? description
-                        : '-',
-                    style: TextStyle(
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: SingleChildScrollView(
+                      child: Text(
+                        description != null && description != ''
+                            ? description.trim()
+                            : '-',
+                        style: TextStyle(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black),
+                      ),
+                    ),
                   ),
                 ),
-                SizedBox(
-                  height: 20.h,
-                ),
-                /* Container(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 10),
-                      height: 0.55.sh,
-                      child: SingleChildScrollView(
-                        child: Html(
-                          data: description.replaceAll('src="//', 'src="'),
-                          shrinkWrap: true,
-                          onLinkTap: (linkUrl) {
-                            CommonUtil()
-                                .openWebViewNew(widget.title, linkUrl, false);
-                          },
-                        ),
+              ),
+              SizedBox(
+                height: 10.h,
+              ),
+              /* Container(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 10),
+                    height: 0.55.sh,
+                    child: SingleChildScrollView(
+                      child: Html(
+                        data: description.replaceAll('src="//', 'src="'),
+                        shrinkWrap: true,
+                        onLinkTap: (linkUrl) {
+                          CommonUtil()
+                              .openWebViewNew(widget.title, linkUrl, false);
+                        },
                       ),
-                    ) */
-                widget?.metaDataForURL?.descriptionURL != null &&
+                    ),
+                  ) */
+              Expanded(
+                child: widget?.metaDataForURL?.descriptionURL != null &&
                         widget?.metaDataForURL?.descriptionURL != ''
                     ? Container(
                         padding:
                             EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                        height: 0.55.sh,
                         child: InAppWebView(
                             initialUrl:
                                 "${widget?.metaDataForURL?.descriptionURL}",
@@ -389,78 +406,77 @@ class PlanDetail extends State<MyPlanDetailView> {
                         //),
                       )
                     : Container(),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    OutlineButton(
-                      //hoverColor: Color(getMyPrimaryColor()),
-                      child: Text(
-                        issubscription == '0'
-                            ? strSubscribe
-                            : strSubscribed,
-                        style: TextStyle(
-                          color: getTextColor(isDisable, issubscription),
-                          fontSize: 13.sp,
-                        ),
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  OutlineButton(
+                    //hoverColor: Color(getMyPrimaryColor()),
+                    child: Text(
+                      issubscription == '0' ? strSubscribe : strSubscribed,
+                      style: TextStyle(
+                        color: getTextColor(isDisable, issubscription),
+                        fontSize: 13.sp,
                       ),
-                      onPressed: isDisable
-                          ? null
-                          : () async {
-                              if (issubscription == '0') {
-                                CommonUtil().profileValidationCheck(contxt,
-                                    packageId: packageId,
-                                    isSubscribed: issubscription,
-                                    isFrom: strIsFromSubscibe,
-                                    providerId: providerId, refresh: () {
-                                  Navigator.of(context).pop();
-                                });
-                              } /*else {
-                                CommonUtil().unSubcribeAlertDialog(context,
-                                    packageId: packageId, refresh: () {
-                                  Navigator.of(context).pop();
-                                });
+                    ),
+                    onPressed: isDisable
+                        ? null
+                        : () async {
+                            if (issubscription == '0') {
+                              CommonUtil().profileValidationCheck(contxt,
+                                  packageId: packageId,
+                                  isSubscribed: issubscription,
+                                  isFrom: strIsFromSubscibe,
+                                  providerId: providerId, refresh: () {
+                                Navigator.of(context).pop();
+                              });
+                            }
+                            /*else {
+                              CommonUtil().unSubcribeAlertDialog(context,
+                                  packageId: packageId, refresh: () {
+                                Navigator.of(context).pop();
+                              });
                               }*/
-                            },
-                      borderSide: BorderSide(
-                        color: issubscription == '0'
-                            ? Color(
-                                CommonUtil().getMyPrimaryColor(),
-                              )
-                            : Colors.grey,
-                        style: BorderStyle.solid,
-                        width: 1,
+                          },
+                    borderSide: BorderSide(
+                      color: issubscription == '0'
+                          ? Color(
+                              CommonUtil().getMyPrimaryColor(),
+                            )
+                          : Colors.grey,
+                      style: BorderStyle.solid,
+                      width: 1,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  OutlineButton(
+                    //hoverColor: Color(getMyPrimaryColor()),
+                    child: Text(
+                      'cancel'.toUpperCase(),
+                      style: TextStyle(
+                        color: Color(CommonUtil().getMyPrimaryColor()),
+                        fontSize: 13.sp,
                       ),
                     ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    OutlineButton(
-                      //hoverColor: Color(getMyPrimaryColor()),
-                      child: Text(
-                        'cancel'.toUpperCase(),
-                        style: TextStyle(
-                          color: Color(CommonUtil().getMyPrimaryColor()),
-                          fontSize: 13.sp,
-                        ),
+                    onPressed: () async {
+                      // open profile page
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                    },
+                    borderSide: BorderSide(
+                      color: Color(
+                        CommonUtil().getMyPrimaryColor(),
                       ),
-                      onPressed: () async {
-                        // open profile page
-                        Navigator.of(context).pop();
-                        Navigator.of(context).pop();
-                      },
-                      borderSide: BorderSide(
-                        color: Color(
-                          CommonUtil().getMyPrimaryColor(),
-                        ),
-                        style: BorderStyle.solid,
-                        width: 1,
-                      ),
+                      style: BorderStyle.solid,
+                      width: 1,
                     ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),

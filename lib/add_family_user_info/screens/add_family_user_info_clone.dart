@@ -5,6 +5,7 @@ import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/language/blocks/LanguageBlock.dart';
 import 'package:myfhb/language/model/Language.dart';
 import 'package:myfhb/language/repository/LanguageRepository.dart';
+import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -1595,10 +1596,28 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       additionalInfo.language = new List();
     }
 
-    List<String> languageSelectedList = getLanguageList();
-    additionalInfo.language = languageSelectedList;
-
     profileResult.additionalInfo = additionalInfo;
+
+    List<UserProfileSettingCollection3> userProfileSettingCollection =
+        new List();
+
+    userProfileSettingCollection =
+        myProfile.result.userProfileSettingCollection3;
+
+    UserProfileSettingCollection3 userProfileSettingCollection3Obj =
+        new UserProfileSettingCollection3();
+
+    if (myProfile.result.userProfileSettingCollection3.length > 0) {
+      userProfileSettingCollection3Obj =
+          myProfile.result.userProfileSettingCollection3[0];
+    }
+
+    userProfileSettingCollection3Obj.profileSetting.preferred_language =
+        selectedLanguage;
+
+    userProfileSettingCollection.add(userProfileSettingCollection3Obj);
+
+    profileResult.userProfileSettingCollection3 = userProfileSettingCollection;
 
     if (currentselectedBloodGroup != null &&
         currentselectedBloodGroupRange != null) {
@@ -2274,7 +2293,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   }
 
   void setValueLanguages() {
-    for (LanguageResult languageResultObj in languageModelList.result) {
+    /* for (LanguageResult languageResultObj in languageModelList.result) {
       if (languageResultObj.referenceValueCollection.length > 0) {
         for (ReferenceValueCollection referenceValueCollection
             in languageResultObj.referenceValueCollection) {
@@ -2292,6 +2311,34 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           }
         }
       }
+    }*/
+    if (myProfile?.result?.userProfileSettingCollection3?.isNotEmpty) {
+      ProfileSetting profileSetting =
+          myProfile?.result?.userProfileSettingCollection3[0].profileSetting;
+      if (profileSetting != null) {
+        CommonUtil.langaugeCodes.forEach((language, languageCode) {
+          if (language == profileSetting.preferred_language) {
+            //setLanguageToField(language, languageCode);
+            selectedLanguage = language;
+          }
+        });
+      }
     }
+  }
+
+  void setLanguageToField(String language, String languageCode) {
+    final langCode = language.split("-").first;
+    String currentLanguage = langCode;
+
+    if (currentLanguage.isNotEmpty) {
+      CommonUtil.supportedLanguages.forEach((language, languageCode) {
+        if (currentLanguage == languageCode) {
+          return;
+        }
+      });
+    }
+
+    PreferenceUtil.saveString(
+        SHEELA_LANG, CommonUtil.langaugeCodes[languageCode] ?? 'en-IN');
   }
 }

@@ -313,7 +313,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
                 refresh: () {
                   setState(() {});
                 },
-                isFromHospital: true),
+                isFromHospital: true,isFromFollowOrReschedule: false),
           ],
         ),
       ),

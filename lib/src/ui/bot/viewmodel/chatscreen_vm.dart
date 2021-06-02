@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as constants;
+import 'package:myfhb/src/model/CreateDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/ui/bot/common/botutils.dart';
 import 'package:myfhb/src/ui/bot/service/sheela_service.dart';
@@ -22,6 +23,7 @@ import 'package:myfhb/src/model/UpdatedDeviceModel.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
 import 'package:myfhb/src/model/bot/button_model.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 class ChatScreenViewModel extends ChangeNotifier {
   static MyProfileModel prof =
@@ -68,6 +70,7 @@ class ChatScreenViewModel extends ChangeNotifier {
   AudioPlayer newAudioPlay1 = AudioPlayer();
   bool isAudioPlayerPlaying = false;
   bool get getIsButtonResponse => isButtonResponse && !enableMic;
+  CreateDeviceSelectionModel createDeviceSelectionModel;
 
   void updateAppState(bool canSheelaSpeak, {bool isInitial: false}) {
     canSpeak = canSheelaSpeak;
@@ -602,7 +605,7 @@ class ChatScreenViewModel extends ChangeNotifier {
     if ((buttons?.length ?? 0) > 0 && playingIndex == index) {
       stopTTS = false;
       Conversation recentConversation = conversations[index];
-      await Future.forEach(buttons, (button) async {
+      await Future.forEach(buttons, (Buttons button) async {
         if (stopTTS || playingIndex != index) {
           // if ((recentConversation?.buttons?.length ?? 0) > 0) {
           //   recentConversation.buttons.forEach((button) {
@@ -614,7 +617,7 @@ class ChatScreenViewModel extends ChangeNotifier {
           // stopTTSEngine(index: index);
           // }
           return;
-        } else {
+        } else if (!button?.skipTTS) {
           if ((recentConversation?.buttons?.length ?? 0) > 0) {
             recentConversation
                 .buttons[recentConversation.buttons?.indexOf(button)]
@@ -761,7 +764,7 @@ class ChatScreenViewModel extends ChangeNotifier {
     });
   }
 
-  Future<void> getDeviceSelectionValues() async {
+  Future<void> getDeviceSelectionValues({String preferredLanguage}) async {
     HealthReportListForUserRepository healthReportListForUserRepository =
         HealthReportListForUserRepository();
     GetDeviceSelectionModel selectionResult;
@@ -795,6 +798,55 @@ class ChatScreenViewModel extends ChangeNotifier {
         _isTHActive = true;
         _isWSActive = true;
         _isHealthFirstTime = false;
+
+        var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+        healthReportListForUserRepository
+            .createDeviceSelection(
+                _isdigitRecognition,
+                _isdeviceRecognition,
+                _isGFActive,
+                _isHKActive,
+                _isBPActive,
+                _isGLActive,
+                _isOxyActive,
+                _isTHActive,
+                _isWSActive,
+                userId,
+                preferred_language,
+                qa_subscription,
+                preColor,
+                greColor)
+            .then((value) {
+          createDeviceSelectionModel = value;
+          if (createDeviceSelectionModel.isSuccess) {
+            updateDeviceSelectionModel(preferredLanguage: preferredLanguage);
+          } else {
+            var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+            healthReportListForUserRepository
+                .createDeviceSelection(
+                    _isdigitRecognition,
+                    _isdeviceRecognition,
+                    _isGFActive,
+                    _isHKActive,
+                    _isBPActive,
+                    _isGLActive,
+                    _isOxyActive,
+                    _isTHActive,
+                    _isWSActive,
+                    userId,
+                    preferred_language,
+                    qa_subscription,
+                    preColor,
+                    greColor)
+                .then((value) {
+              createDeviceSelectionModel = value;
+              if (createDeviceSelectionModel.isSuccess) {
+                updateDeviceSelectionModel(
+                    preferredLanguage: preferredLanguage);
+              }
+            });
+          }
+        });
       }
     });
   }
@@ -888,7 +940,32 @@ class ChatScreenViewModel extends ChangeNotifier {
         .then(
       (value) {
         if (value?.isSuccess ?? false) {
-          getDeviceSelectionValues();
+          getDeviceSelectionValues(
+              preferredLanguage: preferredLanguage ?? preferred_language);
+        } else {
+          var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+          healthReportListForUserRepository
+              .createDeviceSelection(
+                  _isdigitRecognition,
+                  _isdeviceRecognition,
+                  _isGFActive,
+                  _isHKActive,
+                  _isBPActive,
+                  _isGLActive,
+                  _isOxyActive,
+                  _isTHActive,
+                  _isWSActive,
+                  userId,
+                  preferred_language,
+                  qa_subscription,
+                  preColor,
+                  greColor)
+              .then((value) {
+            createDeviceSelectionModel = value;
+            if (createDeviceSelectionModel.isSuccess) {
+              updateDeviceSelectionModel(preferredLanguage: preferredLanguage);
+            }
+          });
         }
       },
     );

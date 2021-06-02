@@ -47,12 +47,12 @@ class _ChatScreenState extends State<ChatScreen>
     constants.mInitialTime = DateTime.now();
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    Provider.of<ChatScreenViewModel>(context, listen: false).updateAppState(
+    Provider.of<ChatScreenViewModel>(context, listen: false)?.updateAppState(
       true,
       isInitial: true,
     );
     Provider.of<ChatScreenViewModel>(context, listen: false)
-        .getDeviceSelectionValues();
+        ?.getDeviceSelectionValues();
     PreferenceUtil.init();
     _controller = AnimationController(
         duration: const Duration(milliseconds: 2000), vsync: this, value: 0.1);
@@ -74,7 +74,7 @@ class _ChatScreenState extends State<ChatScreen>
         state == AppLifecycleState.inactive ||
         state == AppLifecycleState.detached) {
       Provider.of<ChatScreenViewModel>(context, listen: false)
-          .updateAppState(false);
+          ?.updateAppState(false);
       stopTTSEngine();
     } else if (state == AppLifecycleState.resumed) {
       Provider.of<ChatScreenViewModel>(context, listen: false)
@@ -142,7 +142,7 @@ class _ChatScreenState extends State<ChatScreen>
         PreferenceUtil.getProfileData(constants.KEY_PROFILE);
     if (sheelaInputs != null && sheelaInputs != '') {
       return Provider.of<ChatScreenViewModel>(context, listen: false)
-          .startSheelaFromDashboard(sheelaInputs);
+          ?.startSheelaFromDashboard(sheelaInputs);
     } else {
       return Provider.of<ChatScreenViewModel>(context, listen: false);
     }

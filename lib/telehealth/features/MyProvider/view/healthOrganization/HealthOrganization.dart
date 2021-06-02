@@ -290,6 +290,7 @@ class _HealthOrganizationState extends State<HealthOrganization> {
                 setState(() {});
               },
               isFromHospital: false,
+              isFromFollowOrReschedule: false,
             ),
           ],
         ),

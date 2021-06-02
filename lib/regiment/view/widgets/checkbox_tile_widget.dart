@@ -8,11 +8,13 @@ class CheckboxTileWidget extends StatefulWidget {
     @required this.title,
     @required this.onSelected,
     @required this.value,
+    @required this.canEdit,
   });
 
   final String title;
   final String value;
   final Function(dynamic selectedValue, String valueText) onSelected;
+  final bool canEdit;
 
   @override
   _CheckboxTileWidgetState createState() => _CheckboxTileWidgetState();
@@ -38,12 +40,14 @@ class _CheckboxTileWidgetState extends State<CheckboxTileWidget> {
           Checkbox(
             value: checkboxValue,
             activeColor: Color(CommonUtil().getMyPrimaryColor()),
-            onChanged: (value) {
-              setState(() {
-                checkboxValue = value;
-              });
-              widget.onSelected(value, widget.value);
-            },
+            onChanged: widget.canEdit
+                ? (value) {
+                    setState(() {
+                      checkboxValue = value;
+                    });
+                    widget.onSelected(value, widget.value);
+                  }
+                : null,
           ),
           Flexible(
             child: Padding(

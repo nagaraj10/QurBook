@@ -77,6 +77,15 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               ? ''
               : _textFieldController.text.toString(),
           widget.isSkipUnknown);
+    } else {
+      if (widget.arguments.searchWord == CommonConstants.doctors) {
+        _doctorsListBlock.getExistingDoctorList('40');
+      } else if (widget.arguments.searchWord == CommonConstants.hospitals) {
+        _hospitalListBlock
+            .getExistingHospitalListNew(Constants.STR_HEALTHORG_HOSPID);
+      } else if (widget.arguments.searchWord == CommonConstants.labs) {
+        _labsListBlock.getExistingLabsListNew(Constants.STR_HEALTHORG_LABID);
+      }
     }
     WidgetsBinding.instance
         .addPostFrameCallback((_) => _refreshIndicatorKey.currentState.show());
@@ -127,14 +136,27 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                 controller: _textFieldController,
                 autofocus: true,
                 onChanged: (editedValue) {
-                  value = editedValue;
-                  widget.arguments.searchWord == CommonConstants.doctors
-                      ? _doctorsListBlock.getDoctorsListNew(
-                          value, widget.isSkipUnknown)
-                      : widget.arguments.searchWord == CommonConstants.hospitals
-                          ? _hospitalListBlock.getHospitalListNew(value)
-                          : _labsListBlock.getLabsListNew(value);
-                  setState(() {});
+                  if (editedValue != '') {
+                    value = editedValue;
+                    widget.arguments.searchWord == CommonConstants.doctors
+                        ? _doctorsListBlock.getDoctorsListNew(
+                            value, widget.isSkipUnknown)
+                        : widget.arguments.searchWord ==
+                                CommonConstants.hospitals
+                            ? _hospitalListBlock.getHospitalListNew(value)
+                            : _labsListBlock.getLabsListNew(value);
+                    setState(() {});
+                  } else {
+                    widget.arguments.searchWord == CommonConstants.doctors
+                        ? _doctorsListBlock.getExistingDoctorList('50')
+                        : widget.arguments.searchWord ==
+                                CommonConstants.hospitals
+                            ? _hospitalListBlock.getExistingHospitalListNew(
+                                Constants.STR_HEALTHORG_HOSPID)
+                            : _labsListBlock.getExistingLabsListNew(
+                                Constants.STR_HEALTHORG_LABID);
+                    setState(() {});
+                  }
                 },
                 decoration: InputDecoration(
                   fillColor: Colors.white,
@@ -168,11 +190,16 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               child: value == ''
                   ?
                   //getEmptyCard()
-                  Container(
+                  /* Container(
                       child: Center(
                         child: Text(variable.strNodata),
                       ),
-                    )
+                    )*/
+                  widget.arguments.searchWord == CommonConstants.doctors
+                      ? getResponseFromApiWidgetForDoctors()
+                      : widget.arguments.searchWord == CommonConstants.hospitals
+                          ? getResponseFromApiWidgetForHospital()
+                          : getResponseFromApiWidgetForLabs()
                   : widget.arguments.searchWord == CommonConstants.doctors
                       ? getResponseFromApiWidgetForDoctors()
                       : widget.arguments.searchWord == CommonConstants.hospitals
@@ -366,51 +393,6 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   }
 
   Widget getEmptyCard(Diagnostics diagnostics) {
-    /*return SingleChildScrollView(
-        child: Container(
-      width: 1.sw,
-      height: 1.sh,
-      child: Center(
-        child:
-            */ /* Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          SizedBox(height: 50.0.h),
-          Image.asset(ImageUrlUtils.fileImg, width: 65.0.w, height: 90.0.h),
-          SizedBox(height: 30.0.h),
-          Text(
-              "Looks like the Doctor you're searching is not available in the system,please check the spelling or",
-              style: new TextStyle(
-                color: ColorUtils.blackcolor,
-                fontSize: 15.0.sp,
-                fontWeight: FontWeight.w500,
-              )),
-          _showAddButton(diagnostics),
-          Text('to add the Doctor as',
-              style: new TextStyle(
-                color:  Color(CommonUtil().getMyPrimaryColor()),
-                fontSize: 15.0.sp,
-                fontWeight: FontWeight.w500,
-              )),
-          Text('Unknown Doctor ',
-              style: new TextStyle(
-                color:  Color(CommonUtil().getMyPrimaryColor()),
-                fontSize: 15.0.sp,
-                fontWeight: FontWeight.bold,
-              )),
-          Text('temporarily',
-              style: new TextStyle(
-                color:  Color(CommonUtil().getMyPrimaryColor()),
-                fontSize: 15.0.sp,
-                fontWeight: FontWeight.bold,
-              )),
-
-        ],
-      )*/ /*
-
-      ),
-      color: Colors.white,
-    ));*/
     return Center(
       child: new RichText(
         text: new TextSpan(
@@ -531,7 +513,9 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                   child: getCardToDisplaySearchList(
                       (data[i].name != null && data[i].name != '')
                           ? data[i]?.name?.capitalizeFirstofEach
-                          : data[i]?.firstName?.capitalizeFirstofEach + ' ' + data[i]?.lastName?.capitalizeFirstofEach,
+                          : data[i]?.firstName?.capitalizeFirstofEach +
+                              ' ' +
+                              data[i]?.lastName?.capitalizeFirstofEach,
                       getDoctorsAddress(data[i]),
                       data[i].doctorId,
                       data[i].profilePicThumbnailUrl,
@@ -571,9 +555,11 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                           (data.result[i].name != null &&
                                   data.result[i].name != '')
                               ? data?.result[i]?.name?.capitalizeFirstofEach
-                              : data?.result[i]?.firstName?.capitalizeFirstofEach +
+                              : data?.result[i]?.firstName
+                                      ?.capitalizeFirstofEach +
                                   ' ' +
-                                  data?.result[i]?.lastName?.capitalizeFirstofEach,
+                                  data?.result[i]?.lastName
+                                      ?.capitalizeFirstofEach,
                           getDoctorsAddress(data.result[i]),
                           data.result[i].doctorId,
                           data.result[i].profilePicThumbnailUrl,
@@ -718,8 +704,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                     ? passHospitalValue(hospitalData, context)
                     : passLaboratoryValue(labData, context);
           } else {
-            passdataToNextScreen(
-                data?.name.capitalizeFirstofEach, context, data, hospitalData, labData);
+            passdataToNextScreen(data?.name.capitalizeFirstofEach, context,
+                data, hospitalData, labData);
           }
         });
   }
