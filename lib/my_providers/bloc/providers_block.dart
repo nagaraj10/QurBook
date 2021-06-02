@@ -49,6 +49,54 @@ class ProvidersBloc implements BaseBloc {
     return myProvidersResponseList;
   }
 
+  Future<MyProvidersResponse> getMedicalPreferencesForDoctors({String userId}) async {
+    // providersListSink.add(ApiResponse.loading(variable.strFetchMedicalPrefernces));
+    MyProvidersResponse myProvidersResponseList;
+    try {
+      myProvidersResponseList = await _providersListRepository
+          .getMedicalPreferencesForDoctors(userId: userId);
+      doctors = myProvidersResponseList.result.doctors;
+      // hospitals = myProvidersResponseList.result.hospitals;
+      // labs = myProvidersResponseList.result.labs;
+    } catch (e) {
+      providersListSink.add(ApiResponse.error(e.toString()));
+    }
+
+    return myProvidersResponseList;
+  }
+
+  Future<MyProvidersResponse> getMedicalPreferencesForHospital({String userId}) async {
+    // providersListSink.add(ApiResponse.loading(variable.strFetchMedicalPrefernces));
+    MyProvidersResponse myProvidersResponseList;
+    try {
+      myProvidersResponseList = await _providersListRepository
+          .getMedicalPreferencesForHospital(userId: userId);
+      //doctors = myProvidersResponseList.result.doctors;
+      // hospitals = myProvidersResponseList.result.hospitals;
+      // labs = myProvidersResponseList.result.labs;
+    } catch (e) {
+      providersListSink.add(ApiResponse.error(e.toString()));
+    }
+
+    return myProvidersResponseList;
+  }
+
+  Future<MyProvidersResponse> getMedicalPreferencesAll({String userId}) async {
+    // providersListSink.add(ApiResponse.loading(variable.strFetchMedicalPrefernces));
+    MyProvidersResponse myProvidersResponseList;
+    try {
+      myProvidersResponseList = await _providersListRepository
+          .getMedicalPreferencesForAll(userId: userId);
+      //doctors = myProvidersResponseList.result.doctors;
+      // hospitals = myProvidersResponseList.result.hospitals;
+      // labs = myProvidersResponseList.result.labs;
+    } catch (e) {
+      providersListSink.add(ApiResponse.error(e.toString()));
+    }
+
+    return myProvidersResponseList;
+  }
+
   List<Doctors> getFilterDoctorListNew(String doctorName) {
     List<Doctors> filterDoctorData = new List();
     for (Doctors doctorData in doctors) {

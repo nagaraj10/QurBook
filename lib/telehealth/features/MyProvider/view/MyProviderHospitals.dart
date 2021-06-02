@@ -57,7 +57,7 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
     mInitialTime = DateTime.now();
     super.initState();
     _providersBloc = new ProvidersBloc();
-    _medicalPreferenceList = _providersBloc.getMedicalPreferencesList();
+    _medicalPreferenceList = _providersBloc.getMedicalPreferencesForHospital();
     // getHospitalsList();
   }
 
@@ -78,7 +78,7 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
         initialHospitalList = myProvidersResponseList.result.hospitals;
       });
     } else {
-      _providersBloc.getMedicalPreferencesList().then((value) {
+      _providersBloc.getMedicalPreferencesForHospital().then((value) {
         if ((value.result != null &&
             value?.result?.hospitals != null &&
             value.result.hospitals.length > 0)) {
@@ -134,7 +134,7 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
                 )).then((value) {
               getHospitalsList();
               _medicalPreferenceList =
-                  _providersBloc.getMedicalPreferencesList();
+                  _providersBloc.getMedicalPreferencesForHospital();
               setState(() {});
             });
           },
