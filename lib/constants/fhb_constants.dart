@@ -373,6 +373,9 @@ const String STR_DONE = 'Done';
 
 const String STR_LATEST_VALUE = 'Latest Value';
 
+const String STR_HEALTHORG_HOSPID = '67240f46-65dc-41e0-b03f-cc4e4433ee6e';
+const String STR_HEALTHORG_LABID = '34c16c83-2ae6-40e4-9643-5d929eb135e4';
+
 const String SHEELA_LANG = 'sheela_lang';
 const String STR_FAMILY_ADD_MSG =
     'Your doctor will reach the appointee through your app (name) since the user does not have MyFHB app downloaded';
@@ -455,7 +458,8 @@ const strIsFromSubscibe = 'fromSubscribe';
 const strIsRenew = 'Renew';
 const goToRegimen = 'Go to Regimen';
 const symptomsError = 'Data for Symptoms cannot be entered for future dates';
-const activitiesError = 'Data for future events can be entered only 15 minutes prior to the event time';
+const activitiesError =
+    'Data for future events can be entered only 15 minutes prior to the event time';
 
 const strQurhealth = 'QurHealth';
 

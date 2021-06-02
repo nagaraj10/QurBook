@@ -74,4 +74,15 @@ class HospitalListBlock implements BaseBloc {
 
     return hospitalListResponse;
   }
+
+  getExistingHospitalListNew(String hospitalId) async {
+    hospitalListNewSink.add(ApiResponse.loading(variable.strGetHospitalList));
+    try {
+      HospitalsSearchListResponse hospitalListResponse =
+          await _hospitalListRepository.getExistingHospitalFromSearchNew(hospitalId);
+      hospitalListNewSink.add(ApiResponse.completed(hospitalListResponse));
+    } catch (e) {
+      hospitalListNewSink.add(ApiResponse.error(e.toString()));
+    }
+  }
 }

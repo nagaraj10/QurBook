@@ -31,4 +31,14 @@ class DoctorsListRepository {
         await _helper.getDoctorsFromId(query.qr_doctors, doctorsId);
     return DoctorsListResponse.fromJson(response);
   }
+
+  Future<DoctorsSearchListResponse> getExistingDoctorsListFromSearchNew(
+      limitValue) async {
+    int skip = 1;
+    int limit = 40;
+    final response = await _helper.getDoctorsListFromSearchNew(
+        "${query.qr_patient_update_default}${query.qr_list}${query.qr_doctorlist}${query.qr_skip}${skip.toString()}${query.qr_And}${query.qr_limit}${limit.toString()}");
+
+    return DoctorsSearchListResponse.fromJson(response);
+  }
 }

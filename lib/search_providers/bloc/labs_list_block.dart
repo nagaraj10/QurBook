@@ -69,4 +69,15 @@ class LabsListBlock implements BaseBloc {
     }
     return labsListResponse;
   }
+
+  getExistingLabsListNew(String param) async {
+    labListNewSink.add(ApiResponse.loading(variable.strGetLabList));
+    try {
+      LabsSearchListResponse labsListResponse =
+      await _labsListRepository.getExistingLabsFromSearchNew(param);
+      labListNewSink.add(ApiResponse.completed(labsListResponse));
+    } catch (e) {
+      labListNewSink.add(ApiResponse.error(e.toString()));
+    }
+  }
 }

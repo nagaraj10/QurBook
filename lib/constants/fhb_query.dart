@@ -234,3 +234,8 @@ const String qr_get = 'get';
 const String regiment = 'plan-package-master/wrapperApi';
 const String qr_save_regi_media = 'media-details/store-media';
 const String regimentImagePath = 'https://qurplan.com/assets/images/';
+
+const String qr_list = 'list/';
+const String qr_doctorlist = 'doctorsList?';
+const String qr_halthOrganization = 'healthOrganizationTypeId=';
+const String qr_healthOrganizationList = 'healthOrganizationsList?';
