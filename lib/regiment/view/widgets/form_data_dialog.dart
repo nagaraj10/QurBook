@@ -21,6 +21,7 @@ import 'media_icon_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 
 class FormDataDialog extends StatefulWidget {
   FormDataDialog({
@@ -29,6 +30,7 @@ class FormDataDialog extends StatefulWidget {
     @required this.color,
     @required this.mediaData,
     @required this.formTitle,
+    @required this.canEdit,
   });
 
   final List<FieldModel> fieldsData;
@@ -36,6 +38,7 @@ class FormDataDialog extends StatefulWidget {
   final Color color;
   final Otherinfo mediaData;
   final String formTitle;
+  final bool canEdit;
 
   @override
   State<StatefulWidget> createState() => FormDataDialogState();
@@ -125,6 +128,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                         bottom: 10.0.h,
                       ),
                       child: FormFieldWidget(
+                        canEdit: widget.canEdit ?? false,
                         fieldData: fieldsData[index],
                         updateValue: (
                           FieldModel updatedFieldData, {
@@ -163,9 +167,11 @@ class FormDataDialogState extends State<FormDataDialog> {
                   Visibility(
                     visible: mediaData.needPhoto == '1',
                     child: InkWell(
-                      onTap: () {
-                        _showSelectionDialog(context);
-                      },
+                      onTap: widget.canEdit
+                          ? () {
+                              _showSelectionDialog(context);
+                            }
+                          : null,
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -191,44 +197,49 @@ class FormDataDialogState extends State<FormDataDialog> {
                   Visibility(
                     visible: mediaData.needAudio == '1',
                     child: InkWell(
-                      onTap: () {
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(
-                          builder: (context) => AudioRecordScreen(
-                              arguments: AudioScreenArguments(
-                            fromVoice: false,
-                          )),
-                        ))
-                            .then((results) {
-                          String audioPath = results[Constants.keyAudioFile];
-                          if (audioPath != null && audioPath != '') {
-                            imagePaths = audioPath;
-                            setState(() {
-                              audioFileName = strUploading;
-                            });
-                            if (imagePaths != null && imagePaths != '') {
-                              saveMediaRegiment(imagePaths).then((value) {
-                                if (value.isSuccess) {
+                      onTap: widget.canEdit
+                          ? () {
+                              Navigator.of(context)
+                                  .push(MaterialPageRoute(
+                                builder: (context) => AudioRecordScreen(
+                                    arguments: AudioScreenArguments(
+                                  fromVoice: false,
+                                )),
+                              ))
+                                  .then((results) {
+                                String audioPath =
+                                    results[Constants.keyAudioFile];
+                                if (audioPath != null && audioPath != '') {
+                                  imagePaths = audioPath;
                                   setState(() {
-                                    audioFileName = audioPath.split('/').last;
+                                    audioFileName = strUploading;
                                   });
-                                  var oldValue = saveMap.putIfAbsent(
-                                    'audio',
-                                    () => value.result.accessUrl,
-                                  );
-                                  if (oldValue != null) {
-                                    saveMap['audio'] = value.result.accessUrl;
+                                  if (imagePaths != null && imagePaths != '') {
+                                    saveMediaRegiment(imagePaths).then((value) {
+                                      if (value.isSuccess) {
+                                        setState(() {
+                                          audioFileName =
+                                              audioPath.split('/').last;
+                                        });
+                                        var oldValue = saveMap.putIfAbsent(
+                                          'audio',
+                                          () => value.result.accessUrl,
+                                        );
+                                        if (oldValue != null) {
+                                          saveMap['audio'] =
+                                              value.result.accessUrl;
+                                        }
+                                      } else {
+                                        setState(() {
+                                          audioFileName = 'Add Audio';
+                                        });
+                                      }
+                                    });
                                   }
-                                } else {
-                                  setState(() {
-                                    audioFileName = 'Add Audio';
-                                  });
                                 }
                               });
                             }
-                          }
-                        });
-                      },
+                          : null,
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -254,9 +265,11 @@ class FormDataDialogState extends State<FormDataDialog> {
                   Visibility(
                     visible: mediaData.needVideo == '1',
                     child: InkWell(
-                      onTap: () {
-                        getOpenGallery(strVideo);
-                      },
+                      onTap: widget.canEdit
+                          ? () {
+                              getOpenGallery(strVideo);
+                            }
+                          : null,
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -282,9 +295,11 @@ class FormDataDialogState extends State<FormDataDialog> {
                   Visibility(
                     visible: mediaData.needFile == '1',
                     child: InkWell(
-                      onTap: () {
-                        getOpenGallery(strFiles);
-                      },
+                      onTap: widget.canEdit
+                          ? () {
+                              getOpenGallery(strFiles);
+                            }
+                          : null,
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -323,34 +338,49 @@ class FormDataDialogState extends State<FormDataDialog> {
                         color: Colors.white,
                       ),
                     ),
-                    onPressed: () async {
-                      if (_formKey.currentState.validate()) {
-                        String events = '';
-                        saveMap.forEach((key, value) {
-                          events += '&$key=$value';
-                        });
-                        LoaderClass.showLoadingDialog(
-                          Get.context,
-                          canDismiss: false,
-                        );
-                        SaveResponseModel saveResponse =
-                            await Provider.of<RegimentViewModel>(context,
-                                    listen: false)
-                                .saveFormData(
-                          eid: eid,
-                          events: events,
-                        );
-                        if (saveResponse?.isSuccess ?? false) {
-                          LoaderClass.hideLoadingDialog(Get.context);
-                          if (Provider.of<RegimentViewModel>(context,
-                                      listen: false)
-                                  .regimentStatus ==
-                              RegimentStatus.DialogOpened) {
-                            Navigator.pop(context, true);
+                    onPressed: widget.canEdit
+                        ? () async {
+                            if (widget.canEdit) {
+                              if (_formKey.currentState.validate()) {
+                                String events = '';
+                                saveMap.forEach((key, value) {
+                                  events += '&$key=$value';
+                                });
+                                LoaderClass.showLoadingDialog(
+                                  Get.context,
+                                  canDismiss: false,
+                                );
+                                SaveResponseModel saveResponse =
+                                    await Provider.of<RegimentViewModel>(
+                                            context,
+                                            listen: false)
+                                        .saveFormData(
+                                  eid: eid,
+                                  events: events,
+                                );
+                                if (saveResponse?.isSuccess ?? false) {
+                                  LoaderClass.hideLoadingDialog(Get.context);
+                                  if (Provider.of<RegimentViewModel>(context,
+                                              listen: false)
+                                          .regimentStatus ==
+                                      RegimentStatus.DialogOpened) {
+                                    Navigator.pop(context, true);
+                                  }
+                                }
+                              }
+                            } else {
+                              FlutterToast().getToast(
+                                (Provider.of<RegimentViewModel>(context,
+                                                listen: false)
+                                            .regimentMode ==
+                                        RegimentMode.Symptoms)
+                                    ? symptomsError
+                                    : activitiesError,
+                                Colors.red,
+                              );
+                            }
                           }
-                        }
-                      }
-                    },
+                        : null,
                     color: Color(CommonUtil().getMyPrimaryColor()),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(

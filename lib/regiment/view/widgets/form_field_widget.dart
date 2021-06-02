@@ -11,6 +11,7 @@ class FormFieldWidget extends StatelessWidget {
   const FormFieldWidget({
     @required this.fieldData,
     @required this.updateValue,
+    @required this.canEdit,
   });
 
   final FieldModel fieldData;
@@ -19,6 +20,7 @@ class FormFieldWidget extends StatelessWidget {
     bool isAdd,
     String title,
   }) updateValue;
+  final bool canEdit;
 
   @override
   Widget build(BuildContext context) {
@@ -28,34 +30,39 @@ class FormFieldWidget extends StatelessWidget {
           fieldData: fieldData,
           isNumberOnly: true,
           updateValue: updateValue,
+          canEdit: canEdit,
         );
         break;
       case FieldType.CHECKBOX:
         return FormDataCheckbox(
           fieldData: fieldData,
           updateValue: updateValue,
+          canEdit: canEdit,
         );
         break;
       case FieldType.TEXT:
         return FormDataTextField(
           fieldData: fieldData,
           updateValue: updateValue,
+          canEdit: canEdit,
         );
         break;
       case FieldType.LOOKUP:
         return FormDataDropDown(
           fieldData: fieldData,
           updateValue: updateValue,
+          canEdit: canEdit,
         );
         break;
       case FieldType.RADIO:
         return FormDataRadio(
           fieldData: fieldData,
           updateValue: updateValue,
+          canEdit: canEdit,
         );
         break;
       default:
-        return SizedBox.shrink();
+        return const SizedBox.shrink();
     }
   }
 }

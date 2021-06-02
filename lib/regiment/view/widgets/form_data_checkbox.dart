@@ -9,6 +9,7 @@ class FormDataCheckbox extends StatefulWidget {
   const FormDataCheckbox({
     @required this.fieldData,
     @required this.updateValue,
+    @required this.canEdit,
   });
 
   final FieldModel fieldData;
@@ -17,6 +18,7 @@ class FormDataCheckbox extends StatefulWidget {
     bool isAdd,
     String title,
   }) updateValue;
+  final bool canEdit;
 
   @override
   _FormDataCheckboxState createState() => _FormDataCheckboxState();
@@ -37,6 +39,7 @@ class _FormDataCheckboxState extends State<FormDataCheckbox> {
       for (int index = 0; index < checkboxList.length; index++) {
         checkboxWidget.add(
           CheckboxTileWidget(
+            canEdit: widget.canEdit,
             title: checkboxList[index + 1] ?? '',
             value: checkboxList[index],
             onSelected: (selectedValue, valueText) {

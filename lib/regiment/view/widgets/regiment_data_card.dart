@@ -449,55 +449,55 @@ class RegimentDataCard extends StatelessWidget {
   Future<void> onCardPressed(BuildContext context) async {
     stopRegimenTTS();
     bool canEdit = startTime.difference(DateTime.now()).inMinutes <= 15;
-    if (canEdit || isValidSymptom(context)) {
-      FieldsResponseModel fieldsResponseModel =
-          await Provider.of<RegimentViewModel>(context, listen: false)
-              .getFormData(eid: eid);
-      print(fieldsResponseModel);
-      if (fieldsResponseModel.isSuccess &&
-          (fieldsResponseModel.result.fields.length > 0 ||
-              mediaData.toJson().toString().contains('1')) &&
-          Provider.of<RegimentViewModel>(context, listen: false)
-                  .regimentStatus !=
-              RegimentStatus.DialogOpened) {
-        Provider.of<RegimentViewModel>(context, listen: false)
-            .updateRegimentStatus(RegimentStatus.DialogOpened);
-        bool value = await showDialog(
-          context: context,
-          builder: (context) => FormDataDialog(
-            fieldsData: fieldsResponseModel.result.fields,
-            eid: eid,
-            color: color,
-            mediaData: mediaData,
-            formTitle: getDialogTitle(context),
-          ),
-        );
-        if (value != null && (value ?? false)) {
-          LoaderClass.showLoadingDialog(
-            Get.context,
-            canDismiss: false,
-          );
-          Future.delayed(Duration(milliseconds: 300), () async {
-            await Provider.of<RegimentViewModel>(context, listen: false)
-                .fetchRegimentData();
-            LoaderClass.hideLoadingDialog(Get.context);
-          });
-        }
-
-        Provider.of<RegimentViewModel>(context, listen: false)
-            .updateRegimentStatus(RegimentStatus.DialogClosed);
-      }
-    } else {
-      FlutterToast().getToast(
-        (Provider.of<RegimentViewModel>(context,
-            listen: false)
-            .regimentMode ==
-            RegimentMode.Symptoms)
-            ? symptomsError
-            : activitiesError,
-        Colors.red,
+    // if (canEdit || isValidSymptom(context)) {
+    FieldsResponseModel fieldsResponseModel =
+        await Provider.of<RegimentViewModel>(context, listen: false)
+            .getFormData(eid: eid);
+    print(fieldsResponseModel);
+    if (fieldsResponseModel.isSuccess &&
+        (fieldsResponseModel.result.fields.length > 0 ||
+            mediaData.toJson().toString().contains('1')) &&
+        Provider.of<RegimentViewModel>(context, listen: false).regimentStatus !=
+            RegimentStatus.DialogOpened) {
+      Provider.of<RegimentViewModel>(context, listen: false)
+          .updateRegimentStatus(RegimentStatus.DialogOpened);
+      bool value = await showDialog(
+        context: context,
+        builder: (context) => FormDataDialog(
+          fieldsData: fieldsResponseModel.result.fields,
+          eid: eid,
+          color: color,
+          mediaData: mediaData,
+          formTitle: getDialogTitle(context),
+          canEdit: canEdit || isValidSymptom(context),
+        ),
       );
+      if (value != null && (value ?? false)) {
+        LoaderClass.showLoadingDialog(
+          Get.context,
+          canDismiss: false,
+        );
+        Future.delayed(Duration(milliseconds: 300), () async {
+          await Provider.of<RegimentViewModel>(context, listen: false)
+              .fetchRegimentData();
+          LoaderClass.hideLoadingDialog(Get.context);
+        });
+      }
+
+      Provider.of<RegimentViewModel>(context, listen: false)
+          .updateRegimentStatus(RegimentStatus.DialogClosed);
     }
+    // } else {
+    //   FlutterToast().getToast(
+    //     (Provider.of<RegimentViewModel>(context,
+    //         listen: false)
+    //         .regimentMode ==
+    //         RegimentMode.Symptoms)
+    //         ? symptomsError
+    //         : activitiesError,
+    //     Colors.red,
+    //   );
+    // }
   }
 
   stopRegimenTTS() {

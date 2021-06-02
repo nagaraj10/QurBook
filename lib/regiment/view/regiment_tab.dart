@@ -69,7 +69,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
 
   @override
   void dispose() {
-    searchController?.dispose();
+    // searchController?.dispose();
     scrollController?.dispose();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
