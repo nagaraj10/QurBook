@@ -96,7 +96,7 @@ class CommonConstants {
   static String strTimeIntake = 'Time of Intake';
 
   static String strTemperature = 'Temperature';
-  static String strTemperatureValue = 'C';
+  static String strTemperatureValue = 'F';
   static String strTemperatureUnit = 'celcius';
   static String strTempParams = 'temperature';
 

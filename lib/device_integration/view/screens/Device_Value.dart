@@ -859,7 +859,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                       fhbBasicWidget.getErrorMsgForUnitEntered(
                         context,
                         CommonConstants.strTemperature,
-                        'C',
+                        'F',
                         deviceController,
                         (errorValue) {
                           setState(() {
@@ -867,7 +867,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                           });
                         },
                         errorMsg,
-                        'C',
+                        'F',
                         deviceName,
                       )
                     ],
@@ -887,7 +887,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                         width: 50.0.w,
                         constraints: BoxConstraints(maxWidth: 100.0.w),
                         child: Text(
-                          'C',
+                          'F',
                           style: TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 14.0.sp,
@@ -1636,7 +1636,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                               '',
                               '',
                               getFormattedTime(translist[index].startDateTime),
-                              'C',
+                              'F',
                               translist[index].deviceId);
                         },
                       )
