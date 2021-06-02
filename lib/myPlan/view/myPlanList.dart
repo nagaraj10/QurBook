@@ -7,6 +7,7 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
@@ -25,6 +26,7 @@ import 'package:provider/provider.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/src/ui/Dashboard.dart';
 import 'package:get/get.dart';
+import 'package:showcaseview/showcase_widget.dart';
 
 class MyPlanList extends StatefulWidget {
   MyPlanList({
@@ -42,7 +44,10 @@ class _MyPlanState extends State<MyPlanList> {
   MyPlanViewModel myPlanViewModel = new MyPlanViewModel();
   bool isSearch = false;
   List<MyPlanListResult> myPLanListResult = List();
-
+  final GlobalKey _GotoRegimentKey = GlobalKey();
+  final GlobalKey _PlanCardKey = GlobalKey();
+  bool isFirst;
+  BuildContext _myContext;
   @override
   void initState() {
     super.initState();
@@ -53,6 +58,19 @@ class _MyPlanState extends State<MyPlanList> {
         listen: false,
       ).updateTabIndex(currentIndex: 3);
     }
+    PreferenceUtil.init();
+
+    isFirst = PreferenceUtil.isKeyValid(Constants.KEY_SHOWCASE_MyPlan);
+    try {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Future.delayed(
+            Duration(milliseconds: 1000),
+            () => isFirst
+                ? null
+                : ShowCaseWidget.of(_myContext)
+                    .startShowCase([_PlanCardKey, _GotoRegimentKey]));
+      });
+    } catch (e) {}
   }
 
   @override
@@ -63,49 +81,55 @@ class _MyPlanState extends State<MyPlanList> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Visibility(
-      visible: Provider.of<RegimentViewModel>(context).regimentsDataAvailable,
-      child: Container(
-          child: Column(
-        children: [
-          SearchWidget(
-            onChanged: (providerName) {
-              if (providerName != '' && providerName.length > 2) {
-                isSearch = true;
-                onSearchedNew(providerName);
-              } else {
-                setState(() {
-                  isSearch = false;
-                });
-              }
-            },
-          ),
-          SizedBox(
-            height: 5.0.h,
-          ),
-          Expanded(
-            child: myPlanListModel != null ?? myPlanListModel.isSuccess
-                ? hospitalList(myPlanListModel.result)
-                : getPlanList(),
-          )
-        ],
-      )),
-      replacement: Center(
-        child: Padding(
-          padding: EdgeInsets.all(
-            10.0.sp,
-          ),
-          child: Text(
-            Constants.plansForFamily,
-            style: TextStyle(
-              fontSize: 16.0.sp,
+    return ShowCaseWidget(onFinish: () {
+      PreferenceUtil.saveString(
+          Constants.KEY_SHOWCASE_MyPlan, variable.strtrue);
+    }, builder: Builder(builder: (context) {
+      _myContext = context;
+      return Scaffold(
+          body: Visibility(
+        visible: Provider.of<RegimentViewModel>(context).regimentsDataAvailable,
+        child: Container(
+            child: Column(
+          children: [
+            SearchWidget(
+              onChanged: (providerName) {
+                if (providerName != '' && providerName.length > 2) {
+                  isSearch = true;
+                  onSearchedNew(providerName);
+                } else {
+                  setState(() {
+                    isSearch = false;
+                  });
+                }
+              },
             ),
-            textAlign: TextAlign.center,
+            SizedBox(
+              height: 5.0.h,
+            ),
+            Expanded(
+              child: myPlanListModel != null ?? myPlanListModel.isSuccess
+                  ? hospitalList(myPlanListModel.result)
+                  : getPlanList(),
+            )
+          ],
+        )),
+        replacement: Center(
+          child: Padding(
+            padding: EdgeInsets.all(
+              10.0.sp,
+            ),
+            child: Text(
+              Constants.plansForFamily,
+              style: TextStyle(
+                fontSize: 16.0.sp,
+              ),
+              textAlign: TextAlign.center,
+            ),
           ),
         ),
-      ),
-    ));
+      ));
+    }));
   }
 
   onSearchedNew(String doctorName) async {
@@ -125,44 +149,55 @@ class _MyPlanState extends State<MyPlanList> {
             ),
             itemBuilder: (BuildContext ctx, int i) {
               if (i == planList.length) {
-                return Padding(
-                  padding: EdgeInsets.only(
-                    top: 10.0.h,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      FlatButton(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18.0),
-                        ),
-                        color: Color(new CommonUtil().getMyPrimaryColor()),
-                        textColor: Colors.white,
-                        padding: EdgeInsets.all(
-                          10.0.sp,
-                        ),
-                        onPressed: () async {
-                          Provider.of<RegimentViewModel>(
-                            context,
-                            listen: false,
-                          ).updateTabIndex(currentIndex: 0);
-                          Get.offAll(
-                            DashboardScreen(
-                              fromPlans: true,
-                            ),
-                          );
-                        },
-                        child: TextWidget(
-                          text: goToRegimen,
-                          fontsize: 14.0.sp,
-                        ),
+                return FHBBasicWidget.customShowCase(
+                    _GotoRegimentKey,
+                    Constants.GoToRegimentDescription,
+                    Padding(
+                      padding: EdgeInsets.only(
+                        top: 10.0.h,
                       ),
-                    ],
-                  ),
-                );
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          FlatButton(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                            ),
+                            color: Color(new CommonUtil().getMyPrimaryColor()),
+                            textColor: Colors.white,
+                            padding: EdgeInsets.all(
+                              10.0.sp,
+                            ),
+                            onPressed: () async {
+                              Provider.of<RegimentViewModel>(
+                                context,
+                                listen: false,
+                              ).updateTabIndex(currentIndex: 0);
+                              Get.offAll(
+                                DashboardScreen(
+                                  fromPlans: true,
+                                ),
+                              );
+                            },
+                            child: TextWidget(
+                              text: goToRegimen,
+                              fontsize: 14.0.sp,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Constants.DailyRegimen);
               } else {
-                return myPlanListItem(
-                    ctx, i, isSearch ? myPLanListResult : planList);
+                return i != 0
+                    ? myPlanListItem(
+                        ctx, i, isSearch ? myPLanListResult : planList)
+                    : FHBBasicWidget.customShowCase(
+                        _PlanCardKey,
+                        Constants.MyPlanCard,
+                        myPlanListItem(
+                            ctx, i, isSearch ? myPLanListResult : planList),
+                        Constants.SubscribedPlans);
               }
             },
             itemCount: isSearch ? myPLanListResult.length : planList.length + 1,
@@ -241,7 +276,7 @@ class _MyPlanState extends State<MyPlanList> {
                     descriptionURL: planList[i]?.metadata?.descriptionURL,
                   )),
         ).then((value) {
-          if(value=='refreshUI'){
+          if (value == 'refreshUI') {
             setState(() {});
           }
         });
