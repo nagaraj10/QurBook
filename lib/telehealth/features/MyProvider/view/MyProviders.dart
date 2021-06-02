@@ -66,7 +66,7 @@ class _MyProvidersState extends State<MyProviders> {
     super.initState();
     getDataForProvider();
     _providersBloc = new ProvidersBloc();
-    _medicalPreferenceList = _providersBloc.getMedicalPreferencesList();
+    _medicalPreferenceList = _providersBloc.getMedicalPreferencesForDoctors();
   }
 
   @override
@@ -115,9 +115,10 @@ class _MyProvidersState extends State<MyProviders> {
                   fromClass: router.cn_teleheathProvider,
                 )).then((value) {
               providerViewModel.doctorIdsList = null;
-              _medicalPreferenceList =
-                  _providersBloc.getMedicalPreferencesList();
-              setState(() {});
+              setState(() {
+                _medicalPreferenceList =
+                    _providersBloc.getMedicalPreferencesForDoctors();
+              });
             });
           },
           child: Icon(
@@ -413,7 +414,9 @@ class _MyProvidersState extends State<MyProviders> {
                                 docs[i].sharedCategories)
                             .then((status) {
                           if (status) {
-                            setState(() {});
+                            setState(() {
+                              _medicalPreferenceList = _providersBloc.getMedicalPreferencesForDoctors();
+                            });
                           }
                         });
                       }),

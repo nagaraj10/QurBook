@@ -36,6 +36,33 @@ class ProvidersListRepository {
     return MyProvidersResponse.fromJson(response);
   }
 
+  Future<MyProvidersResponse> getMedicalPreferencesForDoctors({String userId}) async {
+    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    final response = await _helper.getMedicalPreferencesList(query.qr_user +
+        (userId != null ? userId : userID) +
+        query.qr_sections +
+        query.qr_medicalPreferences+qr_module_equal+qr_Doctor);
+    return MyProvidersResponse.fromJson(response);
+  }
+
+  Future<MyProvidersResponse> getMedicalPreferencesForHospital({String userId}) async {
+    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    final response = await _helper.getMedicalPreferencesList(query.qr_user +
+        (userId != null ? userId : userID) +
+        query.qr_sections +
+        query.qr_medicalPreferences+qr_module_equal+qr_healthOrg);
+    return MyProvidersResponse.fromJson(response);
+  }
+
+  Future<MyProvidersResponse> getMedicalPreferencesForAll({String userId}) async {
+    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    final response = await _helper.getMedicalPreferencesList(query.qr_user +
+        (userId != null ? userId : userID) +
+        query.qr_sections +
+        query.qr_medicalPreferences+qr_module_equal+qr_all);
+    return MyProvidersResponse.fromJson(response);
+  }
+
   Future<TelehealthProviderModel> getTelehealthDoctorsList() async {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
