@@ -471,6 +471,87 @@ class FHBBasicWidget {
         false;
   }
 
+  static customShowCaseNew(
+      GlobalKey _key, String desc, Widget _child, String title,
+      {BuildContext context}) {
+    return Showcase.withWidget(
+        key: _key,
+        disableAnimation: true,
+        shapeBorder: CircleBorder(),
+        title: title,
+        description: desc,
+        child: _child,
+        overlayColor: Colors.black,
+        overlayOpacity: 0.8,
+        height: MediaQuery.of(context).size.height - 200,
+        width: MediaQuery.of(context).size.width,
+        container: Container(
+            height: 120.0.h,
+            margin: const EdgeInsets.symmetric(
+              vertical: 16.0,
+              horizontal: 24.0,
+            ),
+            child: new Stack(
+              children: <Widget>[
+                Container(
+                  height: 110.0.h,
+                  width: 320.0.w,
+                  margin: new EdgeInsets.only(left: 40.0),
+                  child: Padding(
+                      padding: EdgeInsets.only(left: 40, right: 10),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            title,
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                                color: Colors.white, fontSize: 16.0.sp),
+                            softWrap: true,
+                          ),
+                          SizedBox(height: 5.0.h),
+                          Text(
+                            desc,
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                                color: Colors.white, fontSize: 15.0.sp),
+                            softWrap: true,
+                          ),
+                        ],
+                      )),
+                  decoration: new BoxDecoration(
+                    gradient: LinearGradient(colors: [
+                      Color(CommonUtil().getMyPrimaryColor()),
+                      Color(CommonUtil().getMyGredientColor())
+                    ]),
+                    shape: BoxShape.rectangle,
+                    borderRadius: new BorderRadius.circular(8.0),
+                    boxShadow: <BoxShadow>[
+                      new BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 10.0,
+                        offset: new Offset(0.0, 10.0),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: new EdgeInsets.symmetric(vertical: 30.0),
+                  padding: EdgeInsets.all(4),
+                  alignment: FractionalOffset.centerLeft,
+                  child: new Image(
+                    image: new AssetImage(variable.icon_mayaMain),
+                    height: 80.0.h,
+                    width: 80.0.h,
+                  ),
+                  decoration: BoxDecoration(
+                      color: Colors.white, shape: BoxShape.circle),
+                ),
+              ],
+            )));
+  }
+
   static customShowCase(
       GlobalKey _key, String desc, Widget _child, String title) {
     return Showcase.withWidget(
