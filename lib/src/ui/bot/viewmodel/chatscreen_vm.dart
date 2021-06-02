@@ -605,7 +605,7 @@ class ChatScreenViewModel extends ChangeNotifier {
     if ((buttons?.length ?? 0) > 0 && playingIndex == index) {
       stopTTS = false;
       Conversation recentConversation = conversations[index];
-      await Future.forEach(buttons, (button) async {
+      await Future.forEach(buttons, (Buttons button) async {
         if (stopTTS || playingIndex != index) {
           // if ((recentConversation?.buttons?.length ?? 0) > 0) {
           //   recentConversation.buttons.forEach((button) {
@@ -617,7 +617,7 @@ class ChatScreenViewModel extends ChangeNotifier {
           // stopTTSEngine(index: index);
           // }
           return;
-        } else {
+        } else if (!button?.skipTTS) {
           if ((recentConversation?.buttons?.length ?? 0) > 0) {
             recentConversation
                 .buttons[recentConversation.buttons?.indexOf(button)]
