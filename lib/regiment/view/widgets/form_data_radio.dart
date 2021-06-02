@@ -9,10 +9,12 @@ class FormDataRadio extends StatefulWidget {
   const FormDataRadio({
     @required this.fieldData,
     @required this.updateValue,
+    @required this.canEdit,
   });
 
   final FieldModel fieldData;
   final Function(FieldModel updatedFieldData) updateValue;
+  final bool canEdit;
 
   @override
   _FormDataRadioState createState() => _FormDataRadioState();
@@ -38,14 +40,16 @@ class _FormDataRadioState extends State<FormDataRadio> {
             title: radioList[index + 1] ?? '',
             value: radioList[index],
             radioGroupValue: radioGroupValue,
-            onSelected: (selectedValue) {
-              setState(() {
-                radioGroupValue = selectedValue;
-              });
-              FieldModel updatedFieldData = widget.fieldData;
-              updatedFieldData.value = radioGroupValue.toString();
-              widget.updateValue(updatedFieldData);
-            },
+            onSelected: widget.canEdit
+                ? (selectedValue) {
+                    setState(() {
+                      radioGroupValue = selectedValue;
+                    });
+                    FieldModel updatedFieldData = widget.fieldData;
+                    updatedFieldData.value = radioGroupValue.toString();
+                    widget.updateValue(updatedFieldData);
+                  }
+                : null,
           ),
         );
         index++;
