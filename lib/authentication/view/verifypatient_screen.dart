@@ -111,6 +111,7 @@ class _VerifyPatientState extends State<VerifyPatient> {
   @override
   void dispose() {
     otpViewModel?.stopTimer();
+    otpViewModel?.stopOTPTimer();
     super.dispose();
     con.fbaLog(eveName: 'qurbook_screen_event', eveParams: {
       'eventTime': '${DateTime.now()}',
@@ -195,7 +196,8 @@ class _VerifyPatientState extends State<VerifyPatient> {
                           InkWell(
                             onTap: otpViewModel.timerSeconds == 0
                                 ? () {
-                                    otpViewModel.startTimer();
+                                    otpViewModel?.stopOTPTimer();
+                                    otpViewModel?.startTimer();
                                     if (from == strFromSignUp) {
                                       _resendOtpDetails();
                                     } else if (widget.dataForResendOtp !=
@@ -235,8 +237,15 @@ class _VerifyPatientState extends State<VerifyPatient> {
                           InkWell(
                             onTap: otpViewModel.timerSeconds == 0
                                 ? () {
+                                    otpViewModel?.stopOTPTimer();
                                     otpViewModel.confirmViaCall(
-                                        widget.PhoneNumber ?? '');
+                                      phoneNumber: widget.PhoneNumber ?? '',
+                                      onOtpReceived: (String otpCode) {
+                                        _verifyDetails(
+                                          otpCode: otpCode,
+                                        );
+                                      },
+                                    );
                                   }
                                 : null,
                             child: Container(
@@ -446,14 +455,17 @@ class _VerifyPatientState extends State<VerifyPatient> {
     );
   }
 
-  _verifyDetails() async {
+  _verifyDetails({String otpCode}) async {
     FocusScope.of(context).unfocus();
-    if (_OtpKey.currentState.validate()) {
-      _OtpKey.currentState.save();
+    String otpToVerify = otpCode ?? OtpController.text;
+    if (otpCode != null || _OtpKey.currentState.validate()) {
+      if (otpCode == null) {
+        _OtpKey.currentState.save();
+      }
       LoaderClass.showLoadingDialog(context);
       if (from == strFromSignUp) {
         PatientSignupOtp logInModel = new PatientSignupOtp(
-          verificationCode: OtpController.text,
+          verificationCode: otpToVerify,
           userName: widget.PhoneNumber,
           source: strSource,
           userId: widget.userConfirm
@@ -467,8 +479,7 @@ class _VerifyPatientState extends State<VerifyPatient> {
         _checkResponse(response);
       } else if (from == strFromVerifyFamilyMember) {
         VerifyOTPModel params = VerifyOTPModel(
-            phoneNumber: widget.PhoneNumber,
-            verificationCode: OtpController.text);
+            phoneNumber: widget.PhoneNumber, verificationCode: otpToVerify);
         AddFamilyOTPResponse response =
             await authViewModel.verifyMyOTP(params.toJson());
         if (response.isSuccess) {
@@ -510,7 +521,7 @@ class _VerifyPatientState extends State<VerifyPatient> {
         }
       } else {
         PatientSignupOtp logInModel = new PatientSignupOtp(
-          verificationCode: OtpController.text,
+          verificationCode: otpToVerify,
           userName: widget.PhoneNumber,
           source: strSource,
         );

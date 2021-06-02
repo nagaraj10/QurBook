@@ -7,11 +7,19 @@ import 'package:get/get.dart';
 import 'package:myfhb/authentication/view/confirm_via_call_widget.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:mobile_number/mobile_number.dart';
+import 'package:myfhb/authentication/model/otp_response_model.dart';
 
 class OtpViewModel extends ChangeNotifier {
+  final AuthService _authService = AuthService();
   String timeForResend = '00:30';
   int timerSeconds = 30;
   Timer _timer;
+  Timer _otpTimer;
+  bool isDialogOpen = false;
+
+  void updateDialogStatus(bool newStatus) {
+    isDialogOpen = newStatus;
+  }
 
   void startTimer() {
     timerSeconds = 30;
@@ -37,11 +45,13 @@ class OtpViewModel extends ChangeNotifier {
     if (_timer?.isActive) _timer?.cancel();
   }
 
-  void confirmViaCall(String PhoneNumber) async {
-    print(PhoneNumber);
+  void confirmViaCall({
+    @required String phoneNumber,
+    @required Function(String otpCode) onOtpReceived,
+  }) async {
     LoaderClass.showLoadingDialog(Get.context, canDismiss: false);
     List<dynamic> ivrNumberslist = await getIVRNumbers();
-    print(ivrNumberslist);
+    bool canDialDirectly = false;
     if (Platform.isAndroid) {
       bool hasPermission = await MobileNumber.hasPhonePermission;
       if (!hasPermission) {
@@ -49,21 +59,51 @@ class OtpViewModel extends ChangeNotifier {
         await MobileNumber.requestPhonePermission;
       } else {
         final List<SimCard> simCards = await MobileNumber.getSimCards;
-        simCards?.forEach((simCard) { simCard });
-        print(simCards);
-        LoaderClass.hideLoadingDialog(Get.context);
-        Get.dialog(
-          ConfirmViaCallWidget(
-            ivrNumbersList: ivrNumberslist,
-          ),
-        );
+        simCards?.forEach((simCard) {
+          if (phoneNumber ==
+              ('+${simCard?.countryPhonePrefix ?? ''}${simCard?.number ?? ''}')) {
+            canDialDirectly = true;
+          }
+        });
       }
     }
+    LoaderClass.hideLoadingDialog(Get.context);
+    updateDialogStatus(true);
+    Get.dialog(
+      ConfirmViaCallWidget(
+        ivrNumbersList: ivrNumberslist,
+        canDialDirectly: canDialDirectly,
+      ),
+    );
+    _otpTimer = Timer.periodic(
+      Duration(seconds: 5),
+      (Timer timer) async {
+        final otpResponse =
+            await getOTPFromCall(phoneNumber?.replaceAll('+', ''));
+        if (otpResponse?.isSuccess ?? false) {
+          timer?.cancel();
+          if (isDialogOpen) {
+            updateDialogStatus(true);
+            Get.back();
+          }
+          onOtpReceived(otpResponse?.otpData?.otpCode ?? '');
+          notifyListeners();
+        }
+      },
+    );
+  }
+
+  void stopOTPTimer() {
+    if (_otpTimer?.isActive ?? false) _otpTimer?.cancel();
   }
 
   Future<dynamic> getIVRNumbers() async {
-    final AuthService _authService = AuthService();
-    var otpResponse = await _authService.getIVRNumbers();
+    var ivrResponse = await _authService.getIVRNumbers();
+    return ivrResponse;
+  }
+
+  Future<OtpResponseModel> getOTPFromCall(String phoneNumber) async {
+    var otpResponse = await _authService.getOTPFromCall(phoneNumber);
     return otpResponse;
   }
 }
