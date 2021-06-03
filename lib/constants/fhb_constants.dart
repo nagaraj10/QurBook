@@ -243,6 +243,7 @@ const String Family_Member_Added =
     'Your family member has been added successfully';
 const String VerifyEmail = 'Tap to verify Email address';
 const String otp_assets = 'assets/icons/otp_icon.png';
+const String planDownload = 'assets/icons/planDownload.png';
 
 const String enterFirstName = 'Enter First Name';
 const String enterLastName = 'Enter Last Name';
