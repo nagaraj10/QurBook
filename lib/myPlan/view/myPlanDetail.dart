@@ -275,15 +275,20 @@ class PlanDetail extends State<MyPlanDetail> {
                           onLoadStop: (InAppWebViewController controller,
                               String url) {},
                           onDownloadStart: (controller, url) async {
-                            final taskId = await FlutterDownloader.enqueue(
-                              url: url,
-                              savedDir:
-                                  (await getExternalStorageDirectory()).path,
-                              showNotification: true,
-                              // show download progress in status bar (for Android)
-                              openFileFromNotification:
-                                  true, // click on notification to open downloaded file (for Android)
-                            );
+                            final common = CommonUtil();
+                            final updatedData = common.getFileNameAndUrl(url);
+                            if (updatedData.isEmpty) {
+                              common.showStatusToUser(
+                                  ResultFromResponse(false,
+                                      'incorrect url, Failed to download'),
+                                  _scaffoldKey);
+                            } else {
+                              if (Platform.isIOS) {
+                                downloadFileForIos(updatedData);
+                              } else {
+                                common.downloader(updatedData.first);
+                              }
+                            }
                           }),
                       //),
                     )

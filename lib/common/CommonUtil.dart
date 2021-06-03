@@ -2839,6 +2839,7 @@ class CommonUtil {
       updatedUrl = url.replaceAll('.htm', '.pdf');
     else if (fileExention == '.html')
       updatedUrl = url.replaceAll('.html', '.pdf');
+    else if (fileExention == '.pdf') updatedUrl = url;
     if (updatedUrl != null) {
       final File fileupdated = File(updatedUrl);
       fileName = basename(fileupdated.path);

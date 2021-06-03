@@ -454,7 +454,19 @@ class PlanDetail extends State<MyPlanDetailView> {
                                 String url) {},
                             onDownloadStart: (controller, url) async {
                               final common = CommonUtil();
-                              final taskId = await common.downloader(url);
+                              final updatedData = common.getFileNameAndUrl(url);
+                              if (updatedData.isEmpty) {
+                                common.showStatusToUser(
+                                    ResultFromResponse(false,
+                                        'incorrect url, Failed to download'),
+                                    _scaffoldKey);
+                              } else {
+                                if (Platform.isIOS) {
+                                  downloadFileForIos(updatedData);
+                                } else {
+                                  common.downloader(updatedData.first);
+                                }
+                              }
                             }),
                         //),
                       )
