@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
@@ -10,6 +12,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
+import 'package:myfhb/constants/responseModel.dart';
 import 'package:myfhb/myPlan/model/myPlanDetailModel.dart';
 import 'package:myfhb/myPlan/viewModel/myPlanViewModel.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
@@ -66,6 +69,7 @@ class PlanDetail extends State<MyPlanDetail> {
   String catIcon = '';
   String providerIcon = '';
   String descriptionURL = '';
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   InAppWebViewController webView;
 
@@ -92,6 +96,7 @@ class PlanDetail extends State<MyPlanDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: _scaffoldKey,
         appBar: AppBar(
           flexibleSpace: GradientAppBar(),
           leading: GestureDetector(
@@ -199,6 +204,55 @@ class PlanDetail extends State<MyPlanDetail> {
                 ),
               ),
             ),
+            descriptionURL != null
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        OutlineButton.icon(
+                          icon: ImageIcon(
+                            AssetImage(planDownload),
+                            color: Color(CommonUtil().getMyPrimaryColor()),
+                          ),
+                          label: Text(
+                            'Download Plan',
+                            style: TextStyle(
+                              fontSize: 14.0.sp,
+                              fontWeight: FontWeight.w500,
+                              decoration: TextDecoration.underline,
+                              color: Color(CommonUtil().getMyPrimaryColor()),
+                            ),
+                          ),
+                          onPressed: () async {
+                            final common = CommonUtil();
+                            final updatedData =
+                                common.getFileNameAndUrl(descriptionURL);
+                            if (updatedData.isEmpty) {
+                              common.showStatusToUser(
+                                  ResultFromResponse(false,
+                                      'incorrect url, Failed to download'),
+                                  _scaffoldKey);
+                            } else {
+                              if (Platform.isIOS) {
+                                downloadFileForIos(updatedData);
+                              } else {
+                                common.downloader(updatedData.first);
+                              }
+                            }
+                          },
+                          borderSide: BorderSide(
+                            color: Color(
+                              CommonUtil().getMyPrimaryColor(),
+                            ),
+                            style: BorderStyle.solid,
+                            width: 1,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : Container(),
             Expanded(
               child: descriptionURL != null && descriptionURL != ''
                   ? Container(
@@ -424,6 +478,11 @@ class PlanDetail extends State<MyPlanDetail> {
           ],
         ));
   }*/
+  downloadFileForIos(List<String> updatedData) async {
+    final response = await CommonUtil()
+        .loadPdf(url: updatedData.first, fileName: updatedData.last);
+    CommonUtil().showStatusToUser(response, _scaffoldKey);
+  }
 
   String getImage() {
     String image;

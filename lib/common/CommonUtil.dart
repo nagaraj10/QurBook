@@ -11,6 +11,7 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:get/get.dart';
@@ -30,6 +31,7 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/fhb_parameters.dart';
+import 'package:myfhb/constants/responseModel.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
 import 'package:myfhb/device_integration/viewModel/deviceDataHelper.dart';
@@ -86,6 +88,7 @@ import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:myfhb/telehealth/features/chat/view/BadgeIcon.dart';
+import 'package:myfhb/telehealth/features/chat/view/pdfiosViewer.dart';
 import 'package:package_info/package_info.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -2812,6 +2815,75 @@ class CommonUtil {
 
     if (appDir.existsSync()) {
       appDir.deleteSync(recursive: true);
+    }
+  }
+
+  Future<String> downloader(String url) async {
+    return await FlutterDownloader.enqueue(
+      url: url,
+      savedDir: '/storage/emulated/0/Download/',
+      showNotification: true,
+      // show download progress in status bar (for Android)
+      openFileFromNotification:
+          true, // click on notification to open downloaded file (for Android)
+    );
+  }
+
+  List<String> getFileNameAndUrl(String url) {
+    String updatedUrl;
+    String fileName;
+    List<String> response = [];
+    final File file = File(url);
+    final fileExention = extension(file.path);
+    if (fileExention == '.htm')
+      updatedUrl = url.replaceAll('.htm', '.pdf');
+    else if (fileExention == '.html')
+      updatedUrl = url.replaceAll('.html', '.pdf');
+    if (updatedUrl != null) {
+      final File fileupdated = File(updatedUrl);
+      fileName = basename(fileupdated.path);
+    }
+    if (updatedUrl != null && fileName != null)
+      response.addAll([updatedUrl, fileName]);
+    return response;
+  }
+
+  Future<ResultFromResponse> loadPdf({String url, String fileName}) async {
+    try {
+      final response = await http.get(url);
+      final responseJson = response.bodyBytes;
+      final directory = await getApplicationDocumentsDirectory();
+      String path = directory.path;
+      final file = File('$path/$fileName');
+      file.writeAsBytes(responseJson);
+      path = "file://" + file.path;
+      return ResultFromResponse(true, path);
+    } catch (e) {
+      print(e.toString());
+      return ResultFromResponse(false, 'Failed to download the file');
+    }
+  }
+
+  showStatusToUser(
+      ResultFromResponse response, GlobalKey<ScaffoldState> scaffoldKey) {
+    if (response.status) {
+      scaffoldKey.currentState.showSnackBar(SnackBar(
+        backgroundColor: Colors.green,
+        content: Text('Downloaded'),
+        action: SnackBarAction(
+          label: 'Open',
+          onPressed: () {
+            Get.to(PDFiOSViewer(
+              path: response.result,
+            ));
+          },
+        ),
+      ));
+    } else {
+      scaffoldKey.currentState.showSnackBar(SnackBar(
+        backgroundColor: Colors.red,
+        content: Text(response.result),
+      ));
     }
   }
 }
