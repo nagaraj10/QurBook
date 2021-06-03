@@ -1,18 +1,28 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
+import 'package:myfhb/constants/responseModel.dart';
+import 'package:myfhb/telehealth/features/chat/view/pdfiosViewer.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:path/path.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:get/get.dart';
+import 'package:path/path.dart';
+import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:http/http.dart' as http;
 import 'package:myfhb/plan_dashboard/model/MetaDataForURL.dart';
+import 'dart:developer' as dev;
 
 class MyPlanDetailView extends StatefulWidget {
   final String title;
@@ -66,7 +76,7 @@ class PlanDetail extends State<MyPlanDetailView> {
   String iconApi = '';
   String catIcon = '';
   InAppWebViewController webView;
-
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   void initState() {
     super.initState();
@@ -91,6 +101,7 @@ class PlanDetail extends State<MyPlanDetailView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         flexibleSpace: GradientAppBar(),
         leading: GestureDetector(
@@ -352,6 +363,55 @@ class PlanDetail extends State<MyPlanDetailView> {
                   ),
                 ),
               ),
+              widget?.metaDataForURL?.descriptionURL != null
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          OutlineButton.icon(
+                            icon: ImageIcon(
+                              AssetImage(planDownload),
+                              color: Color(CommonUtil().getMyPrimaryColor()),
+                            ),
+                            label: Text(
+                              'Download Plan',
+                              style: TextStyle(
+                                fontSize: 14.0.sp,
+                                fontWeight: FontWeight.w500,
+                                decoration: TextDecoration.underline,
+                                color: Color(CommonUtil().getMyPrimaryColor()),
+                              ),
+                            ),
+                            onPressed: () async {
+                              final common = CommonUtil();
+                              final updatedData = common.getFileNameAndUrl(
+                                  widget?.metaDataForURL?.descriptionURL);
+                              if (updatedData.isEmpty) {
+                                common.showStatusToUser(
+                                    ResultFromResponse(false,
+                                        'incorrect url, Failed to download'),
+                                    _scaffoldKey);
+                              } else {
+                                if (Platform.isIOS) {
+                                  downloadFileForIos(updatedData);
+                                } else {
+                                  common.downloader(updatedData.first);
+                                }
+                              }
+                            },
+                            borderSide: BorderSide(
+                              color: Color(
+                                CommonUtil().getMyPrimaryColor(),
+                              ),
+                              style: BorderStyle.solid,
+                              width: 1,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  : Container(),
               SizedBox(
                 height: 10.h,
               ),
@@ -393,15 +453,20 @@ class PlanDetail extends State<MyPlanDetailView> {
                             onLoadStop: (InAppWebViewController controller,
                                 String url) {},
                             onDownloadStart: (controller, url) async {
-                              final taskId = await FlutterDownloader.enqueue(
-                                url: url,
-                                savedDir:
-                                    (await getExternalStorageDirectory()).path,
-                                showNotification: true,
-                                // show download progress in status bar (for Android)
-                                openFileFromNotification:
-                                    true, // click on notification to open downloaded file (for Android)
-                              );
+                              final common = CommonUtil();
+                              final updatedData = common.getFileNameAndUrl(url);
+                              if (updatedData.isEmpty) {
+                                common.showStatusToUser(
+                                    ResultFromResponse(false,
+                                        'incorrect url, Failed to download'),
+                                    _scaffoldKey);
+                              } else {
+                                if (Platform.isIOS) {
+                                  downloadFileForIos(updatedData);
+                                } else {
+                                  common.downloader(updatedData.first);
+                                }
+                              }
                             }),
                         //),
                       )
@@ -500,6 +565,12 @@ class PlanDetail extends State<MyPlanDetailView> {
     }
 
     return image;
+  }
+
+  downloadFileForIos(List<String> updatedData) async {
+    final response = await CommonUtil()
+        .loadPdf(url: updatedData.first, fileName: updatedData.last);
+    CommonUtil().showStatusToUser(response, _scaffoldKey);
   }
 
   Color getTextColor(bool disable, String isSubscribe) {
