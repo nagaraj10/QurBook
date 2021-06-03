@@ -152,6 +152,14 @@ const String strUser = "user";
 const String strFirebaseToken = 'Firebase Token from Login Page';
 const String strNetworkIssue = 'Please Check Network Connection';
 const String strresendOtp = 'Resend OTP';
+const String strVerifyCall = 'Confirm via Call';
+const String strOrText = 'or';
+const String strOtpNotReceived =
+    'Don\'t you receive the OTP ? you can re-try in ';
+const String strCallFromNumber =
+    'Call from your registered number to complete the process';
+const String strCallDirect =
+    'Click & call anyone of the below numbers to complete the process';
 
 //Strings used in ChangePassword
 const String strNewPassword = 'newPassword';
@@ -169,8 +177,7 @@ const String strIsSkipMFA = 'isSkipMFA';
 const String strsupportEmail =
     'If OTP is not received within 5mins, please contact to support at support@qurhealth.in';
 
-const String strEmptyWebView =
-    'Plan summary will be available soon';
+const String strEmptyWebView = 'Plan summary will be available soon';
 
 void openEmail({String sub = 'App Feedback', String body = ''}) async {
   final Uri params = Uri(

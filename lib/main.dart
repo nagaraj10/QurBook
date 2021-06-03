@@ -64,6 +64,7 @@ import 'telehealth/features/appointments/model/fetchAppointments/past.dart';
 import 'package:myfhb/src/utils/screenutils/screenutil.dart';
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
+import 'package:myfhb/authentication/view_model/otp_view_model.dart';
 
 var firstCamera;
 List<CameraDescription> listOfCameras;
@@ -158,7 +159,7 @@ Future<void> main() async {
         );
     await Permission.storage.request();
   }
-  
+
   // check if the app install on first time
   CommonUtil().isFirstTime();
 
@@ -783,6 +784,9 @@ class _MyFHBState extends State<MyFHB> {
         ),
         provider.ChangeNotifierProvider<RegimentViewModel>(
           create: (_) => RegimentViewModel(),
+        ),
+        provider.ChangeNotifierProvider<OtpViewModel>(
+          create: (_) => OtpViewModel(),
         ),
       ],
       child: LayoutBuilder(
