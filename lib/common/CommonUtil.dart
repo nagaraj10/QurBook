@@ -2857,7 +2857,7 @@ class CommonUtil {
       String path = directory.path;
       final file = File('$path/$fileName');
       file.writeAsBytes(responseJson);
-      path = "file://" + file.path;
+      path = url;
       return ResultFromResponse(true, path);
     } catch (e) {
       print(e.toString());
@@ -2875,7 +2875,7 @@ class CommonUtil {
           label: 'Open',
           onPressed: () {
             Get.to(PDFiOSViewer(
-              path: response.result,
+              url: response.result,
             ));
           },
         ),
