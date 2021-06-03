@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:get/get.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/authentication/view_model/otp_view_model.dart';
+import 'package:myfhb/authentication/view/call_dial_widget.dart';
 import 'package:provider/provider.dart';
 
 class ConfirmViaCallWidget extends StatelessWidget {
@@ -53,56 +52,29 @@ class ConfirmViaCallWidget extends StatelessWidget {
               vertical: 10.0.h,
             ),
             child: Center(
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: ivrNumbersList?.length ?? 0,
-                itemBuilder: (context, index) {
-                  return ('${ivrNumbersList[index] ?? ''}').isNotEmpty
-                      ? InkWell(
-                          onTap: canDialDirectly
-                              ? () async {
-                                  if (await canLaunch(
-                                      'tel:${ivrNumbersList[index] ?? ''}')) {
-                                    await launch(
-                                        'tel:${ivrNumbersList[index] ?? ''}');
-                                  }
-                                }
-                              : null,
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                              vertical: 10.0.h,
-                            ),
-                            constraints: BoxConstraints(minWidth: 0.5.sw),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  Icons.phone,
-                                  size: 24.0.sp,
-                                  color: Colors.blueAccent,
-                                ),
-                                SizedBox(
-                                  width: 10.0.w,
-                                ),
-                                Text(
-                                  ivrNumbersList[index] ?? '',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 18.0.sp,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
-                      : const SizedBox.shrink();
-                },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: getPhoneWidgets(),
               ),
             ),
           ),
         ],
       ),
     );
+  }
+
+  List<Widget> getPhoneWidgets() {
+    final phoneWidgets = <Widget>[];
+    ivrNumbersList?.forEach(
+      (ivrNumber) {
+        phoneWidgets.add(('${ivrNumber ?? ''}').isNotEmpty
+            ? CallDialWidget(
+                canDialDirectly: canDialDirectly,
+                phoneNumber: ivrNumber ?? '',
+              )
+            : const SizedBox.shrink());
+      },
+    );
+    return phoneWidgets;
   }
 }
