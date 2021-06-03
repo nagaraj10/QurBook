@@ -382,7 +382,6 @@ class _MyPlanState extends State<MyPlanList> {
                           Align(
                             alignment: Alignment.center,
                             child: SizedBoxWithChild(
-                              width: 95.0.w,
                               height: 32.0.h,
                               child: FlatButton(
                                 shape: RoundedRectangleBorder(
