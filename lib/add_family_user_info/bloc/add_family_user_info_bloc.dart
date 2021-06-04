@@ -364,6 +364,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
             .then((value) {
           createDeviceSelectionModel = value;
           if (createDeviceSelectionModel.isSuccess) {
+            userMappingId = createDeviceSelectionModel.result;
             updateDeviceSelectionModel(preferredLanguage: preferredLanguage);
           } else {
             var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
@@ -386,6 +387,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
                 .then((value) {
               createDeviceSelectionModel = value;
               if (createDeviceSelectionModel.isSuccess) {
+                userMappingId = createDeviceSelectionModel.result;
                 updateDeviceSelectionModel(
                     preferredLanguage: preferredLanguage);
               }
