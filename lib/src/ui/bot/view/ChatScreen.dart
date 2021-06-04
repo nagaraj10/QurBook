@@ -110,8 +110,9 @@ class _ChatScreenState extends State<ChatScreen>
           value: languageCode,
           child: Row(
             children: [
-              Checkbox(
-                value: languageCode == currentLanguage,
+              Radio(
+                value: languageCode,
+                groupValue: currentLanguage,
               ),
               Text(
                 toBeginningOfSentenceCase(language),
