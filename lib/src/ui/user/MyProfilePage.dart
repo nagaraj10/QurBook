@@ -64,6 +64,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
 
   bool _isEditable = false;
   double sliverBarHeight = 220;
+  AddFamilyUserInfoBloc addFamilyUserInfoBloc;
 
   @override
   void initState() {
@@ -71,6 +72,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
     // getPreferredLanguage();
     super.initState();
     languageBlock = new LanguageRepository();
+    addFamilyUserInfoBloc = new AddFamilyUserInfoBloc();
+    addFamilyUserInfoBloc.getDeviceSelectionValues().then((value) {});
   }
 
   @override

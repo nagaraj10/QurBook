@@ -159,9 +159,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     getSupportedLanguages();
     addFamilyUserInfoBloc = new AddFamilyUserInfoBloc();
     _addFamilyUserInfoRepository = new AddFamilyUserInfoRepository();
-    addFamilyUserInfoBloc.getDeviceSelectionValues();
+    addFamilyUserInfoBloc
+        .getDeviceSelectionValues()
+        .then((value) => fetchUserProfileInfo());
     setValuesInEditText();
-    fetchUserProfileInfo();
+
     languageBlock = new LanguageRepository();
   }
 
@@ -417,27 +419,30 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                             maxLength: 3))
                   ],
                 ),
-                Padding(
-                  padding:
-                      EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
-                  child: DropdownButton(
-                    isExpanded: true,
-                    hint: Text(
-                      CommonConstants.preferredLanguage,
-                      style: TextStyle(
-                        fontSize: 16.0.sp,
-                      ),
-                    ),
-                    value: selectedLanguage,
-                    items: languagesList,
-                    onChanged: (String newLanguage) {
-                      setState(() {
-                        selectedLanguage = newLanguage;
-                      });
-                      addFamilyUserInfoBloc.preferredLanguage = newLanguage;
-                    },
-                  ),
-                ),
+                widget.arguments.fromClass == CommonConstants.user_update
+                    ? Padding(
+                        padding: EdgeInsets.only(
+                            left: 20, right: 20, top: 5, bottom: 0),
+                        child: DropdownButton(
+                          isExpanded: true,
+                          hint: Text(
+                            CommonConstants.preferredLanguage,
+                            style: TextStyle(
+                              fontSize: 16.0.sp,
+                            ),
+                          ),
+                          value: selectedLanguage,
+                          items: languagesList,
+                          onChanged: (String newLanguage) {
+                            setState(() {
+                              selectedLanguage = newLanguage;
+                            });
+                            addFamilyUserInfoBloc.preferredLanguage =
+                                newLanguage;
+                          },
+                        ),
+                      )
+                    : Container(),
                 _showDateOfBirthTextField(),
                 AddressTypeWidget(
                   addressResult: _addressResult,
@@ -1598,26 +1603,37 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
     profileResult.additionalInfo = additionalInfo;
 
-    List<UserProfileSettingCollection3> userProfileSettingCollection =
-        new List();
+    try {
+      List<UserProfileSettingCollection3> userProfileSettingCollection =
+          new List();
 
-    userProfileSettingCollection =
-        myProfile.result.userProfileSettingCollection3;
+      UserProfileSettingCollection3 userProfileSettingCollection3Obj =
+          new UserProfileSettingCollection3();
+      ProfileSetting profileSetting = new ProfileSetting();
+      userProfileSettingCollection =
+          widget.arguments.myProfileResult.userProfileSettingCollection3;
+      if (userProfileSettingCollection.length > 0) {
+        userProfileSettingCollection3Obj =
+            myProfile.result.userProfileSettingCollection3[0];
+        if (userProfileSettingCollection3Obj.profileSetting != null) {
+          profileSetting = userProfileSettingCollection3Obj.profileSetting;
+          userProfileSettingCollection3Obj.profileSetting.preferred_language =
+              selectedLanguage;
+        } else {
+          profileSetting.preferred_language = selectedLanguage;
+          userProfileSettingCollection3Obj.profileSetting = profileSetting;
+        }
+        userProfileSettingCollection.insert(
+            0, userProfileSettingCollection3Obj);
+      } else {
+        profileSetting.preferred_language = selectedLanguage;
+        userProfileSettingCollection3Obj.profileSetting = profileSetting;
+        userProfileSettingCollection.add(userProfileSettingCollection3Obj);
+      }
 
-    UserProfileSettingCollection3 userProfileSettingCollection3Obj =
-        new UserProfileSettingCollection3();
-
-    if (myProfile.result.userProfileSettingCollection3.length > 0) {
-      userProfileSettingCollection3Obj =
-          myProfile.result.userProfileSettingCollection3[0];
-    }
-
-    userProfileSettingCollection3Obj.profileSetting.preferred_language =
-        selectedLanguage;
-
-    userProfileSettingCollection.add(userProfileSettingCollection3Obj);
-
-    profileResult.userProfileSettingCollection3 = userProfileSettingCollection;
+      profileResult.userProfileSettingCollection3 =
+          userProfileSettingCollection;
+    } catch (e) {}
 
     if (currentselectedBloodGroup != null &&
         currentselectedBloodGroupRange != null) {
@@ -1635,17 +1651,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         userAddressCollection3.id =
             widget?.arguments?.sharedbyme?.child?.userAddressCollection3[0].id;
       }
-
-      //allow family member update their email address when they non primary user
-      // if (widget
-      //     .arguments?.sharedbyme?.child?.userContactCollection3.isNotEmpty) {
-      //   UserContactCollection3 userContact = widget.arguments?.sharedbyme?.child
-      //       ?.userContactCollection3[0] as UserContactCollection3;
-      //   userContact.email = emailController.text;
-      //   List<UserContactCollection3> userContactCollection3List = new List();
-      //   userContactCollection3List.add(userContact);
-      //   profileResult.userContactCollection3 = userContactCollection3List;
-      // }
     } else if (widget.arguments.fromClass == CommonConstants.user_update) {
       addFamilyUserInfoBloc.isUpdate = false;
       profileResult.id = widget.arguments.myProfileResult.id;
@@ -1802,7 +1807,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           } else {
             Navigator.pop(dialogContext);
             Alert.displayAlertPlain(context,
-                title: variable.Error, content: value.message);
+                title: variable.Error,
+                content: value?.message ?? 'Error while updating');
           }
         });
       } else {
