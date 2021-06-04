@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/ClipImage/ClipOvalImage.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/bookmark_record/bloc/bookmarkRecordBloc.dart';
@@ -213,9 +214,12 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
               children: <Widget>[
                 ClipOval(
                     child: mediaMetaInfoObj.metadata.doctor != null
-                        ? CommonUtil().getDoctorProfileImageWidget(
+                        ? getProfilePicWidget(
                             mediaMetaInfoObj
-                                .metadata.doctor.profilePicThumbnailUrl)
+                                .metadata.doctor.profilePicThumbnailUrl,
+                            mediaMetaInfoObj.metadata.doctor.firstName,
+                            mediaMetaInfoObj.metadata.doctor.lastName,
+                            Color(CommonUtil().getMyPrimaryColor()))
                         : Container(
                             width: 50,
                             height: 50,
