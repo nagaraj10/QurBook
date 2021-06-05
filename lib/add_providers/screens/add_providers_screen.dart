@@ -214,7 +214,11 @@ class AddProvidersState extends State<AddProviders> {
         title: Text(
           widget.arguments?.searchKeyWord != null &&
                   widget.arguments.searchKeyWord.isNotEmpty
-              ? 'Add ${widget.arguments.searchKeyWord.substring(0, widget.arguments.searchKeyWord.length - 1)}'
+              ? (widget.arguments.fromClass == router.rt_myprovider
+                      ? variable.Update
+                      : variable.Add) +
+                  ' ' +
+                  '${widget.arguments.searchKeyWord.substring(0, widget.arguments.searchKeyWord.length - 1)}'
               : '',
           style: TextStyle(
             fontSize: 18.0.sp,
@@ -240,7 +244,12 @@ class AddProvidersState extends State<AddProviders> {
                             widget.arguments.hasData == false ? true : false,
                         child: Text(
                           widget.arguments.hasData == false
-                              ? 'Add ${widget.arguments.searchKeyWord}'
+                              ? (widget.arguments.fromClass ==
+                                          router.rt_myprovider
+                                      ? variable.Update
+                                      : variable.Add) +
+                                  ' ' +
+                                  '${widget.arguments.searchKeyWord}'
                               : '',
                           style: TextStyle(
                               fontSize: 18.0.sp,
