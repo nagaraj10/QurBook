@@ -1,51 +1,56 @@
 import 'package:flutter/material.dart';
+import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import 'package:myfhb/widgets/RaisedGradientButton.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CallDialWidget extends StatelessWidget {
   const CallDialWidget({
-    @required this.canDialDirectly,
     @required this.phoneNumber,
+    @required this.phoneNumberName,
   });
 
-  final bool canDialDirectly;
   final String phoneNumber;
+  final String phoneNumberName;
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: canDialDirectly
-          ? () async {
-              if (await canLaunch('tel:$phoneNumber')) {
-                await launch('tel:$phoneNumber');
-              }
-            }
-          : null,
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          vertical: 10.0.h,
-        ),
-        width: 160.0.w,
+    return Container(
+      padding: EdgeInsets.symmetric(
+        vertical: 10.0.h,
+        horizontal: 10.0.w,
+      ),
+      child: RaisedGradientButton(
+        gradient: LinearGradient(colors: [
+          Color(new CommonUtil().getMyPrimaryColor()),
+          Color(new CommonUtil().getMyGredientColor()),
+        ]),
+        width: 220.0.w,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.phone,
-              size: 24.0.sp,
-              color: Colors.blueAccent,
+            Text(
+              phoneNumberName,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16.0.sp,
+              ),
             ),
             SizedBox(
               width: 10.0.w,
             ),
-            Text(
-              phoneNumber,
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 18.0.sp,
-              ),
+            Icon(
+              Icons.phone,
+              size: 24.0.sp,
+              color: Colors.white,
             ),
           ],
         ),
+        onPressed: () async {
+          if (await canLaunch('tel:$phoneNumber')) {
+            await launch('tel:$phoneNumber');
+          }
+        },
       ),
     );
   }

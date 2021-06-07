@@ -39,6 +39,7 @@ import 'package:myfhb/authentication/model/patientlogin_model.dart'
 import 'package:myfhb/constants/fhb_constants.dart' as con;
 import 'package:myfhb/authentication/view_model/otp_view_model.dart';
 import 'package:provider/provider.dart';
+import 'package:myfhb/widgets/RaisedGradientButton.dart';
 
 class VerifyPatient extends StatefulWidget {
   VerifyPatient(
@@ -160,7 +161,13 @@ class _VerifyPatientState extends State<VerifyPatient> {
                           _resetTextFields(strOtp, strOtpHint, OtpController),
                         ],
                       ),
-                      SizedBox(height: 5.0.h),
+                      // (widget.dataForResendOtp != null ||
+                      //         from == strFromVerifyFamilyMember)
+                      //     ? _getResendForSignIN()
+                      //     : Container(),
+                      SizedBox(height: 10.0.h),
+                      _resetButton(),
+                      SizedBox(height: 10.0.h),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -190,87 +197,109 @@ class _VerifyPatientState extends State<VerifyPatient> {
                           ),
                         ],
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          InkWell(
-                            onTap: otpViewModel.timerSeconds == 0
-                                ? () {
-                                    otpViewModel?.stopOTPTimer();
-                                    otpViewModel?.startTimer();
-                                    if (from == strFromSignUp) {
-                                      _resendOtpDetails();
-                                    } else if (widget.dataForResendOtp !=
-                                            null ||
-                                        from == strFromVerifyFamilyMember) {
-                                      _startTimer();
-                                    }
-                                  }
-                                : null,
-                            child: Container(
-                              padding: EdgeInsets.symmetric(vertical: 5),
-                              alignment: Alignment.bottomRight,
-                              child: Text(
-                                strresendOtp,
-                                style: TextStyle(
-                                    color: otpViewModel.timerSeconds == 0
-                                        ? Color(
-                                            CommonUtil().getMyPrimaryColor())
-                                        : Colors.grey,
-                                    fontSize: 15.0.sp,
-                                    fontWeight: FontWeight.w600),
-                              ),
+                      Visibility(
+                        visible: otpViewModel.timerSeconds == 0,
+                        child: Column(
+                          children: [
+                            SizedBox(height: 10.0.h),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                RaisedGradientButton(
+                                  gradient: LinearGradient(colors: [
+                                    Color(new CommonUtil().getMyPrimaryColor()),
+                                    Color(
+                                        new CommonUtil().getMyGredientColor()),
+                                  ]),
+                                  width: 200.0.w,
+                                  child: Text(
+                                    strresendOtp,
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 15.0.sp,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                  onPressed: otpViewModel.timerSeconds == 0
+                                      ? () {
+                                          otpViewModel?.stopOTPTimer();
+                                          otpViewModel?.startTimer();
+                                          if (from == strFromSignUp) {
+                                            _resendOtpDetails();
+                                          } else if (widget.dataForResendOtp !=
+                                                  null ||
+                                              from ==
+                                                  strFromVerifyFamilyMember) {
+                                            _startTimer();
+                                          }
+                                        }
+                                      : null,
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
-                      Text(
-                        strOrText,
-                        style: TextStyle(
-                          fontSize: 15.0.sp,
-                          color: Colors.black,
+                            SizedBox(height: 5.0.h),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Divider(
+                                    thickness: 2.0.h,
+                                    indent: 5.0.w,
+                                    endIndent: 5.0.w,
+                                  ),
+                                ),
+                                Text(
+                                  strOrText,
+                                  style: TextStyle(
+                                    fontSize: 15.0.sp,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Divider(
+                                    thickness: 2.0.h,
+                                    indent: 5.0.w,
+                                    endIndent: 5.0.w,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 5.0.h),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                RaisedGradientButton(
+                                  gradient: LinearGradient(colors: [
+                                    Color(new CommonUtil().getMyPrimaryColor()),
+                                    Color(
+                                        new CommonUtil().getMyGredientColor()),
+                                  ]),
+                                  width: 200.0.w,
+                                  child: Text(
+                                    strVerifyCall,
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 15.0.sp,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                  onPressed: otpViewModel.timerSeconds == 0
+                                      ? () {
+                                          otpViewModel?.stopOTPTimer();
+                                          otpViewModel.confirmViaCall(
+                                            phoneNumber:
+                                                widget.PhoneNumber ?? '',
+                                            onOtpReceived: (String otpCode) {
+                                              _verifyDetails(
+                                                otpCode: otpCode,
+                                              );
+                                            },
+                                          );
+                                        }
+                                      : null,
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          InkWell(
-                            onTap: otpViewModel.timerSeconds == 0
-                                ? () {
-                                    otpViewModel?.stopOTPTimer();
-                                    otpViewModel.confirmViaCall(
-                                      phoneNumber: widget.PhoneNumber ?? '',
-                                      onOtpReceived: (String otpCode) {
-                                        _verifyDetails(
-                                          otpCode: otpCode,
-                                        );
-                                      },
-                                    );
-                                  }
-                                : null,
-                            child: Container(
-                              padding: EdgeInsets.symmetric(vertical: 5),
-                              alignment: Alignment.bottomRight,
-                              child: Text(
-                                strVerifyCall,
-                                style: TextStyle(
-                                    color: otpViewModel.timerSeconds == 0
-                                        ? Color(
-                                            CommonUtil().getMyPrimaryColor())
-                                        : Colors.grey,
-                                    fontSize: 15.0.sp,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      // (widget.dataForResendOtp != null ||
-                      //         from == strFromVerifyFamilyMember)
-                      //     ? _getResendForSignIN()
-                      //     : Container(),
-                      SizedBox(height: 10.0.h),
-                      _resetButton(),
                       SizedBox(height: height * .015),
                     ],
                   ),
