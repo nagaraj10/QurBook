@@ -113,6 +113,13 @@ const String INTRO_SLIDE_DESC_5 =
 const String KEY_SHOWCASE_DASHBOARD = 'KEY_SHOWCASE_DASHBOARD';
 const String KEY_SHOWCASE_HOMESCREEN = 'KEY_SHOWCASE_HOMESCREEN';
 const String KEY_SHOWCASE_CAMERASCREEN = 'KEY_SHOWCASE_CAMERASCREEN';
+
+const String KEY_SHOWCASE_Plan = 'KEY_SHOWCASE_Plan';
+const String KEY_SHOWCASE_MyPlan = 'KEY_SHOWCASE_MyPlan';
+const String KEY_SHOWCASE_Regimen = 'KEY_SHOWCASE_Regimen';
+const String KEY_SHOWCASE_Symptom = 'KEY_SHOWCASE_Symptom';
+const String KEY_SHOWCASE_hospitalList = 'KEY_SHOWCASE_hospitalList';
+
 const String KEY_SHOWCASE_MAYA = 'KEY_SHOWCASE_MAYA';
 const String STR_OTPMISMATCHEDFOREMAIL = 'Verification Code Mismatched';
 const String STR_UN_AUTH_USER = 'STR_UN_AUTH_USER';
@@ -174,7 +181,28 @@ const String NO_DATA_OTHERS =
     'Ofcourse! Add files here to store any other medical records';
 const String COVER_IMG_DESC = 'Add style. \nTap here to add your favorite DP.';
 const String COVER_IMG_TITLE = 'Cover Image';
-
+const String HospitalDescription =
+    'Choose your Hospital and Tap to see the QurPlans offered by them';
+const String SubscribeDescription =
+    'Tap on Subscribe button to enroll for the QurPlan and complete Payment Process';
+const String MyPlanCard =
+    'View the list of QurPlans that you’ve Subscribed and Tap on the Plan name for more Details';
+const String SubscribedPlans = 'Subscribed Plans';
+const String Subscribe = 'Subscribe';
+const String GoToRegimentDescription =
+    'Tap here to see your updated Regimen for each Plan’s subscription';
+const String SymptomsDescription = 'Tap here to view Symptoms list';
+const String DailyScheduleDescription = 'Tap here to set your Daily Schedule';
+const String Schedule = 'Schedule';
+const String LogActivity = 'Log Activity';
+const String CardTap =
+    'Tap on the card or Tick mark on it to mark your activity accomplishment';
+const String Symptoms = 'Symptoms';
+const String LogSymptoms = 'Log Symptoms';
+const String symptomCardTap =
+    'Tap on the card or Tick mark on it to log your Symptoms';
+const String DailyRegimen = 'Daily Regimen';
+const String HospitalSelection = 'Hospital Selection';
 //Prefrence key for family and provider
 const String KEY_FAMILYMEMBER = 'familymember';
 const String KEY_PROVIDER = 'provider';
@@ -215,6 +243,7 @@ const String Family_Member_Added =
     'Your family member has been added successfully';
 const String VerifyEmail = 'Tap to verify Email address';
 const String otp_assets = 'assets/icons/otp_icon.png';
+const String planDownload = 'assets/icons/planDownload.png';
 
 const String enterFirstName = 'Enter First Name';
 const String enterLastName = 'Enter Last Name';
@@ -349,6 +378,7 @@ const String STR_ID = 'id';
 const String STR_CREATED_AT = 'createdAt';
 const String STR_LAST_MESSAGE = 'lastMessage';
 const String STR_IS_READ_COUNT = 'isReadCount';
+const String STR_IS_MUTED = 'isMuted';
 const String STR_USERS = 'users';
 const String STR_CHATTING_WITH = 'chattingWith';
 const String STR_META_ID = 'metaId';
@@ -371,6 +401,9 @@ const String STR_FAILED = 'failed';
 const String STR_DONE = 'Done';
 
 const String STR_LATEST_VALUE = 'Latest Value';
+
+const String STR_HEALTHORG_HOSPID = '67240f46-65dc-41e0-b03f-cc4e4433ee6e';
+const String STR_HEALTHORG_LABID = '34c16c83-2ae6-40e4-9643-5d929eb135e4';
 
 const String SHEELA_LANG = 'sheela_lang';
 const String STR_FAMILY_ADD_MSG =
@@ -445,6 +478,7 @@ const strAudio = 'audio';
 const strUploading = 'Uploading...';
 const strSubscribe = 'Subscribe';
 const strUnSubscribe = 'UnSubscribe';
+const strSubscribed = 'Subscribed';
 const strSelectedPlan = 'Selected Plan - ';
 const strSelectedPlans = 'Selected Plan(s) - ';
 const strSelectPlan = 'Select a Plan';
@@ -452,6 +486,9 @@ const strSelectPlans = 'Select your Plan(s)';
 const strIsFromSubscibe = 'fromSubscribe';
 const strIsRenew = 'Renew';
 const goToRegimen = 'Go to Regimen';
+const symptomsError = 'Data for Symptoms cannot be entered for future dates';
+const activitiesError =
+    'Data for future events can be entered only 15 minutes prior to the event time';
 
 const strQurhealth = 'QurHealth';
 

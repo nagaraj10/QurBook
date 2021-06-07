@@ -6,6 +6,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/FHBBasicWidget.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_constants.dart';
@@ -23,6 +25,7 @@ import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
 import 'package:provider/provider.dart';
+import 'package:showcaseview/showcase_widget.dart';
 
 class SearchListHome extends StatefulWidget {
   @override
@@ -41,7 +44,9 @@ class _SearchListState extends State<SearchListHome> {
 
   TextEditingController searchController = TextEditingController();
   FocusNode searchFocus = FocusNode();
-
+  final GlobalKey _hospitalKey = GlobalKey();
+  bool isFirst;
+  BuildContext _myContext;
   @override
   void initState() {
     FocusManager.instance.primaryFocus.unfocus();
@@ -50,6 +55,17 @@ class _SearchListState extends State<SearchListHome> {
       isInitial: true,
     );
     providerList = myPlanViewModel.getSearchListInit('');
+    isFirst = PreferenceUtil.isKeyValid(Constants.KEY_SHOWCASE_hospitalList);
+
+    try {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Future.delayed(
+            Duration(milliseconds: 1000),
+            () => isFirst
+                ? null
+                : ShowCaseWidget.of(_myContext).startShowCase([_hospitalKey]));
+      });
+    } catch (e) {}
   }
 
   @override
@@ -60,61 +76,67 @@ class _SearchListState extends State<SearchListHome> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Visibility(
-      visible: Provider.of<RegimentViewModel>(context).regimentsDataAvailable,
-      child: Container(
-        child: Column(
-          children: [
-            SearchWidget(
-              searchController: searchController,
-              searchFocus: searchFocus,
-              onChanged: (title) {
-                if (title != '' && title.length > 2) {
-                  onSearchedNew(title);
-                } else {
-                  onSearchedNew(title);
-                }
-              },
-              hintText: variable.strSearchByHosLoc,
-            ),
-            SizedBox(
-              height: 5.0.h,
-            ),
-            Visibility(
-                visible: isLoaderVisible,
-                child: new Center(
-                  child: SizedBox(
-                    width: 30.0.h,
-                    height: 30.0.h,
-                    child: new CircularProgressIndicator(
-                        strokeWidth: 1.5,
-                        backgroundColor:
-                            Color(new CommonUtil().getMyPrimaryColor())),
-                  ),
-                )),
-            Expanded(
-                child: searchModel != null ?? searchModel.isSuccess
-                    ? searchListView(searchModel.result)
-                    : getProviderList())
-          ],
-        ),
-      ),
-      replacement: Center(
-        child: Padding(
-          padding: EdgeInsets.all(
-            10.0.sp,
-          ),
-          child: Text(
-            Constants.categoriesForFamily,
-            style: TextStyle(
-              fontSize: 16.0.sp,
-            ),
-            textAlign: TextAlign.center,
+    return ShowCaseWidget(onFinish: () {
+      PreferenceUtil.saveString(
+          Constants.KEY_SHOWCASE_hospitalList, variable.strtrue);
+    }, builder: Builder(builder: (context) {
+      _myContext = context;
+      return Scaffold(
+          body: Visibility(
+        visible: Provider.of<RegimentViewModel>(context).regimentsDataAvailable,
+        child: Container(
+          child: Column(
+            children: [
+              SearchWidget(
+                searchController: searchController,
+                searchFocus: searchFocus,
+                onChanged: (title) {
+                  if (title != '' && title.length > 2) {
+                    onSearchedNew(title);
+                  } else {
+                    onSearchedNew(title);
+                  }
+                },
+                hintText: variable.strSearchByHosLoc,
+              ),
+              SizedBox(
+                height: 5.0.h,
+              ),
+              Visibility(
+                  visible: isLoaderVisible,
+                  child: new Center(
+                    child: SizedBox(
+                      width: 30.0.h,
+                      height: 30.0.h,
+                      child: new CircularProgressIndicator(
+                          strokeWidth: 1.5,
+                          backgroundColor:
+                              Color(new CommonUtil().getMyPrimaryColor())),
+                    ),
+                  )),
+              Expanded(
+                  child: searchModel != null ?? searchModel.isSuccess
+                      ? searchListView(searchModel.result)
+                      : getProviderList())
+            ],
           ),
         ),
-      ),
-    ));
+        replacement: Center(
+          child: Padding(
+            padding: EdgeInsets.all(
+              10.0.sp,
+            ),
+            child: Text(
+              Constants.categoriesForFamily,
+              style: TextStyle(
+                fontSize: 16.0.sp,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+      ));
+    }));
   }
 
   Widget getProviderList() {
@@ -235,8 +257,13 @@ class _SearchListState extends State<SearchListHome> {
             padding: EdgeInsets.only(
               bottom: 8.0.h,
             ),
-            itemBuilder: (BuildContext ctx, int i) =>
-                searchListItem(ctx, i, searchListResult),
+            itemBuilder: (BuildContext ctx, int i) => i != 0
+                ? searchListItem(ctx, i, searchListResult)
+                : FHBBasicWidget.customShowCase(
+                    _hospitalKey,
+                    Constants.HospitalDescription,
+                    searchListItem(ctx, i, searchListResult),
+                    Constants.HospitalSelection),
             itemCount: searchListResult.length,
           )
         : SafeArea(

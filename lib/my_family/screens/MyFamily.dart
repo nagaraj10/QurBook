@@ -278,7 +278,8 @@ class _MyFamilyState extends State<MyFamily> {
 
   fetchUserProfileInfo() async {
     var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
-    myProfile = await addFamilyUserInfoRepository.getMyProfileInfoNew(userid);
+    if (userid != null)
+      myProfile = await addFamilyUserInfoRepository.getMyProfileInfoNew(userid);
 
     return myProfile;
   }
@@ -367,7 +368,7 @@ class _MyFamilyState extends State<MyFamily> {
                             ),
                           )
                         : Image.network(
-                            data.child.profilePicThumbnailUrl,
+                            data.child?.profilePicThumbnailUrl,
                             fit: BoxFit.cover,
                             width: 60.0.h,
                             height: 60.0.h,
@@ -385,7 +386,7 @@ class _MyFamilyState extends State<MyFamily> {
                                     Color(new CommonUtil().getMyPrimaryColor()),
                                 child: Center(
                                     child: Text(
-                                  data.child.firstName != null &&
+                                  data.child?.firstName != null &&
                                           data.child.lastName != null
                                       ? data.child.firstName[0].toUpperCase() +
                                           data.child.lastName[0].toUpperCase()
@@ -477,11 +478,11 @@ class _MyFamilyState extends State<MyFamily> {
                               ? new CommonUtil()
                                   .titleCase(fulName.toLowerCase())
                               : ''
-                          : data.child.firstName != null
+                          : data.child?.firstName != null
                               ? new CommonUtil().titleCase(
-                                  data.child.firstName +
-                                      ' ' +
-                                      data.child.lastName)
+                                  data.child.firstName ??
+                                      '' + ' ' + data.child.lastName ??
+                                      '')
                               : '',
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
@@ -604,7 +605,7 @@ class _MyFamilyState extends State<MyFamily> {
 
                                   var deLinkingData = {};
                                   deLinkingData[variable.strrelatedTo] =
-                                      data.child.id;
+                                      data.child?.id;
                                   deLinkingData[variable.strrelationshipType] =
                                       variable.strparentToChild;
                                   var jsonString =

@@ -7,6 +7,8 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/FHBBasicWidget.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
@@ -22,6 +24,7 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 class PlanList extends StatefulWidget {
   @override
@@ -50,6 +53,11 @@ class _MyPlanState extends State<PlanList> {
   List<PlanListResult> planListResult;
   bool isSelected = false;
   List<PlanListResult> planListUniq = [];
+  //final GlobalKey _searchKey = GlobalKey();
+  //final GlobalKey _hospitalKey = GlobalKey();
+  final GlobalKey _subscribeKey = GlobalKey();
+  bool isFirst;
+  BuildContext _myContext;
 
   @override
   void initState() {
@@ -66,6 +74,18 @@ class _MyPlanState extends State<PlanList> {
     hosIcon = widget.hosIcon;
     catIcon = widget.catIcon;
     planListResult = widget.planListResult;
+    PreferenceUtil.init();
+
+    var isFirst = PreferenceUtil.isKeyValid(Constants.KEY_SHOWCASE_Plan);
+    try {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Future.delayed(
+            Duration(milliseconds: 1000),
+            () => isFirst
+                ? null
+                : ShowCaseWidget.of(_myContext).startShowCase([_subscribeKey]));
+      });
+    } catch (e) {}
   }
 
   @override
@@ -76,65 +96,70 @@ class _MyPlanState extends State<PlanList> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          flexibleSpace: GradientAppBar(),
-          leading: GestureDetector(
-            onTap: () => Get.back(),
-            child: Icon(
-              Icons.arrow_back_ios, // add custom icons also
-              size: 24.0,
-            ),
-          ),
-          title: Text(
-            'Plans',
-            style: TextStyle(
-              fontSize: 18.0,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ),
-        body: Visibility(
-          visible:
-              Provider.of<RegimentViewModel>(context).regimentsDataAvailable,
-          child: Container(
-            child: Column(
-              children: [
-                SearchWidget(
-                  onChanged: (title) {
-                    if (title != '' && title.length > 2) {
-                      isSearch = true;
-                      onSearchedNew(title, planListUniq);
-                    } else {
-                      setState(() {
-                        isSearch = false;
-                      });
-                    }
-                  },
-                ),
-                SizedBox(
-                  height: 5.0.h,
-                ),
-                Expanded(child: planList(planListResult)),
-                SizedBox(height: 10)
-              ],
-            ),
-          ),
-          replacement: Center(
-            child: Padding(
-              padding: EdgeInsets.all(
-                10.0.sp,
+    return ShowCaseWidget(onFinish: () {
+      PreferenceUtil.saveString(Constants.KEY_SHOWCASE_Plan, variable.strtrue);
+    }, builder: Builder(builder: (context) {
+      _myContext = context;
+      return Scaffold(
+          appBar: AppBar(
+            flexibleSpace: GradientAppBar(),
+            leading: GestureDetector(
+              onTap: () => Get.back(),
+              child: Icon(
+                Icons.arrow_back_ios, // add custom icons also
+                size: 24.0,
               ),
-              child: Text(
-                Constants.mplansForFamily,
-                style: TextStyle(
-                  fontSize: 16.0.sp,
-                ),
-                textAlign: TextAlign.center,
+            ),
+            title: Text(
+              'Plans',
+              style: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ),
-        ));
+          body: Visibility(
+            visible:
+                Provider.of<RegimentViewModel>(context).regimentsDataAvailable,
+            child: Container(
+              child: Column(
+                children: [
+                  SearchWidget(
+                    onChanged: (title) {
+                      if (title != '' && title.length > 2) {
+                        isSearch = true;
+                        onSearchedNew(title, planListUniq);
+                      } else {
+                        setState(() {
+                          isSearch = false;
+                        });
+                      }
+                    },
+                  ),
+                  SizedBox(
+                    height: 5.0.h,
+                  ),
+                  Expanded(child: planList(planListResult)),
+                  SizedBox(height: 10)
+                ],
+              ),
+            ),
+            replacement: Center(
+              child: Padding(
+                padding: EdgeInsets.all(
+                  10.0.sp,
+                ),
+                child: Text(
+                  Constants.mplansForFamily,
+                  style: TextStyle(
+                    fontSize: 16.0.sp,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ));
+    }));
   }
 
   onSearchedNew(String title, List<PlanListResult> planListOld) async {
@@ -282,7 +307,7 @@ class _MyPlanState extends State<PlanList> {
                   CircleAvatar(
                     backgroundColor: Colors.grey[200],
                     radius: 20,
-                    child: CommonUtil().customImage(getImage(i,planList)),
+                    child: CommonUtil().customImage(getImage(i, planList)),
                   ),
                   SizedBox(
                     width: 20.0.w,
@@ -394,57 +419,140 @@ class _MyPlanState extends State<PlanList> {
                               : Container(),
                           SizedBox(height: 8.h),
                           Align(
-                            alignment: Alignment.center,
-                            child: SizedBoxWithChild(
-                              width: 95.0.w,
-                              height: 32.0.h,
-                              child: FlatButton(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(18.0),
-                                    side: BorderSide(
-                                        color: getBorderColor(i, planList))),
-                                color: Colors.transparent,
-                                textColor: planList[i].isSubscribed == '0'
-                                    ? Color(
-                                        new CommonUtil().getMyPrimaryColor())
-                                    : Colors.red,
-                                padding: EdgeInsets.all(
-                                  8.0.sp,
-                                ),
-                                onPressed: planList[i].catselecttype == '1' &&
-                                        planList[i].isSubscribed == '0' &&
-                                        isSelected
-                                    ? null
-                                    : () async {
-                                        if (planList[i].isSubscribed == '0') {
-                                          CommonUtil().profileValidationCheck(
-                                              context,
-                                              packageId: planList[i].packageid,
-                                              isSubscribed:
-                                                  planList[i].isSubscribed,
-                                              providerId: planList[i].plinkid,
-                                              isFrom: strIsFromSubscibe,
-                                              refresh: () {
-                                            setState(() {});
-                                          });
-                                        } else {
+                              alignment: Alignment.center,
+                              child: i != 0
+                                  ? SizedBoxWithChild(
+                                      width: 95.0.w,
+                                      height: 32.0.h,
+                                      child: FlatButton(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(18.0),
+                                            side: BorderSide(
+                                                color: getBorderColor(
+                                                    i, planList))),
+                                        color: Colors.transparent,
+                                        textColor:
+                                            planList[i].isSubscribed == '0'
+                                                ? Color(new CommonUtil()
+                                                    .getMyPrimaryColor())
+                                                : Colors.grey,
+                                        padding: EdgeInsets.all(
+                                          8.0.sp,
+                                        ),
+                                        onPressed:
+                                            planList[i].catselecttype == '1' &&
+                                                    planList[i].isSubscribed ==
+                                                        '0' &&
+                                                    isSelected
+                                                ? null
+                                                : () async {
+                                                    if (planList[i]
+                                                            .isSubscribed ==
+                                                        '0') {
+                                                      CommonUtil().profileValidationCheck(
+                                                          context,
+                                                          packageId: planList[i]
+                                                              .packageid,
+                                                          isSubscribed:
+                                                              planList[i]
+                                                                  .isSubscribed,
+                                                          providerId:
+                                                              planList[i]
+                                                                  .plinkid,
+                                                          isFrom:
+                                                              strIsFromSubscibe,
+                                                          refresh: () {
+                                                        setState(() {});
+                                                      });
+                                                    }
+                                                    /*else {
                                           CommonUtil().unSubcribeAlertDialog(
                                               context,
                                               packageId: planList[i].packageid,
                                               refresh: () {
                                             setState(() {});
                                           });
-                                        }
-                                      },
-                                child: TextWidget(
-                                  text: planList[i].isSubscribed == '0'
-                                      ? strSubscribe
-                                      : strUnSubscribe,
-                                  fontsize: 12.0.sp,
-                                ),
-                              ),
-                            ),
-                          ),
+                                        }*/
+                                                  },
+                                        child: TextWidget(
+                                          text: planList[i].isSubscribed == '0'
+                                              ? strSubscribe
+                                              : strSubscribed,
+                                          fontsize: 12.0.sp,
+                                        ),
+                                      ),
+                                    )
+                                  : FHBBasicWidget.customShowCase(
+                                      _subscribeKey,
+                                      Constants.SubscribeDescription,
+                                      SizedBoxWithChild(
+                                        width: 95.0.w,
+                                        height: 32.0.h,
+                                        child: FlatButton(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(18.0),
+                                              side: BorderSide(
+                                                  color: getBorderColor(
+                                                      i, planList))),
+                                          color: Colors.transparent,
+                                          textColor:
+                                              planList[i].isSubscribed == '0'
+                                                  ? Color(new CommonUtil()
+                                                      .getMyPrimaryColor())
+                                                  : Colors.grey,
+                                          padding: EdgeInsets.all(
+                                            8.0.sp,
+                                          ),
+                                          onPressed: planList[i]
+                                                          .catselecttype ==
+                                                      '1' &&
+                                                  planList[i].isSubscribed ==
+                                                      '0' &&
+                                                  isSelected
+                                              ? null
+                                              : () async {
+                                                  if (planList[i]
+                                                          .isSubscribed ==
+                                                      '0') {
+                                                    CommonUtil()
+                                                        .profileValidationCheck(
+                                                            context,
+                                                            packageId:
+                                                                planList[i]
+                                                                    .packageid,
+                                                            isSubscribed:
+                                                                planList[i]
+                                                                    .isSubscribed,
+                                                            providerId:
+                                                                planList[i]
+                                                                    .plinkid,
+                                                            isFrom:
+                                                                strIsFromSubscibe,
+                                                            refresh: () {
+                                                      setState(() {});
+                                                    });
+                                                  }
+                                                  /*else {
+                                          CommonUtil().unSubcribeAlertDialog(
+                                              context,
+                                              packageId: planList[i].packageid,
+                                              refresh: () {
+                                            setState(() {});
+                                          });
+                                        }*/
+                                                },
+                                          child: TextWidget(
+                                            text:
+                                                planList[i].isSubscribed == '0'
+                                                    ? strSubscribe
+                                                    : strSubscribed,
+                                            fontsize: 12.0.sp,
+                                          ),
+                                        ),
+                                      ),
+                                      Constants.Subscribe)),
                         ],
                       ),
                       SizedBox(width: 4.w),
@@ -458,41 +566,42 @@ class _MyPlanState extends State<PlanList> {
     );
   }
 
-  String getImage(int i, List<PlanListResult> planList){
+  String getImage(int i, List<PlanListResult> planList) {
     String image;
-    if(planList[i]!=null){
-      if(planList[i].metadata!=null && planList[i].metadata!=''){
-        if(planList[i].metadata.icon!=null && planList[i].metadata.icon!=''){
+    if (planList[i] != null) {
+      if (planList[i].metadata != null && planList[i].metadata != '') {
+        if (planList[i].metadata.icon != null &&
+            planList[i].metadata.icon != '') {
           image = planList[i].metadata.icon;
-        }else{
-          if(catIcon!=null && catIcon !=''){
+        } else {
+          if (catIcon != null && catIcon != '') {
             image = catIcon;
-          }else{
-            if(hosIcon!=null && hosIcon!=''){
+          } else {
+            if (hosIcon != null && hosIcon != '') {
               image = hosIcon;
-            }else{
+            } else {
               image = '';
             }
           }
         }
-      }else{
-        if(catIcon!=null && catIcon !=''){
+      } else {
+        if (catIcon != null && catIcon != '') {
           image = catIcon;
-        }else{
-          if(hosIcon!=null && hosIcon!=''){
+        } else {
+          if (hosIcon != null && hosIcon != '') {
             image = hosIcon;
-          }else{
+          } else {
             image = '';
           }
         }
       }
-    }else{
-      if(catIcon!=null && catIcon !=''){
+    } else {
+      if (catIcon != null && catIcon != '') {
         image = catIcon;
-      }else{
-        if(hosIcon!=null && hosIcon!=''){
+      } else {
+        if (hosIcon != null && hosIcon != '') {
           image = hosIcon;
-        }else{
+        } else {
           image = '';
         }
       }
@@ -510,7 +619,7 @@ class _MyPlanState extends State<PlanList> {
       if (planList[i].isSubscribed == '0') {
         return Color(new CommonUtil().getMyPrimaryColor());
       } else {
-        return Colors.red;
+        return Colors.grey;
       }
     }
   }

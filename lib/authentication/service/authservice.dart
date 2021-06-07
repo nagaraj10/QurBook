@@ -4,6 +4,7 @@ import 'package:myfhb/authentication/constants/constants.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:myfhb/authentication/model/error_response_model.dart';
+import 'package:myfhb/authentication/model/otp_response_model.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/HeaderRequest.dart';
@@ -294,5 +295,39 @@ class AuthService {
       return spocketException();
     }
     return responseJson;
+  }
+
+  Future<dynamic> getIVRNumbers() async {
+    var responseJson;
+    try {
+      final response = await http.get(
+        'https://qurplan.com/assets/data/ivr.json',
+      );
+
+      responseJson = jsonDecode(response.body);
+    } on SocketException {
+      return spocketException();
+    }
+    return responseJson;
+  }
+
+  Future<OtpResponseModel> getOTPFromCall(String phoneNumber) async {
+    final headerRequest = await HeaderRequest().getRequestHeadersAuthContent();
+    try {
+      final response = await http.get(
+        Constants.BASE_URL +
+            'authentication-log/polling/?phone=${phoneNumber ?? ''}',
+        headers: headerRequest,
+      );
+      if (response != null) {
+        return OtpResponseModel.fromJson(jsonDecode(response.body) ?? {});
+      } else {
+        return OtpResponseModel(
+          isSuccess: false,
+        );
+      }
+    } on SocketException {
+      return spocketException();
+    }
   }
 }

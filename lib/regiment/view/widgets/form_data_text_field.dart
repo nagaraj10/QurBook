@@ -10,11 +10,13 @@ class FormDataTextField extends StatelessWidget {
     @required this.fieldData,
     this.isNumberOnly = false,
     @required this.updateValue,
+    @required this.canEdit,
   });
 
   final FieldModel fieldData;
   final bool isNumberOnly;
   final Function(FieldModel updatedFieldData) updateValue;
+  final bool canEdit;
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +35,7 @@ class FormDataTextField extends StatelessWidget {
           height: 10.0.h,
         ),
         TextFormField(
+          enabled: canEdit,
           style: TextStyle(
             fontSize: 16.0.sp,
           ),

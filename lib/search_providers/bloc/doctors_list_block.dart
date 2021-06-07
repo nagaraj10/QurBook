@@ -79,4 +79,18 @@ class DoctorsListBlock implements BaseBloc {
 
     return doctorsListResponse;
   }
+
+  Future<DoctorsSearchListResponse> getExistingDoctorList(
+      String limit) async {
+    DoctorsSearchListResponse userHealthResponseList;
+    doctorsListNewSink.add(ApiResponse.loading(variable.strGetDoctorsList));
+    try {
+      userHealthResponseList = await _doctorsListRepository
+          .getExistingDoctorsListFromSearchNew(limit);
+      doctorsListNewSink.add(ApiResponse.completed(userHealthResponseList));
+    } catch (e) {
+      doctorsListNewSink.add(ApiResponse.error(e.toString()));
+    }
+    return userHealthResponseList;
+  }
 }

@@ -6,6 +6,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/my_providers/models/Doctors.dart';
+import 'package:myfhb/my_providers/models/GetDoctorsByIdModel.dart';
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/telehealth/features/MyProvider/model/DoctorsFromHospitalModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/SlotsResultModel.dart';
@@ -21,6 +22,7 @@ class DoctorSessionTimeSlot extends StatefulWidget {
   final String doctorId;
   final String date;
   final List<Doctors> docs;
+  final List<DoctorResult> docsReschedule;
   final int i;
   final int doctorListIndex;
   Past doctorsData;
@@ -36,11 +38,13 @@ class DoctorSessionTimeSlot extends StatefulWidget {
   DateTime onUserChangedDate;
   bool isFromHospital;
   dynamic body;
+  bool isFromFollowOrReschedule;
 
   DoctorSessionTimeSlot(
       {this.doctorId,
       this.date,
       this.docs,
+      this.docsReschedule,
       this.i,
       this.doctorListIndex,
       this.isReshedule,
@@ -55,7 +59,7 @@ class DoctorSessionTimeSlot extends StatefulWidget {
       this.onChanged,
       this.onUserChangedDate,
       this.isFromHospital,
-      this.body});
+      this.body,this.isFromFollowOrReschedule});
 
   @override
   State<StatefulWidget> createState() {
@@ -217,6 +221,7 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
                         child: GetTimeSlots(
                           dateSlotTimingsObj: snapshot.data,
                           docs: widget.docs,
+                          docsReschedule: widget.docsReschedule,
                           j: widget.i,
                           doctorListIndex: widget.doctorListIndex,
                           selectedDate: _selectedValue,
@@ -235,6 +240,7 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
                           isFromNotification: widget.isFromNotification,
                           isFromHospital: widget.isFromHospital,
                           body: widget.body,
+                          isFromFollowReschedule: widget.isFromFollowOrReschedule,
                         ),
                       )
                     : Column(

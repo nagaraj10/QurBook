@@ -11,6 +11,7 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/my_family/models/relationship_response_list.dart';
 import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
+import 'package:myfhb/src/model/CreateDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/UpdatedDeviceModel.dart';
 import 'package:myfhb/src/model/user/City.dart';
@@ -23,6 +24,7 @@ import 'package:myfhb/add_family_user_info/models/verify_email_response.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 class AddFamilyUserInfoBloc extends BaseBloc {
   AddFamilyUserInfoRepository addFamilyUserInfoRepository;
@@ -124,6 +126,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
   String relationshipJsonString;
 
   File profilePic, profileBanner;
+  CreateDeviceSelectionModel createDeviceSelectionModel;
 
   @override
   void dispose() {
@@ -340,6 +343,57 @@ class AddFamilyUserInfoBloc extends BaseBloc {
         _isTHActive = true;
         _isWSActive = true;
         _isHealthFirstTime = false;
+
+        var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+        healthReportListForUserRepository
+            .createDeviceSelection(
+                _isdigitRecognition,
+                _isdeviceRecognition,
+                _isGFActive,
+                _isHKActive,
+                _isBPActive,
+                _isGLActive,
+                _isOxyActive,
+                _isTHActive,
+                _isWSActive,
+                userId,
+                preferred_language,
+                qa_subscription,
+                preColor,
+                greColor)
+            .then((value) {
+          createDeviceSelectionModel = value;
+          if (createDeviceSelectionModel.isSuccess) {
+            userMappingId = createDeviceSelectionModel.result;
+            updateDeviceSelectionModel(preferredLanguage: preferredLanguage);
+          } else {
+            var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+            healthReportListForUserRepository
+                .createDeviceSelection(
+                    _isdigitRecognition,
+                    _isdeviceRecognition,
+                    _isGFActive,
+                    _isHKActive,
+                    _isBPActive,
+                    _isGLActive,
+                    _isOxyActive,
+                    _isTHActive,
+                    _isWSActive,
+                    userId,
+                    preferred_language,
+                    qa_subscription,
+                    preColor,
+                    greColor)
+                .then((value) {
+              createDeviceSelectionModel = value;
+              if (createDeviceSelectionModel.isSuccess) {
+                userMappingId = createDeviceSelectionModel.result;
+                updateDeviceSelectionModel(
+                    preferredLanguage: preferredLanguage);
+              }
+            });
+          }
+        });
       }
     });
   }
@@ -434,6 +488,30 @@ class AddFamilyUserInfoBloc extends BaseBloc {
       (value) {
         if (value?.isSuccess ?? false) {
           getDeviceSelectionValues();
+        } else {
+          var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+          healthReportListForUserRepository
+              .createDeviceSelection(
+                  _isdigitRecognition,
+                  _isdeviceRecognition,
+                  _isGFActive,
+                  _isHKActive,
+                  _isBPActive,
+                  _isGLActive,
+                  _isOxyActive,
+                  _isTHActive,
+                  _isWSActive,
+                  userId,
+                  preferred_language,
+                  qa_subscription,
+                  preColor,
+                  greColor)
+              .then((value) {
+            createDeviceSelectionModel = value;
+            if (createDeviceSelectionModel.isSuccess) {
+              updateDeviceSelectionModel(preferredLanguage: preferredLanguage);
+            }
+          });
         }
       },
     );

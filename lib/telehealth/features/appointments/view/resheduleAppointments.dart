@@ -7,6 +7,7 @@ import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/my_providers/models/GetDoctorsByIdModel.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
@@ -36,6 +37,7 @@ class ResheduleAppointments extends StatefulWidget {
   bool isReshedule;
   Function(String) closePage;
   dynamic body;
+
   ResheduleAppointments(
       {this.doc,
       this.isReshedule,
@@ -58,7 +60,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
   bool noData = false;
   String placeHolder = null;
   ProvidersBloc _providersBloc = ProvidersBloc();
-  Doctors doctors = Doctors();
+  DoctorResult doctors = DoctorResult();
   DateTime onUserChangedDate;
 
   @override
@@ -80,13 +82,10 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
   }
 
   getDoctorsData() async {
-    String userID = PreferenceUtil.getStringValue(prefKey.KEY_USERID_MAIN);
-
     await _providersBloc
-        .getMedicalPreferencesList(userId: userID)
+        .getDoctorsById(doctorId: widget.doc.doctor.id)
         .then((value) => setState(() {
-              doctors = value.result.doctors
-                  .firstWhere((element) => element.id == widget.doc.doctor.id);
+              doctors = value.result;
             }));
   }
 
@@ -108,7 +107,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
     );
   }
 
-  Widget getAppBar(Doctors doctors) {
+  Widget getAppBar(DoctorResult doctors) {
     return AppBar(
         automaticallyImplyLeading: false,
         flexibleSpace: SafeArea(
@@ -279,7 +278,8 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
             DoctorSessionTimeSlot(
               date: _selectedValue.toString(),
               doctorId: widget.doc.doctor.id,
-              docs: [doctors],
+              docs: null,
+              docsReschedule: [doctors],
               isReshedule: widget.isReshedule,
               i: i,
               doctorsData: widget.doc,
@@ -303,6 +303,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
               isFromNotification: widget.isFromNotification,
               isFromHospital: false,
               body: widget.body,
+              isFromFollowOrReschedule: true,
             ),
           ],
         ),
@@ -317,7 +318,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
   Widget getHospitalWidget(
       int i,
       List<HealthOrganizationResult> eachHospitalModel,
-      Doctors doctors,
+      DoctorResult doctors,
       int index) {
     return Row(
       children: <Widget>[
@@ -499,7 +500,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
     return fees;
   }
 
-  String getCity(Doctors doctors) {
+  String getCity(DoctorResult doctors) {
     String city;
 
     if (doctors?.user?.userAddressCollection3 != null) {

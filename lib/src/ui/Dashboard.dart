@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
 import 'package:myfhb/common/CommonDialogBox.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
@@ -472,6 +473,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
     try {
       new CommonDialogBox().getCategoryList();
       getFamilyRelationAndMediaType();
+    } catch (e) {}
+
+    try {
+      AddFamilyUserInfoBloc addFamilyUserInfoBloc = new AddFamilyUserInfoBloc();
+      addFamilyUserInfoBloc.getDeviceSelectionValues().then((value) {});
     } catch (e) {}
   }
 

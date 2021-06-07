@@ -12,6 +12,8 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import 'package:myfhb/authentication/view_model/otp_view_model.dart';
+import 'package:provider/provider.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   ChangePasswordScreen({this.userName});
@@ -31,17 +33,21 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   AuthViewModel authViewModel;
   bool _isHidden = true;
   bool _isHiddenSecondary = true;
+  OtpViewModel otpViewModel;
 
   @override
   void initState() {
     mInitialTime = DateTime.now();
     super.initState();
     authViewModel = new AuthViewModel();
+    Provider.of<OtpViewModel>(context, listen: false)?.startTimer();
   }
 
   @override
   void dispose() {
     super.dispose();
+    otpViewModel?.stopTimer();
+    otpViewModel?.stopOTPTimer();
     fbaLog(eveName: 'qurbook_screen_event', eveParams: {
       'eventTime': '${DateTime.now()}',
       'pageName': 'Confirm Password Screen',
@@ -52,6 +58,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    otpViewModel = Provider.of<OtpViewModel>(context);
     final height = 1.sh;
     return Scaffold(
       body: Form(
@@ -212,6 +219,70 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                           ),
                         ],
                       ),
+                      SizedBox(height: 10.0.h),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Flexible(
+                            child: Center(
+                              child: RichText(
+                                text: TextSpan(
+                                  text: strOtpNotReceived,
+                                  style: TextStyle(
+                                    fontSize: 15.0.sp,
+                                    color: Colors.black,
+                                  ),
+                                  children: [
+                                    TextSpan(
+                                      text: '${otpViewModel.timeForResend}',
+                                      style: TextStyle(
+                                        color: Color(
+                                            CommonUtil().getMyPrimaryColor()),
+                                        fontSize: 15.0.sp,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            onTap: otpViewModel.timerSeconds == 0
+                                ? () {
+                                    otpViewModel?.stopOTPTimer();
+                                    otpViewModel.confirmViaCall(
+                                      phoneNumber: widget.userName ?? '',
+                                      onOtpReceived: (String otpCode) {
+                                        _verifyDetails(
+                                          otpCode: otpCode,
+                                        );
+                                      },
+                                    );
+                                  }
+                                : null,
+                            child: Container(
+                              padding: EdgeInsets.symmetric(vertical: 5),
+                              alignment: Alignment.bottomRight,
+                              child: Text(
+                                strVerifyCall,
+                                style: TextStyle(
+                                    color: otpViewModel.timerSeconds == 0
+                                        ? Color(
+                                            CommonUtil().getMyPrimaryColor())
+                                        : Colors.grey,
+                                    fontSize: 15.0.sp,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                       SizedBox(
                         height: 20.0.h,
                       ),
@@ -281,13 +352,15 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     );
   }
 
-  _verifyDetails() async {
+  _verifyDetails({String otpCode}) async {
     FocusScope.of(context).unfocus();
-    if (_ChangePasswordKey.currentState.validate()) {
-      _ChangePasswordKey.currentState.save();
+    if (otpCode != null || _ChangePasswordKey.currentState.validate()) {
+      if (otpCode == null) {
+        _ChangePasswordKey.currentState.save();
+      }
       LoaderClass.showLoadingDialog(context);
       PatientConfirmPasswordModel logInModel = new PatientConfirmPasswordModel(
-        verificationCode: CodeController.text,
+        verificationCode: otpCode ?? CodeController.text,
         userName: widget.userName,
         source: strSource,
         password: NewPasswordController.text,

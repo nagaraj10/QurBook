@@ -7,6 +7,7 @@ import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/constants/fhb_query.dart' as query;
 import 'package:myfhb/my_providers/models/Doctors.dart';
+import 'package:myfhb/my_providers/models/GetDoctorsByIdModel.dart';
 import 'package:myfhb/my_providers/models/Hospitals.dart';
 import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
@@ -32,6 +33,33 @@ class ProvidersListRepository {
         (userId != null ? userId : userID) +
         query.qr_sections +
         query.qr_medicalPreferences);
+    return MyProvidersResponse.fromJson(response);
+  }
+
+  Future<MyProvidersResponse> getMedicalPreferencesForDoctors({String userId}) async {
+    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    final response = await _helper.getMedicalPreferencesList(query.qr_user +
+        (userId != null ? userId : userID) +
+        query.qr_sections +
+        query.qr_medicalPreferences+qr_module_equal+qr_Doctor);
+    return MyProvidersResponse.fromJson(response);
+  }
+
+  Future<MyProvidersResponse> getMedicalPreferencesForHospital({String userId}) async {
+    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    final response = await _helper.getMedicalPreferencesList(query.qr_user +
+        (userId != null ? userId : userID) +
+        query.qr_sections +
+        query.qr_medicalPreferences+qr_module_equal+qr_healthOrg);
+    return MyProvidersResponse.fromJson(response);
+  }
+
+  Future<MyProvidersResponse> getMedicalPreferencesForAll({String userId}) async {
+    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    final response = await _helper.getMedicalPreferencesList(query.qr_user +
+        (userId != null ? userId : userID) +
+        query.qr_sections +
+        query.qr_medicalPreferences+qr_module_equal+qr_all);
     return MyProvidersResponse.fromJson(response);
   }
 
@@ -175,5 +203,10 @@ class ProvidersListRepository {
         doctorIdEqualTo +
         doctorId);
     return AppointmentDetailModel.fromJson(response);
+  }
+
+  Future<GetDoctorsByIdModel> getDoctorsByID({String doctorId}) async {
+    final response = await _helper.getDoctorsByIdNew(qr_doctor+doctorId);
+    return GetDoctorsByIdModel.fromJson(response);
   }
 }

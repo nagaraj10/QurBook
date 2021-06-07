@@ -33,7 +33,7 @@ class MyProviderState extends State<MyProvider>
     _tabController.addListener(_setActiveTabIndex);
 
     _providersBloc = new ProvidersBloc();
-    _providersBloc.getMedicalPreferencesList().then((value) {
+    _providersBloc.getMedicalPreferencesAll().then((value) {
       setState(() {
         myProvidersResponseList = value;
       });
@@ -60,7 +60,7 @@ class MyProviderState extends State<MyProvider>
       myProvidersResponseList = null;
     });
     _providersBloc = new ProvidersBloc();
-    _providersBloc.getMedicalPreferencesList().then((value) {
+    _providersBloc.getMedicalPreferencesAll().then((value) {
       setState(() {
         myProvidersResponseList = value;
       });

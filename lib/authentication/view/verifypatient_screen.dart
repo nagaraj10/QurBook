@@ -36,7 +36,9 @@ import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/authentication/model/patientlogin_model.dart'
     as loginModel;
-    import 'package:myfhb/constants/fhb_constants.dart' as con;
+import 'package:myfhb/constants/fhb_constants.dart' as con;
+import 'package:myfhb/authentication/view_model/otp_view_model.dart';
+import 'package:provider/provider.dart';
 
 class VerifyPatient extends StatefulWidget {
   VerifyPatient(
@@ -92,6 +94,7 @@ class _VerifyPatientState extends State<VerifyPatient> {
   int numberOfTimesResendTapped = 0;
   bool enableResendButton = true;
   bool disableResendButton = false;
+  OtpViewModel otpViewModel;
 
   @override
   void initState() {
@@ -102,10 +105,13 @@ class _VerifyPatientState extends State<VerifyPatient> {
     if (widget.userConfirm) {
       _resendOtpDetails();
     }
+    Provider.of<OtpViewModel>(context, listen: false)?.startTimer();
   }
 
   @override
   void dispose() {
+    otpViewModel?.stopTimer();
+    otpViewModel?.stopOTPTimer();
     super.dispose();
     con.fbaLog(eveName: 'qurbook_screen_event', eveParams: {
       'eventTime': '${DateTime.now()}',
@@ -117,6 +123,7 @@ class _VerifyPatientState extends State<VerifyPatient> {
 
   @override
   Widget build(BuildContext context) {
+    otpViewModel = Provider.of<OtpViewModel>(context);
     final height = 1.sh;
     return Scaffold(
       body: Form(
@@ -154,30 +161,114 @@ class _VerifyPatientState extends State<VerifyPatient> {
                         ],
                       ),
                       SizedBox(height: 5.0.h),
-                      InkWell(
-                        onTap: () {
-                          _resendOtpDetails();
-                        },
-                        child: from ==
-                                strFromSignUp //*this has to be change with strFromSignUp
-                            ? Container(
-                                padding: EdgeInsets.symmetric(vertical: 5),
-                                alignment: Alignment.bottomRight,
-                                child: Text(
-                                  strresendOtp,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Flexible(
+                            child: Center(
+                              child: RichText(
+                                text: TextSpan(
+                                  text: strOtpNotReceived,
                                   style: TextStyle(
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
-                                      fontSize: 15.0.sp,
-                                      fontWeight: FontWeight.w600),
+                                    fontSize: 15.0.sp,
+                                    color: Colors.black,
+                                  ),
+                                  children: [
+                                    TextSpan(
+                                      text: '${otpViewModel.timeForResend}',
+                                      style: TextStyle(
+                                        color: Color(
+                                            CommonUtil().getMyPrimaryColor()),
+                                        fontSize: 15.0.sp,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              )
-                            : Container(),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      (widget.dataForResendOtp != null ||
-                              from == strFromVerifyFamilyMember)
-                          ? _getResendForSignIN()
-                          : Container(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            onTap: otpViewModel.timerSeconds == 0
+                                ? () {
+                                    otpViewModel?.stopOTPTimer();
+                                    otpViewModel?.startTimer();
+                                    if (from == strFromSignUp) {
+                                      _resendOtpDetails();
+                                    } else if (widget.dataForResendOtp !=
+                                            null ||
+                                        from == strFromVerifyFamilyMember) {
+                                      _startTimer();
+                                    }
+                                  }
+                                : null,
+                            child: Container(
+                              padding: EdgeInsets.symmetric(vertical: 5),
+                              alignment: Alignment.bottomRight,
+                              child: Text(
+                                strresendOtp,
+                                style: TextStyle(
+                                    color: otpViewModel.timerSeconds == 0
+                                        ? Color(
+                                            CommonUtil().getMyPrimaryColor())
+                                        : Colors.grey,
+                                    fontSize: 15.0.sp,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Text(
+                        strOrText,
+                        style: TextStyle(
+                          fontSize: 15.0.sp,
+                          color: Colors.black,
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            onTap: otpViewModel.timerSeconds == 0
+                                ? () {
+                                    otpViewModel?.stopOTPTimer();
+                                    otpViewModel.confirmViaCall(
+                                      phoneNumber: widget.PhoneNumber ?? '',
+                                      onOtpReceived: (String otpCode) {
+                                        _verifyDetails(
+                                          otpCode: otpCode,
+                                        );
+                                      },
+                                    );
+                                  }
+                                : null,
+                            child: Container(
+                              padding: EdgeInsets.symmetric(vertical: 5),
+                              alignment: Alignment.bottomRight,
+                              child: Text(
+                                strVerifyCall,
+                                style: TextStyle(
+                                    color: otpViewModel.timerSeconds == 0
+                                        ? Color(
+                                            CommonUtil().getMyPrimaryColor())
+                                        : Colors.grey,
+                                    fontSize: 15.0.sp,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      // (widget.dataForResendOtp != null ||
+                      //         from == strFromVerifyFamilyMember)
+                      //     ? _getResendForSignIN()
+                      //     : Container(),
                       SizedBox(height: 10.0.h),
                       _resetButton(),
                       SizedBox(height: height * .015),
@@ -202,35 +293,35 @@ class _VerifyPatientState extends State<VerifyPatient> {
     }
   }
 
-  Widget _getResendForSignIN() {
-    return enableResendButton
-        ? InkWell(
-            onTap: () {
-              _startTimer();
-            },
-            child: Container(
-              padding: EdgeInsets.symmetric(vertical: 5),
-              alignment: Alignment.bottomRight,
-              child: Text(
-                strresendOtp,
-                style: TextStyle(
-                    color: Color(CommonUtil().getMyPrimaryColor()),
-                    fontSize: 15.0.sp,
-                    fontWeight: FontWeight.w600),
-              ),
-            ))
-        : Container(
-            padding: EdgeInsets.symmetric(vertical: 5),
-            alignment: Alignment.bottomRight,
-            child: Text(
-              strresendOtp,
-              style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 15.0.sp,
-                  fontWeight: FontWeight.w600),
-            ),
-          );
-  }
+  // Widget _getResendForSignIN() {
+  //   return enableResendButton
+  //       ? InkWell(
+  //           onTap: () {
+  //             _startTimer();
+  //           },
+  //           child: Container(
+  //             padding: EdgeInsets.symmetric(vertical: 5),
+  //             alignment: Alignment.bottomRight,
+  //             child: Text(
+  //               strresendOtp,
+  //               style: TextStyle(
+  //                   color: Color(CommonUtil().getMyPrimaryColor()),
+  //                   fontSize: 15.0.sp,
+  //                   fontWeight: FontWeight.w600),
+  //             ),
+  //           ))
+  //       : Container(
+  //           padding: EdgeInsets.symmetric(vertical: 5),
+  //           alignment: Alignment.bottomRight,
+  //           child: Text(
+  //             strresendOtp,
+  //             style: TextStyle(
+  //                 color: Colors.grey,
+  //                 fontSize: 15.0.sp,
+  //                 fontWeight: FontWeight.w600),
+  //           ),
+  //         );
+  // }
 
   _loginOTPSent(loginModel.PatientLogIn response) {
     if (response.isSuccess) {
@@ -364,14 +455,17 @@ class _VerifyPatientState extends State<VerifyPatient> {
     );
   }
 
-  _verifyDetails() async {
+  _verifyDetails({String otpCode}) async {
     FocusScope.of(context).unfocus();
-    if (_OtpKey.currentState.validate()) {
-      _OtpKey.currentState.save();
+    String otpToVerify = otpCode ?? OtpController.text;
+    if (otpCode != null || _OtpKey.currentState.validate()) {
+      if (otpCode == null) {
+        _OtpKey.currentState.save();
+      }
       LoaderClass.showLoadingDialog(context);
       if (from == strFromSignUp) {
         PatientSignupOtp logInModel = new PatientSignupOtp(
-          verificationCode: OtpController.text,
+          verificationCode: otpToVerify,
           userName: widget.PhoneNumber,
           source: strSource,
           userId: widget.userConfirm
@@ -385,8 +479,7 @@ class _VerifyPatientState extends State<VerifyPatient> {
         _checkResponse(response);
       } else if (from == strFromVerifyFamilyMember) {
         VerifyOTPModel params = VerifyOTPModel(
-            phoneNumber: widget.PhoneNumber,
-            verificationCode: OtpController.text);
+            phoneNumber: widget.PhoneNumber, verificationCode: otpToVerify);
         AddFamilyOTPResponse response =
             await authViewModel.verifyMyOTP(params.toJson());
         if (response.isSuccess) {
@@ -428,7 +521,7 @@ class _VerifyPatientState extends State<VerifyPatient> {
         }
       } else {
         PatientSignupOtp logInModel = new PatientSignupOtp(
-          verificationCode: OtpController.text,
+          verificationCode: otpToVerify,
           userName: widget.PhoneNumber,
           source: strSource,
         );

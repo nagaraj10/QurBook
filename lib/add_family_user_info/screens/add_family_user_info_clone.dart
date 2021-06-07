@@ -5,6 +5,7 @@ import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/language/blocks/LanguageBlock.dart';
 import 'package:myfhb/language/model/Language.dart';
 import 'package:myfhb/language/repository/LanguageRepository.dart';
+import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -158,9 +159,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     getSupportedLanguages();
     addFamilyUserInfoBloc = new AddFamilyUserInfoBloc();
     _addFamilyUserInfoRepository = new AddFamilyUserInfoRepository();
-    addFamilyUserInfoBloc.getDeviceSelectionValues();
+    addFamilyUserInfoBloc
+        .getDeviceSelectionValues()
+        .then((value) => fetchUserProfileInfo());
     setValuesInEditText();
-    fetchUserProfileInfo();
+
     languageBlock = new LanguageRepository();
   }
 
@@ -416,27 +419,30 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                             maxLength: 3))
                   ],
                 ),
-                Padding(
-                  padding:
-                      EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
-                  child: DropdownButton(
-                    isExpanded: true,
-                    hint: Text(
-                      CommonConstants.preferredLanguage,
-                      style: TextStyle(
-                        fontSize: 16.0.sp,
-                      ),
-                    ),
-                    value: selectedLanguage,
-                    items: languagesList,
-                    onChanged: (String newLanguage) {
-                      setState(() {
-                        selectedLanguage = newLanguage;
-                      });
-                      addFamilyUserInfoBloc.preferredLanguage = newLanguage;
-                    },
-                  ),
-                ),
+                widget.arguments.fromClass == CommonConstants.user_update
+                    ? Padding(
+                        padding: EdgeInsets.only(
+                            left: 20, right: 20, top: 5, bottom: 0),
+                        child: DropdownButton(
+                          isExpanded: true,
+                          hint: Text(
+                            CommonConstants.preferredLanguage,
+                            style: TextStyle(
+                              fontSize: 16.0.sp,
+                            ),
+                          ),
+                          value: selectedLanguage,
+                          items: languagesList,
+                          onChanged: (String newLanguage) {
+                            setState(() {
+                              selectedLanguage = newLanguage;
+                            });
+                            addFamilyUserInfoBloc.preferredLanguage =
+                                newLanguage;
+                          },
+                        ),
+                      )
+                    : Container(),
                 _showDateOfBirthTextField(),
                 AddressTypeWidget(
                   addressResult: _addressResult,
@@ -1595,10 +1601,39 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       additionalInfo.language = new List();
     }
 
-    List<String> languageSelectedList = getLanguageList();
-    additionalInfo.language = languageSelectedList;
-
     profileResult.additionalInfo = additionalInfo;
+
+    try {
+      List<UserProfileSettingCollection3> userProfileSettingCollection =
+          new List();
+
+      UserProfileSettingCollection3 userProfileSettingCollection3Obj =
+          new UserProfileSettingCollection3();
+      ProfileSetting profileSetting = new ProfileSetting();
+      userProfileSettingCollection =
+          widget.arguments.myProfileResult.userProfileSettingCollection3;
+      if (userProfileSettingCollection.length > 0) {
+        userProfileSettingCollection3Obj =
+            myProfile.result.userProfileSettingCollection3[0];
+        if (userProfileSettingCollection3Obj.profileSetting != null) {
+          profileSetting = userProfileSettingCollection3Obj.profileSetting;
+          userProfileSettingCollection3Obj.profileSetting.preferred_language =
+              selectedLanguage;
+        } else {
+          profileSetting.preferred_language = selectedLanguage;
+          userProfileSettingCollection3Obj.profileSetting = profileSetting;
+        }
+        userProfileSettingCollection.insert(
+            0, userProfileSettingCollection3Obj);
+      } else {
+        profileSetting.preferred_language = selectedLanguage;
+        userProfileSettingCollection3Obj.profileSetting = profileSetting;
+        userProfileSettingCollection.add(userProfileSettingCollection3Obj);
+      }
+
+      profileResult.userProfileSettingCollection3 =
+          userProfileSettingCollection;
+    } catch (e) {}
 
     if (currentselectedBloodGroup != null &&
         currentselectedBloodGroupRange != null) {
@@ -1616,17 +1651,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         userAddressCollection3.id =
             widget?.arguments?.sharedbyme?.child?.userAddressCollection3[0].id;
       }
-
-      //allow family member update their email address when they non primary user
-      // if (widget
-      //     .arguments?.sharedbyme?.child?.userContactCollection3.isNotEmpty) {
-      //   UserContactCollection3 userContact = widget.arguments?.sharedbyme?.child
-      //       ?.userContactCollection3[0] as UserContactCollection3;
-      //   userContact.email = emailController.text;
-      //   List<UserContactCollection3> userContactCollection3List = new List();
-      //   userContactCollection3List.add(userContact);
-      //   profileResult.userContactCollection3 = userContactCollection3List;
-      // }
     } else if (widget.arguments.fromClass == CommonConstants.user_update) {
       addFamilyUserInfoBloc.isUpdate = false;
       profileResult.id = widget.arguments.myProfileResult.id;
@@ -1783,7 +1807,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           } else {
             Navigator.pop(dialogContext);
             Alert.displayAlertPlain(context,
-                title: variable.Error, content: value.message);
+                title: variable.Error,
+                content: value?.message ?? 'Error while updating');
           }
         });
       } else {
@@ -2274,7 +2299,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   }
 
   void setValueLanguages() {
-    for (LanguageResult languageResultObj in languageModelList.result) {
+    /* for (LanguageResult languageResultObj in languageModelList.result) {
       if (languageResultObj.referenceValueCollection.length > 0) {
         for (ReferenceValueCollection referenceValueCollection
             in languageResultObj.referenceValueCollection) {
@@ -2292,6 +2317,34 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           }
         }
       }
+    }*/
+    if (myProfile?.result?.userProfileSettingCollection3?.isNotEmpty) {
+      ProfileSetting profileSetting =
+          myProfile?.result?.userProfileSettingCollection3[0].profileSetting;
+      if (profileSetting != null) {
+        CommonUtil.langaugeCodes.forEach((language, languageCode) {
+          if (language == profileSetting.preferred_language) {
+            //setLanguageToField(language, languageCode);
+            selectedLanguage = language;
+          }
+        });
+      }
     }
+  }
+
+  void setLanguageToField(String language, String languageCode) {
+    final langCode = language.split("-").first;
+    String currentLanguage = langCode;
+
+    if (currentLanguage.isNotEmpty) {
+      CommonUtil.supportedLanguages.forEach((language, languageCode) {
+        if (currentLanguage == languageCode) {
+          return;
+        }
+      });
+    }
+
+    PreferenceUtil.saveString(
+        SHEELA_LANG, CommonUtil.langaugeCodes[languageCode] ?? 'en-IN');
   }
 }

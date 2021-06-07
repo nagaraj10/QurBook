@@ -859,7 +859,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                       fhbBasicWidget.getErrorMsgForUnitEntered(
                         context,
                         CommonConstants.strTemperature,
-                        commonConstants.tempUNIT,
+                        'F',
                         deviceController,
                         (errorValue) {
                           setState(() {
@@ -867,7 +867,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                           });
                         },
                         errorMsg,
-                        commonConstants.tempUNIT,
+                        'F',
                         deviceName,
                       )
                     ],

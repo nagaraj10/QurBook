@@ -8,10 +8,12 @@ class FormDataDropDown extends StatefulWidget {
   FormDataDropDown({
     @required this.fieldData,
     @required this.updateValue,
+    @required this.canEdit,
   });
 
   final FieldModel fieldData;
   final Function(FieldModel updatedfieldData) updateValue;
+  final bool canEdit;
 
   @override
   _FormDataDropDownState createState() => _FormDataDropDownState();
@@ -84,12 +86,14 @@ class _FormDataDropDownState extends State<FormDataDropDown> {
           value: comboValue,
           items: comboItems,
           onChanged: (value) {
-            setState(() {
-              comboValue = value;
-            });
-            FieldModel updatedFieldData = widget.fieldData;
-            updatedFieldData.value = (value).toString();
-            widget.updateValue(updatedFieldData);
+            if (widget.canEdit) {
+              setState(() {
+                comboValue = value;
+              });
+              FieldModel updatedFieldData = widget.fieldData;
+              updatedFieldData.value = (value).toString();
+              widget.updateValue(updatedFieldData);
+            }
           },
         ),
       ],
