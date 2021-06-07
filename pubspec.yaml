@@ -21,7 +21,7 @@ dependencies:
     sdk: flutter
   
   gmiwidgetspackage:
-    path: ../../fhb/fhbCommon
+    path: ../../QurHealth/fhbCommon
 
   # The following adds the Cupertino Icons font to your application.
   flutter_launcher_icons: ^0.7.0
@@ -155,6 +155,8 @@ flutter:
     - assets/video/
     - assets/slide_icons/
     - assets/
+    - assets/launcher/qurplan.png
+    - assets/IntroScreensImages/
     - assets/devices/
     - secrets.json
     - assets/payment/failure.png
