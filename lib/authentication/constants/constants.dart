@@ -78,7 +78,7 @@ const String strEmailCantEmpty = 'Please Enter Valid Email';
 const String strPhoneValidText = 'Please Enter Valid Phone Number';
 const String strUserNameCantEmpty = 'Please Enter Valid User Name';
 const String strUserNameValid = 'Please Enter Username in lowercase';
-const String strOtpCantEmpty = 'Please Enter Valid Otp';
+const String strOtpCantEmpty = 'Please Enter Valid OTP';
 const String strValidOtp = 'Otp should have six characters';
 const String strPasswordMultiChecks =
     'Password should one special character, number, lowercase and uppercase alphabets';

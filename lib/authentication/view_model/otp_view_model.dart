@@ -1,6 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'dart:async';
 import 'package:myfhb/authentication/service/authservice.dart';
 import 'package:get/get.dart';
@@ -8,6 +11,7 @@ import 'package:myfhb/authentication/view/confirm_via_call_widget.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:mobile_number/mobile_number.dart';
 import 'package:myfhb/authentication/model/otp_response_model.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class OtpViewModel extends ChangeNotifier {
   final AuthService _authService = AuthService();
@@ -52,12 +56,19 @@ class OtpViewModel extends ChangeNotifier {
     LoaderClass.showLoadingDialog(Get.context, canDismiss: false);
     List<dynamic> ivrNumberslist = await getIVRNumbers();
     bool canDialDirectly = false;
+    bool isLoaderOpen = true;
     if (Platform.isAndroid) {
-      bool hasPermission = await MobileNumber.hasPhonePermission;
-      if (!hasPermission) {
+      PermissionStatus phoneStatus = await Permission.phone.status;
+      if (phoneStatus != PermissionStatus.granted) {
         LoaderClass.hideLoadingDialog(Get.context);
-        await MobileNumber.requestPhonePermission;
-      } else {
+        isLoaderOpen = false;
+        if (phoneStatus == PermissionStatus.denied ||
+            phoneStatus == PermissionStatus.undetermined) {
+          //if permission denied ask again
+          phoneStatus = await Permission.phone.request();
+        } 
+      } 
+      if(phoneStatus == PermissionStatus.granted) {
         final List<SimCard> simCards = await MobileNumber.getSimCards;
         simCards?.forEach((simCard) {
           if (phoneNumber ==
@@ -67,7 +78,9 @@ class OtpViewModel extends ChangeNotifier {
         });
       }
     }
-    LoaderClass.hideLoadingDialog(Get.context);
+    if (isLoaderOpen) {
+      LoaderClass.hideLoadingDialog(Get.context);
+    }
     updateDialogStatus(true);
     Get.dialog(
       ConfirmViaCallWidget(
