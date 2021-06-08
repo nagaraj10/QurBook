@@ -40,6 +40,11 @@ class PreferenceUtil {
     return _prefsInstance.containsKey(key);
   }
 
+  static saveShownIntroScreens() async {
+    var instance = await _prefs;
+    instance.setBool(Constants.KeyShowIntroScreens, true);
+  }
+
   static Future<bool> saveMediaData(
       String keyProfile, MediaResult mediaData) async {
     var instance = await _prefs;

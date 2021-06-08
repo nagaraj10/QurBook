@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:myfhb/IntroScreens/IntroWidget.dart';
+import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/variable_constant.dart';
+import 'package:myfhb/src/ui/SplashScreen.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 
 class IntroductionScreen extends StatefulWidget {
@@ -17,6 +21,12 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
     IntroWidget(icon_TrustedAnswerIntro),
     IntroWidget(icon_ReminderIntro),
   ];
+  @override
+  void initState() {
+    PreferenceUtil.saveShownIntroScreens();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,10 +61,13 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
             height: 10,
           ),
           FlatButton(
-              onPressed: () {},
+              onPressed: () {
+                Get.offAll(SplashScreen());
+              },
               child: Text(
-                'skip',
-                style: TextStyle(color: Colors.grey),
+                (screens.length - 1) == currentScreen ? 'close' : 'skip',
+                style:
+                    TextStyle(color: Color(CommonUtil().getMyPrimaryColor())),
               )),
           const SizedBox(
             height: 20,
@@ -71,7 +84,9 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
       margin: EdgeInsets.only(right: 5),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        color: currentScreen == index ? HexColor('2831b1') : Colors.grey,
+        color: currentScreen == index
+            ? Color(CommonUtil().getMyPrimaryColor())
+            : Colors.grey,
       ),
     );
   }

@@ -112,6 +112,8 @@ const String INTRO_SLIDE_DESC_5 =
     'Securily and Privately share your medical records with your family,  doctors and caregivers';
 const String KEY_SHOWCASE_DASHBOARD = 'KEY_SHOWCASE_DASHBOARD';
 const String KEY_SHOWCASE_HOMESCREEN = 'KEY_SHOWCASE_HOMESCREEN';
+const String KeyShowIntroScreens = 'KeyShowIntroScreens';
+
 const String KEY_SHOWCASE_CAMERASCREEN = 'KEY_SHOWCASE_CAMERASCREEN';
 
 const String KEY_SHOWCASE_Plan = 'KEY_SHOWCASE_Plan';

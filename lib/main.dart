@@ -4,6 +4,7 @@ import 'dart:io' show Platform;
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:myfhb/IntroScreens/IntroductionScreen.dart';
 //import 'package:myfhb/QurPlan/WelcomeScreens/qurplan_welcome_screen.dart';
 // import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
@@ -247,13 +248,14 @@ class _MyFHBState extends State<MyFHB> {
   var globalContext;
   AuthService authService = AuthService();
   ChatViewModel chatViewModel = new ChatViewModel();
-
+  bool isFirstTime;
   @override
   void initState() {
     // TODO: implement initState
 
     /*NotificationController.instance.takeFCMTokenWhenAppLaunch();
     NotificationController.instance.initLocalNotification();*/
+    CheckForShowingTheIntroScreens();
     chatViewModel.setCurrentChatRoomID('none');
     super.initState();
     CommonUtil.askPermissionForCameraAndMic();
@@ -498,6 +500,15 @@ class _MyFHBState extends State<MyFHB> {
     //initConnectivity();
     _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+  }
+
+  CheckForShowingTheIntroScreens() async {
+    try {
+      isFirstTime =
+          await PreferenceUtil.isKeyValid(Constants.KeyShowIntroScreens);
+    } catch (e) {
+      isFirstTime = false;
+    }
   }
 
   @override
@@ -825,7 +836,9 @@ class _MyFHBState extends State<MyFHB> {
   }
 
   Widget findHomeWidget(String navRoute) {
-    if (navRoute.isEmpty) {
+    if (isFirstTime != null && !isFirstTime) {
+      return IntroductionScreen();
+    } else if (navRoute.isEmpty) {
       return SplashScreen();
     } else {
       try {
