@@ -18,6 +18,7 @@ import 'package:myfhb/plan_dashboard/model/SearchListModel.dart';
 import 'package:myfhb/plan_dashboard/services/SearchListService.dart';
 import 'package:myfhb/plan_dashboard/view/categoryList.dart';
 import 'package:myfhb/plan_dashboard/view/planList.dart';
+import 'package:myfhb/plan_dashboard/view/searchProviderList.dart';
 import 'package:myfhb/plan_dashboard/viewModel/planViewModel.dart';
 import 'package:myfhb/plan_dashboard/viewModel/subscribeViewModel.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
@@ -47,6 +48,7 @@ class _SearchListState extends State<SearchListHome> {
   final GlobalKey _hospitalKey = GlobalKey();
   bool isFirst;
   BuildContext _myContext;
+
   @override
   void initState() {
     FocusManager.instance.primaryFocus.unfocus();
@@ -54,7 +56,7 @@ class _SearchListState extends State<SearchListHome> {
     Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
       isInitial: true,
     );
-    providerList = myPlanViewModel.getSearchListInit('');
+    providerList = myPlanViewModel.getSearchListInit();
     isFirst = PreferenceUtil.isKeyValid(Constants.KEY_SHOWCASE_hospitalList);
 
     try {
@@ -83,11 +85,12 @@ class _SearchListState extends State<SearchListHome> {
       _myContext = context;
       return Scaffold(
           body: Visibility(
-        visible: Provider.of<RegimentViewModel>(context).regimentsDataAvailable,
-        child: Container(
-          child: Column(
-            children: [
-              SearchWidget(
+            visible:
+                Provider.of<RegimentViewModel>(context).regimentsDataAvailable,
+            child: Container(
+              child: Column(
+                children: [
+                 /* SearchWidget(
                 searchController: searchController,
                 searchFocus: searchFocus,
                 onChanged: (title) {
@@ -98,44 +101,58 @@ class _SearchListState extends State<SearchListHome> {
                   }
                 },
                 hintText: variable.strSearchByHosLoc,
-              ),
+              ),*/
               SizedBox(
                 height: 5.0.h,
               ),
-              Visibility(
-                  visible: isLoaderVisible,
-                  child: new Center(
-                    child: SizedBox(
-                      width: 30.0.h,
-                      height: 30.0.h,
-                      child: new CircularProgressIndicator(
-                          strokeWidth: 1.5,
-                          backgroundColor:
-                              Color(new CommonUtil().getMyPrimaryColor())),
-                    ),
-                  )),
-              Expanded(
-                  child: searchModel != null ?? searchModel.isSuccess
-                      ? searchListView(searchModel.result)
-                      : getProviderList())
-            ],
-          ),
-        ),
-        replacement: Center(
-          child: Padding(
-            padding: EdgeInsets.all(
-              10.0.sp,
-            ),
-            child: Text(
-              Constants.categoriesForFamily,
-              style: TextStyle(
-                fontSize: 16.0.sp,
+                  Visibility(
+                      visible: isLoaderVisible,
+                      child: new Center(
+                        child: SizedBox(
+                          width: 30.0.h,
+                          height: 30.0.h,
+                          child: new CircularProgressIndicator(
+                              strokeWidth: 1.5,
+                              backgroundColor:
+                                  Color(new CommonUtil().getMyPrimaryColor())),
+                        ),
+                      )),
+                  Expanded(
+                      child: searchModel != null ?? searchModel.isSuccess
+                          ? searchListView(searchModel.result)
+                          : getProviderList())
+                ],
               ),
-              textAlign: TextAlign.center,
+            ),
+            replacement: Center(
+              child: Padding(
+                padding: EdgeInsets.all(
+                  10.0.sp,
+                ),
+                child: Text(
+                  Constants.categoriesForFamily,
+                  style: TextStyle(
+                    fontSize: 16.0.sp,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
             ),
           ),
-        ),
-      ));
+          floatingActionButton: FloatingActionButton(
+            heroTag: "searchOpt",
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SearchProviderList()),
+              );
+            },
+            child: Icon(
+              Icons.add,
+              color: Color(new CommonUtil().getMyPrimaryColor()),
+              size: 24.0.sp,
+            ),
+          ));
     }));
   }
 
