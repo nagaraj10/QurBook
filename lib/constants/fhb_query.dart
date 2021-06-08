@@ -225,6 +225,7 @@ const String qr_plan_list = 'plan-package-master/wrapperApi';
 const String qr_getUserPack = 'Action=GetUserPackages';
 const String qr_getPack = 'Action=GetPackages';
 const String qr_getSearchList = 'Action=GetProviderList';
+const String qr_getUserSearchList = 'Action=GetUserProviderList';
 const String qr_qEqaul = '&q=';
 const String qr_providerEqaul = '&providerid=';
 const String qr_getUserPackDetail = 'Action=GetUserPlanDetails&packageid=';
