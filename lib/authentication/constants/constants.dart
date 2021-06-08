@@ -156,10 +156,10 @@ const String strVerifyCall = 'Confirm via Call';
 const String strOrText = 'or';
 const String strOtpNotReceived =
     'Don\'t you receive the OTP ? you can re-try in ';
-const String strCallFromNumber =
-    'Call from your registered number to complete the process';
 const String strCallDirect =
-    'Click & call anyone of the below numbers to complete the process';
+    'Please call from your registered number to complete the process';
+const String primaryNumber = 'Primary Number';
+const String alternateNumber = 'Alternate Number';
 
 //Strings used in ChangePassword
 const String strNewPassword = 'newPassword';

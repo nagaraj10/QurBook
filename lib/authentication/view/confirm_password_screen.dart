@@ -14,6 +14,7 @@ import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/authentication/view_model/otp_view_model.dart';
 import 'package:provider/provider.dart';
+import 'package:myfhb/widgets/RaisedGradientButton.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   ChangePasswordScreen({this.userName});
@@ -219,6 +220,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                           ),
                         ],
                       ),
+                      SizedBox(
+                        height: 20.0.h,
+                      ),
+                      _changePassword(),
                       SizedBox(height: 10.0.h),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -249,44 +254,42 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                           ),
                         ],
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          InkWell(
-                            onTap: otpViewModel.timerSeconds == 0
-                                ? () {
-                                    otpViewModel?.stopOTPTimer();
-                                    otpViewModel.confirmViaCall(
-                                      phoneNumber: widget.userName ?? '',
-                                      onOtpReceived: (String otpCode) {
-                                        _verifyDetails(
-                                          otpCode: otpCode,
-                                        );
-                                      },
-                                    );
-                                  }
-                                : null,
-                            child: Container(
-                              padding: EdgeInsets.symmetric(vertical: 5),
-                              alignment: Alignment.bottomRight,
+                      SizedBox(height: 10.0.h),
+                      Visibility(
+                        visible: otpViewModel.timerSeconds == 0,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            RaisedGradientButton(
+                              gradient: LinearGradient(colors: [
+                                Color(new CommonUtil().getMyPrimaryColor()),
+                                Color(new CommonUtil().getMyGredientColor()),
+                              ]),
+                              width: 200.0.w,
                               child: Text(
                                 strVerifyCall,
                                 style: TextStyle(
-                                    color: otpViewModel.timerSeconds == 0
-                                        ? Color(
-                                            CommonUtil().getMyPrimaryColor())
-                                        : Colors.grey,
+                                    color: Colors.white,
                                     fontSize: 15.0.sp,
                                     fontWeight: FontWeight.w600),
                               ),
+                              onPressed: otpViewModel.timerSeconds == 0
+                                  ? () {
+                                      otpViewModel?.stopOTPTimer();
+                                      otpViewModel.confirmViaCall(
+                                        phoneNumber: widget.userName ?? '',
+                                        onOtpReceived: (String otpCode) {
+                                          _verifyDetails(
+                                            otpCode: otpCode,
+                                          );
+                                        },
+                                      );
+                                    }
+                                  : null,
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                      SizedBox(
-                        height: 20.0.h,
-                      ),
-                      _changePassword(),
                     ],
                   ),
                 ),
