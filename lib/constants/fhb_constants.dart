@@ -475,6 +475,15 @@ const strVideo = 'video';
 const strFiles = 'file';
 const strAudio = 'audio';
 
+const strYourQurplans = 'Your Qurplans';
+const strYourRegimen = 'Your Regimen';
+const strVitals = 'Vitals';
+const strSymptomsCheckIn = 'Symptoms Check-in';
+const strYourFamily = 'Your Family';
+const strYourProviders = 'Your Providers';
+const strHowVideos = 'How to use Videos?';
+const strChatWithUs = 'Chat with us';
+
 const strUploading = 'Uploading...';
 const strSubscribe = 'Subscribe';
 const strUnSubscribe = 'UnSubscribe';

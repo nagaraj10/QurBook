@@ -169,6 +169,17 @@ const String icon_no_internet = 'assets/no_internet.png';
 const String icon_something_wrong = 'assets/something-wrong.png';
 const String icon_refresh_dash = 'assets/icons/refresh_dash.png';
 
+//Dashboard
+const String icon_call = 'assets/dashboard/call.svg';
+const String icon_chat_dash = 'assets/dashboard/chat.svg';
+const String icon_check_symptoms = 'assets/dashboard/check-symptoms.svg';
+const String icon_how_to_use = 'assets/dashboard/how-to-use.svg';
+const String icon_my_family = 'assets/dashboard/my-family.svg';
+const String icon_my_health_regimen = 'assets/dashboard/my-health-regimen.svg';
+const String icon_my_plan = 'assets/dashboard/my-plan.svg';
+const String icon_my_providers = 'assets/dashboard/my-providers.svg';
+const String icon_record_my_vitals = 'assets/dashboard/record-my-vitals.svg';
+
 //For Apple Health Settings Info
 const String apple_health_settings_info = 'assets/settings/health.jpg';
 const String strUnderstood = 'Understood';
