@@ -320,7 +320,7 @@ class AuthService {
     try {
       final response = await http.get(
         Constants.BASE_URL +
-            'authentication-log/polling/?phone=${phoneNumber ?? ''}',
+            'authentication-log/polling/?phone=${phoneNumber ?? ''}&source=myFHB',
         headers: headerRequest,
       );
       if (response != null) {
