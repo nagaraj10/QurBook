@@ -218,6 +218,8 @@ class CommonConstants {
   static String weightName = "Weight(Kg)";
   static String preferredLanguage = "Preferred Language";
 
+  static String specialization = "Specialization";
+  static String hospitalName = "Hospital Name";
   //===========================================//
 
   static String strOperationSignUp = 'signUp';

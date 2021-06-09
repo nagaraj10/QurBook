@@ -2,11 +2,13 @@ import 'dart:convert';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_country_picker/flutter_country_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/add_providers/models/add_providers_arguments.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
@@ -16,6 +18,7 @@ import 'package:myfhb/search_providers/models/doctor_list_response_new.dart';
 import 'package:myfhb/search_providers/models/hospital_list_response_new.dart';
 import 'package:myfhb/search_providers/models/labs_list_response_new.dart';
 import 'package:myfhb/search_providers/models/search_arguments.dart';
+import 'package:myfhb/search_providers/services/doctors_list_repository.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
@@ -57,6 +60,28 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
   String value;
+
+  final mobileNoController = TextEditingController();
+  FocusNode mobileNoFocus = FocusNode();
+
+  final nameController = TextEditingController();
+  FocusNode nameFocus = FocusNode();
+
+  final firstNameController = TextEditingController();
+  FocusNode firstNameFocus = FocusNode();
+
+  final lastNameController = TextEditingController();
+  FocusNode lastNameFocus = FocusNode();
+
+  final specializationController = TextEditingController();
+  FocusNode specializationFocus = FocusNode();
+
+  final hospitalNameController = TextEditingController();
+  FocusNode hospitalNameFocus = FocusNode();
+
+  DoctorsListRepository doctorsListRepository = new DoctorsListRepository();
+
+  var _selected = Country.IN;
 
   @override
   void initState() {
@@ -414,7 +439,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                 ..onTap = () {
                   if (widget.toPreviousScreen) {
                     widget.arguments.searchWord == CommonConstants.doctors
-                        ? passDoctorsValue(diagnostics.errorData, context)
+                        ? saveMediaDialog(context)
                         : widget.arguments.searchWord ==
                                 CommonConstants.hospitals
                             ? passHospitalValue(null, context)
@@ -423,23 +448,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                 },
             ),
             new TextSpan(
-              text: ' to add the Doctor as ',
-              style: new TextStyle(
-                color: ColorUtils.blackcolor,
-                fontSize: 15.0.sp,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            new TextSpan(
-              text: ' Unknown Doctor ',
-              style: new TextStyle(
-                color: ColorUtils.blackcolor,
-                fontSize: 18.0.sp,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            new TextSpan(
-              text: ' temporarily',
+              text: ' to add the Doctor',
               style: new TextStyle(
                 color: ColorUtils.blackcolor,
                 fontSize: 15.0.sp,
@@ -988,5 +997,396 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       city = city + ',' + toBeginningOfSentenceCase(data.stateName);
     }
     return city;
+  }
+
+  saveMediaDialog(BuildContext context) {
+    firstNameController.text = '';
+    lastNameController.text = '';
+    mobileNoController.text = '';
+    specializationController.text = '';
+    hospitalNameController.text = '';
+
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(builder: (context, setState) {
+          return AlertDialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(1)),
+            content: Container(
+                width: 1.sw,
+                height: 1.sh / 1.5,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                IconButton(
+                                    icon: Icon(
+                                      Icons.close,
+                                      size: 24.0.sp,
+                                    ),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    })
+                              ],
+                            ),
+
+                            Row(
+                              children: <Widget>[
+                                _showFirstNameTextField(),
+                              ],
+                            ),
+
+                            SizedBox(
+                              height: 10.0.h,
+                            ),
+                            Row(
+                              children: <Widget>[
+                                _showLastNameTextField(),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10.0.h,
+                            ),
+                            Row(
+                              children: <Widget>[
+                                CountryPicker(
+                                  nameTextStyle: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w500),
+                                  dialingCodeTextStyle: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w500),
+                                  dense: false,
+                                  showFlag: false,
+                                  //displays flag, true by default
+                                  showDialingCode: true,
+                                  //displays dialing code, false by default
+                                  showName: false,
+                                  //displays country name, true by default
+                                  showCurrency: false,
+                                  //eg. 'British pound'
+                                  showCurrencyISO: false,
+                                  //eg. 'GBP'
+                                  onChanged: (Country country) {
+                                    setState(() {
+                                      _selected = country;
+                                    });
+                                  },
+                                  selectedCountry: _selected,
+                                ),
+                                _ShowMobileNoTextField()
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10.0.h,
+                            ),
+
+                            Row(
+                              children: <Widget>[
+                                _showSpecializationTextField(),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10.0.h,
+                            ),
+                            Row(
+                              children: <Widget>[
+                                _showHospitalNameTextField(),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10.0.h,
+                            ),
+
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                _showAddDoctorButton(),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 20.0.h,
+                            ),
+                            // callAddFamilyStreamBuilder(),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                )),
+          );
+        });
+      },
+    );
+  }
+
+  Widget _showFirstNameTextField() {
+    return Expanded(
+        child: TextField(
+      cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+      controller: firstNameController,
+      maxLines: 1,
+      keyboardType: TextInputType.text,
+      focusNode: firstNameFocus,
+      textInputAction: TextInputAction.done,
+      onSubmitted: (term) {
+        FocusScope.of(context).requestFocus(firstNameFocus);
+      },
+      style: new TextStyle(
+          fontWeight: FontWeight.w500,
+          fontSize: 16.0.sp,
+          color: ColorUtils.blackcolor),
+      decoration: InputDecoration(
+        labelText: CommonConstants.firstNameWithStar,
+        hintText: CommonConstants.firstName,
+        labelStyle: TextStyle(
+            fontSize: 15.0.sp,
+            fontWeight: FontWeight.w400,
+            color: ColorUtils.myFamilyGreyColor),
+        hintStyle: TextStyle(
+          fontSize: 16.0.sp,
+          color: ColorUtils.myFamilyGreyColor,
+          fontWeight: FontWeight.w400,
+        ),
+        border: new UnderlineInputBorder(
+            borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
+      ),
+    ));
+  }
+
+  Widget _showLastNameTextField() {
+    return Expanded(
+        child: TextField(
+      cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+      controller: lastNameController,
+      maxLines: 1,
+      keyboardType: TextInputType.text,
+      focusNode: lastNameFocus,
+      textInputAction: TextInputAction.done,
+      onSubmitted: (term) {
+        lastNameFocus.unfocus();
+      },
+      style: new TextStyle(
+          fontWeight: FontWeight.w500,
+          fontSize: 16.0.sp,
+          color: ColorUtils.blackcolor),
+      decoration: InputDecoration(
+        labelText: CommonConstants.lastName,
+        hintText: CommonConstants.lastName,
+        labelStyle: TextStyle(
+            fontSize: 15.0.sp,
+            fontWeight: FontWeight.w400,
+            color: ColorUtils.myFamilyGreyColor),
+        hintStyle: TextStyle(
+          fontSize: 16.0.sp,
+          color: ColorUtils.myFamilyGreyColor,
+          fontWeight: FontWeight.w400,
+        ),
+        border: new UnderlineInputBorder(
+            borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
+      ),
+    ));
+  }
+
+  Widget _ShowMobileNoTextField() {
+    return Expanded(
+      child: new TextField(
+          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+          controller: mobileNoController,
+          maxLines: 1,
+          enabled: true,
+          keyboardType: TextInputType.text,
+          focusNode: mobileNoFocus,
+          textInputAction: TextInputAction.done,
+          onSubmitted: (term) {
+            mobileNoFocus.unfocus();
+          },
+          style: new TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 16.0.sp,
+              color: ColorUtils.blackcolor),
+          decoration: InputDecoration(
+            hintText: CommonConstants.mobile_number,
+            labelStyle: TextStyle(
+                fontSize: 14.0.sp,
+                fontWeight: FontWeight.w400,
+                color: ColorUtils.myFamilyGreyColor),
+            hintStyle: TextStyle(
+              fontSize: 16.0.sp,
+              color: ColorUtils.myFamilyGreyColor,
+              fontWeight: FontWeight.w400,
+            ),
+            border: new UnderlineInputBorder(
+                borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
+          )),
+    );
+  }
+
+  Widget _showSpecializationTextField() {
+    return Expanded(
+        child: TextField(
+      cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+      controller: specializationController,
+      maxLines: 1,
+      keyboardType: TextInputType.text,
+      focusNode: specializationFocus,
+      textInputAction: TextInputAction.done,
+      onSubmitted: (term) {
+        FocusScope.of(context).requestFocus(lastNameFocus);
+      },
+      style: new TextStyle(
+          fontWeight: FontWeight.w500,
+          fontSize: 16.0.sp,
+          color: ColorUtils.blackcolor),
+      decoration: InputDecoration(
+        labelText: CommonConstants.specialization,
+        hintText: CommonConstants.specialization,
+        labelStyle: TextStyle(
+            fontSize: 15.0.sp,
+            fontWeight: FontWeight.w400,
+            color: ColorUtils.myFamilyGreyColor),
+        hintStyle: TextStyle(
+          fontSize: 16.0.sp,
+          color: ColorUtils.myFamilyGreyColor,
+          fontWeight: FontWeight.w400,
+        ),
+        border: new UnderlineInputBorder(
+            borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
+      ),
+    ));
+  }
+
+  Widget _showHospitalNameTextField() {
+    return Expanded(
+        child: TextField(
+      cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+      controller: hospitalNameController,
+      maxLines: 1,
+      keyboardType: TextInputType.text,
+      focusNode: hospitalNameFocus,
+      textInputAction: TextInputAction.done,
+      onSubmitted: (term) {
+        FocusScope.of(context).requestFocus(specializationFocus);
+      },
+      style: new TextStyle(
+          fontWeight: FontWeight.w500,
+          fontSize: 16.0.sp,
+          color: ColorUtils.blackcolor),
+      decoration: InputDecoration(
+        labelText: CommonConstants.hospitalName,
+        hintText: CommonConstants.hospitalName,
+        labelStyle: TextStyle(
+            fontSize: 15.0.sp,
+            fontWeight: FontWeight.w400,
+            color: ColorUtils.myFamilyGreyColor),
+        hintStyle: TextStyle(
+          fontSize: 16.0.sp,
+          color: ColorUtils.myFamilyGreyColor,
+          fontWeight: FontWeight.w400,
+        ),
+        border: new UnderlineInputBorder(
+            borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
+      ),
+    ));
+  }
+
+  _showAddDoctorButton() {
+    final GestureDetector addButtonWithGesture = new GestureDetector(
+      onTap: _addDoctorToList,
+      child: new Container(
+        width: 130.0.w,
+        height: 40.0.h,
+        decoration: new BoxDecoration(
+          color: Color(new CommonUtil().getMyPrimaryColor()),
+          borderRadius: new BorderRadius.all(Radius.circular(2.0)),
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+              color: Color.fromARGB(15, 0, 0, 0),
+              offset: Offset(0, 2),
+              blurRadius: 5,
+            ),
+          ],
+        ),
+        child: new Center(
+          child: new Text(
+            'Add Doctor',
+            style: new TextStyle(
+              color: Colors.white,
+              fontSize: 16.0.sp,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+        ),
+      ),
+    );
+
+    return new Padding(
+        padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 30.0),
+        child: addButtonWithGesture);
+  }
+
+  void _addDoctorToList() {
+    var addDoctorData = {};
+    var doctorReferenced = {};
+    var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+
+    if (firstNameController.text.trim() != '') {
+      addDoctorData['firstName'] =
+          toBeginningOfSentenceCase(firstNameController.text);
+      addDoctorData['lastName'] = lastNameController.text.trim() == ''
+          ? ''
+          : toBeginningOfSentenceCase(lastNameController.text);
+      addDoctorData['specialization'] =
+          specializationController.text.trim() == ''
+              ? null
+              : specializationController.text;
+      if (mobileNoController.text.trim() == '' ||
+          mobileNoController.text == null) {
+        addDoctorData['phoneNumber'] = mobileNoController.text.trim() == ''
+            ? null
+            : mobileNoController.text;
+      } else {
+        String phoneNumber = '+' +
+            _selected.dialingCode.toString() +
+            '' +
+            mobileNoController.text;
+        addDoctorData['phoneNumber'] = phoneNumber;
+      }
+      addDoctorData['hospitalName'] = hospitalNameController.text.trim() == ''
+          ? null
+          : hospitalNameController.text;
+      addDoctorData['email'] = null;
+      addDoctorData['addressLine1'] = null;
+      addDoctorData['addressLine2'] = null;
+      addDoctorData['city'] = null;
+      addDoctorData['state'] = null;
+      addDoctorData['isReferenced'] = null;
+      addDoctorData['pincode'] = null;
+
+      doctorReferenced['id'] = userid;
+      addDoctorData['referredPatient'] = doctorReferenced;
+      var params = json.encode(addDoctorData);
+      print(params.toString());
+
+      doctorsListRepository.addDoctorFromProvider(params).then((value) {
+        Navigator.pop(context);
+        passDoctorsValue(value, context);
+      });
+    } else {
+      showDialog(
+          context: context,
+          child: new AlertDialog(
+            title: new Text(variable.strAPP_NAME),
+            content: new Text('Enter First Name'),
+          ));
+    }
   }
 }
