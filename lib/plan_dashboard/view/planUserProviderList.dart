@@ -84,59 +84,41 @@ class _SearchListState extends State<SearchListHome> {
     }, builder: Builder(builder: (context) {
       _myContext = context;
       return Scaffold(
-          body: Visibility(
-            visible:
-                Provider.of<RegimentViewModel>(context).regimentsDataAvailable,
-            child: Container(
-              child: Column(
-                children: [
-                 /* SearchWidget(
-                searchController: searchController,
-                searchFocus: searchFocus,
-                onChanged: (title) {
-                  if (title != '' && title.length > 2) {
-                    onSearchedNew(title);
-                  } else {
-                    onSearchedNew(title);
-                  }
-                },
-                hintText: variable.strSearchByHosLoc,
-              ),*/
-              SizedBox(
-                height: 5.0.h,
-              ),
-                  Visibility(
-                      visible: isLoaderVisible,
-                      child: new Center(
-                        child: SizedBox(
-                          width: 30.0.h,
-                          height: 30.0.h,
-                          child: new CircularProgressIndicator(
-                              strokeWidth: 1.5,
-                              backgroundColor:
-                                  Color(new CommonUtil().getMyPrimaryColor())),
-                        ),
-                      )),
-                  Expanded(
-                      child: searchModel != null ?? searchModel.isSuccess
-                          ? searchListView(searchModel.result)
-                          : getProviderList())
-                ],
-              ),
+          body: Container(
+            child: Column(
+              children: [
+               /* SearchWidget(
+              searchController: searchController,
+              searchFocus: searchFocus,
+              onChanged: (title) {
+                if (title != '' && title.length > 2) {
+                  onSearchedNew(title);
+                } else {
+                  onSearchedNew(title);
+                }
+              },
+              hintText: variable.strSearchByHosLoc,
+            ),*/
+            SizedBox(
+              height: 5.0.h,
             ),
-            replacement: Center(
-              child: Padding(
-                padding: EdgeInsets.all(
-                  10.0.sp,
-                ),
-                child: Text(
-                  Constants.categoriesForFamily,
-                  style: TextStyle(
-                    fontSize: 16.0.sp,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
+                Visibility(
+                    visible: isLoaderVisible,
+                    child: new Center(
+                      child: SizedBox(
+                        width: 30.0.h,
+                        height: 30.0.h,
+                        child: new CircularProgressIndicator(
+                            strokeWidth: 1.5,
+                            backgroundColor:
+                                Color(new CommonUtil().getMyPrimaryColor())),
+                      ),
+                    )),
+                Expanded(
+                    child: searchModel != null ?? searchModel.isSuccess
+                        ? searchListView(searchModel.result)
+                        : getProviderList())
+              ],
             ),
           ),
           floatingActionButton: FloatingActionButton(

@@ -87,48 +87,31 @@ class _MyPlanState extends State<MyPlanList> {
     }, builder: Builder(builder: (context) {
       _myContext = context;
       return Scaffold(
-          body: Visibility(
-        visible: Provider.of<RegimentViewModel>(context).regimentsDataAvailable,
-        child: Container(
-            child: Column(
-          children: [
-            SearchWidget(
-              onChanged: (providerName) {
-                if (providerName != '' && providerName.length > 2) {
-                  isSearch = true;
-                  onSearchedNew(providerName);
-                } else {
-                  setState(() {
-                    isSearch = false;
-                  });
-                }
-              },
-            ),
-            SizedBox(
-              height: 5.0.h,
-            ),
-            Expanded(
-              child: myPlanListModel != null ?? myPlanListModel.isSuccess
-                  ? hospitalList(myPlanListModel.result)
-                  : getPlanList(),
-            )
-          ],
-        )),
-        replacement: Center(
-          child: Padding(
-            padding: EdgeInsets.all(
-              10.0.sp,
-            ),
-            child: Text(
-              Constants.plansForFamily,
-              style: TextStyle(
-                fontSize: 16.0.sp,
+          body: Container(
+              child: Column(
+            children: [
+              SearchWidget(
+                onChanged: (providerName) {
+                  if (providerName != '' && providerName.length > 2) {
+                    isSearch = true;
+                    onSearchedNew(providerName);
+                  } else {
+                    setState(() {
+                      isSearch = false;
+                    });
+                  }
+                },
               ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ),
-      ));
+              SizedBox(
+                height: 5.0.h,
+              ),
+              Expanded(
+                child: myPlanListModel != null ?? myPlanListModel.isSuccess
+                    ? hospitalList(myPlanListModel.result)
+                    : getPlanList(),
+              )
+            ],
+          )));
     }));
   }
 
