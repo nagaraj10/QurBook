@@ -4,13 +4,14 @@ import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/authentication/view_model/otp_view_model.dart';
 import 'package:myfhb/authentication/view/call_dial_widget.dart';
 import 'package:provider/provider.dart';
+import 'or_divider.dart';
 
 class ConfirmViaCallWidget extends StatelessWidget {
   ConfirmViaCallWidget({
     @required this.ivrNumbersList,
   });
 
-  List<dynamic> ivrNumbersList;
+  List<String> ivrNumbersList;
 
   @override
   Widget build(BuildContext context) {
@@ -67,10 +68,15 @@ class ConfirmViaCallWidget extends StatelessWidget {
     int index = 0;
     for (var ivrNumber in ivrNumbersList) {
       phoneWidgets.add(('${ivrNumber ?? ''}').isNotEmpty
-          ? CallDialWidget(
-              phoneNumber: ivrNumber ?? '',
-              phoneNumberName:
-                  index == 0 ? primaryNumber : '${alternateNumber} $index',
+          ? Column(
+              children: [
+                if (index != 0) OrDivider(),
+                CallDialWidget(
+                  phoneNumber: ivrNumber ?? '',
+                  phoneNumberName:
+                      index == 0 ? primaryNumber : '${alternateNumber} $index',
+                ),
+              ],
             )
           : const SizedBox.shrink());
       index++;
