@@ -24,7 +24,6 @@ class RegimentViewModel extends ChangeNotifier {
   List<RegimentDataModel> regimentsScheduledList = [];
   List<RegimentDataModel> regimentsAsNeededList = [];
   List<RegimentDataModel> regimentsFilteredList = [];
-  bool regimentsDataAvailable = true;
   bool searchExpanded = false;
   RegimentStatus regimentStatus = RegimentStatus.Loaded;
   DateTime selectedDate = DateTime.now();
@@ -210,24 +209,13 @@ class RegimentViewModel extends ChangeNotifier {
     regimentsList.clear();
     regimentsAsNeededList.clear();
     regimentsScheduledList.clear();
-    if (PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN) ==
-        PreferenceUtil.getStringValue(Constants.KEY_USERID)) {
-      if (isInitial) {
-        updateRegimentStatus(RegimentStatus.Loading, isInitial: isInitial);
-      }
-      regimentsDataAvailable = true;
-      regimentsData = await RegimentService.getRegimentData(
-        dateSelected: CommonUtil().dateConversionToApiFormat(selectedDate),
-      );
-      updateRegimentStatus(RegimentStatus.Loaded);
-    } else {
-      regimentsDataAvailable = false;
-      regimentsData = RegimentResponseModel(
-        isSuccess: true,
-        regimentsList: [],
-        message: Constants.plansForFamily,
-      );
+    if (isInitial) {
+      updateRegimentStatus(RegimentStatus.Loading, isInitial: isInitial);
     }
+    regimentsData = await RegimentService.getRegimentData(
+      dateSelected: CommonUtil().dateConversionToApiFormat(selectedDate),
+    );
+    updateRegimentStatus(RegimentStatus.Loaded);
     regimentsData?.regimentsList?.forEach((event) {
       if (event.doseMeal) {
         regimentsAsNeededList.add(event);

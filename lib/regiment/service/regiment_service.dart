@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/HeaderRequest.dart';
 import 'package:http/http.dart' as http;
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
@@ -13,6 +14,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 class RegimentService {
   static Future<RegimentResponseModel> getRegimentData(
       {String dateSelected}) async {
+    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     final urlForRegiment = Constants.BASE_URL + variable.regiment;
     try {
       final headerRequest =
@@ -32,7 +34,7 @@ class RegimentService {
           {
             "method": "get",
             "data":
-                "Action=GetUserActivities&lang=$currentLanguage&date=$dateSelected",
+                "Action=GetUserActivities&lang=$currentLanguage&date=$dateSelected${variable.qr_patientEqaul}$userId",
           },
         ),
       );
@@ -52,6 +54,7 @@ class RegimentService {
 
   static Future<SaveResponseModel> saveFormData(
       {String eid, String events}) async {
+    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     final urlForRegiment = Constants.BASE_URL + variable.regiment;
     try {
       final headerRequest =
@@ -62,7 +65,8 @@ class RegimentService {
         body: json.encode(
           {
             "method": "post",
-            "data": "Action=SaveFormForEvent&eid=$eid${events ?? ''}",
+            "data":
+                "Action=SaveFormForEvent&eid=$eid${events ?? ''}${variable.qr_patientEqaul}$userId",
           },
         ),
       );
@@ -82,6 +86,7 @@ class RegimentService {
   }
 
   static Future<FieldsResponseModel> getFormData({String eid}) async {
+    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     final urlForRegiment = Constants.BASE_URL + variable.regiment;
     try {
       final headerRequest =
@@ -92,7 +97,8 @@ class RegimentService {
         body: json.encode(
           {
             "method": "get",
-            "data": "Action=GetFormForEvent&eid=$eid",
+            "data":
+                "Action=GetFormForEvent&eid=$eid${variable.qr_patientEqaul}$userId",
           },
         ),
       );
@@ -112,6 +118,7 @@ class RegimentService {
   }
 
   static Future<ProfileResponseModel> getProfile() async {
+    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     final urlForRegiment = Constants.BASE_URL + variable.regiment;
     try {
       final headerRequest =
@@ -122,7 +129,7 @@ class RegimentService {
         body: json.encode(
           {
             "method": "get",
-            "data": "&Action=GetProfile",
+            "data": "&Action=GetProfile${variable.qr_patientEqaul}$userId",
           },
         ),
       );
@@ -142,6 +149,7 @@ class RegimentService {
   }
 
   static Future<SaveResponseModel> saveProfile({String schedules}) async {
+    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     final urlForRegiment = Constants.BASE_URL + variable.regiment;
     try {
       final headerRequest =
@@ -152,7 +160,8 @@ class RegimentService {
         body: json.encode(
           {
             "method": "post",
-            "data": "Action=SetProfile$schedules",
+            "data":
+                "Action=SetProfile$schedules${variable.qr_patientEqaul}$userId",
           },
         ),
       );
@@ -172,6 +181,7 @@ class RegimentService {
   }
 
   static Future<SaveResponseModel> undoSaveFormData({String eid}) async {
+    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     final urlForRegiment = Constants.BASE_URL + variable.regiment;
     try {
       final headerRequest =
@@ -182,7 +192,7 @@ class RegimentService {
         body: json.encode(
           {
             "method": "post",
-            "data": "Action=UnDO&eid=$eid",
+            "data": "Action=UnDO&eid=$eid${variable.qr_patientEqaul}$userId",
           },
         ),
       );
