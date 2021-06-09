@@ -486,18 +486,12 @@ class RegimentDataCard extends StatelessWidget {
 
       Provider.of<RegimentViewModel>(context, listen: false)
           .updateRegimentStatus(RegimentStatus.DialogClosed);
+    } else if (!regimentData.hasform) {
+      FlutterToast().getToast(
+        tickInfo,
+        Colors.black,
+      );
     }
-    // } else {
-    //   FlutterToast().getToast(
-    //     (Provider.of<RegimentViewModel>(context,
-    //         listen: false)
-    //         .regimentMode ==
-    //         RegimentMode.Symptoms)
-    //         ? symptomsError
-    //         : activitiesError,
-    //     Colors.red,
-    //   );
-    // }
   }
 
   stopRegimenTTS() {

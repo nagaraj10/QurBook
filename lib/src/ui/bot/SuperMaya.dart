@@ -17,6 +17,14 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'view/ChatScreen.dart';
 
 class SuperMaya extends StatefulWidget {
+  SuperMaya({
+    this.isHome = false,
+    this.onBackPressed,
+  });
+
+  final bool isHome;
+  final Function onBackPressed;
+
   @override
   _SuperMayaState createState() => _SuperMayaState();
 }
@@ -79,116 +87,124 @@ class _SuperMayaState extends State<SuperMaya> {
       builder: Builder(
         builder: (context) {
           _myContext = context;
-          return Scaffold(
-              backgroundColor: const Color(fhbColors.bgColorContainer),
-              appBar: PreferredSize(
-                preferredSize: Size.fromHeight(60),
-                child: AppBar(
-                  flexibleSpace: GradientAppBar(),
-                  backgroundColor: Colors.transparent,
-                  leading: IconWidget(
-                    icon: Icons.arrow_back_ios,
-                    colors: Colors.white,
-                    size: 24.0.sp,
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
+          return WillPopScope(
+            onWillPop: (){
+              if(widget.isHome){
+                widget.onBackPressed();
+              }
+              Future.value(widget.isHome ? false : true);
+            },
+            child: Scaffold(
+                backgroundColor: const Color(fhbColors.bgColorContainer),
+                appBar: widget.isHome ? null : PreferredSize(
+                  preferredSize: Size.fromHeight(60),
+                  child: AppBar(
+                    flexibleSpace: GradientAppBar(),
+                    backgroundColor: Colors.transparent,
+                    leading: IconWidget(
+                      icon: Icons.arrow_back_ios,
+                      colors: Colors.white,
+                      size: 24.0.sp,
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    elevation: 0,
+                    title: Text('Sheela G'),
+                    actions: [
+                      Center(
+                          child: new CommonUtil().getNotificationIcon(context)),
+                      SizedBoxWidget(
+                        width: 10.0.w,
+                      ),
+                    ],
+                    centerTitle: true,
                   ),
-                  elevation: 0,
-                  title: Text('Sheela G'),
-                  actions: [
-                    Center(
-                        child: new CommonUtil().getNotificationIcon(context)),
-                    SizedBoxWidget(
-                      width: 10.0.w,
-                    ),
-                  ],
-                  centerTitle: true,
                 ),
-              ),
-              body: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Image.asset(
-                      PreferenceUtil.getStringValue(Constants.keyMayaAsset) !=
-                              null
-                          ? PreferenceUtil.getStringValue(
-                                  Constants.keyMayaAsset) +
-                              variable.strExtImg
-                          : variable.icon_mayaMain,
-                      height: 160.0.h,
-                      width: 160.0.h,
-                      //color: Colors.deepPurple,
-                    ),
-                    //Icon(Icons.people),
-                    Text(
-                      variable.strIntromaya,
-                      softWrap: true,
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    SizedBox(
-                        width: 150.0.w,
-                        height: 50.0.h,
-                        child: FHBBasicWidget.customShowCase(
-                            _micKey,
-                            variable.strTapMaya,
-                            RaisedGradientButton(
-                                borderRadius: 30,
-                                child: Text(
-                                  variable.strStartNow,
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 16.0.sp),
-                                ),
-                                gradient: LinearGradient(
-                                  colors: <Color>[
-                                    Color(new CommonUtil().getMyPrimaryColor()),
-                                    Color(
-                                        new CommonUtil().getMyGredientColor()),
-                                  ],
-                                ),
-                                onPressed: () {
-                                  String sheela_lang =
-                                      PreferenceUtil.getStringValue(
-                                          Constants.SHEELA_LANG);
-                                  if (sheela_lang != null &&
-                                      sheela_lang != '') {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) {
-                                          return ChatScreen(
-                                            isSheelaAskForLang: false,
-                                            langCode: sheela_lang,
-                                          );
-                                        },
-                                      ),
-                                    );
-                                  } else {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) {
-                                          return ChatScreen(
-                                            isSheelaAskForLang: true,
-                                          );
-                                        },
-                                      ),
-                                    );
-                                  }
+                body: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Image.asset(
+                        PreferenceUtil.getStringValue(Constants.keyMayaAsset) !=
+                                null
+                            ? PreferenceUtil.getStringValue(
+                                    Constants.keyMayaAsset) +
+                                variable.strExtImg
+                            : variable.icon_mayaMain,
+                        height: 160.0.h,
+                        width: 160.0.h,
+                        //color: Colors.deepPurple,
+                      ),
+                      //Icon(Icons.people),
+                      Text(
+                        variable.strIntromaya,
+                        softWrap: true,
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      SizedBox(
+                          width: 150.0.w,
+                          height: 50.0.h,
+                          child: FHBBasicWidget.customShowCase(
+                              _micKey,
+                              variable.strTapMaya,
+                              RaisedGradientButton(
+                                  borderRadius: 30,
+                                  child: Text(
+                                    variable.strStartNow,
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 16.0.sp),
+                                  ),
+                                  gradient: LinearGradient(
+                                    colors: <Color>[
+                                      Color(new CommonUtil().getMyPrimaryColor()),
+                                      Color(
+                                          new CommonUtil().getMyGredientColor()),
+                                    ],
+                                  ),
+                                  onPressed: () {
+                                    String sheela_lang =
+                                        PreferenceUtil.getStringValue(
+                                            Constants.SHEELA_LANG);
+                                    if (sheela_lang != null &&
+                                        sheela_lang != '') {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) {
+                                            return ChatScreen(
+                                              isSheelaAskForLang: false,
+                                              langCode: sheela_lang,
+                                            );
+                                          },
+                                        ),
+                                      );
+                                    } else {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) {
+                                            return ChatScreen(
+                                              isSheelaAskForLang: true,
+                                            );
+                                          },
+                                        ),
+                                      );
+                                    }
 
-                                  /* requestPermission(_micpermission)
-                                      .then((status) {
-                                    if (status == PermissionStatus.granted) {
+                                    /* requestPermission(_micpermission)
+                                        .then((status) {
+                                      if (status == PermissionStatus.granted) {
 
-                                    } 
-                                  });*/
-                                }),
-                            variable.strMaya)),
-                  ],
-                ),
-              ));
+                                      }
+                                    });*/
+                                  }),
+                              variable.strMaya)),
+                    ],
+                  ),
+                )),
+          );
         },
       ),
     );

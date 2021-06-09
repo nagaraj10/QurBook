@@ -303,11 +303,10 @@ class _SplashScreenState extends State<SplashScreen> {
                       } else {
                         fbaLog(eveParams: {
                           'eventTime': '${DateTime.now()}',
-                          'ns_type': 'dashboard',
-                          'navigationPage': 'Dashboard',
+                          'ns_type': 'landing',
+                          'navigationPage': 'Landing',
                         });
-                        PageNavigator.goToPermanent(
-                            context, router.rt_Dashboard);
+                        PageNavigator.goToPermanent(context, router.rt_Landing);
                       }
                     } else {
                       FirebaseMessaging _firebaseMessaging =

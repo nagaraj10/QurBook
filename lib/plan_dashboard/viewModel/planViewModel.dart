@@ -65,4 +65,13 @@ class PlanViewModel extends ChangeNotifier {
     } catch (e) {}
   }
 
+
+  Future<SearchListModel> getUserSearchListInit() async {
+    try {
+      SearchListModel searchListModel =
+      await searchListService.getUserProviderList();
+      return searchListModel;
+    } catch (e) {}
+  }
+
 }

@@ -17,4 +17,13 @@ class SearchListService {
     final response = await _helper.getSearchListApi(qr_plan_list,jsonString);
     return SearchListModel.fromJson(response);
   }
+
+  Future<SearchListModel> getUserProviderList() async {
+    var body = {};
+    body['method'] = qr_get;
+    body['data'] = qr_getUserSearchList;
+    var jsonString = convert.jsonEncode(body);
+    final response = await _helper.getSearchListApi(qr_plan_list,jsonString);
+    return SearchListModel.fromJson(response);
+  }
 }
