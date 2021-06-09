@@ -1531,6 +1531,19 @@ class ApiBaseHelper {
     }
     return responseJson;
   }
+
+  Future<dynamic> addDoctorFromProvider(String url, String jsonData) async {
+    var responseJson;
+    try {
+      final response = await http.post(_baseUrl + url,
+          body: jsonData, headers: await headerRequest.getRequestHeader());
+      responseJson = _returnResponse(response);
+      print(responseJson.toString());
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
 }
 
 void exitFromApp() async {

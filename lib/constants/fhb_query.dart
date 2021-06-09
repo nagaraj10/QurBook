@@ -157,6 +157,8 @@ const String qr_include = 'include=';
 const String qr_personal = 'personal';
 const String qr_name_desc = 'desc';
 const String qr_skip = 'skip=';
+const String qr_reference_doctor = 'reference-doctor/';
+const String qr_non_qurpro = 'non-qurpro-doctor';
 
 const String qr_health_organization = 'health-organization/';
 const String qr_health_Search = 'search/';
