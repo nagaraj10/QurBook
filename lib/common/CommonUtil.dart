@@ -1544,7 +1544,10 @@ class CommonUtil {
     return myProfile;
   }
 
-  Widget getNotificationIcon(BuildContext context) {
+  Widget getNotificationIcon(
+    BuildContext context, {
+    Color color,
+  }) {
     try {
       int count = 0;
       String targetID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
@@ -1578,7 +1581,7 @@ class CommonUtil {
                 child: BadgeIcon(
                     icon: Icon(
                       Icons.notifications,
-                      color: Colors.white,
+                      color: color ?? Colors.white,
                       size: 30.0.sp,
                     ),
                     badgeColor: ColorUtils.countColor,
@@ -1595,7 +1598,7 @@ class CommonUtil {
                 child: BadgeIcon(
                     icon: Icon(
                       Icons.notifications,
-                      color: Colors.white,
+                      color: color ?? Colors.white,
                       size: 30.0.sp,
                     ),
                     badgeColor: ColorUtils.countColor,
@@ -1614,7 +1617,7 @@ class CommonUtil {
         child: BadgeIcon(
             icon: Icon(
               Icons.notifications,
-              color: Colors.white,
+              color: color ?? Colors.white,
               size: 30.0.sp,
             ),
             badgeColor: ColorUtils.countColor,

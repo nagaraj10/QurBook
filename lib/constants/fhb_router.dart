@@ -34,6 +34,7 @@ import '../confirm_location/screens/confirm_location_screen.dart';
 import '../feedback/Feedbacks.dart';
 import '../feedback/FeedbacksSucess.dart';
 import '../my_family_detail/screens/my_family_detail_screen.dart';
+import 'package:myfhb/landing/view/landing_screen.dart';
 
 setRouter(List<CameraDescription> listOfCameras) async {
   var firstCamera = listOfCameras[0];
@@ -42,6 +43,7 @@ setRouter(List<CameraDescription> listOfCameras) async {
     router.rt_Splash: (BuildContext context) => SplashScreen(),
     router.rt_SignIn: (BuildContext context) => SignInScreen(),
     router.rt_Dashboard: (BuildContext context) => DashboardScreen(),
+    router.rt_Landing: (BuildContext context) => LandingScreen(),
     router.rt_HomeScreen: (BuildContext context) =>
         HomeScreen(arguments: ModalRoute.of(context).settings.arguments),
     router.rt_deviceDashboard: (BuildContext context) =>

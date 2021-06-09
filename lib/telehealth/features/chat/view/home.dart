@@ -27,7 +27,14 @@ import '../../../../common/CommonUtil.dart';
 import 'package:myfhb/common/errors_widget.dart';
 
 class ChatHomeScreen extends StatefulWidget {
-  ChatHomeScreen({Key key}) : super(key: key);
+  ChatHomeScreen({
+    Key key,
+    this.isHome = false,
+    this.onBackPressed,
+  }) : super(key: key);
+
+  final bool isHome;
+  final Function onBackPressed;
 
   @override
   State createState() => HomeScreenState();
@@ -138,7 +145,11 @@ class HomeScreenState extends State<ChatHomeScreen> {
   }
 
   Future<bool> onBackPress() {
-    Navigator.pop(context);
+    if (!widget.isHome) {
+      Navigator.pop(context);
+    }else{
+      widget.onBackPressed();
+    }
     return Future.value(false);
   }
 
@@ -244,33 +255,35 @@ class HomeScreenState extends State<ChatHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        flexibleSpace: GradientAppBar(),
-        leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              size: 24.0.sp,
+      appBar: widget.isHome
+          ? null
+          : AppBar(
+              flexibleSpace: GradientAppBar(),
+              leading: IconButton(
+                  icon: Icon(
+                    Icons.arrow_back_ios,
+                    size: 24.0.sp,
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  }),
+              elevation: 0.0,
+              backgroundColor: Colors.transparent,
+              title: Text(
+                CHAT,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16.0.sp,
+                ),
+              ),
+              centerTitle: true,
+              actions: [
+                Center(child: new CommonUtil().getNotificationIcon(context)),
+                SizedBoxWidget(
+                  width: 10,
+                ),
+              ],
             ),
-            onPressed: () {
-              Navigator.of(context).pop();
-            }),
-        elevation: 0.0,
-        backgroundColor: Colors.transparent,
-        title: Text(
-          CHAT,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 16.0.sp,
-          ),
-        ),
-        centerTitle: true,
-        actions: [
-          Center(child: new CommonUtil().getNotificationIcon(context)),
-          SizedBoxWidget(
-            width: 10,
-          ),
-        ],
-      ),
       body: WillPopScope(
         child: checkIfDoctorIdExist(),
         onWillPop: onBackPress,
@@ -455,7 +468,9 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                   child: Text(
                                     /* toBeginningOfSentenceCase(
                                         snapshotUser.data[STR_NICK_NAME]), */
-                                    snapshotUser?.data[STR_NICK_NAME]?.toString()?.capitalizeFirstofEach,    
+                                    snapshotUser?.data[STR_NICK_NAME]
+                                        ?.toString()
+                                        ?.capitalizeFirstofEach,
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
                                     style: TextStyle(

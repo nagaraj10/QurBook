@@ -60,8 +60,14 @@ export 'package:myfhb/src/model/Media/MediaTypeResponse.dart';
 
 class MyRecords extends StatefulWidget {
   MyRecordsArgument argument;
+  final bool isHome;
+  final Function onBackPressed;
 
-  MyRecords({this.argument});
+  MyRecords({
+    this.argument,
+    this.isHome = false,
+    this.onBackPressed,
+  });
 
   @override
   _MyRecordsState createState() => _MyRecordsState();
@@ -142,33 +148,43 @@ class _MyRecordsState extends State<MyRecords> {
 
   @override
   Widget build(BuildContext context) {
-    return ShowCaseWidget(onFinish: () {
-      PreferenceUtil.saveString(
-          Constants.KEY_SHOWCASE_HOMESCREEN, variable.strtrue);
-    }, builder: Builder(builder: (context) {
-      _myContext = context;
-      return getCompleteWidgets();
-    }));
+    return WillPopScope(
+      onWillPop: () {
+        if (widget.isHome) {
+          widget.onBackPressed();
+        }
+        return Future.value(widget.isHome ? false : true);
+      },
+      child: ShowCaseWidget(onFinish: () {
+        PreferenceUtil.saveString(
+            Constants.KEY_SHOWCASE_HOMESCREEN, variable.strtrue);
+      }, builder: Builder(builder: (context) {
+        _myContext = context;
+        return getCompleteWidgets();
+      })),
+    );
   }
 
   Widget getCompleteWidgets() {
     return Scaffold(
       key: scaffold_state,
-      appBar: AppBar(
-        elevation: 0,
-        automaticallyImplyLeading: false,
-        flexibleSpace: GradientAppBar(),
-        leading: IconWidget(
-          icon: Icons.arrow_back_ios,
-          colors: Colors.white,
-          size: 24.0.sp,
-          onTap: () {
-            Navigator.pop(context);
-          },
-        ),
-        titleSpacing: 0,
-        title: _buildSearchField(),
-      ),
+      appBar: widget.isHome
+          ? null
+          : AppBar(
+              elevation: 0,
+              automaticallyImplyLeading: false,
+              flexibleSpace: GradientAppBar(),
+              leading: IconWidget(
+                icon: Icons.arrow_back_ios,
+                colors: Colors.white,
+                size: 24.0.sp,
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+              titleSpacing: 0,
+              title: _buildSearchField(),
+            ),
       body: fromSearch
           ? getResponseForSearchedMedia()
           : getResponseFromApiWidget(),

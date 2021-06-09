@@ -28,6 +28,7 @@ import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:myfhb/common/errors_widget.dart';
+import 'package:myfhb/landing/view/landing_screen.dart';
 
 class MoreMenuScreen extends StatefulWidget {
   final Function refresh;
@@ -446,7 +447,9 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                               createAppColorSelection(variable.myThemes[index],
                                   variable.myGradient[index]);
 
-                              HomeScreen.of(context).refresh();
+                              HomeScreen.of(context)?.refresh();
+                              LandingScreen.of(context)?.refresh();
+
                               setState(() {});
                             },
                             child: Padding(
