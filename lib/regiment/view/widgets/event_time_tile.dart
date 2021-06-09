@@ -20,14 +20,25 @@ class EventTimeTile extends StatefulWidget {
 class _EventTimeTileState extends State<EventTimeTile> {
   TimeOfDay timeSelected;
   DayPeriod selectedTimePeriod = DayPeriod.am;
+  final _textFormField = TextEditingController();
 
   getTimeAsString(TimeOfDay timeOfDay) {
-    selectedTimePeriod = timeOfDay.period;
-    int hour = timeOfDay?.hourOfPeriod;
-    if (timeOfDay?.hour == 12) {
-      hour = 12;
+    if (timeOfDay != null) {
+      selectedTimePeriod = timeOfDay.period;
+      int hour = timeOfDay?.hourOfPeriod;
+      if (timeOfDay?.hour == 12) {
+        hour = 12;
+      }
+      return '${hour > 9 ? '' : '0'}${hour}:${timeOfDay.minute > 9 ? '' : '0'}${timeOfDay.minute}';
+    } else {
+      return '';
     }
-    return '${hour > 9 ? '' : '0'}${hour}:${timeOfDay.minute > 9 ? '' : '0'}${timeOfDay.minute}';
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _textFormField.text = getTimeAsString(widget.selectedTime);
   }
 
   @override
@@ -76,6 +87,7 @@ class _EventTimeTileState extends State<EventTimeTile> {
                       initialTime: timeSelected ?? TimeOfDay.now(),
                     );
                     if (timeSelected != null) {
+                      _textFormField.text = getTimeAsString(timeSelected);
                       setState(() {
                         selectedTimePeriod = timeSelected.period;
                       });
@@ -89,16 +101,21 @@ class _EventTimeTileState extends State<EventTimeTile> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(
-                        getTimeAsString(timeSelected),
+                      TextFormField(
+                        controller: _textFormField,
                         style: TextStyle(
                           fontSize: 16.0.sp,
                         ),
+                        enabled: false,
+                        validator: (val) {
+                          return val.isEmpty ? 'error' : null;
+                        },
+                        decoration: InputDecoration(isDense: true,errorStyle: TextStyle(height: 0),),
                       ),
-                      Divider(
-                        height: 2.0.h,
-                        color: Colors.grey,
-                      ),
+                      // Divider(
+                      //   height: 2.0.h,
+                      //   color: Colors.grey,
+                      // ),
                     ],
                   ),
                 ),
