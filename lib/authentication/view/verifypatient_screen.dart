@@ -40,6 +40,7 @@ import 'package:myfhb/constants/fhb_constants.dart' as con;
 import 'package:myfhb/authentication/view_model/otp_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:myfhb/widgets/RaisedGradientButton.dart';
+import 'or_divider.dart';
 
 class VerifyPatient extends StatefulWidget {
   VerifyPatient(
@@ -236,33 +237,7 @@ class _VerifyPatientState extends State<VerifyPatient> {
                                 ),
                               ],
                             ),
-                            SizedBox(height: 5.0.h),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Divider(
-                                    thickness: 2.0.h,
-                                    indent: 5.0.w,
-                                    endIndent: 5.0.w,
-                                  ),
-                                ),
-                                Text(
-                                  strOrText,
-                                  style: TextStyle(
-                                    fontSize: 15.0.sp,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Divider(
-                                    thickness: 2.0.h,
-                                    indent: 5.0.w,
-                                    endIndent: 5.0.w,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 5.0.h),
+                            OrDivider(),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [

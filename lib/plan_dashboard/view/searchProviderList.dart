@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -24,15 +25,16 @@ import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
+import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
 import 'package:showcaseview/showcase_widget.dart';
 
-class SearchListHome extends StatefulWidget {
+class SearchProviderList extends StatefulWidget {
   @override
-  _SearchListState createState() => _SearchListState();
+  _SearchProviderList createState() => _SearchProviderList();
 }
 
-class _SearchListState extends State<SearchListHome> {
+class _SearchProviderList extends State<SearchProviderList> {
   PlanViewModel myPlanViewModel = new PlanViewModel();
   SearchListModel searchModel;
   SearchListService searchListService = new SearchListService();
@@ -47,13 +49,14 @@ class _SearchListState extends State<SearchListHome> {
   final GlobalKey _hospitalKey = GlobalKey();
   bool isFirst;
   BuildContext _myContext;
+
   @override
   void initState() {
-    FocusManager.instance.primaryFocus.unfocus();
+    searchFocus.requestFocus();
     super.initState();
-    Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
+    /*Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
       isInitial: true,
-    );
+    );*/
     providerList = myPlanViewModel.getSearchListInit('');
     isFirst = PreferenceUtil.isKeyValid(Constants.KEY_SHOWCASE_hospitalList);
 
@@ -82,60 +85,62 @@ class _SearchListState extends State<SearchListHome> {
     }, builder: Builder(builder: (context) {
       _myContext = context;
       return Scaffold(
-          body: Visibility(
-        visible: Provider.of<RegimentViewModel>(context).regimentsDataAvailable,
-        child: Container(
-          child: Column(
-            children: [
-              SearchWidget(
-                searchController: searchController,
-                searchFocus: searchFocus,
-                onChanged: (title) {
-                  if (title != '' && title.length > 2) {
-                    onSearchedNew(title);
-                  } else {
-                    onSearchedNew(title);
-                  }
-                },
-                hintText: variable.strSearchByHosLoc,
+          appBar: AppBar(
+            flexibleSpace: GradientAppBar(),
+            leading: GestureDetector(
+              onTap: () => Get.back(),
+              child: Icon(
+                Icons.arrow_back_ios, // add custom icons also
+                size: 24.0,
               ),
-              SizedBox(
-                height: 5.0.h,
-              ),
-              Visibility(
-                  visible: isLoaderVisible,
-                  child: new Center(
-                    child: SizedBox(
-                      width: 30.0.h,
-                      height: 30.0.h,
-                      child: new CircularProgressIndicator(
-                          strokeWidth: 1.5,
-                          backgroundColor:
-                              Color(new CommonUtil().getMyPrimaryColor())),
-                    ),
-                  )),
-              Expanded(
-                  child: searchModel != null ?? searchModel.isSuccess
-                      ? searchListView(searchModel.result)
-                      : getProviderList())
-            ],
-          ),
-        ),
-        replacement: Center(
-          child: Padding(
-            padding: EdgeInsets.all(
-              10.0.sp,
             ),
-            child: Text(
-              Constants.categoriesForFamily,
+            title: Text(
+              'Search Provider',
               style: TextStyle(
-                fontSize: 16.0.sp,
+                fontSize: 18.0,
+                fontWeight: FontWeight.w500,
               ),
-              textAlign: TextAlign.center,
             ),
           ),
-        ),
-      ));
+          body: Container(
+            child: Column(
+              children: [
+                SearchWidget(
+                  searchController: searchController,
+                  searchFocus: searchFocus,
+                  onChanged: (title) {
+                    if (title != '' && title.length > 2) {
+                      onSearchedNew(title);
+                    } else {
+                      setState(() {
+                        searchModel = null;
+                      });
+                    }
+                  },
+                  hintText: variable.strSearchByHosLoc,
+                ),
+                SizedBox(
+                  height: 5.0.h,
+                ),
+                Visibility(
+                    visible: isLoaderVisible,
+                    child: new Center(
+                      child: SizedBox(
+                        width: 30.0.h,
+                        height: 30.0.h,
+                        child: new CircularProgressIndicator(
+                            strokeWidth: 1.5,
+                            backgroundColor:
+                                Color(new CommonUtil().getMyPrimaryColor())),
+                      ),
+                    )),
+                Expanded(
+                    child: searchModel != null ?? searchModel.isSuccess
+                        ? searchListView(searchModel.result)
+                        : getProviderList())
+              ],
+            ),
+          ));
     }));
   }
 
@@ -166,15 +171,7 @@ class _SearchListState extends State<SearchListHome> {
               snapshot?.data?.result?.length > 0) {
             return searchListView(snapshot.data.result);
           } else {
-            return SafeArea(
-              child: SizedBox(
-                height: 1.sh / 1.3,
-                child: Container(
-                    child: Center(
-                  child: Text(variable.strNodata),
-                )),
-              ),
-            );
+            return SizedBox.shrink();
           }
         }
       },
@@ -266,15 +263,7 @@ class _SearchListState extends State<SearchListHome> {
                     Constants.HospitalSelection),
             itemCount: searchListResult.length,
           )
-        : SafeArea(
-            child: SizedBox(
-              height: 1.sh / 1.3,
-              child: Container(
-                  child: Center(
-                child: Text(variable.strNodata),
-              )),
-            ),
-          );
+        : SizedBox.shrink();
   }
 
   Widget searchListItem(

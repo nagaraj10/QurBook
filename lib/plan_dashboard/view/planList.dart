@@ -118,45 +118,27 @@ class _MyPlanState extends State<PlanList> {
               ),
             ),
           ),
-          body: Visibility(
-            visible:
-                Provider.of<RegimentViewModel>(context).regimentsDataAvailable,
-            child: Container(
-              child: Column(
-                children: [
-                  SearchWidget(
-                    onChanged: (title) {
-                      if (title != '' && title.length > 2) {
-                        isSearch = true;
-                        onSearchedNew(title, planListUniq);
-                      } else {
-                        setState(() {
-                          isSearch = false;
-                        });
-                      }
-                    },
-                  ),
-                  SizedBox(
-                    height: 5.0.h,
-                  ),
-                  Expanded(child: planList(planListResult)),
-                  SizedBox(height: 10)
-                ],
-              ),
-            ),
-            replacement: Center(
-              child: Padding(
-                padding: EdgeInsets.all(
-                  10.0.sp,
+          body: Container(
+            child: Column(
+              children: [
+                SearchWidget(
+                  onChanged: (title) {
+                    if (title != '' && title.length > 2) {
+                      isSearch = true;
+                      onSearchedNew(title, planListUniq);
+                    } else {
+                      setState(() {
+                        isSearch = false;
+                      });
+                    }
+                  },
                 ),
-                child: Text(
-                  Constants.mplansForFamily,
-                  style: TextStyle(
-                    fontSize: 16.0.sp,
-                  ),
-                  textAlign: TextAlign.center,
+                SizedBox(
+                  height: 5.0.h,
                 ),
-              ),
+                Expanded(child: planList(planListResult)),
+                SizedBox(height: 10)
+              ],
             ),
           ));
     }));

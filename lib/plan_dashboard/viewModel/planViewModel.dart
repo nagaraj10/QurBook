@@ -18,8 +18,9 @@ class PlanViewModel extends ChangeNotifier {
 
   Future<PlanListModel> getPlanList(String providerId) async {
     try {
+      var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
       PlanListModel myPlanListModel =
-      await myPlanService.getPlanList(providerId);
+      await myPlanService.getPlanList(providerId,userid);
       if(myPlanListModel.isSuccess){
         myPLanListResult = myPlanListModel.result;
       }
@@ -61,6 +62,16 @@ class PlanViewModel extends ChangeNotifier {
     try {
       SearchListModel searchListModel =
       await searchListService.getSearchList(title);
+      return searchListModel;
+    } catch (e) {}
+  }
+
+
+  Future<SearchListModel> getUserSearchListInit() async {
+    try {
+      var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      SearchListModel searchListModel =
+      await searchListService.getUserProviderList(userid);
       return searchListModel;
     } catch (e) {}
   }

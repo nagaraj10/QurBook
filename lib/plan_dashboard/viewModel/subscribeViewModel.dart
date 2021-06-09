@@ -14,17 +14,19 @@ class SubscribeViewModel extends ChangeNotifier {
   SubscribeService myPlanService = new SubscribeService();
 
   Future<SubscribeModel> subScribePlan(String packageId) async {
+    var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     try {
       SubscribeModel myPlanListModel =
-      await myPlanService.subscribePlan(packageId);
+      await myPlanService.subscribePlan(packageId,userid);
       return myPlanListModel;
     } catch (e) {}
   }
 
   Future<SubscribeModel> UnsubScribePlan(String packageId) async {
+    var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     try {
       SubscribeModel myPlanListModel =
-      await myPlanService.UnsubscribePlan(packageId);
+      await myPlanService.UnsubscribePlan(packageId,userid);
       return myPlanListModel;
     } catch (e) {}
   }

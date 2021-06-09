@@ -153,11 +153,11 @@ const String strFirebaseToken = 'Firebase Token from Login Page';
 const String strNetworkIssue = 'Please Check Network Connection';
 const String strresendOtp = 'Resend OTP';
 const String strVerifyCall = 'Confirm via Call';
-const String strOrText = 'or';
+const String strOrText = 'OR';
 const String strOtpNotReceived =
     'Don\'t you receive the OTP ? you can re-try in ';
 const String strCallDirect =
-    'Please call from your registered number to complete the process';
+    'Please call from your registered mobile number a phone number below. Thank you for your understanding';
 const String primaryNumber = 'Primary Number';
 const String alternateNumber = 'Alternate Number';
 
