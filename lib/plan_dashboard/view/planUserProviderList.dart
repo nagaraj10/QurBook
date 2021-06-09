@@ -56,7 +56,7 @@ class _SearchListState extends State<SearchListHome> {
     Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
       isInitial: true,
     );
-    providerList = myPlanViewModel.getSearchListInit();
+    providerList = myPlanViewModel.getUserSearchListInit();
     isFirst = PreferenceUtil.isKeyValid(Constants.KEY_SHOWCASE_hospitalList);
 
     try {
