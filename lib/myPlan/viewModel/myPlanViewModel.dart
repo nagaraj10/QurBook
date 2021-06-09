@@ -11,10 +11,10 @@ class MyPlanViewModel extends ChangeNotifier {
   List<MyPlanListResult> myPLanListResult = List();
 
   Future<MyPlanListModel> getMyPlanList() async {
-    var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+    var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     if (userid != null) {
       try {
-        MyPlanListModel myPlanListModel = await myPlanService.getMyPlanList();
+        MyPlanListModel myPlanListModel = await myPlanService.getMyPlanList(userid);
         if (myPlanListModel.isSuccess) {
           myPLanListResult = myPlanListModel.result;
         }

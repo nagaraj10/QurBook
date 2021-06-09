@@ -228,6 +228,7 @@ const String qr_getSearchList = 'Action=GetProviderList';
 const String qr_getUserSearchList = 'Action=GetUserProviderList';
 const String qr_qEqaul = '&q=';
 const String qr_providerEqaul = '&providerid=';
+const String qr_patientEqaul = '&patientId=';
 const String qr_getUserPackDetail = 'Action=GetUserPlanDetails&packageid=';
 const String qr_subscribePlan = 'Action=Subscribe&packageid=';
 const String qr_UnsubscribePlan = 'Action=UnSubscribe&packageid=';
