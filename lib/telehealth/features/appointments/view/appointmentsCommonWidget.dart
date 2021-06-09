@@ -401,7 +401,7 @@ class AppointmentsCommonWidget {
     );
   }
 
-  Widget floatingButton(BuildContext context) {
+  Widget floatingButton(BuildContext context,{bool isHome=false,}) {
     return FloatingActionButton(
       mini: true,
       backgroundColor: Colors.white,
@@ -417,7 +417,9 @@ class AppointmentsCommonWidget {
         colors: Color(new CommonUtil().getMyPrimaryColor()),
         size: 24.0.sp,
         onTap: () {
-          Navigator.of(context).pop();
+          if(!isHome) {
+            Navigator.of(context).pop();
+          }
           Navigator.pushNamed(
             context,
             '/telehealth-providers',

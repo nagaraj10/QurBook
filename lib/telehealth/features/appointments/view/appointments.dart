@@ -27,6 +27,12 @@ import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class Appointments extends StatefulWidget {
+  Appointments({
+    this.isHome = false,
+  });
+
+  final bool isHome;
+
   @override
   _AppointmentsState createState() => _AppointmentsState();
 }
@@ -71,9 +77,13 @@ class _AppointmentsState extends State<Appointments> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: body(),
-        appBar: appBar(),
-        floatingActionButton: commonWidget.floatingButton(context));
+      body: body(),
+      appBar: widget.isHome ? null : appBar(),
+      floatingActionButton: commonWidget.floatingButton(
+        context,
+        isHome: widget.isHome,
+      ),
+    );
   }
 
   getCategoryList() {
@@ -287,7 +297,9 @@ class _AppointmentsState extends State<Appointments> {
                                       refreshAppointments();
                                     },
                                     closePage: (value) {
-                                      Navigator.pop(context);
+                                      if (!widget.isHome) {
+                                        Navigator.pop(context);
+                                      }
                                     },
                                   );
                                 },

@@ -121,167 +121,167 @@ class _DashboardScreenState extends State<DashboardScreen> {
           _myContext = context;
           return Scaffold(
               key: scaffold_state,
-              bottomNavigationBar: Container(
-                decoration: BoxDecoration(
-                  boxShadow: <BoxShadow>[
-                    BoxShadow(
-                      color: Colors.black54,
-                      blurRadius: 1,
-                    ),
-                  ],
-                ),
-                child: BottomNavigationBar(
-                  type: BottomNavigationBarType.fixed,
-                  selectedFontSize: 10.sp,
-                  unselectedFontSize: 10.sp,
-                  items: <BottomNavigationBarItem>[
-                    BottomNavigationBarItem(
-                        icon: InkWell(
-                            // onTap: () {
-                            //   navigateToTelehealthScreen(0);
-                            // },
-                            child: ImageIcon(
-                          AssetImage(variable.icon_th),
-                          color: Colors.black54,
-                        )),
-                        title: Text(
-                          variable.strTelehealth,
-                          style: TextStyle(color: Colors.black54),
-                        )),
-                    /*BottomNavigationBarItem(
-                        icon: InkWell(
-                          // onTap: () {
-                          //   Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) => ChatHomeScreen()),
-                          //   );
-                          // },
-                            child: ImageIcon(
-                              AssetImage(variable.icon_chat),
-                              color: Colors.black54,
-                            )),
-                        title: Text(
-                          variable.strChat,
-                          style: TextStyle(color: Colors.black54),
-                        )),*/
-                    BottomNavigationBarItem(
-                        icon: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ChatHomeScreen()),
-                            );
-                          },
-                          child: getChatIcon(),
-                        ),
-                        title: Text(
-                          variable.strChat,
-                          style: TextStyle(color: Colors.black54),
-                        )),
-                    BottomNavigationBarItem(
-                        icon: InkWell(
-                          // onTap: () {
-                          //   moveToNextScreen(2);
-                          // },
-                          child: Image.asset(
-                            PreferenceUtil.getStringValue(
-                                        Constants.keyMayaAsset) !=
-                                    null
-                                ? PreferenceUtil.getStringValue(
-                                        Constants.keyMayaAsset) +
-                                    variable.strExtImg
-                                : variable.icon_mayaMain,
-                            height: 25,
-                            width: 25,
-                          ),
-                        ),
-                        title: Text(
-                          'Sheela G',
-                          style: TextStyle(color: Colors.black54),
-                        )),
-                    BottomNavigationBarItem(
-                        icon: InkWell(
-                            // onTap: () {
-                            //   moveToNextScreen(1);
-                            // },
-                            child: ImageIcon(
-                          AssetImage(variable.icon_records),
-                          color: Colors.black54,
-                        )),
-                        title: Text(
-                          variable.strMyRecords,
-                          style: TextStyle(color: Colors.black54),
-                        )),
-                    /*BottomNavigationBarItem(
-                          icon: InkWell(
-                              onTap: () {
-                                moveToFamilyOrprovider(2);
-                              },
-                              child: ImageIcon(
-                                AssetImage(variable.icon_provider),
-                                color: Colors.black54,
-                              )),
-                          title: Text(
-                            variable.strMyProvider,
-                            style: TextStyle(color: Colors.black54),
-                          )),*/
-                    BottomNavigationBarItem(
-                        icon: InkWell(
-                            // onTap: () {
-                            //   Navigator.pushNamed(
-                            //     context,
-                            //     router.rt_UserAccounts,
-                            //     arguments:
-                            //         UserAccountsArguments(selectedIndex: 0),
-                            //   ).then((value) {
-                            //     setState(() {});
-                            //   });
-                            // },
-                            child: ImageIcon(
-                          AssetImage(variable.icon_profile),
-                          color: Colors.black54,
-                        )),
-                        title: Text(
-                          variable.strProfile,
-                          style: TextStyle(color: Colors.black54),
-                        )),
-                  ],
-                  onTap: (tappedIndex) {
-                    switch (tappedIndex) {
-                      case 0:
-                        navigateToTelehealthScreen(0);
-                        break;
-                      case 1:
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ChatHomeScreen()),
-                        );
-                        break;
-                      case 2:
-                        moveToNextScreen(2);
-                        break;
-                      case 3:
-                        moveToNextScreen(1);
-                        break;
-                      case 4:
-                        Navigator.pushNamed(
-                          context,
-                          router.rt_UserAccounts,
-                          arguments: UserAccountsArguments(selectedIndex: 0),
-                        ).then((value) {
-                          setState(() {});
-                        });
-                        break;
-                      default:
-                        navigateToTelehealthScreen(0);
-                        break;
-                    }
-                  },
-                ),
-              ),
+              // bottomNavigationBar: Container(
+              //   decoration: BoxDecoration(
+              //     boxShadow: <BoxShadow>[
+              //       BoxShadow(
+              //         color: Colors.black54,
+              //         blurRadius: 1,
+              //       ),
+              //     ],
+              //   ),
+              //   child: BottomNavigationBar(
+              //     type: BottomNavigationBarType.fixed,
+              //     selectedFontSize: 10.sp,
+              //     unselectedFontSize: 10.sp,
+              //     items: <BottomNavigationBarItem>[
+              //       BottomNavigationBarItem(
+              //           icon: InkWell(
+              //               // onTap: () {
+              //               //   navigateToTelehealthScreen(0);
+              //               // },
+              //               child: ImageIcon(
+              //             AssetImage(variable.icon_th),
+              //             color: Colors.black54,
+              //           )),
+              //           title: Text(
+              //             variable.strTelehealth,
+              //             style: TextStyle(color: Colors.black54),
+              //           )),
+              //       /*BottomNavigationBarItem(
+              //           icon: InkWell(
+              //             // onTap: () {
+              //             //   Navigator.push(
+              //             //     context,
+              //             //     MaterialPageRoute(
+              //             //         builder: (context) => ChatHomeScreen()),
+              //             //   );
+              //             // },
+              //               child: ImageIcon(
+              //                 AssetImage(variable.icon_chat),
+              //                 color: Colors.black54,
+              //               )),
+              //           title: Text(
+              //             variable.strChat,
+              //             style: TextStyle(color: Colors.black54),
+              //           )),*/
+              //       BottomNavigationBarItem(
+              //           icon: GestureDetector(
+              //             onTap: () {
+              //               Navigator.push(
+              //                 context,
+              //                 MaterialPageRoute(
+              //                     builder: (context) => ChatHomeScreen()),
+              //               );
+              //             },
+              //             child: getChatIcon(),
+              //           ),
+              //           title: Text(
+              //             variable.strChat,
+              //             style: TextStyle(color: Colors.black54),
+              //           )),
+              //       BottomNavigationBarItem(
+              //           icon: InkWell(
+              //             // onTap: () {
+              //             //   moveToNextScreen(2);
+              //             // },
+              //             child: Image.asset(
+              //               PreferenceUtil.getStringValue(
+              //                           Constants.keyMayaAsset) !=
+              //                       null
+              //                   ? PreferenceUtil.getStringValue(
+              //                           Constants.keyMayaAsset) +
+              //                       variable.strExtImg
+              //                   : variable.icon_mayaMain,
+              //               height: 25,
+              //               width: 25,
+              //             ),
+              //           ),
+              //           title: Text(
+              //             'Sheela G',
+              //             style: TextStyle(color: Colors.black54),
+              //           )),
+              //       BottomNavigationBarItem(
+              //           icon: InkWell(
+              //               // onTap: () {
+              //               //   moveToNextScreen(1);
+              //               // },
+              //               child: ImageIcon(
+              //             AssetImage(variable.icon_records),
+              //             color: Colors.black54,
+              //           )),
+              //           title: Text(
+              //             variable.strMyRecords,
+              //             style: TextStyle(color: Colors.black54),
+              //           )),
+              //       /*BottomNavigationBarItem(
+              //             icon: InkWell(
+              //                 onTap: () {
+              //                   moveToFamilyOrprovider(2);
+              //                 },
+              //                 child: ImageIcon(
+              //                   AssetImage(variable.icon_provider),
+              //                   color: Colors.black54,
+              //                 )),
+              //             title: Text(
+              //               variable.strMyProvider,
+              //               style: TextStyle(color: Colors.black54),
+              //             )),*/
+              //       BottomNavigationBarItem(
+              //           icon: InkWell(
+              //               // onTap: () {
+              //               //   Navigator.pushNamed(
+              //               //     context,
+              //               //     router.rt_UserAccounts,
+              //               //     arguments:
+              //               //         UserAccountsArguments(selectedIndex: 0),
+              //               //   ).then((value) {
+              //               //     setState(() {});
+              //               //   });
+              //               // },
+              //               child: ImageIcon(
+              //             AssetImage(variable.icon_profile),
+              //             color: Colors.black54,
+              //           )),
+              //           title: Text(
+              //             variable.strProfile,
+              //             style: TextStyle(color: Colors.black54),
+              //           )),
+              //     ],
+              //     onTap: (tappedIndex) {
+              //       switch (tappedIndex) {
+              //         case 0:
+              //           navigateToTelehealthScreen(0);
+              //           break;
+              //         case 1:
+              //           Navigator.push(
+              //             context,
+              //             MaterialPageRoute(
+              //                 builder: (context) => ChatHomeScreen()),
+              //           );
+              //           break;
+              //         case 2:
+              //           moveToNextScreen(2);
+              //           break;
+              //         case 3:
+              //           moveToNextScreen(1);
+              //           break;
+              //         case 4:
+              //           Navigator.pushNamed(
+              //             context,
+              //             router.rt_UserAccounts,
+              //             arguments: UserAccountsArguments(selectedIndex: 0),
+              //           ).then((value) {
+              //             setState(() {});
+              //           });
+              //           break;
+              //         default:
+              //           navigateToTelehealthScreen(0);
+              //           break;
+              //       }
+              //     },
+              //   ),
+              // ),
               backgroundColor: Colors.grey[200],
               body: ChangeNotifierProvider(
                 create: (context) => DevicesViewModel(),
@@ -291,61 +291,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ));
         },
       ),
-    );
-  }
-
-  saveMediaDialog(BuildContext cont, bool isProfileImage) {
-    return showDialog<void>(
-      context: cont,
-      builder: (BuildContext context) {
-        return StatefulBuilder(builder: (context, setState) {
-          return AlertDialog(
-              title: Text(Constants.makeAChoice),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(1)),
-              content: SingleChildScrollView(
-                child: ListBody(
-                  children: <Widget>[
-                    GestureDetector(
-                      child: Text(Constants.GALLERY_TITLE),
-                      onTap: () {
-                        Navigator.pop(context);
-
-                        var image =
-                            ImagePicker.pickImage(source: ImageSource.gallery);
-                        image.then((value) {
-                          imageURIProfile = value;
-                          PreferenceUtil.saveString(
-                              Constants.KEY_DASHBOARD_BANNER, value.path);
-
-                          (cont as Element).markNeedsBuild();
-                        });
-                      },
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(8.0),
-                    ),
-                    GestureDetector(
-                      child: Text(Constants.CAMERA_TITLE),
-                      onTap: () {
-                        Navigator.pop(context);
-
-                        var image =
-                            ImagePicker.pickImage(source: ImageSource.camera);
-                        image.then((value) {
-                          imageURIProfile = value;
-                          PreferenceUtil.saveString(
-                              Constants.KEY_DASHBOARD_BANNER, value.path);
-
-                          (cont as Element).markNeedsBuild();
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              ));
-        });
-      },
     );
   }
 

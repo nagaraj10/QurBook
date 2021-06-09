@@ -97,102 +97,102 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
       });
     }
     return Scaffold(
-        backgroundColor: const Color(0xFFf7f6f5),
-        body: Center(
-          child: _widgetOptions.elementAt(_selectedIndex),
-        ),
-        bottomNavigationBar: Container(
-          decoration: BoxDecoration(
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                color: Colors.black54,
-                blurRadius: 1,
-              ),
-            ],
-          ),
-          child: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            selectedFontSize: 10.sp,
-            unselectedFontSize: 10.sp,
-            items: [
-              BottomNavigationBarItem(
-                  icon: ImageIcon(
-                    AssetImage(variable.icon_th),
-                    color: _selectedIndex == 0
-                        ? Color(CommonUtil().getMyPrimaryColor())
-                        : Colors.black54,
-                  ),
-                  title: Text(
-                    'TeleHealth',
-                    style: TextStyle(
-                      fontSize: 10.sp,
-                      color: _selectedIndex == 0
-                          ? Color(CommonUtil().getMyPrimaryColor())
-                          : Colors.black54,
-                    ),
-                  )),
-              BottomNavigationBarItem(
-                  icon: ImageIcon(
-                    AssetImage('assets/navicons/my_providers.png'),
-                    color: _selectedIndex == 1
-                        ? Color(CommonUtil().getMyPrimaryColor())
-                        : Colors.black54,
-                  ),
-                  title: Text(
-                    'My Providers',
-                    style: TextStyle(
-                        fontSize: 10.sp,
-                        color: _selectedIndex == 1
-                            ? Color(CommonUtil().getMyPrimaryColor())
-                            : Colors.black54),
-                  )),
-              BottomNavigationBarItem(
-                  icon: Image.asset(
-                    ('assets/maya/maya_us_main.png'),
-                    height: 25,
-                    width: 25,
-                  ),
-                  title: Text(variable.strMaya,
-                      style: TextStyle(
-                          fontSize: 10.sp,
-                          color: _selectedIndex == 2
-                              ? Color(CommonUtil().getMyPrimaryColor())
-                              : Colors.black54))),
-              BottomNavigationBarItem(
-                  icon: getChatIcon('assets/navicons/chat.png'),
-                  title: Text('Chats',
-                      style: TextStyle(
-                          fontSize: 10.sp,
-                          color: _selectedIndex == 3
-                              ? Color(CommonUtil().getMyPrimaryColor())
-                              : Colors.black54))),
-              BottomNavigationBarItem(
-                  icon: ImageIcon(
-                    AssetImage('assets/navicons/records.png'),
-                    color: _selectedIndex == 4
-                        ? Color(CommonUtil().getMyPrimaryColor())
-                        : Colors.black54,
-                  ),
-                  title: Text('My Records',
-                      style: TextStyle(
-                          fontSize: 10.sp,
-                          color: _selectedIndex == 4
-                              ? Color(CommonUtil().getMyPrimaryColor())
-                              : Colors.black54))),
-            ],
-            //backgroundColor: Colors.grey[200],
-            onTap: (index) {
-              _myFunc(index);
-            },
-          ),
-        )
-        // BottomNavigationWidget(
-        //   selectedPageIndex: _selectedIndex,
-        //   myFunc: _myFunc,
-        //   bottomNavigationArgumentsList: bottomNavigationArgumentsList,
-        // ),
-        //bottomNavigationBar: BottomNavigationMain(),
-        );
+      backgroundColor: const Color(0xFFf7f6f5),
+      body: Center(
+        child: _widgetOptions.elementAt(_selectedIndex),
+      ),
+      // bottomNavigationBar: Container(
+      //   decoration: BoxDecoration(
+      //     boxShadow: <BoxShadow>[
+      //       BoxShadow(
+      //         color: Colors.black54,
+      //         blurRadius: 1,
+      //       ),
+      //     ],
+      //   ),
+      //   child: BottomNavigationBar(
+      //     type: BottomNavigationBarType.fixed,
+      //     selectedFontSize: 10.sp,
+      //     unselectedFontSize: 10.sp,
+      //     items: [
+      //       BottomNavigationBarItem(
+      //           icon: ImageIcon(
+      //             AssetImage(variable.icon_th),
+      //             color: _selectedIndex == 0
+      //                 ? Color(CommonUtil().getMyPrimaryColor())
+      //                 : Colors.black54,
+      //           ),
+      //           title: Text(
+      //             'TeleHealth',
+      //             style: TextStyle(
+      //               fontSize: 10.sp,
+      //               color: _selectedIndex == 0
+      //                   ? Color(CommonUtil().getMyPrimaryColor())
+      //                   : Colors.black54,
+      //             ),
+      //           )),
+      //       BottomNavigationBarItem(
+      //           icon: ImageIcon(
+      //             AssetImage('assets/navicons/my_providers.png'),
+      //             color: _selectedIndex == 1
+      //                 ? Color(CommonUtil().getMyPrimaryColor())
+      //                 : Colors.black54,
+      //           ),
+      //           title: Text(
+      //             'My Providers',
+      //             style: TextStyle(
+      //                 fontSize: 10.sp,
+      //                 color: _selectedIndex == 1
+      //                     ? Color(CommonUtil().getMyPrimaryColor())
+      //                     : Colors.black54),
+      //           )),
+      //       BottomNavigationBarItem(
+      //           icon: Image.asset(
+      //             ('assets/maya/maya_us_main.png'),
+      //             height: 25,
+      //             width: 25,
+      //           ),
+      //           title: Text(variable.strMaya,
+      //               style: TextStyle(
+      //                   fontSize: 10.sp,
+      //                   color: _selectedIndex == 2
+      //                       ? Color(CommonUtil().getMyPrimaryColor())
+      //                       : Colors.black54))),
+      //       BottomNavigationBarItem(
+      //           icon: getChatIcon('assets/navicons/chat.png'),
+      //           title: Text('Chats',
+      //               style: TextStyle(
+      //                   fontSize: 10.sp,
+      //                   color: _selectedIndex == 3
+      //                       ? Color(CommonUtil().getMyPrimaryColor())
+      //                       : Colors.black54))),
+      //       BottomNavigationBarItem(
+      //           icon: ImageIcon(
+      //             AssetImage('assets/navicons/records.png'),
+      //             color: _selectedIndex == 4
+      //                 ? Color(CommonUtil().getMyPrimaryColor())
+      //                 : Colors.black54,
+      //           ),
+      //           title: Text('My Records',
+      //               style: TextStyle(
+      //                   fontSize: 10.sp,
+      //                   color: _selectedIndex == 4
+      //                       ? Color(CommonUtil().getMyPrimaryColor())
+      //                       : Colors.black54))),
+      //     ],
+      //     //backgroundColor: Colors.grey[200],
+      //     onTap: (index) {
+      //       _myFunc(index);
+      //     },
+      //   ),
+      // )
+      // BottomNavigationWidget(
+      //   selectedPageIndex: _selectedIndex,
+      //   myFunc: _myFunc,
+      //   bottomNavigationArgumentsList: bottomNavigationArgumentsList,
+      // ),
+      //bottomNavigationBar: BottomNavigationMain(),
+    );
   }
 
   Widget getChatIcon(String icon) {
