@@ -502,7 +502,7 @@ const tickInfo = 'Please tap on the check mark to log the activity';
 
 const strQurhealth = 'QurHealth';
 
-const strCovidFree = 'Click for free Covid Plans';
+const strCovidFree = 'Click for FREE COVID PLANS';
 
 FirebaseAnalytics _firebaseAnalytics = FirebaseAnalytics();
 var mInitialTime;

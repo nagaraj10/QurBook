@@ -362,8 +362,7 @@ class _SearchListState extends State<SearchListHome> {
                                 style: TextStyle(
                                   fontSize: 15.0.sp,
                                   fontWeight: FontWeight.w600,
-                                  color: Color(
-                                      new CommonUtil().getMyPrimaryColor()),
+                                  color: Colors.red,
                                 ),
                                 textAlign: TextAlign.start,
                               )
