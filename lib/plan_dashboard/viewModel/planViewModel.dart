@@ -57,7 +57,16 @@ class PlanViewModel extends ChangeNotifier {
     return filterDoctorData;
   }
 
-  Future<SearchListModel> getSearchListInit() async {
+  Future<SearchListModel> getSearchListInit(String title) async {
+    try {
+      SearchListModel searchListModel =
+      await searchListService.getSearchList(title);
+      return searchListModel;
+    } catch (e) {}
+  }
+
+
+  Future<SearchListModel> getUserSearchListInit() async {
     try {
       SearchListModel searchListModel =
       await searchListService.getUserProviderList();
