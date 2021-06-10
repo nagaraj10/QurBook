@@ -57,7 +57,7 @@ class _SearchProviderList extends State<SearchProviderList> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Future.delayed(
             Duration(milliseconds: 1000),
-                () => isFirst
+            () => isFirst
                 ? null
                 : ShowCaseWidget.of(_myContext).startShowCase([_hospitalKey]));
       });
@@ -125,7 +125,7 @@ class _SearchProviderList extends State<SearchProviderList> {
                         child: new CircularProgressIndicator(
                             strokeWidth: 1.5,
                             backgroundColor:
-                            Color(new CommonUtil().getMyPrimaryColor())),
+                                Color(new CommonUtil().getMyPrimaryColor())),
                       ),
                     )),
                 Expanded(
@@ -152,7 +152,7 @@ class _SearchProviderList extends State<SearchProviderList> {
                   height: 30.0.h,
                   child: new CircularProgressIndicator(
                       backgroundColor:
-                      Color(new CommonUtil().getMyPrimaryColor())),
+                          Color(new CommonUtil().getMyPrimaryColor())),
                 ),
               ),
             ),
@@ -170,8 +170,8 @@ class _SearchProviderList extends State<SearchProviderList> {
                 height: 1.sh / 1.3,
                 child: Container(
                     child: Center(
-                      child: Text(variable.strNodata),
-                    )),
+                  child: Text(variable.strNodata),
+                )),
               ),
             );
           }
@@ -184,7 +184,7 @@ class _SearchProviderList extends State<SearchProviderList> {
     searchFilterProviderList.clear();
     if (title != null) {
       searchFilterProviderList =
-      await myPlanViewModel.getFilterForProvider(title, searchList);
+          await myPlanViewModel.getFilterForProvider(title, searchList);
     }
     setState(() {});
   }
@@ -264,36 +264,36 @@ class _SearchProviderList extends State<SearchProviderList> {
       searchProviderList = searchListResult;
       return (searchProviderList != null && searchProviderList.length > 0)
           ? ListView.builder(
-        shrinkWrap: true,
-        padding: EdgeInsets.only(
-          bottom: 8.0.h,
-        ),
-        itemBuilder: (BuildContext ctx, int i) => i != 0
-            ? searchListItem(ctx, i,
-            isSearch ? searchFilterProviderList : searchProviderList)
-            : FHBBasicWidget.customShowCase(
-            _hospitalKey,
-            Constants.HospitalDescription,
-            searchListItem(
-                ctx,
-                i,
-                isSearch
-                    ? searchFilterProviderList
-                    : searchProviderList),
-            Constants.HospitalSelection),
-        itemCount: isSearch
-            ? searchFilterProviderList.length
-            : searchProviderList.length,
-      )
+              shrinkWrap: true,
+              padding: EdgeInsets.only(
+                bottom: 8.0.h,
+              ),
+              itemBuilder: (BuildContext ctx, int i) => i != 0
+                  ? searchListItem(ctx, i,
+                      isSearch ? searchFilterProviderList : searchProviderList)
+                  : FHBBasicWidget.customShowCase(
+                      _hospitalKey,
+                      Constants.HospitalDescription,
+                      searchListItem(
+                          ctx,
+                          i,
+                          isSearch
+                              ? searchFilterProviderList
+                              : searchProviderList),
+                      Constants.HospitalSelection),
+              itemCount: isSearch
+                  ? searchFilterProviderList.length
+                  : searchProviderList.length,
+            )
           : SafeArea(
-        child: SizedBox(
-          height: 1.sh / 1.3,
-          child: Container(
-              child: Center(
-                child: Text(variable.strNodata),
-              )),
-        ),
-      );
+              child: SizedBox(
+                height: 1.sh / 1.3,
+                child: Container(
+                    child: Center(
+                  child: Text(variable.strNodata),
+                )),
+              ),
+            );
     }
   }
 
@@ -364,7 +364,7 @@ class _SearchProviderList extends State<SearchProviderList> {
                         Text(
                           searchList[i].description != null
                               ? toBeginningOfSentenceCase(
-                              searchList[i].description)
+                                  searchList[i].description)
                               : '',
                           style: TextStyle(
                             fontSize: 15.0.sp,
@@ -376,17 +376,17 @@ class _SearchProviderList extends State<SearchProviderList> {
                           maxLines: 2,
                         ),
                         searchList[i].title != null &&
-                            searchList[i].title != '' &&
-                            searchList[i].title == strQurhealth
+                                searchList[i].title != '' &&
+                                searchList[i].title == strQurhealth
                             ? Text(
-                          strCovidFree,
-                          style: TextStyle(
-                            fontSize: 15.0.sp,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.red,
-                          ),
-                          textAlign: TextAlign.start,
-                        )
+                                strCovidFree,
+                                style: TextStyle(
+                                  fontSize: 15.0.sp,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.red,
+                                ),
+                                textAlign: TextAlign.start,
+                              )
                             : SizedBox.shrink()
                       ],
                     ),
