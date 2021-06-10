@@ -179,6 +179,8 @@ const String icon_my_health_regimen = 'assets/dashboard/my-health-regimen.svg';
 const String icon_my_plan = 'assets/dashboard/my-plan.svg';
 const String icon_my_providers = 'assets/dashboard/my-providers.svg';
 const String icon_record_my_vitals = 'assets/dashboard/record-my-vitals.svg';
+const String icon_logout = 'assets/icons/logout.svg';
+const String icon_settings = 'assets/icons/settings.svg';
 
 //For Apple Health Settings Info
 const String apple_health_settings_info = 'assets/settings/health.jpg';

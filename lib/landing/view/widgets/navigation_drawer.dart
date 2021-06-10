@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:intl/intl.dart';
@@ -126,7 +127,10 @@ class NavigationDrawer extends StatelessWidget {
                     ),
                     DrawerTile(
                       title: variable.strMyFamily,
-                      icon: variable.icon_profile,
+                      iconWidget: SvgPicture.asset(
+                        variable.icon_my_family,
+                        color: Colors.black54,
+                      ),
                       onPressed: () {
                         Navigator.pop(context);
                         Navigator.pushNamed(
@@ -140,7 +144,10 @@ class NavigationDrawer extends StatelessWidget {
                     ),
                     DrawerTile(
                       title: variable.strSettings,
-                      icon: variable.icon_more,
+                      iconWidget: SvgPicture.asset(
+                        variable.icon_settings,
+                        color: Colors.black54,
+                      ),
                       onPressed: () {
                         Navigator.pop(context);
                         Navigator.push(
@@ -153,9 +160,8 @@ class NavigationDrawer extends StatelessWidget {
                     ),
                     DrawerTile(
                       title: variable.strLogout,
-                      iconWidget: Icon(
-                        Icons.exit_to_app,
-                        size: 24.0.sp,
+                      iconWidget: SvgPicture.asset(
+                        variable.icon_logout,
                         color: Colors.black54,
                       ),
                       onPressed: () {

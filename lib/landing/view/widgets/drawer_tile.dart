@@ -17,40 +17,26 @@ class DrawerTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Column(
         children: [
-          InkWell(
+          ListTile(
             onTap: onPressed,
-            child: Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: 20.0.w,
-                vertical: 5.0.h,
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    width: 24.0.sp,
-                    height: 24.0.sp,
-                    child: iconWidget ??
-                        ImageIcon(
-                          AssetImage(icon),
-                          color: Colors.black54,
-                        ),
+            leading: Container(
+              width: 24.0.sp,
+              height: 24.0.sp,
+              child: iconWidget ??
+                  ImageIcon(
+                    AssetImage(icon),
+                    color: Colors.black54,
                   ),
-                  SizedBox(
-                    width: 20.0.w,
-                  ),
-                  Text(
-                    title ?? '',
-                    style: TextStyle(
-                      fontSize: 16.0.sp,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
+            ),
+            title: Text(
+              title ?? '',
+              style: TextStyle(
+                fontSize: 16.0.sp,
+                color: Colors.black,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ),
-          const Divider(),
         ],
       );
 }

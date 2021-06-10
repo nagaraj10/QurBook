@@ -24,8 +24,10 @@ import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/telehealth/features/appointments/view/appointmentsMain.dart';
 import 'package:myfhb/telehealth/features/chat/view/BadgeIcon.dart';
 import 'package:myfhb/telehealth/features/chat/view/home.dart';
+import 'package:provider/provider.dart';
 import 'widgets/home_widget.dart';
 import 'widgets/navigation_drawer.dart';
+import 'package:myfhb/landing/view_model/landing_view_model.dart';
 
 class LandingScreen extends StatefulWidget {
   static _LandingScreenState of(BuildContext context) =>
@@ -40,10 +42,10 @@ class _LandingScreenState extends State<LandingScreen> {
   MyProfileModel myProfile;
   AddFamilyUserInfoRepository addFamilyUserInfoRepository =
       AddFamilyUserInfoRepository();
-  final GlobalKey<State> _key = new GlobalKey<State>();
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<State> _key = GlobalKey<State>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   Future profileData;
-  Color primaryColor;
+  LandingViewModel landingViewModel;
 
   @override
   void initState() {
@@ -53,7 +55,7 @@ class _LandingScreenState extends State<LandingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    primaryColor = Color(CommonUtil().getMyPrimaryColor());
+    landingViewModel = Provider.of<LandingViewModel>(context);
     return FutureBuilder<MyProfileModel>(
       future: profileData,
       builder: (BuildContext context, snapshot) {
@@ -62,7 +64,7 @@ class _LandingScreenState extends State<LandingScreen> {
             backgroundColor: Colors.white,
             body: Center(
               child: CircularProgressIndicator(
-                backgroundColor: primaryColor,
+                backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
               ),
             ),
           );
@@ -87,8 +89,8 @@ class _LandingScreenState extends State<LandingScreen> {
                               begin: Alignment.centerLeft,
                               end: Alignment.centerRight,
                               colors: <Color>[
-                            Color(new CommonUtil().getMyPrimaryColor()),
-                            Color(new CommonUtil().getMyGredientColor())
+                            Color(CommonUtil().getMyPrimaryColor()),
+                            Color(CommonUtil().getMyGredientColor())
                           ],
                               stops: [
                             0.3,
@@ -107,10 +109,8 @@ class _LandingScreenState extends State<LandingScreen> {
                                           begin: Alignment.centerLeft,
                                           end: Alignment.centerRight,
                                           colors: <Color>[
-                                        Color(new CommonUtil()
-                                            .getMyPrimaryColor()),
-                                        Color(new CommonUtil()
-                                            .getMyGredientColor())
+                                        Color(CommonUtil().getMyPrimaryColor()),
+                                        Color(CommonUtil().getMyGredientColor())
                                       ],
                                           stops: [
                                         0.3,
@@ -194,13 +194,13 @@ class _LandingScreenState extends State<LandingScreen> {
                 selectedFontSize: 10.sp,
                 unselectedFontSize: 10.sp,
                 selectedLabelStyle: TextStyle(
-                  color: primaryColor,
+                  color: Color(CommonUtil().getMyPrimaryColor()),
                 ),
                 unselectedLabelStyle: const TextStyle(
                   color: Colors.black54,
                 ),
                 selectedIconTheme: IconThemeData(
-                  color: primaryColor,
+                  color: Color(CommonUtil().getMyPrimaryColor()),
                 ),
                 unselectedIconTheme: const IconThemeData(
                   color: Colors.black54,
@@ -275,7 +275,9 @@ class _LandingScreenState extends State<LandingScreen> {
             icon: GestureDetector(
               child: ImageIcon(
                 const AssetImage(variable.icon_chat),
-                color: _selectedIndex == 1 ? primaryColor : Colors.black54,
+                color: _selectedIndex == 1
+                    ? Color(CommonUtil().getMyPrimaryColor())
+                    : Colors.black54,
               ),
             ),
             badgeColor: ColorUtils.countColor,
@@ -286,7 +288,9 @@ class _LandingScreenState extends State<LandingScreen> {
             icon: GestureDetector(
               child: ImageIcon(
                 const AssetImage(variable.icon_chat),
-                color: _selectedIndex == 1 ? primaryColor : Colors.black54,
+                color: _selectedIndex == 1
+                    ? Color(CommonUtil().getMyPrimaryColor())
+                    : Colors.black54,
               ),
             ),
             badgeColor: ColorUtils.countColor,
