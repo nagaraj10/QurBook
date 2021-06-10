@@ -12,6 +12,7 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
+import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/myPlan/model/myPlanListModel.dart';
 import 'package:myfhb/myPlan/services/myPlanService.dart';
 import 'package:myfhb/myPlan/view/myPlanDetail.dart';
@@ -89,29 +90,29 @@ class _MyPlanState extends State<MyPlanList> {
       return Scaffold(
           body: Container(
               child: Column(
-            children: [
-              SearchWidget(
-                onChanged: (providerName) {
-                  if (providerName != '' && providerName.length > 2) {
-                    isSearch = true;
-                    onSearchedNew(providerName);
-                  } else {
-                    setState(() {
-                      isSearch = false;
-                    });
-                  }
-                },
-              ),
-              SizedBox(
-                height: 5.0.h,
-              ),
-              Expanded(
-                child: myPlanListModel != null ?? myPlanListModel.isSuccess
-                    ? hospitalList(myPlanListModel.result)
-                    : getPlanList(),
-              )
-            ],
-          )));
+        children: [
+          SearchWidget(
+            onChanged: (providerName) {
+              if (providerName != '' && providerName.length > 2) {
+                isSearch = true;
+                onSearchedNew(providerName);
+              } else {
+                setState(() {
+                  isSearch = false;
+                });
+              }
+            },
+          ),
+          SizedBox(
+            height: 5.0.h,
+          ),
+          Expanded(
+            child: myPlanListModel != null ?? myPlanListModel.isSuccess
+                ? hospitalList(myPlanListModel.result)
+                : getPlanList(),
+          )
+        ],
+      )));
     }));
   }
 
@@ -156,11 +157,7 @@ class _MyPlanState extends State<MyPlanList> {
                                 context,
                                 listen: false,
                               ).updateTabIndex(currentIndex: 0);
-                              Get.offAll(
-                                DashboardScreen(
-                                  fromPlans: true,
-                                ),
-                              );
+                              Get.toNamed(rt_Regimen);
                             },
                             child: TextWidget(
                               text: goToRegimen,

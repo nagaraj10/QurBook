@@ -4,11 +4,11 @@ import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart';
-import 'package:myfhb/regiment/view/regiment_tab.dart';
+import 'package:myfhb/myPlan/view/myPlanList.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
-class RegimentScreen extends StatelessWidget {
+class MyPlansScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,7 +16,7 @@ class RegimentScreen extends StatelessWidget {
         flexibleSpace: GradientAppBar(),
         backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
         elevation: 0,
-        title: Text(strRegimen),
+        title: Text(strMyPlans),
         leading: IconWidget(
           icon: Icons.arrow_back_ios,
           colors: Colors.white,
@@ -29,7 +29,7 @@ class RegimentScreen extends StatelessWidget {
           onBackPressed(context);
           return Future.value(false);
         },
-        child: RegimentTab(),
+        child: MyPlanList(),
       ),
     );
   }

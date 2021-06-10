@@ -8,6 +8,9 @@ import 'package:myfhb/devices/device_dashboard_arguments.dart';
 import 'package:myfhb/my_family/screens/MyFamily.dart';
 import 'package:myfhb/my_family_detail_view/screens/my_family_detail_view.dart';
 import 'package:myfhb/my_providers/screens/my_provider.dart';
+import 'package:myfhb/regiment/view/regiment_screen.dart';
+import 'package:myfhb/myPlan/view/my_plans_screen.dart';
+import 'package:myfhb/plan_dashboard/view/plans_screen.dart';
 import 'package:myfhb/schedules/add_appointments.dart';
 import 'package:myfhb/schedules/add_reminders.dart';
 import 'package:myfhb/search_providers/screens/search_specific_list.dart';
@@ -20,6 +23,7 @@ import 'package:myfhb/src/ui/authentication/SignInScreen.dart';
 import 'package:myfhb/src/ui/camera/TakePictureScreen.dart';
 import 'package:myfhb/src/ui/camera/take_picture_screen_for_devices.dart';
 import 'package:myfhb/src/ui/dashboard.dart';
+import 'package:myfhb/src/ui/devices_screen.dart';
 import 'package:myfhb/src/ui/settings/MySettings.dart';
 import 'package:myfhb/src/ui/user/UserAccounts.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/MyProvidersMain.dart';
@@ -44,6 +48,10 @@ setRouter(List<CameraDescription> listOfCameras) async {
     router.rt_SignIn: (BuildContext context) => SignInScreen(),
     router.rt_Dashboard: (BuildContext context) => DashboardScreen(),
     router.rt_Landing: (BuildContext context) => LandingScreen(),
+    router.rt_Regimen: (BuildContext context) => RegimentScreen(),
+    router.rt_MyPlans: (BuildContext context) => MyPlansScreen(),
+    router.rt_Plans: (BuildContext context) => PlansScreen(),
+    router.rt_Devices: (BuildContext context) => DevicesScreen(),
     router.rt_HomeScreen: (BuildContext context) =>
         HomeScreen(arguments: ModalRoute.of(context).settings.arguments),
     router.rt_deviceDashboard: (BuildContext context) =>

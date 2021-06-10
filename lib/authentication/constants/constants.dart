@@ -157,7 +157,7 @@ const String strOrText = 'OR';
 const String strOtpNotReceived =
     'Don\'t you receive the OTP ? you can re-try in ';
 const String strCallDirect =
-    'Please call from your registered mobile number a phone number below. Thank you for your understanding';
+    'Please call from your registered mobile number to a phone number below. Thank you for your understanding';
 const String primaryNumber = 'Primary Number';
 const String alternateNumber = 'Alternate Number';
 

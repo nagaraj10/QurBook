@@ -1,25 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
 import 'package:myfhb/authentication/view/login_screen.dart';
+import 'package:myfhb/colors/fhb_colors.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:myfhb/common/errors_widget.dart';
-import 'package:myfhb/notifications/myfhb_notifications.dart';
-import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
-import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/ui/MyRecordsArguments.dart';
 import 'package:myfhb/src/ui/bot/SuperMaya.dart';
-import 'package:myfhb/src/ui/user/UserAccounts.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/fhb_constants.dart' as constants;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/telehealth/features/appointments/view/appointmentsMain.dart';
 import 'package:myfhb/telehealth/features/chat/view/BadgeIcon.dart';
@@ -38,7 +35,6 @@ class LandingScreen extends StatefulWidget {
 }
 
 class _LandingScreenState extends State<LandingScreen> {
-  int _selectedIndex = 0;
   MyProfileModel myProfile;
   AddFamilyUserInfoRepository addFamilyUserInfoRepository =
       AddFamilyUserInfoRepository();
@@ -59,196 +55,176 @@ class _LandingScreenState extends State<LandingScreen> {
     return FutureBuilder<MyProfileModel>(
       future: profileData,
       builder: (BuildContext context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Scaffold(
-            backgroundColor: Colors.white,
-            body: Center(
-              child: CircularProgressIndicator(
-                backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-              ),
-            ),
-          );
-        } else if (snapshot.hasError) {
-          return Scaffold(
-            backgroundColor: Colors.white,
-            body: Center(
-              child: ErrorsWidget(),
-            ),
-          );
-        } else {
-          return Scaffold(
-            key: _scaffoldKey,
-            body: Stack(
-              fit: StackFit.expand,
-              children: [
-                Column(
-                  children: [
-                    Container(
+        return Scaffold(
+          key: _scaffoldKey,
+          backgroundColor: const Color(bgColorContainer),
+          body: Stack(
+            fit: StackFit.expand,
+            children: [
+              Column(
+                children: [
+                  Visibility(
+                    visible: !landingViewModel.isSearchVisible,
+                    child: Container(
                       decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                              begin: Alignment.centerLeft,
-                              end: Alignment.centerRight,
-                              colors: <Color>[
+                        gradient: LinearGradient(
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                          colors: <Color>[
                             Color(CommonUtil().getMyPrimaryColor()),
-                            Color(CommonUtil().getMyGredientColor())
+                            Color(CommonUtil().getMyGredientColor()),
                           ],
-                              stops: [
-                            0.3,
-                            1.0
-                          ])),
-                      child: IntrinsicHeight(
-                        child: SafeArea(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              PreferredSize(
-                                preferredSize: Size.fromHeight(1.sh * 0.15),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                          begin: Alignment.centerLeft,
-                                          end: Alignment.centerRight,
-                                          colors: <Color>[
-                                        Color(CommonUtil().getMyPrimaryColor()),
-                                        Color(CommonUtil().getMyGredientColor())
-                                      ],
-                                          stops: [
-                                        0.3,
-                                        1.0
-                                      ])),
-                                  child: SafeArea(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        Container(
-                                          child: Row(
-                                            children: <Widget>[
-                                              IconButton(
-                                                icon: const Icon(
-                                                  Icons.menu_rounded,
-                                                ),
-                                                color: Colors.white,
-                                                iconSize: 24.0.sp,
-                                                onPressed: () {
-                                                  _scaffoldKey.currentState
-                                                      .openDrawer();
-                                                },
-                                              ),
-                                              Expanded(
-                                                child: _getUserName(),
-                                              ),
-                                              Center(
-                                                child: CommonUtil()
-                                                    .getNotificationIcon(
-                                                        context),
-                                              ),
-                                              SwitchProfile().buildActions(
-                                                context,
-                                                _key,
-                                                () {
-                                                  (context as Element)
-                                                      .markNeedsBuild();
-                                                },
-                                                true,
-                                              ),
-                                              SizedBox(
-                                                width: 10.0.w,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                          stops: [0.3, 1.0],
+                        ),
+                        // color: Colors.white,
+                      ),
+                      child: SafeArea(
+                        child: Row(
+                          children: <Widget>[
+                            Material(
+                              color: Colors.transparent,
+                              child: IconButton(
+                                icon: const Icon(
+                                  Icons.menu_rounded,
+                                ),
+                                color: Colors.white,
+                                iconSize: 24.0.sp,
+                                onPressed: () {
+                                  _scaffoldKey.currentState.openDrawer();
+                                },
+                              ),
+                            ),
+                            Expanded(
+                              child: getAppBarTitle(),
+                            ),
+                            Visibility(
+                              visible: landingViewModel.currentTabIndex == 4,
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                  right: 5.0.w,
+                                ),
+                                child: IconWidget(
+                                  icon: Icons.search,
+                                  colors: Colors.white,
+                                  size: 30.0.sp,
+                                  onTap: () {
+                                    landingViewModel?.changeSearchBar(
+                                      isEnabled: true,
+                                    );
+                                  },
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                            Center(
+                              child: CommonUtil().getNotificationIcon(
+                                context,
+                                color: Colors.white,
+                              ),
+                            ),
+                            SwitchProfile().buildActions(
+                              context,
+                              _key,
+                              () {
+                                profileData = getMyProfile();
+                                setState(() {});
+                                (context as Element).markNeedsBuild();
+                              },
+                              true,
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                    Expanded(
-                      child: getCurrentTab(),
-                    ),
-                  ],
+                  ),
+                  Expanded(
+                    child: (snapshot.connectionState == ConnectionState.waiting)
+                        ? Center(
+                            child: CircularProgressIndicator(
+                              backgroundColor:
+                                  Color(CommonUtil().getMyPrimaryColor()),
+                            ),
+                          )
+                        : (snapshot.hasError)
+                            ? Center(
+                                child: ErrorsWidget(),
+                              )
+                            : getCurrentTab(),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          drawer: NavigationDrawer(
+            myProfile: myProfile,
+            moveToLoginPage: moveToLoginPage,
+          ),
+          bottomNavigationBar: Container(
+            decoration: const BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black54,
+                  blurRadius: 1,
                 ),
               ],
             ),
-            drawer: NavigationDrawer(
-              myProfile: myProfile,
-              moveToLoginPage: moveToLoginPage,
-            ),
-            bottomNavigationBar: Container(
-              decoration: const BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black54,
-                    blurRadius: 1,
-                  ),
-                ],
+            child: BottomNavigationBar(
+              currentIndex: landingViewModel.currentTabIndex,
+              type: BottomNavigationBarType.fixed,
+              selectedFontSize: 10.sp,
+              unselectedFontSize: 10.sp,
+              selectedLabelStyle: TextStyle(
+                color: Color(CommonUtil().getMyPrimaryColor()),
               ),
-              child: BottomNavigationBar(
-                currentIndex: _selectedIndex,
-                type: BottomNavigationBarType.fixed,
-                selectedFontSize: 10.sp,
-                unselectedFontSize: 10.sp,
-                selectedLabelStyle: TextStyle(
-                  color: Color(CommonUtil().getMyPrimaryColor()),
-                ),
-                unselectedLabelStyle: const TextStyle(
-                  color: Colors.black54,
-                ),
-                selectedIconTheme: IconThemeData(
-                  color: Color(CommonUtil().getMyPrimaryColor()),
-                ),
-                unselectedIconTheme: const IconThemeData(
-                  color: Colors.black54,
-                ),
-                items: [
-                  const BottomNavigationBarItem(
-                    icon: ImageIcon(
-                      AssetImage(
-                        variable.icon_home,
-                      ),
-                    ),
-                    label: variable.strhome,
-                  ),
-                  BottomNavigationBarItem(
-                    icon: getChatIcon(),
-                    label: variable.strChat,
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Image.asset(
-                      variable.icon_mayaMain,
-                      height: 25,
-                      width: 25,
-                    ),
-                    label: variable.strMaya,
-                  ),
-                  const BottomNavigationBarItem(
-                    icon: ImageIcon(
-                      AssetImage(variable.icon_th),
-                    ),
-                    label: variable.strTelehealth,
-                  ),
-                  const BottomNavigationBarItem(
-                    icon: ImageIcon(
-                      AssetImage(variable.icon_records),
-                    ),
-                    label: variable.strMyRecords,
-                  )
-                ],
-                //backgroundColor: Colors.grey[200],
-                onTap: (index) {
-                  setState(() {
-                    _selectedIndex = index;
-                  });
-                },
+              unselectedLabelStyle: const TextStyle(
+                color: Colors.black54,
               ),
+              selectedIconTheme: IconThemeData(
+                color: Color(CommonUtil().getMyPrimaryColor()),
+              ),
+              unselectedIconTheme: const IconThemeData(
+                color: Colors.black54,
+              ),
+              items: [
+                const BottomNavigationBarItem(
+                  icon: ImageIcon(
+                    AssetImage(
+                      variable.icon_home,
+                    ),
+                  ),
+                  label: variable.strhome,
+                ),
+                BottomNavigationBarItem(
+                  icon: getChatIcon(),
+                  label: variable.strChat,
+                ),
+                BottomNavigationBarItem(
+                  icon: Image.asset(
+                    variable.icon_mayaMain,
+                    height: 25,
+                    width: 25,
+                  ),
+                  label: variable.strMaya,
+                ),
+                const BottomNavigationBarItem(
+                  icon: ImageIcon(
+                    AssetImage(variable.icon_th),
+                  ),
+                  label: constants.strAppointment,
+                ),
+                const BottomNavigationBarItem(
+                  icon: ImageIcon(
+                    AssetImage(variable.icon_records),
+                  ),
+                  label: variable.strMyRecords,
+                )
+              ],
+              //backgroundColor: Colors.grey[200],
+              onTap: (index) {
+                landingViewModel.updateTabIndex(index);
+              },
             ),
-          );
-        }
+          ),
+        );
       },
     );
   }
@@ -258,24 +234,24 @@ class _LandingScreenState extends State<LandingScreen> {
     final targetID = PreferenceUtil.getStringValue(constants.KEY_USERID);
     return StreamBuilder<QuerySnapshot>(
       stream: Firestore.instance
-          .collection(STR_CHAT_LIST)
+          .collection(constants.STR_CHAT_LIST)
           .document(targetID)
-          .collection(STR_USER_LIST)
+          .collection(constants.STR_USER_LIST)
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasData) {
           count = 0;
           snapshot.data.documents.toList().forEach((element) {
-            if (element.data[STR_IS_READ_COUNT] != null &&
-                element.data[STR_IS_READ_COUNT] != '') {
-              count = count + element.data[STR_IS_READ_COUNT];
+            if (element.data[constants.STR_IS_READ_COUNT] != null &&
+                element.data[constants.STR_IS_READ_COUNT] != '') {
+              count = count + element.data[constants.STR_IS_READ_COUNT];
             }
           });
           return BadgeIcon(
             icon: GestureDetector(
               child: ImageIcon(
                 const AssetImage(variable.icon_chat),
-                color: _selectedIndex == 1
+                color: landingViewModel.currentTabIndex == 1
                     ? Color(CommonUtil().getMyPrimaryColor())
                     : Colors.black54,
               ),
@@ -288,7 +264,7 @@ class _LandingScreenState extends State<LandingScreen> {
             icon: GestureDetector(
               child: ImageIcon(
                 const AssetImage(variable.icon_chat),
-                color: _selectedIndex == 1
+                color: landingViewModel.currentTabIndex == 1
                     ? Color(CommonUtil().getMyPrimaryColor())
                     : Colors.black54,
               ),
@@ -303,12 +279,10 @@ class _LandingScreenState extends State<LandingScreen> {
 
   Widget getCurrentTab() {
     Function onBackPressed = () {
-      setState(() {
-        _selectedIndex = 0;
-      });
+      landingViewModel.updateTabIndex(0);
     };
     Widget landingTab;
-    switch (_selectedIndex) {
+    switch (landingViewModel.currentTabIndex) {
       case 1:
         landingTab = ChatHomeScreen(
           isHome: true,
@@ -324,6 +298,7 @@ class _LandingScreenState extends State<LandingScreen> {
       case 3:
         landingTab = AppointmentsMain(
           isHome: true,
+          onBackPressed: onBackPressed,
         );
         break;
       case 4:
@@ -340,17 +315,14 @@ class _LandingScreenState extends State<LandingScreen> {
     return landingTab;
   }
 
-  Widget _getUserName() {
-    var resultWidget = null;
-    resultWidget = AnimatedSwitcher(
-      duration: Duration(milliseconds: 10),
-      child: Row(
-        children: <Widget>[
-          SizedBox(
-            width: 5.0.w,
-          ),
-          Expanded(
-            child: Container(
+  Widget _getUserName() => AnimatedSwitcher(
+        duration: const Duration(milliseconds: 10),
+        child: Row(
+          children: <Widget>[
+            SizedBox(
+              width: 5.0.w,
+            ),
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -358,9 +330,7 @@ class _LandingScreenState extends State<LandingScreen> {
                     myProfile != null ??
                             myProfile.result.firstName != null &&
                                 myProfile.result.firstName != ''
-                        ? 'Hey ' +
-                            toBeginningOfSentenceCase(
-                                myProfile.result.firstName)
+                        ? 'Hey ${toBeginningOfSentenceCase(myProfile.result.firstName)}'
                         : 'Hey User',
                     style: TextStyle(
                       fontSize: 18.0.sp,
@@ -372,12 +342,22 @@ class _LandingScreenState extends State<LandingScreen> {
                   ),
                 ],
               ),
-            ),
-          )
-        ],
-      ),
+            )
+          ],
+        ),
+      );
+
+  Widget getAppBarTitle() {
+    return Row(
+      children: <Widget>[
+        SizedBox(
+          width: 5.0.w,
+        ),
+        Expanded(
+          child: _getUserName(),
+        )
+      ],
     );
-    return resultWidget;
   }
 
   Future<MyProfileModel> getMyProfile() async {

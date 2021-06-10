@@ -88,39 +88,42 @@ class _SuperMayaState extends State<SuperMaya> {
         builder: (context) {
           _myContext = context;
           return WillPopScope(
-            onWillPop: (){
-              if(widget.isHome){
+            onWillPop: () {
+              if (widget.isHome) {
                 widget.onBackPressed();
               }
               Future.value(widget.isHome ? false : true);
             },
             child: Scaffold(
                 backgroundColor: const Color(fhbColors.bgColorContainer),
-                appBar: widget.isHome ? null : PreferredSize(
-                  preferredSize: Size.fromHeight(60),
-                  child: AppBar(
-                    flexibleSpace: GradientAppBar(),
-                    backgroundColor: Colors.transparent,
-                    leading: IconWidget(
-                      icon: Icons.arrow_back_ios,
-                      colors: Colors.white,
-                      size: 24.0.sp,
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                    elevation: 0,
-                    title: Text('Sheela G'),
-                    actions: [
-                      Center(
-                          child: new CommonUtil().getNotificationIcon(context)),
-                      SizedBoxWidget(
-                        width: 10.0.w,
+                appBar: widget.isHome
+                    ? null
+                    : PreferredSize(
+                        preferredSize: Size.fromHeight(60),
+                        child: AppBar(
+                          flexibleSpace: GradientAppBar(),
+                          backgroundColor: Colors.transparent,
+                          leading: IconWidget(
+                            icon: Icons.arrow_back_ios,
+                            colors: Colors.white,
+                            size: 24.0.sp,
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                          elevation: 0,
+                          title: Text(strSheelaG),
+                          actions: [
+                            Center(
+                                child: new CommonUtil()
+                                    .getNotificationIcon(context)),
+                            SizedBoxWidget(
+                              width: 10.0.w,
+                            ),
+                          ],
+                          centerTitle: true,
+                        ),
                       ),
-                    ],
-                    centerTitle: true,
-                  ),
-                ),
                 body: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -160,9 +163,10 @@ class _SuperMayaState extends State<SuperMaya> {
                                   ),
                                   gradient: LinearGradient(
                                     colors: <Color>[
-                                      Color(new CommonUtil().getMyPrimaryColor()),
                                       Color(
-                                          new CommonUtil().getMyGredientColor()),
+                                          new CommonUtil().getMyPrimaryColor()),
+                                      Color(new CommonUtil()
+                                          .getMyGredientColor()),
                                     ],
                                   ),
                                   onPressed: () {
