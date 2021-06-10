@@ -1,10 +1,5 @@
-import 'dart:math';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
@@ -12,21 +7,15 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
 import 'package:myfhb/plan_dashboard/model/SearchListModel.dart';
 import 'package:myfhb/plan_dashboard/services/SearchListService.dart';
 import 'package:myfhb/plan_dashboard/view/categoryList.dart';
-import 'package:myfhb/plan_dashboard/view/planList.dart';
 import 'package:myfhb/plan_dashboard/viewModel/planViewModel.dart';
-import 'package:myfhb/plan_dashboard/viewModel/subscribeViewModel.dart';
-import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'package:provider/provider.dart';
 import 'package:showcaseview/showcase_widget.dart';
 
 class SearchProviderList extends StatefulWidget {
@@ -44,15 +33,19 @@ class _SearchProviderList extends State<SearchProviderList> {
 
   Future<SearchListModel> providerList;
 
+  List<SearchListResult> searchFilterProviderList = List();
+  List<SearchListResult> searchProviderList = [];
+
   TextEditingController searchController = TextEditingController();
   FocusNode searchFocus = FocusNode();
   final GlobalKey _hospitalKey = GlobalKey();
   bool isFirst;
   BuildContext _myContext;
+  bool isSearch = false;
 
   @override
   void initState() {
-    searchFocus.requestFocus();
+    //searchFocus.requestFocus();
     super.initState();
     /*Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
       isInitial: true,
@@ -64,7 +57,7 @@ class _SearchProviderList extends State<SearchProviderList> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Future.delayed(
             Duration(milliseconds: 1000),
-            () => isFirst
+                () => isFirst
                 ? null
                 : ShowCaseWidget.of(_myContext).startShowCase([_hospitalKey]));
       });
@@ -110,10 +103,11 @@ class _SearchProviderList extends State<SearchProviderList> {
                   searchFocus: searchFocus,
                   onChanged: (title) {
                     if (title != '' && title.length > 2) {
-                      onSearchedNew(title);
+                      isSearch = true;
+                      onSearchedNew(title, searchProviderList);
                     } else {
                       setState(() {
-                        searchModel = null;
+                        isSearch = false;
                       });
                     }
                   },
@@ -131,7 +125,7 @@ class _SearchProviderList extends State<SearchProviderList> {
                         child: new CircularProgressIndicator(
                             strokeWidth: 1.5,
                             backgroundColor:
-                                Color(new CommonUtil().getMyPrimaryColor())),
+                            Color(new CommonUtil().getMyPrimaryColor())),
                       ),
                     )),
                 Expanded(
@@ -158,7 +152,7 @@ class _SearchProviderList extends State<SearchProviderList> {
                   height: 30.0.h,
                   child: new CircularProgressIndicator(
                       backgroundColor:
-                          Color(new CommonUtil().getMyPrimaryColor())),
+                      Color(new CommonUtil().getMyPrimaryColor())),
                 ),
               ),
             ),
@@ -171,14 +165,31 @@ class _SearchProviderList extends State<SearchProviderList> {
               snapshot?.data?.result?.length > 0) {
             return searchListView(snapshot.data.result);
           } else {
-            return SizedBox.shrink();
+            return SafeArea(
+              child: SizedBox(
+                height: 1.sh / 1.3,
+                child: Container(
+                    child: Center(
+                      child: Text(variable.strNodata),
+                    )),
+              ),
+            );
           }
         }
       },
     );
   }
 
-  onSearchedNew(String title) async {
+  onSearchedNew(String title, List<SearchListResult> searchList) async {
+    searchFilterProviderList.clear();
+    if (title != null) {
+      searchFilterProviderList =
+      await myPlanViewModel.getFilterForProvider(title, searchList);
+    }
+    setState(() {});
+  }
+
+  /*onSearchedNew(String title) async {
     if (title != null) {
       setState(() {
         isLoaderVisible = true;
@@ -203,7 +214,7 @@ class _SearchProviderList extends State<SearchProviderList> {
         }
       });
     }
-  }
+  }*/
 
   /*Widget getSearchList(String title) {
     return new FutureBuilder<SearchListModel>(
@@ -248,22 +259,42 @@ class _SearchProviderList extends State<SearchProviderList> {
   }*/
 
   Widget searchListView(List<SearchListResult> searchListResult) {
-    return (searchListResult != null && searchListResult.length > 0)
-        ? ListView.builder(
-            shrinkWrap: true,
-            padding: EdgeInsets.only(
-              bottom: 8.0.h,
-            ),
-            itemBuilder: (BuildContext ctx, int i) => i != 0
-                ? searchListItem(ctx, i, searchListResult)
-                : FHBBasicWidget.customShowCase(
-                    _hospitalKey,
-                    Constants.HospitalDescription,
-                    searchListItem(ctx, i, searchListResult),
-                    Constants.HospitalSelection),
-            itemCount: searchListResult.length,
-          )
-        : SizedBox.shrink();
+    searchProviderList = [];
+    if (searchListResult != null && searchListResult.length > 0) {
+      searchProviderList = searchListResult;
+      return (searchProviderList != null && searchProviderList.length > 0)
+          ? ListView.builder(
+        shrinkWrap: true,
+        padding: EdgeInsets.only(
+          bottom: 8.0.h,
+        ),
+        itemBuilder: (BuildContext ctx, int i) => i != 0
+            ? searchListItem(ctx, i,
+            isSearch ? searchFilterProviderList : searchProviderList)
+            : FHBBasicWidget.customShowCase(
+            _hospitalKey,
+            Constants.HospitalDescription,
+            searchListItem(
+                ctx,
+                i,
+                isSearch
+                    ? searchFilterProviderList
+                    : searchProviderList),
+            Constants.HospitalSelection),
+        itemCount: isSearch
+            ? searchFilterProviderList.length
+            : searchProviderList.length,
+      )
+          : SafeArea(
+        child: SizedBox(
+          height: 1.sh / 1.3,
+          child: Container(
+              child: Center(
+                child: Text(variable.strNodata),
+              )),
+        ),
+      );
+    }
   }
 
   Widget searchListItem(
@@ -333,7 +364,7 @@ class _SearchProviderList extends State<SearchProviderList> {
                         Text(
                           searchList[i].description != null
                               ? toBeginningOfSentenceCase(
-                                  searchList[i].description)
+                              searchList[i].description)
                               : '',
                           style: TextStyle(
                             fontSize: 15.0.sp,
@@ -345,17 +376,17 @@ class _SearchProviderList extends State<SearchProviderList> {
                           maxLines: 2,
                         ),
                         searchList[i].title != null &&
-                                searchList[i].title != '' &&
-                                searchList[i].title == strQurhealth
+                            searchList[i].title != '' &&
+                            searchList[i].title == strQurhealth
                             ? Text(
-                                strCovidFree,
-                                style: TextStyle(
-                                  fontSize: 15.0.sp,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.red,
-                                ),
-                                textAlign: TextAlign.start,
-                              )
+                          strCovidFree,
+                          style: TextStyle(
+                            fontSize: 15.0.sp,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.red,
+                          ),
+                          textAlign: TextAlign.start,
+                        )
                             : SizedBox.shrink()
                       ],
                     ),
