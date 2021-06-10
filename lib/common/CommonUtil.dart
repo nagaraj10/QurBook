@@ -1257,6 +1257,13 @@ class CommonUtil {
     return updatedDate;
   }
 
+  dateConversionToDayMonthDate(DateTime dateTime) {
+    var newFormat = DateFormat('EEEE, MMMM d');
+    String updatedDate = newFormat.format(dateTime);
+
+    return updatedDate;
+  }
+
   dateConversionToDayMonthYear(DateTime dateTime) {
     var newFormat = DateFormat('d MMM, ' 'yyyy');
     String updatedDate = newFormat.format(dateTime);
@@ -2451,11 +2458,8 @@ class CommonUtil {
                                         context,
                                         listen: false,
                                       ).updateTabIndex(currentIndex: 3);
-                                      Get.offAll(
-                                        DashboardScreen(
-                                          fromPlans: true,
-                                        ),
-                                      );
+                                      Get.offNamedUntil(router.rt_MyPlans,
+                                          (Route<dynamic> route) => false);
                                       // refresh();
                                     } else {
                                       Navigator.of(_keyLoader.currentContext,
@@ -2467,11 +2471,8 @@ class CommonUtil {
                                         context,
                                         listen: false,
                                       ).updateTabIndex(currentIndex: 3);
-                                      Get.offAll(
-                                        DashboardScreen(
-                                          fromPlans: true,
-                                        ),
-                                      );
+                                      Get.offNamedUntil(router.rt_MyPlans,
+                                          (Route<dynamic> route) => false);
                                       FlutterToast().getToast(
                                           'Already Subscribed', Colors.red);
                                     }

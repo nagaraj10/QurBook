@@ -65,6 +65,7 @@ import 'package:myfhb/src/utils/screenutils/screenutil.dart';
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/authentication/view_model/otp_view_model.dart';
+import 'package:myfhb/landing/view_model/landing_view_model.dart';
 
 var firstCamera;
 List<CameraDescription> listOfCameras;
@@ -787,6 +788,9 @@ class _MyFHBState extends State<MyFHB> {
         ),
         provider.ChangeNotifierProvider<OtpViewModel>(
           create: (_) => OtpViewModel(),
+        ),
+        provider.ChangeNotifierProvider<LandingViewModel>(
+          create: (_) => LandingViewModel(),
         ),
       ],
       child: LayoutBuilder(

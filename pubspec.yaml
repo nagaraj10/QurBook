@@ -160,6 +160,7 @@ flutter:
     - assets/payment/success_tick.png
     - assets/launcher/myfhb.png
     - assets/launcher/myfhb1.png
+    - assets/dashboard/
 
 
   #  - images/a_dot_ham.jpeg
