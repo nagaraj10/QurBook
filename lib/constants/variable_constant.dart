@@ -135,15 +135,12 @@ const String strCallLab = 'laboratories/';
 //ForIcons
 
 const String icon_qurplan = 'assets/launcher/qurplan.png';
-const String icon_languageIntro = 'assets/IntroScreensImages/LanguageIntro.png';
-const String icon_qurplanIntro = 'assets/IntroScreensImages/qurplanIntro.png';
-const String icon_ReminderIntro = 'assets/IntroScreensImages/ReminderIntro.png';
-const String icon_SheelaIntro = 'assets/IntroScreensImages/SheelaIntro.png';
-
-const String icon_TrustedAnswerIntro =
-    'assets/IntroScreensImages/TrustedAnswerIntro.png';
-const String icon_StickPlanIntro =
-    'assets/IntroScreensImages/StickPlanIntro.png';
+const String icon_languageIntro = 'assets/IntroScreensImages/Intro01.png';
+const String icon_qurplanIntro = 'assets/IntroScreensImages/Intro03.png';
+const String icon_ReminderIntro = 'assets/IntroScreensImages/Intro05.png';
+const String icon_SheelaIntro = 'assets/IntroScreensImages/Intro02.png';
+const String icon_TrustedAnswerIntro = 'assets/IntroScreensImages/Intro04.png';
+const String icon_StickPlanIntro = 'assets/IntroScreensImages/common.png';
 const String icon_fhb = 'assets/launcher/myfhb.png';
 const String icon_splash_logo = 'assets/launcher/myfhb.png';
 const String icon_attach = 'assets/icons/attach.png';
