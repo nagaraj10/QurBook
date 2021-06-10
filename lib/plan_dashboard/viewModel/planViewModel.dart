@@ -76,4 +76,24 @@ class PlanViewModel extends ChangeNotifier {
     } catch (e) {}
   }
 
+  List<SearchListResult> getFilterForProvider(
+      String title, List<SearchListResult> planListOld) {
+    List<SearchListResult> filterSearch = new List();
+    for (SearchListResult searchList in planListOld) {
+      if (searchList?.title != null && searchList?.title != '') {
+        if (searchList?.title
+            .toLowerCase()
+            .trim()
+            .contains(title.toLowerCase().trim()) ||
+            searchList?.description
+                .toLowerCase()
+                .trim()
+                .contains(title.toLowerCase().trim())) {
+          filterSearch.add(searchList);
+        }
+      }
+    }
+    return filterSearch;
+  }
+
 }
