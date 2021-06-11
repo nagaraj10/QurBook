@@ -601,12 +601,12 @@ class _VerifyPatientState extends State<VerifyPatient> {
         if (value != null) {
           Future.delayed(Duration(seconds: 3), () {
             LoaderClass.hideLoadingDialog(context);
-            PageNavigator.goToPermanent(context, router.rt_Dashboard);
+            PageNavigator.goToPermanent(context, router.rt_Landing);
           });
         } else {
           LoaderClass.hideLoadingDialog(context);
           new FHBBasicWidget().showDialogWithTwoButtons(context, () {
-            PageNavigator.goToPermanent(context, router.rt_Dashboard);
+            PageNavigator.goToPermanent(context, router.rt_Landing);
           }, value.message, strConfirmDialog);
         }
       });
@@ -649,12 +649,12 @@ class _VerifyPatientState extends State<VerifyPatient> {
         if (value != null) {
           Future.delayed(Duration(seconds: 3), () {
             LoaderClass.hideLoadingDialog(context);
-            PageNavigator.goToPermanent(context, router.rt_Dashboard);
+            PageNavigator.goToPermanent(context, router.rt_Landing);
           });
         } else {
           LoaderClass.hideLoadingDialog(context);
           new FHBBasicWidget().showDialogWithTwoButtons(context, () {
-            PageNavigator.goToPermanent(context, router.rt_Dashboard);
+            PageNavigator.goToPermanent(context, router.rt_Landing);
           }, value.message, strConfirmDialog);
         }
       });

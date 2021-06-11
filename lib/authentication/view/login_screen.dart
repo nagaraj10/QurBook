@@ -423,11 +423,11 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
           LoaderClass.hideLoadingDialog(context);
           if (value != null) {
             Future.delayed(Duration(seconds: 3), () {
-              PageNavigator.goToPermanent(context, router.rt_Dashboard);
+              PageNavigator.goToPermanent(context, router.rt_Landing);
             });
           } else {
             new FHBBasicWidget().showDialogWithTwoButtons(context, () {
-              PageNavigator.goToPermanent(context, router.rt_Dashboard);
+              PageNavigator.goToPermanent(context, router.rt_Landing);
             }, value.message, strConfirmDialog);
           }
         });

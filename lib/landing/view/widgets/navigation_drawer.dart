@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/colors/fhb_colors.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/more_menu/screens/more_menu_screen.dart';
@@ -17,10 +18,12 @@ class NavigationDrawer extends StatelessWidget {
   NavigationDrawer({
     @required this.myProfile,
     @required this.moveToLoginPage,
+    @required this.refresh,
   });
 
   final MyProfileModel myProfile;
   final Function moveToLoginPage;
+  final Function refresh;
 
   @override
   Widget build(BuildContext context) => Drawer(
@@ -66,6 +69,9 @@ class NavigationDrawer extends StatelessWidget {
                                     child: FHBBasicWidget()
                                         .getProfilePicWidgeUsingUrlForProfile(
                                       myProfile,
+                                      textColor: Color(
+                                          CommonUtil().getMyPrimaryColor()),
+                                      circleColor: Color(bgColorContainer),
                                     ),
                                   ),
                                 ),
@@ -146,7 +152,9 @@ class NavigationDrawer extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => MoreMenuScreen(),
+                              builder: (context) => MoreMenuScreen(
+                                refresh: refresh,
+                              ),
                             ),
                           );
                         },

@@ -246,7 +246,11 @@ class FHBBasicWidget {
     /* });*/
   }
 
-  Widget getProfilePicWidgeUsingUrlForProfile(MyProfileModel myProfile) {
+  Widget getProfilePicWidgeUsingUrlForProfile(
+    MyProfileModel myProfile, {
+    Color textColor,
+    Color circleColor,
+  }) {
 /*
     setAuthToken().then((authToken) {
 */
@@ -263,9 +267,12 @@ class FHBBasicWidget {
             return Container(
               height: 50.0.h,
               width: 50.0.h,
-              color: Color(new CommonUtil().getMyPrimaryColor()),
+              color: circleColor ?? Color(new CommonUtil().getMyPrimaryColor()),
               child: Center(
-                child: getFirstLastNameTextForProfile(myProfile),
+                child: getFirstLastNameTextForProfile(
+                  myProfile,
+                  textColor: textColor,
+                ),
               ),
             );
           },
@@ -1005,7 +1012,8 @@ Widget getFirstLastNameText(MyProfileModel myProfile) {
   }
 }
 
-Widget getFirstLastNameTextForProfile(MyProfileModel myProfile) {
+Widget getFirstLastNameTextForProfile(MyProfileModel myProfile,
+    {Color textColor}) {
   if (myProfile.result != null &&
       myProfile.result.firstName != null &&
       myProfile.result.lastName != null) {
@@ -1013,7 +1021,7 @@ Widget getFirstLastNameTextForProfile(MyProfileModel myProfile) {
       myProfile.result.firstName[0].toUpperCase() +
           myProfile.result.lastName[0].toUpperCase(),
       style: TextStyle(
-        color: Colors.white,
+        color: textColor ?? Colors.white,
         fontSize: 28.0.sp,
         fontWeight: FontWeight.w500,
       ),
