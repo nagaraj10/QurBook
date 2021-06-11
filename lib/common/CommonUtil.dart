@@ -2088,8 +2088,11 @@ class CommonUtil {
                           if (value.result.result == 'Done') {
                             Get.back(result: 'refreshUI');
                           } else {
-                            FlutterToast()
-                                .getToast('Subscribe Failed', Colors.red);
+                            FlutterToast().getToast(
+                                value.result.message != null
+                                    ? value.result.message
+                                    : 'Subscribe Failed',
+                                Colors.red);
                           }
                         }
                       } else {
@@ -2332,7 +2335,10 @@ class CommonUtil {
                                           .pop();
                                       Get.back();
                                       FlutterToast().getToast(
-                                          'UnSubscribe Failed', Colors.red);
+                                          value.result.message != null
+                                              ? value.result.message
+                                              : 'UnSubscribe Failed',
+                                          Colors.red);
                                     }
                                   }
                                 } else {
@@ -2474,7 +2480,10 @@ class CommonUtil {
                                       Get.offNamedUntil(router.rt_MyPlans,
                                           (Route<dynamic> route) => false);
                                       FlutterToast().getToast(
-                                          'Already Subscribed', Colors.red);
+                                          value.result.message != null
+                                              ? value.result.message
+                                              : 'Subscribe Failed',
+                                          Colors.red);
                                     }
                                   }
                                 } else {
@@ -2518,8 +2527,11 @@ class CommonUtil {
                                         rootNavigator: true)
                                     .pop();
                                 Get.back(result: 'refreshUI');
-                                FlutterToast()
-                                    .getToast('UnSubscribe Failed', Colors.red);
+                                FlutterToast().getToast(
+                                    value.result.message != null
+                                        ? value.result.message
+                                        : 'UnSubscribe Failed',
+                                    Colors.red);
                               }
                             }
                           } else {
@@ -2667,8 +2679,11 @@ class CommonUtil {
                                               rootNavigator: true)
                                           .pop();
                                       Get.back();
-                                      FlutterToast()
-                                          .getToast('Renew Failed', Colors.red);
+                                      FlutterToast().getToast(
+                                          value.result.message != null
+                                              ? 'Unable to renew - '+value.result.message
+                                              : 'Renew Failed',
+                                          Colors.red);
                                     }
                                   }
                                 } else {
