@@ -16,6 +16,8 @@ import 'package:myfhb/src/ui/loader_class.dart';
 
 enum RegimentMode { Schedule, Symptoms }
 
+enum RegimentFilter { All, Missed }
+
 enum RegimentStatus { Loading, Loaded, DialogOpened, DialogClosed }
 
 class RegimentViewModel extends ChangeNotifier {
@@ -35,6 +37,7 @@ class RegimentViewModel extends ChangeNotifier {
   int tabIndex = 0;
   double scrollOffset;
   int initialShowIndex;
+  RegimentFilter regimentFilter = RegimentFilter.All;
 
   void updateInitialShowIndex({
     bool isDone = false,
@@ -83,11 +86,23 @@ class RegimentViewModel extends ChangeNotifier {
     }
   }
 
+  void changeFilter(RegimentFilter newFilter) {
+    regimentFilter = newFilter;
+    if (newFilter == RegimentFilter.Missed) {
+      updateInitialShowIndex(
+        index: 0,
+      );
+    }
+    setViewRegimentsData();
+    notifyListeners();
+  }
+
   Future<void> switchRegimentMode() {
     regimentMode = (regimentMode == RegimentMode.Schedule)
         ? RegimentMode.Symptoms
         : RegimentMode.Schedule;
     if (regimentMode == RegimentMode.Symptoms) {
+      regimentFilter = RegimentFilter.All;
       updateInitialShowIndex(index: 0);
     }
     resetRegimenTab();
@@ -104,7 +119,10 @@ class RegimentViewModel extends ChangeNotifier {
     List<RegimentDataModel> filteredList,
     bool isInitial = false,
   }) {
-    if (filteredList != null) {
+    if (regimentFilter == RegimentFilter.Missed &&
+        regimentMode == RegimentMode.Schedule) {
+      regimentsList = getMissedFilter(filteredList);
+    } else if (filteredList != null) {
       regimentsList = filteredList;
     } else {
       if (regimentMode == RegimentMode.Schedule) {
@@ -117,6 +135,23 @@ class RegimentViewModel extends ChangeNotifier {
     if (!isInitial) {
       notifyListeners();
     }
+  }
+
+  List<RegimentDataModel> getMissedFilter(
+    List<RegimentDataModel> filteredList,
+  ) {
+    List<RegimentDataModel> actualList = filteredList ?? regimentsScheduledList;
+    List<RegimentDataModel> missedRegimenList = [];
+    actualList?.forEach((regimenData) {
+      if (regimenData?.estart
+              ?.difference(DateTime.now())
+              ?.inMinutes
+              ?.isNegative &&
+          regimenData.ack == null) {
+        missedRegimenList.add(regimenData);
+      }
+    });
+    return missedRegimenList;
   }
 
   void startRegimenTTS(int index, String saytext) {

@@ -460,6 +460,9 @@ const String scheduleTitle = 'Daily Schedule';
 const String planActivities = 'Plan Activities';
 const String planSymptoms = 'Plan Symptoms';
 const String undo = 'Undo';
+const String filter = 'Filter';
+const String allActivities = 'All Activities';
+const String missedActivities = 'Missed Activities';
 
 const strJpgDot = '.jpg';
 const strJpegDot = '.jpeg';

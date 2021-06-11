@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 
@@ -15,6 +16,7 @@ class LandingCard extends StatelessWidget {
     this.onPressed,
     this.onAddPressed,
     this.isEnabled = true,
+    this.onLinkPressed,
   });
 
   final String title;
@@ -25,6 +27,7 @@ class LandingCard extends StatelessWidget {
   final Function onPressed;
   final Function onAddPressed;
   final bool isEnabled;
+  final Function onLinkPressed;
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -82,14 +85,17 @@ class LandingCard extends StatelessWidget {
                   ),
                   Visibility(
                     visible: (alerts ?? '').isNotEmpty,
-                    child: Text(
-                      alerts ?? '',
-                      style: TextStyle(
-                        fontSize: 14.0.sp,
-                        color: color,
+                    child: InkWell(
+                      onTap: onLinkPressed,
+                      child: Text(
+                        alerts ?? '',
+                        style: TextStyle(
+                          fontSize: 14.0.sp,
+                          color: color,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   Row(
