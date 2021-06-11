@@ -1821,7 +1821,7 @@ class CommonUtil {
                   fromAppointments: false,
                   fromClass: 'notification'))
           .then((value) => Get.offNamedUntil(
-              router.rt_Dashboard, (Route<dynamic> route) => false));
+              router.rt_Landing, (Route<dynamic> route) => false));
     } else {
       Get.to(
         MyRecords(
@@ -2681,7 +2681,8 @@ class CommonUtil {
                                       Get.back();
                                       FlutterToast().getToast(
                                           value.result.message != null
-                                              ? 'Unable to renew - '+value.result.message
+                                              ? 'Unable to renew - ' +
+                                                  value.result.message
                                               : 'Renew Failed',
                                           Colors.red);
                                     }

@@ -90,7 +90,7 @@ class _UserAccountsState extends State<UserAccounts>
                 Navigator.popUntil(context, (Route<dynamic> route) {
                   if (Navigator.canPop(context)) {
                     bool shouldPop = false;
-                    if (route.settings.name == router.rt_Dashboard ||
+                    if (route.settings.name == router.rt_Landing ||
                         route.settings == null) {
                       shouldPop = true;
                     }
