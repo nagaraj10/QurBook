@@ -46,7 +46,7 @@ setRouter(List<CameraDescription> listOfCameras) async {
   var fhb_router = <String, WidgetBuilder>{
     router.rt_Splash: (BuildContext context) => SplashScreen(),
     router.rt_SignIn: (BuildContext context) => SignInScreen(),
-    router.rt_Dashboard: (BuildContext context) => DashboardScreen(),
+    router.rt_Dashboard: (BuildContext context) => DevicesScreen(),
     router.rt_Landing: (BuildContext context) => LandingScreen(),
     router.rt_Regimen: (BuildContext context) => RegimentScreen(),
     router.rt_MyPlans: (BuildContext context) => MyPlansScreen(),

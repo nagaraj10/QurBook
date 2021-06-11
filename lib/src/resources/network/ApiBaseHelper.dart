@@ -1460,6 +1460,20 @@ class ApiBaseHelper {
     return responseJson;
   }
 
+  Future<dynamic> getQurPlanDashBoard(String url) async {
+    var responseJson;
+    try {
+      final response = await http.get(
+        _baseUrl + url,
+        headers: await headerRequest.getRequestHeadersTimeSlot(),
+      );
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
   Future<dynamic> saveRegimentMedia(
       String url, String imagePaths, String userId) async {
     var response;

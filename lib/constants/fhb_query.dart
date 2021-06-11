@@ -243,6 +243,9 @@ const String qr_list = 'list/';
 const String qr_doctorlist = 'doctorsList?';
 const String qr_halthOrganization = 'healthOrganizationTypeId=';
 const String qr_healthOrganizationList = 'healthOrganizationsList?';
+const String qr_qur_plan_dashboard = 'qur-plan-dashboard?';
+const String qr_userid_dashboard = '&userId=';
+const String qr_date = '&date=';
 
 const String qr_module_equal = '&module=';
 const String qr_healthOrg = 'healthOrganization';

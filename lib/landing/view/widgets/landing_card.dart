@@ -14,6 +14,7 @@ class LandingCard extends StatelessWidget {
     this.alerts,
     this.onPressed,
     this.onAddPressed,
+    this.isEnabled = true,
   });
 
   final String title;
@@ -23,6 +24,7 @@ class LandingCard extends StatelessWidget {
   final String alerts;
   final Function onPressed;
   final Function onAddPressed;
+  final bool isEnabled;
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -74,6 +76,8 @@ class LandingCard extends StatelessWidget {
                         color: Colors.grey,
                         fontWeight: FontWeight.w500,
                       ),
+                      maxLines: 4,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   Visibility(
@@ -84,6 +88,8 @@ class LandingCard extends StatelessWidget {
                         fontSize: 14.0.sp,
                         color: color,
                       ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   Row(
