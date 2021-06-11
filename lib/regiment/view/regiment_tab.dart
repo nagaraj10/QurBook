@@ -55,6 +55,11 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
     );
     Provider.of<RegimentViewModel>(context, listen: false)
         .updateInitialShowIndex(
+      index: Provider.of<RegimentViewModel>(context, listen: false)
+                  .regimentFilter ==
+              RegimentFilter.Missed
+          ? 0
+          : null,
       isInitial: true,
     );
     Provider.of<ChatScreenViewModel>(context, listen: false)?.updateAppState(
@@ -459,17 +464,145 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                       ),
                     ),
                   ),
-                  InkWell(
-                    onTap: () {
-                      _regimentViewModel.changeSearchExpanded(true);
-                    },
-                    child: Center(
-                      child: Icon(
-                        Icons.search,
-                        color: Colors.black,
-                        size: 30.0.sp,
+                  Row(
+                    children: [
+                      Visibility(
+                        visible: _regimentViewModel.regimentMode ==
+                            RegimentMode.Schedule,
+                        // child: Padding(
+                        //   padding: EdgeInsets.only(
+                        //     right: 10.0.w,
+                        //   ),
+                        //   child: PopupMenuButton(
+                        //     itemBuilder: (BuildContext context) => [
+                        //       PopupMenuItem<RegimentFilter>(
+                        //         value: RegimentFilter.All,
+                        //         child: Row(
+                        //           mainAxisAlignment:
+                        //               MainAxisAlignment.spaceBetween,
+                        //           children: [
+                        //             Text(
+                        //               allActivities,
+                        //               style: TextStyle(
+                        //                 fontSize: 14.0.sp,
+                        //                 fontWeight: FontWeight.w500,
+                        //                 color: Colors.black,
+                        //               ),
+                        //             ),
+                        //             Radio(
+                        //               groupValue:
+                        //                   _regimentViewModel.regimentFilter,
+                        //               value: RegimentFilter.All,
+                        //               activeColor: Color(
+                        //                   CommonUtil().getMyPrimaryColor()),
+                        //               onChanged: (newFilter) {
+                        //                 _regimentViewModel
+                        //                     .changeFilter(newFilter);
+                        //                 Navigator.pop(context);
+                        //               },
+                        //             ),
+                        //           ],
+                        //         ),
+                        //       ),
+                        //       PopupMenuItem<RegimentFilter>(
+                        //         value: RegimentFilter.Missed,
+                        //         child: Row(
+                        //           mainAxisAlignment:
+                        //               MainAxisAlignment.spaceBetween,
+                        //           children: [
+                        //             Text(
+                        //               missedActivities,
+                        //               style: TextStyle(
+                        //                 fontSize: 14.0.sp,
+                        //                 fontWeight: FontWeight.w500,
+                        //                 color: Colors.black,
+                        //               ),
+                        //             ),
+                        //             Radio(
+                        //               groupValue:
+                        //                   _regimentViewModel.regimentFilter,
+                        //               value: RegimentFilter.Missed,
+                        //               activeColor: Color(
+                        //                   CommonUtil().getMyPrimaryColor()),
+                        //               onChanged: (newFilter) {
+                        //                 _regimentViewModel
+                        //                     .changeFilter(newFilter);
+                        //                 Navigator.pop(context);
+                        //               },
+                        //             ),
+                        //           ],
+                        //         ),
+                        //       ),
+                        //     ],
+                        //     onSelected: (newFilter) {
+                        //       _regimentViewModel.changeFilter(newFilter);
+                        //     },
+                        //     child: Card(
+                        //       shape: RoundedRectangleBorder(
+                        //         borderRadius: BorderRadius.circular(20.0.sp),
+                        //       ),
+                        //       color: Color(CommonUtil().getMyPrimaryColor()),
+                        //       child: Padding(
+                        //         padding: EdgeInsets.symmetric(
+                        //           vertical: 2.0.h,
+                        //           horizontal: 10.0.w,
+                        //         ),
+                        //         child: Text(
+                        //           filter,
+                        //           style: TextStyle(
+                        //             fontSize: 14.0.sp,
+                        //             fontWeight: FontWeight.w500,
+                        //             color: Colors.white,
+                        //           ),
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
+                        child: Row(
+                          children: [
+                            Checkbox(
+                              materialTapTargetSize:
+                                  MaterialTapTargetSize.shrinkWrap,
+                              value: _regimentViewModel.regimentFilter ==
+                                  RegimentFilter.Missed,
+                              activeColor:
+                                  Color(CommonUtil().getMyPrimaryColor()),
+                              onChanged: (isMissed) {
+                                _regimentViewModel.changeFilter(isMissed
+                                    ? RegimentFilter.Missed
+                                    : RegimentFilter.All);
+                              },
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(
+                                right: 15.0.w,
+                              ),
+                              child: Text(
+                                missedActivities,
+                                style: TextStyle(
+                                  fontSize: 14.0.sp,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
+                      InkWell(
+                        onTap: () {
+                          _regimentViewModel.changeSearchExpanded(true);
+                        },
+                        child: Center(
+                          child: Icon(
+                            Icons.search,
+                            color: Colors.black,
+                            size: 30.0.sp,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

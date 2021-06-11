@@ -66,7 +66,7 @@ class HomeWidget extends StatelessWidget {
                         crossAxisCount: 2,
                         crossAxisSpacing: 5.0.w,
                         mainAxisSpacing: 5.0.w,
-                        childAspectRatio: 0.8,
+                        childAspectRatio: 0.7,
                       ),
                       children: [
                         LandingCard(
@@ -106,6 +106,20 @@ class HomeWidget extends StatelessWidget {
                               context,
                               listen: false,
                             ).regimentMode = RegimentMode.Schedule;
+                            Provider.of<RegimentViewModel>(context,
+                                    listen: false)
+                                .regimentFilter = RegimentFilter.All;
+                            Get.toNamed(rt_Regimen);
+                          },
+                          onLinkPressed: () {
+                            Provider.of<RegimentViewModel>(
+                              context,
+                              listen: false,
+                            ).regimentMode = RegimentMode.Schedule;
+                            Provider.of<RegimentViewModel>(
+                              context,
+                              listen: false,
+                            ).regimentFilter = RegimentFilter.Missed;
                             Get.toNamed(rt_Regimen);
                           },
                         ),
@@ -142,6 +156,9 @@ class HomeWidget extends StatelessWidget {
                               context,
                               listen: false,
                             ).regimentMode = RegimentMode.Symptoms;
+                            Provider.of<RegimentViewModel>(context,
+                                    listen: false)
+                                .regimentFilter = RegimentFilter.All;
                             Get.toNamed(rt_Regimen);
                           },
                         ),
