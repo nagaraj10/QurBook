@@ -52,23 +52,23 @@ class IntroWidget extends StatelessWidget {
   String getStringForIntro() {
     switch (imageForScreen) {
       case icon_languageIntro:
-        return 'Subscribe to 100+ HealthCare plans \n from Trusted Doctors and Hospitals';
+        return 'Subscribe to 150+ personalized health \n care plans from trusted providers';
         break;
       case icon_SheelaIntro:
-        return 'Use Sheela G to Record \n Health Vitals & Receive Trusted Advice';
+        return 'One call or chat with your care giver  \n to manage your healthcare needs';
         break;
       case icon_qurplanIntro:
-        return 'Get Assigned a \n Doctor & Caregiver';
+        return 'Just follow your Care plan Regime and \n be on top of your Health Risk';
         break;
       case icon_TrustedAnswerIntro:
-        return 'Follow Health Regimes \n scheduled for the day';
+        return 'Use Sheela G to record vitals, \n symptoms and disease education';
         break;
       case icon_ReminderIntro:
-        return 'Video Call & Chat with \n Your Care Team Instantly';
+        return 'Get Peace of mind and Protection for \n you and your family';
         break;
 
       default:
-        return 'Get Assigned a \n Doctor & Caregiver';
+        return 'Subscribe to 150+ personalized health care plans \n from trusted providers';
     }
   }
 }
