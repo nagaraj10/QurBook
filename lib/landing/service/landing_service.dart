@@ -20,6 +20,6 @@ class LandingService {
     final response = await _helper.getQurPlanDashBoard(
       url,
     );
-    return QurPlanDashboardModel.fromJson(response);
+    return QurPlanDashboardModel.fromJson(response ?? '');
   }
 }
