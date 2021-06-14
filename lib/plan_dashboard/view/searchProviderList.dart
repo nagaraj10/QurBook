@@ -14,13 +14,19 @@ import 'package:myfhb/plan_dashboard/view/categoryList.dart';
 import 'package:myfhb/plan_dashboard/viewModel/planViewModel.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:showcaseview/showcase_widget.dart';
+import 'package:myfhb/styles/styles.dart' as fhbStyles;
 
 class SearchProviderList extends StatefulWidget {
   @override
   _SearchProviderList createState() => _SearchProviderList();
+
+  final List<SearchListResult> searchListResult;
+
+  SearchProviderList(this.searchListResult);
 }
 
 class _SearchProviderList extends State<SearchProviderList> {
@@ -43,6 +49,9 @@ class _SearchProviderList extends State<SearchProviderList> {
   BuildContext _myContext;
   bool isSearch = false;
 
+  List<SearchListResult> providerSelectedList = new List();
+  CommonWidgets commonWidgets = new CommonWidgets();
+
   @override
   void initState() {
     //searchFocus.requestFocus();
@@ -50,6 +59,9 @@ class _SearchProviderList extends State<SearchProviderList> {
     /*Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
       isInitial: true,
     );*/
+
+    providerSelectedList = widget.searchListResult;
+
     providerList = myPlanViewModel.getSearchListInit('');
     isFirst = PreferenceUtil.isKeyValid(Constants.KEY_SHOWCASE_hospitalList);
 
@@ -391,11 +403,30 @@ class _SearchProviderList extends State<SearchProviderList> {
                       ],
                     ),
                   ),
+                  getSelectedIcon(providerSelectedList, searchList[i]),
+                  SizedBox(width: 5.w),
                 ],
               ),
               SizedBox(height: 5.h),
             ],
           )),
     );
+  }
+
+  Widget getSelectedIcon(List<SearchListResult> providerSelectedList,
+      SearchListResult searchList) {
+    Widget icon = SizedBox.shrink();
+
+    if (providerSelectedList != null && searchList != null) {
+      providerSelectedList.forEach((element) {
+        if (element.linkid == searchList.linkid) {
+          icon = commonWidgets.getIcon(width: 18.w, icon: Icons.check_circle);
+        }
+      });
+    } else {
+      icon = SizedBox.shrink();
+    }
+
+    return icon;
   }
 }

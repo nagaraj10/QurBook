@@ -1,5 +1,6 @@
 // ignore: file_names
 import 'dart:io';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
@@ -175,6 +176,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
   }
 
   getFamilyLength() async {
+    FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+    final token = await _firebaseMessaging.getToken();
+    print('------------FCM--------------------$token');
+
     _familyListBloc.getFamilyMembersListNew().then((familyMembersList) {
       if (mounted) {
         setState(() {
