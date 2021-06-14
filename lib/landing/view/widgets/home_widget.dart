@@ -57,6 +57,10 @@ class HomeWidget extends StatelessWidget {
                         (dashboardData?.providers?.doctor ?? 0) +
                             (dashboardData?.providers?.hospital ?? 0) +
                             (dashboardData?.providers?.lab ?? 0);
+                    var availableVideos =
+                        (dashboardData?.helperVideos?.length ?? 0) +
+                            (dashboardData?.helperVideos?.length ?? 0) +
+                            (dashboardData?.helperVideos?.length ?? 0);
                     return GridView(
                       padding: EdgeInsets.symmetric(
                         vertical: 10.0.h,
@@ -64,9 +68,9 @@ class HomeWidget extends StatelessWidget {
                       ),
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
-                        crossAxisSpacing: 5.0.w,
-                        mainAxisSpacing: 5.0.w,
-                        childAspectRatio: 0.7,
+                        crossAxisSpacing: 16.0.w,
+                        mainAxisSpacing: 16.0.w,
+                        childAspectRatio: 0.9,
                       ),
                       children: [
                         LandingCard(
@@ -142,9 +146,9 @@ class HomeWidget extends StatelessWidget {
                           lastStatus: dashboardData?.symptomsCheckIn?.title !=
                                   null
                               ? (constants.strLastEntered +
-                                  (dashboardData?.symptomsCheckIn?.title ??
-                                      '') +
-                                  ' at ' +
+                                  // (dashboardData?.symptomsCheckIn?.title ??
+                                  //     '') +
+                                  // ' at ' +
                                   CommonUtil().dateTimeString(
                                       dashboardData?.symptomsCheckIn?.estart))
                               : '',
@@ -219,7 +223,9 @@ class HomeWidget extends StatelessWidget {
                         LandingCard(
                           title: constants.strHowVideos,
                           lastStatus: '',
-                          alerts: '',
+                          alerts: availableVideos > 0
+                              ? '$availableVideos ${constants.strVideosAvailable}'
+                              : constants.strNoVideos,
                           icon: variable.icon_how_to_use,
                           color: Color(CommonConstants.GlucoDarkColor),
                           onPressed: () {},

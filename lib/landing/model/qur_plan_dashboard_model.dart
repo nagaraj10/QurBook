@@ -154,7 +154,8 @@ class RegimenDue {
 
   factory RegimenDue.fromJson(Map<String, dynamic> json) => RegimenDue(
         activeDues: json['activeDues'],
-        lastEnteredDateTime: DateTime.parse(json['lastEnteredDateTime']),
+        lastEnteredDateTime:
+            DateTime.tryParse(json['lastEnteredDateTime'] ?? ''),
       );
 
   Map<String, dynamic> toJson() => {
@@ -186,8 +187,8 @@ class SymptomsCheckIn {
         title: json['title'],
         aid: json['aid'],
         activityname: json['activityname'],
-        estart: DateTime.parse(json['estart']),
-        eend: DateTime.parse(json['eend']),
+        estart: DateTime.tryParse(json['estart'] ?? ''),
+        eend: DateTime.tryParse(json['eend'] ?? ''),
       );
 
   Map<String, dynamic> toJson() => {
