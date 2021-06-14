@@ -1257,6 +1257,16 @@ class CommonUtil {
     return updatedDate;
   }
 
+  dateTimeString(DateTime dateTime) {
+    if (dateTime != null && (dateTime?.toString()?.isNotEmpty ?? false)) {
+      var newFormat = DateFormat('MMM d, yyyy hh:mm a');
+      String updatedDate = newFormat.format(dateTime);
+      return updatedDate;
+    } else {
+      return '';
+    }
+  }
+
   dateConversionToDayMonthDate(DateTime dateTime) {
     var newFormat = DateFormat('EEEE, MMMM d');
     String updatedDate = newFormat.format(dateTime);

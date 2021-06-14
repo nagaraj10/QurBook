@@ -83,11 +83,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     QurPlanReminders.getTheRemindersFromAPI();
     callImportantsMethod();
 
-    print(
-        'User Id : ${PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN)}');
-    print(
-        'Auth Token : ${PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)}');
-
     String profilebanner =
         PreferenceUtil.getStringValue(Constants.KEY_DASHBOARD_BANNER);
     if (profilebanner != null) {

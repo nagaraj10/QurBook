@@ -1,13 +1,19 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
 import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
 import 'package:myfhb/authentication/view/login_screen.dart';
 import 'package:myfhb/colors/fhb_colors.dart';
+import 'package:myfhb/common/CommonConstants.dart';
+import 'package:myfhb/common/CommonDialogBox.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:myfhb/common/errors_widget.dart';
+import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/ui/MyRecordsArguments.dart';
@@ -41,12 +47,27 @@ class _LandingScreenState extends State<LandingScreen> {
   final GlobalKey<State> _key = GlobalKey<State>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   Future profileData;
+  File imageURIProfile;
   LandingViewModel landingViewModel;
+  CommonUtil commonUtil = new CommonUtil();
 
   @override
   void initState() {
     super.initState();
+    dbInitialize();
+    QurPlanReminders.getTheRemindersFromAPI();
+    callImportantsMethod();
+
+    String profilebanner =
+        PreferenceUtil.getStringValue(constants.KEY_DASHBOARD_BANNER);
+    if (profilebanner != null) {
+      imageURIProfile = File(profilebanner);
+    }
+    try {
+      commonUtil.versionCheck(context);
+    } catch (e) {}
     profileData = getMyProfile();
+    Provider.of<LandingViewModel>(context, listen: false).getQurPlanDashBoard();
   }
 
   @override
@@ -157,6 +178,7 @@ class _LandingScreenState extends State<LandingScreen> {
           drawer: NavigationDrawer(
             myProfile: myProfile,
             moveToLoginPage: moveToLoginPage,
+            refresh: refresh,
           ),
           bottomNavigationBar: Container(
             decoration: const BoxDecoration(
@@ -185,17 +207,31 @@ class _LandingScreenState extends State<LandingScreen> {
                 color: Colors.black54,
               ),
               items: [
-                const BottomNavigationBarItem(
+                BottomNavigationBarItem(
                   icon: ImageIcon(
                     AssetImage(
                       variable.icon_home,
                     ),
                   ),
-                  label: variable.strhome,
+                  title: Text(
+                    variable.strhome,
+                    style: TextStyle(
+                      color: landingViewModel.currentTabIndex == 0
+                          ? Color(CommonUtil().getMyPrimaryColor())
+                          : Colors.black54,
+                    ),
+                  ),
                 ),
                 BottomNavigationBarItem(
                   icon: getChatIcon(),
-                  label: variable.strChat,
+                  title: Text(
+                    variable.strChat,
+                    style: TextStyle(
+                      color: landingViewModel.currentTabIndex == 1
+                          ? Color(CommonUtil().getMyPrimaryColor())
+                          : Colors.black54,
+                    ),
+                  ),
                 ),
                 BottomNavigationBarItem(
                   icon: Image.asset(
@@ -203,19 +239,40 @@ class _LandingScreenState extends State<LandingScreen> {
                     height: 25,
                     width: 25,
                   ),
-                  label: variable.strMaya,
+                  title: Text(
+                    variable.strMaya,
+                    style: TextStyle(
+                      color: landingViewModel.currentTabIndex == 2
+                          ? Color(CommonUtil().getMyPrimaryColor())
+                          : Colors.black54,
+                    ),
+                  ),
                 ),
-                const BottomNavigationBarItem(
+                BottomNavigationBarItem(
                   icon: ImageIcon(
                     AssetImage(variable.icon_th),
                   ),
-                  label: constants.strAppointment,
+                  title: Text(
+                    constants.strAppointment,
+                    style: TextStyle(
+                      color: landingViewModel.currentTabIndex == 3
+                          ? Color(CommonUtil().getMyPrimaryColor())
+                          : Colors.black54,
+                    ),
+                  ),
                 ),
-                const BottomNavigationBarItem(
+                BottomNavigationBarItem(
                   icon: ImageIcon(
                     AssetImage(variable.icon_records),
                   ),
-                  label: variable.strMyRecords,
+                  title: Text(
+                    variable.strMyRecords,
+                    style: TextStyle(
+                      color: landingViewModel.currentTabIndex == 4
+                          ? Color(CommonUtil().getMyPrimaryColor())
+                          : Colors.black54,
+                    ),
+                  ),
                 )
               ],
               //backgroundColor: Colors.grey[200],
@@ -390,5 +447,55 @@ class _LandingScreenState extends State<LandingScreen> {
 
   void refresh() {
     setState(() {});
+  }
+
+  void dbInitialize() {
+    var commonConstants = new CommonConstants();
+    commonConstants.getCountryMetrics();
+  }
+
+  void callImportantsMethod() async {
+    try {
+      getFamilyRelationAndMediaType();
+    } catch (e) {}
+    try {
+      getProfileData();
+    } catch (e) {}
+    try {
+      syncDevices();
+    } catch (e) {}
+
+    try {
+      await new CommonUtil().getMedicalPreference();
+    } catch (e) {}
+
+    try {
+      new CommonDialogBox().getCategoryList();
+      getFamilyRelationAndMediaType();
+    } catch (e) {}
+
+    try {
+      AddFamilyUserInfoBloc addFamilyUserInfoBloc = new AddFamilyUserInfoBloc();
+      addFamilyUserInfoBloc.getDeviceSelectionValues().then((value) {});
+    } catch (e) {}
+  }
+
+  void getFamilyRelationAndMediaType() async {
+    try {
+      await new CommonUtil().getAllCustomRoles();
+    } catch (e) {}
+    try {
+      await new CommonUtil().getMediaTypes();
+    } catch (e) {}
+  }
+
+  void getProfileData() async {
+    try {
+      await new CommonUtil().getUserProfileData();
+    } catch (e) {}
+  }
+
+  void syncDevices() async {
+    await new CommonUtil().syncDevices();
   }
 }
