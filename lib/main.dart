@@ -36,6 +36,7 @@ import 'package:myfhb/src/ui/SplashScreen.dart';
 import 'package:myfhb/src/ui/NetworkScreen.dart';
 import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
+import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
@@ -52,6 +53,7 @@ import 'package:myfhb/video_call/utils/callstatus.dart';
 import 'package:myfhb/video_call/utils/hideprovider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart' as provider;
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:myfhb/src/ui/bot/SuperMaya.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
@@ -145,7 +147,10 @@ Future<void> main() async {
   CommonUtil().isFirstTime();
 
   runApp(
-    MyFHB(),
+    provider.ChangeNotifierProvider<RegimentViewModel>(
+      create: (_) => RegimentViewModel(),
+      child: MyFHB(),
+    ),
   );
 
   // await saveToPreference();
@@ -292,6 +297,14 @@ class _MyFHBState extends State<MyFHB> {
     _msgListener.value = _msg;
     final String c_msg = msg as String;
     if (c_msg.isNotEmpty || c_msg != null) {
+      if (c_msg == 'chat') {
+        fbaLog(eveParams: {
+          'eventTime': '${DateTime.now()}',
+          'ns_type': 'chat',
+          'navigationPage': 'Tele Health Chat list',
+        });
+        Get.to(ChatHomeScreen());
+      }
       var passedValArr = c_msg.split('&');
       if (passedValArr[0] == 'ack') {
         var temp = passedValArr[1].split('|');
@@ -310,7 +323,8 @@ class _MyFHBState extends State<MyFHB> {
             'navigationPage': 'Sheela Start Page',
           });
           Get.to(SuperMaya());
-        } else if (passedValArr[1] == 'profile_page') {
+        } else if (passedValArr[1] == 'profile_page' ||
+            passedValArr[1] == 'profile') {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
             'ns_type': 'profile_page',
@@ -326,7 +340,8 @@ class _MyFHBState extends State<MyFHB> {
             'navigationPage': 'Google Fit page',
           });
           Get.toNamed(router.rt_AppSettings);
-        } else if (passedValArr[1] == 'th_provider') {
+        } else if (passedValArr[1] == 'th_provider' ||
+            passedValArr[1] == 'provider') {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
             'ns_type': 'th_provider',
@@ -335,7 +350,9 @@ class _MyFHBState extends State<MyFHB> {
           Get.toNamed(router.rt_TelehealthProvider,
                   arguments: HomeScreenArguments(selectedIndex: 1))
               .then((value) => setState(() {}));
-        } else if (passedValArr[1] == 'my_record') {
+        } else if (passedValArr[1] == 'my_record' ||
+            passedValArr[1] == 'prescription_list' ||
+            passedValArr[1] == 'add_doc') {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
             'ns_type': 'my_record',
@@ -352,14 +369,21 @@ class _MyFHBState extends State<MyFHB> {
             'ns_type': 'regiment_screen',
             'navigationPage': 'Regimen Screen',
           });
-          Get.to(DashboardScreen());
+          //PageNavigator.goToPermanent(context, router.rt_Landing);
+          Provider.of<RegimentViewModel>(
+            context,
+            listen: false,
+          )?.regimentMode = RegimentMode.Schedule;
+          Provider.of<RegimentViewModel>(context, listen: false)
+              ?.regimentFilter = RegimentFilter.All;
+          Get.toNamed(router.rt_Regimen);
         } else if (passedValArr[1] == 'dashboard') {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
             'ns_type': 'dashboard',
             'navigationPage': 'Device List Screen',
           });
-          Get.toNamed(router.rt_Dashboard);
+          PageNavigator.goToPermanent(context, router.rt_Landing);
         } else if (passedValArr[1] == 'th_provider_hospital') {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
@@ -368,7 +392,8 @@ class _MyFHBState extends State<MyFHB> {
           });
           Get.toNamed(router.rt_TelehealthProvider,
               arguments: HomeScreenArguments(selectedIndex: 1, thTabIndex: 1));
-        } else if (passedValArr[1] == 'myfamily_list') {
+        } else if (passedValArr[1] == 'myfamily_list' ||
+            passedValArr[1] == 'profile_my_family') {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
             'ns_type': 'myfamily_list',
@@ -392,32 +417,57 @@ class _MyFHBState extends State<MyFHB> {
           });
           Get.toNamed(router.rt_UserAccounts,
               arguments: UserAccountsArguments(selectedIndex: 3));
+        } else if (passedValArr[1] == 'appointmentList' ||
+            passedValArr[1] == 'appointmentHistory') {
+          fbaLog(eveParams: {
+            'eventTime': '${DateTime.now()}',
+            'ns_type': 'appointmentList',
+            'navigationPage': 'appointmentList',
+          });
+          Get.to(SplashScreen(
+            nsRoute: passedValArr[1],
+          ));
+        } else if (passedValArr[1] == 'devices_tab') {
+          fbaLog(eveParams: {
+            'eventTime': '${DateTime.now()}',
+            'ns_type': 'device_list',
+            'navigationPage': 'devices_tab',
+          });
+          getProfileData();
+          Get.toNamed(
+            router.rt_HomeScreen,
+            arguments: HomeScreenArguments(selectedIndex: 1, thTabIndex: 1),
+          ).then((value) =>
+              PageNavigator.goToPermanent(context, router.rt_Landing));
+        } else if (passedValArr[1] == 'bills') {
+          fbaLog(eveParams: {
+            'eventTime': '${DateTime.now()}',
+            'ns_type': 'bills',
+            'navigationPage': 'Bills Screen',
+          });
+          Get.toNamed(
+            router.rt_HomeScreen,
+            arguments: HomeScreenArguments(selectedIndex: 1, thTabIndex: 4),
+          ).then((value) =>
+              PageNavigator.goToPermanent(context, router.rt_Landing));
         } else {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
             'ns_type': 'appointment_list',
             'navigationPage': 'Tele Health Appointment list',
           });
-          Get.to(TelehealthProviders(
-            arguments: HomeScreenArguments(selectedIndex: 0),
-          ));
+          PageNavigator.goToPermanent(Get.context, router.rt_Landing);
         }
-      } else if (passedValArr[1] == 'appointmentList') {
+      } else if (passedValArr[1] == 'appointmentList' ||
+          passedValArr[1] == 'appointmentHistory') {
         fbaLog(eveParams: {
           'eventTime': '${DateTime.now()}',
           'ns_type': 'appointmentList',
           'navigationPage': 'Tele Health Appointment list',
         });
         Get.to(SplashScreen(
-          nsRoute: 'appointmentList',
+          nsRoute: passedValArr[1],
         ));
-      } else if (c_msg == 'chat') {
-        fbaLog(eveParams: {
-          'eventTime': '${DateTime.now()}',
-          'ns_type': 'chat',
-          'navigationPage': 'Tele Health Chat list',
-        });
-        Get.to(ChatHomeScreen());
       } else if (passedValArr[0] == 'DoctorRescheduling') {
         /* Get.to(TelehealthProviders(
           arguments: HomeScreenArguments(
@@ -549,9 +599,9 @@ class _MyFHBState extends State<MyFHB> {
         provider.ChangeNotifierProvider<ChatScreenViewModel>(
           create: (_) => ChatScreenViewModel(),
         ),
-        provider.ChangeNotifierProvider<RegimentViewModel>(
-          create: (_) => RegimentViewModel(),
-        ),
+        // provider.ChangeNotifierProvider<RegimentViewModel>(
+        //   create: (_) => RegimentViewModel(),
+        // ),
         provider.ChangeNotifierProvider<OtpViewModel>(
           create: (_) => OtpViewModel(),
         ),
@@ -604,9 +654,10 @@ class _MyFHBState extends State<MyFHB> {
         var parsedData = navRoute.split('&');
         if (navRoute == 'chat') {
           return SplashScreen(nsRoute: 'chat');
-        } else if (parsedData[1] == 'appointmentList') {
+        } else if (parsedData[1] == 'appointmentList' ||
+            parsedData[1] == 'appointmentHistory') {
           return SplashScreen(
-            nsRoute: 'appointmentList',
+            nsRoute: parsedData[1],
           );
         } else if (parsedData[0] == 'ack') {
           var temp = parsedData[1].split('|');
@@ -620,21 +671,25 @@ class _MyFHBState extends State<MyFHB> {
             return SplashScreen(
               nsRoute: 'sheela',
             );
-          } else if (parsedData[1] == 'profile_page') {
+          } else if (parsedData[1] == 'profile_page' ||
+              parsedData[1] == 'profile') {
             return SplashScreen(
-              nsRoute: 'profile_page',
+              nsRoute: parsedData[1],
             );
           } else if (parsedData[1] == 'googlefit') {
             return SplashScreen(
               nsRoute: 'googlefit',
             );
-          } else if (parsedData[1] == 'th_provider') {
+          } else if (parsedData[1] == 'th_provider' ||
+              parsedData[1] == 'provider') {
             return SplashScreen(
-              nsRoute: 'th_provider',
+              nsRoute: parsedData[1],
             );
-          } else if (parsedData[1] == 'my_record') {
+          } else if (parsedData[1] == 'my_record' ||
+              parsedData[1] == 'prescription_list' ||
+              parsedData[1] == 'add_doc') {
             return SplashScreen(
-              nsRoute: 'my_record',
+              nsRoute: parsedData[1],
             );
           } else if (parsedData[1] == 'regiment_screen') {
             //this need to be navigte to Regiment screen
@@ -651,15 +706,26 @@ class _MyFHBState extends State<MyFHB> {
             return SplashScreen(
               nsRoute: 'myfamily_list',
             );
-          } else if (parsedData[1] == 'myprovider_list') {
+          } else if (parsedData[1] == 'myprovider_list' ||
+              parsedData[1] == 'profile_my_family') {
             //this need to be navigte to My Provider screen
             return SplashScreen(
-              nsRoute: 'myprovider_list',
+              nsRoute: parsedData[1],
             );
           } else if (parsedData[1] == 'myplans') {
             //this need to be navigte to My Plans screen
             return SplashScreen(
               nsRoute: 'myplans',
+            );
+          } else if (parsedData[1] == 'devices_tab') {
+            //this need to be navigte to My Plans screen
+            return SplashScreen(
+              nsRoute: 'devices_tab',
+            );
+          } else if (parsedData[1] == 'bills') {
+            //this need to be navigte to My Plans screen
+            return SplashScreen(
+              nsRoute: 'bills',
             );
           } else {
             return SplashScreen(
