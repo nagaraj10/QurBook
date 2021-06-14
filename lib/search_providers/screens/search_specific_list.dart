@@ -432,7 +432,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               fontWeight: FontWeight.w500,
             ),
           ),
-        SizedBox(
+          SizedBox(
             height: 10,
           ),
           fhbBasicWidget.getSaveButton(() {
