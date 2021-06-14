@@ -4,16 +4,16 @@ import 'package:myfhb/constants/fhb_constants.dart' as constants;
 class Utils {
   static const Map<String, String> supportedLanguages = {
     'english': 'en',
-    'tamil': 'ta',
-    'telugu': 'te',
-    'hindi': 'hi',
+    'french': 'fr',
+    'german': 'de',
+    'spanish': 'es',
     'bengali': 'bn',
     'gujarati': 'gu',
+    'hindi': 'hi',
     'kannada': 'kn',
     'malayalam': 'ml',
-    'spanish': 'es',
-    'french': 'fr',
-    'german': 'de'
+    'tamil': 'ta',
+    'telugu': 'te',
   };
 
   static const Map<String, String> langaugeCodes = {

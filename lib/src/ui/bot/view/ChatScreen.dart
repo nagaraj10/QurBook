@@ -113,6 +113,16 @@ class _ChatScreenState extends State<ChatScreen>
               Radio(
                 value: languageCode,
                 groupValue: currentLanguage,
+                activeColor: Color(CommonUtil().getMyPrimaryColor()),
+                onChanged: (value) {
+                  Navigator.pop(context);
+                  PreferenceUtil.saveString(constants.SHEELA_LANG,
+                      Utils.langaugeCodes[value ?? 'undef']);
+                  Provider.of<ChatScreenViewModel>(context, listen: false)
+                      .updateDeviceSelectionModel(
+                    preferredLanguage: value,
+                  );
+                },
               ),
               Text(
                 toBeginningOfSentenceCase(language),
