@@ -17,6 +17,8 @@ class EventListWidget extends StatelessWidget {
   final ProfileResultModel profileResultModel;
   final _formKey = GlobalKey<FormState>();
   var eventTime = {};
+  var eventController = {};
+  bool isEventsAreValid = true;
 
   @override
   Widget build(BuildContext context) {
@@ -25,9 +27,39 @@ class EventListWidget extends StatelessWidget {
       key: _formKey,
       child: SimpleDialog(
         children: getDialogItems(
-          onTimeSelected: (TimeOfDay timeSelected, String scheduleName) {
-            //add to the list for compare
-            eventTime[scheduleName] = toDouble(timeSelected);
+          onTimeSelected: (TimeOfDay timeSelected, String scheduleName,
+              TextEditingController controller) {
+            if (eventTime.isEmpty) {
+              //add events to the list for compare
+              eventTime[scheduleName] = toDouble(timeSelected);
+            } else {
+              isEventsAreValid = eventTimeValidation(eventTime.values.toList(),
+                  eventName: scheduleName,
+                  currentEventTime: toDouble(timeSelected));
+              if (!isEventsAreValid) {
+                var eventList = eventTime.values.toList();
+                var eventControllerList = eventController.values.toList();
+                bool isTimeFound = false;
+                bool isEventNameFound = false;
+                //int index = eventList.indexOf(toDouble(timeSelected));
+                for (var data in eventList) {
+                  if (data != toDouble(timeSelected) && isTimeFound) {
+                    eventTime.remove(data);
+                  } else if (data == toDouble(timeSelected)) {
+                    isTimeFound = true;
+                  }
+                }
+
+                for (var data in eventControllerList) {
+                  if (data != controller && isEventNameFound) {
+                    data.text = '';
+                  } else if (data == controller) {
+                    isEventNameFound = true;
+                  }
+                }
+                print('-------${eventList.toString()}');
+              }
+            }
             var oldValue = saveMap.putIfAbsent(
               scheduleName,
               () => getTimeAsString(timeSelected),
@@ -38,7 +70,7 @@ class EventListWidget extends StatelessWidget {
           },
           onSave: () async {
             if (_formKey.currentState.validate()) {
-              if (eventTimeValidation(eventTime.values.toList())) {
+              if (isEventsAreValid) {
                 String currentLanguage = '';
                 final lan = CommonUtil.getCurrentLanCode();
                 if (lan != "undef") {
@@ -108,6 +140,8 @@ class EventListWidget extends StatelessWidget {
                 minute: int.parse(timeData[1]),
               ),
             );
+            var controllerName = TextEditingController();
+            eventController[key] = controllerName;
             dialogItems.add(
               EventTimeTile(
                 title: key,
@@ -116,6 +150,7 @@ class EventListWidget extends StatelessWidget {
                   minute: int.parse(timeData[1]),
                 ),
                 onTimeSelected: onTimeSelected,
+                controller: controllerName,
               ),
             );
           }
@@ -160,15 +195,35 @@ class EventListWidget extends StatelessWidget {
 
   double toDouble(TimeOfDay myTime) => myTime.hour + myTime.minute / 60.0;
 
-  bool eventTimeValidation(List eventList) {
+  bool eventTimeValidation(List eventList,
+      {String eventName, double currentEventTime}) {
+    // if (eventList.last > currentEventTime) {
+    //   FlutterToast().getToast(
+    //       '${eventName} time should be greater than the previous event',
+    //       Colors.red);
+    //   return false;
+    // } else if (eventList.last == currentEventTime) {
+    //   FlutterToast().getToast(
+    //       '${eventName} time should\'t not be equal to the previous event',
+    //       Colors.red);
+    //   return false;
+    // } else {
+    //   eventTime[eventName] = currentEventTime;
+    //   return true;
+    // }
+    var eventNames = eventTime.keys.toList();
     for (int i = 0; i < eventList.length; i++) {
       if (i + 1 == eventList.length) {
         return true;
       } else if (eventList[i] > eventList[i + 1]) {
-        FlutterToast().getToast('Invalid event time', Colors.red);
+        FlutterToast().getToast(
+            '${eventNames[i + 1]} time should be greater than the ${eventNames[i]} event',
+            Colors.red);
         return false;
       } else if (eventList[i] == eventList[i + 1]) {
-        FlutterToast().getToast('event times can\'t be same', Colors.red);
+        FlutterToast().getToast(
+            '${eventNames[i + 1]} time should be greater than the ${eventNames[i]} event',
+            Colors.red);
         return false;
       }
     }
