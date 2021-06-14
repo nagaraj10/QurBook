@@ -182,6 +182,7 @@ const String icon_chat_dash = 'assets/dashboard/chat.svg';
 const String icon_check_symptoms = 'assets/dashboard/check-symptoms.svg';
 const String icon_how_to_use = 'assets/dashboard/how-to-use.svg';
 const String icon_my_family = 'assets/dashboard/my-family.svg';
+const String icon_my_family_menu = 'assets/dashboard/my-family-old.svg';
 const String icon_my_health_regimen = 'assets/dashboard/my-health-regimen.svg';
 // const String icon_check_symptoms = 'assets/dashboard/symptoms.svg';
 // const String icon_how_to_use = 'assets/dashboard/information.svg';
