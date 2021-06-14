@@ -88,7 +88,7 @@ class _SearchProviderList extends State<SearchProviderList> {
               ),
             ),
             title: Text(
-              'Search Provider',
+              searchHospitals,
               style: TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.w500,

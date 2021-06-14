@@ -283,10 +283,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     if (sharedByMeList == null) {
       sharedByMeList = new List();
       sharedByMeList
-          .add(new SharedByUsers(id: myProfile.result.id, nickName: 'Self'));
+          .add(new SharedByUsers(id: myProfile?.result?.id, nickName: 'Self'));
     } else {
       sharedByMeList.insert(
-          0, new SharedByUsers(id: myProfile.result.id, nickName: 'Self'));
+          0, new SharedByUsers(id: myProfile?.result?.id, nickName: 'Self'));
     }
     if (_familyNames.length == 0) {
       for (int i = 0; i < sharedByMeList.length; i++) {
