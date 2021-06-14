@@ -295,10 +295,10 @@ class _CallPageState extends State<CallPage> {
           //print('user is OFFLINE');
         } else {
           if (Platform.isIOS) {
-            PageNavigator.goToPermanent(context, router.rt_Dashboard);
+            PageNavigator.goToPermanent(context, router.rt_Landing);
           } else {
             if (widget.isAppExists) {
-              PageNavigator.goToPermanent(context, router.rt_Dashboard);
+              PageNavigator.goToPermanent(context, router.rt_Landing);
             } else {
               Navigator.of(context).pushNamedAndRemoveUntil(
                   '/splashscreen', (Route<dynamic> route) => false);
@@ -727,10 +727,10 @@ class _CallPageState extends State<CallPage> {
                   // }
 
                   if (Platform.isIOS) {
-                    PageNavigator.goToPermanent(context, router.rt_Dashboard);
+                    PageNavigator.goToPermanent(context, router.rt_Landing);
                   } else {
                     if (widget.isAppExists) {
-                      PageNavigator.goToPermanent(context, router.rt_Dashboard);
+                      PageNavigator.goToPermanent(context, router.rt_Landing);
                     } else {
                       Navigator.of(context).pushNamedAndRemoveUntil(
                           '/splashscreen', (Route<dynamic> route) => false);

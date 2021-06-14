@@ -815,8 +815,8 @@ class _NotificationScreen extends State<NotificationScreen> {
               bookingId: result?.messageDetails?.payload?.bookingId,
               date: result?.messageDetails?.payload?.appointmentDate,
               templateName: result?.messageDetails?.content?.templateName),
-        )).then((value) =>
-            PageNavigator.goToPermanent(context, router.rt_Dashboard));
+        )).then(
+            (value) => PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);
         break;
       case "PaymentReceipt":
@@ -827,8 +827,8 @@ class _NotificationScreen extends State<NotificationScreen> {
               bookingId: result?.messageDetails?.payload?.bookingId,
               date: result?.messageDetails?.payload?.appointmentDate,
               templateName: result?.messageDetails?.content?.templateName),
-        )).then((value) =>
-            PageNavigator.goToPermanent(context, router.rt_Dashboard));
+        )).then(
+            (value) => PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);
         break;
       case "SlotsFull":
@@ -838,8 +838,8 @@ class _NotificationScreen extends State<NotificationScreen> {
               bookingId: result?.messageDetails?.payload?.bookingId,
               date: result?.messageDetails?.payload?.appointmentDate,
               templateName: result?.messageDetails?.content?.templateName),
-        )).then((value) =>
-            PageNavigator.goToPermanent(context, router.rt_Dashboard));
+        )).then(
+            (value) => PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);
         break;
       case "PatientPrescription":
@@ -857,27 +857,27 @@ class _NotificationScreen extends State<NotificationScreen> {
         readUnreadAction(result);
         break;
       case "sheela":
-        Get.to(SuperMaya()).then((value) =>
-            PageNavigator.goToPermanent(context, router.rt_Dashboard));
+        Get.to(SuperMaya()).then(
+            (value) => PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);
         break;
       case "profile_page":
         Get.toNamed(router.rt_UserAccounts,
                 arguments: UserAccountsArguments(selectedIndex: 0))
             .then((value) =>
-                PageNavigator.goToPermanent(context, router.rt_Dashboard));
+                PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);
         break;
       case "googlefit":
-        Get.toNamed(router.rt_AppSettings).then((value) =>
-            PageNavigator.goToPermanent(context, router.rt_Dashboard));
+        Get.toNamed(router.rt_AppSettings).then(
+            (value) => PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);
         break;
       case "th_provider":
         Get.toNamed(router.rt_TelehealthProvider,
                 arguments: HomeScreenArguments(selectedIndex: 1))
             .then((value) =>
-                PageNavigator.goToPermanent(context, router.rt_Dashboard));
+                PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);
         break;
       case "my_record":
@@ -885,7 +885,7 @@ class _NotificationScreen extends State<NotificationScreen> {
         Get.toNamed(router.rt_HomeScreen,
                 arguments: HomeScreenArguments(selectedIndex: 1))
             .then((value) =>
-                PageNavigator.goToPermanent(context, router.rt_Dashboard));
+                PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);
         break;
       case "myRecords":

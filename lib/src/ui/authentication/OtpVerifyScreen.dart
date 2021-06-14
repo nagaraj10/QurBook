@@ -611,7 +611,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
   void verifyOTP() {}
 
   void moveToDashboardScreen() {
-    PageNavigator.goToPermanent(context, router.rt_Dashboard);
+    PageNavigator.goToPermanent(context, router.rt_Landing);
   }
 
   void checkOTPResponse(OTPResponse otpResponse) {
