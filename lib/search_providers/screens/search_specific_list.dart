@@ -8,6 +8,7 @@ import 'package:myfhb/add_providers/models/add_providers_arguments.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_constants.dart';
@@ -82,6 +83,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   DoctorsListRepository doctorsListRepository = new DoctorsListRepository();
 
   var _selected = Country.IN;
+  FHBBasicWidget fhbBasicWidget = new FHBBasicWidget();
 
   @override
   void initState() {
@@ -419,44 +421,30 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
   Widget getEmptyCard(Diagnostics diagnostics) {
     return Center(
-      child: new RichText(
-        text: new TextSpan(
-          children: [
-            new TextSpan(
-              text:
-                  'Looks like the Doctor you\'re searching is not available in the system,please check the spelling or ',
-              style: new TextStyle(
-                color: ColorUtils.blackcolor,
-                fontSize: 15.0.sp,
-                fontWeight: FontWeight.w500,
-              ),
+      child: new Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          new Text(
+            'No Records Found ',
+            style: new TextStyle(
+              color: ColorUtils.blackcolor,
+              fontSize: 15.0.sp,
+              fontWeight: FontWeight.w500,
             ),
-            new TextSpan(
-              text: 'Click here ',
-              style: new TextStyle(
-                  color: Color(new CommonUtil().getMyPrimaryColor())),
-              recognizer: new TapGestureRecognizer()
-                ..onTap = () {
-                  if (widget.toPreviousScreen) {
-                    widget.arguments.searchWord == CommonConstants.doctors
-                        ? saveMediaDialog(context)
-                        : widget.arguments.searchWord ==
-                                CommonConstants.hospitals
-                            ? passHospitalValue(null, context)
-                            : passLaboratoryValue(null, context);
-                  }
-                },
-            ),
-            new TextSpan(
-              text: ' to add the Doctor',
-              style: new TextStyle(
-                color: ColorUtils.blackcolor,
-                fontSize: 15.0.sp,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        ),
+          ),
+        SizedBox(
+            height: 10,
+          ),
+          fhbBasicWidget.getSaveButton(() {
+            if (widget.toPreviousScreen) {
+              widget.arguments.searchWord == CommonConstants.doctors
+                  ? saveMediaDialog(context)
+                  : widget.arguments.searchWord == CommonConstants.hospitals
+                      ? passHospitalValue(null, context)
+                      : passLaboratoryValue(null, context);
+            }
+          }, text: 'Click here to add', width: 150.w),
+        ],
       ),
     );
   }
@@ -1000,11 +988,12 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   }
 
   saveMediaDialog(BuildContext context) {
-    firstNameController.text = '';
+    firstNameController.text = _textFieldController.text;
     lastNameController.text = '';
     mobileNoController.text = '';
     specializationController.text = '';
     hospitalNameController.text = '';
+    _textFieldController.text = '';
 
     return showDialog<void>(
       context: context,

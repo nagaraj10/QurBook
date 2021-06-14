@@ -43,12 +43,12 @@ class FHBBasicWidget {
     });
   }
 
-  Widget getSaveButton(Function onSavedPressed) {
+  Widget getSaveButton(Function onSavedPressed, {String text, double width}) {
     return RaisedGradientButton(
-      width: 120.0.w,
+      width: width ?? 120.0.w,
       height: 40.0.h,
       child: Text(
-        variable.strSave,
+        text ?? variable.strSave,
         style: TextStyle(
             color: Colors.white,
             fontSize: 16.0.sp,
