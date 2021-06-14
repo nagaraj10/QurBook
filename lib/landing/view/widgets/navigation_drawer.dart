@@ -127,7 +127,7 @@ class NavigationDrawer extends StatelessWidget {
                       DrawerTile(
                         title: variable.strMyFamily,
                         iconWidget: SvgPicture.asset(
-                          variable.icon_my_family,
+                          variable.icon_my_family_menu,
                           color: Colors.black54,
                         ),
                         onPressed: () {

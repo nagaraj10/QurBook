@@ -7,6 +7,7 @@ import 'package:myfhb/landing/view_model/landing_view_model.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import 'package:myfhb/landing/view/widgets/video_screen.dart';
 import 'package:provider/provider.dart';
 import 'landing_card.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as constants;
@@ -58,9 +59,7 @@ class HomeWidget extends StatelessWidget {
                             (dashboardData?.providers?.hospital ?? 0) +
                             (dashboardData?.providers?.lab ?? 0);
                     var availableVideos =
-                        (dashboardData?.helperVideos?.length ?? 0) +
-                            (dashboardData?.helperVideos?.length ?? 0) +
-                            (dashboardData?.helperVideos?.length ?? 0);
+                        (dashboardData?.helperVideos?.length ?? 0);
                     return GridView(
                       padding: EdgeInsets.symmetric(
                         vertical: 10.0.h,
@@ -77,7 +76,6 @@ class HomeWidget extends StatelessWidget {
                           title: activePlanCount > 0
                               ? constants.strYourQurplans
                               : constants.strNoQurplans,
-                          isEnabled: activePlanCount > 0,
                           lastStatus: '',
                           alerts:
                               '${activePlanCount > 0 ? activePlanCount : 'No'}${constants.strPlansActive}',
@@ -133,6 +131,7 @@ class HomeWidget extends StatelessWidget {
                           alerts: '',
                           icon: variable.icon_record_my_vitals,
                           color: Color(CommonConstants.ThermolightColor),
+                          iconColor: Color(CommonConstants.ThermolightColor),
                           onPressed: () {
                             Get.toNamed(rt_Devices);
                           },
@@ -228,14 +227,24 @@ class HomeWidget extends StatelessWidget {
                               : constants.strNoVideos,
                           icon: variable.icon_how_to_use,
                           color: Color(CommonConstants.GlucoDarkColor),
-                          onPressed: () {},
+                          onPressed: () {
+                            if (availableVideos > 0) {
+                              Get.to(
+                                VideoScreen(
+                                  videoList: dashboardData?.helperVideos,
+                                ),
+                              );
+                            }
+                          },
                         ),
                         LandingCard(
                           title: constants.strChatWithUs,
                           lastStatus: '',
+                          isEnabled: activePlanCount > 0,
                           alerts: '',
                           icon: variable.icon_chat_dash,
                           color: Color(CommonConstants.ThermoDarkColor),
+                          iconColor: Color(CommonConstants.ThermoDarkColor),
                           onPressed: () {},
                         ),
                       ],
