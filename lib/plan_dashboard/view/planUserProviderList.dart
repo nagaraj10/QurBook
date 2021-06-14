@@ -49,6 +49,8 @@ class _SearchListState extends State<SearchListHome> {
   bool isFirst;
   BuildContext _myContext;
 
+  List<SearchListResult> providerListSelected = new List();
+
   @override
   void initState() {
     FocusManager.instance.primaryFocus.unfocus();
@@ -87,7 +89,7 @@ class _SearchListState extends State<SearchListHome> {
           body: Container(
             child: Column(
               children: [
-               /* SearchWidget(
+                /* SearchWidget(
               searchController: searchController,
               searchFocus: searchFocus,
               onChanged: (title) {
@@ -99,9 +101,9 @@ class _SearchListState extends State<SearchListHome> {
               },
               hintText: variable.strSearchByHosLoc,
             ),*/
-            SizedBox(
-              height: 5.0.h,
-            ),
+                SizedBox(
+                  height: 5.0.h,
+                ),
                 Visibility(
                     visible: isLoaderVisible,
                     child: new Center(
@@ -126,7 +128,11 @@ class _SearchListState extends State<SearchListHome> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => SearchProviderList()),
+                MaterialPageRoute(
+                    builder: (context) => SearchProviderList(
+                        providerListSelected != null
+                            ? providerListSelected
+                            : [])),
               );
             },
             child: Icon(
@@ -163,6 +169,7 @@ class _SearchListState extends State<SearchListHome> {
           if (snapshot?.hasData &&
               snapshot?.data?.result != null &&
               snapshot?.data?.result?.length > 0) {
+            providerListSelected = snapshot?.data?.result;
             return searchListView(snapshot.data.result);
           } else {
             return SafeArea(
