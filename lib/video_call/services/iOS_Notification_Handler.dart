@@ -142,7 +142,8 @@ class IosNotificationHandler {
           : Get.to(SplashScreen(
               nsRoute: 'googlefit',
             ));
-    } else if (model.redirect == 'th_provider') {
+    } else if ((model.redirect == 'th_provider') ||
+        (model.redirect == 'provider')) {
       fbaLog(eveParams: {
         'eventTime': '${DateTime.now()}',
         'ns_type': 'th_provider',
@@ -155,7 +156,8 @@ class IosNotificationHandler {
               nsRoute: 'th_provider',
             ));
     } else if ((model.redirect == 'my_record') ||
-        (model.redirect == 'prescription_list')) {
+        (model.redirect == 'prescription_list') ||
+        (model.redirect == 'add_doc')) {
       fbaLog(eveParams: {
         'eventTime': '${DateTime.now()}',
         'ns_type': 'my_record',
@@ -205,8 +207,7 @@ class IosNotificationHandler {
         'navigationPage': 'Regimen Screen',
       });
       isAlreadyLoaded
-          ? PageNavigator.goToPermanent(
-              Get.key.currentContext, router.rt_Landing)
+          ? Get.toNamed(router.rt_Regimen)
           : Get.to(SplashScreen(
               nsRoute: 'regiment_screen',
             ));
@@ -247,8 +248,7 @@ class IosNotificationHandler {
           : Get.to(SplashScreen(
               nsRoute: 'myfamily_list',
             ));
-    } else if ((model.redirect == 'myprovider_list') ||
-        (model.redirect == 'provider')) {
+    } else if ((model.redirect == 'myprovider_list')) {
       fbaLog(eveParams: {
         'eventTime': '${DateTime.now()}',
         'ns_type': 'myprovider_list',
