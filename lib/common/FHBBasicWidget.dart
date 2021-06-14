@@ -43,12 +43,12 @@ class FHBBasicWidget {
     });
   }
 
-  Widget getSaveButton(Function onSavedPressed) {
+  Widget getSaveButton(Function onSavedPressed, {String text, double width}) {
     return RaisedGradientButton(
-      width: 120.0.w,
+      width: width ?? 120.0.w,
       height: 40.0.h,
       child: Text(
-        variable.strSave,
+        text ?? variable.strSave,
         style: TextStyle(
             color: Colors.white,
             fontSize: 16.0.sp,
@@ -205,9 +205,6 @@ class FHBBasicWidget {
   }
 
   Widget getProfilePicWidgeUsingUrl(MyProfileModel myProfile) {
-/*
-    setAuthToken().then((authToken) {
-*/
     if (myProfile != null && myProfile.result != null) {
       if (myProfile.result.profilePicThumbnailUrl != '') {
         return Image.network(
@@ -221,7 +218,7 @@ class FHBBasicWidget {
             return Container(
               height: 50.0.h,
               width: 50.0.h,
-              color: Colors.grey[200],
+              color: Color(new CommonUtil().getMyPrimaryColor()),
               child: Center(
                 child: getFirstLastNameText(myProfile),
               ),
@@ -242,8 +239,6 @@ class FHBBasicWidget {
         width: 50.0.h,
       );
     }
-
-    /* });*/
   }
 
   Widget getProfilePicWidgeUsingUrlForProfile(
@@ -986,8 +981,8 @@ Widget getFirstLastNameText(MyProfileModel myProfile) {
       myProfile.result.firstName[0].toUpperCase() +
           myProfile.result.lastName[0].toUpperCase(),
       style: TextStyle(
-        color: Color(new CommonUtil().getMyPrimaryColor()),
-        fontSize: 16.0.sp,
+        color: Colors.white,
+        fontSize: 22.0.sp,
         fontWeight: FontWeight.w400,
       ),
     );
@@ -995,8 +990,8 @@ Widget getFirstLastNameText(MyProfileModel myProfile) {
     return Text(
       myProfile.result.firstName[0].toUpperCase(),
       style: TextStyle(
-        color: Color(new CommonUtil().getMyPrimaryColor()),
-        fontSize: 16.0.sp,
+        color: Colors.white,
+        fontSize: 22.0.sp,
         fontWeight: FontWeight.w400,
       ),
     );
@@ -1004,8 +999,8 @@ Widget getFirstLastNameText(MyProfileModel myProfile) {
     return Text(
       '',
       style: TextStyle(
-        color: Color(new CommonUtil().getMyPrimaryColor()),
-        fontSize: 16.0.sp,
+        color: Colors.white,
+        fontSize: 22.0.sp,
         fontWeight: FontWeight.w200,
       ),
     );
