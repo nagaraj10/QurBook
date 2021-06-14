@@ -65,9 +65,11 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
                 Get.offAll(SplashScreen());
               },
               child: Text(
-                (screens.length - 1) == currentScreen ? 'close' : 'skip',
-                style:
-                    TextStyle(color: Color(CommonUtil().getMyPrimaryColor())),
+                (screens.length - 1) == currentScreen ? 'CLOSE' : 'SKIP',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Color(CommonUtil().getMyPrimaryColor()),
+                ),
               )),
           const SizedBox(
             height: 20,
