@@ -205,7 +205,7 @@ class _LandingScreenState extends State<LandingScreen> {
                 BottomNavigationBarItem(
                   icon: getChatIcon(),
                   title: Text(
-                    variable.strhome,
+                    variable.strChat,
                     style: TextStyle(
                       color: landingViewModel.currentTabIndex == 1
                           ? Color(CommonUtil().getMyPrimaryColor())

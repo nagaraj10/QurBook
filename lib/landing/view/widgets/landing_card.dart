@@ -31,7 +31,7 @@ class LandingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: EdgeInsets.all(10.0.sp),
+        padding: EdgeInsets.all(0.0.sp),
         child: Material(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
@@ -76,7 +76,7 @@ class LandingCard extends StatelessWidget {
                       lastStatus ?? '',
                       style: TextStyle(
                         fontSize: 14.0.sp,
-                        color: Colors.grey,
+                        color: Colors.black54,
                         fontWeight: FontWeight.w500,
                       ),
                       maxLines: 4,
