@@ -112,6 +112,8 @@ const String INTRO_SLIDE_DESC_5 =
     'Securily and Privately share your medical records with your family,  doctors and caregivers';
 const String KEY_SHOWCASE_DASHBOARD = 'KEY_SHOWCASE_DASHBOARD';
 const String KEY_SHOWCASE_HOMESCREEN = 'KEY_SHOWCASE_HOMESCREEN';
+const String KeyShowIntroScreens = 'KeyShowIntroScreens';
+
 const String KEY_SHOWCASE_CAMERASCREEN = 'KEY_SHOWCASE_CAMERASCREEN';
 
 const String KEY_SHOWCASE_Plan = 'KEY_SHOWCASE_Plan';
@@ -503,8 +505,8 @@ const String strAppointment = 'Appointments';
 const String strNiceDay = 'Have a nice day';
 const String strRegimen = 'Regimen';
 const String strDevices = 'Devices';
-const String strPlans = 'Plans';
-const String strMyPlans = 'My Plans';
+const String strPlans = 'Hospitals';
+const String strMyPlans = 'My QurPlans';
 
 const strUploading = 'Uploading...';
 const strSubscribe = 'Subscribe';
@@ -521,6 +523,8 @@ const symptomsError = 'Data for Symptoms cannot be entered for future dates';
 const activitiesError =
     'Data for future events can be entered only 15 minutes prior to the event time';
 const tickInfo = 'Please tap on the check mark to log the activity';
+
+const searchHospitals = 'Search Hospitals';
 
 const strQurhealth = 'QurHealth';
 
