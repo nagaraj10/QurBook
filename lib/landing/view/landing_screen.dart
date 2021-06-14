@@ -1,13 +1,19 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
 import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
 import 'package:myfhb/authentication/view/login_screen.dart';
 import 'package:myfhb/colors/fhb_colors.dart';
+import 'package:myfhb/common/CommonConstants.dart';
+import 'package:myfhb/common/CommonDialogBox.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:myfhb/common/errors_widget.dart';
+import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/ui/MyRecordsArguments.dart';
@@ -41,11 +47,25 @@ class _LandingScreenState extends State<LandingScreen> {
   final GlobalKey<State> _key = GlobalKey<State>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   Future profileData;
+  File imageURIProfile;
   LandingViewModel landingViewModel;
+  CommonUtil commonUtil = new CommonUtil();
 
   @override
   void initState() {
     super.initState();
+    dbInitialize();
+    QurPlanReminders.getTheRemindersFromAPI();
+    callImportantsMethod();
+
+    String profilebanner =
+        PreferenceUtil.getStringValue(constants.KEY_DASHBOARD_BANNER);
+    if (profilebanner != null) {
+      imageURIProfile = File(profilebanner);
+    }
+    try {
+      commonUtil.versionCheck(context);
+    } catch (e) {}
     profileData = getMyProfile();
     Provider.of<LandingViewModel>(context, listen: false).getQurPlanDashBoard();
   }
@@ -427,5 +447,55 @@ class _LandingScreenState extends State<LandingScreen> {
 
   void refresh() {
     setState(() {});
+  }
+
+  void dbInitialize() {
+    var commonConstants = new CommonConstants();
+    commonConstants.getCountryMetrics();
+  }
+
+  void callImportantsMethod() async {
+    try {
+      getFamilyRelationAndMediaType();
+    } catch (e) {}
+    try {
+      getProfileData();
+    } catch (e) {}
+    try {
+      syncDevices();
+    } catch (e) {}
+
+    try {
+      await new CommonUtil().getMedicalPreference();
+    } catch (e) {}
+
+    try {
+      new CommonDialogBox().getCategoryList();
+      getFamilyRelationAndMediaType();
+    } catch (e) {}
+
+    try {
+      AddFamilyUserInfoBloc addFamilyUserInfoBloc = new AddFamilyUserInfoBloc();
+      addFamilyUserInfoBloc.getDeviceSelectionValues().then((value) {});
+    } catch (e) {}
+  }
+
+  void getFamilyRelationAndMediaType() async {
+    try {
+      await new CommonUtil().getAllCustomRoles();
+    } catch (e) {}
+    try {
+      await new CommonUtil().getMediaTypes();
+    } catch (e) {}
+  }
+
+  void getProfileData() async {
+    try {
+      await new CommonUtil().getUserProfileData();
+    } catch (e) {}
+  }
+
+  void syncDevices() async {
+    await new CommonUtil().syncDevices();
   }
 }
