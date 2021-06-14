@@ -20,6 +20,7 @@ class RegimentDataModel {
     this.remindin,
     this.remindinType,
     this.ack,
+    this.ackIST,
     this.alarm,
     this.uformdata,
     this.ts,
@@ -58,6 +59,7 @@ class RegimentDataModel {
   final String remindin;
   final String remindinType;
   final DateTime ack;
+  final DateTime ackIST;
   final String alarm;
   final UformData uformdata;
   final DateTime ts;
@@ -97,7 +99,8 @@ class RegimentDataModel {
             json['otherinfo'] is List ? {} : (json['otherinfo'] ?? '{}')),
         remindin: json['remindin'],
         remindinType: json['remindin_type'],
-        ack: DateTime.tryParse(json['ack'] ?? ''),
+        ack: DateTime.tryParse(json['ack_utc'] ?? '')?.toLocal(),
+        ackIST: DateTime.tryParse(json['ack'] ?? ''),
         alarm: json['alarm'],
         uformdata:
             json['uformdata'] != null && json['uformdata'].toString().isNotEmpty
@@ -141,7 +144,8 @@ class RegimentDataModel {
         'otherinfo': otherinfo.toJson(),
         'remindin': remindin,
         'remindin_type': remindinType,
-        'ack': ack.toIso8601String(),
+        'ack_utc': ack.toIso8601String(),
+        'ack': ackIST.toIso8601String(),
         'alarm': alarm,
         'uformdata': uformdata,
         'ts': ts.toIso8601String(),

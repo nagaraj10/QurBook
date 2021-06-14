@@ -29,6 +29,7 @@ import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/landing/view/landing_screen.dart';
+import 'package:myfhb/landing/view_model/landing_view_model.dart';
 
 class MoreMenuScreen extends StatefulWidget {
   final Function refresh;
@@ -449,6 +450,9 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
 
                               HomeScreen.of(context)?.refresh();
                               LandingScreen.of(context)?.refresh();
+                              if (widget.refresh != null) {
+                                widget.refresh();
+                              }
 
                               setState(() {});
                             },

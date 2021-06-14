@@ -47,6 +47,7 @@ class _LandingScreenState extends State<LandingScreen> {
   void initState() {
     super.initState();
     profileData = getMyProfile();
+    Provider.of<LandingViewModel>(context, listen: false).getQurPlanDashBoard();
   }
 
   @override
@@ -157,6 +158,7 @@ class _LandingScreenState extends State<LandingScreen> {
           drawer: NavigationDrawer(
             myProfile: myProfile,
             moveToLoginPage: moveToLoginPage,
+            refresh: refresh,
           ),
           bottomNavigationBar: Container(
             decoration: const BoxDecoration(
@@ -185,17 +187,31 @@ class _LandingScreenState extends State<LandingScreen> {
                 color: Colors.black54,
               ),
               items: [
-                const BottomNavigationBarItem(
+                BottomNavigationBarItem(
                   icon: ImageIcon(
                     AssetImage(
                       variable.icon_home,
                     ),
                   ),
-                  label: variable.strhome,
+                  title: Text(
+                    variable.strhome,
+                    style: TextStyle(
+                      color: landingViewModel.currentTabIndex == 0
+                          ? Color(CommonUtil().getMyPrimaryColor())
+                          : Colors.black54,
+                    ),
+                  ),
                 ),
                 BottomNavigationBarItem(
                   icon: getChatIcon(),
-                  label: variable.strChat,
+                  title: Text(
+                    variable.strhome,
+                    style: TextStyle(
+                      color: landingViewModel.currentTabIndex == 1
+                          ? Color(CommonUtil().getMyPrimaryColor())
+                          : Colors.black54,
+                    ),
+                  ),
                 ),
                 BottomNavigationBarItem(
                   icon: Image.asset(
@@ -203,19 +219,40 @@ class _LandingScreenState extends State<LandingScreen> {
                     height: 25,
                     width: 25,
                   ),
-                  label: variable.strMaya,
+                  title: Text(
+                    variable.strMaya,
+                    style: TextStyle(
+                      color: landingViewModel.currentTabIndex == 2
+                          ? Color(CommonUtil().getMyPrimaryColor())
+                          : Colors.black54,
+                    ),
+                  ),
                 ),
-                const BottomNavigationBarItem(
+                BottomNavigationBarItem(
                   icon: ImageIcon(
                     AssetImage(variable.icon_th),
                   ),
-                  label: constants.strAppointment,
+                  title: Text(
+                    constants.strAppointment,
+                    style: TextStyle(
+                      color: landingViewModel.currentTabIndex == 3
+                          ? Color(CommonUtil().getMyPrimaryColor())
+                          : Colors.black54,
+                    ),
+                  ),
                 ),
-                const BottomNavigationBarItem(
+                BottomNavigationBarItem(
                   icon: ImageIcon(
                     AssetImage(variable.icon_records),
                   ),
-                  label: variable.strMyRecords,
+                  title: Text(
+                    variable.strMyRecords,
+                    style: TextStyle(
+                      color: landingViewModel.currentTabIndex == 4
+                          ? Color(CommonUtil().getMyPrimaryColor())
+                          : Colors.black54,
+                    ),
+                  ),
                 )
               ],
               //backgroundColor: Colors.grey[200],
