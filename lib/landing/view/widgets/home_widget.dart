@@ -94,7 +94,7 @@ class HomeWidget extends StatelessWidget {
                             await landingViewModel.getQurPlanDashBoard();
                           },
                           onAddPressed: () async {
-                            await Get.toNamed(rt_Plans);
+                            await Get.toNamed(rt_Diseases);
                             await landingViewModel.getQurPlanDashBoard();
                           },
                         ),

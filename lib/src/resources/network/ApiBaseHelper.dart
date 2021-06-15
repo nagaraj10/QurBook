@@ -1437,6 +1437,7 @@ class ApiBaseHelper {
   Future<dynamic> getPlanList(String url, String jsonString) async {
     var responseJson;
     try {
+      print('refer:  '+url+jsonString);
       final response = await http.post(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersTimeSlot(),
           body: jsonString);

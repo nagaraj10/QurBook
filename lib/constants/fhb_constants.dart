@@ -508,6 +508,7 @@ const String strRegimen = 'Regimen';
 const String strDevices = 'Devices';
 const String strPlans = 'Hospitals';
 const String strMyPlans = 'My QurPlans';
+const String strCarePlans = 'Care Plans';
 
 const strUploading = 'Uploading...';
 const strSubscribe = 'Subscribe';
@@ -530,6 +531,10 @@ const searchHospitals = 'Search Hospitals';
 const strQurhealth = 'QurHealth';
 
 const strCovidFree = 'Click for FREE COVID PLANS';
+
+const strDiseasesImage = 'https://qurplan.com/assets/icons/diseases/';
+const strSVG = '.svg';
+const strAllPlans = 'All Plans';
 
 FirebaseAnalytics _firebaseAnalytics = FirebaseAnalytics();
 var mInitialTime;
