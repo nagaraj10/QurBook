@@ -1,24 +1,25 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/regiment/models/profile_response_model.dart';
+import 'package:myfhb/regiment/models/regiment_data_model.dart';
+import 'package:myfhb/regiment/view/widgets/event_list_widget.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
+import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
 import 'package:provider/provider.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:showcaseview/showcase_widget.dart';
+
 import 'widgets/regiment_data_card.dart';
-import 'package:myfhb/regiment/models/regiment_data_model.dart';
-import 'package:intl/intl.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/regiment/models/profile_response_model.dart';
-import 'package:myfhb/regiment/view/widgets/event_list_widget.dart';
-import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 class RegimentTab extends StatefulWidget {
   @override
@@ -561,18 +562,24 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                         // ),
                         child: Row(
                           children: [
-                            Checkbox(
-                              materialTapTargetSize:
-                                  MaterialTapTargetSize.shrinkWrap,
-                              value: _regimentViewModel.regimentFilter ==
-                                  RegimentFilter.Missed,
-                              activeColor:
-                                  Color(CommonUtil().getMyPrimaryColor()),
-                              onChanged: (isMissed) {
-                                _regimentViewModel.changeFilter(isMissed
-                                    ? RegimentFilter.Missed
-                                    : RegimentFilter.All);
-                              },
+                            Theme(
+                              data: Theme.of(context).copyWith(
+                                unselectedWidgetColor:
+                                    Color(CommonUtil().getMyPrimaryColor()),
+                              ),
+                              child: Checkbox(
+                                materialTapTargetSize:
+                                    MaterialTapTargetSize.shrinkWrap,
+                                value: _regimentViewModel.regimentFilter ==
+                                    RegimentFilter.Missed,
+                                activeColor:
+                                    Color(CommonUtil().getMyPrimaryColor()),
+                                onChanged: (isMissed) {
+                                  _regimentViewModel.changeFilter(isMissed
+                                      ? RegimentFilter.Missed
+                                      : RegimentFilter.All);
+                                },
+                              ),
                             ),
                             Padding(
                               padding: EdgeInsets.only(
@@ -583,7 +590,8 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                                 style: TextStyle(
                                   fontSize: 14.0.sp,
                                   fontWeight: FontWeight.w500,
-                                  color: Colors.black,
+                                  color:
+                                      Color(CommonUtil().getMyPrimaryColor()),
                                 ),
                               ),
                             ),
