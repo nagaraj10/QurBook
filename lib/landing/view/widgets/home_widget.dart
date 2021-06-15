@@ -2,18 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as constants;
 import 'package:myfhb/constants/router_variable.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/landing/view/widgets/video_screen.dart';
 import 'package:myfhb/landing/view_model/landing_view_model.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/landing/view/widgets/video_screen.dart';
 import 'package:provider/provider.dart';
+
 import 'landing_card.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as constants;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 class HomeWidget extends StatelessWidget {
+  HomeWidget({
+    @required this.refresh,
+  });
+
+  final Function(bool userChanged) refresh;
+
   @override
   Widget build(BuildContext context) => Container(
         child: Column(
@@ -81,11 +89,13 @@ class HomeWidget extends StatelessWidget {
                               '${activePlanCount > 0 ? activePlanCount : 'No'}${constants.strPlansActive}',
                           icon: variable.icon_my_plan,
                           color: Color(CommonConstants.bplightColor),
-                          onPressed: () {
-                            Get.toNamed(rt_MyPlans);
+                          onPressed: () async {
+                            await Get.toNamed(rt_MyPlans);
+                            await landingViewModel.getQurPlanDashBoard();
                           },
-                          onAddPressed: () {
-                            Get.toNamed(rt_Diseases);
+                          onAddPressed: () async {
+                            await Get.toNamed(rt_Diseases);
+                            await landingViewModel.getQurPlanDashBoard();
                           },
                         ),
                         LandingCard(
@@ -103,7 +113,9 @@ class HomeWidget extends StatelessWidget {
                               : '',
                           icon: variable.icon_my_health_regimen,
                           color: Color(CommonConstants.GlucolightColor),
-                          onPressed: () {
+                          onPressed: () async {
+                            var userId = PreferenceUtil.getStringValue(
+                                constants.KEY_USERID);
                             Provider.of<RegimentViewModel>(
                               context,
                               listen: false,
@@ -111,9 +123,15 @@ class HomeWidget extends StatelessWidget {
                             Provider.of<RegimentViewModel>(context,
                                     listen: false)
                                 .regimentFilter = RegimentFilter.All;
-                            Get.toNamed(rt_Regimen);
+                            await Get.toNamed(rt_Regimen);
+                            var newUserId = PreferenceUtil.getStringValue(
+                                constants.KEY_USERID);
+                            refresh(userId != newUserId);
+                            await landingViewModel.getQurPlanDashBoard();
                           },
-                          onLinkPressed: () {
+                          onLinkPressed: () async {
+                            var userId = PreferenceUtil.getStringValue(
+                                constants.KEY_USERID);
                             Provider.of<RegimentViewModel>(
                               context,
                               listen: false,
@@ -122,31 +140,30 @@ class HomeWidget extends StatelessWidget {
                               context,
                               listen: false,
                             ).regimentFilter = RegimentFilter.Missed;
-                            Get.toNamed(rt_Regimen);
+                            await Get.toNamed(rt_Regimen);
+                            var newUserId = PreferenceUtil.getStringValue(
+                                constants.KEY_USERID);
+                            refresh(userId != newUserId);
+                            await landingViewModel.getQurPlanDashBoard();
                           },
                         ),
                         LandingCard(
                           title: constants.strVitals,
                           lastStatus: '',
-                          alerts: '',
+                          alerts: constants.strVitalsDevice,
                           icon: variable.icon_record_my_vitals,
                           color: Color(CommonConstants.ThermolightColor),
-                          iconColor: Color(CommonConstants.ThermolightColor),
                           onPressed: () {
-                            Get.toNamed(rt_Devices);
-                          },
-                          onAddPressed: () {
                             Get.toNamed(rt_Devices);
                           },
                         ),
                         LandingCard(
                           title: constants.strSymptomsCheckIn,
                           isEnabled: activePlanCount > 0,
-                          lastStatus: dashboardData?.symptomsCheckIn?.title !=
+                          eventName: dashboardData?.symptomsCheckIn?.title,
+                          lastStatus: dashboardData?.symptomsCheckIn?.estart !=
                                   null
                               ? (constants.strLastEntered +
-                                  // (dashboardData?.symptomsCheckIn?.title ??
-                                  //     '') +
                                   // ' at ' +
                                   CommonUtil().dateTimeString(
                                       dashboardData?.symptomsCheckIn?.estart))
@@ -154,7 +171,9 @@ class HomeWidget extends StatelessWidget {
                           alerts: '',
                           icon: variable.icon_check_symptoms,
                           color: Color(CommonConstants.pulselightColor),
-                          onPressed: () {
+                          onPressed: () async {
+                            var userId = PreferenceUtil.getStringValue(
+                                constants.KEY_USERID);
                             Provider.of<RegimentViewModel>(
                               context,
                               listen: false,
@@ -162,7 +181,11 @@ class HomeWidget extends StatelessWidget {
                             Provider.of<RegimentViewModel>(context,
                                     listen: false)
                                 .regimentFilter = RegimentFilter.All;
-                            Get.toNamed(rt_Regimen);
+                            await Get.toNamed(rt_Regimen);
+                            var newUserId = PreferenceUtil.getStringValue(
+                                constants.KEY_USERID);
+                            refresh(userId != newUserId);
+                            await landingViewModel.getQurPlanDashBoard();
                           },
                         ),
                         LandingCard(
@@ -173,23 +196,15 @@ class HomeWidget extends StatelessWidget {
                               : constants.strNoFamily,
                           icon: variable.icon_my_family,
                           color: Color(CommonConstants.weightlightColor),
-                          onPressed: () {
-                            Navigator.pushNamed(
+                          onPressed: () async {
+                            await Navigator.pushNamed(
                               context,
                               rt_UserAccounts,
                               arguments: UserAccountsArguments(
                                 selectedIndex: 1,
                               ),
                             );
-                          },
-                          onAddPressed: () {
-                            Navigator.pushNamed(
-                              context,
-                              rt_UserAccounts,
-                              arguments: UserAccountsArguments(
-                                selectedIndex: 1,
-                              ),
-                            );
+                            await landingViewModel.getQurPlanDashBoard();
                           },
                         ),
                         LandingCard(
@@ -200,23 +215,15 @@ class HomeWidget extends StatelessWidget {
                               : constants.strNoProvider,
                           icon: variable.icon_my_providers,
                           color: Color(CommonConstants.bpDarkColor),
-                          onPressed: () {
-                            Navigator.pushNamed(
+                          onPressed: () async {
+                            await Navigator.pushNamed(
                               context,
                               rt_UserAccounts,
                               arguments: UserAccountsArguments(
                                 selectedIndex: 2,
                               ),
                             );
-                          },
-                          onAddPressed: () {
-                            Navigator.pushNamed(
-                              context,
-                              rt_UserAccounts,
-                              arguments: UserAccountsArguments(
-                                selectedIndex: 2,
-                              ),
-                            );
+                            await landingViewModel.getQurPlanDashBoard();
                           },
                         ),
                         LandingCard(
@@ -244,7 +251,6 @@ class HomeWidget extends StatelessWidget {
                           alerts: '',
                           icon: variable.icon_chat_dash,
                           color: Color(CommonConstants.ThermoDarkColor),
-                          iconColor: Color(CommonConstants.ThermoDarkColor),
                           onPressed: () {},
                         ),
                       ],

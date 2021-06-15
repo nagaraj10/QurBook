@@ -42,77 +42,85 @@ class VideoScreen extends StatelessWidget {
             String videoId =
                 YoutubePlayer.convertUrlToId(videoList[index]?.url);
             return Container(
-              // decoration: BoxDecoration(
-              //   border: Border(
-              //     bottom: BorderSide(
-              //       width: 2.0.h,
-              //       color: Colors.grey,
-              //     ),
-              //   ),
-              // ),
               constraints: BoxConstraints(
                 minHeight: 0.15.sh,
                 maxHeight: 0.2.sh,
               ),
-              child: Card(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 10.0.w,
-                    vertical: 10.0.h,
+              padding: EdgeInsets.symmetric(
+                horizontal: 5.0.w,
+                vertical: 5.0.h,
+              ),
+              child: Material(
+                color: Colors.white,
+                shadowColor: Theme.of(context).shadowColor,
+                elevation: 3.0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(
+                    15.0.sp,
                   ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        flex: 2,
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            FadeInImage.assetNetwork(
-                              placeholder: qurHealthLogo,
-                              image:
-                                  (videoList[index]?.thumbnail ?? '').isNotEmpty
+                ),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MyYoutubePlayer(
+                          videoId: videoId,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Card(
+                    color: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10.0.w,
+                        vertical: 10.0.h,
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                FadeInImage.assetNetwork(
+                                  placeholder: qurHealthLogo,
+                                  image: (videoList[index]?.thumbnail ?? '')
+                                          .isNotEmpty
                                       ? videoList[index]?.thumbnail
                                       : YoutubePlayer.getThumbnail(
                                           videoId: videoId,
                                           quality: ThumbnailQuality.high,
                                         ),
+                                ),
+                                Icon(
+                                  Icons.play_circle_fill_rounded,
+                                  color: Colors.black54,
+                                  size: 60.0.sp,
+                                ),
+                              ],
                             ),
-                            IconButton(
-                              icon: Icon(
-                                Icons.play_circle_fill_rounded,
-                              ),
-                              color: Colors.black54,
-                              iconSize: 60.0.sp,
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => MyYoutubePlayer(
-                                      videoId: videoId,
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        width: 20.0.w,
-                      ),
-                      Expanded(
-                        flex: 3,
-                        child: Text(
-                          videoList[index].title,
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 14.0.sp,
                           ),
-                          maxLines: 5,
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                          SizedBox(
+                            width: 20.0.w,
+                          ),
+                          Expanded(
+                            flex: 3,
+                            child: Text(
+                              videoList[index].title,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 14.0.sp,
+                              ),
+                              maxLines: 5,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
               ),
