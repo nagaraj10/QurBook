@@ -350,6 +350,7 @@ class MainActivity : FlutterActivity() {
         patId = intent.getStringExtra(getString(R.string.pat_id))
         patName = intent.getStringExtra(getString(R.string.pat_name))
         patPic = intent.getStringExtra(getString(R.string.pat_pic))
+        val message = intent.getStringExtra(getString(R.string.message))
         if (sharedValue != null && sharedValue == "chat") {
             sharedValue = "$sharedValue"
         } else if (sharedValue != null && username != null && docId != null && docPic != null) {
@@ -367,7 +368,7 @@ class MainActivity : FlutterActivity() {
                 sharedValue = "$sharedValue&${providerReqId}&${"rejected"}"
             }
         } else if (data != null && data == "DoctorPatientAssociation") {
-            sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${"$doctorID|$docName|$docPic|$patId|$patName|$patPic"}"
+            sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${"$doctorID|$docName|$docPic|$patId|$patName|$patPic|$message"}"
         } else if (data != null && data == "MissingActivitiesReminder") {
             sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${EVEId}"
         } else {

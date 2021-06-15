@@ -26,6 +26,7 @@ class OnTapNotification:BroadcastReceiver() {
         val pat_id = p1?.getStringExtra(p0?.getString(R.string.pat_id))
         val pat_pic = p1?.getStringExtra(p0?.getString(R.string.pat_pic))
         val pat_name = p1?.getStringExtra(p0?.getString(R.string.pat_name))
+        val message = p1?.getStringExtra(p0?.getString(R.string.message))
         val raw_title = p1?.getStringExtra(Constants.PROP_RAWTITLE)
         val raw_body = p1?.getStringExtra(Constants.PROP_RAWBODY)
 
@@ -51,6 +52,7 @@ class OnTapNotification:BroadcastReceiver() {
         launchIntent?.putExtra(p0.getString(R.string.pat_id), pat_id)
         launchIntent?.putExtra(p0.getString(R.string.pat_pic), pat_pic)
         launchIntent?.putExtra(p0.getString(R.string.pat_name), pat_name)
+        launchIntent?.putExtra(p0.getString(R.string.message), message)
         launchIntent?.putExtra(Constants.PROP_RAWBODY, raw_body)
         launchIntent?.putExtra(Constants.PROP_RAWTITLE, raw_title)
         p0.startActivity(launchIntent)

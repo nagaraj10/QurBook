@@ -454,6 +454,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         val _patId = data[getString(R.string.pat_id)]
         val _patName = data[getString(R.string.pat_name)]
         val _patPic = data[getString(R.string.pat_pic)]
+        val _message = data[getString(R.string.message)]
         val _redirectTo = data[Constants.PROP_REDIRECT_TO]
         val ack_sound: Uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.msg_tone)
 
@@ -479,6 +480,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         onTapNS.putExtra(getString(R.string.pat_id), _patId)
         onTapNS.putExtra(getString(R.string.pat_pic), _patPic)
         onTapNS.putExtra(getString(R.string.pat_name), _patName)
+        onTapNS.putExtra(getString(R.string.message), _message)
         onTapNS.putExtra(Constants.PROP_DATA, template)
         onTapNS.putExtra(Constants.PROP_REDIRECT_TO, _redirectTo)
         val onTapPendingIntent = PendingIntent.getBroadcast(applicationContext, NS_ID, onTapNS, PendingIntent.FLAG_CANCEL_CURRENT)

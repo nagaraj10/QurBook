@@ -331,9 +331,16 @@ class _MyFHBState extends State<MyFHB> {
             String sheela_lang =
                 PreferenceUtil.getStringValue(Constants.SHEELA_LANG);
             if (sheela_lang != null && sheela_lang != '') {
-              Get.to(bot.ChatScreen(isSheelaAskForLang: false,langCode: sheela_lang,rawMessage: rawBody,));
+              Get.to(bot.ChatScreen(
+                isSheelaAskForLang: false,
+                langCode: sheela_lang,
+                rawMessage: rawBody,
+              ));
             } else {
-              Get.to(bot.ChatScreen(isSheelaAskForLang: true,rawMessage: rawBody,));
+              Get.to(bot.ChatScreen(
+                isSheelaAskForLang: true,
+                rawMessage: rawBody,
+              ));
             }
           } else {
             Get.to(SuperMaya());
@@ -481,6 +488,7 @@ class _MyFHBState extends State<MyFHB> {
             patientName: chatParsedData[4],
             patientPicture: chatParsedData[5],
             isFromVideoCall: false,
+            message: chatParsedData[6],
           )).then((value) =>
               PageNavigator.goToPermanent(context, router.rt_Landing));
         } else {

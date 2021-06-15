@@ -32,6 +32,7 @@
     <string name="docId">doctorId</string>
     <string name="docPic">doctorPicture</string>
     <string name="docName">doctorName</string>
+    <string name="message">message</string>
     <string name="type">type</string>
     <string name="ns_icall_type">Incoming_call</string>
     <string name="ns_ack_type">Ackowledgement</string>

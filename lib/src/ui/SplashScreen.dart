@@ -184,6 +184,7 @@ class _SplashScreenState extends State<SplashScreen> {
                             patientName: chatParsedData[4],
                             patientPicture: chatParsedData[5],
                             isFromVideoCall: false,
+                            message: chatParsedData[6],
                           )).then((value) => PageNavigator.goToPermanent(
                               context, router.rt_Landing));
                         } else {
