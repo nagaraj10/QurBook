@@ -2,18 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as constants;
 import 'package:myfhb/constants/router_variable.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/landing/view/widgets/video_screen.dart';
 import 'package:myfhb/landing/view_model/landing_view_model.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/landing/view/widgets/video_screen.dart';
 import 'package:provider/provider.dart';
+
 import 'landing_card.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as constants;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 class HomeWidget extends StatelessWidget {
+  HomeWidget({
+    @required this.refresh,
+  });
+
+  final Function(bool userChanged) refresh;
+
   @override
   Widget build(BuildContext context) => Container(
         child: Column(
@@ -106,6 +114,8 @@ class HomeWidget extends StatelessWidget {
                           icon: variable.icon_my_health_regimen,
                           color: Color(CommonConstants.GlucolightColor),
                           onPressed: () async {
+                            var userId = PreferenceUtil.getStringValue(
+                                constants.KEY_USERID);
                             Provider.of<RegimentViewModel>(
                               context,
                               listen: false,
@@ -114,9 +124,14 @@ class HomeWidget extends StatelessWidget {
                                     listen: false)
                                 .regimentFilter = RegimentFilter.All;
                             await Get.toNamed(rt_Regimen);
+                            var newUserId = PreferenceUtil.getStringValue(
+                                constants.KEY_USERID);
+                            refresh(userId != newUserId);
                             await landingViewModel.getQurPlanDashBoard();
                           },
                           onLinkPressed: () async {
+                            var userId = PreferenceUtil.getStringValue(
+                                constants.KEY_USERID);
                             Provider.of<RegimentViewModel>(
                               context,
                               listen: false,
@@ -126,6 +141,9 @@ class HomeWidget extends StatelessWidget {
                               listen: false,
                             ).regimentFilter = RegimentFilter.Missed;
                             await Get.toNamed(rt_Regimen);
+                            var newUserId = PreferenceUtil.getStringValue(
+                                constants.KEY_USERID);
+                            refresh(userId != newUserId);
                             await landingViewModel.getQurPlanDashBoard();
                           },
                         ),
@@ -154,6 +172,8 @@ class HomeWidget extends StatelessWidget {
                           icon: variable.icon_check_symptoms,
                           color: Color(CommonConstants.pulselightColor),
                           onPressed: () async {
+                            var userId = PreferenceUtil.getStringValue(
+                                constants.KEY_USERID);
                             Provider.of<RegimentViewModel>(
                               context,
                               listen: false,
@@ -162,6 +182,9 @@ class HomeWidget extends StatelessWidget {
                                     listen: false)
                                 .regimentFilter = RegimentFilter.All;
                             await Get.toNamed(rt_Regimen);
+                            var newUserId = PreferenceUtil.getStringValue(
+                                constants.KEY_USERID);
+                            refresh(userId != newUserId);
                             await landingViewModel.getQurPlanDashBoard();
                           },
                         ),
