@@ -81,11 +81,13 @@ class HomeWidget extends StatelessWidget {
                               '${activePlanCount > 0 ? activePlanCount : 'No'}${constants.strPlansActive}',
                           icon: variable.icon_my_plan,
                           color: Color(CommonConstants.bplightColor),
-                          onPressed: () {
-                            Get.toNamed(rt_MyPlans);
+                          onPressed: () async {
+                            await Get.toNamed(rt_MyPlans);
+                            await landingViewModel.getQurPlanDashBoard();
                           },
-                          onAddPressed: () {
-                            Get.toNamed(rt_Plans);
+                          onAddPressed: () async {
+                            await Get.toNamed(rt_Plans);
+                            await landingViewModel.getQurPlanDashBoard();
                           },
                         ),
                         LandingCard(
@@ -103,7 +105,7 @@ class HomeWidget extends StatelessWidget {
                               : '',
                           icon: variable.icon_my_health_regimen,
                           color: Color(CommonConstants.GlucolightColor),
-                          onPressed: () {
+                          onPressed: () async {
                             Provider.of<RegimentViewModel>(
                               context,
                               listen: false,
@@ -111,9 +113,10 @@ class HomeWidget extends StatelessWidget {
                             Provider.of<RegimentViewModel>(context,
                                     listen: false)
                                 .regimentFilter = RegimentFilter.All;
-                            Get.toNamed(rt_Regimen);
+                            await Get.toNamed(rt_Regimen);
+                            await landingViewModel.getQurPlanDashBoard();
                           },
-                          onLinkPressed: () {
+                          onLinkPressed: () async {
                             Provider.of<RegimentViewModel>(
                               context,
                               listen: false,
@@ -122,31 +125,27 @@ class HomeWidget extends StatelessWidget {
                               context,
                               listen: false,
                             ).regimentFilter = RegimentFilter.Missed;
-                            Get.toNamed(rt_Regimen);
+                            await Get.toNamed(rt_Regimen);
+                            await landingViewModel.getQurPlanDashBoard();
                           },
                         ),
                         LandingCard(
                           title: constants.strVitals,
                           lastStatus: '',
-                          alerts: '',
+                          alerts: constants.strVitalsDevice,
                           icon: variable.icon_record_my_vitals,
                           color: Color(CommonConstants.ThermolightColor),
-                          iconColor: Color(CommonConstants.ThermolightColor),
                           onPressed: () {
-                            Get.toNamed(rt_Devices);
-                          },
-                          onAddPressed: () {
                             Get.toNamed(rt_Devices);
                           },
                         ),
                         LandingCard(
                           title: constants.strSymptomsCheckIn,
                           isEnabled: activePlanCount > 0,
-                          lastStatus: dashboardData?.symptomsCheckIn?.title !=
+                          eventName: dashboardData?.symptomsCheckIn?.title,
+                          lastStatus: dashboardData?.symptomsCheckIn?.estart !=
                                   null
                               ? (constants.strLastEntered +
-                                  // (dashboardData?.symptomsCheckIn?.title ??
-                                  //     '') +
                                   // ' at ' +
                                   CommonUtil().dateTimeString(
                                       dashboardData?.symptomsCheckIn?.estart))
@@ -154,7 +153,7 @@ class HomeWidget extends StatelessWidget {
                           alerts: '',
                           icon: variable.icon_check_symptoms,
                           color: Color(CommonConstants.pulselightColor),
-                          onPressed: () {
+                          onPressed: () async {
                             Provider.of<RegimentViewModel>(
                               context,
                               listen: false,
@@ -162,7 +161,8 @@ class HomeWidget extends StatelessWidget {
                             Provider.of<RegimentViewModel>(context,
                                     listen: false)
                                 .regimentFilter = RegimentFilter.All;
-                            Get.toNamed(rt_Regimen);
+                            await Get.toNamed(rt_Regimen);
+                            await landingViewModel.getQurPlanDashBoard();
                           },
                         ),
                         LandingCard(
@@ -173,23 +173,15 @@ class HomeWidget extends StatelessWidget {
                               : constants.strNoFamily,
                           icon: variable.icon_my_family,
                           color: Color(CommonConstants.weightlightColor),
-                          onPressed: () {
-                            Navigator.pushNamed(
+                          onPressed: () async {
+                            await Navigator.pushNamed(
                               context,
                               rt_UserAccounts,
                               arguments: UserAccountsArguments(
                                 selectedIndex: 1,
                               ),
                             );
-                          },
-                          onAddPressed: () {
-                            Navigator.pushNamed(
-                              context,
-                              rt_UserAccounts,
-                              arguments: UserAccountsArguments(
-                                selectedIndex: 1,
-                              ),
-                            );
+                            await landingViewModel.getQurPlanDashBoard();
                           },
                         ),
                         LandingCard(
@@ -200,23 +192,15 @@ class HomeWidget extends StatelessWidget {
                               : constants.strNoProvider,
                           icon: variable.icon_my_providers,
                           color: Color(CommonConstants.bpDarkColor),
-                          onPressed: () {
-                            Navigator.pushNamed(
+                          onPressed: () async {
+                            await Navigator.pushNamed(
                               context,
                               rt_UserAccounts,
                               arguments: UserAccountsArguments(
                                 selectedIndex: 2,
                               ),
                             );
-                          },
-                          onAddPressed: () {
-                            Navigator.pushNamed(
-                              context,
-                              rt_UserAccounts,
-                              arguments: UserAccountsArguments(
-                                selectedIndex: 2,
-                              ),
-                            );
+                            await landingViewModel.getQurPlanDashBoard();
                           },
                         ),
                         LandingCard(
@@ -244,7 +228,6 @@ class HomeWidget extends StatelessWidget {
                           alerts: '',
                           icon: variable.icon_chat_dash,
                           color: Color(CommonConstants.ThermoDarkColor),
-                          iconColor: Color(CommonConstants.ThermoDarkColor),
                           onPressed: () {},
                         ),
                       ],

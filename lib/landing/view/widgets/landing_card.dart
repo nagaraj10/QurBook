@@ -18,6 +18,7 @@ class LandingCard extends StatelessWidget {
     this.isEnabled = true,
     this.onLinkPressed,
     this.iconColor,
+    this.eventName,
   });
 
   final String title;
@@ -30,6 +31,7 @@ class LandingCard extends StatelessWidget {
   final bool isEnabled;
   final Function onLinkPressed;
   final Color iconColor;
+  final String eventName;
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -70,8 +72,21 @@ class LandingCard extends StatelessWidget {
                         '${title ?? ''}',
                         style: TextStyle(
                           fontSize: 14.0.sp,
-                          color: Colors.black,
+                          color: color,
                           fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Visibility(
+                        visible: isEnabled && (eventName ?? '').isNotEmpty,
+                        child: Text(
+                          eventName?.trim() ?? '',
+                          style: TextStyle(
+                            fontSize: 14.0.sp,
+                            color: Colors.black54,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       Visibility(
@@ -95,7 +110,8 @@ class LandingCard extends StatelessWidget {
                             alerts ?? '',
                             style: TextStyle(
                               fontSize: 14.0.sp,
-                              color: color,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500,
                             ),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
