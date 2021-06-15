@@ -7,8 +7,8 @@ import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/regiment/view/regiment_tab.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
 
 class RegimentScreen extends StatelessWidget {
