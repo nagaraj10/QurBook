@@ -126,14 +126,14 @@ class _SearchListState extends State<SearchListHome> {
           floatingActionButton: FloatingActionButton(
             heroTag: "searchOpt",
             onPressed: () {
-              Navigator.push(
+              /*Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => SearchProviderList(
                         providerListSelected != null
                             ? providerListSelected
                             : [])),
-              );
+              );*/
             },
             child: Icon(
               Icons.add,

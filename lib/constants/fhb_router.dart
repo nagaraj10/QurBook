@@ -8,6 +8,7 @@ import 'package:myfhb/devices/device_dashboard_arguments.dart';
 import 'package:myfhb/my_family/screens/MyFamily.dart';
 import 'package:myfhb/my_family_detail_view/screens/my_family_detail_view.dart';
 import 'package:myfhb/my_providers/screens/my_provider.dart';
+import 'package:myfhb/plan_dashboard/view/diseasesHome.dart';
 import 'package:myfhb/regiment/view/regiment_screen.dart';
 import 'package:myfhb/myPlan/view/my_plans_screen.dart';
 import 'package:myfhb/plan_dashboard/view/plans_screen.dart';
@@ -51,6 +52,7 @@ setRouter(List<CameraDescription> listOfCameras) async {
     router.rt_Regimen: (BuildContext context) => RegimentScreen(),
     router.rt_MyPlans: (BuildContext context) => MyPlansScreen(),
     router.rt_Plans: (BuildContext context) => PlansScreen(),
+    router.rt_Diseases: (BuildContext context) => DiseasesScreen(),
     router.rt_Devices: (BuildContext context) => DevicesScreen(),
     router.rt_HomeScreen: (BuildContext context) =>
         HomeScreen(arguments: ModalRoute.of(context).settings.arguments),

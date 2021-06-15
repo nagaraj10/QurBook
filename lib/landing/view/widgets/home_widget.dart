@@ -85,7 +85,7 @@ class HomeWidget extends StatelessWidget {
                             Get.toNamed(rt_MyPlans);
                           },
                           onAddPressed: () {
-                            Get.toNamed(rt_Plans);
+                            Get.toNamed(rt_Diseases);
                           },
                         ),
                         LandingCard(
