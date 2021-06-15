@@ -147,6 +147,7 @@ class _LandingScreenState extends State<LandingScreen> {
                               _key,
                               () {
                                 profileData = getMyProfile();
+                                landingViewModel.getQurPlanDashBoard();
                                 setState(() {});
                                 (context as Element).markNeedsBuild();
                               },
@@ -461,9 +462,6 @@ class _LandingScreenState extends State<LandingScreen> {
     try {
       getProfileData();
     } catch (e) {}
-    try {
-      syncDevices();
-    } catch (e) {}
 
     try {
       await new CommonUtil().getMedicalPreference();
@@ -493,9 +491,5 @@ class _LandingScreenState extends State<LandingScreen> {
     try {
       await new CommonUtil().getUserProfileData();
     } catch (e) {}
-  }
-
-  void syncDevices() async {
-    await new CommonUtil().syncDevices();
   }
 }
