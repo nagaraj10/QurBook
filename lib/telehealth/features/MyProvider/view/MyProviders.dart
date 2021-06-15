@@ -109,11 +109,14 @@ class _MyProvidersState extends State<MyProviders> {
         floatingActionButton: FloatingActionButton(
           heroTag: "btn2",
           onPressed: () {
-            Navigator.pushNamed(context, router.rt_SearchProvider,
-                arguments: SearchArguments(
-                  searchWord: CommonConstants.doctors,
-                  fromClass: router.cn_teleheathProvider,
-                )).then((value) {
+            Navigator.pushNamed(
+              context,
+              router.rt_SearchProvider,
+              arguments: SearchArguments(
+                searchWord: CommonConstants.doctors,
+                fromClass: router.cn_teleheathProvider,
+              ),
+            ).then((value) {
               providerViewModel.doctorIdsList = null;
               setState(() {
                 _medicalPreferenceList =
@@ -379,7 +382,7 @@ class _MyProvidersState extends State<MyProviders> {
                 new Positioned(
                   bottom: 0.0,
                   right: 2.0,
-                  child: commonWidgets.getDoctorStatusWidgetNew(docs[i],i),
+                  child: commonWidgets.getDoctorStatusWidgetNew(docs[i], i),
                 )
               ],
             ),
@@ -415,7 +418,8 @@ class _MyProvidersState extends State<MyProviders> {
                             .then((status) {
                           if (status) {
                             setState(() {
-                              _medicalPreferenceList = _providersBloc.getMedicalPreferencesForDoctors();
+                              _medicalPreferenceList = _providersBloc
+                                  .getMedicalPreferencesForDoctors();
                             });
                           }
                         });

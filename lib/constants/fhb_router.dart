@@ -77,7 +77,7 @@ setRouter(List<CameraDescription> listOfCameras) async {
     router.rt_SearchProvider: (BuildContext context) => SearchSpecificList(
         arguments: ModalRoute.of(context).settings.arguments,
         toPreviousScreen: false,
-        isSkipUnknown: false),
+        isSkipUnknown: true),
     router.rt_TakePicture: (BuildContext context) =>
         TakePictureScreen(camera: firstCamera),
     router.rt_TakePictureForDevices: (BuildContext context) =>

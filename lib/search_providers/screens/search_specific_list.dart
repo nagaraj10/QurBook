@@ -420,33 +420,45 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   }
 
   Widget getEmptyCard(Diagnostics diagnostics) {
-    return Center(
-      child: new Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          new Text(
-            'No Records Found ',
-            style: new TextStyle(
-              color: ColorUtils.blackcolor,
-              fontSize: 15.0.sp,
-              fontWeight: FontWeight.w500,
+    return !widget.toPreviousScreen
+        ? Center(
+            child: new Text(
+              'No Records Found ',
+              style: new TextStyle(
+                color: ColorUtils.blackcolor,
+                fontSize: 15.0.sp,
+                fontWeight: FontWeight.w500,
+              ),
             ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          fhbBasicWidget.getSaveButton(() {
-            if (widget.toPreviousScreen) {
-              widget.arguments.searchWord == CommonConstants.doctors
-                  ? saveMediaDialog(context)
-                  : widget.arguments.searchWord == CommonConstants.hospitals
-                      ? passHospitalValue(null, context)
-                      : passLaboratoryValue(null, context);
-            }
-          }, text: 'Click here to add', width: 150.w),
-        ],
-      ),
-    );
+          )
+        : Center(
+            child: new Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                new Text(
+                  'No Records Found ',
+                  style: new TextStyle(
+                    color: ColorUtils.blackcolor,
+                    fontSize: 15.0.sp,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                fhbBasicWidget.getSaveButton(() {
+                  if (widget.toPreviousScreen) {
+                    widget.arguments.searchWord == CommonConstants.doctors
+                        ? saveMediaDialog(context)
+                        : widget.arguments.searchWord ==
+                                CommonConstants.hospitals
+                            ? passHospitalValue(null, context)
+                            : passLaboratoryValue(null, context);
+                  }
+                }, text: 'Click here to add', width: 150.w),
+              ],
+            ),
+          );
   }
 
   Future<void> _refresh() async {
