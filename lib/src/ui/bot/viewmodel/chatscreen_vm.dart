@@ -94,12 +94,14 @@ class ChatScreenViewModel extends ChangeNotifier {
     user_id = PreferenceUtil.getStringValue(constants.KEY_USERID);
   }
 
-  startMayaAutomatically() {
+  startMayaAutomatically({String message}) {
     isLoading = true;
     notifyListeners();
     Future.delayed(Duration(seconds: 1), () {
       _screen = parameters.strSheela;
-      sendToMaya(variable.strhiMaya, screen: _screen);
+      sendToMaya(
+          (message != null && message.isNotEmpty) ? message : variable.strhiMaya,
+          screen: _screen);
     });
 
     // var date = new FHBUtils().getFormattedDateString(DateTime.now().toString());
@@ -372,10 +374,10 @@ class ChatScreenViewModel extends ChangeNotifier {
     }
   }
 
-  askUserForLanguage() {
+  askUserForLanguage({String message}) {
     Future.delayed(Duration(seconds: 1), () {
       _screen = parameters.strSheela;
-      sendToMaya(variable.strhiMaya, screen: _screen);
+      sendToMaya( (message != null && message.isNotEmpty) ? message : variable.strhiMaya, screen: _screen);
     });
 
     // var date = new FHBUtils().getFormattedDateString(DateTime.now().toString());

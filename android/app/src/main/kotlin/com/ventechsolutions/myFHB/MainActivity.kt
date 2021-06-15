@@ -12,14 +12,12 @@ import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
-import android.util.Log
 import android.view.View
 import android.view.Window
 import android.widget.*
 import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.multidex.BuildConfig
 import com.github.ybq.android.spinkit.SpinKitView
 import com.google.android.gms.auth.api.phone.SmsRetriever
@@ -344,6 +342,11 @@ class MainActivity : FlutterActivity() {
         val redirect_to = intent.getStringExtra(Constants.PROP_REDIRECT_TO)
         val data = intent.getStringExtra(Constants.PROP_DATA)
         val HRMId = intent.getStringExtra(Constants.PROP_HRMID)
+        val EVEId = intent.getStringExtra(Constants.PROP_EVEID)
+        val doctorID = intent.getStringExtra(getString(R.string.docId))
+        val docName = intent.getStringExtra(getString(R.string.docName))
+        val rawTitle = intent.getStringExtra(Constants.PROP_RAWTITLE)
+        val rawBody = intent.getStringExtra(Constants.PROP_RAWBODY)
         patId = intent.getStringExtra(getString(R.string.pat_id))
         patName = intent.getStringExtra(getString(R.string.pat_name))
         patPic = intent.getStringExtra(getString(R.string.pat_pic))
@@ -363,13 +366,27 @@ class MainActivity : FlutterActivity() {
             } else {
                 sharedValue = "$sharedValue&${providerReqId}&${"rejected"}"
             }
+        } else if (data != null && data == "DoctorPatientAssociation") {
+            sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${"$doctorID|$docName|$docPic|$patId|$patName|$patPic"}"
+        } else if (data != null && data == "MissingActivitiesReminder") {
+            sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${EVEId}"
         } else {
             if (HRMId != null && HRMId != "") {
                 sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${HRMId}"
             } else if (data != null) {
                 sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${data!!}"
             } else {
-                sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${""}"
+                if (redirect_to.contains("sheela")) {
+                    var redirectArray = redirect_to.split("|")
+                    if (redirectArray.size > 1 && redirectArray[1] == "pushMessage") {
+                        sharedValue = "${Constants.PROP_ACK}&${"sheela"}&${"$rawTitle|$rawBody"}"
+                    }else{
+                        sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${""}"
+                    }
+                } else {
+                    sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${""}"
+                }
+
             }
 
         }

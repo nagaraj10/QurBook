@@ -13,6 +13,7 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/regiment/models/regiment_arguments.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
@@ -27,6 +28,7 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
 import 'package:myfhb/telehealth/features/appointments/view/resheduleMain.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/telehealth/features/chat/view/chat.dart';
 import 'package:myfhb/telehealth/features/chat/view/home.dart';
 import 'package:provider/provider.dart';
 import '../utils/PageNavigator.dart';
@@ -35,6 +37,7 @@ import 'NetworkScreen.dart';
 import 'package:myfhb/src/ui/bot/SuperMaya.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:myfhb/src/ui/bot/view/ChatScreen.dart' as bot;
 
 class SplashScreen extends StatefulWidget {
   final String nsRoute;
@@ -171,9 +174,23 @@ class _SplashScreenState extends State<SplashScreen> {
                           'ns_type': 'chat',
                           'navigationPage': 'Tele Health Chat list',
                         });
-                        Get.to(ChatHomeScreen()).then((value) =>
-                            PageNavigator.goToPermanent(
-                                context, router.rt_Landing));
+                        if (widget.bundle != null && widget.bundle != '') {
+                          var chatParsedData = widget.bundle?.split('|');
+                          Get.to(Chat(
+                            peerId: chatParsedData[0],
+                            peerName: chatParsedData[1],
+                            peerAvatar: chatParsedData[2],
+                            patientId: chatParsedData[3],
+                            patientName: chatParsedData[4],
+                            patientPicture: chatParsedData[5],
+                            isFromVideoCall: false,
+                          )).then((value) => PageNavigator.goToPermanent(
+                              context, router.rt_Landing));
+                        } else {
+                          Get.to(ChatHomeScreen()).then((value) =>
+                              PageNavigator.goToPermanent(
+                                  context, router.rt_Landing));
+                        }
                       } else if (widget.nsRoute == 'appointmentList' ||
                           widget.nsRoute == 'appointmentHistory') {
                         fbaLog(eveParams: {
@@ -196,9 +213,32 @@ class _SplashScreenState extends State<SplashScreen> {
                           'ns_type': 'sheela',
                           'navigationPage': 'Sheela Start Page',
                         });
-                        Get.to(SuperMaya()).then((value) =>
-                            PageNavigator.goToPermanent(
-                                context, router.rt_Landing));
+                        if (widget.bundle != null && widget.bundle .isNotEmpty) {
+                          var rawTitle = widget.bundle?.split('|')[0];
+                          var rawBody = widget.bundle?.split('|')[1];
+                          String sheela_lang = PreferenceUtil.getStringValue(
+                              Constants.SHEELA_LANG);
+                          if (sheela_lang != null && sheela_lang != '') {
+                            Get.to(bot.ChatScreen(
+                              isSheelaAskForLang: false,
+                              langCode: sheela_lang,
+                              rawMessage: rawBody,
+                            )).then((value) =>
+                              PageNavigator.goToPermanent(
+                                  context, router.rt_Landing));
+                          } else {
+                            Get.to(bot.ChatScreen(
+                              isSheelaAskForLang: true,
+                              rawMessage: rawBody,
+                            )).then((value) =>
+                              PageNavigator.goToPermanent(
+                                  context, router.rt_Landing));
+                          }
+                        } else {
+                          Get.to(SuperMaya()).then((value) =>
+                              PageNavigator.goToPermanent(
+                                  context, router.rt_Landing));
+                        }
                       } else if (widget.nsRoute == 'profile_page' ||
                           widget.nsRoute == 'profile') {
                         fbaLog(eveParams: {
@@ -269,7 +309,9 @@ class _SplashScreenState extends State<SplashScreen> {
                         )?.regimentMode = RegimentMode.Schedule;
                         Provider.of<RegimentViewModel>(context, listen: false)
                             ?.regimentFilter = RegimentFilter.All;
-                        PageNavigator.goToPermanent(context, router.rt_Regimen);
+                        PageNavigator.goToPermanent(context, router.rt_Regimen,
+                            arguments:
+                                RegimentArguments(eventId: widget.bundle));
                       } else if (widget.nsRoute == 'th_provider_hospital') {
                         fbaLog(eveParams: {
                           'eventTime': '${DateTime.now()}',

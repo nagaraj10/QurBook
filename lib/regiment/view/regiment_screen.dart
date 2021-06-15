@@ -4,11 +4,17 @@ import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart';
+import 'package:myfhb/regiment/models/regiment_arguments.dart';
 import 'package:myfhb/regiment/view/regiment_tab.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class RegimentScreen extends StatelessWidget {
+
+  final RegimentArguments aruguments;
+
+  RegimentScreen({this.aruguments});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +35,7 @@ class RegimentScreen extends StatelessWidget {
           onBackPressed(context);
           return Future.value(false);
         },
-        child: RegimentTab(),
+        child: RegimentTab(eventId: aruguments?.eventId,),
       ),
     );
   }

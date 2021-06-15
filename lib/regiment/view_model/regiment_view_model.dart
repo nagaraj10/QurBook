@@ -43,6 +43,7 @@ class RegimentViewModel extends ChangeNotifier {
     bool isDone = false,
     int index,
     bool isInitial = false,
+    String eventId,
   }) {
     if (isDone) {
       initialShowIndex = null;
@@ -50,13 +51,24 @@ class RegimentViewModel extends ChangeNotifier {
       initialShowIndex = index;
     } else if ((regimentsScheduledList?.length ?? 0) > 0) {
       int index = 0;
-      for (final event in regimentsScheduledList) {
-        if (event.estart.isAfter(DateTime.now()) ||
-            event.estart.isAtSameMomentAs(DateTime.now())) {
-          initialShowIndex = index;
-          break;
-        } else {
-          index++;
+      if (eventId != null) {
+        for (final event in regimentsScheduledList) {
+          if (event.eid == eventId ) {
+            initialShowIndex = index;
+            break;
+          } else {
+            index++;
+          }
+        }
+      } else {
+        for (final event in regimentsScheduledList) {
+          if (event.estart.isAfter(DateTime.now()) ||
+              event.estart.isAtSameMomentAs(DateTime.now())) {
+            initialShowIndex = index;
+            break;
+          } else {
+            index++;
+          }
         }
       }
       initialShowIndex ??= regimentsScheduledList.length - 1;
