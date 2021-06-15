@@ -118,13 +118,16 @@ class _DiseasesList extends State<DiseasesList> {
                 children: [
                   Expanded(
                     child: Container(
-                      padding: EdgeInsets.all(5.0),
-                      margin: EdgeInsets.only(left: 16, right: 16, top: 8),
+                      padding: EdgeInsets.symmetric(vertical: 10,horizontal: 5),
+                      //margin: EdgeInsets.only(left: 16, right: 16, top: 8),
                       color: Colors.deepPurple,
-                      child: Text(
-                        strAllPlans,
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.w500),
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(10,0,0,0),
+                        child: Text(
+                          strAllPlans,
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.w500),
+                        ),
                       ),
                     ),
                   ),
@@ -311,8 +314,8 @@ class _DiseasesList extends State<DiseasesList> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-            padding: EdgeInsets.all(4.0),
-            margin: EdgeInsets.only(left: 16, right: 16),
+            padding: EdgeInsets.all(6.0),
+            //margin: EdgeInsets.only(left: 16, right: 16),
             child: Column(
               children: [
                 Row(
