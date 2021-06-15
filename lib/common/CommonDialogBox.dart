@@ -11,6 +11,12 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/my_providers/bloc/providers_block.dart';
+import 'package:myfhb/my_providers/models/Doctors.dart';
+import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
+import 'package:myfhb/my_providers/models/User.dart';
+import 'package:myfhb/my_providers/models/UserAddressCollection.dart'
+    as address;
 import 'package:myfhb/search_providers/models/doctors_data.dart';
 import 'package:myfhb/search_providers/models/hospital_data.dart';
 import 'package:myfhb/search_providers/models/lab_data.dart';
@@ -26,6 +32,8 @@ import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/model/Media/MediaData.dart';
 import 'package:myfhb/src/model/Media/media_data_list.dart';
 import 'package:myfhb/src/model/Media/media_result.dart';
+import 'package:myfhb/src/model/common_response.dart';
+import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/ui/MyRecordsArguments.dart';
 import 'package:myfhb/src/ui/audio/AudioScreenArguments.dart';
@@ -33,6 +41,7 @@ import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 
 class CommonDialogBox {
   String categoryName, deviceName;
@@ -86,7 +95,7 @@ class CommonDialogBox {
   String metaId;
 
   List<MediaResult> mediaDataAry = PreferenceUtil.getMediaType();
-  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+  final GlobalKey<State> _keyLoader = GlobalKey<State>();
 
   FocusNode dateOfBirthFocus = FocusNode();
   FlutterToast toast = new FlutterToast();
@@ -94,6 +103,15 @@ class CommonDialogBox {
   String fromClassNew = '';
   HealthResult deviceHealthResult;
   bool forNotes = false;
+
+  ProvidersBloc _providersBloc = new ProvidersBloc();
+  Future<MyProvidersResponse> _medicalPreferenceList;
+  List<Doctors> doctorsListFromProvider;
+
+  Doctors doctorObj;
+
+  CommonWidgets commonWidgets = new CommonWidgets();
+  bool showDoctorList = true;
 
   Future<Widget> getDialogBoxForPrescription(
       BuildContext context,
@@ -114,8 +132,11 @@ class CommonDialogBox {
       audioPathMain = audioPath;
       containsAudioMain = containsAudio;
 
+      _medicalPreferenceList = _providersBloc.getMedicalPreferencesForDoctors();
+
       if (mediaMetaInfo != null) {
         deviceHealthResult = mediaMetaInfo;
+
         doctorsData = mediaMetaInfo.metadata.doctor != null
             ? mediaMetaInfo.metadata.doctor
             : null;
@@ -126,6 +147,8 @@ class CommonDialogBox {
             ? mediaMetaInfo.metaInfo.laboratory
             : null;*/
         mediaMetaInfo = mediaMetaInfo != null ? mediaMetaInfo : null;
+
+        setDoctorValueFromResponse(mediaMetaInfo);
 
         if (mediaMetaInfo != null) {
           metaInfoId = mediaMetaInfo.id;
@@ -184,19 +207,71 @@ class CommonDialogBox {
                   children: <Widget>[
                     fhbBasicWidget.getTextForAlertDialog(
                         context, CommonConstants.strDoctorsName),
-                    fhbBasicWidget
-                        .getTextFieldForDialogWithControllerAndPressed(context,
-                            (context, value) {
-                      moveToSearchScreen(
-                          context,
-                          CommonConstants.keyDoctor,
-                          doctor,
-                          hospital,
-                          null,
-                          updateUI,
-                          audioPath,
-                          containsAudio);
-                    }, doctor, CommonConstants.keyDoctor),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: fhbBasicWidget.getTextFiledWithHint(
+                              context, 'Choose Doctor', doctor,
+                              enabled: false),
+
+                          /*fhbBasicWidget
+                                .getTextFieldForDialogWithControllerAndPressed(
+                                    context, (context, value) {
+                              setState(() {
+                                showDoctorList != showDoctorList;
+                              });
+                              */ /*moveToSearchScreen(
+                                  context,
+                                  CommonConstants.keyDoctor,
+                                  doctor,
+                                  hospital,
+                                  null,
+                                  updateUI,
+                                  audioPath,
+                                  containsAudio,
+                                  setState: setState);*/ /*
+                            }, doctor, CommonConstants.keyDoctor)*/
+                        ),
+                        showDoctorList
+                            ? Container(
+                                height: 50,
+                                child: doctorsListFromProvider != null
+                                    ? getDoctorDropDown(
+                                        doctorsListFromProvider,
+                                        doctorObj,
+                                        () {
+                                          Navigator.pop(context);
+                                          moveToSearchScreen(
+                                              context,
+                                              CommonConstants.keyDoctor,
+                                              doctor,
+                                              hospital,
+                                              null,
+                                              updateUI,
+                                              audioPath,
+                                              containsAudio,
+                                              setState: setState);
+                                        },
+                                      )
+                                    : getAllCustomRoles(doctorObj, () {
+                                        Navigator.pop(context);
+                                        moveToSearchScreen(
+                                            context,
+                                            CommonConstants.keyDoctor,
+                                            doctor,
+                                            hospital,
+                                            null,
+                                            updateUI,
+                                            audioPath,
+                                            containsAudio,
+                                            setState: setState);
+                                      }),
+                              )
+                            : Container(),
+                      ],
+                    ),
                     SizedBox(
                       height: 15.0.h,
                     ),
@@ -311,6 +386,7 @@ class CommonDialogBox {
         deviceHealthResult = mediaMetaInfo;
 
         doctorsData = mediaMetaInfo.metadata.doctor;
+        setDoctorValueFromResponse(mediaMetaInfo);
 
         labData = mediaMetaInfo.metadata.laboratory != null
             ? mediaMetaInfo.metadata.laboratory
@@ -1574,7 +1650,8 @@ class CommonDialogBox {
       TextEditingController labName,
       Function onTextFinished,
       String audioPath,
-      bool containsAudio) async {
+      bool containsAudio,
+      {setState}) async {
     await Navigator.of(context)
         .push(MaterialPageRoute(
             builder: (context) => SearchSpecificList(
@@ -1589,7 +1666,11 @@ class CommonDialogBox {
       if (results != null) {
         if (results.containsKey(Constants.keyDoctor)) {
           doctorsData = json.decode(results[Constants.keyDoctor]);
+          try {
+            setValueToDoctorDropdown(doctorsData, setState);
+          } catch (e) {}
 
+          print(doctorsData[parameters.strFirstName]);
           if (doctorsData[parameters.strName] != '' &&
               doctorsData[parameters.strName] != null) {
             doctorsName.text = doctorsData[parameters.strName];
@@ -2584,6 +2665,308 @@ class CommonDialogBox {
       });
     } else {
       return filteredCategoryData;
+    }
+  }
+
+  Widget getAllCustomRoles(Doctors doctorObj, Function onAdd) {
+    Widget familyWidget;
+
+    return StreamBuilder<ApiResponse<MyProvidersResponse>>(
+      stream: _providersBloc.providersListStream,
+      builder:
+          (context, AsyncSnapshot<ApiResponse<MyProvidersResponse>> snapshot) {
+        if (snapshot.hasData) {
+          switch (snapshot.data.status) {
+            case Status.LOADING:
+              familyWidget = Center(
+                  child: SizedBox(
+                child: CircularProgressIndicator(),
+                width: 30.0.h,
+                height: 30.0.h,
+              ));
+              break;
+
+            case Status.ERROR:
+              familyWidget = Center(
+                  child: Text(Constants.STR_ERROR_LOADING_DATA,
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 16.0.sp,
+                      )));
+              break;
+
+            case Status.COMPLETED:
+              if (snapshot.data != null &&
+                  snapshot.data.data != null &&
+                  snapshot.data.data.result != null &&
+                  snapshot.data.data.result.doctors != null &&
+                  snapshot.data.data.result.doctors.length > 0) {
+                doctorsListFromProvider = snapshot.data.data.result.doctors;
+                familyWidget = getDoctorDropDown(
+                  snapshot.data.data.result.doctors,
+                  doctorObj,
+                  onAdd,
+                );
+              } else {
+                doctorsListFromProvider = new List();
+                familyWidget = getDoctorDropDownWhenNoList(
+                    doctorsListFromProvider, null, onAdd);
+              }
+
+              return familyWidget;
+              break;
+          }
+        } else {
+          doctorsListFromProvider = new List();
+          familyWidget = Container(
+            width: 100.0.h,
+            height: 100.0.h,
+          );
+        }
+        return familyWidget;
+      },
+    );
+  }
+
+  getDoctorDropDown(
+      List<Doctors> doctors, Doctors doctorObjSample, Function onAddClick,
+      {Widget child}) {
+    if (doctorObjSample != null) {
+      for (Doctors doctorsObjS in doctors) {
+        if (doctorsObjS.id == doctorObjSample.id) {
+          doctorObj = doctorsObjS;
+        }
+      }
+    }
+
+    return StatefulBuilder(builder: (context, setState) {
+      return PopupMenuButton<Doctors>(
+        offset: Offset(-100.0, 70.0),
+        //padding: EdgeInsets.all(20),
+        itemBuilder: (context) => (doctors != null && doctors.length > 0)
+            ? doctors
+                .mapIndexed((int index, element) => index == doctors.length - 1
+                    ? PopupMenuItem<Doctors>(
+                        value: element,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              padding: EdgeInsets.symmetric(vertical: 10),
+                              child: Text(
+                                element.user.name,
+                              ),
+                              width: 0.5.sw,
+                            ),
+                            SizedBox(height: 10),
+                            fhbBasicWidget.getSaveButton(() {
+                              onAddClick();
+                            }, text: 'Add Doctor'),
+                            SizedBox(height: 10),
+                          ],
+                        ))
+                    : PopupMenuItem<Doctors>(
+                        value: element,
+                        child: Container(
+                          child: Text(
+                            element.user.name,
+                          ),
+                          width: 0.5.sw,
+                        ),
+                      ))
+                .toList()
+            : PopupMenuItem<Doctors>(
+                child: Column(
+                  children: [
+                    SizedBox(height: 10),
+                    fhbBasicWidget.getSaveButton(() {
+                      onAddClick();
+                    }, text: 'Add Doctor'),
+                    SizedBox(height: 10)
+                  ],
+                ),
+              ),
+        onSelected: (value) {
+          doctorObj = value;
+          setDoctorValue(value);
+          setState(() {
+            doctor.text = doctorObj.user.name;
+          });
+        },
+        child: child ?? getIconButton(),
+      );
+    });
+  }
+
+  getDoctorDropDownWhenNoList(
+      List<Doctors> doctors, Doctors doctorObjSample, Function onAddClick,
+      {Widget child}) {
+    if (doctorObjSample != null) {
+      for (Doctors doctorsObjS in doctors) {
+        if (doctorsObjS.id == doctorObjSample.id) {
+          doctorObj = doctorsObjS;
+        }
+      }
+    }
+
+    return (doctors != null && doctors.length > 0)
+        ? StatefulBuilder(builder: (context, setState) {
+            return PopupMenuButton<Doctors>(
+              offset: Offset(-100.0, 70.0),
+              //padding: EdgeInsets.all(20),
+              itemBuilder: (context) => doctors
+                  .mapIndexed(
+                      (int index, element) => index == doctors.length - 1
+                          ? PopupMenuItem<Doctors>(
+                              value: element,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.symmetric(vertical: 10),
+                                    child: Text(
+                                      element.user.name,
+                                    ),
+                                    width: 0.5.sw,
+                                  ),
+                                  SizedBox(height: 10),
+                                  fhbBasicWidget.getSaveButton(() {
+                                    onAddClick();
+                                  }, text: 'Add Doctor'),
+                                  SizedBox(height: 10),
+                                ],
+                              ))
+                          : PopupMenuItem<Doctors>(
+                              value: element,
+                              child: Container(
+                                child: Text(
+                                  element.user.name,
+                                ),
+                                width: 0.5.sw,
+                              ),
+                            ))
+                  .toList(),
+              onSelected: (value) {
+                doctorObj = value;
+                setDoctorValue(value);
+                setState(() {
+                  doctor.text = doctorObj.user.name;
+                });
+              },
+              child: child ?? getIconButton(),
+            );
+          })
+        : StatefulBuilder(builder: (context, setState) {
+            return PopupMenuButton<Doctors>(
+              offset: Offset(-100.0, 70.0),
+              itemBuilder: (context) => <PopupMenuItem<Doctors>>[
+                PopupMenuItem<Doctors>(
+                    child: Container(
+                  width: 150,
+                  child: Column(
+                    children: [
+                      SizedBox(height: 10),
+                      fhbBasicWidget.getSaveButton(() {
+                        onAddClick();
+                      }, text: 'Add Doctor'),
+                      SizedBox(height: 10)
+                    ],
+                  ),
+                )),
+              ],
+              onSelected: (_) {},
+              child: getIconButton(),
+            );
+          });
+  }
+
+  void setDoctorValue(Doctors newValue) {
+    Doctor doctorNewObj = new Doctor(
+      doctorId: newValue.id,
+      name: newValue.user.name,
+      firstName: newValue.user.firstName,
+      lastName: newValue.user.lastName,
+      addressLine1: newValue.user.userAddressCollection3[0].addressLine1,
+      addressLine2: newValue.user.userAddressCollection3[0].addressLine2,
+      isMciVerified: newValue.isMciVerified,
+      isTelehealthEnabled: newValue.isTelehealthEnabled,
+      profilePicThumbnailUrl: newValue.user.profilePicThumbnailUrl,
+      specialization: newValue.specialization,
+      userId: newValue.user.id,
+    );
+
+    doctorsData = doctorNewObj;
+  }
+
+  void setValueToDoctorDropdown(doctorsData, Function onTextFinished) {
+    address.UserAddressCollection3 userAddressCollection3 =
+        new address.UserAddressCollection3(
+            addressLine1: doctorsData[parameters.strAddressLine1],
+            addressLine2: doctorsData[parameters.strAddressLine2]);
+    List<address.UserAddressCollection3> userAddressCollection3List =
+        new List();
+    userAddressCollection3List.add(userAddressCollection3);
+    User user = new User(
+        id: doctorsData[parameters.struserId],
+        name: doctorsData[parameters.strName],
+        firstName: doctorsData[parameters.strFirstName],
+        lastName: doctorsData[parameters.strLastName],
+        userAddressCollection3: userAddressCollection3List);
+
+    doctorObj = new Doctors(
+        id: doctorsData[parameters.strDoctorId],
+        specialization: doctorsData[parameters.strSpecilization],
+        isTelehealthEnabled: doctorsData[parameters.strisTelehealthEnabled],
+        isMciVerified: doctorsData[parameters.strisMCIVerified],
+        user: user);
+
+    doctorsListFromProvider.add(doctorObj);
+    getDoctorDropDown(doctorsListFromProvider, doctorObj, onTextFinished);
+  }
+
+  void setDoctorValueFromResponse(HealthResult mediaMetaInfo) {
+    if (mediaMetaInfo.metadata.doctor != null) {
+      Doctor doctorFromRespon = mediaMetaInfo.metadata.doctor;
+
+      address.UserAddressCollection3 userAddressCollection3 =
+          new address.UserAddressCollection3(
+              addressLine1: doctorFromRespon.addressLine1,
+              addressLine2: doctorFromRespon.addressLine2);
+      List<address.UserAddressCollection3> userAddressCollection3List =
+          new List();
+      userAddressCollection3List.add(userAddressCollection3);
+      User user = new User(
+          id: doctorFromRespon.userId,
+          name: doctorFromRespon.name,
+          firstName: doctorFromRespon.firstName,
+          lastName: doctorFromRespon.lastName,
+          userAddressCollection3: userAddressCollection3List);
+
+      doctorObj = new Doctors(
+          id: doctorFromRespon.doctorId,
+          specialization: doctorFromRespon.specialization,
+          isTelehealthEnabled: doctorFromRespon.isTelehealthEnabled,
+          isMciVerified: doctorFromRespon.isMciVerified,
+          user: user);
+    }
+  }
+
+  Widget getIconButton() {
+    return IconButton(
+      icon: Icon(Icons.arrow_drop_down),
+      color: Color(CommonUtil().getMyPrimaryColor()),
+      iconSize: 40,
+    );
+  }
+}
+
+extension FicListExtension<T> on List<T> {
+  /// Maps each element of the list.
+  /// The [map] function gets both the original [item] and its [index].
+  ///
+  Iterable<E> mapIndexed<E>(E Function(int index, T item) map) sync* {
+    for (var index = 0; index < length; index++) {
+      yield map(index, this[index]);
     }
   }
 }
