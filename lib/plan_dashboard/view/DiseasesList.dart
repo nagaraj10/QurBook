@@ -114,41 +114,38 @@ class _DiseasesList extends State<DiseasesList> {
               SizedBox(
                 height: 8.h,
               ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 10,horizontal: 5),
-                      //margin: EdgeInsets.only(left: 16, right: 16, top: 8),
-                      color: Colors.deepPurple,
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(10,0,0,0),
-                        child: Text(
-                          strAllPlans,
-                          style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.w500),
-                        ),
-                      ),
-                    ),
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+                width: 1.sw,
+                //margin: EdgeInsets.only(left: 16, right: 16, top: 8),
+                color: Colors.deepPurple,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                  child: Text(
+                    strAllPlans,
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.w500),
                   ),
-                ],
+                ),
               ),
               SizedBox(
                 height: 8.h,
               ),
-              ListView.builder(
-                shrinkWrap: true,
-                padding: EdgeInsets.only(
-                  bottom: 8.0.h,
+              Expanded(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  padding: EdgeInsets.only(
+                    bottom: 8.0.h,
+                  ),
+                  itemBuilder: (BuildContext ctx, int i) => diseasesListItem(
+                      ctx,
+                      i,
+                      isSearch ? myPLanListResult : categoryListUniq,
+                      planList),
+                  itemCount: isSearch
+                      ? myPLanListResult.length
+                      : categoryListUniq.length,
                 ),
-                itemBuilder: (BuildContext ctx, int i) => diseasesListItem(
-                    ctx,
-                    i,
-                    isSearch ? myPLanListResult : categoryListUniq,
-                    planList),
-                itemCount: isSearch
-                    ? myPLanListResult.length
-                    : categoryListUniq.length,
               ),
             ],
           )
@@ -302,70 +299,63 @@ class _DiseasesList extends State<DiseasesList> {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) =>
-                  SearchProviderList(planList[i].plinkid, planListFull)),
+              builder: (context) => SearchProviderList(
+                  planList[i]?.metadata?.diseases ?? '', planListFull)),
         ).then((value) => {
               setState(() {
                 planListModel = myPlanViewModel.getPlanList('');
               })
             });
       },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            padding: EdgeInsets.all(6.0),
-            //margin: EdgeInsets.only(left: 16, right: 16),
-            child: Column(
+      child: Container(
+        padding: EdgeInsets.all(6.0),
+        //margin: EdgeInsets.only(left: 16, right: 16),
+        child: Column(
+          children: [
+            Row(
               children: [
-                Row(
-                  children: [
-                    CircleAvatar(
-                        backgroundColor: Colors.grey[200],
-                        radius: 20,
-                        child: CommonUtil().customImage(
-                            (planList[i]?.metadata?.diseases ?? '').isNotEmpty
-                                ? strDiseasesImage +
-                                    planList[i]?.metadata?.diseases +
-                                    strSVG
-                                : '')),
-                    SizedBox(
-                      width: 10.0.w,
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            planList[i].metadata?.diseases != null
-                                ? toBeginningOfSentenceCase(
-                                    planList[i]?.metadata?.diseases)
-                                : '',
-                            style: TextStyle(
-                              fontSize: 18.0.sp,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            textAlign: TextAlign.start,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                CircleAvatar(
+                    backgroundColor: Colors.grey[200],
+                    radius: 20,
+                    child: CommonUtil().customImage(
+                        (planList[i]?.metadata?.diseaseIcon ?? '').isNotEmpty
+                            ? planList[i]?.metadata?.diseaseIcon
+                            : '')),
                 SizedBox(
-                  height: 8.h,
+                  width: 10.0.w,
                 ),
-                Divider(
-                  thickness: 1,
-                  color: Colors.grey,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        planList[i].metadata?.diseases != null
+                            ? toBeginningOfSentenceCase(
+                                planList[i]?.metadata?.diseases)
+                            : '',
+                        style: TextStyle(
+                          fontSize: 18.0.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        textAlign: TextAlign.start,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
-          ),
-        ],
+            SizedBox(
+              height: 8.h,
+            ),
+            Divider(
+              thickness: 1,
+              color: Colors.grey,
+            ),
+          ],
+        ),
       ),
     );
   }

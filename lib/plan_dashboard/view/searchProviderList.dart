@@ -23,11 +23,11 @@ class SearchProviderList extends StatefulWidget {
   @override
   _SearchProviderList createState() => _SearchProviderList();
 
-  final String plinkId;
+  final String diseases;
 
   final List<PlanListResult> planListResult;
 
-  SearchProviderList(this.plinkId, this.planListResult);
+  SearchProviderList(this.diseases, this.planListResult);
 }
 
 class _SearchProviderList extends State<SearchProviderList> {
@@ -38,7 +38,7 @@ class _SearchProviderList extends State<SearchProviderList> {
   SubscribeViewModel subscribeViewModel = new SubscribeViewModel();
   FlutterToast toast = new FlutterToast();
 
-  String plinkId = '';
+  String diseases = '';
   String hosIcon = '';
   String catIcon = '';
   List<PlanListResult> planListResult;
@@ -61,7 +61,7 @@ class _SearchProviderList extends State<SearchProviderList> {
       context,
       listen: false,
     ).handleSearchField();
-    plinkId = widget.plinkId;
+    diseases = widget.diseases;
     planListResult = widget.planListResult;
     PreferenceUtil.init();
 
@@ -145,17 +145,27 @@ class _SearchProviderList extends State<SearchProviderList> {
 
   Widget planList(List<PlanListResult> planList) {
     planListUniq = [];
-    if (planList != null && planList.length > 0) {
+    /*if (planList != null && planList.length > 0) {
       planList.forEach((element) {
-        bool keysUniq = true;
-        planListUniq.forEach((catElement) {
-          if (catElement.plinkid == plinkId) {
-            keysUniq = false;
+        if (element?.metadata?.diseases == diseases) {
+          bool keysUniq = true;
+          planListUniq.forEach((catElement) {
+            if (catElement?.metadata?.diseases == diseases) {
+              keysUniq = false;
+            }
+          });
+          if (keysUniq) {
+            planListUniq.add(element);
           }
-        });
-        if (keysUniq) {
-          planListUniq.add(element);
         }
+      });
+    }*/
+
+    if (planList != null && planList.length > 0) {
+      planList.where((element1) {
+        return (element1?.metadata?.diseases ?? '')== diseases;
+      }).forEach((element) {
+        planListUniq.add(element);
       });
     }
 
@@ -230,7 +240,7 @@ class _SearchProviderList extends State<SearchProviderList> {
           context,
           MaterialPageRoute(
               builder: (context) => CategoryList(
-                  planList[i].providerid, planList[i]?.metadata?.icon)),
+                  planList[i].providerid, planList[i]?.metadata?.icon,planList[i]?.metadata?.diseases)),
         ).then((value) {
           setState(() {});
         });
@@ -264,8 +274,8 @@ class _SearchProviderList extends State<SearchProviderList> {
                   CircleAvatar(
                       backgroundColor: Colors.grey[200],
                       radius: 20,
-                      child: CommonUtil()
-                          .customImage(planList[i]?.providerMetadata?.icon ?? '')),
+                      child: CommonUtil().customImage(
+                          planList[i]?.providerMetadata?.icon ?? '')),
                   SizedBox(
                     width: 20.0.w,
                   ),

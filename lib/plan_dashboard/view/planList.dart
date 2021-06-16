@@ -33,10 +33,11 @@ class PlanList extends StatefulWidget {
   final String categoryId;
   final String hosIcon;
   final String catIcon;
+  final String diseases;
 
   final List<PlanListResult> planListResult;
 
-  PlanList(this.categoryId, this.planListResult, this.hosIcon, this.catIcon);
+  PlanList(this.categoryId, this.planListResult, this.hosIcon, this.catIcon,this.diseases);
 }
 
 class _MyPlanState extends State<PlanList> {
@@ -50,6 +51,7 @@ class _MyPlanState extends State<PlanList> {
   String categoryId = '';
   String hosIcon = '';
   String catIcon = '';
+  String diseases = '';
   List<PlanListResult> planListResult;
   bool isSelected = false;
   List<PlanListResult> planListUniq = [];
@@ -73,6 +75,7 @@ class _MyPlanState extends State<PlanList> {
     categoryId = widget.categoryId;
     hosIcon = widget.hosIcon;
     catIcon = widget.catIcon;
+    diseases = widget.diseases;
     planListResult = widget.planListResult;
     PreferenceUtil.init();
 
@@ -158,7 +161,7 @@ class _MyPlanState extends State<PlanList> {
     isSelected = false;
     if (planList != null && planList.length > 0) {
       planList.where((element1) {
-        return element1.packcatid == categoryId;
+        return element1?.metadata?.diseases == diseases;
       }).forEach((element) {
         if (element.isSubscribed == '1') {
           isSelected = true;

@@ -291,7 +291,7 @@ class _SearchListState extends State<SearchListHome> {
           context,
           MaterialPageRoute(
               builder: (context) => CategoryList(
-                  searchList[i].providerid, searchList[i]?.metadata?.icon)),
+                  searchList[i].providerid, searchList[i]?.metadata?.icon,'')),
         ).then((value) {
           setState(() {});
         });
