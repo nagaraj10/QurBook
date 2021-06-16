@@ -58,6 +58,8 @@ class RegimentViewModel extends ChangeNotifier {
             index++;
           }
         }
+      } else if (regimentMode == RegimentMode.Symptoms) {
+        initialShowIndex = 0;
       } else {
         for (final event in regimentsScheduledList) {
           if (event.estart.isAfter(DateTime.now()) ||
