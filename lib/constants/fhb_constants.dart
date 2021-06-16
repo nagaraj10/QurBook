@@ -486,16 +486,16 @@ const strPlansActive = ' Plans active';
 const strYourRegimen = 'Your Regimen';
 const strNoRegimen = 'Your Regimen';
 const strActivitiesDue = ' activities due today';
-const strLastEntered = 'Last entered - ';
+const strLastEntered = 'Recent entry';
 const strVitals = 'Vitals';
 const strVitalsDevice = '5 devices available';
-const strSymptomsCheckIn = 'Symptoms\nCheck-in';
+const strSymptomsCheckIn = 'Symptoms';
 const strYourFamily = 'Your Family';
-const strNoFamily = 'No family member active';
-const strFamilyActive = ' family members active';
+const strNoFamily = 'No family members added';
+const strFamilyActive = ' family members';
 const strYourProviders = 'Your Providers';
-const strNoProvider = 'No provider active';
-const strProviderActive = ' providers active';
+const strNoProvider = 'No providers added';
+const strProviderActive = ' providers';
 const strHowVideos = 'How to use Videos?';
 const strNoVideos = 'No videos available';
 const strVideosAvailable = ' videos available';
@@ -530,7 +530,7 @@ const searchHospitals = 'Search Hospitals';
 
 const strQurhealth = 'QurHealth';
 
-const strCovidFree = 'Click for FREE COVID PLANS';
+const strCovidFree = 'Choose your FREE CARE PLANS';
 
 const strDiseasesImage = 'https://qurplan.com/assets/icons/diseases/';
 const strSVG = '.svg';

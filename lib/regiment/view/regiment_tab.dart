@@ -54,6 +54,11 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
       currentIndex: 0,
       isInitial: true,
     );
+    if (Provider.of<RegimentViewModel>(context, listen: false).regimentFilter !=
+        RegimentFilter.Event) {
+      Provider.of<RegimentViewModel>(context, listen: false).redirectEventId =
+          '';
+    }
     Provider.of<RegimentViewModel>(context, listen: false)
         .updateInitialShowIndex(
       index: Provider.of<RegimentViewModel>(context, listen: false)
