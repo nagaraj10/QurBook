@@ -37,9 +37,11 @@ import 'package:myfhb/common/errors_widget.dart';
 
 class MyProvidersHospitals extends StatefulWidget {
   Function(String) closePage;
+  bool isRefresh;
+
   @override
   _MyProvidersState createState() => _MyProvidersState();
-  MyProvidersHospitals({this.closePage});
+  MyProvidersHospitals({this.closePage, this.isRefresh});
 }
 
 class _MyProvidersState extends State<MyProvidersHospitals> {
@@ -58,7 +60,7 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
     super.initState();
     _providersBloc = new ProvidersBloc();
     _medicalPreferenceList = _providersBloc.getMedicalPreferencesForHospital();
-    // getHospitalsList();
+    print('init hospital');
   }
 
   @override
@@ -92,6 +94,15 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
 
   @override
   Widget build(BuildContext context) {
+    print('inside build of doctors');
+    if (!widget.isRefresh) {
+      providerViewModel.doctorIdsList = null;
+      setState(() {
+        _medicalPreferenceList =
+            _providersBloc.getMedicalPreferencesForHospital();
+      });
+      widget.isRefresh != widget.isRefresh;
+    }
     return Scaffold(
         body: Container(
           child: Column(
