@@ -28,6 +28,7 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/appointments/view/appointmentsMain.dart';
 import 'package:myfhb/telehealth/features/chat/view/BadgeIcon.dart';
 import 'package:myfhb/telehealth/features/chat/view/home.dart';
+import 'package:myfhb/video_call/model/NotificationModel.dart';
 import 'package:provider/provider.dart';
 
 import 'widgets/home_widget.dart';
@@ -69,6 +70,26 @@ class _LandingScreenState extends State<LandingScreen> {
     } catch (e) {}
     profileData = getMyProfile();
     Provider.of<LandingViewModel>(context, listen: false).getQurPlanDashBoard();
+    Future.delayed(Duration(seconds: 1)).then((_) {
+      if (Platform.isIOS) {
+        if (PreferenceUtil.isKeyValid(constants.NotificationData)) {
+          changeTabToAppointments();
+        }
+      }
+    });
+  }
+
+  changeTabToAppointments() async {
+    try {
+      NotificationModel notificationData =
+          await PreferenceUtil.getNotifiationData();
+      if (notificationData.redirect == 'appointmentList') {
+        landingViewModel.updateTabIndex(3);
+        await PreferenceUtil.removeNotificationData();
+      }
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   @override

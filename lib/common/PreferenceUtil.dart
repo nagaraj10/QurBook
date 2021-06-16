@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
 
+import 'package:flutter/widgets.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/language/model/Language.dart';
@@ -18,6 +19,8 @@ import 'package:myfhb/src/model/user/DoctorIds.dart';
 import 'package:myfhb/src/model/user/HospitalIds.dart';
 import 'package:myfhb/src/model/user/LaboratoryIds.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
+import 'package:myfhb/telehealth/features/Notifications/constants/notification_constants.dart';
+import 'package:myfhb/video_call/model/NotificationModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PreferenceUtil {
@@ -89,6 +92,25 @@ class PreferenceUtil {
     return mediaData;
   }
 
+  static Future<bool> saveNotificationData(NotificationModel data) async {
+    _prefsInstance ??= await _prefs;
+    final dataInMap = data.toMap();
+    final jsonData = json.encode(dataInMap);
+    return await _prefsInstance.setString(Constants.NotificationData, jsonData);
+  }
+
+  static Future<NotificationModel> getNotifiationData() async {
+    _prefsInstance ??= await _prefs;
+    final jsonData = _prefsInstance.getString(Constants.NotificationData);
+    final dataInMap = json.decode(jsonData);
+    return NotificationModel.fromSharePreferences(dataInMap);
+  }
+
+  static Future<bool> removeNotificationData() async {
+    _prefsInstance ??= await _prefs;
+    return await _prefsInstance.remove(Constants.NotificationData);
+  }
+
   static String getStringValue(String key) {
     return _prefsInstance.getString(key);
   }
@@ -120,7 +142,6 @@ class PreferenceUtil {
       String keyProfile, MyProfileModel profileData) async {
     var instance = await _prefs;
     String profile = json.encode(profileData);
-
     return instance.setString(keyProfile, profile);
   }
 
