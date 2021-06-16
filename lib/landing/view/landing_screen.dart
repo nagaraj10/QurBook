@@ -52,6 +52,7 @@ class _LandingScreenState extends State<LandingScreen> {
   File imageURIProfile;
   LandingViewModel landingViewModel;
   CommonUtil commonUtil = new CommonUtil();
+  bool isFirstTime = true;
 
   @override
   void initState() {
@@ -65,11 +66,15 @@ class _LandingScreenState extends State<LandingScreen> {
     if (profilebanner != null) {
       imageURIProfile = File(profilebanner);
     }
-    try {
-      commonUtil.versionCheck(context);
-    } catch (e) {}
-    profileData = getMyProfile();
-    Provider.of<LandingViewModel>(context, listen: false).getQurPlanDashBoard();
+    if (isFirstTime) {
+      isFirstTime = false;
+      try {
+        commonUtil.versionCheck(context);
+      } catch (e) {}
+      profileData = getMyProfile();
+      Provider.of<LandingViewModel>(context, listen: false)
+          .getQurPlanDashBoard();
+    }
     Future.delayed(Duration(seconds: 1)).then((_) {
       if (Platform.isIOS) {
         if (PreferenceUtil.isKeyValid(constants.NotificationData)) {

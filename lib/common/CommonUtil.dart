@@ -25,8 +25,8 @@ import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/constants/responseModel.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
@@ -2236,12 +2236,15 @@ class CommonUtil {
         });
   }
 
-  Future<dynamic> unSubcribeAlertDialog(BuildContext context,
-      {String title,
-      String content,
-      String packageId,
-      String isSubscribed,
-      Function() refresh}) async {
+  Future<dynamic> unSubcribeAlertDialog(
+    BuildContext context, {
+    String title,
+    String content,
+    String packageId,
+    String isSubscribed,
+    Function() refresh,
+    bool fromDetail = false,
+  }) async {
     var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     showDialog<void>(
         context: context,
@@ -2319,7 +2322,9 @@ class CommonUtil {
                                       Navigator.of(_keyLoader.currentContext,
                                               rootNavigator: true)
                                           .pop();
-                                      Get.back();
+                                      if (fromDetail) {
+                                        Get.back();
+                                      }
                                       Get.back(result: 'refreshUI');
                                       refresh();
                                     } else {
