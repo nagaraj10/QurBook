@@ -133,16 +133,16 @@ class _MyPlanState extends State<MyPlanList> {
             ),
             itemBuilder: (BuildContext ctx, int i) {
               if (i == planList.length) {
-                return FHBBasicWidget.customShowCase(
-                    _GotoRegimentKey,
-                    Constants.GoToRegimentDescription,
-                    Padding(
-                      padding: EdgeInsets.only(
-                        top: 10.0.h,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
+                return Padding(
+                  padding: EdgeInsets.only(
+                    top: 10.0.h,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      FHBBasicWidget.customShowCase(
+                          _GotoRegimentKey,
+                          Constants.GoToRegimentDescription,
                           FlatButton(
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18.0),
@@ -164,10 +164,10 @@ class _MyPlanState extends State<MyPlanList> {
                               fontsize: 14.0.sp,
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                    Constants.DailyRegimen);
+                          Constants.DailyRegimen),
+                    ],
+                  ),
+                );
               } else {
                 return i != 0
                     ? myPlanListItem(

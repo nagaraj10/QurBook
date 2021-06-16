@@ -59,7 +59,8 @@ class DoctorSessionTimeSlot extends StatefulWidget {
       this.onChanged,
       this.onUserChangedDate,
       this.isFromHospital,
-      this.body,this.isFromFollowOrReschedule});
+      this.body,
+      this.isFromFollowOrReschedule});
 
   @override
   State<StatefulWidget> createState() {
@@ -118,7 +119,7 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
     return Column(
       children: <Widget>[
         Container(
-          height: 75.0.h,
+          height: 80.0.h,
           color: Colors.grey[200],
           child: DatePicker(
             DateTime.now().add(Duration(days: -0)),
@@ -240,7 +241,8 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
                           isFromNotification: widget.isFromNotification,
                           isFromHospital: widget.isFromHospital,
                           body: widget.body,
-                          isFromFollowReschedule: widget.isFromFollowOrReschedule,
+                          isFromFollowReschedule:
+                              widget.isFromFollowOrReschedule,
                         ),
                       )
                     : Column(

@@ -463,7 +463,7 @@ class FHBBasicWidget {
           );
   }
 
-  Widget getPopmenuItem(Doctors element,Function onAddClick){
+  Widget getPopmenuItem(Doctors element, Function onAddClick) {
     return PopupMenuItem<Doctors>(
         value: element,
         child: Column(
@@ -614,7 +614,7 @@ class FHBBasicWidget {
         child: _child,
         overlayColor: Colors.black,
         overlayOpacity: 0.8,
-        height: double.infinity,
+        height: 1.h,
         width: double.infinity,
         container: Container(
             height: 120.0.h,
@@ -1055,7 +1055,6 @@ Widget getFirstLastNameText(MyProfileModel myProfile) {
     );
   }
 }
-
 
 Widget getFirstLastNameTextForProfile(MyProfileModel myProfile,
     {Color textColor}) {
