@@ -21,6 +21,7 @@ const String FAQ = 'FAQ';
 const String RateUs = 'Rate us';
 const String SOURCE_NAME = 'tridentApp';
 const String KEY_METADATA = 'metadata';
+const String NotificationData = 'NotificationData';
 const String KEY_CATEGORYNAME = 'categoryName';
 const String KEY_CATEGORYID = 'categoryID';
 const String KEY_CATEGORYLIST = 'categoryList';

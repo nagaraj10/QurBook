@@ -28,9 +28,10 @@ class CategoryList extends StatefulWidget {
   _CategoryState createState() => _CategoryState();
 
   final String providerId;
+  final String diseases;
   final String icon;
 
-  CategoryList(this.providerId, this.icon);
+  CategoryList(this.providerId, this.icon, this.diseases);
 }
 
 class _CategoryState extends State<CategoryList> {
@@ -50,6 +51,7 @@ class _CategoryState extends State<CategoryList> {
 
   String providerId = '';
   String icon = '';
+  String diseases = '';
 
   Future<PlanListModel> planListModel;
 
@@ -67,6 +69,7 @@ class _CategoryState extends State<CategoryList> {
 
     providerId = widget.providerId;
     icon = widget.icon;
+    diseases = widget.diseases;
 
     planListModel = myPlanViewModel.getPlanList(providerId);
   }
@@ -141,13 +144,7 @@ class _CategoryState extends State<CategoryList> {
     isSubscribedOne = false;
     if (planList != null && planList.length > 0) {
       planList.forEach((element) {
-        bool keysUniq = true;
-        categoryListUniq.forEach((catElement) {
-          if (catElement.packcatid == element.packcatid) {
-            keysUniq = false;
-          }
-        });
-        if (keysUniq) {
+        if (element?.metadata?.diseases == diseases) {
           categoryListUniq.add(element);
         }
       });
@@ -242,8 +239,8 @@ class _CategoryState extends State<CategoryList> {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) =>
-                  PlanList(planList[i].packcatid, planListFull, icon,planList[i]?.catmetadata?.icon)),
+              builder: (context) => PlanList(planList[i].packcatid,
+                  planListFull, icon, planList[i]?.catmetadata?.icon,planList[i]?.metadata?.diseases)),
         ).then((value) {
           setState(() {
             planListModel = myPlanViewModel.getPlanList(providerId);
@@ -280,7 +277,9 @@ class _CategoryState extends State<CategoryList> {
                       backgroundColor: Colors.grey[200],
                       radius: 20,
                       child: CommonUtil().customImage(
-                          (planList[i]?.catmetadata?.icon??'').isNotEmpty?planList[i]?.catmetadata?.icon : icon)),
+                          (planList[i]?.catmetadata?.icon ?? '').isNotEmpty
+                              ? planList[i]?.catmetadata?.icon
+                              : icon)),
                   SizedBox(
                     width: 20.0.w,
                   ),
