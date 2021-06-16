@@ -14,6 +14,7 @@ class LandingViewModel extends ChangeNotifier {
   bool isSearchVisible = false;
   LandingScreenStatus landingScreenStatus = LandingScreenStatus.Loaded;
   DashboardModel dashboardData;
+  bool isLoadDone = true;
 
   void changeSearchBar({bool isEnabled = false, bool needNotify = true}) {
     isSearchVisible = isEnabled;
@@ -56,13 +57,17 @@ class LandingViewModel extends ChangeNotifier {
   }
 
   Future<void> getQurPlanDashBoard() async {
-    updateStatus(LandingScreenStatus.Loading);
-    var dashboardResponse = await LandingService.getQurPlanDashBoard();
-    if (dashboardResponse?.isSuccess ?? false) {
-      dashboardData = dashboardResponse.dashboardData;
-    } else {
-      dashboardData = dashboardResponse?.dashboardData;
+    if (isLoadDone) {
+      updateStatus(LandingScreenStatus.Loading);
+      isLoadDone = false;
+      var dashboardResponse = await LandingService.getQurPlanDashBoard();
+      isLoadDone = true;
+      if (dashboardResponse?.isSuccess ?? false) {
+        dashboardData = dashboardResponse.dashboardData;
+      } else {
+        dashboardData = dashboardResponse?.dashboardData;
+      }
+      updateStatus(LandingScreenStatus.Loaded);
     }
-    updateStatus(LandingScreenStatus.Loaded);
   }
 }

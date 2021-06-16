@@ -107,15 +107,15 @@ class HomeWidget extends StatelessWidget {
                             var userId = PreferenceUtil.getStringValue(
                                 constants.KEY_USERID);
                             Provider.of<RegimentViewModel>(
-                              context,
+                              Get.context,
                               listen: false,
                             ).regimentMode = RegimentMode.Schedule;
                             Provider.of<RegimentViewModel>(
-                              context,
+                              Get.context,
                               listen: false,
                             ).regimentFilter = RegimentFilter.Event;
                             Provider.of<RegimentViewModel>(
-                              context,
+                              Get.context,
                               listen: false,
                             ).redirectEventId =
                                 '${dashboardData?.regimenDue?.eid ?? ''}';
@@ -143,10 +143,10 @@ class HomeWidget extends StatelessWidget {
                             var userId = PreferenceUtil.getStringValue(
                                 constants.KEY_USERID);
                             Provider.of<RegimentViewModel>(
-                              context,
+                              Get.context,
                               listen: false,
                             ).regimentMode = RegimentMode.Schedule;
-                            Provider.of<RegimentViewModel>(context,
+                            Provider.of<RegimentViewModel>(Get.context,
                                     listen: false)
                                 .regimentFilter = RegimentFilter.All;
                             await Get.toNamed(rt_Regimen);
@@ -159,10 +159,10 @@ class HomeWidget extends StatelessWidget {
                             var userId = PreferenceUtil.getStringValue(
                                 constants.KEY_USERID);
                             Provider.of<RegimentViewModel>(
-                              context,
+                              Get.context,
                               listen: false,
                             ).regimentMode = RegimentMode.Schedule;
-                            Provider.of<RegimentViewModel>(context,
+                            Provider.of<RegimentViewModel>(Get.context,
                                     listen: false)
                                 .regimentFilter = RegimentFilter.All;
                             await Get.toNamed(rt_Regimen);
@@ -175,11 +175,11 @@ class HomeWidget extends StatelessWidget {
                             var userId = PreferenceUtil.getStringValue(
                                 constants.KEY_USERID);
                             Provider.of<RegimentViewModel>(
-                              context,
+                              Get.context,
                               listen: false,
                             ).regimentMode = RegimentMode.Schedule;
                             Provider.of<RegimentViewModel>(
-                              context,
+                              Get.context,
                               listen: false,
                             ).regimentFilter = RegimentFilter.Missed;
                             await Get.toNamed(rt_Regimen);
@@ -210,15 +210,15 @@ class HomeWidget extends StatelessWidget {
                             var userId = PreferenceUtil.getStringValue(
                                 constants.KEY_USERID);
                             Provider.of<RegimentViewModel>(
-                              context,
+                              Get.context,
                               listen: false,
                             ).regimentMode = RegimentMode.Symptoms;
                             Provider.of<RegimentViewModel>(
-                              context,
+                              Get.context,
                               listen: false,
                             ).regimentFilter = RegimentFilter.Event;
                             Provider.of<RegimentViewModel>(
-                              context,
+                              Get.context,
                               listen: false,
                             ).redirectEventId =
                                 '${dashboardData?.symptomsCheckIn?.eid ?? ''}';
@@ -242,10 +242,10 @@ class HomeWidget extends StatelessWidget {
                             var userId = PreferenceUtil.getStringValue(
                                 constants.KEY_USERID);
                             Provider.of<RegimentViewModel>(
-                              context,
+                              Get.context,
                               listen: false,
                             ).regimentMode = RegimentMode.Symptoms;
-                            Provider.of<RegimentViewModel>(context,
+                            Provider.of<RegimentViewModel>(Get.context,
                                     listen: false)
                                 .regimentFilter = RegimentFilter.All;
                             await Get.toNamed(rt_Regimen);
@@ -258,10 +258,10 @@ class HomeWidget extends StatelessWidget {
                             var userId = PreferenceUtil.getStringValue(
                                 constants.KEY_USERID);
                             Provider.of<RegimentViewModel>(
-                              context,
+                              Get.context,
                               listen: false,
                             ).regimentMode = RegimentMode.Symptoms;
-                            Provider.of<RegimentViewModel>(context,
+                            Provider.of<RegimentViewModel>(Get.context,
                                     listen: false)
                                 .regimentFilter = RegimentFilter.All;
                             await Get.toNamed(rt_Regimen);
@@ -281,7 +281,7 @@ class HomeWidget extends StatelessWidget {
                           color: Color(CommonConstants.weightlightColor),
                           onPressed: () async {
                             await Navigator.pushNamed(
-                              context,
+                              Get.context,
                               rt_UserAccounts,
                               arguments: UserAccountsArguments(
                                 selectedIndex: 1,
@@ -291,7 +291,7 @@ class HomeWidget extends StatelessWidget {
                           },
                           onAddPressed: () async {
                             await Navigator.pushNamed(
-                              context,
+                              Get.context,
                               rt_UserAccounts,
                               arguments: UserAccountsArguments(
                                 selectedIndex: 1,
@@ -310,7 +310,7 @@ class HomeWidget extends StatelessWidget {
                           color: Color(CommonConstants.ThermoDarkColor),
                           onPressed: () async {
                             await Navigator.pushNamed(
-                              context,
+                              Get.context,
                               rt_UserAccounts,
                               arguments: UserAccountsArguments(
                                 selectedIndex: 2,
@@ -320,7 +320,7 @@ class HomeWidget extends StatelessWidget {
                           },
                           onAddPressed: () async {
                             await Navigator.pushNamed(
-                              context,
+                              Get.context,
                               rt_UserAccounts,
                               arguments: UserAccountsArguments(
                                 selectedIndex: 2,

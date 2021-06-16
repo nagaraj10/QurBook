@@ -1,12 +1,10 @@
 import 'dart:io';
-import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
-import 'package:myfhb/common/CommonDialogBox.dart';
-import 'package:myfhb/reminders/QurPlanReminders.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
 import 'package:myfhb/common/CommonConstants.dart';
+import 'package:myfhb/common/CommonDialogBox.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -16,6 +14,7 @@ import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/device_integration/view/screens/Device_Widget.dart';
 import 'package:myfhb/device_integration/viewModel/Device_model.dart';
+import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/model/Authentication/UserModel.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
@@ -23,13 +22,9 @@ import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/telehealth/features/chat/view/BadgeIcon.dart';
-import 'package:myfhb/telehealth/features/chat/view/home.dart';
-import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:showcaseview/showcase_widget.dart';
-import 'package:myfhb/device_integration/viewModel/Device_model.dart';
-import 'package:provider/provider.dart';
 
 class DashboardScreen extends StatefulWidget {
   DashboardScreen({
@@ -88,9 +83,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     if (profilebanner != null) {
       imageURIProfile = File(profilebanner);
     }
-    try {
-      if (!widget.fromPlans) commonUtil.versionCheck(context);
-    } catch (e) {}
+    // try {
+    //   if (!widget.fromPlans) commonUtil.versionCheck(context);
+    // } catch (e) {}
   }
 
   @override

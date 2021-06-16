@@ -1,9 +1,6 @@
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
-import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -11,22 +8,17 @@ import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/fhb_parameters.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/router_variable.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/myPlan/model/myPlanListModel.dart';
-import 'package:myfhb/myPlan/services/myPlanService.dart';
 import 'package:myfhb/myPlan/view/myPlanDetail.dart';
 import 'package:myfhb/myPlan/viewModel/myPlanViewModel.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/plan_dashboard/viewModel/subscribeViewModel.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
 import 'package:provider/provider.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/src/ui/Dashboard.dart';
-import 'package:get/get.dart';
 import 'package:showcaseview/showcase_widget.dart';
 
 class MyPlanList extends StatefulWidget {
@@ -157,6 +149,10 @@ class _MyPlanState extends State<MyPlanList> {
                                 context,
                                 listen: false,
                               ).updateTabIndex(currentIndex: 0);
+                              Provider.of<RegimentViewModel>(
+                                context,
+                                listen: false,
+                              ).regimentMode = RegimentMode.Schedule;
                               Get.toNamed(rt_Regimen);
                             },
                             child: TextWidget(
