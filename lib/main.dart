@@ -334,12 +334,12 @@ class _MyFHBState extends State<MyFHB> {
               Get.to(bot.ChatScreen(
                 isSheelaAskForLang: false,
                 langCode: sheela_lang,
-                rawMessage: rawBody,
+                rawMessage:rawBody,
               ));
             } else {
               Get.to(bot.ChatScreen(
                 isSheelaAskForLang: true,
-                rawMessage: rawBody,
+                rawMessage:rawBody,
               ));
             }
           } else {
@@ -397,7 +397,7 @@ class _MyFHBState extends State<MyFHB> {
             listen: false,
           )?.regimentMode = RegimentMode.Schedule;
           Provider.of<RegimentViewModel>(context, listen: false)
-              ?.regimentFilter = RegimentFilter.All;
+              ?.regimentFilter = RegimentFilter.Missed;
           Get.toNamed(router.rt_Regimen,
               arguments: RegimentArguments(eventId: passedValArr[2]));
         } else if (passedValArr[1] == 'dashboard') {
@@ -773,7 +773,7 @@ class _MyFHBState extends State<MyFHB> {
           } else if (parsedData[1] == 'chat') {
             //this need to be navigte to My Plans screen
             return SplashScreen(
-              nsRoute: 'bills',
+              nsRoute: 'chat',
               bundle: parsedData[2],
             );
           } else {

@@ -82,7 +82,8 @@ class ChatState extends State<Chat> {
           patientId: widget.patientId,
           patientName: widget.patientName,
           patientPicture: widget.patientPicture,
-          isFromVideoCall: widget.isFromVideoCall),
+          isFromVideoCall: widget.isFromVideoCall,
+          message: widget?.message,),
     );
   }
 

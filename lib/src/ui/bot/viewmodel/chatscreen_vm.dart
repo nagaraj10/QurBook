@@ -100,8 +100,8 @@ class ChatScreenViewModel extends ChangeNotifier {
     Future.delayed(Duration(seconds: 1), () {
       _screen = parameters.strSheela;
       sendToMaya(
-          (message != null && message.isNotEmpty) ? message : variable.strhiMaya,
-          screen: _screen);
+          (message != null && message.isNotEmpty) ? '/provider_message' : variable.strhiMaya,
+          screen: _screen, providerMsg: (message != null && message.isNotEmpty) ? message : null);
     });
 
     // var date = new FHBUtils().getFormattedDateString(DateTime.now().toString());
@@ -377,7 +377,7 @@ class ChatScreenViewModel extends ChangeNotifier {
   askUserForLanguage({String message}) {
     Future.delayed(Duration(seconds: 1), () {
       _screen = parameters.strSheela;
-      sendToMaya( (message != null && message.isNotEmpty) ? message : variable.strhiMaya, screen: _screen);
+      sendToMaya( (message != null && message.isNotEmpty) ? '/provider_message' : variable.strhiMaya, screen: _screen, providerMsg: (message != null && message.isNotEmpty) ? message : null);
     });
 
     // var date = new FHBUtils().getFormattedDateString(DateTime.now().toString());
@@ -395,7 +395,7 @@ class ChatScreenViewModel extends ChangeNotifier {
     // notifyListeners();
   }
 
-  sendToMaya(String msg, {String screen}) async {
+  sendToMaya(String msg, {String screen, String providerMsg}) async {
     prof = await PreferenceUtil.getProfileData(constants.KEY_PROFILE);
     user_name = prof.result != null
         ? prof.result.firstName + ' ' + prof.result.lastName
@@ -418,6 +418,7 @@ class ChatScreenViewModel extends ChangeNotifier {
 
     reqJson[parameters.strPlatforType] = Platform.isAndroid ? 'android' : 'ios';
     reqJson[parameters.strScreen] = screen;
+    reqJson[parameters.strProviderMsg] = providerMsg;
     screenValue = screen;
     isLoading = true;
 

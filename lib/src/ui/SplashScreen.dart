@@ -223,14 +223,14 @@ class _SplashScreenState extends State<SplashScreen> {
                             Get.to(bot.ChatScreen(
                               isSheelaAskForLang: false,
                               langCode: sheela_lang,
-                              rawMessage: rawBody,
+                              rawMessage:rawBody,
                             )).then((value) =>
                               PageNavigator.goToPermanent(
                                   context, router.rt_Landing));
                           } else {
                             Get.to(bot.ChatScreen(
                               isSheelaAskForLang: true,
-                              rawMessage: rawBody,
+                              rawMessage:rawBody,
                             )).then((value) =>
                               PageNavigator.goToPermanent(
                                   context, router.rt_Landing));
@@ -309,7 +309,7 @@ class _SplashScreenState extends State<SplashScreen> {
                           listen: false,
                         )?.regimentMode = RegimentMode.Schedule;
                         Provider.of<RegimentViewModel>(context, listen: false)
-                            ?.regimentFilter = RegimentFilter.All;
+                            ?.regimentFilter = RegimentFilter.Missed;
                         PageNavigator.goToPermanent(context, router.rt_Regimen,
                             arguments:
                                 RegimentArguments(eventId: widget.bundle));
