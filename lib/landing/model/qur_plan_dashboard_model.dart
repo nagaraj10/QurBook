@@ -147,20 +147,29 @@ class RegimenDue {
   RegimenDue({
     this.activeDues,
     this.lastEnteredDateTime,
+    this.lastEventTitle,
+    this.eid,
   });
 
   final int activeDues;
   final DateTime lastEnteredDateTime;
+  final String lastEventTitle;
+  final int eid;
 
   factory RegimenDue.fromJson(Map<String, dynamic> json) => RegimenDue(
         activeDues: json['activeDues'],
-        lastEnteredDateTime:
-            DateTime.tryParse(json['lastEnteredDateTime'] ?? ''),
+        lastEnteredDateTime: json['lastEnteredDateTime'] != null
+            ? DateTime.tryParse(json['lastEnteredDateTime'] ?? '')?.toLocal()
+            : null,
+        lastEventTitle: json['lastEventTitle'],
+        eid: json['eid'],
       );
 
   Map<String, dynamic> toJson() => {
         'activeDues': activeDues,
         'lastEnteredDateTime': lastEnteredDateTime.toIso8601String(),
+        'lastEventTitle': lastEventTitle,
+        'eid': eid,
       };
 }
 
@@ -172,6 +181,7 @@ class SymptomsCheckIn {
     this.activityname,
     this.estart,
     this.eend,
+    this.ack,
   });
 
   final int eid;
@@ -180,6 +190,7 @@ class SymptomsCheckIn {
   final String activityname;
   final DateTime estart;
   final DateTime eend;
+  final DateTime ack;
 
   factory SymptomsCheckIn.fromJson(Map<String, dynamic> json) =>
       SymptomsCheckIn(
@@ -189,6 +200,9 @@ class SymptomsCheckIn {
         activityname: json['activityname'],
         estart: DateTime.tryParse(json['estart'] ?? ''),
         eend: DateTime.tryParse(json['eend'] ?? ''),
+        ack: json['ack'] != null
+            ? DateTime.tryParse(json['ack'] ?? '')?.toLocal()
+            : null,
       );
 
   Map<String, dynamic> toJson() => {
@@ -198,5 +212,6 @@ class SymptomsCheckIn {
         'activityname': activityname,
         'estart': estart.toIso8601String(),
         'eend': eend.toIso8601String(),
+        'ack': ack.toIso8601String(),
       };
 }

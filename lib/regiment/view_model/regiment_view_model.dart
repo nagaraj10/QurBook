@@ -1,22 +1,20 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/regiment/service/regiment_service.dart';
-import 'package:myfhb/regiment/models/regiment_response_model.dart';
-import 'package:myfhb/regiment/models/save_response_model.dart';
 import 'package:myfhb/regiment/models/field_response_model.dart';
 import 'package:myfhb/regiment/models/profile_response_model.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/regiment/models/regiment_data_model.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:myfhb/regiment/models/regiment_response_model.dart';
+import 'package:myfhb/regiment/models/save_response_model.dart';
+import 'package:myfhb/regiment/service/regiment_service.dart';
 import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
-import 'package:get/get.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
+import 'package:provider/provider.dart';
 
 enum RegimentMode { Schedule, Symptoms }
 
-enum RegimentFilter { All, Missed }
+enum RegimentFilter { All, Missed, Event }
 
 enum RegimentStatus { Loading, Loaded, DialogOpened, DialogClosed }
 
@@ -38,6 +36,7 @@ class RegimentViewModel extends ChangeNotifier {
   double scrollOffset;
   int initialShowIndex;
   RegimentFilter regimentFilter = RegimentFilter.All;
+  String redirectEventId = '';
 
   void updateInitialShowIndex({
     bool isDone = false,
@@ -50,13 +49,26 @@ class RegimentViewModel extends ChangeNotifier {
       initialShowIndex = index;
     } else if ((regimentsScheduledList?.length ?? 0) > 0) {
       int index = 0;
-      for (final event in regimentsScheduledList) {
-        if (event.estart.isAfter(DateTime.now()) ||
-            event.estart.isAtSameMomentAs(DateTime.now())) {
-          initialShowIndex = index;
-          break;
-        } else {
-          index++;
+      if ((redirectEventId ?? '').isNotEmpty) {
+        for (final event in regimentsScheduledList) {
+          if (event.eid == redirectEventId) {
+            initialShowIndex = index;
+            break;
+          } else {
+            index++;
+          }
+        }
+      } else if (regimentMode == RegimentMode.Symptoms) {
+        initialShowIndex = 0;
+      } else {
+        for (final event in regimentsScheduledList) {
+          if (event.estart.isAfter(DateTime.now()) ||
+              event.estart.isAtSameMomentAs(DateTime.now())) {
+            initialShowIndex = index;
+            break;
+          } else {
+            index++;
+          }
         }
       }
       initialShowIndex ??= regimentsScheduledList.length - 1;

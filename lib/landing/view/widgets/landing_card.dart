@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class LandingCard extends StatelessWidget {
@@ -16,6 +18,7 @@ class LandingCard extends StatelessWidget {
     this.onLinkPressed,
     this.iconColor,
     this.eventName,
+    this.onEventPressed,
   });
 
   final String title;
@@ -29,6 +32,7 @@ class LandingCard extends StatelessWidget {
   final Function onLinkPressed;
   final Color iconColor;
   final String eventName;
+  final Function onEventPressed;
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -68,37 +72,89 @@ class LandingCard extends StatelessWidget {
                       Text(
                         '${title ?? ''}',
                         style: TextStyle(
-                          fontSize: 14.0.sp,
+                          fontSize: 18.0.sp,
                           color: color,
-                          fontWeight: FontWeight.w600,
+                          // fontWeight: FontWeight.w600,
                         ),
                       ),
                       Visibility(
-                        visible: isEnabled && (eventName ?? '').isNotEmpty,
+                        visible: isEnabled &&
+                            ((lastStatus ?? '').isNotEmpty ||
+                                (eventName ?? '').isNotEmpty),
                         child: Text(
-                          eventName?.trim() ?? '',
+                          strLastEntered,
                           style: TextStyle(
                             fontSize: 14.0.sp,
                             color: Colors.black54,
                             fontWeight: FontWeight.w500,
+                            height: 1.0.h,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       Visibility(
-                        visible: isEnabled && (lastStatus ?? '').isNotEmpty,
+                        visible: isEnabled && (eventName ?? '').isNotEmpty,
+                        child: InkWell(
+                          onTap: onEventPressed ?? null,
+                          child: Text(
+                            (eventName ?? '').isNotEmpty
+                                ? toBeginningOfSentenceCase(
+                                    eventName?.trim() ?? '')
+                                : '',
+                            style: TextStyle(
+                              fontSize: 14.0.sp,
+                              color: color,
+                              decoration: TextDecoration.underline,
+                              height: 1.0.h,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                      Visibility(
+                        visible: (lastStatus ?? '').isNotEmpty,
                         child: Text(
                           lastStatus ?? '',
                           style: TextStyle(
                             fontSize: 14.0.sp,
                             color: Colors.black54,
                             fontWeight: FontWeight.w500,
+                            decoration: TextDecoration.none,
+                            height: 1.0.h,
                           ),
-                          maxLines: 4,
+                          maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
+                      // Visibility(
+                      //   visible: isEnabled && (eventName ?? '').isNotEmpty,
+                      //   child: Text(
+                      //     eventName?.trim() ?? '',
+                      //     style: TextStyle(
+                      //       fontSize: 14.0.sp,
+                      //       color: Colors.indigoAccent,
+                      //       fontWeight: FontWeight.w500,
+                      //       decoration: TextDecoration.underline,
+                      //     ),
+                      //     maxLines: 1,
+                      //     overflow: TextOverflow.ellipsis,
+                      //   ),
+                      // ),
+                      // Visibility(
+                      //   visible: isEnabled && (lastStatus ?? '').isNotEmpty,
+                      //   child: Text(
+                      //     lastStatus ?? '',
+                      //     style: TextStyle(
+                      //       fontSize: 14.0.sp,
+                      //       color: Colors.black54,
+                      //       fontWeight: FontWeight.w500,
+                      //     ),
+                      //     maxLines: 4,
+                      //     overflow: TextOverflow.ellipsis,
+                      //   ),
+                      // ),
                       Visibility(
                         visible: isEnabled && (alerts ?? '').isNotEmpty,
                         child: InkWell(
@@ -107,7 +163,9 @@ class LandingCard extends StatelessWidget {
                             alerts ?? '',
                             style: TextStyle(
                               fontSize: 14.0.sp,
-                              color: Colors.black,
+                              color: onLinkPressed != null
+                                  ? Colors.indigoAccent
+                                  : Colors.black54,
                               fontWeight: FontWeight.w500,
                               decoration: onLinkPressed != null
                                   ? TextDecoration.underline

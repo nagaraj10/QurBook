@@ -101,12 +101,38 @@ class HomeWidget extends StatelessWidget {
                         LandingCard(
                           title: constants.strYourRegimen,
                           isEnabled: activePlanCount > 0,
+                          eventName:
+                              dashboardData?.regimenDue?.lastEventTitle ?? '',
+                          onEventPressed: () async {
+                            var userId = PreferenceUtil.getStringValue(
+                                constants.KEY_USERID);
+                            Provider.of<RegimentViewModel>(
+                              context,
+                              listen: false,
+                            ).regimentMode = RegimentMode.Schedule;
+                            Provider.of<RegimentViewModel>(
+                              context,
+                              listen: false,
+                            ).regimentFilter = RegimentFilter.Event;
+                            Provider.of<RegimentViewModel>(
+                              context,
+                              listen: false,
+                            ).redirectEventId =
+                                '${dashboardData?.regimenDue?.eid ?? ''}';
+                            await Get.toNamed(rt_Regimen);
+                            var newUserId = PreferenceUtil.getStringValue(
+                                constants.KEY_USERID);
+                            refresh(userId != newUserId);
+                            await landingViewModel.getQurPlanDashBoard();
+                          },
                           lastStatus:
                               dashboardData?.regimenDue?.lastEnteredDateTime !=
                                       null
-                                  ? (constants.strLastEntered +
-                                      CommonUtil().dateTimeString(dashboardData
-                                          ?.regimenDue?.lastEnteredDateTime))
+                                  ? CommonUtil().regimentDateFormat(
+                                      dashboardData
+                                          ?.regimenDue?.lastEnteredDateTime,
+                                      isLanding: true,
+                                    )
                                   : '',
                           alerts: activeDues > 0
                               ? '$activeDues${constants.strActivitiesDue}'
@@ -114,6 +140,22 @@ class HomeWidget extends StatelessWidget {
                           icon: variable.icon_my_health_regimen,
                           color: Color(CommonConstants.GlucolightColor),
                           onPressed: () async {
+                            var userId = PreferenceUtil.getStringValue(
+                                constants.KEY_USERID);
+                            Provider.of<RegimentViewModel>(
+                              context,
+                              listen: false,
+                            ).regimentMode = RegimentMode.Schedule;
+                            Provider.of<RegimentViewModel>(context,
+                                    listen: false)
+                                .regimentFilter = RegimentFilter.All;
+                            await Get.toNamed(rt_Regimen);
+                            var newUserId = PreferenceUtil.getStringValue(
+                                constants.KEY_USERID);
+                            refresh(userId != newUserId);
+                            await landingViewModel.getQurPlanDashBoard();
+                          },
+                          onAddPressed: () async {
                             var userId = PreferenceUtil.getStringValue(
                                 constants.KEY_USERID);
                             Provider.of<RegimentViewModel>(
@@ -156,22 +198,63 @@ class HomeWidget extends StatelessWidget {
                           onPressed: () {
                             Get.toNamed(rt_Devices);
                           },
+                          onAddPressed: () {
+                            Get.toNamed(rt_Devices);
+                          },
                         ),
                         LandingCard(
                           title: constants.strSymptomsCheckIn,
                           isEnabled: activePlanCount > 0,
                           eventName: dashboardData?.symptomsCheckIn?.title,
-                          lastStatus: dashboardData?.symptomsCheckIn?.estart !=
-                                  null
-                              ? (constants.strLastEntered +
-                                  // ' at ' +
-                                  CommonUtil().dateTimeString(
-                                      dashboardData?.symptomsCheckIn?.estart))
-                              : '',
+                          onEventPressed: () async {
+                            var userId = PreferenceUtil.getStringValue(
+                                constants.KEY_USERID);
+                            Provider.of<RegimentViewModel>(
+                              context,
+                              listen: false,
+                            ).regimentMode = RegimentMode.Symptoms;
+                            Provider.of<RegimentViewModel>(
+                              context,
+                              listen: false,
+                            ).regimentFilter = RegimentFilter.Event;
+                            Provider.of<RegimentViewModel>(
+                              context,
+                              listen: false,
+                            ).redirectEventId =
+                                '${dashboardData?.symptomsCheckIn?.eid ?? ''}';
+                            await Get.toNamed(rt_Regimen);
+                            var newUserId = PreferenceUtil.getStringValue(
+                                constants.KEY_USERID);
+                            refresh(userId != newUserId);
+                            await landingViewModel.getQurPlanDashBoard();
+                          },
+                          lastStatus:
+                              dashboardData?.symptomsCheckIn?.ack != null
+                                  ? CommonUtil().regimentDateFormat(
+                                      dashboardData?.symptomsCheckIn?.ack,
+                                      isLanding: true,
+                                    )
+                                  : '',
                           alerts: '',
                           icon: variable.icon_check_symptoms,
                           color: Color(CommonConstants.pulselightColor),
                           onPressed: () async {
+                            var userId = PreferenceUtil.getStringValue(
+                                constants.KEY_USERID);
+                            Provider.of<RegimentViewModel>(
+                              context,
+                              listen: false,
+                            ).regimentMode = RegimentMode.Symptoms;
+                            Provider.of<RegimentViewModel>(context,
+                                    listen: false)
+                                .regimentFilter = RegimentFilter.All;
+                            await Get.toNamed(rt_Regimen);
+                            var newUserId = PreferenceUtil.getStringValue(
+                                constants.KEY_USERID);
+                            refresh(userId != newUserId);
+                            await landingViewModel.getQurPlanDashBoard();
+                          },
+                          onAddPressed: () async {
                             var userId = PreferenceUtil.getStringValue(
                                 constants.KEY_USERID);
                             Provider.of<RegimentViewModel>(
@@ -206,6 +289,16 @@ class HomeWidget extends StatelessWidget {
                             );
                             await landingViewModel.getQurPlanDashBoard();
                           },
+                          onAddPressed: () async {
+                            await Navigator.pushNamed(
+                              context,
+                              rt_UserAccounts,
+                              arguments: UserAccountsArguments(
+                                selectedIndex: 1,
+                              ),
+                            );
+                            await landingViewModel.getQurPlanDashBoard();
+                          },
                         ),
                         LandingCard(
                           title: constants.strYourProviders,
@@ -214,8 +307,18 @@ class HomeWidget extends StatelessWidget {
                               ? '$activeProviders ${constants.strProviderActive}'
                               : constants.strNoProvider,
                           icon: variable.icon_my_providers,
-                          color: Color(CommonConstants.bpDarkColor),
+                          color: Color(CommonConstants.ThermoDarkColor),
                           onPressed: () async {
+                            await Navigator.pushNamed(
+                              context,
+                              rt_UserAccounts,
+                              arguments: UserAccountsArguments(
+                                selectedIndex: 2,
+                              ),
+                            );
+                            await landingViewModel.getQurPlanDashBoard();
+                          },
+                          onAddPressed: () async {
                             await Navigator.pushNamed(
                               context,
                               rt_UserAccounts,
@@ -250,7 +353,7 @@ class HomeWidget extends StatelessWidget {
                           isEnabled: activePlanCount > 0,
                           alerts: '',
                           icon: variable.icon_chat_dash,
-                          color: Color(CommonConstants.ThermoDarkColor),
+                          color: Color(CommonConstants.bpDarkColor),
                           onPressed: () {},
                         ),
                       ],
