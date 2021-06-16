@@ -164,7 +164,7 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                           SizedBox(height: 5.0.h),
                           AutoSizeText(
                             eachDoctorModel.user != null
-                                ? getDoctorName(eachDoctorModel.user)
+                                ? new CommonUtil().getDoctorName(eachDoctorModel.user)
                                 : '',
                             maxLines: 1,
                             style: TextStyle(
@@ -227,19 +227,5 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
       },
       itemCount: doctorsModel.length,
     );
-  }
-
-  getDoctorName(User user) {
-    String doctorName = '';
-
-    /*if (user.name != null && user.name != '') {
-      doctorName = user.name;
-    } else */
-    if (user.firstName != null && user.firstName != '') {
-      doctorName = user.firstName + ' ' + user.lastName;
-    } else if (user.userName != null && user.userName != '') {
-      doctorName = user.userName;
-    }
-    return doctorName?.capitalizeFirstofEach;
   }
 }

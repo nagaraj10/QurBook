@@ -41,6 +41,7 @@ import 'package:myfhb/my_family/models/LinkedData.dart';
 import 'package:myfhb/my_family/models/ProfileData.dart';
 import 'package:myfhb/my_family/models/Sharedbyme.dart';
 import 'package:myfhb/my_providers/models/ProfilePicThumbnail.dart';
+import 'package:myfhb/my_providers/models/User.dart';
 import 'package:myfhb/myfhb_weview/myfhb_webview.dart';
 import 'package:myfhb/plan_dashboard/viewModel/subscribeViewModel.dart';
 import 'package:myfhb/record_detail/model/DoctorImageResponse.dart';
@@ -2917,6 +2918,17 @@ class CommonUtil {
         content: Text(response.result),
       ));
     }
+  }
+
+  String getDoctorName(User user) {
+    String doctorName = '';
+
+    if (user.firstName != null && user.firstName != '') {
+      doctorName = user.firstName + ' ' + user.lastName;
+    } else if (user.userName != null && user.userName != '') {
+      doctorName = user.userName;
+    }
+    return doctorName?.capitalizeFirstofEach;
   }
 }
 

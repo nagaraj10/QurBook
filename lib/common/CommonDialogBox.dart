@@ -107,6 +107,7 @@ class CommonDialogBox {
   ProvidersBloc _providersBloc = new ProvidersBloc();
   Future<MyProvidersResponse> _medicalPreferenceList;
   List<Doctors> doctorsListFromProvider;
+  List<Doctors> copyOfdoctorsModel;
 
   Doctors doctorObj;
 
@@ -215,24 +216,6 @@ class CommonDialogBox {
                           child: fhbBasicWidget.getTextFiledWithHint(
                               context, 'Choose Doctor', doctor,
                               enabled: false),
-
-                          /*fhbBasicWidget
-                                .getTextFieldForDialogWithControllerAndPressed(
-                                    context, (context, value) {
-                              setState(() {
-                                showDoctorList != showDoctorList;
-                              });
-                              */ /*moveToSearchScreen(
-                                  context,
-                                  CommonConstants.keyDoctor,
-                                  doctor,
-                                  hospital,
-                                  null,
-                                  updateUI,
-                                  audioPath,
-                                  containsAudio,
-                                  setState: setState);*/ /*
-                            }, doctor, CommonConstants.keyDoctor)*/
                         ),
                         showDoctorList
                             ? Container(
@@ -381,6 +364,7 @@ class CommonDialogBox {
       modeOfSave = modeOfSaveClone;
       audioPathMain = audioPath;
       containsAudioMain = containsAudio;
+      _medicalPreferenceList = _providersBloc.getMedicalPreferencesForDoctors();
       if (mediaMetaInfo != null) {
         mediaMetaInfo = mediaMetaInfo != null ? mediaMetaInfo : null;
         deviceHealthResult = mediaMetaInfo;
@@ -470,19 +454,53 @@ class CommonDialogBox {
                     ),
                     fhbBasicWidget.getTextForAlertDialog(
                         context, CommonConstants.strDoctorsName),
-                    fhbBasicWidget
-                        .getTextFieldForDialogWithControllerAndPressed(context,
-                            (context, value) {
-                      moveToSearchScreen(
-                          context,
-                          CommonConstants.keyDoctor,
-                          doctor,
-                          null,
-                          lab,
-                          updateUI,
-                          audioPath,
-                          containsAudio);
-                    }, doctor, CommonConstants.keyDoctor),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: fhbBasicWidget.getTextFiledWithHint(
+                              context, 'Choose Doctor', doctor,
+                              enabled: false),
+                        ),
+                        showDoctorList
+                            ? Container(
+                                height: 50,
+                                child: doctorsListFromProvider != null
+                                    ? getDoctorDropDown(
+                                        doctorsListFromProvider,
+                                        doctorObj,
+                                        () {
+                                          Navigator.pop(context);
+                                          moveToSearchScreen(
+                                              context,
+                                              CommonConstants.keyDoctor,
+                                              doctor,
+                                              hospital,
+                                              null,
+                                              updateUI,
+                                              audioPath,
+                                              containsAudio,
+                                              setState: setState);
+                                        },
+                                      )
+                                    : getAllCustomRoles(doctorObj, () {
+                                        Navigator.pop(context);
+                                        moveToSearchScreen(
+                                            context,
+                                            CommonConstants.keyDoctor,
+                                            doctor,
+                                            hospital,
+                                            null,
+                                            updateUI,
+                                            audioPath,
+                                            containsAudio,
+                                            setState: setState);
+                                      }),
+                              )
+                            : Container(),
+                      ],
+                    ),
                     SizedBox(
                       height: 15.0.h,
                     ),
@@ -2702,8 +2720,9 @@ class CommonDialogBox {
                   snapshot.data.data.result.doctors != null &&
                   snapshot.data.data.result.doctors.length > 0) {
                 doctorsListFromProvider = snapshot.data.data.result.doctors;
+                filterDuplicateDoctor();
                 familyWidget = getDoctorDropDown(
-                  snapshot.data.data.result.doctors,
+                  doctorsListFromProvider,
                   doctorObj,
                   onAdd,
                 );
@@ -2750,12 +2769,13 @@ class CommonDialogBox {
                         value: element,
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Container(
                               padding: EdgeInsets.symmetric(vertical: 10),
-                              child: Text(
-                                element.user.name,
-                              ),
+                              child: Text(element.user != null
+                                  ? new CommonUtil().getDoctorName(element.user)
+                                  : ''),
                               width: 0.5.sw,
                             ),
                             SizedBox(height: 10),
@@ -2768,9 +2788,9 @@ class CommonDialogBox {
                     : PopupMenuItem<Doctors>(
                         value: element,
                         child: Container(
-                          child: Text(
-                            element.user.name,
-                          ),
+                          child: Text(element.user != null
+                              ? new CommonUtil().getDoctorName(element.user)
+                              : ''),
                           width: 0.5.sw,
                         ),
                       ))
@@ -2790,7 +2810,9 @@ class CommonDialogBox {
           doctorObj = value;
           setDoctorValue(value);
           setState(() {
-            doctor.text = doctorObj.user.name;
+            doctor.text = value.user != null
+                ? new CommonUtil().getDoctorName(value.user)
+                : '';
           });
         },
         child: child ?? getIconButton(),
@@ -2921,6 +2943,7 @@ class CommonDialogBox {
         user: user);
 
     doctorsListFromProvider.add(doctorObj);
+    filterDuplicateDoctor();
     getDoctorDropDown(doctorsListFromProvider, doctorObj, onTextFinished);
   }
 
@@ -2957,6 +2980,15 @@ class CommonDialogBox {
       color: Color(CommonUtil().getMyPrimaryColor()),
       iconSize: 40,
     );
+  }
+
+  void filterDuplicateDoctor() {
+    if (doctorsListFromProvider.length > 0) {
+      copyOfdoctorsModel = doctorsListFromProvider;
+      final ids = copyOfdoctorsModel.map((e) => e?.user?.id).toSet();
+      copyOfdoctorsModel.retainWhere((x) => ids.remove(x?.user?.id));
+      doctorsListFromProvider = copyOfdoctorsModel;
+    }
   }
 }
 
