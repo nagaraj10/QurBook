@@ -26,7 +26,7 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
-import 'package:myfhb/constants/fhb_parameters.dart' as parametersnstants/fhb_parameters.dart';
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/responseModel.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
