@@ -17,6 +17,7 @@ import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as constants;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/landing/view/landing_arguments.dart';
 import 'package:myfhb/landing/view_model/landing_view_model.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
@@ -38,6 +39,12 @@ class LandingScreen extends StatefulWidget {
   static _LandingScreenState of(BuildContext context) =>
       context.findAncestorStateOfType<State<LandingScreen>>();
 
+  LandingScreen({
+    this.landingArguments,
+  });
+
+  final LandingArguments landingArguments;
+
   @override
   _LandingScreenState createState() => _LandingScreenState();
 }
@@ -52,7 +59,6 @@ class _LandingScreenState extends State<LandingScreen> {
   File imageURIProfile;
   LandingViewModel landingViewModel;
   CommonUtil commonUtil = new CommonUtil();
-  bool isFirstTime = true;
 
   @override
   void initState() {
@@ -66,15 +72,18 @@ class _LandingScreenState extends State<LandingScreen> {
     if (profilebanner != null) {
       imageURIProfile = File(profilebanner);
     }
-    if (isFirstTime) {
-      isFirstTime = false;
+    if (widget.landingArguments?.needFreshLoad ?? true) {
       try {
         commonUtil.versionCheck(context);
       } catch (e) {}
-      profileData = getMyProfile();
+      Provider.of<LandingViewModel>(context, listen: false)
+          .getQurPlanDashBoard(needNotify: true);
+    } else {
       Provider.of<LandingViewModel>(context, listen: false)
           .getQurPlanDashBoard();
     }
+    profileData = getMyProfile();
+
     Future.delayed(Duration(seconds: 1)).then((_) {
       if (Platform.isIOS) {
         if (PreferenceUtil.isKeyValid(constants.NotificationData)) {
@@ -174,7 +183,8 @@ class _LandingScreenState extends State<LandingScreen> {
                               _key,
                               () {
                                 profileData = getMyProfile();
-                                landingViewModel.getQurPlanDashBoard();
+                                landingViewModel.getQurPlanDashBoard(
+                                    needNotify: true);
                                 setState(() {});
                                 (context as Element).markNeedsBuild();
                               },
