@@ -1,21 +1,19 @@
 import 'dart:io';
-import 'package:myfhb/device_integration/viewModel/Device_model.dart';
-import 'package:myfhb/src/ui/settings/MySettings.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
-import 'package:intl/intl.dart';
 import 'package:launch_review/launch_review.dart';
-import 'package:myfhb/authentication/view/login_screen.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/device_integration/viewModel/Device_model.dart';
+import 'package:myfhb/landing/view/landing_screen.dart';
 import 'package:myfhb/myfhb_weview/myfhb_webview.dart';
-import 'package:myfhb/src/model/Authentication/SignOutResponse.dart';
 import 'package:myfhb/src/model/CreateDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/UpdatedDeviceModel.dart';
@@ -23,13 +21,11 @@ import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
 import 'package:myfhb/src/ui/HomeScreen.dart';
-import 'package:myfhb/src/utils/PageNavigator.dart';
+import 'package:myfhb/src/ui/settings/MySettings.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:myfhb/common/errors_widget.dart';
-import 'package:myfhb/landing/view/landing_screen.dart';
-import 'package:myfhb/landing/view_model/landing_view_model.dart';
 
 class MoreMenuScreen extends StatefulWidget {
   final Function refresh;
@@ -145,16 +141,16 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
               },
             ),
             actions: <Widget>[
-              IconButton(
-                  icon: Icon(
-                    Icons.exit_to_app,
-                    size: 24.0.sp,
-                  ),
-                  onPressed: () {
-                    new FHBBasicWidget().exitApp(context, () {
-                      new CommonUtil().logout(moveToLoginPage);
-                    });
-                  })
+              // IconButton(
+              //     icon: Icon(
+              //       Icons.exit_to_app,
+              //       size: 24.0.sp,
+              //     ),
+              //     onPressed: () {
+              //       new FHBBasicWidget().exitApp(context, () {
+              //         new CommonUtil().logout(moveToLoginPage);
+              //       });
+              //     })
             ]),
         body: getValuesFromSharedPrefernce());
   }
