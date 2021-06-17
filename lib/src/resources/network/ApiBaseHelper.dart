@@ -1437,7 +1437,7 @@ class ApiBaseHelper {
   Future<dynamic> getPlanList(String url, String jsonString) async {
     var responseJson;
     try {
-      print('refer:  '+url+jsonString);
+      print('refer:  ' + url + jsonString);
       final response = await http.post(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersTimeSlot(),
           body: jsonString);
@@ -1558,6 +1558,22 @@ class ApiBaseHelper {
       throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
+  }
+
+  Future<dynamic> getLoginDetails() async {
+    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+
+    var response = await http.get(
+      _baseUrl + 'user/loggedin-details/',
+      headers: {HttpHeaders.authorizationHeader: authToken},
+    );
+    if (response.statusCode == 200) {
+      final body = jsonDecode(response.body);
+      return body;
+    } else {
+      //throw Exception("Unable to perform request!");
+      throw InnerException('No Data Found');
+    }
   }
 }
 

@@ -19,6 +19,7 @@ import 'package:intl/intl.dart';
 import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments.dart';
 import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
 import 'package:myfhb/add_providers/bloc/update_providers_bloc.dart';
+import 'package:myfhb/authentication/model/logged_in_success.dart';
 import 'package:myfhb/authentication/view/login_screen.dart';
 import 'package:myfhb/bookmark_record/bloc/bookmarkRecordBloc.dart';
 import 'package:myfhb/common/CommonConstants.dart';
@@ -1431,6 +1432,8 @@ class CommonUtil {
     } else {
       PreferenceUtil.saveString(Constants.KEY_DEVICEINFO, variable.strFalse);
     }
+
+    getLoggedIDetails();
     return DeviceInfoSucess.fromJson(response);
   }
 
@@ -1542,6 +1545,16 @@ class CommonUtil {
     MyProfileModel myProfile =
         await AddFamilyUserInfoRepository().getMyProfileInfoNew(userid);
     return myProfile;
+  }
+
+  void getLoggedIDetails() async {
+    ApiBaseHelper apiBaseHelper = new ApiBaseHelper();
+
+    final response = await apiBaseHelper.getLoginDetails();
+    LoginDetails loginDetails = LoginDetails.fromJson(response);
+
+    await PreferenceUtil.save(
+        Constants.KEY_LASTLOGGEDTIME, loginDetails.result.lastLoggedIn);
   }
 
   Widget getNotificationIcon(
