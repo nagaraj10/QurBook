@@ -80,31 +80,34 @@ class _MyPlanState extends State<MyPlanList> {
     }, builder: Builder(builder: (context) {
       _myContext = context;
       return Scaffold(
+          floatingActionButton: getTheRegimen(),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat,
           body: Container(
               child: Column(
-        children: [
-          SearchWidget(
-            onChanged: (providerName) {
-              if (providerName != '' && providerName.length > 2) {
-                isSearch = true;
-                onSearchedNew(providerName);
-              } else {
-                setState(() {
-                  isSearch = false;
-                });
-              }
-            },
-          ),
-          SizedBox(
-            height: 5.0.h,
-          ),
-          Expanded(
-            child: myPlanListModel != null ?? myPlanListModel.isSuccess
-                ? hospitalList(myPlanListModel.result)
-                : getPlanList(),
-          )
-        ],
-      )));
+            children: [
+              SearchWidget(
+                onChanged: (providerName) {
+                  if (providerName != '' && providerName.length > 2) {
+                    isSearch = true;
+                    onSearchedNew(providerName);
+                  } else {
+                    setState(() {
+                      isSearch = false;
+                    });
+                  }
+                },
+              ),
+              SizedBox(
+                height: 5.0.h,
+              ),
+              Expanded(
+                child: myPlanListModel != null ?? myPlanListModel.isSuccess
+                    ? hospitalList(myPlanListModel.result)
+                    : getPlanList(),
+              )
+            ],
+          )));
     }));
   }
 
@@ -116,6 +119,48 @@ class _MyPlanState extends State<MyPlanList> {
     setState(() {});
   }
 
+  Widget getTheRegimen() {
+    return Padding(
+      padding: EdgeInsets.only(
+        top: 10.0.h,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          FHBBasicWidget.customShowCase(
+              _GotoRegimentKey,
+              Constants.GoToRegimentDescription,
+              FlatButton(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18.0),
+                ),
+                color: Color(new CommonUtil().getMyPrimaryColor()),
+                textColor: Colors.white,
+                padding: EdgeInsets.all(
+                  10.0.sp,
+                ),
+                onPressed: () async {
+                  Provider.of<RegimentViewModel>(
+                    context,
+                    listen: false,
+                  ).updateTabIndex(currentIndex: 0);
+                  Provider.of<RegimentViewModel>(
+                    context,
+                    listen: false,
+                  ).regimentMode = RegimentMode.Schedule;
+                  Get.toNamed(rt_Regimen);
+                },
+                child: TextWidget(
+                  text: goToRegimen,
+                  fontsize: 14.0.sp,
+                ),
+              ),
+              Constants.DailyRegimen),
+        ],
+      ),
+    );
+  }
+
   Widget hospitalList(List<MyPlanListResult> planList) {
     return (planList != null && planList.length > 0)
         ? ListView.builder(
@@ -124,59 +169,17 @@ class _MyPlanState extends State<MyPlanList> {
               bottom: 8.0.h,
             ),
             itemBuilder: (BuildContext ctx, int i) {
-              if (i == planList.length) {
-                return Padding(
-                  padding: EdgeInsets.only(
-                    top: 10.0.h,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      FHBBasicWidget.customShowCase(
-                          _GotoRegimentKey,
-                          Constants.GoToRegimentDescription,
-                          FlatButton(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18.0),
-                            ),
-                            color: Color(new CommonUtil().getMyPrimaryColor()),
-                            textColor: Colors.white,
-                            padding: EdgeInsets.all(
-                              10.0.sp,
-                            ),
-                            onPressed: () async {
-                              Provider.of<RegimentViewModel>(
-                                context,
-                                listen: false,
-                              ).updateTabIndex(currentIndex: 0);
-                              Provider.of<RegimentViewModel>(
-                                context,
-                                listen: false,
-                              ).regimentMode = RegimentMode.Schedule;
-                              Get.toNamed(rt_Regimen);
-                            },
-                            child: TextWidget(
-                              text: goToRegimen,
-                              fontsize: 14.0.sp,
-                            ),
-                          ),
-                          Constants.DailyRegimen),
-                    ],
-                  ),
-                );
-              } else {
-                return i != 0
-                    ? myPlanListItem(
-                        ctx, i, isSearch ? myPLanListResult : planList)
-                    : FHBBasicWidget.customShowCase(
-                        _PlanCardKey,
-                        Constants.MyPlanCard,
-                        myPlanListItem(
-                            ctx, i, isSearch ? myPLanListResult : planList),
-                        Constants.SubscribedPlans);
-              }
+              return i != 0
+                  ? myPlanListItem(
+                      ctx, i, isSearch ? myPLanListResult : planList)
+                  : FHBBasicWidget.customShowCase(
+                      _PlanCardKey,
+                      Constants.MyPlanCard,
+                      myPlanListItem(
+                          ctx, i, isSearch ? myPLanListResult : planList),
+                      Constants.SubscribedPlans);
             },
-            itemCount: isSearch ? myPLanListResult.length : planList.length + 1,
+            itemCount: isSearch ? myPLanListResult.length : planList.length,
           )
         : SafeArea(
             child: SizedBox(
