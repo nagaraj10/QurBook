@@ -123,19 +123,19 @@ class NotificationModel {
           rawBody = message[parameters.PROP_RAWBODY];
         }
         if (message[parameters.doctorName] != null) {
-          type = message[parameters.doctorName];
+          doctorName = message[parameters.doctorName];
         }
         if (message[parameters.doctorPicture] != null) {
-          eventId = message[parameters.doctorPicture];
+          doctorPicture = message[parameters.doctorPicture];
         }
         if (message[parameters.strPatientId] != null) {
-          rawTitle = message[parameters.strPatientId];
+          patientId = message[parameters.strPatientId];
         }
         if (message[parameters.patientName] != null) {
-          rawBody = message[parameters.patientName];
+          patientName = message[parameters.patientName];
         }
         if (message[parameters.patientPicture] != null) {
-          rawBody = message[parameters.patientPicture];
+          patientPicture = message[parameters.patientPicture];
         }
         if (message[parameters.gcmEventId] != null) {
           eventId = message[parameters.gcmEventId];
@@ -145,8 +145,12 @@ class NotificationModel {
     setData(messageFromNative);
     if (redirect.contains('|')) {
       final split = redirect.split('|');
-      redirectData = {for (int i = 0; i < split.length; i++) i: split[i]};
-      redirectData[split.length] = healthRecordMetaIds;
+      if (split.first == 'sheela') {
+        redirect = split.first;
+      } else {
+        redirectData = {for (int i = 0; i < split.length; i++) i: split[i]};
+        redirectData[split.length] = healthRecordMetaIds;
+      }
     }
     if (title == null) {
       title = "title";
@@ -220,19 +224,19 @@ class NotificationModel {
       rawBody = message[parameters.PROP_RAWBODY];
     }
     if (message[parameters.doctorName] != null) {
-      type = message[parameters.doctorName];
+      doctorName = message[parameters.doctorName];
     }
     if (message[parameters.doctorPicture] != null) {
-      eventId = message[parameters.doctorPicture];
+      doctorPicture = message[parameters.doctorPicture];
     }
     if (message[parameters.strPatientId] != null) {
-      rawTitle = message[parameters.strPatientId];
+      patientId = message[parameters.strPatientId];
     }
     if (message[parameters.patientName] != null) {
-      rawBody = message[parameters.patientName];
+      patientName = message[parameters.patientName];
     }
     if (message[parameters.patientPicture] != null) {
-      rawBody = message[parameters.patientPicture];
+      patientPicture = message[parameters.patientPicture];
     }
   }
 }
