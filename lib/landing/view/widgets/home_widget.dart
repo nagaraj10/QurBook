@@ -11,6 +11,7 @@ import 'package:myfhb/landing/view_model/landing_view_model.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import 'package:myfhb/telehealth/features/chat/view/chat.dart';
 import 'package:provider/provider.dart';
 
 import 'landing_card.dart';
@@ -59,6 +60,8 @@ class HomeWidget extends StatelessWidget {
                     var dashboardData = landingViewModel?.dashboardData;
                     var activePlanCount =
                         dashboardData?.activePlans?.activePlanCount ?? 0;
+                    var activeDevices =
+                        dashboardData?.vitalsDetails?.activeDevice ?? 0;
                     var activeDues = dashboardData?.regimenDue?.activeDues ?? 0;
                     var activeFamilyMembers =
                         dashboardData?.familyMember?.noOfFamilyMembers ?? 0;
@@ -68,6 +71,14 @@ class HomeWidget extends StatelessWidget {
                             (dashboardData?.providers?.lab ?? 0);
                     var availableVideos =
                         (dashboardData?.helperVideos?.length ?? 0);
+                    var availableCareProvider =
+                        (dashboardData?.careGiverInfo?.doctorId != null
+                            ? 1
+                            : 0);
+                    var careProviderName =
+                        (dashboardData?.careGiverInfo?.firstName ?? '') +
+                            ' ' +
+                            (dashboardData?.careGiverInfo?.lastName ?? '');
                     return GridView(
                       padding: EdgeInsets.symmetric(
                         vertical: 10.0.h,
@@ -192,14 +203,18 @@ class HomeWidget extends StatelessWidget {
                         LandingCard(
                           title: constants.strVitals,
                           lastStatus: '',
-                          alerts: constants.strVitalsDevice,
+                          alerts: activeDevices > 0
+                              ? '${activeDevices} ${constants.strVitalsDevice}'
+                              : constants.strVitalsNoDevice,
                           icon: variable.icon_record_my_vitals,
                           color: Color(CommonConstants.ThermolightColor),
-                          onPressed: () {
-                            Get.toNamed(rt_Devices);
+                          onPressed: () async {
+                            await Get.toNamed(rt_Devices);
+                            await landingViewModel.getQurPlanDashBoard();
                           },
-                          onAddPressed: () {
-                            Get.toNamed(rt_Devices);
+                          onAddPressed: () async {
+                            await Get.toNamed(rt_Devices);
+                            await landingViewModel.getQurPlanDashBoard();
                           },
                         ),
                         LandingCard(
@@ -351,10 +366,35 @@ class HomeWidget extends StatelessWidget {
                           title: constants.strChatWithUs,
                           lastStatus: '',
                           isEnabled: activePlanCount > 0,
-                          alerts: '',
+                          alerts: availableCareProvider > 0 &&
+                                  (careProviderName?.trim()?.isNotEmpty ??
+                                      false)
+                              ? '$careProviderName ${constants.strChatAvailable}'
+                              : constants.strChatNotAvailable,
                           icon: variable.icon_chat_dash,
                           color: Color(CommonConstants.bpDarkColor),
-                          onPressed: () {},
+                          onPressed: () {
+                            if (availableCareProvider > 0) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Chat(
+                                    peerId:
+                                        dashboardData?.careGiverInfo?.doctorId,
+                                    peerAvatar: dashboardData
+                                            ?.careGiverInfo?.profilePic ??
+                                        '',
+                                    peerName: careProviderName,
+                                    lastDate: null,
+                                    patientId: '',
+                                    patientName: '',
+                                    patientPicture: '',
+                                    isFromVideoCall: false,
+                                  ),
+                                ),
+                              );
+                            }
+                          },
                         ),
                       ],
                     );

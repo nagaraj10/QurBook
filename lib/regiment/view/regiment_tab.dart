@@ -423,202 +423,100 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
               horizontal: 10.0.w,
               vertical: 5.0.h,
             ),
-            child: Visibility(
-              visible: _regimentViewModel.searchExpanded,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      _regimentViewModel.changeSearchExpanded(false);
-                    },
-                    child: Center(
-                      child: Icon(
-                        Icons.cancel,
-                        color: Colors.black,
-                        size: 30.0.sp,
-                      ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Flexible(
+                  child: Text(
+                    _regimentViewModel.regimentMode == RegimentMode.Schedule
+                        ? planActivities
+                        : planSymptoms,
+                    style: TextStyle(
+                      fontSize: 16.0.sp,
+                      color: Color(CommonUtil().getMyPrimaryColor()),
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                  SizedBox(
-                    width: 10.0.w,
-                  ),
-                  Expanded(
-                    child: SearchWidget(
-                      searchController: searchController,
-                      searchFocus: searchFocus,
-                      onChanged: _regimentViewModel.onSearch,
-                      padding: 0.0,
-                    ),
-                  ),
-                ],
-              ),
-              replacement: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Flexible(
-                    child: Text(
-                      _regimentViewModel.regimentMode == RegimentMode.Schedule
-                          ? planActivities
-                          : planSymptoms,
-                      style: TextStyle(
-                        fontSize: 16.0.sp,
-                        color: Color(CommonUtil().getMyPrimaryColor()),
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      Visibility(
-                        visible: _regimentViewModel.regimentMode ==
-                            RegimentMode.Schedule,
-                        // child: Padding(
-                        //   padding: EdgeInsets.only(
-                        //     right: 10.0.w,
-                        //   ),
-                        //   child: PopupMenuButton(
-                        //     itemBuilder: (BuildContext context) => [
-                        //       PopupMenuItem<RegimentFilter>(
-                        //         value: RegimentFilter.All,
-                        //         child: Row(
-                        //           mainAxisAlignment:
-                        //               MainAxisAlignment.spaceBetween,
-                        //           children: [
-                        //             Text(
-                        //               allActivities,
-                        //               style: TextStyle(
-                        //                 fontSize: 14.0.sp,
-                        //                 fontWeight: FontWeight.w500,
-                        //                 color: Colors.black,
-                        //               ),
-                        //             ),
-                        //             Radio(
-                        //               groupValue:
-                        //                   _regimentViewModel.regimentFilter,
-                        //               value: RegimentFilter.All,
-                        //               activeColor: Color(
-                        //                   CommonUtil().getMyPrimaryColor()),
-                        //               onChanged: (newFilter) {
-                        //                 _regimentViewModel
-                        //                     .changeFilter(newFilter);
-                        //                 Navigator.pop(context);
-                        //               },
-                        //             ),
-                        //           ],
-                        //         ),
-                        //       ),
-                        //       PopupMenuItem<RegimentFilter>(
-                        //         value: RegimentFilter.Missed,
-                        //         child: Row(
-                        //           mainAxisAlignment:
-                        //               MainAxisAlignment.spaceBetween,
-                        //           children: [
-                        //             Text(
-                        //               missedActivities,
-                        //               style: TextStyle(
-                        //                 fontSize: 14.0.sp,
-                        //                 fontWeight: FontWeight.w500,
-                        //                 color: Colors.black,
-                        //               ),
-                        //             ),
-                        //             Radio(
-                        //               groupValue:
-                        //                   _regimentViewModel.regimentFilter,
-                        //               value: RegimentFilter.Missed,
-                        //               activeColor: Color(
-                        //                   CommonUtil().getMyPrimaryColor()),
-                        //               onChanged: (newFilter) {
-                        //                 _regimentViewModel
-                        //                     .changeFilter(newFilter);
-                        //                 Navigator.pop(context);
-                        //               },
-                        //             ),
-                        //           ],
-                        //         ),
-                        //       ),
-                        //     ],
-                        //     onSelected: (newFilter) {
-                        //       _regimentViewModel.changeFilter(newFilter);
-                        //     },
-                        //     child: Card(
-                        //       shape: RoundedRectangleBorder(
-                        //         borderRadius: BorderRadius.circular(20.0.sp),
-                        //       ),
-                        //       color: Color(CommonUtil().getMyPrimaryColor()),
-                        //       child: Padding(
-                        //         padding: EdgeInsets.symmetric(
-                        //           vertical: 2.0.h,
-                        //           horizontal: 10.0.w,
-                        //         ),
-                        //         child: Text(
-                        //           filter,
-                        //           style: TextStyle(
-                        //             fontSize: 14.0.sp,
-                        //             fontWeight: FontWeight.w500,
-                        //             color: Colors.white,
-                        //           ),
-                        //         ),
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ),
-                        child: Row(
-                          children: [
-                            Theme(
-                              data: Theme.of(context).copyWith(
-                                unselectedWidgetColor:
-                                    Color(CommonUtil().getMyPrimaryColor()),
-                              ),
-                              child: Checkbox(
-                                materialTapTargetSize:
-                                    MaterialTapTargetSize.shrinkWrap,
-                                value: _regimentViewModel.regimentFilter ==
-                                    RegimentFilter.Missed,
-                                activeColor:
-                                    Color(CommonUtil().getMyPrimaryColor()),
-                                onChanged: (isMissed) {
-                                  _regimentViewModel.changeFilter(isMissed
-                                      ? RegimentFilter.Missed
-                                      : RegimentFilter.All);
-                                },
-                              ),
+                ),
+                Row(
+                  children: [
+                    Visibility(
+                      visible: _regimentViewModel.regimentMode ==
+                          RegimentMode.Schedule,
+                      child: Row(
+                        children: [
+                          Theme(
+                            data: Theme.of(context).copyWith(
+                              unselectedWidgetColor:
+                                  Color(CommonUtil().getMyPrimaryColor()),
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                right: 15.0.w,
-                              ),
-                              child: Text(
-                                missedActivities,
-                                style: TextStyle(
-                                  fontSize: 14.0.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color:
-                                      Color(CommonUtil().getMyPrimaryColor()),
-                                ),
-                              ),
+                            child: Checkbox(
+                              materialTapTargetSize:
+                                  MaterialTapTargetSize.shrinkWrap,
+                              value: _regimentViewModel.regimentFilter ==
+                                  RegimentFilter.Missed,
+                              activeColor:
+                                  Color(CommonUtil().getMyPrimaryColor()),
+                              onChanged: (isMissed) {
+                                _regimentViewModel.changeFilter(isMissed
+                                    ? RegimentFilter.Missed
+                                    : RegimentFilter.All);
+                              },
                             ),
-                          ],
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          _regimentViewModel.changeSearchExpanded(true);
-                        },
-                        child: Center(
-                          child: Icon(
-                            Icons.search,
-                            color: Colors.black,
-                            size: 30.0.sp,
                           ),
-                        ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                              right: 15.0.w,
+                            ),
+                            child: Text(
+                              missedActivities,
+                              style: TextStyle(
+                                fontSize: 14.0.sp,
+                                fontWeight: FontWeight.w500,
+                                color: Color(CommonUtil().getMyPrimaryColor()),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
+                    // InkWell(
+                    //   onTap: () {
+                    //     _regimentViewModel.changeSearchExpanded(true);
+                    //   },
+                    //   child: Center(
+                    //     child: Icon(
+                    //       Icons.search,
+                    //       color: Colors.black,
+                    //       size: 30.0.sp,
+                    //     ),
+                    //   ),
+                    // ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(
+              left: 10.0.w,
+              right: 10.0.w,
+              bottom: 10.0.h,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: SearchWidget(
+                    searchController: searchController,
+                    searchFocus: searchFocus,
+                    onChanged: _regimentViewModel.onSearch,
+                    padding: 0.0,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
           Expanded(

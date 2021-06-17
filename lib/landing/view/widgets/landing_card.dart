@@ -77,84 +77,62 @@ class LandingCard extends StatelessWidget {
                           // fontWeight: FontWeight.w600,
                         ),
                       ),
-                      Visibility(
-                        visible: isEnabled &&
-                            ((lastStatus ?? '').isNotEmpty ||
-                                (eventName ?? '').isNotEmpty),
-                        child: Text(
-                          strLastEntered,
-                          style: TextStyle(
-                            fontSize: 14.0.sp,
-                            color: Colors.black54,
-                            fontWeight: FontWeight.w500,
-                            height: 1.0.h,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      Visibility(
-                        visible: isEnabled && (eventName ?? '').isNotEmpty,
-                        child: InkWell(
-                          onTap: onEventPressed ?? null,
-                          child: Text(
-                            (eventName ?? '').isNotEmpty
-                                ? toBeginningOfSentenceCase(
-                                    eventName?.trim() ?? '')
-                                : '',
-                            style: TextStyle(
-                              fontSize: 14.0.sp,
-                              color: color,
-                              decoration: TextDecoration.underline,
-                              height: 1.0.h,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Visibility(
+                            visible: isEnabled &&
+                                ((lastStatus ?? '').isNotEmpty ||
+                                    (eventName ?? '').isNotEmpty),
+                            child: Text(
+                              strLastEntered,
+                              style: TextStyle(
+                                fontSize: 14.0.sp,
+                                color: Colors.black54,
+                                fontWeight: FontWeight.w500,
+                                height: 1.0.h,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
                           ),
-                        ),
-                      ),
-                      Visibility(
-                        visible: (lastStatus ?? '').isNotEmpty,
-                        child: Text(
-                          lastStatus ?? '',
-                          style: TextStyle(
-                            fontSize: 14.0.sp,
-                            color: Colors.black54,
-                            fontWeight: FontWeight.w500,
-                            decoration: TextDecoration.none,
-                            height: 1.0.h,
+                          Visibility(
+                            visible: isEnabled && (eventName ?? '').isNotEmpty,
+                            child: InkWell(
+                              onTap: onEventPressed ?? null,
+                              child: Text(
+                                (eventName ?? '').isNotEmpty
+                                    ? toBeginningOfSentenceCase(
+                                        eventName?.trim() ?? '')
+                                    : '',
+                                style: TextStyle(
+                                  fontSize: 14.0.sp,
+                                  color: color,
+                                  decoration: TextDecoration.underline,
+                                  height: 1.3.h,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
                           ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                          Visibility(
+                            visible: isEnabled && (lastStatus ?? '').isNotEmpty,
+                            child: Text(
+                              lastStatus ?? '',
+                              style: TextStyle(
+                                fontSize: 14.0.sp,
+                                color: Colors.black54,
+                                fontWeight: FontWeight.w500,
+                                decoration: TextDecoration.none,
+                                height: 1.3.h,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
                       ),
-                      // Visibility(
-                      //   visible: isEnabled && (eventName ?? '').isNotEmpty,
-                      //   child: Text(
-                      //     eventName?.trim() ?? '',
-                      //     style: TextStyle(
-                      //       fontSize: 14.0.sp,
-                      //       color: Colors.indigoAccent,
-                      //       fontWeight: FontWeight.w500,
-                      //       decoration: TextDecoration.underline,
-                      //     ),
-                      //     maxLines: 1,
-                      //     overflow: TextOverflow.ellipsis,
-                      //   ),
-                      // ),
-                      // Visibility(
-                      //   visible: isEnabled && (lastStatus ?? '').isNotEmpty,
-                      //   child: Text(
-                      //     lastStatus ?? '',
-                      //     style: TextStyle(
-                      //       fontSize: 14.0.sp,
-                      //       color: Colors.black54,
-                      //       fontWeight: FontWeight.w500,
-                      //     ),
-                      //     maxLines: 4,
-                      //     overflow: TextOverflow.ellipsis,
-                      //   ),
-                      // ),
                       Visibility(
                         visible: isEnabled && (alerts ?? '').isNotEmpty,
                         child: InkWell(
@@ -171,7 +149,7 @@ class LandingCard extends StatelessWidget {
                                   ? TextDecoration.underline
                                   : TextDecoration.none,
                             ),
-                            maxLines: 2,
+                            maxLines: 3,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
