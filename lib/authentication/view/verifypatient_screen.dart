@@ -53,7 +53,8 @@ class VerifyPatient extends StatefulWidget {
       this.relationship,
       this.userConfirm,
       this.userId,
-      this.dataForResendOtp});
+      this.dataForResendOtp,
+      this.emailId});
 
   final String PhoneNumber;
   final String from;
@@ -64,6 +65,7 @@ class VerifyPatient extends StatefulWidget {
   final bool isPrimaryNoSelected;
   final bool userConfirm;
   final String userId;
+  final String emailId;
   Map<String, dynamic> dataForResendOtp;
   @override
   _VerifyPatientState createState() => _VerifyPatientState();
@@ -596,7 +598,8 @@ class _VerifyPatientState extends State<VerifyPatient> {
       FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
       final token = await _firebaseMessaging.getToken();
       CommonUtil()
-          .sendDeviceToken(userId, '', user_mobile_no, token, true)
+          .sendDeviceToken(
+              userId, widget.emailId, widget.PhoneNumber, token, true)
           .then((value) {
         if (value != null) {
           Future.delayed(Duration(seconds: 3), () {

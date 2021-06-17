@@ -27,6 +27,7 @@ const String KEY_CATEGORYID = 'categoryID';
 const String KEY_CATEGORYLIST = 'categoryList';
 const String KEY_PROFILE = 'profile';
 const String KEY_USERID = 'userID';
+const String KEY_LASTLOGGEDTIME = 'lastLoggedIn';
 const String KEY_AUTHTOKEN = 'authToken';
 const String KEY_FAMILYMEMBERID = 'familyMemberId';
 const String KEY_IDDOCSCATEGORYTYPE = 'idDocsCategoryType';
