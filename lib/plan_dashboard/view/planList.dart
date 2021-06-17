@@ -37,7 +37,8 @@ class PlanList extends StatefulWidget {
 
   final List<PlanListResult> planListResult;
 
-  PlanList(this.categoryId, this.planListResult, this.hosIcon, this.catIcon,this.diseases);
+  PlanList(this.categoryId, this.planListResult, this.hosIcon, this.catIcon,
+      this.diseases);
 }
 
 class _MyPlanState extends State<PlanList> {
@@ -55,6 +56,7 @@ class _MyPlanState extends State<PlanList> {
   List<PlanListResult> planListResult;
   bool isSelected = false;
   List<PlanListResult> planListUniq = [];
+
   //final GlobalKey _searchKey = GlobalKey();
   //final GlobalKey _hospitalKey = GlobalKey();
   final GlobalKey _subscribeKey = GlobalKey();
@@ -161,7 +163,8 @@ class _MyPlanState extends State<PlanList> {
     isSelected = false;
     if (planList != null && planList.length > 0) {
       planList.where((element1) {
-        return element1?.metadata?.diseases == diseases;
+        return element1?.packcatid == categoryId &&
+            (element1?.metadata?.diseases == diseases);
       }).forEach((element) {
         if (element.isSubscribed == '1') {
           isSelected = true;

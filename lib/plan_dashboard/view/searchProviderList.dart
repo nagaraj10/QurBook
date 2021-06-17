@@ -163,9 +163,17 @@ class _SearchProviderList extends State<SearchProviderList> {
 
     if (planList != null && planList.length > 0) {
       planList.where((element1) {
-        return (element1?.metadata?.diseases ?? '')== diseases;
+        return (element1?.metadata?.diseases ?? '') == diseases;
       }).forEach((element) {
-        planListUniq.add(element);
+        bool keysUniq = true;
+        planListUniq.forEach((catElement) {
+          if (catElement?.plinkid == element.plinkid) {
+            keysUniq = false;
+          }
+        });
+        if (keysUniq) {
+          planListUniq.add(element);
+        }
       });
     }
 
@@ -240,7 +248,9 @@ class _SearchProviderList extends State<SearchProviderList> {
           context,
           MaterialPageRoute(
               builder: (context) => CategoryList(
-                  planList[i].providerid, planList[i]?.metadata?.icon,planList[i]?.metadata?.diseases)),
+                  planList[i].providerid,
+                  planList[i]?.metadata?.icon,
+                  planList[i]?.metadata?.diseases)),
         ).then((value) {
           setState(() {});
         });
