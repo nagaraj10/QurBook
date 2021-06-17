@@ -5,6 +5,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart';
+import 'package:myfhb/landing/view/landing_arguments.dart';
 import 'package:myfhb/regiment/view/regiment_tab.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
@@ -57,7 +58,12 @@ class RegimentScreen extends StatelessWidget {
     if (Navigator.canPop(context)) {
       Get.back();
     } else {
-      Get.offAllNamed(rt_Landing);
+      Get.offAllNamed(
+        rt_Landing,
+        arguments: LandingArguments(
+          needFreshLoad: false,
+        ),
+      );
     }
   }
 }
