@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'MetaDataForHospitalLogo.dart';
 import 'MetaDataForURL.dart';
 
 class PlanListModel {
@@ -42,6 +43,7 @@ class PlanListResult {
   String ts;
   String providerid;
   String providerName;
+  String providerDesc;
   String plinkid;
   String packcatid;
   String catname;
@@ -52,6 +54,7 @@ class PlanListResult {
   String startDate;
   MetaDataForURL metadata;
   MetaDataForURL catmetadata;
+  MetaDataForHospitalLogo providerMetadata;
 
   PlanListResult(
       {this.packageid,
@@ -76,7 +79,8 @@ class PlanListResult {
       this.isSubscribed,
       this.startDate,
       this.metadata,
-      this.catmetadata});
+      this.catmetadata,
+      this.providerMetadata,this.providerDesc});
 
   factory PlanListResult.fromJson(Map<String, dynamic> json) {
     return PlanListResult(
@@ -93,6 +97,7 @@ class PlanListResult {
         ts: json['ts'],
         providerid: json['providerid'],
         providerName: json['provider_name'],
+        providerDesc: json['providerdescription'],
         plinkid: json['plinkid'],
         packcatid: json['packcatid'],
         catname: json['catname'],
@@ -108,6 +113,11 @@ class PlanListResult {
         catmetadata: json['catmetadata'] != null &&
                 json['catmetadata'].toString().isNotEmpty
             ? MetaDataForURL.fromJson(jsonDecode(json["catmetadata"] ?? '{}'))
+            : null,
+        providerMetadata: json['providermetadata'] != null &&
+                json['providermetadata'].toString().isNotEmpty
+            ? MetaDataForHospitalLogo.fromJson(
+                jsonDecode(json["providermetadata"] ?? '{}'))
             : null);
   }
 
@@ -126,6 +136,7 @@ class PlanListResult {
     data['ts'] = this.ts;
     data['providerid'] = this.providerid;
     data['provider_name'] = this.providerName;
+    data['providerdescription'] = this.providerDesc;
     data['plinkid'] = this.plinkid;
     data['packcatid'] = this.packcatid;
     data['catname'] = this.catname;
@@ -136,6 +147,7 @@ class PlanListResult {
     data['startdate'] = this.startDate;
     data['metadata'] = this.metadata;
     data['catmetadata'] = this.catmetadata;
+    data['providermetadata'] = this.providerMetadata;
     return data;
   }
 }

@@ -283,10 +283,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     if (sharedByMeList == null) {
       sharedByMeList = new List();
       sharedByMeList
-          .add(new SharedByUsers(id: myProfile.result.id, nickName: 'Self'));
+          .add(new SharedByUsers(id: myProfile?.result?.id, nickName: 'Self'));
     } else {
       sharedByMeList.insert(
-          0, new SharedByUsers(id: myProfile.result.id, nickName: 'Self'));
+          0, new SharedByUsers(id: myProfile?.result?.id, nickName: 'Self'));
     }
     if (_familyNames.length == 0) {
       for (int i = 0; i < sharedByMeList.length; i++) {
@@ -478,12 +478,17 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         message: checkSlots,
         borderRadius: 6.0,
         backgroundColor: Colors.white,
-        progressWidget: SizedBoxWithChild(
-            height: 25,
-            width: 25,
-            child: CircularProgressIndicator(
-                strokeWidth: 2.0,
-                backgroundColor: Color(new CommonUtil().getMyPrimaryColor()))),
+        progressWidget: SizedBox(
+          height: 1.sh,
+          child: Center(
+            child: SizedBox(
+                width: 30.0.h,
+                height: 30.0.h,
+                child: CircularProgressIndicator(
+                    strokeWidth: 1.5,
+                    backgroundColor: Color(new CommonUtil().getMyPrimaryColor()))),
+          ),
+        ),
         elevation: 6.0,
         insetAnimCurve: Curves.easeInOut,
         progress: 0.0,
@@ -880,11 +885,13 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: <Widget>[
-                              TextWidget(
-                                  text: redirectedToPaymentMessage,
-                                  fontsize: 16.0.sp,
-                                  fontWeight: FontWeight.w500,
-                                  colors: Colors.grey[600]),
+                              Center(
+                                child: TextWidget(
+                                    text: redirectedToPaymentMessage,
+                                    fontsize: 16.0.sp,
+                                    fontWeight: FontWeight.w500,
+                                    colors: Colors.grey[600]),
+                              ),
                               SizedBoxWidget(
                                 height: 10,
                               ),

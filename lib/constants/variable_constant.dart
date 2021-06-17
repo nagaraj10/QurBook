@@ -134,6 +134,13 @@ const String strCallLab = 'laboratories/';
 
 //ForIcons
 
+const String icon_qurplan = 'assets/launcher/qurplan.png';
+const String icon_languageIntro = 'assets/IntroScreensImages/Intro01.png';
+const String icon_qurplanIntro = 'assets/IntroScreensImages/Intro03.png';
+const String icon_ReminderIntro = 'assets/IntroScreensImages/Intro05.png';
+const String icon_SheelaIntro = 'assets/IntroScreensImages/Intro02.png';
+const String icon_TrustedAnswerIntro = 'assets/IntroScreensImages/Intro04.png';
+const String icon_StickPlanIntro = 'assets/IntroScreensImages/common.png';
 const String icon_fhb = 'assets/launcher/myfhb.png';
 const String icon_splash_logo = 'assets/launcher/myfhb.png';
 const String icon_attach = 'assets/icons/attach.png';
@@ -168,6 +175,24 @@ const String icon_more = 'assets/navicons/more.png';
 const String icon_no_internet = 'assets/no_internet.png';
 const String icon_something_wrong = 'assets/something-wrong.png';
 const String icon_refresh_dash = 'assets/icons/refresh_dash.png';
+
+//Dashboard
+const String icon_call = 'assets/dashboard/call.svg';
+const String icon_chat_dash = 'assets/dashboard/chat.svg';
+const String icon_check_symptoms = 'assets/dashboard/check-symptoms.svg';
+const String icon_how_to_use = 'assets/dashboard/how-to-use.svg';
+const String icon_my_family = 'assets/dashboard/my-family.svg';
+const String icon_my_family_menu = 'assets/dashboard/my-family-old.svg';
+const String icon_my_health_regimen = 'assets/dashboard/my-health-regimen.svg';
+// const String icon_check_symptoms = 'assets/dashboard/symptoms.svg';
+// const String icon_how_to_use = 'assets/dashboard/information.svg';
+// const String icon_my_family = 'assets/dashboard/home.svg';
+// const String icon_my_health_regimen = 'assets/dashboard/clipboard.svg';
+const String icon_my_plan = 'assets/dashboard/my-plan.svg';
+const String icon_my_providers = 'assets/dashboard/my-providers.svg';
+const String icon_record_my_vitals = 'assets/dashboard/record-my-vitals.svg';
+const String icon_logout = 'assets/icons/logout.svg';
+const String icon_settings = 'assets/icons/settings.svg';
 
 //For Apple Health Settings Info
 const String apple_health_settings_info = 'assets/settings/health.jpg';

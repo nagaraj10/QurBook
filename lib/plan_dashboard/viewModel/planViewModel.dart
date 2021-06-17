@@ -18,8 +18,9 @@ class PlanViewModel extends ChangeNotifier {
 
   Future<PlanListModel> getPlanList(String providerId) async {
     try {
+      var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
       PlanListModel myPlanListModel =
-      await myPlanService.getPlanList(providerId);
+      await myPlanService.getPlanList(providerId,userid);
       if(myPlanListModel.isSuccess){
         myPLanListResult = myPlanListModel.result;
       }
@@ -42,11 +43,26 @@ class PlanViewModel extends ChangeNotifier {
     return filterDoctorData;
   }
 
+  List<PlanListResult> getSearchDiseases(String title,List<PlanListResult> planListOld) {
+    List<PlanListResult> filterDoctorData = new List();
+    for (PlanListResult planList in planListOld) {
+      if (planList?.metadata?.diseases != null && planList?.metadata?.diseases != '') {
+        if (planList?.metadata?.diseases
+            .toLowerCase()
+            .trim()
+            .contains(title.toLowerCase().trim())) {
+          filterDoctorData.add(planList);
+        }
+      }
+    }
+    return filterDoctorData;
+  }
+
   List<PlanListResult> getSearchForPlanList(String title,List<PlanListResult> planListOld) {
     List<PlanListResult> filterDoctorData = new List();
     for (PlanListResult planList in planListOld) {
-      if (planList.title != null && planList.title != '') {
-        if (planList.title
+      if (planList.providerName != null && planList.providerName != '') {
+        if (planList.providerName
             .toLowerCase()
             .trim()
             .contains(title.toLowerCase().trim())) {
@@ -63,6 +79,36 @@ class PlanViewModel extends ChangeNotifier {
       await searchListService.getSearchList(title);
       return searchListModel;
     } catch (e) {}
+  }
+
+
+  Future<SearchListModel> getUserSearchListInit() async {
+    try {
+      var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      SearchListModel searchListModel =
+      await searchListService.getUserProviderList(userid);
+      return searchListModel;
+    } catch (e) {}
+  }
+
+  List<PlanListResult> getFilterForProvider(
+      String title, List<PlanListResult> planListOld) {
+    List<PlanListResult> filterSearch = new List();
+    for (PlanListResult searchList in planListOld) {
+      if (searchList?.providerName != null && searchList?.providerName != '') {
+        if (searchList?.providerName
+            .toLowerCase()
+            .trim()
+            .contains(title.toLowerCase().trim()) ||
+            searchList?.providerDesc
+                .toLowerCase()
+                .trim()
+                .contains(title.toLowerCase().trim())) {
+          filterSearch.add(searchList);
+        }
+      }
+    }
+    return filterSearch;
   }
 
 }

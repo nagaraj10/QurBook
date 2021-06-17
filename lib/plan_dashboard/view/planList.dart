@@ -33,10 +33,12 @@ class PlanList extends StatefulWidget {
   final String categoryId;
   final String hosIcon;
   final String catIcon;
+  final String diseases;
 
   final List<PlanListResult> planListResult;
 
-  PlanList(this.categoryId, this.planListResult, this.hosIcon, this.catIcon);
+  PlanList(this.categoryId, this.planListResult, this.hosIcon, this.catIcon,
+      this.diseases);
 }
 
 class _MyPlanState extends State<PlanList> {
@@ -50,9 +52,11 @@ class _MyPlanState extends State<PlanList> {
   String categoryId = '';
   String hosIcon = '';
   String catIcon = '';
+  String diseases = '';
   List<PlanListResult> planListResult;
   bool isSelected = false;
   List<PlanListResult> planListUniq = [];
+
   //final GlobalKey _searchKey = GlobalKey();
   //final GlobalKey _hospitalKey = GlobalKey();
   final GlobalKey _subscribeKey = GlobalKey();
@@ -73,6 +77,7 @@ class _MyPlanState extends State<PlanList> {
     categoryId = widget.categoryId;
     hosIcon = widget.hosIcon;
     catIcon = widget.catIcon;
+    diseases = widget.diseases;
     planListResult = widget.planListResult;
     PreferenceUtil.init();
 
@@ -118,45 +123,27 @@ class _MyPlanState extends State<PlanList> {
               ),
             ),
           ),
-          body: Visibility(
-            visible:
-                Provider.of<RegimentViewModel>(context).regimentsDataAvailable,
-            child: Container(
-              child: Column(
-                children: [
-                  SearchWidget(
-                    onChanged: (title) {
-                      if (title != '' && title.length > 2) {
-                        isSearch = true;
-                        onSearchedNew(title, planListUniq);
-                      } else {
-                        setState(() {
-                          isSearch = false;
-                        });
-                      }
-                    },
-                  ),
-                  SizedBox(
-                    height: 5.0.h,
-                  ),
-                  Expanded(child: planList(planListResult)),
-                  SizedBox(height: 10)
-                ],
-              ),
-            ),
-            replacement: Center(
-              child: Padding(
-                padding: EdgeInsets.all(
-                  10.0.sp,
+          body: Container(
+            child: Column(
+              children: [
+                SearchWidget(
+                  onChanged: (title) {
+                    if (title != '' && title.length > 2) {
+                      isSearch = true;
+                      onSearchedNew(title, planListUniq);
+                    } else {
+                      setState(() {
+                        isSearch = false;
+                      });
+                    }
+                  },
                 ),
-                child: Text(
-                  Constants.mplansForFamily,
-                  style: TextStyle(
-                    fontSize: 16.0.sp,
-                  ),
-                  textAlign: TextAlign.center,
+                SizedBox(
+                  height: 5.0.h,
                 ),
-              ),
+                Expanded(child: planList(planListResult)),
+                SizedBox(height: 10)
+              ],
             ),
           ));
     }));
@@ -176,7 +163,8 @@ class _MyPlanState extends State<PlanList> {
     isSelected = false;
     if (planList != null && planList.length > 0) {
       planList.where((element1) {
-        return element1.packcatid == categoryId;
+        return element1?.packcatid == categoryId &&
+            (element1?.metadata?.diseases == diseases);
       }).forEach((element) {
         if (element.isSubscribed == '1') {
           isSelected = true;

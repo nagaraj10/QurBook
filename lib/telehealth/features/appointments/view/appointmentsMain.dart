@@ -15,6 +15,14 @@ import 'package:myfhb/telehealth/features/appointments/constants/appointments_co
 import 'package:provider/provider.dart';
 
 class AppointmentsMain extends StatefulWidget {
+  AppointmentsMain({
+    this.isHome = false,
+    this.onBackPressed,
+  });
+
+  final bool isHome;
+  final Function onBackPressed;
+
   @override
   _AppointmentsMainState createState() => _AppointmentsMainState();
 }
@@ -22,22 +30,32 @@ class AppointmentsMain extends StatefulWidget {
 class _AppointmentsMainState extends State<AppointmentsMain> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        /*appBar: appBar(),*/
-        body: MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (context) => AppointmentsListViewModel(),
+    return WillPopScope(
+      onWillPop: () {
+        if(widget.isHome){
+          widget.onBackPressed();
+        }
+        return Future.value(widget.isHome ? false : true);
+      },
+      child: Scaffold(
+          /*appBar: appBar(),*/
+          body: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+            create: (context) => AppointmentsListViewModel(),
+          ),
+          ChangeNotifierProvider<CancelAppointmentViewModel>(
+            create: (_) => CancelAppointmentViewModel(),
+          ),
+          ChangeNotifierProvider<ResheduleAppointmentViewModel>(
+            create: (_) => ResheduleAppointmentViewModel(),
+          ),
+        ],
+        child: Appointments(
+          isHome: widget.isHome,
         ),
-        ChangeNotifierProvider<CancelAppointmentViewModel>(
-          create: (_) => CancelAppointmentViewModel(),
-        ),
-        ChangeNotifierProvider<ResheduleAppointmentViewModel>(
-          create: (_) => ResheduleAppointmentViewModel(),
-        ),
-      ],
-      child: Appointments(),
-    ));
+      )),
+    );
   }
 
   /* Widget appBar() {

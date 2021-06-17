@@ -78,7 +78,7 @@ const String strEmailCantEmpty = 'Please Enter Valid Email';
 const String strPhoneValidText = 'Please Enter Valid Phone Number';
 const String strUserNameCantEmpty = 'Please Enter Valid User Name';
 const String strUserNameValid = 'Please Enter Username in lowercase';
-const String strOtpCantEmpty = 'Please Enter Valid Otp';
+const String strOtpCantEmpty = 'Please Enter Valid OTP';
 const String strValidOtp = 'Otp should have six characters';
 const String strPasswordMultiChecks =
     'Password should one special character, number, lowercase and uppercase alphabets';
@@ -153,13 +153,13 @@ const String strFirebaseToken = 'Firebase Token from Login Page';
 const String strNetworkIssue = 'Please Check Network Connection';
 const String strresendOtp = 'Resend OTP';
 const String strVerifyCall = 'Confirm via Call';
-const String strOrText = 'or';
+const String strOrText = 'OR';
 const String strOtpNotReceived =
     'Don\'t you receive the OTP ? you can re-try in ';
-const String strCallFromNumber =
-    'Call from your registered number to complete the process';
 const String strCallDirect =
-    'Click & call anyone of the below numbers to complete the process';
+    'Please call from your registered mobile number to a phone number below. Thank you for your understanding';
+const String primaryNumber = 'Primary Number';
+const String alternateNumber = 'Alternate Number';
 
 //Strings used in ChangePassword
 const String strNewPassword = 'newPassword';

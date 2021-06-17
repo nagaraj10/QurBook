@@ -29,7 +29,7 @@ class _TabBarDemoState extends State<MyProvidersMain>
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
   TabController _controller;
   int _selectedIndex = 0;
-
+  bool isRefresh = true;
   @override
   void initState() {
     // TODO: implement initState
@@ -77,20 +77,22 @@ class _TabBarDemoState extends State<MyProvidersMain>
       body: TabBarView(
         controller: _controller,
         children: [
-          Scaffold(
-            body: ChangeNotifierProvider(
+          Container(
+            child: ChangeNotifierProvider(
               create: (context) => MyProviderViewModel(),
               child: MyProviders(
+                isRefresh: isRefresh,
                 closePage: (value) {
                   Navigator.pop(context);
                 },
               ),
             ),
           ),
-          Scaffold(
-            body: ChangeNotifierProvider(
+          Container(
+            child: ChangeNotifierProvider(
               create: (context) => MyProviderViewModel(),
               child: MyProvidersHospitals(
+                isRefresh: isRefresh,
                 closePage: (value) {
                   Navigator.pop(context);
                 },
@@ -123,27 +125,10 @@ class _TabBarDemoState extends State<MyProvidersMain>
 
   void callBackToRefresh() {
     //myProvidersResponseList = null;
+    setState(() {
+      isRefresh = false;
+    });
+    print('Came hereee');
     (context as Element).markNeedsBuild();
   }
 }
-
-/*class MyProvidersMain extends StatefulWidget {
-  @override
-  _MyProvidersMainState createState() => _MyProvidersMainState();
-}
-
-class _MyProvidersMainState extends State<MyProvidersMain> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: ChangeNotifierProvider(
-        create: (context) => MyProviderViewModel(),
-        child: MyProviders(
-          closePage: (value) {
-            Navigator.pop(context);
-          },
-        ),
-      ),
-    );
-  }
-}*/

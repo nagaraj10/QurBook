@@ -161,7 +161,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     _addFamilyUserInfoRepository = new AddFamilyUserInfoRepository();
     addFamilyUserInfoBloc
         .getDeviceSelectionValues()
-        .then((value) => fetchUserProfileInfo());
+        .then((value) {
+          fetchUserProfileInfo();
+    });
     setValuesInEditText();
 
     languageBlock = new LanguageRepository();
@@ -181,7 +183,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   fetchUserProfileInfo() async {
     addFamilyUserInfoRepository = new AddFamilyUserInfoRepository();
-    var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+    var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     myProfile = await addFamilyUserInfoRepository.getMyProfileInfoNew(userid);
 
     return myProfile;
@@ -1611,7 +1613,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           new UserProfileSettingCollection3();
       ProfileSetting profileSetting = new ProfileSetting();
       userProfileSettingCollection =
-          widget.arguments.myProfileResult.userProfileSettingCollection3;
+          addFamilyUserInfoBloc.myprofileObject.result.userProfileSettingCollection3;
       if (userProfileSettingCollection.length > 0) {
         userProfileSettingCollection3Obj =
             myProfile.result.userProfileSettingCollection3[0];
@@ -1758,7 +1760,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           } else {
             Navigator.pop(dialogContext);
             Alert.displayAlertPlain(context,
-                title: variable.Error, content: value.message);
+                title: variable.Error, content: value?.message ?? 'Error while updating');
           }
         });
       } else {
@@ -1846,7 +1848,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           } else {
             Navigator.pop(dialogContext);
             Alert.displayAlertPlain(context,
-                title: variable.Error, content: value.message);
+                title: variable.Error, content: value?.message ?? 'Error while updating');
           }
         });
       } else {

@@ -1437,6 +1437,7 @@ class ApiBaseHelper {
   Future<dynamic> getPlanList(String url, String jsonString) async {
     var responseJson;
     try {
+      print('refer:  '+url+jsonString);
       final response = await http.post(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersTimeSlot(),
           body: jsonString);
@@ -1453,6 +1454,20 @@ class ApiBaseHelper {
       final response = await http.post(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersTimeSlot(),
           body: jsonString);
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
+  Future<dynamic> getQurPlanDashBoard(String url) async {
+    var responseJson;
+    try {
+      final response = await http.get(
+        _baseUrl + url,
+        headers: await headerRequest.getRequestHeadersTimeSlot(),
+      );
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
@@ -1526,6 +1541,19 @@ class ApiBaseHelper {
       final response = await http.get(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersAuthAcceptNew());
       responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
+  Future<dynamic> addDoctorFromProvider(String url, String jsonData) async {
+    var responseJson;
+    try {
+      final response = await http.post(_baseUrl + url,
+          body: jsonData, headers: await headerRequest.getRequestHeader());
+      responseJson = _returnResponse(response);
+      print(responseJson.toString());
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
     }

@@ -3,16 +3,17 @@ import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/authentication/model/confirm_password_model.dart';
-import 'package:myfhb/authentication/view/authentication_validator.dart';
-import 'package:myfhb/authentication/view/login_screen.dart';
-import 'package:myfhb/authentication/view_model/patientauth_view_model.dart';
 import 'package:myfhb/authentication/model/confirm_password_model.dart'
     as confirmPasswordModel;
+import 'package:myfhb/authentication/view/authentication_validator.dart';
+import 'package:myfhb/authentication/view/login_screen.dart';
+import 'package:myfhb/authentication/view_model/otp_view_model.dart';
+import 'package:myfhb/authentication/view_model/patientauth_view_model.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/authentication/view_model/otp_view_model.dart';
+import 'package:myfhb/widgets/RaisedGradientButton.dart';
 import 'package:provider/provider.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
@@ -29,6 +30,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   var isLoading = false;
   FlutterToast toast = new FlutterToast();
   var _ChangePasswordKey = GlobalKey<FormState>();
+  var _otpKey = GlobalKey<FormState>();
   bool _autoValidateBool = false;
   AuthViewModel authViewModel;
   bool _isHidden = true;
@@ -61,41 +63,41 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     otpViewModel = Provider.of<OtpViewModel>(context);
     final height = 1.sh;
     return Scaffold(
-      body: Form(
-        key: _ChangePasswordKey,
-        child: Container(
-          height: height,
-          child: Stack(
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      SizedBox(height: height * .1),
-                      AssetImageWidget(
-                        icon: myFHB_logo,
-                        height: 120.0.h,
-                        width: 120.0.h,
+      body: Container(
+        height: height,
+        child: Stack(
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(height: height * .1),
+                    AssetImageWidget(
+                      icon: myFHB_logo,
+                      height: 120.0.h,
+                      width: 120.0.h,
+                    ),
+                    SizedBox(
+                      height: 10.0.h,
+                    ),
+                    Text(
+                      strChangePasswordText,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 14.0.sp,
                       ),
-                      SizedBox(
-                        height: 10.0.h,
-                      ),
-                      Text(
-                        strChangePasswordText,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 14.0.sp,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10.0.h,
-                      ),
-                      Column(
-                        children: [
-                          _changepasswordTextFields(
+                    ),
+                    SizedBox(
+                      height: 10.0.h,
+                    ),
+                    Column(
+                      children: [
+                        Form(
+                          key: _otpKey,
+                          child: _changepasswordTextFields(
                             TextFormField(
                               style: TextStyle(
                                 fontSize: 16.0.sp,
@@ -127,172 +129,186 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                               onSaved: (value) {},
                             ),
                           ),
-                          SizedBox(height: 10.0.h),
-                          _changepasswordTextFields(
-                            TextFormField(
-                              style: TextStyle(
-                                fontSize: 16.0.sp,
-                              ),
-                              autovalidate: _autoValidateBool,
-                              obscureText: _isHidden,
-                              decoration: InputDecoration(
-                                hintText: strNewPasswordHintTxt,
-                                labelText: strNewPasswordHintTxt,
-                                suffix: InkWell(
-                                  onTap: _togglePasswordView,
-                                  child: Icon(
-                                    _isHidden
-                                        ? Icons.visibility
-                                        : Icons.visibility_off,
-                                    size: 18,
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    borderSide: BorderSide(
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
-                                    )),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  borderSide: BorderSide(
-                                    color:
-                                        Color(CommonUtil().getMyPrimaryColor()),
-                                  ),
-                                ),
-                                errorMaxLines: 2,
-                              ),
-                              validator: (value) {
-                                return AuthenticationValidator()
-                                    .passwordValidation(value, patternPassword,
-                                        strPassCantEmpty);
-                              },
-                              controller: NewPasswordController,
-                              onSaved: (value) {},
-                            ),
-                          ),
-                          SizedBox(height: 10.0.h),
-                          _changepasswordTextFields(
-                            TextFormField(
-                              style: TextStyle(
-                                fontSize: 16.0.sp,
-                              ),
-                              autovalidate: _autoValidateBool,
-                              obscureText: _isHiddenSecondary,
-                              decoration: InputDecoration(
-                                hintText: strNewPasswordAgainHintText,
-                                labelText: strNewPasswordAgainHintText,
-                                suffix: InkWell(
-                                  onTap: _togglePasswordViewSecodary,
-                                  child: Icon(
-                                    _isHiddenSecondary
-                                        ? Icons.visibility
-                                        : Icons.visibility_off,
-                                    size: 18,
-                                  ),
-                                ),
-                                errorMaxLines: 2,
-                                focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    borderSide: BorderSide(
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
-                                    )),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  borderSide: BorderSide(
-                                    color:
-                                        Color(CommonUtil().getMyPrimaryColor()),
-                                  ),
-                                ),
-                              ),
-                              controller: NewPasswordAgainController,
-                              validator: (value) {
-                                return AuthenticationValidator()
-                                    .confirmPasswordValidation(
-                                        NewPasswordController.text,
-                                        value,
-                                        patternPassword,
-                                        strPassCantEmpty);
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 10.0.h),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Flexible(
-                            child: Center(
-                              child: RichText(
-                                text: TextSpan(
-                                  text: strOtpNotReceived,
+                        ),
+                        SizedBox(height: 10.0.h),
+                        Form(
+                          key: _ChangePasswordKey,
+                          child: Column(
+                            children: [
+                              _changepasswordTextFields(
+                                TextFormField(
                                   style: TextStyle(
-                                    fontSize: 15.0.sp,
-                                    color: Colors.black,
+                                    fontSize: 16.0.sp,
                                   ),
-                                  children: [
-                                    TextSpan(
-                                      text: '${otpViewModel.timeForResend}',
-                                      style: TextStyle(
-                                        color: Color(
-                                            CommonUtil().getMyPrimaryColor()),
-                                        fontSize: 15.0.sp,
-                                        fontWeight: FontWeight.w600,
+                                  autovalidate: _autoValidateBool,
+                                  obscureText: _isHidden,
+                                  decoration: InputDecoration(
+                                    hintText: strNewPasswordHintTxt,
+                                    labelText: strNewPasswordHintTxt,
+                                    suffix: InkWell(
+                                      onTap: _togglePasswordView,
+                                      child: Icon(
+                                        _isHidden
+                                            ? Icons.visibility
+                                            : Icons.visibility_off,
+                                        size: 18,
                                       ),
                                     ),
-                                  ],
+                                    focusedBorder: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                        borderSide: BorderSide(
+                                          color: Color(
+                                              CommonUtil().getMyPrimaryColor()),
+                                        )),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      borderSide: BorderSide(
+                                        color: Color(
+                                            CommonUtil().getMyPrimaryColor()),
+                                      ),
+                                    ),
+                                    errorMaxLines: 2,
+                                  ),
+                                  validator: (value) {
+                                    return AuthenticationValidator()
+                                        .passwordValidation(value,
+                                            patternPassword, strPassCantEmpty);
+                                  },
+                                  controller: NewPasswordController,
+                                  onSaved: (value) {},
                                 ),
                               ),
-                            ),
+                              SizedBox(height: 10.0.h),
+                              _changepasswordTextFields(
+                                TextFormField(
+                                  style: TextStyle(
+                                    fontSize: 16.0.sp,
+                                  ),
+                                  autovalidate: _autoValidateBool,
+                                  obscureText: _isHiddenSecondary,
+                                  decoration: InputDecoration(
+                                    hintText: strNewPasswordAgainHintText,
+                                    labelText: strNewPasswordAgainHintText,
+                                    suffix: InkWell(
+                                      onTap: _togglePasswordViewSecodary,
+                                      child: Icon(
+                                        _isHiddenSecondary
+                                            ? Icons.visibility
+                                            : Icons.visibility_off,
+                                        size: 18,
+                                      ),
+                                    ),
+                                    errorMaxLines: 2,
+                                    focusedBorder: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                        borderSide: BorderSide(
+                                          color: Color(
+                                              CommonUtil().getMyPrimaryColor()),
+                                        )),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      borderSide: BorderSide(
+                                        color: Color(
+                                            CommonUtil().getMyPrimaryColor()),
+                                      ),
+                                    ),
+                                  ),
+                                  controller: NewPasswordAgainController,
+                                  validator: (value) {
+                                    return AuthenticationValidator()
+                                        .confirmPasswordValidation(
+                                            NewPasswordController.text,
+                                            value,
+                                            patternPassword,
+                                            strPassCantEmpty);
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          InkWell(
-                            onTap: otpViewModel.timerSeconds == 0
-                                ? () {
-                                    otpViewModel?.stopOTPTimer();
-                                    otpViewModel.confirmViaCall(
-                                      phoneNumber: widget.userName ?? '',
-                                      onOtpReceived: (String otpCode) {
-                                        _verifyDetails(
-                                          otpCode: otpCode,
-                                        );
-                                      },
-                                    );
-                                  }
-                                : null,
-                            child: Container(
-                              padding: EdgeInsets.symmetric(vertical: 5),
-                              alignment: Alignment.bottomRight,
-                              child: Text(
-                                strVerifyCall,
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 20.0.h,
+                    ),
+                    _changePassword(),
+                    SizedBox(height: 10.0.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Flexible(
+                          child: Center(
+                            child: RichText(
+                              text: TextSpan(
+                                text: strOtpNotReceived,
                                 style: TextStyle(
-                                    color: otpViewModel.timerSeconds == 0
-                                        ? Color(
-                                            CommonUtil().getMyPrimaryColor())
-                                        : Colors.grey,
-                                    fontSize: 15.0.sp,
-                                    fontWeight: FontWeight.w600),
+                                  fontSize: 15.0.sp,
+                                  color: Colors.black,
+                                ),
+                                children: [
+                                  TextSpan(
+                                    text: '${otpViewModel.timeForResend}',
+                                    style: TextStyle(
+                                      color: Color(
+                                          CommonUtil().getMyPrimaryColor()),
+                                      fontSize: 15.0.sp,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10.0.h),
+                    Visibility(
+                      visible: otpViewModel.timerSeconds == 0,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          RaisedGradientButton(
+                            gradient: LinearGradient(colors: [
+                              Color(new CommonUtil().getMyPrimaryColor()),
+                              Color(new CommonUtil().getMyGredientColor()),
+                            ]),
+                            width: 200.0.w,
+                            child: Text(
+                              strVerifyCall,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15.0.sp,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                            onPressed: otpViewModel.timerSeconds == 0
+                                ? () {
+                                    if (_ChangePasswordKey.currentState
+                                        .validate()) {
+                                      otpViewModel?.stopOTPTimer();
+                                      otpViewModel.confirmViaCall(
+                                        phoneNumber: widget.userName ?? '',
+                                        onOtpReceived: (String otpCode) {
+                                          _verifyDetails(
+                                            otpCode: otpCode,
+                                          );
+                                        },
+                                      );
+                                    }
+                                  }
+                                : null,
+                          ),
                         ],
                       ),
-                      SizedBox(
-                        height: 20.0.h,
-                      ),
-                      _changePassword(),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -354,8 +370,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   _verifyDetails({String otpCode}) async {
     FocusScope.of(context).unfocus();
-    if (otpCode != null || _ChangePasswordKey.currentState.validate()) {
+    if (otpCode != null ||
+        (_ChangePasswordKey.currentState.validate() &&
+            _otpKey.currentState.validate())) {
       if (otpCode == null) {
+        _ChangePasswordKey.currentState.save();
+      } else {
+        _otpKey.currentState.save();
         _ChangePasswordKey.currentState.save();
       }
       LoaderClass.showLoadingDialog(context);

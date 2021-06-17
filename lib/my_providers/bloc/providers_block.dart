@@ -8,6 +8,7 @@ import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
 import 'package:myfhb/my_providers/services/providers_repository.dart';
 import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 class ProvidersBloc implements BaseBloc {
   ProvidersListRepository _providersListRepository;
@@ -49,13 +50,19 @@ class ProvidersBloc implements BaseBloc {
     return myProvidersResponseList;
   }
 
-  Future<MyProvidersResponse> getMedicalPreferencesForDoctors({String userId}) async {
-    // providersListSink.add(ApiResponse.loading(variable.strFetchMedicalPrefernces));
+  Future<MyProvidersResponse> getMedicalPreferencesForDoctors(
+      {String userId}) async {
+    providersListSink
+        .add(ApiResponse.loading(variable.strFetchMedicalPrefernces));
     MyProvidersResponse myProvidersResponseList;
     try {
       myProvidersResponseList = await _providersListRepository
           .getMedicalPreferencesForDoctors(userId: userId);
-      doctors = myProvidersResponseList.result.doctors;
+      try {
+        doctors = myProvidersResponseList.result?.doctors;
+      } catch (e) {}
+      providersListSink.add(ApiResponse.completed(myProvidersResponseList));
+
       // hospitals = myProvidersResponseList.result.hospitals;
       // labs = myProvidersResponseList.result.labs;
     } catch (e) {
@@ -65,7 +72,8 @@ class ProvidersBloc implements BaseBloc {
     return myProvidersResponseList;
   }
 
-  Future<MyProvidersResponse> getMedicalPreferencesForHospital({String userId}) async {
+  Future<MyProvidersResponse> getMedicalPreferencesForHospital(
+      {String userId}) async {
     // providersListSink.add(ApiResponse.loading(variable.strFetchMedicalPrefernces));
     MyProvidersResponse myProvidersResponseList;
     try {
@@ -143,8 +151,8 @@ class ProvidersBloc implements BaseBloc {
   Future<GetDoctorsByIdModel> getDoctorsById({String doctorId}) async {
     GetDoctorsByIdModel getDoctorsByIdModel;
     try {
-      getDoctorsByIdModel = await _providersListRepository
-          .getDoctorsByID(doctorId: doctorId);
+      getDoctorsByIdModel =
+          await _providersListRepository.getDoctorsByID(doctorId: doctorId);
     } catch (e) {
       providersListSink.add(ApiResponse.error(e.toString()));
     }

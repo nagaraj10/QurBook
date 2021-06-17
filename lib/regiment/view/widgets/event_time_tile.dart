@@ -7,11 +7,13 @@ class EventTimeTile extends StatefulWidget {
     @required this.title,
     @required this.onTimeSelected,
     this.selectedTime,
+    this.controller
   });
 
   final String title;
   final Function onTimeSelected;
   final TimeOfDay selectedTime;
+  final controller;
 
   @override
   _EventTimeTileState createState() => _EventTimeTileState();
@@ -20,14 +22,26 @@ class EventTimeTile extends StatefulWidget {
 class _EventTimeTileState extends State<EventTimeTile> {
   TimeOfDay timeSelected;
   DayPeriod selectedTimePeriod = DayPeriod.am;
+  //final _textFormField = TextEditingController();
 
   getTimeAsString(TimeOfDay timeOfDay) {
-    selectedTimePeriod = timeOfDay.period;
-    int hour = timeOfDay?.hourOfPeriod;
-    if (timeOfDay?.hour == 12) {
-      hour = 12;
+    if (timeOfDay != null) {
+      selectedTimePeriod = timeOfDay.period;
+      int hour = timeOfDay?.hour;
+      // if (timeOfDay?.hour == 12) {
+      //   hour = 12;
+      // }
+      return '${hour > 9 ? '' : '0'}${hour}:${timeOfDay.minute > 9 ? '' : '0'}${timeOfDay.minute}';
+    } else {
+      return '';
     }
-    return '${hour > 9 ? '' : '0'}${hour}:${timeOfDay.minute > 9 ? '' : '0'}${timeOfDay.minute}';
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    widget.controller.text = getTimeAsString(widget.selectedTime);
+    //_textFormField.text = '';
   }
 
   @override
@@ -72,33 +86,46 @@ class _EventTimeTileState extends State<EventTimeTile> {
                 child: InkWell(
                   onTap: () async {
                     timeSelected = await showTimePicker(
-                      context: context,
-                      initialTime: timeSelected ?? TimeOfDay.now(),
-                    );
+                        context: context,
+                        initialTime: timeSelected ?? TimeOfDay.now(),
+                        builder: (contxt, chld) {
+                          return MediaQuery(
+                            data: MediaQuery.of(context)
+                                .copyWith(alwaysUse24HourFormat: true),
+                            child: chld,
+                          );
+                        });
                     if (timeSelected != null) {
+                      widget.controller.text = getTimeAsString(timeSelected);
                       setState(() {
                         selectedTimePeriod = timeSelected.period;
                       });
                       widget.onTimeSelected(
-                        timeSelected,
-                        widget.title,
-                      );
+                          timeSelected, widget.title, widget.controller);
                     }
                   },
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(
-                        getTimeAsString(timeSelected),
+                      TextFormField(
+                        controller: widget.controller,
                         style: TextStyle(
                           fontSize: 16.0.sp,
                         ),
+                        enabled: false,
+                        validator: (val) {
+                          return val.isEmpty ? 'error' : null;
+                        },
+                        decoration: InputDecoration(
+                          isDense: true,
+                          errorStyle: TextStyle(height: 0),
+                        ),
                       ),
-                      Divider(
-                        height: 2.0.h,
-                        color: Colors.grey,
-                      ),
+                      // Divider(
+                      //   height: 2.0.h,
+                      //   color: Colors.grey,
+                      // ),
                     ],
                   ),
                 ),
@@ -106,33 +133,33 @@ class _EventTimeTileState extends State<EventTimeTile> {
               SizedBox(
                 width: 5.0.w,
               ),
-              DropdownButton(
-                style: TextStyle(
-                  color: Colors.black54,
-                  fontSize: 16.0.sp,
-                ),
-                underline: SizedBox.shrink(),
-                icon: Icon(
-                  Icons.keyboard_arrow_down,
-                  size: 24.0.sp,
-                ),
-                value: selectedTimePeriod,
-                onChanged: (value) {
-                  setState(() {
-                    selectedTimePeriod = value;
-                  });
-                },
-                items: [
-                  DropdownMenuItem(
-                    value: DayPeriod.am,
-                    child: Text('AM'),
-                  ),
-                  DropdownMenuItem(
-                    value: DayPeriod.pm,
-                    child: Text('PM'),
-                  ),
-                ],
-              ),
+              // DropdownButton(
+              //   style: TextStyle(
+              //     color: Colors.black54,
+              //     fontSize: 16.0.sp,
+              //   ),
+              //   underline: SizedBox.shrink(),
+              //   icon: Icon(
+              //     Icons.keyboard_arrow_down,
+              //     size: 24.0.sp,
+              //   ),
+              //   value: selectedTimePeriod,
+              //   onChanged: (value) {
+              //     setState(() {
+              //       selectedTimePeriod = value;
+              //     });
+              //   },
+              //   items: [
+              //     DropdownMenuItem(
+              //       value: DayPeriod.am,
+              //       child: Text('AM'),
+              //     ),
+              //     DropdownMenuItem(
+              //       value: DayPeriod.pm,
+              //       child: Text('PM'),
+              //     ),
+              //   ],
+              // ),
             ],
           ),
         ],

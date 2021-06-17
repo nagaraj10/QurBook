@@ -1,20 +1,20 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/regiment/service/regiment_service.dart';
-import 'package:myfhb/regiment/models/regiment_response_model.dart';
-import 'package:myfhb/regiment/models/save_response_model.dart';
 import 'package:myfhb/regiment/models/field_response_model.dart';
 import 'package:myfhb/regiment/models/profile_response_model.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/regiment/models/regiment_data_model.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:myfhb/regiment/models/regiment_response_model.dart';
+import 'package:myfhb/regiment/models/save_response_model.dart';
+import 'package:myfhb/regiment/service/regiment_service.dart';
 import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
-import 'package:get/get.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
+import 'package:provider/provider.dart';
 
 enum RegimentMode { Schedule, Symptoms }
+
+enum RegimentFilter { All, Missed, Event }
 
 enum RegimentStatus { Loading, Loaded, DialogOpened, DialogClosed }
 
@@ -24,7 +24,6 @@ class RegimentViewModel extends ChangeNotifier {
   List<RegimentDataModel> regimentsScheduledList = [];
   List<RegimentDataModel> regimentsAsNeededList = [];
   List<RegimentDataModel> regimentsFilteredList = [];
-  bool regimentsDataAvailable = true;
   bool searchExpanded = false;
   RegimentStatus regimentStatus = RegimentStatus.Loaded;
   DateTime selectedDate = DateTime.now();
@@ -36,6 +35,8 @@ class RegimentViewModel extends ChangeNotifier {
   int tabIndex = 0;
   double scrollOffset;
   int initialShowIndex;
+  RegimentFilter regimentFilter = RegimentFilter.All;
+  String redirectEventId = '';
 
   void updateInitialShowIndex({
     bool isDone = false,
@@ -48,13 +49,26 @@ class RegimentViewModel extends ChangeNotifier {
       initialShowIndex = index;
     } else if ((regimentsScheduledList?.length ?? 0) > 0) {
       int index = 0;
-      for (final event in regimentsScheduledList) {
-        if (event.estart.isAfter(DateTime.now()) ||
-            event.estart.isAtSameMomentAs(DateTime.now())) {
-          initialShowIndex = index;
-          break;
-        } else {
-          index++;
+      if ((redirectEventId ?? '').isNotEmpty) {
+        for (final event in regimentsScheduledList) {
+          if (event.eid == redirectEventId) {
+            initialShowIndex = index;
+            break;
+          } else {
+            index++;
+          }
+        }
+      } else if (regimentMode == RegimentMode.Symptoms) {
+        initialShowIndex = 0;
+      } else {
+        for (final event in regimentsScheduledList) {
+          if (event.estart.isAfter(DateTime.now()) ||
+              event.estart.isAtSameMomentAs(DateTime.now())) {
+            initialShowIndex = index;
+            break;
+          } else {
+            index++;
+          }
         }
       }
       initialShowIndex ??= regimentsScheduledList.length - 1;
@@ -84,11 +98,23 @@ class RegimentViewModel extends ChangeNotifier {
     }
   }
 
+  void changeFilter(RegimentFilter newFilter) {
+    regimentFilter = newFilter;
+    if (newFilter == RegimentFilter.Missed) {
+      updateInitialShowIndex(
+        index: 0,
+      );
+    }
+    setViewRegimentsData();
+    notifyListeners();
+  }
+
   Future<void> switchRegimentMode() {
     regimentMode = (regimentMode == RegimentMode.Schedule)
         ? RegimentMode.Symptoms
         : RegimentMode.Schedule;
     if (regimentMode == RegimentMode.Symptoms) {
+      regimentFilter = RegimentFilter.All;
       updateInitialShowIndex(index: 0);
     }
     resetRegimenTab();
@@ -105,7 +131,10 @@ class RegimentViewModel extends ChangeNotifier {
     List<RegimentDataModel> filteredList,
     bool isInitial = false,
   }) {
-    if (filteredList != null) {
+    if (regimentFilter == RegimentFilter.Missed &&
+        regimentMode == RegimentMode.Schedule) {
+      regimentsList = getMissedFilter(filteredList);
+    } else if (filteredList != null) {
       regimentsList = filteredList;
     } else {
       if (regimentMode == RegimentMode.Schedule) {
@@ -118,6 +147,23 @@ class RegimentViewModel extends ChangeNotifier {
     if (!isInitial) {
       notifyListeners();
     }
+  }
+
+  List<RegimentDataModel> getMissedFilter(
+    List<RegimentDataModel> filteredList,
+  ) {
+    List<RegimentDataModel> actualList = filteredList ?? regimentsScheduledList;
+    List<RegimentDataModel> missedRegimenList = [];
+    actualList?.forEach((regimenData) {
+      if (regimenData?.estart
+              ?.difference(DateTime.now())
+              ?.inMinutes
+              ?.isNegative &&
+          regimenData.ack == null) {
+        missedRegimenList.add(regimenData);
+      }
+    });
+    return missedRegimenList;
   }
 
   void startRegimenTTS(int index, String saytext) {
@@ -210,24 +256,13 @@ class RegimentViewModel extends ChangeNotifier {
     regimentsList.clear();
     regimentsAsNeededList.clear();
     regimentsScheduledList.clear();
-    if (PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN) ==
-        PreferenceUtil.getStringValue(Constants.KEY_USERID)) {
-      if (isInitial) {
-        updateRegimentStatus(RegimentStatus.Loading, isInitial: isInitial);
-      }
-      regimentsDataAvailable = true;
-      regimentsData = await RegimentService.getRegimentData(
-        dateSelected: CommonUtil().dateConversionToApiFormat(selectedDate),
-      );
-      updateRegimentStatus(RegimentStatus.Loaded);
-    } else {
-      regimentsDataAvailable = false;
-      regimentsData = RegimentResponseModel(
-        isSuccess: true,
-        regimentsList: [],
-        message: Constants.plansForFamily,
-      );
+    if (isInitial) {
+      updateRegimentStatus(RegimentStatus.Loading, isInitial: isInitial);
     }
+    regimentsData = await RegimentService.getRegimentData(
+      dateSelected: CommonUtil().dateConversionToApiFormat(selectedDate),
+    );
+    updateRegimentStatus(RegimentStatus.Loaded);
     regimentsData?.regimentsList?.forEach((event) {
       if (event.doseMeal) {
         regimentsAsNeededList.add(event);

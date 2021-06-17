@@ -1,5 +1,6 @@
 // ignore: file_names
 import 'dart:io';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
@@ -22,7 +23,7 @@ import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/screens/MyFamily.dart';
 import 'package:myfhb/plan_dashboard/view/categoryList.dart';
 import 'package:myfhb/plan_dashboard/view/planList.dart';
-import 'package:myfhb/plan_dashboard/view/searchListHome.dart';
+import 'package:myfhb/plan_dashboard/view/planUserProviderList.dart';
 import 'package:myfhb/regiment/view/regiment_tab.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/common_response.dart';
@@ -175,6 +176,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
   }
 
   getFamilyLength() async {
+    FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+    final token = await _firebaseMessaging.getToken();
+    print('------------FCM--------------------$token');
+
     _familyListBloc.getFamilyMembersListNew().then((familyMembersList) {
       if (mounted) {
         setState(() {
@@ -497,136 +502,13 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
-              Container(
-                decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                        colors: <Color>[
-                      Color(new CommonUtil().getMyPrimaryColor()),
-                      Color(new CommonUtil().getMyGredientColor())
-                    ],
-                        stops: [
-                      0.3,
-                      1.0
-                    ])),
-                child: IntrinsicHeight(
-                  child: SafeArea(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        PreferredSize(
-                          preferredSize: Size.fromHeight(1.sh * 0.15),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                    begin: Alignment.centerLeft,
-                                    end: Alignment.centerRight,
-                                    colors: <Color>[
-                                  Color(new CommonUtil().getMyPrimaryColor()),
-                                  Color(new CommonUtil().getMyGredientColor())
-                                ],
-                                    stops: [
-                                  0.3,
-                                  1.0
-                                ])),
-                            child: SafeArea(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Container(
-                                    child: Row(
-                                      children: <Widget>[
-                                        SizedBox(
-                                          width: 0.05.sw,
-                                        ),
-                                        Container(
-                                          width: 0.66.sw,
-                                          child: _getUserName(),
-                                        ),
-                                        CommonUtil()
-                                            .getNotificationIcon(context),
-                                        SizedBox(
-                                          width: 0.03.sw,
-                                        ),
-                                        /*isFamilyAvail
-                                            ?*/
-                                        SwitchProfile().buildActions(context,
-                                            _key, callBackToRefresh, true)
-                                        /* : getMaterialPlusIcon(context)*/,
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    alignment: Alignment.centerLeft,
-                                    child: TabBar(
-                                      indicatorWeight: 2.0.h,
-                                      isScrollable: true,
-                                      labelColor: Colors.white,
-                                      indicatorSize: TabBarIndicatorSize.label,
-                                      unselectedLabelColor: Colors.white70,
-                                      tabs: [
-                                        Tab(
-                                          child: Text(
-                                            'Regimen',
-                                            style: TextStyle(
-                                              fontSize: 16.0.sp,
-                                            ),
-                                          ),
-                                        ),
-                                        Tab(
-                                          child: Text(
-                                            'Devices',
-                                            style: TextStyle(
-                                              fontSize: 16.0.sp,
-                                            ),
-                                          ),
-                                        ),
-                                        Tab(
-                                          child: Text(
-                                            'Plans',
-                                            style: TextStyle(
-                                              fontSize: 16.0.sp,
-                                            ),
-                                          ),
-                                        ),
-                                        Tab(
-                                          child: Text(
-                                            'My Plans',
-                                            style: TextStyle(
-                                              fontSize: 16.0.sp,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
               Expanded(
-                child: TabBarView(
-                  children: [
-                    RegimentTab(),
-                    SingleChildScrollView(
-                      child: Container(
-                        width: 1.sw,
-                        alignment: Alignment.center,
-                        child: getValues(context, _devicesmodel),
-                      ),
-                    ),
-                    SearchListHome(),
-                    MyPlanList(
-                      fromDashBoard: true,
-                    ),
-                  ],
+                child: SingleChildScrollView(
+                  child: Container(
+                    width: 1.sw,
+                    alignment: Alignment.center,
+                    child: getValues(context, _devicesmodel),
+                  ),
                 ),
               ),
             ],

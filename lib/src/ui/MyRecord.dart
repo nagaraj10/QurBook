@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
+import 'package:myfhb/landing/view_model/landing_view_model.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
@@ -51,6 +52,7 @@ import 'package:myfhb/src/ui/health/VoiceRecordList.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 import 'package:showcaseview/showcase_widget.dart';
 
 import '../../constants/fhb_constants.dart';
@@ -60,8 +62,14 @@ export 'package:myfhb/src/model/Media/MediaTypeResponse.dart';
 
 class MyRecords extends StatefulWidget {
   MyRecordsArgument argument;
+  final bool isHome;
+  final Function onBackPressed;
 
-  MyRecords({this.argument});
+  MyRecords({
+    this.argument,
+    this.isHome = false,
+    this.onBackPressed,
+  });
 
   @override
   _MyRecordsState createState() => _MyRecordsState();
@@ -98,6 +106,7 @@ class _MyRecordsState extends State<MyRecords> {
 
   List<String> selectedMedia = new List();
   static bool audioPage = false;
+  LandingViewModel landingViewModel;
 
   @override
   void initState() {
@@ -142,33 +151,61 @@ class _MyRecordsState extends State<MyRecords> {
 
   @override
   Widget build(BuildContext context) {
-    return ShowCaseWidget(onFinish: () {
-      PreferenceUtil.saveString(
-          Constants.KEY_SHOWCASE_HOMESCREEN, variable.strtrue);
-    }, builder: Builder(builder: (context) {
-      _myContext = context;
-      return getCompleteWidgets();
-    }));
+    landingViewModel = Provider.of<LandingViewModel>(context);
+    return WillPopScope(
+      onWillPop: () {
+        if (widget.isHome) {
+          if (landingViewModel?.isSearchVisible ?? false) {
+            landingViewModel?.changeSearchBar(
+              isEnabled: false,
+              needNotify: true,
+            );
+          } else {
+            widget.onBackPressed();
+          }
+        }
+        return Future.value(widget.isHome ? false : true);
+      },
+      child: ShowCaseWidget(onFinish: () {
+        PreferenceUtil.saveString(
+            Constants.KEY_SHOWCASE_HOMESCREEN, variable.strtrue);
+      }, builder: Builder(builder: (context) {
+        _myContext = context;
+        return getCompleteWidgets();
+      })),
+    );
   }
 
   Widget getCompleteWidgets() {
     return Scaffold(
       key: scaffold_state,
-      appBar: AppBar(
-        elevation: 0,
-        automaticallyImplyLeading: false,
-        flexibleSpace: GradientAppBar(),
-        leading: IconWidget(
-          icon: Icons.arrow_back_ios,
-          colors: Colors.white,
-          size: 24.0.sp,
-          onTap: () {
-            Navigator.pop(context);
-          },
-        ),
-        titleSpacing: 0,
-        title: _buildSearchField(),
-      ),
+      appBar: widget.isHome && !(landingViewModel?.isSearchVisible ?? false)
+          ? null
+          : AppBar(
+              elevation: 0,
+              automaticallyImplyLeading: false,
+              flexibleSpace: GradientAppBar(),
+              leading: IconWidget(
+                icon: widget.isHome ? Icons.cancel : Icons.arrow_back_ios,
+                colors: Colors.white,
+                size: 24.0.sp,
+                onTap: () {
+                  if (widget.isHome) {
+                    if (landingViewModel?.isSearchVisible ?? false) {
+                      _searchQueryController.clear();
+                      landingViewModel?.changeSearchBar(
+                        isEnabled: false,
+                        needNotify: true,
+                      );
+                    }
+                  } else {
+                    Navigator.pop(context);
+                  }
+                },
+              ),
+              titleSpacing: 0,
+              title: _buildSearchField(),
+            ),
       body: fromSearch
           ? getResponseForSearchedMedia()
           : getResponseFromApiWidget(),

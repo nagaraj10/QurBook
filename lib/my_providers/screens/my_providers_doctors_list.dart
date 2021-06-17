@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/ClipImage/ClipOvalImage.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/add_providers/models/add_providers_arguments.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
@@ -136,12 +137,11 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                         child: eachDoctorModel.user != null
                             ? eachDoctorModel.user.profilePicThumbnailUrl !=
                                     null
-                                ? Image.network(
+                                ? getProfilePicWidget(
                                     eachDoctorModel.user.profilePicThumbnailUrl,
-                                    height: 50.0.h,
-                                    width: 50.0.h,
-                                    fit: BoxFit.cover,
-                                  )
+                                    eachDoctorModel.user.firstName,
+                                    eachDoctorModel.user.lastName,
+                                    Color(CommonUtil().getMyPrimaryColor()))
                                 : Container(
                                     width: 50.0.h,
                                     height: 50.0.h,
@@ -164,7 +164,7 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                           SizedBox(height: 5.0.h),
                           AutoSizeText(
                             eachDoctorModel.user != null
-                                ? getDoctorName(eachDoctorModel.user)
+                                ? new CommonUtil().getDoctorName(eachDoctorModel.user)
                                 : '',
                             maxLines: 1,
                             style: TextStyle(
@@ -203,7 +203,10 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                                   .getBookMarkedIconNew(eachDoctorModel, () {
                                 providerViewModel
                                     .bookMarkDoctor(
-                                        eachDoctorModel, false, 'ListItem',eachDoctorModel.sharedCategories)
+                                        eachDoctorModel,
+                                        false,
+                                        'ListItem',
+                                        eachDoctorModel.sharedCategories)
                                     .then((status) {
                                   if (status) {
                                     widget.refresh();
@@ -224,19 +227,5 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
       },
       itemCount: doctorsModel.length,
     );
-  }
-
-  getDoctorName(User user) {
-    String doctorName = '';
-
-    /*if (user.name != null && user.name != '') {
-      doctorName = user.name;
-    } else */
-    if (user.firstName != null && user.firstName != '') {
-      doctorName = user.firstName + ' ' + user.lastName;
-    } else if (user.userName != null && user.userName != '') {
-      doctorName = user.userName;
-    }
-    return doctorName?.capitalizeFirstofEach;
   }
 }

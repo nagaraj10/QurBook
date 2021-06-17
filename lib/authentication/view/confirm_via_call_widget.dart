@@ -4,15 +4,14 @@ import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/authentication/view_model/otp_view_model.dart';
 import 'package:myfhb/authentication/view/call_dial_widget.dart';
 import 'package:provider/provider.dart';
+import 'or_divider.dart';
 
 class ConfirmViaCallWidget extends StatelessWidget {
   ConfirmViaCallWidget({
     @required this.ivrNumbersList,
-    @required this.canDialDirectly,
   });
 
-  List<dynamic> ivrNumbersList;
-  final bool canDialDirectly;
+  List<String> ivrNumbersList;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +34,7 @@ class ConfirmViaCallWidget extends StatelessWidget {
               left: 20.0.w,
             ),
             child: Text(
-              canDialDirectly ? strCallDirect : strCallFromNumber,
+              strCallDirect,
               style: TextStyle(
                 fontSize: 15.0.sp,
                 color: Colors.black,
@@ -65,16 +64,23 @@ class ConfirmViaCallWidget extends StatelessWidget {
 
   List<Widget> getPhoneWidgets() {
     final phoneWidgets = <Widget>[];
-    ivrNumbersList?.forEach(
-      (ivrNumber) {
-        phoneWidgets.add(('${ivrNumber ?? ''}').isNotEmpty
-            ? CallDialWidget(
-                canDialDirectly: canDialDirectly,
-                phoneNumber: ivrNumber ?? '',
-              )
-            : const SizedBox.shrink());
-      },
-    );
+    primaryNumber;
+    int index = 0;
+    for (var ivrNumber in ivrNumbersList) {
+      phoneWidgets.add(('${ivrNumber ?? ''}').isNotEmpty
+          ? Column(
+              children: [
+                if (index != 0) OrDivider(),
+                CallDialWidget(
+                  phoneNumber: ivrNumber ?? '',
+                  phoneNumberName:
+                      index == 0 ? primaryNumber : '${alternateNumber} $index',
+                ),
+              ],
+            )
+          : const SizedBox.shrink());
+      index++;
+    }
     return phoneWidgets;
   }
 }

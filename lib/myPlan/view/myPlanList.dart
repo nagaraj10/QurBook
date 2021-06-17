@@ -1,9 +1,6 @@
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
-import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -11,21 +8,17 @@ import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/fhb_parameters.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/router_variable.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/myPlan/model/myPlanListModel.dart';
-import 'package:myfhb/myPlan/services/myPlanService.dart';
 import 'package:myfhb/myPlan/view/myPlanDetail.dart';
 import 'package:myfhb/myPlan/viewModel/myPlanViewModel.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/plan_dashboard/viewModel/subscribeViewModel.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
 import 'package:provider/provider.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/src/ui/Dashboard.dart';
-import 'package:get/get.dart';
 import 'package:showcaseview/showcase_widget.dart';
 
 class MyPlanList extends StatefulWidget {
@@ -87,48 +80,34 @@ class _MyPlanState extends State<MyPlanList> {
     }, builder: Builder(builder: (context) {
       _myContext = context;
       return Scaffold(
-          body: Visibility(
-        visible: Provider.of<RegimentViewModel>(context).regimentsDataAvailable,
-        child: Container(
-            child: Column(
-          children: [
-            SearchWidget(
-              onChanged: (providerName) {
-                if (providerName != '' && providerName.length > 2) {
-                  isSearch = true;
-                  onSearchedNew(providerName);
-                } else {
-                  setState(() {
-                    isSearch = false;
-                  });
-                }
-              },
-            ),
-            SizedBox(
-              height: 5.0.h,
-            ),
-            Expanded(
-              child: myPlanListModel != null ?? myPlanListModel.isSuccess
-                  ? hospitalList(myPlanListModel.result)
-                  : getPlanList(),
-            )
-          ],
-        )),
-        replacement: Center(
-          child: Padding(
-            padding: EdgeInsets.all(
-              10.0.sp,
-            ),
-            child: Text(
-              Constants.plansForFamily,
-              style: TextStyle(
-                fontSize: 16.0.sp,
+          floatingActionButton: getTheRegimen(),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat,
+          body: Container(
+              child: Column(
+            children: [
+              SearchWidget(
+                onChanged: (providerName) {
+                  if (providerName != '' && providerName.length > 2) {
+                    isSearch = true;
+                    onSearchedNew(providerName);
+                  } else {
+                    setState(() {
+                      isSearch = false;
+                    });
+                  }
+                },
               ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ),
-      ));
+              SizedBox(
+                height: 5.0.h,
+              ),
+              Expanded(
+                child: myPlanListModel != null ?? myPlanListModel.isSuccess
+                    ? hospitalList(myPlanListModel.result)
+                    : getPlanList(),
+              )
+            ],
+          )));
     }));
   }
 
@@ -140,6 +119,48 @@ class _MyPlanState extends State<MyPlanList> {
     setState(() {});
   }
 
+  Widget getTheRegimen() {
+    return Padding(
+      padding: EdgeInsets.only(
+        top: 10.0.h,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          FHBBasicWidget.customShowCase(
+              _GotoRegimentKey,
+              Constants.GoToRegimentDescription,
+              FlatButton(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18.0),
+                ),
+                color: Color(new CommonUtil().getMyPrimaryColor()),
+                textColor: Colors.white,
+                padding: EdgeInsets.all(
+                  10.0.sp,
+                ),
+                onPressed: () async {
+                  Provider.of<RegimentViewModel>(
+                    context,
+                    listen: false,
+                  ).updateTabIndex(currentIndex: 0);
+                  Provider.of<RegimentViewModel>(
+                    context,
+                    listen: false,
+                  ).regimentMode = RegimentMode.Schedule;
+                  Get.toNamed(rt_Regimen);
+                },
+                child: TextWidget(
+                  text: goToRegimen,
+                  fontsize: 14.0.sp,
+                ),
+              ),
+              Constants.DailyRegimen),
+        ],
+      ),
+    );
+  }
+
   Widget hospitalList(List<MyPlanListResult> planList) {
     return (planList != null && planList.length > 0)
         ? ListView.builder(
@@ -148,59 +169,17 @@ class _MyPlanState extends State<MyPlanList> {
               bottom: 8.0.h,
             ),
             itemBuilder: (BuildContext ctx, int i) {
-              if (i == planList.length) {
-                return FHBBasicWidget.customShowCase(
-                    _GotoRegimentKey,
-                    Constants.GoToRegimentDescription,
-                    Padding(
-                      padding: EdgeInsets.only(
-                        top: 10.0.h,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          FlatButton(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18.0),
-                            ),
-                            color: Color(new CommonUtil().getMyPrimaryColor()),
-                            textColor: Colors.white,
-                            padding: EdgeInsets.all(
-                              10.0.sp,
-                            ),
-                            onPressed: () async {
-                              Provider.of<RegimentViewModel>(
-                                context,
-                                listen: false,
-                              ).updateTabIndex(currentIndex: 0);
-                              Get.offAll(
-                                DashboardScreen(
-                                  fromPlans: true,
-                                ),
-                              );
-                            },
-                            child: TextWidget(
-                              text: goToRegimen,
-                              fontsize: 14.0.sp,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Constants.DailyRegimen);
-              } else {
-                return i != 0
-                    ? myPlanListItem(
-                        ctx, i, isSearch ? myPLanListResult : planList)
-                    : FHBBasicWidget.customShowCase(
-                        _PlanCardKey,
-                        Constants.MyPlanCard,
-                        myPlanListItem(
-                            ctx, i, isSearch ? myPLanListResult : planList),
-                        Constants.SubscribedPlans);
-              }
+              return i != 0
+                  ? myPlanListItem(
+                      ctx, i, isSearch ? myPLanListResult : planList)
+                  : FHBBasicWidget.customShowCase(
+                      _PlanCardKey,
+                      Constants.MyPlanCard,
+                      myPlanListItem(
+                          ctx, i, isSearch ? myPLanListResult : planList),
+                      Constants.SubscribedPlans);
             },
-            itemCount: isSearch ? myPLanListResult.length : planList.length + 1,
+            itemCount: isSearch ? myPLanListResult.length : planList.length,
           )
         : SafeArea(
             child: SizedBox(

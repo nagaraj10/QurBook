@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/services.dart';
 import 'package:myfhb/common/errors_widget.dart';
+import 'package:myfhb/my_providers/models/Doctors.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/utils/alert.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
@@ -33,6 +34,8 @@ class FHBBasicWidget {
   String authToken;
 
   var commonConstants = new CommonConstants();
+  var actionWidgetSize = 55.0;
+  var plusIconSize = 14.0;
 
   UnitsMesurements unitsMesurements;
   setValues(String unitsTosearch) {
@@ -43,12 +46,37 @@ class FHBBasicWidget {
     });
   }
 
-  Widget getSaveButton(Function onSavedPressed) {
+  Widget getPlusIcon(Function onTap) {
+    return Positioned(
+      bottom: 0,
+      left: ((55 / 2) - (55 / 2)),
+      child: InkWell(
+        onTap: () {
+          onTap();
+        },
+        child: Container(
+            width: 14, // PlusIconSize = 20.0;
+
+            height: 14, // PlusIconSize = 20.0;
+
+            decoration: BoxDecoration(
+                color: ColorUtils.countColor,
+                borderRadius: BorderRadius.circular(15.0)),
+            child: Icon(
+              Icons.add,
+              color: Colors.white,
+              size: 12.0,
+            )),
+      ),
+    );
+  }
+
+  Widget getSaveButton(Function onSavedPressed, {String text, double width}) {
     return RaisedGradientButton(
-      width: 120.0.w,
+      width: width ?? 120.0.w,
       height: 40.0.h,
       child: Text(
-        variable.strSave,
+        text ?? variable.strSave,
         style: TextStyle(
             color: Colors.white,
             fontSize: 16.0.sp,
@@ -205,9 +233,6 @@ class FHBBasicWidget {
   }
 
   Widget getProfilePicWidgeUsingUrl(MyProfileModel myProfile) {
-/*
-    setAuthToken().then((authToken) {
-*/
     if (myProfile != null && myProfile.result != null) {
       if (myProfile.result.profilePicThumbnailUrl != '') {
         return Image.network(
@@ -221,7 +246,7 @@ class FHBBasicWidget {
             return Container(
               height: 50.0.h,
               width: 50.0.h,
-              color: Colors.grey[200],
+              color: Color(new CommonUtil().getMyPrimaryColor()),
               child: Center(
                 child: getFirstLastNameText(myProfile),
               ),
@@ -242,14 +267,13 @@ class FHBBasicWidget {
         width: 50.0.h,
       );
     }
-
-    /* });*/
   }
 
-  Widget getProfilePicWidgeUsingUrlForProfile(MyProfileModel myProfile) {
-/*
-    setAuthToken().then((authToken) {
-*/
+  Widget getProfilePicWidgeUsingUrlForProfile(
+    MyProfileModel myProfile, {
+    Color textColor,
+    Color circleColor,
+  }) {
     if (myProfile != null && myProfile.result != null) {
       if (myProfile.result.profilePicThumbnailUrl != '') {
         return Image.network(
@@ -263,9 +287,12 @@ class FHBBasicWidget {
             return Container(
               height: 50.0.h,
               width: 50.0.h,
-              color: Color(new CommonUtil().getMyPrimaryColor()),
+              color: circleColor ?? Color(new CommonUtil().getMyPrimaryColor()),
               child: Center(
-                child: getFirstLastNameTextForProfile(myProfile),
+                child: getFirstLastNameTextForProfile(
+                  myProfile,
+                  textColor: textColor,
+                ),
               ),
             );
           },
@@ -341,11 +368,13 @@ class FHBBasicWidget {
   }
 
   Widget getTextFiledWithHint(BuildContext context, String hintTextValue,
-      TextEditingController memoController) {
+      TextEditingController memoController,
+      {bool enabled}) {
     return Container(
         width: 1.sw - 60,
         child: TextField(
             autofocus: false,
+            enabled: enabled ?? true,
             onTap: () {},
             controller: memoController,
             decoration: InputDecoration(
@@ -432,6 +461,28 @@ class FHBBasicWidget {
               })
             ],
           );
+  }
+
+  Widget getPopmenuItem(Doctors element, Function onAddClick) {
+    return PopupMenuItem<Doctors>(
+        value: element,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 10),
+              child: Text(
+                element.user.name,
+              ),
+              width: 0.5.sw,
+            ),
+            SizedBox(height: 10),
+            getSaveButton(() {
+              onAddClick();
+            }, text: 'Add Doctor'),
+            SizedBox(height: 10),
+          ],
+        ));
   }
 
   Future<bool> exitApp(BuildContext context, Function logout) {
@@ -563,7 +614,7 @@ class FHBBasicWidget {
         child: _child,
         overlayColor: Colors.black,
         overlayOpacity: 0.8,
-        height: double.infinity,
+        height: 1.h,
         width: double.infinity,
         container: Container(
             height: 120.0.h,
@@ -979,8 +1030,8 @@ Widget getFirstLastNameText(MyProfileModel myProfile) {
       myProfile.result.firstName[0].toUpperCase() +
           myProfile.result.lastName[0].toUpperCase(),
       style: TextStyle(
-        color: Color(new CommonUtil().getMyPrimaryColor()),
-        fontSize: 16.0.sp,
+        color: Colors.white,
+        fontSize: 22.0.sp,
         fontWeight: FontWeight.w400,
       ),
     );
@@ -988,8 +1039,8 @@ Widget getFirstLastNameText(MyProfileModel myProfile) {
     return Text(
       myProfile.result.firstName[0].toUpperCase(),
       style: TextStyle(
-        color: Color(new CommonUtil().getMyPrimaryColor()),
-        fontSize: 16.0.sp,
+        color: Colors.white,
+        fontSize: 22.0.sp,
         fontWeight: FontWeight.w400,
       ),
     );
@@ -997,15 +1048,16 @@ Widget getFirstLastNameText(MyProfileModel myProfile) {
     return Text(
       '',
       style: TextStyle(
-        color: Color(new CommonUtil().getMyPrimaryColor()),
-        fontSize: 16.0.sp,
+        color: Colors.white,
+        fontSize: 22.0.sp,
         fontWeight: FontWeight.w200,
       ),
     );
   }
 }
 
-Widget getFirstLastNameTextForProfile(MyProfileModel myProfile) {
+Widget getFirstLastNameTextForProfile(MyProfileModel myProfile,
+    {Color textColor}) {
   if (myProfile.result != null &&
       myProfile.result.firstName != null &&
       myProfile.result.lastName != null) {
@@ -1013,7 +1065,7 @@ Widget getFirstLastNameTextForProfile(MyProfileModel myProfile) {
       myProfile.result.firstName[0].toUpperCase() +
           myProfile.result.lastName[0].toUpperCase(),
       style: TextStyle(
-        color: Colors.white,
+        color: textColor ?? Colors.white,
         fontSize: 28.0.sp,
         fontWeight: FontWeight.w500,
       ),

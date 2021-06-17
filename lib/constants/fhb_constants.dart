@@ -21,6 +21,7 @@ const String FAQ = 'FAQ';
 const String RateUs = 'Rate us';
 const String SOURCE_NAME = 'tridentApp';
 const String KEY_METADATA = 'metadata';
+const String NotificationData = 'NotificationData';
 const String KEY_CATEGORYNAME = 'categoryName';
 const String KEY_CATEGORYID = 'categoryID';
 const String KEY_CATEGORYLIST = 'categoryList';
@@ -112,6 +113,8 @@ const String INTRO_SLIDE_DESC_5 =
     'Securily and Privately share your medical records with your family,  doctors and caregivers';
 const String KEY_SHOWCASE_DASHBOARD = 'KEY_SHOWCASE_DASHBOARD';
 const String KEY_SHOWCASE_HOMESCREEN = 'KEY_SHOWCASE_HOMESCREEN';
+const String KeyShowIntroScreens = 'KeyShowIntroScreens';
+
 const String KEY_SHOWCASE_CAMERASCREEN = 'KEY_SHOWCASE_CAMERASCREEN';
 
 const String KEY_SHOWCASE_Plan = 'KEY_SHOWCASE_Plan';
@@ -460,6 +463,9 @@ const String scheduleTitle = 'Daily Schedule';
 const String planActivities = 'Plan Activities';
 const String planSymptoms = 'Plan Symptoms';
 const String undo = 'Undo';
+const String filter = 'Filter';
+const String allActivities = 'All Activities';
+const String missedActivities = 'Missed Activities';
 
 const strJpgDot = '.jpg';
 const strJpegDot = '.jpeg';
@@ -475,6 +481,39 @@ const strVideo = 'video';
 const strFiles = 'file';
 const strAudio = 'audio';
 
+const strYourQurplans = 'Your Care Plans';
+const strNoQurplans = 'Add your Care Plans to start your Regimen';
+const strPlansActive = ' Plans active';
+const strYourRegimen = 'Your Regimen';
+const strNoRegimen = 'Your Regimen';
+const strActivitiesDue = ' activities due today';
+const strLastEntered = 'Recent entry';
+const strVitals = 'Vitals';
+const strVitalsDevice = 'devices available';
+const strVitalsNoDevice = 'No devices available';
+const strSymptomsCheckIn = 'Symptoms';
+const strYourFamily = 'Your Family';
+const strNoFamily = 'No family members added';
+const strFamilyActive = 'family members';
+const strYourProviders = 'Your Providers';
+const strNoProvider = 'No providers added';
+const strProviderActive = 'providers';
+const strHowVideos = 'How to use Videos?';
+const strNoVideos = 'No videos available';
+const strVideosAvailable = 'videos available';
+const strChatWithUs = 'Chat with us';
+const strChatAvailable = ' is available';
+const strChatNotAvailable = 'No care provider assigned';
+const strMyDashboard = 'Dashboard';
+const String strSheelaG = 'Sheela G';
+const String strAppointment = 'Appointments';
+const String strNiceDay = 'Have a nice day';
+const String strRegimen = 'Regimen';
+const String strDevices = 'Devices';
+const String strPlans = 'Hospitals';
+const String strMyPlans = 'My QurPlans';
+const String strCarePlans = 'Care Plans';
+
 const strUploading = 'Uploading...';
 const strSubscribe = 'Subscribe';
 const strUnSubscribe = 'UnSubscribe';
@@ -489,10 +528,17 @@ const goToRegimen = 'Go to Regimen';
 const symptomsError = 'Data for Symptoms cannot be entered for future dates';
 const activitiesError =
     'Data for future events can be entered only 15 minutes prior to the event time';
+const tickInfo = 'Please tap on the check mark to log the activity';
+
+const searchHospitals = 'Search Hospitals';
 
 const strQurhealth = 'QurHealth';
 
-const strCovidFree = 'Click for free Covid Plans';
+const strCovidFree = 'Choose your FREE CARE PLANS';
+
+const strDiseasesImage = 'https://qurplan.com/assets/icons/diseases/';
+const strSVG = '.svg';
+const strAllPlans = 'All Plans';
 
 FirebaseAnalytics _firebaseAnalytics = FirebaseAnalytics();
 var mInitialTime;

@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:myfhb/authentication/model/error_response_model.dart';
 import 'package:myfhb/authentication/model/otp_response_model.dart';
+import 'package:myfhb/authentication/model/ivr_number_model.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/HeaderRequest.dart';
@@ -297,14 +298,17 @@ class AuthService {
     return responseJson;
   }
 
-  Future<dynamic> getIVRNumbers() async {
+  Future<IvrNumberModel> getIVRNumbers() async {
     var responseJson;
+    Map<String, String> requestHeaders = {
+      'authorization': PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN),
+      'Content-Type': 'application/json'
+    };
     try {
       final response = await http.get(
-        'https://qurplan.com/assets/data/ivr.json',
-      );
-
-      responseJson = jsonDecode(response.body);
+          Constants.BASE_URL + 'authentication-log/get-ivr-number/',
+          headers: requestHeaders);
+      responseJson = IvrNumberModel.fromJson(jsonDecode(response.body));
     } on SocketException {
       return spocketException();
     }
@@ -316,7 +320,7 @@ class AuthService {
     try {
       final response = await http.get(
         Constants.BASE_URL +
-            'authentication-log/polling/?phone=${phoneNumber ?? ''}',
+            'authentication-log/polling/?phone=${phoneNumber ?? ''}&source=myFHB',
         headers: headerRequest,
       );
       if (response != null) {

@@ -1,12 +1,10 @@
 import 'dart:io';
-import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
-import 'package:myfhb/common/CommonDialogBox.dart';
-import 'package:myfhb/reminders/QurPlanReminders.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
 import 'package:myfhb/common/CommonConstants.dart';
+import 'package:myfhb/common/CommonDialogBox.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -16,6 +14,7 @@ import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/device_integration/view/screens/Device_Widget.dart';
 import 'package:myfhb/device_integration/viewModel/Device_model.dart';
+import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/model/Authentication/UserModel.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
@@ -23,13 +22,9 @@ import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/telehealth/features/chat/view/BadgeIcon.dart';
-import 'package:myfhb/telehealth/features/chat/view/home.dart';
-import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:showcaseview/showcase_widget.dart';
-import 'package:myfhb/device_integration/viewModel/Device_model.dart';
-import 'package:provider/provider.dart';
 
 class DashboardScreen extends StatefulWidget {
   DashboardScreen({
@@ -83,19 +78,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
     QurPlanReminders.getTheRemindersFromAPI();
     callImportantsMethod();
 
-    print(
-        'User Id : ${PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN)}');
-    print(
-        'Auth Token : ${PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)}');
-
     String profilebanner =
         PreferenceUtil.getStringValue(Constants.KEY_DASHBOARD_BANNER);
     if (profilebanner != null) {
       imageURIProfile = File(profilebanner);
     }
-    try {
-      if (!widget.fromPlans) commonUtil.versionCheck(context);
-    } catch (e) {}
+    // try {
+    //   if (!widget.fromPlans) commonUtil.versionCheck(context);
+    // } catch (e) {}
   }
 
   @override
@@ -121,167 +111,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
           _myContext = context;
           return Scaffold(
               key: scaffold_state,
-              bottomNavigationBar: Container(
-                decoration: BoxDecoration(
-                  boxShadow: <BoxShadow>[
-                    BoxShadow(
-                      color: Colors.black54,
-                      blurRadius: 1,
-                    ),
-                  ],
-                ),
-                child: BottomNavigationBar(
-                  type: BottomNavigationBarType.fixed,
-                  selectedFontSize: 10.sp,
-                  unselectedFontSize: 10.sp,
-                  items: <BottomNavigationBarItem>[
-                    BottomNavigationBarItem(
-                        icon: InkWell(
-                            // onTap: () {
-                            //   navigateToTelehealthScreen(0);
-                            // },
-                            child: ImageIcon(
-                          AssetImage(variable.icon_th),
-                          color: Colors.black54,
-                        )),
-                        title: Text(
-                          variable.strTelehealth,
-                          style: TextStyle(color: Colors.black54),
-                        )),
-                    /*BottomNavigationBarItem(
-                        icon: InkWell(
-                          // onTap: () {
-                          //   Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) => ChatHomeScreen()),
-                          //   );
-                          // },
-                            child: ImageIcon(
-                              AssetImage(variable.icon_chat),
-                              color: Colors.black54,
-                            )),
-                        title: Text(
-                          variable.strChat,
-                          style: TextStyle(color: Colors.black54),
-                        )),*/
-                    BottomNavigationBarItem(
-                        icon: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ChatHomeScreen()),
-                            );
-                          },
-                          child: getChatIcon(),
-                        ),
-                        title: Text(
-                          variable.strChat,
-                          style: TextStyle(color: Colors.black54),
-                        )),
-                    BottomNavigationBarItem(
-                        icon: InkWell(
-                          // onTap: () {
-                          //   moveToNextScreen(2);
-                          // },
-                          child: Image.asset(
-                            PreferenceUtil.getStringValue(
-                                        Constants.keyMayaAsset) !=
-                                    null
-                                ? PreferenceUtil.getStringValue(
-                                        Constants.keyMayaAsset) +
-                                    variable.strExtImg
-                                : variable.icon_mayaMain,
-                            height: 25,
-                            width: 25,
-                          ),
-                        ),
-                        title: Text(
-                          'Sheela G',
-                          style: TextStyle(color: Colors.black54),
-                        )),
-                    BottomNavigationBarItem(
-                        icon: InkWell(
-                            // onTap: () {
-                            //   moveToNextScreen(1);
-                            // },
-                            child: ImageIcon(
-                          AssetImage(variable.icon_records),
-                          color: Colors.black54,
-                        )),
-                        title: Text(
-                          variable.strMyRecords,
-                          style: TextStyle(color: Colors.black54),
-                        )),
-                    /*BottomNavigationBarItem(
-                          icon: InkWell(
-                              onTap: () {
-                                moveToFamilyOrprovider(2);
-                              },
-                              child: ImageIcon(
-                                AssetImage(variable.icon_provider),
-                                color: Colors.black54,
-                              )),
-                          title: Text(
-                            variable.strMyProvider,
-                            style: TextStyle(color: Colors.black54),
-                          )),*/
-                    BottomNavigationBarItem(
-                        icon: InkWell(
-                            // onTap: () {
-                            //   Navigator.pushNamed(
-                            //     context,
-                            //     router.rt_UserAccounts,
-                            //     arguments:
-                            //         UserAccountsArguments(selectedIndex: 0),
-                            //   ).then((value) {
-                            //     setState(() {});
-                            //   });
-                            // },
-                            child: ImageIcon(
-                          AssetImage(variable.icon_profile),
-                          color: Colors.black54,
-                        )),
-                        title: Text(
-                          variable.strProfile,
-                          style: TextStyle(color: Colors.black54),
-                        )),
-                  ],
-                  onTap: (tappedIndex) {
-                    switch (tappedIndex) {
-                      case 0:
-                        navigateToTelehealthScreen(0);
-                        break;
-                      case 1:
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ChatHomeScreen()),
-                        );
-                        break;
-                      case 2:
-                        moveToNextScreen(2);
-                        break;
-                      case 3:
-                        moveToNextScreen(1);
-                        break;
-                      case 4:
-                        Navigator.pushNamed(
-                          context,
-                          router.rt_UserAccounts,
-                          arguments: UserAccountsArguments(selectedIndex: 0),
-                        ).then((value) {
-                          setState(() {});
-                        });
-                        break;
-                      default:
-                        navigateToTelehealthScreen(0);
-                        break;
-                    }
-                  },
-                ),
-              ),
               backgroundColor: Colors.grey[200],
               body: ChangeNotifierProvider(
                 create: (context) => DevicesViewModel(),
@@ -291,61 +120,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ));
         },
       ),
-    );
-  }
-
-  saveMediaDialog(BuildContext cont, bool isProfileImage) {
-    return showDialog<void>(
-      context: cont,
-      builder: (BuildContext context) {
-        return StatefulBuilder(builder: (context, setState) {
-          return AlertDialog(
-              title: Text(Constants.makeAChoice),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(1)),
-              content: SingleChildScrollView(
-                child: ListBody(
-                  children: <Widget>[
-                    GestureDetector(
-                      child: Text(Constants.GALLERY_TITLE),
-                      onTap: () {
-                        Navigator.pop(context);
-
-                        var image =
-                            ImagePicker.pickImage(source: ImageSource.gallery);
-                        image.then((value) {
-                          imageURIProfile = value;
-                          PreferenceUtil.saveString(
-                              Constants.KEY_DASHBOARD_BANNER, value.path);
-
-                          (cont as Element).markNeedsBuild();
-                        });
-                      },
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(8.0),
-                    ),
-                    GestureDetector(
-                      child: Text(Constants.CAMERA_TITLE),
-                      onTap: () {
-                        Navigator.pop(context);
-
-                        var image =
-                            ImagePicker.pickImage(source: ImageSource.camera);
-                        image.then((value) {
-                          imageURIProfile = value;
-                          PreferenceUtil.saveString(
-                              Constants.KEY_DASHBOARD_BANNER, value.path);
-
-                          (cont as Element).markNeedsBuild();
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              ));
-        });
-      },
     );
   }
 

@@ -79,152 +79,156 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
     return Scaffold(
       body: Form(
         key: _loginKey,
-        child: Container(
-          height: height,
-          child: Stack(
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      SizedBox(height: height * .1),
-                      AssetImageWidget(
-                        icon: myFHB_logo,
-                        height: 120.0.h,
-                        width: 120.0.h,
-                      ),
-                      SizedBox(height: 20.0.h),
-                      Text(
-                        strPhoneandPass,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 16.0.sp,
+        child: Theme(
+          data: Theme.of(context).copyWith(primaryColor: Color(CommonUtil().getMyPrimaryColor(),),),
+          child: Container(
+            height: height,
+            child: Stack(
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        SizedBox(height: height * .1),
+                        AssetImageWidget(
+                          icon: myFHB_logo,
+                          height: 120.0.h,
+                          width: 120.0.h,
                         ),
-                      ),
-                      SizedBox(
-                        height: 10.0.h,
-                      ),
-                      Column(
-                        children: [
-                          _loginTextFields(
-                            TextFormField(
-                              style: TextStyle(
-                                fontSize: 16.0.sp,
-                              ),
-                              autovalidate: _autoValidateBool,
-                              decoration: InputDecoration(
-                                prefixIcon: Container(
-                                  constraints: BoxConstraints(
-                                      maxWidth: 100.0.w, minWidth: 50.0.w),
-                                  child: CountryCodePickerPage(
-                                      onValuePicked: (Country country) =>
-                                          setState(() =>
-                                              _selectedDialogCountry = country),
-                                      selectedDialogCountry:
-                                          _selectedDialogCountry),
-                                ),
-                                hintText: strNewPhoneHint,
-                                labelText: strNumberHint,
-                                focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    borderSide: BorderSide(
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
-                                    )),
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    borderSide: BorderSide(
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
-                                    )),
-                              ),
-                              validator: (value) {
-                                return AuthenticationValidator()
-                                    .phoneValidation(value, patternPhoneNew,
-                                        strPhoneCantEmpty);
-                              },
-                              controller: numberController,
-                              onSaved: (value) {},
-                              keyboardType: TextInputType.number,
-                            ),
+                        SizedBox(height: 20.0.h),
+                        Text(
+                          strPhoneandPass,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 16.0.sp,
                           ),
-                          SizedBox(height: 10.0.h),
-                          _loginTextFields(
-                            TextFormField(
-                              style: TextStyle(
-                                fontSize: 16.0.sp,
+                        ),
+                        SizedBox(
+                          height: 10.0.h,
+                        ),
+                        Column(
+                          children: [
+                            _loginTextFields(
+                              TextFormField(
+                                style: TextStyle(
+                                  fontSize: 16.0.sp,
+                                ),
+                                autovalidate: _autoValidateBool,
+                                decoration: InputDecoration(
+                                  prefixIcon: Container(
+                                    constraints: BoxConstraints(
+                                        maxWidth: 100.0.w, minWidth: 50.0.w),
+                                    child: CountryCodePickerPage(
+                                        onValuePicked: (Country country) =>
+                                            setState(() =>
+                                                _selectedDialogCountry =
+                                                    country),
+                                        selectedDialogCountry:
+                                            _selectedDialogCountry),
+                                  ),
+                                  hintText: strNewPhoneHint,
+                                  labelText: strNumberHint,
+                                  focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      borderSide: BorderSide(
+                                        color: Color(
+                                            CommonUtil().getMyPrimaryColor()),
+                                      )),
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      borderSide: BorderSide(
+                                        color: Color(
+                                            CommonUtil().getMyPrimaryColor()),
+                                      )),
+                                ),
+                                validator: (value) {
+                                  return AuthenticationValidator()
+                                      .phoneValidation(value, patternPhoneNew,
+                                          strPhoneCantEmpty);
+                                },
+                                controller: numberController,
+                                onSaved: (value) {},
+                                keyboardType: TextInputType.number,
                               ),
-                              autovalidate: _autoValidateBool,
-                              obscureText: _isHidden,
-                              decoration: InputDecoration(
-                                hintText: strPassword,
-                                labelText: strPassword,
-                                suffix: InkWell(
-                                  onTap: _togglePasswordView,
-                                  child: Icon(
-                                    _isHidden
-                                        ? Icons.visibility
-                                        : Icons.visibility_off,
-                                    size: 18,
+                            ),
+                            SizedBox(height: 10.0.h),
+                            _loginTextFields(
+                              TextFormField(
+                                style: TextStyle(
+                                  fontSize: 16.0.sp,
+                                ),
+                                autovalidate: _autoValidateBool,
+                                obscureText: _isHidden,
+                                decoration: InputDecoration(
+                                  hintText: strPassword,
+                                  labelText: strPassword,
+                                  suffix: InkWell(
+                                    onTap: _togglePasswordView,
+                                    child: Icon(
+                                      _isHidden
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
+                                      size: 18,
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      borderSide: BorderSide(
+                                        color: Color(
+                                            CommonUtil().getMyPrimaryColor()),
+                                      )),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderSide: BorderSide(
+                                      color: Color(
+                                          CommonUtil().getMyPrimaryColor()),
+                                    ),
                                   ),
                                 ),
-                                focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    borderSide: BorderSide(
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
-                                    )),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  borderSide: BorderSide(
-                                    color:
-                                        Color(CommonUtil().getMyPrimaryColor()),
-                                  ),
-                                ),
+                                controller: passwordController,
+                                validator: (value) {
+                                  return AuthenticationValidator()
+                                      .loginPasswordValidation(value,
+                                          patternPassword, strPassCantEmpty);
+                                },
                               ),
-                              controller: passwordController,
-                              validator: (value) {
-                                return AuthenticationValidator()
-                                    .loginPasswordValidation(value,
-                                        patternPassword, strPassCantEmpty);
-                              },
                             ),
-                          ),
-                        ],
-                      ),
-                      Container(
-                        padding: EdgeInsets.symmetric(vertical: 10),
-                        alignment: Alignment.centerLeft,
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        ForgotPasswordScreen()));
-                          },
-                          child: Text(strForgotTxt,
-                              style: TextStyle(
-                                  fontSize: 14.0.sp,
-                                  fontWeight: FontWeight.w500)),
+                          ],
                         ),
-                      ),
-                      SizedBox(height: 10.0.h),
-                      _loginsavebutton(),
-                      SizedBox(height: 10.0.h),
-                      _gotoregistertap(),
-                    ],
+                        Container(
+                          padding: EdgeInsets.symmetric(vertical: 10),
+                          alignment: Alignment.centerLeft,
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          ForgotPasswordScreen()));
+                            },
+                            child: Text(strForgotTxt,
+                                style: TextStyle(
+                                    fontSize: 14.0.sp,
+                                    fontWeight: FontWeight.w500)),
+                          ),
+                        ),
+                        SizedBox(height: 10.0.h),
+                        _loginsavebutton(),
+                        SizedBox(height: 10.0.h),
+                        _gotoregistertap(),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              /* Positioned(
-              top: 40,
-              left: 0,
-            ),*/
-            ],
+                /* Positioned(
+                top: 40,
+                left: 0,
+              ),*/
+              ],
+            ),
           ),
         ),
       ),
@@ -423,11 +427,11 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
           LoaderClass.hideLoadingDialog(context);
           if (value != null) {
             Future.delayed(Duration(seconds: 3), () {
-              PageNavigator.goToPermanent(context, router.rt_Dashboard);
+              PageNavigator.goToPermanent(context, router.rt_Landing);
             });
           } else {
             new FHBBasicWidget().showDialogWithTwoButtons(context, () {
-              PageNavigator.goToPermanent(context, router.rt_Dashboard);
+              PageNavigator.goToPermanent(context, router.rt_Landing);
             }, value.message, strConfirmDialog);
           }
         });

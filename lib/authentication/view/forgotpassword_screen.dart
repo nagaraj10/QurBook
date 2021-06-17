@@ -57,74 +57,81 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     return Scaffold(
       body: Form(
         key: _ForgetPassKey,
-        child: Container(
-          height: height,
-          child: Stack(
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      SizedBox(height: height * .1),
-                      AssetImageWidget(
-                        icon: myFHB_logo,
-                        height: 120.0.h,
-                        width: 120.0.h,
-                      ),
-                      SizedBox(height: 20.0.h),
-                      Text(
-                        strOtpShowText,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 14.0.sp,
+        child: Theme(
+          data: Theme.of(context).copyWith(
+            primaryColor: Color(
+              CommonUtil().getMyPrimaryColor(),
+            ),
+          ),
+          child: Container(
+            height: height,
+            child: Stack(
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        SizedBox(height: height * .1),
+                        AssetImageWidget(
+                          icon: myFHB_logo,
+                          height: 120.0.h,
+                          width: 120.0.h,
                         ),
-                      ),
-                      SizedBox(
-                        height: 10.0.h,
-                      ),
-                      Column(
-                        children: [
-                          _resettextfields(
-                              strPhoneNumber, strPhoneHint, mobileController),
-                        ],
-                      ),
-                      SizedBox(height: 10.0.h),
-                      _resetbutton(),
-                      SizedBox(height: height * .015),
-                      Text(
-                        strsupportEmail,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 15.0.sp),
-                      ),
-                      // RichText(
-                      //   softWrap: true,
-                      //   text: TextSpan(
-                      //     text:
-                      //         'If OTP is not received within 5mins, please contact to support at ',
-                      //     style: TextStyle(color: Colors.black, fontSize: 15.0.sp),
-                      //     children: [
-                      //       TextSpan(
-                      //           text: 'support@qurhealth.in',
-                      //           style: TextStyle(
-                      //               color: Colors.blue,
-                      //               fontSize: 15.0.sp,
-                      //               fontWeight: FontWeight.w500),
-                      //           recognizer: TapGestureRecognizer()
-                      //             ..onTap = () {
+                        SizedBox(height: 20.0.h),
+                        Text(
+                          strOtpShowText,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 14.0.sp,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10.0.h,
+                        ),
+                        Column(
+                          children: [
+                            _resettextfields(
+                                strPhoneNumber, strPhoneHint, mobileController),
+                          ],
+                        ),
+                        SizedBox(height: 10.0.h),
+                        _resetbutton(),
+                        SizedBox(height: height * .015),
+                        Text(
+                          strsupportEmail,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 15.0.sp),
+                        ),
+                        // RichText(
+                        //   softWrap: true,
+                        //   text: TextSpan(
+                        //     text:
+                        //         'If OTP is not received within 5mins, please contact to support at ',
+                        //     style: TextStyle(color: Colors.black, fontSize: 15.0.sp),
+                        //     children: [
+                        //       TextSpan(
+                        //           text: 'support@qurhealth.in',
+                        //           style: TextStyle(
+                        //               color: Colors.blue,
+                        //               fontSize: 15.0.sp,
+                        //               fontWeight: FontWeight.w500),
+                        //           recognizer: TapGestureRecognizer()
+                        //             ..onTap = () {
 
-                      //             }),
-                      //     ],
-                      //   ),
-                      // ),
-                      // _gotosignintap(),
-                    ],
+                        //             }),
+                        //     ],
+                        //   ),
+                        // ),
+                        // _gotosignintap(),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
