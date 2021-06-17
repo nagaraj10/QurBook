@@ -25,8 +25,8 @@ import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/fhb_parameters.dart';
+import 'package:myfhb/constants/fhb_parameters.dart' as parametersnstants/fhb_parameters.dart';
 import 'package:myfhb/constants/responseModel.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
@@ -1836,16 +1836,16 @@ class CommonUtil {
 
   static const Map<String, String> supportedLanguages = {
     'english': 'en',
-    'tamil': 'ta',
-    'telugu': 'te',
-    'hindi': 'hi',
+    'french': 'fr',
+    'german': 'de',
+    'spanish': 'es',
     'bengali': 'bn',
     'gujarati': 'gu',
+    'hindi': 'hi',
     'kannada': 'kn',
     'malayalam': 'ml',
-    'spanish': 'es',
-    'french': 'fr',
-    'german': 'de'
+    'tamil': 'ta',
+    'telugu': 'te',
   };
 
   static const Map<String, String> langaugeCodes = {
