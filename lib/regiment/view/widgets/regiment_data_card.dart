@@ -367,7 +367,11 @@ class RegimentDataCard extends StatelessWidget {
 
                         bool canEdit =
                             startTime.difference(DateTime.now()).inMinutes <=
-                                15;
+                                    15 &&
+                                Provider.of<RegimentViewModel>(context,
+                                            listen: false)
+                                        .regimentMode ==
+                                    RegimentMode.Schedule;
                         if (canEdit || isValidSymptom(context)) {
                           LoaderClass.showLoadingDialog(
                             Get.context,
@@ -424,12 +428,14 @@ class RegimentDataCard extends StatelessWidget {
 
   bool isValidSymptom(BuildContext context) {
     DateTime currentTime = DateTime.now();
+    var selectedDate =
+        Provider.of<RegimentViewModel>(context, listen: false).selectedDate;
     return (Provider.of<RegimentViewModel>(context, listen: false)
                 .regimentMode ==
             RegimentMode.Symptoms) &&
-        ((startTime.year <= currentTime.year)
-            ? (startTime.month <= currentTime.month
-                ? startTime.day <= currentTime.day
+        ((selectedDate?.year <= currentTime.year)
+            ? (selectedDate?.month <= currentTime.month
+                ? selectedDate?.day <= currentTime.day
                 : false)
             : false);
   }
@@ -448,7 +454,9 @@ class RegimentDataCard extends StatelessWidget {
 
   Future<void> onCardPressed(BuildContext context) async {
     stopRegimenTTS();
-    bool canEdit = startTime.difference(DateTime.now()).inMinutes <= 15;
+    bool canEdit = startTime.difference(DateTime.now()).inMinutes <= 15 &&
+        Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
+            RegimentMode.Schedule;
     // if (canEdit || isValidSymptom(context)) {
     FieldsResponseModel fieldsResponseModel =
         await Provider.of<RegimentViewModel>(context, listen: false)
