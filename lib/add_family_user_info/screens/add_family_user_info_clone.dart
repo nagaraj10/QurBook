@@ -159,10 +159,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     getSupportedLanguages();
     addFamilyUserInfoBloc = new AddFamilyUserInfoBloc();
     _addFamilyUserInfoRepository = new AddFamilyUserInfoRepository();
-    addFamilyUserInfoBloc
-        .getDeviceSelectionValues()
-        .then((value) {
-          fetchUserProfileInfo();
+    setUserId();
+    addFamilyUserInfoBloc.getDeviceSelectionValues().then((value) {
+      //fetchUserProfileInfo();
     });
     setValuesInEditText();
 
@@ -422,28 +421,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   ],
                 ),
                 widget.arguments.fromClass == CommonConstants.user_update
-                    ? Padding(
-                        padding: EdgeInsets.only(
-                            left: 20, right: 20, top: 5, bottom: 0),
-                        child: DropdownButton(
-                          isExpanded: true,
-                          hint: Text(
-                            CommonConstants.preferredLanguage,
-                            style: TextStyle(
-                              fontSize: 16.0.sp,
-                            ),
-                          ),
-                          value: selectedLanguage,
-                          items: languagesList,
-                          onChanged: (String newLanguage) {
-                            setState(() {
-                              selectedLanguage = newLanguage;
-                            });
-                            addFamilyUserInfoBloc.preferredLanguage =
-                                newLanguage;
-                          },
-                        ),
-                      )
+                    ? getLanguageWidget()
                     : Container(),
                 _showDateOfBirthTextField(),
                 AddressTypeWidget(
@@ -1605,37 +1583,39 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
     profileResult.additionalInfo = additionalInfo;
 
-    try {
-      List<UserProfileSettingCollection3> userProfileSettingCollection =
-          new List();
+    if (widget.arguments.fromClass == CommonConstants.user_update) {
+      try {
+        List<UserProfileSettingCollection3> userProfileSettingCollection =
+            new List();
 
-      UserProfileSettingCollection3 userProfileSettingCollection3Obj =
-          new UserProfileSettingCollection3();
-      ProfileSetting profileSetting = new ProfileSetting();
-      userProfileSettingCollection =
-          addFamilyUserInfoBloc.myprofileObject.result.userProfileSettingCollection3;
-      if (userProfileSettingCollection.length > 0) {
-        userProfileSettingCollection3Obj =
-            myProfile.result.userProfileSettingCollection3[0];
-        if (userProfileSettingCollection3Obj.profileSetting != null) {
-          profileSetting = userProfileSettingCollection3Obj.profileSetting;
-          userProfileSettingCollection3Obj.profileSetting.preferred_language =
-              selectedLanguage;
+        UserProfileSettingCollection3 userProfileSettingCollection3Obj =
+            new UserProfileSettingCollection3();
+        ProfileSetting profileSetting = new ProfileSetting();
+        userProfileSettingCollection = addFamilyUserInfoBloc
+            .myprofileObject.result.userProfileSettingCollection3;
+        if (userProfileSettingCollection.length > 0) {
+          userProfileSettingCollection3Obj =
+              myProfile.result.userProfileSettingCollection3[0];
+          if (userProfileSettingCollection3Obj.profileSetting != null) {
+            profileSetting = userProfileSettingCollection3Obj.profileSetting;
+            userProfileSettingCollection3Obj.profileSetting.preferred_language =
+                selectedLanguage;
+          } else {
+            profileSetting.preferred_language = selectedLanguage;
+            userProfileSettingCollection3Obj.profileSetting = profileSetting;
+          }
+          userProfileSettingCollection.insert(
+              0, userProfileSettingCollection3Obj);
         } else {
           profileSetting.preferred_language = selectedLanguage;
           userProfileSettingCollection3Obj.profileSetting = profileSetting;
+          userProfileSettingCollection.add(userProfileSettingCollection3Obj);
         }
-        userProfileSettingCollection.insert(
-            0, userProfileSettingCollection3Obj);
-      } else {
-        profileSetting.preferred_language = selectedLanguage;
-        userProfileSettingCollection3Obj.profileSetting = profileSetting;
-        userProfileSettingCollection.add(userProfileSettingCollection3Obj);
-      }
 
-      profileResult.userProfileSettingCollection3 =
-          userProfileSettingCollection;
-    } catch (e) {}
+        profileResult.userProfileSettingCollection3 =
+            userProfileSettingCollection;
+      } catch (e) {}
+    }
 
     if (currentselectedBloodGroup != null &&
         currentselectedBloodGroupRange != null) {
@@ -1760,7 +1740,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           } else {
             Navigator.pop(dialogContext);
             Alert.displayAlertPlain(context,
-                title: variable.Error, content: value?.message ?? 'Error while updating');
+                title: variable.Error,
+                content: value?.message ?? 'Error while updating');
           }
         });
       } else {
@@ -1848,7 +1829,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           } else {
             Navigator.pop(dialogContext);
             Alert.displayAlertPlain(context,
-                title: variable.Error, content: value?.message ?? 'Error while updating');
+                title: variable.Error,
+                content: value?.message ?? 'Error while updating');
           }
         });
       } else {
@@ -2300,7 +2282,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     emailController.text = myProfile?.result?.userContactCollection3[0].email;
   }
 
-  void setValueLanguages() {
+  Future<String> setValueLanguages() async {
     /* for (LanguageResult languageResultObj in languageModelList.result) {
       if (languageResultObj.referenceValueCollection.length > 0) {
         for (ReferenceValueCollection referenceValueCollection
@@ -2320,18 +2302,22 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         }
       }
     }*/
-    if (myProfile?.result?.userProfileSettingCollection3?.isNotEmpty) {
-      ProfileSetting profileSetting =
-          myProfile?.result?.userProfileSettingCollection3[0].profileSetting;
-      if (profileSetting != null) {
-        CommonUtil.langaugeCodes.forEach((language, languageCode) {
-          if (language == profileSetting.preferred_language) {
-            //setLanguageToField(language, languageCode);
-            selectedLanguage = language;
-          }
-        });
+    if (selectedLanguage != null && selectedLanguage != '') {
+    } else {
+      if (widget.arguments.myProfileResult.userProfileSettingCollection3
+          ?.isNotEmpty) {
+        ProfileSetting profileSetting = widget.arguments.myProfileResult
+            ?.userProfileSettingCollection3[0].profileSetting;
+        if (profileSetting != null) {
+          CommonUtil.langaugeCodes.forEach((language, languageCode) {
+            if (language == profileSetting.preferred_language) {
+              selectedLanguage = language;
+            }
+          });
+        }
       }
     }
+    return selectedLanguage;
   }
 
   void setLanguageToField(String language, String languageCode) {
@@ -2348,5 +2334,44 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
     PreferenceUtil.saveString(
         SHEELA_LANG, CommonUtil.langaugeCodes[languageCode] ?? 'en-IN');
+  }
+
+  void setUserId() {
+    if (widget.arguments.fromClass == CommonConstants.my_family) {
+      addFamilyUserInfoBloc.userId = widget.arguments.id;
+    } else if (widget.arguments.fromClass == CommonConstants.user_update) {
+      addFamilyUserInfoBloc.userId = widget.arguments.myProfileResult.id;
+    } else {
+      addFamilyUserInfoBloc.userId =
+          widget.arguments.addFamilyUserInfo.childInfo.id;
+    }
+  }
+
+  getLanguageWidget() {
+    return FutureBuilder(
+        future: setValueLanguages(),
+        builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+          print('I m here');
+          return Padding(
+            padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+            child: DropdownButton(
+              isExpanded: true,
+              hint: Text(
+                CommonConstants.preferredLanguage,
+                style: TextStyle(
+                  fontSize: 16.0.sp,
+                ),
+              ),
+              value: selectedLanguage,
+              items: languagesList,
+              onChanged: (String newLanguage) {
+                setState(() {
+                  selectedLanguage = newLanguage;
+                });
+                addFamilyUserInfoBloc.preferredLanguage = newLanguage;
+              },
+            ),
+          );
+        });
   }
 }

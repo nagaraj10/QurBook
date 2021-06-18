@@ -250,6 +250,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
       }
       PreferenceUtil.saveString(
           SHEELA_LANG, CommonUtil.langaugeCodes[currentLanguage] ?? 'en-IN');
+      preferred_language = currentLanguage;
 
       updateAddFamilyInfo = await addFamilyUserInfoRepository.updateUserInfoNew(
           userId,
@@ -316,7 +317,9 @@ class AddFamilyUserInfoBloc extends BaseBloc {
     HealthReportListForUserRepository healthReportListForUserRepository =
         HealthReportListForUserRepository();
     GetDeviceSelectionModel selectionResult;
-    await healthReportListForUserRepository.getDeviceSelection().then((value) {
+    await healthReportListForUserRepository
+        .getDeviceSelection(userIdFromBloc: userId)
+        .then((value) {
       selectionResult = value;
       if (selectionResult.isSuccess) {
         if (selectionResult.result != null) {
@@ -348,7 +351,6 @@ class AddFamilyUserInfoBloc extends BaseBloc {
         _isWSActive = true;
         _isHealthFirstTime = false;
 
-        var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
         healthReportListForUserRepository
             .createDeviceSelection(
                 _isdigitRecognition,
@@ -371,7 +373,6 @@ class AddFamilyUserInfoBloc extends BaseBloc {
             userMappingId = createDeviceSelectionModel.result;
             updateDeviceSelectionModel(preferredLanguage: preferredLanguage);
           } else {
-            var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
             healthReportListForUserRepository
                 .createDeviceSelection(
                     _isdigitRecognition,
@@ -493,7 +494,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
         if (value?.isSuccess ?? false) {
           getDeviceSelectionValues();
         } else {
-          var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+          //var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
           healthReportListForUserRepository
               .createDeviceSelection(
                   _isdigitRecognition,
