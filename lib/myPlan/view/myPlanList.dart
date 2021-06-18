@@ -80,34 +80,57 @@ class _MyPlanState extends State<MyPlanList> {
     }, builder: Builder(builder: (context) {
       _myContext = context;
       return Scaffold(
-          floatingActionButton: getTheRegimen(),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerFloat,
-          body: Container(
-              child: Column(
+          floatingActionButton: FloatingActionButton(
+            onPressed: () async {
+              await Get.toNamed(rt_Diseases);
+            },
+            elevation: 2.0,
+            backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
+            child: Icon(
+              Icons.add,
+              color: Colors.white,
+            ),
+          ),
+          body: Stack(
+            fit: StackFit.expand,
+            alignment: Alignment.bottomCenter,
             children: [
-              SearchWidget(
-                onChanged: (providerName) {
-                  if (providerName != '' && providerName.length > 2) {
-                    isSearch = true;
-                    onSearchedNew(providerName);
-                  } else {
-                    setState(() {
-                      isSearch = false;
-                    });
-                  }
-                },
-              ),
-              SizedBox(
-                height: 5.0.h,
-              ),
-              Expanded(
-                child: myPlanListModel != null ?? myPlanListModel.isSuccess
-                    ? hospitalList(myPlanListModel.result)
-                    : getPlanList(),
-              )
+              Container(
+                  child: Column(
+                children: [
+                  SearchWidget(
+                    onChanged: (providerName) {
+                      if (providerName != '' && providerName.length > 2) {
+                        isSearch = true;
+                        onSearchedNew(providerName);
+                      } else {
+                        setState(() {
+                          isSearch = false;
+                        });
+                      }
+                    },
+                  ),
+                  SizedBox(
+                    height: 5.0.h,
+                  ),
+                  Expanded(
+                    child: myPlanListModel != null ?? myPlanListModel.isSuccess
+                        ? hospitalList(myPlanListModel.result)
+                        : getPlanList(),
+                  )
+                ],
+              )),
+              // Align(
+              //   alignment: Alignment.bottomCenter,
+              //   child: Padding(
+              //     padding: EdgeInsets.only(
+              //       bottom: 20.0.h,
+              //     ),
+              //     child: getTheRegimen(),
+              //   ),
+              // ),
             ],
-          )));
+          ));
     }));
   }
 
