@@ -87,7 +87,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   void initState() {
     mInitialTime = DateTime.now();
     //getProfileImage();
-    getAppColorValues();
+    //getAppColorValues();
     PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
       version = packageInfo.version;
     });
@@ -247,7 +247,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
               ),
             ).then((value) {
               if (value) {
-                getAppColorValues();
+               setState(() {});
               }
             });
             //PageNavigator.goTo(context, router.rt_AppSettings);
@@ -521,7 +521,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   }
 
   setValues(GetDeviceSelectionModel getDeviceSelectionModel) {
-    setState(() {
+
       preColor = getDeviceSelectionModel.result[0].profileSetting.preColor;
       greColor = getDeviceSelectionModel.result[0].profileSetting.greColor;
 
@@ -603,7 +603,6 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
           PreferenceUtil.getSavedTheme(Constants.keyPriColor) != null
               ? PreferenceUtil.getSavedTheme(Constants.keyPriColor)
               : preColor;
-    });
   }
 
   Future<CreateDeviceSelectionModel> createAppColorSelection(
@@ -668,6 +667,25 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   Widget getValuesFromSharedPrefernce() {
     return new FutureBuilder<MyProfileModel>(
       future: getMyProfile(),
+      builder: (BuildContext context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return new Center(
+            child: new CircularProgressIndicator(
+              backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return ErrorsWidget();
+        } else {
+          return getAppColorsAndDeviceValues();
+        }
+      },
+    );
+  }
+
+  Widget getAppColorsAndDeviceValues() {
+    return new FutureBuilder<GetDeviceSelectionModel>(
+      future: getAppColorValues(),
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return new Center(
