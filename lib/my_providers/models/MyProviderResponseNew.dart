@@ -10,9 +10,11 @@ class MyProvidersResponse {
   MyProvidersResponse.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     message = json['message'];
-    result = json['result'] != null
-        ? new MyProvidersResponseData.fromJson(json['result'])
-        : null;
+    if (json.containsKey('result')) {
+      result = json['result'] != null
+          ? new MyProvidersResponseData.fromJson(json['result'])
+          : null;
+    }
   }
 
   Map<String, dynamic> toJson() {

@@ -5,11 +5,11 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/landing/view/landing_arguments.dart';
-import 'package:myfhb/src/ui/Dashboard.dart';
+import 'package:myfhb/plan_dashboard/view/DiseasesList.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 
-class DevicesScreen extends StatelessWidget {
+class DiseasesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,7 +17,7 @@ class DevicesScreen extends StatelessWidget {
         flexibleSpace: GradientAppBar(),
         backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
         elevation: 0,
-        title: Text(strDevices),
+        title: Text(strCarePlans),
         leading: IconWidget(
           icon: Icons.arrow_back_ios,
           colors: Colors.white,
@@ -30,7 +30,7 @@ class DevicesScreen extends StatelessWidget {
           onBackPressed(context);
           return Future.value(false);
         },
-        child: DashboardScreen(),
+        child: DiseasesList(),
       ),
     );
   }

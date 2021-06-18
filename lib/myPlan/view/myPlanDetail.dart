@@ -1,25 +1,15 @@
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
-import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/constants/responseModel.dart';
-import 'package:myfhb/myPlan/model/myPlanDetailModel.dart';
 import 'package:myfhb/myPlan/viewModel/myPlanViewModel.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:flutter/material.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'package:path_provider/path_provider.dart';
 
 class MyPlanDetail extends StatefulWidget {
   final String title;
@@ -331,8 +321,11 @@ class PlanDetail extends State<MyPlanDetail> {
                       CommonUtil()
                           .renewAlertDialog(context, packageId: packageId);
                     } else {
-                      CommonUtil()
-                          .unSubcribeAlertDialog(context, packageId: packageId);
+                      CommonUtil().unSubcribeAlertDialog(
+                        context,
+                        packageId: packageId,
+                        fromDetail: true,
+                      );
                     }
                   },
                   borderSide: BorderSide(

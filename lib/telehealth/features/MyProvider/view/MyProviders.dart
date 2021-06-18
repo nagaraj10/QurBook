@@ -34,10 +34,11 @@ import 'package:myfhb/common/errors_widget.dart';
 
 class MyProviders extends StatefulWidget {
   Function(String) closePage;
+  bool isRefresh;
   @override
   _MyProvidersState createState() => _MyProvidersState();
 
-  MyProviders({this.closePage});
+  MyProviders({this.closePage, this.isRefresh});
 }
 
 class _MyProvidersState extends State<MyProviders> {
@@ -67,6 +68,7 @@ class _MyProvidersState extends State<MyProviders> {
     getDataForProvider();
     _providersBloc = new ProvidersBloc();
     _medicalPreferenceList = _providersBloc.getMedicalPreferencesForDoctors();
+    print('init doctor');
   }
 
   @override
@@ -82,6 +84,15 @@ class _MyProvidersState extends State<MyProviders> {
 
   @override
   Widget build(BuildContext context) {
+    print('inside build of doctors');
+    if (!widget.isRefresh) {
+      providerViewModel.doctorIdsList = null;
+      setState(() {
+        _medicalPreferenceList =
+            _providersBloc.getMedicalPreferencesForDoctors();
+      });
+      widget.isRefresh != widget.isRefresh;
+    }
     return Scaffold(
         body: Container(
             child: Column(
@@ -99,8 +110,8 @@ class _MyProvidersState extends State<MyProviders> {
               },
             ),
             Expanded(
-              child: myProvidersResponseList != null ??
-                      myProvidersResponseList.isSuccess
+              child: (widget.isRefresh && myProvidersResponseList != null ??
+                      myProvidersResponseList.isSuccess)
                   ? myProviderList(myProvidersResponseList)
                   : getDoctorProviderListNew(),
             )
@@ -109,11 +120,14 @@ class _MyProvidersState extends State<MyProviders> {
         floatingActionButton: FloatingActionButton(
           heroTag: "btn2",
           onPressed: () {
-            Navigator.pushNamed(context, router.rt_SearchProvider,
-                arguments: SearchArguments(
-                  searchWord: CommonConstants.doctors,
-                  fromClass: router.cn_teleheathProvider,
-                )).then((value) {
+            Navigator.pushNamed(
+              context,
+              router.rt_SearchProvider,
+              arguments: SearchArguments(
+                searchWord: CommonConstants.doctors,
+                fromClass: router.cn_teleheathProvider,
+              ),
+            ).then((value) {
               providerViewModel.doctorIdsList = null;
               setState(() {
                 _medicalPreferenceList =
@@ -379,7 +393,7 @@ class _MyProvidersState extends State<MyProviders> {
                 new Positioned(
                   bottom: 0.0,
                   right: 2.0,
-                  child: commonWidgets.getDoctorStatusWidgetNew(docs[i],i),
+                  child: commonWidgets.getDoctorStatusWidgetNew(docs[i], i),
                 )
               ],
             ),
@@ -415,7 +429,8 @@ class _MyProvidersState extends State<MyProviders> {
                             .then((status) {
                           if (status) {
                             setState(() {
-                              _medicalPreferenceList = _providersBloc.getMedicalPreferencesForDoctors();
+                              _medicalPreferenceList = _providersBloc
+                                  .getMedicalPreferencesForDoctors();
                             });
                           }
                         });

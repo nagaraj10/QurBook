@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/services.dart';
 import 'package:myfhb/common/errors_widget.dart';
+import 'package:myfhb/my_providers/models/Doctors.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/utils/alert.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
@@ -33,6 +34,8 @@ class FHBBasicWidget {
   String authToken;
 
   var commonConstants = new CommonConstants();
+  var actionWidgetSize = 55.0;
+  var plusIconSize = 14.0;
 
   UnitsMesurements unitsMesurements;
   setValues(String unitsTosearch) {
@@ -41,6 +44,31 @@ class FHBBasicWidget {
         .then((unitsMesurementsClone) {
       unitsMesurements = unitsMesurementsClone;
     });
+  }
+
+  Widget getPlusIcon(Function onTap) {
+    return Positioned(
+      bottom: 0,
+      left: ((55 / 2) - (55 / 2)),
+      child: InkWell(
+        onTap: () {
+          onTap();
+        },
+        child: Container(
+            width: 14, // PlusIconSize = 20.0;
+
+            height: 14, // PlusIconSize = 20.0;
+
+            decoration: BoxDecoration(
+                color: ColorUtils.countColor,
+                borderRadius: BorderRadius.circular(15.0)),
+            child: Icon(
+              Icons.add,
+              color: Colors.white,
+              size: 12.0,
+            )),
+      ),
+    );
   }
 
   Widget getSaveButton(Function onSavedPressed, {String text, double width}) {
@@ -246,9 +274,6 @@ class FHBBasicWidget {
     Color textColor,
     Color circleColor,
   }) {
-/*
-    setAuthToken().then((authToken) {
-*/
     if (myProfile != null && myProfile.result != null) {
       if (myProfile.result.profilePicThumbnailUrl != '') {
         return Image.network(
@@ -343,11 +368,13 @@ class FHBBasicWidget {
   }
 
   Widget getTextFiledWithHint(BuildContext context, String hintTextValue,
-      TextEditingController memoController) {
+      TextEditingController memoController,
+      {bool enabled}) {
     return Container(
         width: 1.sw - 60,
         child: TextField(
             autofocus: false,
+            enabled: enabled ?? true,
             onTap: () {},
             controller: memoController,
             decoration: InputDecoration(
@@ -434,6 +461,28 @@ class FHBBasicWidget {
               })
             ],
           );
+  }
+
+  Widget getPopmenuItem(Doctors element, Function onAddClick) {
+    return PopupMenuItem<Doctors>(
+        value: element,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 10),
+              child: Text(
+                element.user.name,
+              ),
+              width: 0.5.sw,
+            ),
+            SizedBox(height: 10),
+            getSaveButton(() {
+              onAddClick();
+            }, text: 'Add Doctor'),
+            SizedBox(height: 10),
+          ],
+        ));
   }
 
   Future<bool> exitApp(BuildContext context, Function logout) {
@@ -565,7 +614,7 @@ class FHBBasicWidget {
         child: _child,
         overlayColor: Colors.black,
         overlayOpacity: 0.8,
-        height: double.infinity,
+        height: 1.h,
         width: double.infinity,
         container: Container(
             height: 120.0.h,

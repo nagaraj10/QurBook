@@ -1,10 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:myfhb/common/CommonUtil.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 
 class LandingCard extends StatelessWidget {
   const LandingCard({
@@ -18,6 +17,8 @@ class LandingCard extends StatelessWidget {
     this.isEnabled = true,
     this.onLinkPressed,
     this.iconColor,
+    this.eventName,
+    this.onEventPressed,
   });
 
   final String title;
@@ -30,6 +31,8 @@ class LandingCard extends StatelessWidget {
   final bool isEnabled;
   final Function onLinkPressed;
   final Color iconColor;
+  final String eventName;
+  final Function onEventPressed;
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -69,23 +72,66 @@ class LandingCard extends StatelessWidget {
                       Text(
                         '${title ?? ''}',
                         style: TextStyle(
-                          fontSize: 14.0.sp,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w600,
+                          fontSize: 18.0.sp,
+                          color: color,
+                          // fontWeight: FontWeight.w600,
                         ),
                       ),
-                      Visibility(
-                        visible: isEnabled && (lastStatus ?? '').isNotEmpty,
-                        child: Text(
-                          lastStatus ?? '',
-                          style: TextStyle(
-                            fontSize: 14.0.sp,
-                            color: Colors.black54,
-                            fontWeight: FontWeight.w500,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Visibility(
+                            visible: isEnabled &&
+                                ((lastStatus ?? '').isNotEmpty ||
+                                    (eventName ?? '').isNotEmpty),
+                            child: Text(
+                              strLastEntered,
+                              style: TextStyle(
+                                fontSize: 14.0.sp,
+                                color: Colors.black54,
+                                fontWeight: FontWeight.w500,
+                                height: 1.0.h,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
-                          maxLines: 4,
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                          Visibility(
+                            visible: isEnabled && (eventName ?? '').isNotEmpty,
+                            child: InkWell(
+                              onTap: onEventPressed ?? null,
+                              child: Text(
+                                (eventName ?? '').isNotEmpty
+                                    ? toBeginningOfSentenceCase(
+                                        eventName?.trim() ?? '')
+                                    : '',
+                                style: TextStyle(
+                                  fontSize: 14.0.sp,
+                                  color: color,
+                                  decoration: TextDecoration.underline,
+                                  height: 1.3.h,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ),
+                          Visibility(
+                            visible: isEnabled && (lastStatus ?? '').isNotEmpty,
+                            child: Text(
+                              lastStatus ?? '',
+                              style: TextStyle(
+                                fontSize: 14.0.sp,
+                                color: Colors.black54,
+                                fontWeight: FontWeight.w500,
+                                decoration: TextDecoration.none,
+                                height: 1.3.h,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
                       ),
                       Visibility(
                         visible: isEnabled && (alerts ?? '').isNotEmpty,
@@ -95,9 +141,15 @@ class LandingCard extends StatelessWidget {
                             alerts ?? '',
                             style: TextStyle(
                               fontSize: 14.0.sp,
-                              color: color,
+                              color: onLinkPressed != null
+                                  ? Colors.indigoAccent
+                                  : Colors.black54,
+                              fontWeight: FontWeight.w500,
+                              decoration: onLinkPressed != null
+                                  ? TextDecoration.underline
+                                  : TextDecoration.none,
                             ),
-                            maxLines: 2,
+                            maxLines: 3,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),

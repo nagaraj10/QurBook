@@ -16,6 +16,7 @@ const String rt_Landing = '/landing-screen';
 const String rt_Regimen = '/regimen-screen';
 const String rt_MyPlans = '/my-plans-screen';
 const String rt_Plans = '/plans-screen';
+const String rt_Diseases = '/diseases-screen';
 const String rt_Devices = '/devices-screen';
 const String rt_HomeScreen = '/home-screen';
 const String rt_TakePictureForDevices = '/take-picture-screen-for-devices';

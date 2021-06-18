@@ -9,7 +9,6 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/regiment/models/regiment_arguments.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
-import 'package:myfhb/src/ui/Dashboard.dart';
 import 'package:myfhb/src/ui/SplashScreen.dart';
 import 'package:myfhb/src/ui/bot/SuperMaya.dart';
 import 'package:myfhb/src/ui/bot/view/ChatScreen.dart' as bot;
@@ -19,7 +18,6 @@ import 'package:myfhb/telehealth/features/chat/view/chat.dart';
 import 'package:myfhb/telehealth/features/chat/view/home.dart';
 import 'package:myfhb/video_call/model/NotificationModel.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:myfhb/landing/view/landing_screen.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
 
 class IosNotificationHandler {
@@ -62,7 +60,7 @@ class IosNotificationHandler {
     }
   }
 
-  actionForTheNotification() {
+  actionForTheNotification() async {
     if (model.isCall) {
       updateStatus(parameters.accept.toLowerCase());
     } else if (model.isCancellation) {
@@ -331,10 +329,10 @@ class IosNotificationHandler {
         'ns_type': 'appointmentList',
         'navigationPage': 'Tele Health Appointment list',
       });
+      model.redirect = 'appointmentList';
+      await PreferenceUtil.saveNotificationData(model);
       isAlreadyLoaded
-          ? Get.to(TelehealthProviders(
-              arguments: HomeScreenArguments(selectedIndex: 0),
-            ))
+          ? PageNavigator.goTo(Get.context, router.rt_Landing)
           : Get.to(SplashScreen(
               nsRoute: model.redirect,
             ));

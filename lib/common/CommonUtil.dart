@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -13,25 +12,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gallery_saver/gallery_saver.dart';
 import 'package:get/get.dart';
-import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:http/http.dart' as http;
-import 'package:image_downloader/image_downloader.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments.dart';
 import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
 import 'package:myfhb/add_providers/bloc/update_providers_bloc.dart';
+import 'package:myfhb/authentication/view/login_screen.dart';
 import 'package:myfhb/bookmark_record/bloc/bookmarkRecordBloc.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/fhb_parameters.dart';
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/responseModel.dart';
+import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
 import 'package:myfhb/device_integration/viewModel/deviceDataHelper.dart';
@@ -40,69 +37,50 @@ import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/LinkedData.dart';
 import 'package:myfhb/my_family/models/ProfileData.dart';
 import 'package:myfhb/my_family/models/Sharedbyme.dart';
-import 'package:myfhb/my_providers/models/ProfilePicThumbnail.dart';
+import 'package:myfhb/my_providers/models/User.dart';
 import 'package:myfhb/myfhb_weview/myfhb_webview.dart';
 import 'package:myfhb/plan_dashboard/viewModel/subscribeViewModel.dart';
-import 'package:myfhb/record_detail/model/DoctorImageResponse.dart';
+import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
-import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
 import 'package:myfhb/src/blocs/Media/MediaTypeBlock.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/Authentication/DeviceInfoSucess.dart';
-import 'package:myfhb/src/model/Authentication/SignOutResponse.dart';
 import 'package:myfhb/src/model/Category/CategoryData.dart';
-import 'package:myfhb/src/model/Category/CategoryResponseList.dart';
 import 'package:myfhb/src/model/Category/catergory_data_list.dart';
 import 'package:myfhb/src/model/Category/catergory_result.dart';
 import 'package:myfhb/src/model/Health/CategoryInfo.dart';
-import 'package:myfhb/src/model/Health/CompleteData.dart';
-
 import 'package:myfhb/src/model/Health/MediaMasterIds.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
 import 'package:myfhb/src/model/Health/MediaTypeInfo.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/model/Media/DeviceModel.dart';
-import 'package:myfhb/src/model/Media/MediaData.dart';
 import 'package:myfhb/src/model/Media/media_result.dart';
 import 'package:myfhb/src/model/sceretLoader.dart';
 import 'package:myfhb/src/model/secretmodel.dart';
-import 'package:myfhb/src/model/user/DoctorIds.dart';
-import 'package:myfhb/src/model/user/HospitalIds.dart';
-import 'package:myfhb/src/model/user/LaboratoryIds.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/model/user/MyProfileResult.dart';
-import 'package:myfhb/src/model/user/ProfileCompletedata.dart';
 import 'package:myfhb/src/model/user/UserAddressCollection.dart';
-import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/src/resources/repository/CategoryRepository/CategoryResponseListRepository.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/ui/MyRecordsArguments.dart';
-import 'package:myfhb/src/ui/user/UserAccounts.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
-import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:myfhb/telehealth/features/chat/view/BadgeIcon.dart';
 import 'package:myfhb/telehealth/features/chat/view/pdfiosViewer.dart';
 import 'package:package_info/package_info.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shimmer/shimmer.dart';
-import 'package:showcaseview/showcase.dart';
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:url_launcher/url_launcher.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/authentication/view/login_screen.dart';
 import 'package:provider/provider.dart';
-import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
-import 'package:myfhb/src/ui/Dashboard.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:showcaseview/showcase.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CommonUtil {
   static String SHEELA_URL = "";
@@ -1229,6 +1207,7 @@ class CommonUtil {
   regimentDateFormat(
     DateTime newDateTime, {
     bool isAck = false,
+    bool isLanding = false,
   }) {
     DateFormat newFormat;
     String updatedDate = '';
@@ -1238,6 +1217,8 @@ class CommonUtil {
         newDateTime.year == currentTime.year) {
       if (isAck) {
         newFormat = DateFormat("hh:mm a");
+      } else if (isLanding) {
+        newFormat = DateFormat("HH:mm");
       } else {
         newFormat = DateFormat("MMM d, yyyy");
       }
@@ -1249,6 +1230,8 @@ class CommonUtil {
     } else {
       if (isAck) {
         newFormat = DateFormat("hh:mm a");
+      } else if (isLanding) {
+        newFormat = DateFormat("MMM d, HH:mm");
       } else {
         newFormat = DateFormat("EEE, MMM d, yyyy");
       }
@@ -1853,16 +1836,16 @@ class CommonUtil {
 
   static const Map<String, String> supportedLanguages = {
     'english': 'en',
-    'tamil': 'ta',
-    'telugu': 'te',
-    'hindi': 'hi',
+    'french': 'fr',
+    'german': 'de',
+    'spanish': 'es',
     'bengali': 'bn',
     'gujarati': 'gu',
+    'hindi': 'hi',
     'kannada': 'kn',
     'malayalam': 'ml',
-    'spanish': 'es',
-    'french': 'fr',
-    'german': 'de'
+    'tamil': 'ta',
+    'telugu': 'te',
   };
 
   static const Map<String, String> langaugeCodes = {
@@ -2253,12 +2236,15 @@ class CommonUtil {
         });
   }
 
-  Future<dynamic> unSubcribeAlertDialog(BuildContext context,
-      {String title,
-      String content,
-      String packageId,
-      String isSubscribed,
-      Function() refresh}) async {
+  Future<dynamic> unSubcribeAlertDialog(
+    BuildContext context, {
+    String title,
+    String content,
+    String packageId,
+    String isSubscribed,
+    Function() refresh,
+    bool fromDetail = false,
+  }) async {
     var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     showDialog<void>(
         context: context,
@@ -2336,7 +2322,9 @@ class CommonUtil {
                                       Navigator.of(_keyLoader.currentContext,
                                               rootNavigator: true)
                                           .pop();
-                                      Get.back();
+                                      if (fromDetail) {
+                                        Get.back();
+                                      }
                                       Get.back(result: 'refreshUI');
                                       refresh();
                                     } else {
@@ -2727,6 +2715,7 @@ class CommonUtil {
   }
 
   Widget customImage(String iconApi) {
+    print(iconApi);
     return ClipOval(
       child: Container(
         alignment: Alignment.center,
@@ -2916,6 +2905,17 @@ class CommonUtil {
         content: Text(response.result),
       ));
     }
+  }
+
+  String getDoctorName(User user) {
+    String doctorName = '';
+
+    if (user.firstName != null && user.firstName != '') {
+      doctorName = user.firstName + ' ' + user.lastName;
+    } else if (user.userName != null && user.userName != '') {
+      doctorName = user.userName;
+    }
+    return doctorName?.capitalizeFirstofEach;
   }
 }
 

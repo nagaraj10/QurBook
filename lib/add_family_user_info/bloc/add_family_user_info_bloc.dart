@@ -75,6 +75,8 @@ class AddFamilyUserInfoBloc extends BaseBloc {
 
   String userId;
 
+  MyProfileModel myprofileObject;
+
   String name,
       phoneNo,
       email,
@@ -175,6 +177,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
 
     try {
       myProfile = await addFamilyUserInfoRepository.getMyProfileInfoNew(userId);
+      myprofileObject = myProfile;
     } catch (e) {
       myProfileSink.add(ApiResponse.error(e.toString()));
     }
@@ -319,6 +322,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
         if (selectionResult.result != null) {
           setValues(selectionResult);
           userMappingId = selectionResult.result[0].id;
+          getMyProfileInfo();
         } else {
           userMappingId = '';
           _isdeviceRecognition = true;

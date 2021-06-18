@@ -28,9 +28,10 @@ class CategoryList extends StatefulWidget {
   _CategoryState createState() => _CategoryState();
 
   final String providerId;
+  final String diseases;
   final String icon;
 
-  CategoryList(this.providerId, this.icon);
+  CategoryList(this.providerId, this.icon, this.diseases);
 }
 
 class _CategoryState extends State<CategoryList> {
@@ -50,6 +51,7 @@ class _CategoryState extends State<CategoryList> {
 
   String providerId = '';
   String icon = '';
+  String diseases = '';
 
   Future<PlanListModel> planListModel;
 
@@ -67,6 +69,7 @@ class _CategoryState extends State<CategoryList> {
 
     providerId = widget.providerId;
     icon = widget.icon;
+    diseases = widget.diseases;
 
     planListModel = myPlanViewModel.getPlanList(providerId);
   }
@@ -141,14 +144,16 @@ class _CategoryState extends State<CategoryList> {
     isSubscribedOne = false;
     if (planList != null && planList.length > 0) {
       planList.forEach((element) {
-        bool keysUniq = true;
-        categoryListUniq.forEach((catElement) {
-          if (catElement.packcatid == element.packcatid) {
-            keysUniq = false;
+        if (element?.metadata?.diseases == diseases) {
+          bool keysUniq = true;
+          categoryListUniq.forEach((catElement) {
+            if (catElement?.packcatid == element.packcatid) {
+              keysUniq = false;
+            }
+          });
+          if (keysUniq) {
+            categoryListUniq.add(element);
           }
-        });
-        if (keysUniq) {
-          categoryListUniq.add(element);
         }
       });
       categoryListUniq.forEach((elementNew) {
@@ -161,7 +166,8 @@ class _CategoryState extends State<CategoryList> {
           () => [],
         );
         planList.where((elementWhere) {
-          return elementNew.packcatid == elementWhere.packcatid;
+          return (elementWhere?.metadata?.diseases == diseases) &&
+              (elementNew.packcatid == elementWhere.packcatid);
         }).forEach((elementLast) {
           if (elementLast.isSubscribed == '1') {
             isSubscribedOne = true;
@@ -242,8 +248,12 @@ class _CategoryState extends State<CategoryList> {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) =>
-                  PlanList(planList[i].packcatid, planListFull, icon,planList[i]?.catmetadata?.icon)),
+              builder: (context) => PlanList(
+                  planList[i].packcatid,
+                  planListFull,
+                  icon,
+                  planList[i]?.catmetadata?.icon,
+                  planList[i]?.metadata?.diseases)),
         ).then((value) {
           setState(() {
             planListModel = myPlanViewModel.getPlanList(providerId);
@@ -280,7 +290,9 @@ class _CategoryState extends State<CategoryList> {
                       backgroundColor: Colors.grey[200],
                       radius: 20,
                       child: CommonUtil().customImage(
-                          (planList[i]?.catmetadata?.icon??'').isNotEmpty?planList[i]?.catmetadata?.icon : icon)),
+                          (planList[i]?.catmetadata?.icon ?? '').isNotEmpty
+                              ? planList[i]?.catmetadata?.icon
+                              : icon)),
                   SizedBox(
                     width: 20.0.w,
                   ),
@@ -315,8 +327,7 @@ class _CategoryState extends State<CategoryList> {
                         SizedBox(height: 2.h),
                         Text(
                           selectTitle[planList[i].packcatid] != null
-                              ? isSubscribedOne &&
-                                      planList[i].isSubscribed == '1'
+                              ? isSubscribedOne
                                   ? planList[i].catselecttype == '1'
                                       ? strSelectedPlan +
                                           selectedTitle[planList[i].packcatid]

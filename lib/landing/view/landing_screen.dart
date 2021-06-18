@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
@@ -11,30 +12,38 @@ import 'package:myfhb/colors/fhb_colors.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonDialogBox.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:myfhb/common/errors_widget.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as constants;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/landing/view/landing_arguments.dart';
+import 'package:myfhb/landing/view_model/landing_view_model.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/ui/MyRecordsArguments.dart';
 import 'package:myfhb/src/ui/bot/SuperMaya.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/constants/fhb_constants.dart' as constants;
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/appointments/view/appointmentsMain.dart';
 import 'package:myfhb/telehealth/features/chat/view/BadgeIcon.dart';
 import 'package:myfhb/telehealth/features/chat/view/home.dart';
+import 'package:myfhb/video_call/model/NotificationModel.dart';
 import 'package:provider/provider.dart';
+
 import 'widgets/home_widget.dart';
 import 'widgets/navigation_drawer.dart';
-import 'package:myfhb/landing/view_model/landing_view_model.dart';
 
 class LandingScreen extends StatefulWidget {
   static _LandingScreenState of(BuildContext context) =>
       context.findAncestorStateOfType<State<LandingScreen>>();
+
+  LandingScreen({
+    this.landingArguments,
+  });
+
+  final LandingArguments landingArguments;
 
   @override
   _LandingScreenState createState() => _LandingScreenState();
@@ -63,11 +72,38 @@ class _LandingScreenState extends State<LandingScreen> {
     if (profilebanner != null) {
       imageURIProfile = File(profilebanner);
     }
-    try {
-      commonUtil.versionCheck(context);
-    } catch (e) {}
+    if (widget.landingArguments?.needFreshLoad ?? true) {
+      try {
+        commonUtil.versionCheck(context);
+      } catch (e) {}
+      Provider.of<LandingViewModel>(context, listen: false)
+          .getQurPlanDashBoard(needNotify: true);
+    } else {
+      Provider.of<LandingViewModel>(context, listen: false)
+          .getQurPlanDashBoard();
+    }
     profileData = getMyProfile();
-    Provider.of<LandingViewModel>(context, listen: false).getQurPlanDashBoard();
+
+    Future.delayed(Duration(seconds: 1)).then((_) {
+      if (Platform.isIOS) {
+        if (PreferenceUtil.isKeyValid(constants.NotificationData)) {
+          changeTabToAppointments();
+        }
+      }
+    });
+  }
+
+  changeTabToAppointments() async {
+    try {
+      NotificationModel notificationData =
+          await PreferenceUtil.getNotifiationData();
+      if (notificationData.redirect == 'appointmentList') {
+        landingViewModel.updateTabIndex(3);
+        await PreferenceUtil.removeNotificationData();
+      }
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   @override
@@ -147,6 +183,8 @@ class _LandingScreenState extends State<LandingScreen> {
                               _key,
                               () {
                                 profileData = getMyProfile();
+                                landingViewModel.getQurPlanDashBoard(
+                                    needNotify: true);
                                 setState(() {});
                                 (context as Element).markNeedsBuild();
                               },
@@ -366,7 +404,11 @@ class _LandingScreenState extends State<LandingScreen> {
         );
         break;
       default:
-        landingTab = HomeWidget();
+        landingTab = HomeWidget(
+          refresh: (bool userChanged) => refresh(
+            userChanged: userChanged,
+          ),
+        );
         break;
     }
     return landingTab;
@@ -445,7 +487,12 @@ class _LandingScreenState extends State<LandingScreen> {
     );
   }
 
-  void refresh() {
+  void refresh({
+    bool userChanged = false,
+  }) {
+    if (userChanged) {
+      profileData = getMyProfile();
+    }
     setState(() {});
   }
 
@@ -460,9 +507,6 @@ class _LandingScreenState extends State<LandingScreen> {
     } catch (e) {}
     try {
       getProfileData();
-    } catch (e) {}
-    try {
-      syncDevices();
     } catch (e) {}
 
     try {
@@ -493,9 +537,5 @@ class _LandingScreenState extends State<LandingScreen> {
     try {
       await new CommonUtil().getUserProfileData();
     } catch (e) {}
-  }
-
-  void syncDevices() async {
-    await new CommonUtil().syncDevices();
   }
 }

@@ -43,11 +43,26 @@ class PlanViewModel extends ChangeNotifier {
     return filterDoctorData;
   }
 
+  List<PlanListResult> getSearchDiseases(String title,List<PlanListResult> planListOld) {
+    List<PlanListResult> filterDoctorData = new List();
+    for (PlanListResult planList in planListOld) {
+      if (planList?.metadata?.diseases != null && planList?.metadata?.diseases != '') {
+        if (planList?.metadata?.diseases
+            .toLowerCase()
+            .trim()
+            .contains(title.toLowerCase().trim())) {
+          filterDoctorData.add(planList);
+        }
+      }
+    }
+    return filterDoctorData;
+  }
+
   List<PlanListResult> getSearchForPlanList(String title,List<PlanListResult> planListOld) {
     List<PlanListResult> filterDoctorData = new List();
     for (PlanListResult planList in planListOld) {
-      if (planList.title != null && planList.title != '') {
-        if (planList.title
+      if (planList.providerName != null && planList.providerName != '') {
+        if (planList.providerName
             .toLowerCase()
             .trim()
             .contains(title.toLowerCase().trim())) {
@@ -76,16 +91,16 @@ class PlanViewModel extends ChangeNotifier {
     } catch (e) {}
   }
 
-  List<SearchListResult> getFilterForProvider(
-      String title, List<SearchListResult> planListOld) {
-    List<SearchListResult> filterSearch = new List();
-    for (SearchListResult searchList in planListOld) {
-      if (searchList?.title != null && searchList?.title != '') {
-        if (searchList?.title
+  List<PlanListResult> getFilterForProvider(
+      String title, List<PlanListResult> planListOld) {
+    List<PlanListResult> filterSearch = new List();
+    for (PlanListResult searchList in planListOld) {
+      if (searchList?.providerName != null && searchList?.providerName != '') {
+        if (searchList?.providerName
             .toLowerCase()
             .trim()
             .contains(title.toLowerCase().trim()) ||
-            searchList?.description
+            searchList?.providerDesc
                 .toLowerCase()
                 .trim()
                 .contains(title.toLowerCase().trim())) {

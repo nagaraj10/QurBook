@@ -67,6 +67,23 @@ class NotificationModel {
     };
   }
 
+  NotificationModel.fromSharePreferences(Map<String, dynamic> message) {
+    title = message['title'];
+    body = message['body'];
+    ringtone = message['ringtone'];
+    templateName = message['templateName'];
+    userId = message['userId'];
+    idToHighlight = message['idToHighlight'];
+    redirect = message['redirect'];
+    healthRecordMetaIds = message['healthRecordMetaIds'];
+    isCall = message['isCall'];
+    needToHighlight = message['needToHighlight'];
+    meeting_id = message['meeting_id'];
+    doctorId = message['doctorId'];
+    username = message['username'];
+    type = message['type'];
+  }
+
   NotificationModel.fromMap(Map<String, dynamic> messageFromNative) {
     if (messageFromNative[parameters.notification] != null) {
       setData(messageFromNative[parameters.notification]);

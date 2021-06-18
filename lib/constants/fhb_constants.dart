@@ -21,6 +21,7 @@ const String FAQ = 'FAQ';
 const String RateUs = 'Rate us';
 const String SOURCE_NAME = 'tridentApp';
 const String KEY_METADATA = 'metadata';
+const String NotificationData = 'NotificationData';
 const String KEY_CATEGORYNAME = 'categoryName';
 const String KEY_CATEGORYID = 'categoryID';
 const String KEY_CATEGORYLIST = 'categoryList';
@@ -480,25 +481,29 @@ const strVideo = 'video';
 const strFiles = 'file';
 const strAudio = 'audio';
 
-const strYourQurplans = 'Your Qurplans';
-const strNoQurplans = 'Add your plans to start your Regimen';
+const strYourQurplans = 'Your Care Plans';
+const strNoQurplans = 'Add your Care Plans to start your Regimen';
 const strPlansActive = ' Plans active';
 const strYourRegimen = 'Your Regimen';
 const strNoRegimen = 'Your Regimen';
 const strActivitiesDue = ' activities due today';
-const strLastEntered = 'Last entered - ';
+const strLastEntered = 'Recent entry';
 const strVitals = 'Vitals';
-const strSymptomsCheckIn = 'Symptoms\nCheck-in';
+const strVitalsDevice = 'devices available';
+const strVitalsNoDevice = 'No devices available';
+const strSymptomsCheckIn = 'Symptoms';
 const strYourFamily = 'Your Family';
-const strNoFamily = 'No family member active';
-const strFamilyActive = 'family members active';
+const strNoFamily = 'No family members added';
+const strFamilyActive = 'family members';
 const strYourProviders = 'Your Providers';
-const strNoProvider = 'No provider active';
-const strProviderActive = ' providers active';
+const strNoProvider = 'No providers added';
+const strProviderActive = 'providers';
 const strHowVideos = 'How to use Videos?';
 const strNoVideos = 'No videos available';
-const strVideosAvailable = ' videos available';
+const strVideosAvailable = 'videos available';
 const strChatWithUs = 'Chat with us';
+const strChatAvailable = ' is available';
+const strChatNotAvailable = 'No care provider assigned';
 const strMyDashboard = 'Dashboard';
 const String strSheelaG = 'Sheela G';
 const String strAppointment = 'Appointments';
@@ -507,6 +512,7 @@ const String strRegimen = 'Regimen';
 const String strDevices = 'Devices';
 const String strPlans = 'Hospitals';
 const String strMyPlans = 'My QurPlans';
+const String strCarePlans = 'Care Plans';
 
 const strUploading = 'Uploading...';
 const strSubscribe = 'Subscribe';
@@ -528,7 +534,11 @@ const searchHospitals = 'Search Hospitals';
 
 const strQurhealth = 'QurHealth';
 
-const strCovidFree = 'Click for FREE COVID PLANS';
+const strCovidFree = 'Choose your FREE CARE PLANS';
+
+const strDiseasesImage = 'https://qurplan.com/assets/icons/diseases/';
+const strSVG = '.svg';
+const strAllPlans = 'All Plans';
 
 FirebaseAnalytics _firebaseAnalytics = FirebaseAnalytics();
 var mInitialTime;
