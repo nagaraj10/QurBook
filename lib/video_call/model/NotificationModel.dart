@@ -18,25 +18,35 @@ class NotificationModel {
   String doctorId;
   String username;
   String type;
+  String eventId;
+  String rawTitle;
+  String rawBody;
+  String doctorName;
+  String doctorPicture;
+  String patientId;
+  String patientName;
+  String patientPicture;
   CallArguments callArguments;
   Map<int, dynamic> redirectData;
 
-  NotificationModel({
-    this.title,
-    this.body,
-    this.ringtone,
-    this.templateName,
-    this.userId,
-    this.idToHighlight,
-    this.redirect,
-    this.healthRecordMetaIds,
-    this.isCall,
-    this.needToHighlight,
-    this.meeting_id,
-    this.doctorId,
-    this.username,
-    this.type,
-  });
+  NotificationModel(
+      {this.title,
+      this.body,
+      this.ringtone,
+      this.templateName,
+      this.userId,
+      this.idToHighlight,
+      this.redirect,
+      this.healthRecordMetaIds,
+      this.isCall,
+      this.needToHighlight,
+      this.meeting_id,
+      this.doctorId,
+      this.username,
+      this.type,
+      this.eventId,
+      this.rawTitle,
+      this.rawBody});
 
   Map<String, dynamic> toMap() {
     return {
@@ -120,13 +130,44 @@ class NotificationModel {
         if (message[parameters.strtype] != null) {
           type = message[parameters.strtype];
         }
+        if (message[parameters.PROP_EVEID] != null) {
+          eventId = message[parameters.PROP_EVEID];
+        }
+        if (message[parameters.PROP_RAWTITLE] != null) {
+          rawTitle = message[parameters.PROP_RAWTITLE];
+        }
+        if (message[parameters.PROP_RAWBODY] != null) {
+          rawBody = message[parameters.PROP_RAWBODY];
+        }
+        if (message[parameters.doctorName] != null) {
+          doctorName = message[parameters.doctorName];
+        }
+        if (message[parameters.doctorPicture] != null) {
+          doctorPicture = message[parameters.doctorPicture];
+        }
+        if (message[parameters.strPatientId] != null) {
+          patientId = message[parameters.strPatientId];
+        }
+        if (message[parameters.patientName] != null) {
+          patientName = message[parameters.patientName];
+        }
+        if (message[parameters.patientPicture] != null) {
+          patientPicture = message[parameters.patientPicture];
+        }
+        if (message[parameters.gcmEventId] != null) {
+          eventId = message[parameters.gcmEventId];
+        }
       }
     }
     setData(messageFromNative);
     if (redirect.contains('|')) {
       final split = redirect.split('|');
-      redirectData = {for (int i = 0; i < split.length; i++) i: split[i]};
-      redirectData[split.length] = healthRecordMetaIds;
+      if (split.first == 'sheela') {
+        redirect = split.first;
+      } else {
+        redirectData = {for (int i = 0; i < split.length; i++) i: split[i]};
+        redirectData[split.length] = healthRecordMetaIds;
+      }
     }
     if (title == null) {
       title = "title";
@@ -185,6 +226,34 @@ class NotificationModel {
     }
     if (message[parameters.strtype] != null) {
       type = message[parameters.strtype];
+    }
+
+    if (message[parameters.PROP_EVEID] != null) {
+      eventId = message[parameters.PROP_EVEID];
+    }
+    if (message[parameters.gcmEventId] != null) {
+      eventId = message[parameters.gcmEventId];
+    }
+    if (message[parameters.PROP_RAWTITLE] != null) {
+      rawTitle = message[parameters.PROP_RAWTITLE];
+    }
+    if (message[parameters.PROP_RAWBODY] != null) {
+      rawBody = message[parameters.PROP_RAWBODY];
+    }
+    if (message[parameters.doctorName] != null) {
+      doctorName = message[parameters.doctorName];
+    }
+    if (message[parameters.doctorPicture] != null) {
+      doctorPicture = message[parameters.doctorPicture];
+    }
+    if (message[parameters.strPatientId] != null) {
+      patientId = message[parameters.strPatientId];
+    }
+    if (message[parameters.patientName] != null) {
+      patientName = message[parameters.patientName];
+    }
+    if (message[parameters.patientPicture] != null) {
+      patientPicture = message[parameters.patientPicture];
     }
   }
 }

@@ -51,6 +51,7 @@ class Chat extends StatefulWidget {
   final String patientName;
   final String patientPicture;
   final bool isFromVideoCall;
+  final String message;
 
   Chat(
       {Key key,
@@ -61,7 +62,8 @@ class Chat extends StatefulWidget {
       @required this.patientId,
       @required this.patientName,
       @required this.patientPicture,
-      @required this.isFromVideoCall})
+      @required this.isFromVideoCall,
+      this.message})
       : super(key: key);
 
   @override
@@ -80,7 +82,8 @@ class ChatState extends State<Chat> {
           patientId: widget.patientId,
           patientName: widget.patientName,
           patientPicture: widget.patientPicture,
-          isFromVideoCall: widget.isFromVideoCall),
+          isFromVideoCall: widget.isFromVideoCall,
+          message: widget?.message,),
     );
   }
 
@@ -100,6 +103,7 @@ class ChatScreen extends StatefulWidget {
   final String patientName;
   final String patientPicture;
   final bool isFromVideoCall;
+  final String message;
 
   ChatScreen(
       {Key key,
@@ -110,7 +114,8 @@ class ChatScreen extends StatefulWidget {
       @required this.patientId,
       @required this.patientName,
       @required this.patientPicture,
-      @required this.isFromVideoCall})
+      @required this.isFromVideoCall,
+      this.message})
       : super(key: key);
 
   @override
@@ -212,6 +217,8 @@ class ChatScreenState extends State<ChatScreen> {
     getPatientDetails();
 
     updateReadCount();
+
+    textEditingController.text = widget?.message;
   }
 
   @override

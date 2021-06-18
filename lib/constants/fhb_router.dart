@@ -46,10 +46,10 @@ setRouter(List<CameraDescription> listOfCameras) async {
     router.rt_Splash: (BuildContext context) => SplashScreen(),
     router.rt_SignIn: (BuildContext context) => SignInScreen(),
     router.rt_Dashboard: (BuildContext context) => DevicesScreen(),
+    router.rt_Regimen: (BuildContext context) => RegimentScreen(aruguments: ModalRoute.of(context).settings.arguments),
     router.rt_Landing: (BuildContext context) => LandingScreen(
           landingArguments: ModalRoute.of(context).settings.arguments,
         ),
-    router.rt_Regimen: (BuildContext context) => RegimentScreen(),
     router.rt_MyPlans: (BuildContext context) => MyPlansScreen(),
     router.rt_Plans: (BuildContext context) => PlansScreen(),
     router.rt_Diseases: (BuildContext context) => DiseasesScreen(),

@@ -24,8 +24,12 @@ class ChatScreen extends StatefulWidget {
   final bool isSheelaAskForLang;
   final String langCode;
   final String sheelaInputs;
+  final String rawMessage;
   ChatScreen(
-      {@required this.isSheelaAskForLang, this.langCode, this.sheelaInputs});
+      {@required this.isSheelaAskForLang,
+      this.langCode,
+      this.sheelaInputs,
+      this.rawMessage});
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -64,8 +68,13 @@ class _ChatScreenState extends State<ChatScreen>
       getMyViewModel(sheelaInputs: widget.sheelaInputs);
     } else {
       widget.isSheelaAskForLang
-          ? getMyViewModel().askUserForLanguage()
-          : getMyViewModel().startMayaAutomatically();
+          ? (widget?.rawMessage != null && widget?.rawMessage?.isNotEmpty)
+              ? getMyViewModel().askUserForLanguage(message: widget?.rawMessage)
+              : getMyViewModel().askUserForLanguage()
+          : (widget?.rawMessage != null && widget?.rawMessage?.isNotEmpty)
+              ? getMyViewModel()
+                  .startMayaAutomatically(message: widget?.rawMessage)
+              : getMyViewModel().startMayaAutomatically();
     }
   }
 

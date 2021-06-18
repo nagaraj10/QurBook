@@ -42,7 +42,11 @@ class RegimentViewModel extends ChangeNotifier {
     bool isDone = false,
     int index,
     bool isInitial = false,
+    String eventId,
   }) {
+    if (eventId != null) {
+      redirectEventId = eventId;
+    }
     if (isDone) {
       initialShowIndex = null;
     } else if (index != null) {
