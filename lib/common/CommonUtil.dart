@@ -41,6 +41,8 @@ import 'package:myfhb/my_family/models/Sharedbyme.dart';
 import 'package:myfhb/my_providers/models/User.dart';
 import 'package:myfhb/myfhb_weview/myfhb_webview.dart';
 import 'package:myfhb/plan_dashboard/viewModel/subscribeViewModel.dart';
+import 'package:myfhb/refer_friend/view/invite_contacts_screen.dart';
+import 'package:myfhb/refer_friend/viewmodel/referafriend_vm.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
@@ -79,6 +81,7 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showcaseview/showcase.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -94,6 +97,7 @@ class CommonUtil {
   static String BASE_URL_FROM_RES = "";
   static String BASEURL_DEVICE_READINGS = '';
   static String FIREBASE_CHAT_NOTIFY_TOKEN = '';
+  static const bgColor = 0xFFe3e2e2;
 
   static const secondaryGrey = 0xFF545454;
 
@@ -2930,6 +2934,56 @@ class CommonUtil {
     }
     return doctorName?.capitalizeFirstofEach;
   }
+
+  accessContactsDialog() async {
+    final PermissionStatus permissionStatus = await Permission.contacts.status;
+    if (permissionStatus == PermissionStatus.granted) {
+      navigateInviteContact();
+    } else {
+      await getPermission().then((value) {
+        if (value == PermissionStatus.granted) {
+          navigateInviteContact();
+        }else {
+          FlutterToast().getToast(
+              'Please allow access to invite people from your contacts',
+              Colors.red);
+        }
+      });
+    }
+  }
+
+  Future<PermissionStatus> getPermission() async {
+    final PermissionStatus permission = await Permission.contacts.status;
+    if ((permission != PermissionStatus.granted)) {
+      final Map<Permission, PermissionStatus> permissionStatus =
+          await [Permission.contacts].request();
+      return permissionStatus[Permission.contacts] ??
+          PermissionStatus.undetermined;
+    } else {
+      return permission;
+    }
+  }
+
+  navigateInviteContact() {
+    Navigator.pop(Get.context);
+    Navigator.push(
+      Get.context,
+      MaterialPageRoute(
+        builder: (context) => MultiProvider(
+          providers: <SingleChildWidget>[
+            ChangeNotifierProvider<ReferAFriendViewModel>(
+              create: (_) => ReferAFriendViewModel(),
+            ),
+          ],
+          child: InviteContactsScreen(),
+        ),
+      ),
+    );
+  }
+
+
+
+
 }
 
 extension CapExtension on String {

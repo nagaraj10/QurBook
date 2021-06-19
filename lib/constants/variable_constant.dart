@@ -581,6 +581,7 @@ const String st_pausedplayer = 'paused player';
 const String strNoData = 'No data Available';
 const String strViewPDF = 'View PDF';
 const String strLogout = 'Logout';
+const String strRefer_friend = 'Refer a Friend';
 const String strLogoutMsg =
     'Stay Healthy.. See you Soon. \nSheela will be waiting to serve you.';
 const String strYes = 'Yes';

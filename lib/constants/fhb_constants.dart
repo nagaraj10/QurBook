@@ -540,6 +540,12 @@ const strCovidFree = 'Choose your FREE CARE PLANS';
 const strDiseasesImage = 'https://qurplan.com/assets/icons/diseases/';
 const strSVG = '.svg';
 const strAllPlans = 'All Plans';
+const String strSendInvite = 'Send Invite';
+const String strContactsLabel = 'Contacts';
+const String strSearchContacts = 'Search Contacts';
+const String strNoContactsSearchlbl =
+    'Looks like there is no contact in this name!!';
+const String strNoContactsLabel = 'Looks Like There are No Contacts!!!';
 
 FirebaseAnalytics _firebaseAnalytics = FirebaseAnalytics();
 var mInitialTime;

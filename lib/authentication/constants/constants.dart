@@ -98,6 +98,7 @@ const String strSignEndpoint = 'login';
 const String strUserVerifyEndpoint = 'confirm-user';
 const String strOtpVerifyEndpoint = 'auth/verify-otp';
 const String strUserOtpVerifyEndpoint = 'user-relationship/verify-otp';
+const String qr_refer_friend = "/user/refer-friend";
 const String strResult = "result";
 const String strmessage = "message";
 const String strIsSuccess = 'isSuccess';
