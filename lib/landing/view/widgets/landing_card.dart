@@ -16,7 +16,7 @@ class LandingCard extends StatelessWidget {
     this.onAddPressed,
     this.isEnabled = true,
     this.onLinkPressed,
-    this.iconColor,
+    this.alertsColor,
     this.eventName,
     this.onEventPressed,
   });
@@ -30,7 +30,7 @@ class LandingCard extends StatelessWidget {
   final Function onAddPressed;
   final bool isEnabled;
   final Function onLinkPressed;
-  final Color iconColor;
+  final Color alertsColor;
   final String eventName;
   final Function onEventPressed;
 
@@ -46,7 +46,7 @@ class LandingCard extends StatelessWidget {
           ),
           elevation: 5.0,
           color: Colors.white,
-          shadowColor: Colors.white54,
+          shadowColor: Colors.black54,
           child: Stack(
             children: [
               InkWell(
@@ -77,74 +77,34 @@ class LandingCard extends StatelessWidget {
                           // fontWeight: FontWeight.w600,
                         ),
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Visibility(
-                            visible: isEnabled &&
-                                ((lastStatus ?? '').isNotEmpty ||
-                                    (eventName ?? '').isNotEmpty),
-                            child: Text(
-                              strLastEntered,
-                              style: TextStyle(
-                                fontSize: 14.0.sp,
-                                color: Colors.black54,
-                                fontWeight: FontWeight.w500,
-                                height: 1.0.h,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
+                      Visibility(
+                        visible: onLinkPressed == null &&
+                            isEnabled &&
+                            (alerts ?? '').isNotEmpty,
+                        child: Text(
+                          alerts ?? '',
+                          style: TextStyle(
+                            fontSize: alertsColor != null ? 14.0.sp : 12.0.sp,
+                            color: alertsColor ?? Colors.black54,
+                            decoration: onLinkPressed != null
+                                ? TextDecoration.underline
+                                : TextDecoration.none,
                           ),
-                          Visibility(
-                            visible: isEnabled && (eventName ?? '').isNotEmpty,
-                            child: InkWell(
-                              onTap: onEventPressed ?? null,
-                              child: Text(
-                                (eventName ?? '').isNotEmpty
-                                    ? toBeginningOfSentenceCase(
-                                        eventName?.trim() ?? '')
-                                    : '',
-                                style: TextStyle(
-                                  fontSize: 14.0.sp,
-                                  color: color,
-                                  decoration: TextDecoration.underline,
-                                  height: 1.3.h,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ),
-                          Visibility(
-                            visible: isEnabled && (lastStatus ?? '').isNotEmpty,
-                            child: Text(
-                              lastStatus ?? '',
-                              style: TextStyle(
-                                fontSize: 14.0.sp,
-                                color: Colors.black54,
-                                fontWeight: FontWeight.w500,
-                                decoration: TextDecoration.none,
-                                height: 1.3.h,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                       Visibility(
-                        visible: isEnabled && (alerts ?? '').isNotEmpty,
+                        visible: onLinkPressed != null &&
+                            isEnabled &&
+                            (alerts ?? '').isNotEmpty,
                         child: InkWell(
                           onTap: onLinkPressed,
                           child: Text(
                             alerts ?? '',
                             style: TextStyle(
-                              fontSize: 14.0.sp,
-                              color: onLinkPressed != null
-                                  ? Colors.indigoAccent
-                                  : Colors.black54,
-                              fontWeight: FontWeight.w500,
+                              fontSize: alertsColor != null ? 12.0.sp : 12.0.sp,
+                              color: Colors.black54,
                               decoration: onLinkPressed != null
                                   ? TextDecoration.underline
                                   : TextDecoration.none,
@@ -154,6 +114,65 @@ class LandingCard extends StatelessWidget {
                           ),
                         ),
                       ),
+                      Visibility(
+                        visible: isEnabled && (eventName ?? '').isNotEmpty,
+                        child: InkWell(
+                          onTap: null,
+                          child: Text(
+                            (eventName ?? '').isNotEmpty
+                                ? toBeginningOfSentenceCase(
+                                    eventName?.trim() ?? '')
+                                : '',
+                            style: TextStyle(
+                              fontSize: 12.0.sp,
+                              color: Colors.black54,
+                              height: 1.3.h,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                      Visibility(
+                        visible: isEnabled && (lastStatus ?? '').isNotEmpty,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              lastStatus ?? '',
+                              style: TextStyle(
+                                fontSize: 12.0.sp,
+                                color: Colors.black54,
+                                decoration: TextDecoration.none,
+                                height: 1.3.h,
+                              ),
+                              textAlign: TextAlign.end,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
+                      // Visibility(
+                      //   visible: onLinkPressed != null &&
+                      //       isEnabled &&
+                      //       (alerts ?? '').isNotEmpty,
+                      //   child: InkWell(
+                      //     onTap: onLinkPressed,
+                      //     child: Text(
+                      //       alerts ?? '',
+                      //       style: TextStyle(
+                      //         fontSize: alertsColor != null ? 12.0.sp : 12.0.sp,
+                      //         color: Colors.black54,
+                      //         decoration: onLinkPressed != null
+                      //             ? TextDecoration.underline
+                      //             : TextDecoration.none,
+                      //       ),
+                      //       maxLines: 3,
+                      //       overflow: TextOverflow.ellipsis,
+                      //     ),
+                      //   ),
+                      // ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -161,7 +180,6 @@ class LandingCard extends StatelessWidget {
                             icon,
                             width: 40.0.sp,
                             height: 40.0.sp,
-                            color: iconColor,
                           ),
                           Visibility(
                             visible: onAddPressed != null,
@@ -171,10 +189,11 @@ class LandingCard extends StatelessWidget {
                               child: FloatingActionButton(
                                 onPressed: onAddPressed ?? () {},
                                 elevation: 2.0,
+                                backgroundColor: color,
                                 heroTag: '$title',
                                 child: Icon(
                                   Icons.add,
-                                  color: color,
+                                  color: Colors.white,
                                 ),
                               ),
                             ),
@@ -186,7 +205,7 @@ class LandingCard extends StatelessWidget {
                 ),
               ),
               Visibility(
-                visible: !isEnabled,
+                visible: false && !isEnabled,
                 child: Container(
                   decoration: BoxDecoration(
                     color: Colors.grey.withOpacity(0.5),

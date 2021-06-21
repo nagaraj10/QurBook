@@ -81,7 +81,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
     return Scaffold(key: scaffold_state, body: getProfileDetailClone());
   }
 
-  void getPreferredLanguage(MyProfileResult myProfile) async {
+  Future<String> getPreferredLanguage(MyProfileResult myProfile) async {
     try {
       try {
         var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
@@ -90,12 +90,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
         }
       } catch (e) {}
 
-      PreferenceUtil.saveString(
-          SHEELA_LANG,
-          CommonUtil.langaugeCodes[myProfile?.additionalInfo.language[0]] ??
-              'en-IN');
-
-      setValueLanguages(myProfile);
+      return setValueLanguages(myProfile);
     } catch (e) {
       String currentLanguage = '';
       final lan = CommonUtil.getCurrentLanCode();
@@ -116,14 +111,25 @@ class _MyProfilePageState extends State<MyProfilePage> {
     }
   }
 
-  void setValueLanguages(MyProfileResult myProfile) {
+  String setValueLanguages(MyProfileResult myProfile) {
     if (myProfile?.userProfileSettingCollection3?.isNotEmpty) {
       ProfileSetting profileSetting =
           myProfile?.userProfileSettingCollection3[0].profileSetting;
       if (profileSetting != null) {
         CommonUtil.langaugeCodes.forEach((language, languageCode) {
           if (language == profileSetting.preferred_language) {
-            setLanguageToField(language, languageCode);
+            final langCode = language.split("-").first;
+            String currentLanguage = langCode;
+
+            if (currentLanguage.isNotEmpty) {
+              CommonUtil.supportedLanguages.forEach((language, languageCode) {
+                if (currentLanguage == languageCode) {
+                  languageController.text = toBeginningOfSentenceCase(language);
+                }
+              });
+            }
+
+            return languageController.text;
           }
         });
       }
@@ -138,7 +144,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
         if (snapshot.hasData) {
           //* its done with fetching the data from remote
           if (snapshot.hasData && snapshot.data != null) {
-            getPreferredLanguage(snapshot.data.result);
+            //getPreferredLanguage(snapshot.data.result);
             return getProfileWidget(snapshot.data, snapshot.data.result);
           } else {
             //todo proper error msg to users
@@ -525,19 +531,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                         )),
                   ],
                 ),
-                Padding(
-                  padding: EdgeInsets.all(10),
-                  child: TextField(
-                    style: TextStyle(fontSize: 16.0.sp),
-                    controller: languageController,
-                    enabled: false,
-                    decoration: InputDecoration(
-                      hintText: CommonConstants.preferredLanguage,
-                      hintStyle: TextStyle(fontSize: 16.0.sp),
-                      labelText: CommonConstants.preferredLanguage,
-                    ),
-                  ),
-                ),
+                getLanguageWidget(myProfile),
                 Padding(
                   padding: EdgeInsets.all(10),
                   child: TextField(
@@ -647,7 +641,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
     });
   }
 
-  void setLanguageToField(String language, String languageCode) {
+  String setLanguageToField(String language, String languageCode) {
     final langCode = language.split("-").first;
     String currentLanguage = langCode;
 
@@ -660,7 +654,27 @@ class _MyProfilePageState extends State<MyProfilePage> {
       });
     }
 
-    PreferenceUtil.saveString(
-        SHEELA_LANG, CommonUtil.langaugeCodes[languageCode] ?? 'en-IN');
+    return languageController.text;
+  }
+
+  getLanguageWidget(MyProfileModel myProfile) {
+    return FutureBuilder(
+        future: getPreferredLanguage(myProfile?.result),
+        builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+          languageController.text = snapshot.data;
+          return Padding(
+            padding: EdgeInsets.all(10),
+            child: TextField(
+              style: TextStyle(fontSize: 16.0.sp),
+              controller: languageController,
+              enabled: false,
+              decoration: InputDecoration(
+                hintText: CommonConstants.preferredLanguage,
+                hintStyle: TextStyle(fontSize: 16.0.sp),
+                labelText: CommonConstants.preferredLanguage,
+              ),
+            ),
+          );
+        });
   }
 }
