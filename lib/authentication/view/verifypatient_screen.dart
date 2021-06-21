@@ -548,6 +548,9 @@ class _VerifyPatientState extends State<VerifyPatient> {
       _getPatientDetails();
     } else {
       LoaderClass.hideLoadingDialog(context);
+      if (response?.message?.contains('expired') ?? false) {
+        Navigator.pop(context);
+      }
       toast.getToast(response.message, Colors.red);
     }
   }
