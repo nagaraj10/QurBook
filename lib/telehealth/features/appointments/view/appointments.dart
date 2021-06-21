@@ -196,10 +196,17 @@ class _AppointmentsState extends State<Appointments> {
     var appointmentData = Provider.of<AppointmentsListViewModel>(context);
     switch (appointmentData.loadingStatus) {
       case LoadingStatus.searching:
-        return new Center(
-          child: new CircularProgressIndicator(
-            backgroundColor: Color(
-              new CommonUtil().getMyPrimaryColor(),
+        return SafeArea(
+          child: SizedBox(
+            height: 1.sh / 2.0,
+            child: new Center(
+              child: SizedBox(
+                width: 30.0.h,
+                height: 30.0.h,
+                child: new CircularProgressIndicator(
+                    backgroundColor:
+                    Color(new CommonUtil().getMyPrimaryColor())),
+              ),
             ),
           ),
         );
