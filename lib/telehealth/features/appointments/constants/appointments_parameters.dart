@@ -148,4 +148,5 @@ const String strFeeDetails='feeDetails';
 const String strPaidAmount='paidAmount';
 const String strDoctorCancellationCharges='doctorCancellationCharge';
 const String strFinalRefundAmount='finalRefundAmount';
+const String strOFFMODE='OFFMOD';
 
