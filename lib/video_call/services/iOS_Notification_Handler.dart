@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:launch_review/launch_review.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
@@ -58,6 +59,13 @@ class IosNotificationHandler {
   }
 
   actionForTheNotification() async {
+    if (model.templateName == 'openurl') {
+      LaunchReview.launch(
+          androidAppId: variable.strAppPackage,
+          iOSAppId: variable.iOSAppId,
+          writeReview: false);
+    }
+
     if (model.isCall) {
       updateStatus(parameters.accept.toLowerCase());
     } else if (model.isCancellation) {
