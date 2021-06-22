@@ -275,7 +275,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
           relationship);
       //userProfileSink.add(ApiResponse.completed(updateAddFamilyInfo));
 
-      await updateDeviceSelectionModel(preferredLanguage: preferredLanguage);
+      await updateDeviceSelectionModel(preferredLanguage: preferred_language);
     } catch (e) {
       userProfileSink.add(ApiResponse.error(e.toString()));
     }

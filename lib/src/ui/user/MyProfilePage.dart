@@ -125,6 +125,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
               CommonUtil.supportedLanguages.forEach((language, languageCode) {
                 if (currentLanguage == languageCode) {
                   languageController.text = toBeginningOfSentenceCase(language);
+                  PreferenceUtil.saveString(
+        SHEELA_LANG, CommonUtil.langaugeCodes[languageCode] ?? 'en-IN');
                 }
               });
             }
