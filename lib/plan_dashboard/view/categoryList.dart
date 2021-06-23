@@ -1,18 +1,17 @@
-import 'dart:math';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:gmiwidgetspackage/widgets/sized_box.dart';
+import 'package:gmiwidgetspackage/widgets/text_widget.dart';
+import 'package:group_list_view/group_list_view.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/errors_widget.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
+import 'package:myfhb/plan_dashboard/view/planDetailsView.dart';
 import 'package:myfhb/plan_dashboard/view/planList.dart';
 import 'package:myfhb/plan_dashboard/viewModel/planViewModel.dart';
 import 'package:myfhb/plan_dashboard/viewModel/subscribeViewModel.dart';
@@ -54,6 +53,11 @@ class _CategoryState extends State<CategoryList> {
   String diseases = '';
 
   Future<PlanListModel> planListModel;
+  Map<String, List<PlanListResult>> planListResultMap;
+
+  List<PlanListResult> planListResult = [];
+
+  bool isSelected = false;
 
   @override
   void initState() {
@@ -93,7 +97,7 @@ class _CategoryState extends State<CategoryList> {
             ),
           ),
           title: Text(
-            'Packages',
+            strPlans,
             style: TextStyle(
               fontSize: 18.0,
               fontWeight: FontWeight.w500,
@@ -116,7 +120,7 @@ class _CategoryState extends State<CategoryList> {
                 },
               ),
               SizedBox(
-                height: 5.0.h,
+                height: 10.0.h,
               ),
               Expanded(
                 child: myPlanListModel != null ?? myPlanListModel.isSuccess
@@ -139,15 +143,17 @@ class _CategoryState extends State<CategoryList> {
 
   Widget categoryList(List<PlanListResult> planList) {
     categoryListUniq = [];
-    selectTitle = {};
-    selectedTitle = {};
+    //selectTitle = {};
+    //selectedTitle = {};
     isSubscribedOne = false;
+    planListResultMap = {};
+    isSelected = false;
     if (planList != null && planList.length > 0) {
       planList.forEach((element) {
         if (element?.metadata?.diseases == diseases) {
           bool keysUniq = true;
           categoryListUniq.forEach((catElement) {
-            if (catElement?.packcatid == element.packcatid) {
+            if (catElement?.packcatid == element?.packcatid) {
               keysUniq = false;
             }
           });
@@ -157,27 +163,34 @@ class _CategoryState extends State<CategoryList> {
         }
       });
       categoryListUniq.forEach((elementNew) {
-        selectTitle.putIfAbsent(
+        /*selectTitle.putIfAbsent(
           elementNew.packcatid,
           () => [],
         );
         selectedTitle.putIfAbsent(
           elementNew.packcatid,
           () => [],
+        );*/
+        planListResultMap.putIfAbsent(
+          elementNew.packcatid,
+          () => [],
         );
         planList.where((elementWhere) {
           return (elementWhere?.metadata?.diseases == diseases) &&
-              (elementNew.packcatid == elementWhere.packcatid);
+              (elementNew?.packcatid == elementWhere?.packcatid);
         }).forEach((elementLast) {
-          if (elementLast.isSubscribed == '1') {
+          if (elementLast?.isSubscribed == '1') {
+            isSelected = true;
             isSubscribedOne = true;
-            selectedTitle[elementLast.packcatid].add(elementLast.title);
+            //selectedTitle[elementLast.packcatid].add(elementLast.title);
           }
-          selectTitle[elementLast.packcatid].add(elementLast.title);
+          //selectTitle[elementLast.packcatid].add(elementLast.title);
+
+          planListResultMap[elementLast.packcatid].add(elementLast);
         });
       });
     }
-    return (categoryListUniq != null && categoryListUniq.length > 0)
+    /*return (categoryListUniq != null && categoryListUniq.length > 0)
         ? ListView.builder(
             shrinkWrap: true,
             padding: EdgeInsets.only(
@@ -187,6 +200,61 @@ class _CategoryState extends State<CategoryList> {
                 isSearch ? myPLanListResult : categoryListUniq, planList),
             itemCount:
                 isSearch ? myPLanListResult.length : categoryListUniq.length,
+          )
+        : SafeArea(
+            child: SizedBox(
+              height: 1.sh / 1.3,
+              child: Container(
+                  child: Center(
+                child: Text(variable.strNoPackages),
+              )),
+            ),
+          );*/
+    return (categoryListUniq != null &&
+            categoryListUniq.length > 0 &&
+            planListResultMap != null &&
+            planListResultMap.length > 0)
+        ? GroupListView(
+            shrinkWrap: true,
+            padding: EdgeInsets.only(
+              bottom: 8.0.h,
+            ),
+            sectionsCount:
+                isSearch ? myPLanListResult.length : categoryListUniq.length,
+            countOfItemInSection: (int section) {
+              return planListResultMap[isSearch
+                          ? myPLanListResult[section]?.packcatid
+                          : categoryListUniq[section]?.packcatid]
+                      ?.length ??
+                  0;
+            },
+            itemBuilder: _itemBuilder,
+            groupHeaderBuilder: (BuildContext context, int section) {
+              var catName = isSearch
+                  ? myPLanListResult[section]?.catname
+                  : categoryListUniq[section]?.catname;
+              return Column(
+                children: [
+                  SizedBox(height: 8.0.h),
+                  Container(
+                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+                    width: 1.sw,
+                    color: Colors.grey[300],
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                      child: Text(
+                        toBeginningOfSentenceCase(catName),
+                        style: TextStyle(
+                            color: Colors.black, fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
+            separatorBuilder: (context, index) => SizedBoxWidget(
+              height: 2.0.h,
+            ),
           )
         : SafeArea(
             child: SizedBox(
@@ -241,6 +309,7 @@ class _CategoryState extends State<CategoryList> {
     );
   }
 
+  //// old flow (not using)
   Widget categoryListItem(BuildContext context, int i,
       List<PlanListResult> planList, List<PlanListResult> planListFull) {
     return InkWell(
@@ -357,5 +426,360 @@ class _CategoryState extends State<CategoryList> {
             ],
           )),
     );
+  }
+
+  Widget _itemBuilder(BuildContext context, IndexPath inx) {
+    if ((planListResultMap?.length ?? 0) > 0 &&
+        (categoryListUniq?.length ?? 0) > 0) {
+      var planListResult = planListResultMap[isSearch
+          ? myPLanListResult[inx.section]?.packcatid
+          : categoryListUniq[inx.section]?.packcatid];
+      return InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => MyPlanDetailView(
+                      title: planListResult[inx.index]?.title,
+                      providerName: planListResult[inx.index]?.providerName,
+                      description: planListResult[inx.index]?.description,
+                      issubscription: planListResult[inx.index]?.isSubscribed,
+                      packageId: planListResult[inx.index]?.packageid,
+                      price: planListResult[inx.index]?.price,
+                      packageDuration:
+                          planListResult[inx.index]?.packageDuration,
+                      providerId: planListResult[inx.index]?.plinkid,
+                      isDisable:
+                          planListResult[inx.index]?.catselecttype == '1' &&
+                              planListResult[inx.index]?.isSubscribed == '0' &&
+                              isSelected,
+                      hosIcon:
+                          planListResult[inx.index]?.providerMetadata?.icon,
+                      iconApi: planListResult[inx.index]?.metadata?.icon,
+                      catIcon: planListResult[inx.index]?.catmetadata?.icon,
+                      metaDataForURL: planListResult[inx.index]?.metadata,
+                    )),
+          ).then((value) {
+            if (value == 'refreshUI') {
+              setState(() {});
+            }
+          });
+        },
+        child: Container(
+            padding: EdgeInsets.all(4.0),
+            margin: EdgeInsets.only(left: 12, right: 12, top: 8),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFFe3e2e2),
+                  blurRadius: 16, // has the effect of softening the shadow
+                  spreadRadius: 5.0, // has the effect of extending the shadow
+                  offset: Offset(
+                    0.0, // horizontal, move right 10
+                    0.0, // vertical, move down 10
+                  ),
+                )
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  children: [
+                    SizedBox(
+                      width: 15.0.w,
+                    ),
+                    CircleAvatar(
+                      backgroundColor: Colors.grey[200],
+                      radius: 20,
+                      child: CommonUtil()
+                          .customImage(getImage(inx.index, planListResult)),
+                    ),
+                    SizedBox(
+                      width: 20.0.w,
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            planListResult[inx.index]?.title != null
+                                ? toBeginningOfSentenceCase(
+                                    planListResult[inx.index]?.title)
+                                : '',
+                            style: TextStyle(
+                              fontSize: 15.0.sp,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            textAlign: TextAlign.start,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                          ),
+                          Text(
+                            planListResult[inx.index]?.providerName != null
+                                ? toBeginningOfSentenceCase(
+                                    planListResult[inx.index]?.providerName)
+                                : '',
+                            style: TextStyle(
+                                fontSize: 14.0.sp,
+                                fontWeight: FontWeight.w400,
+                                color: ColorUtils.lightgraycolor),
+                          ),
+                          Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Text(
+                                    'Duration: ',
+                                    style: TextStyle(
+                                        fontSize: 10.0.sp,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                  planListResult[inx.index]?.packageDuration !=
+                                          null
+                                      ? Text(
+                                          planListResult[inx.index]
+                                                  ?.packageDuration +
+                                              ' days',
+                                          maxLines: 1,
+                                          style: TextStyle(
+                                              fontSize: 10.0.sp,
+                                              fontWeight: FontWeight.w600),
+                                        )
+                                      : Container()
+                                ],
+                              ),
+                            ],
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Row(
+                                children: [
+                                  planListResult[inx.index]?.isSubscribed == '1'
+                                      ? Text(
+                                          'Start Date: ',
+                                          style: TextStyle(
+                                              fontSize: 10.0.sp,
+                                              fontWeight: FontWeight.w400),
+                                        )
+                                      : SizedBox(width: 55.w),
+                                  planListResult[inx.index]?.isSubscribed == '1'
+                                      ? Text(
+                                          new CommonUtil().dateFormatConversion(
+                                              planListResult[inx.index]
+                                                  ?.startDate),
+                                          maxLines: 1,
+                                          style: TextStyle(
+                                              fontSize: 10.0.sp,
+                                              fontWeight: FontWeight.w600),
+                                        )
+                                      : SizedBox(width: 55.w),
+                                  planListResult[inx.index]?.isSubscribed == '0'
+                                      ? SizedBox(width: 60.w)
+                                      : SizedBox(width: 55.w),
+                                ],
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Column(
+                          children: [
+                            planListResult[inx.index].price != null
+                                ? Visibility(
+                                    visible: planListResult[inx.index]
+                                            .price
+                                            .isNotEmpty &&
+                                        planListResult[inx.index]?.price != '0',
+                                    child: TextWidget(
+                                        text: INR +
+                                            planListResult[inx.index]?.price,
+                                        fontsize: 16.0.sp,
+                                        fontWeight: FontWeight.w500,
+                                        colors: Color(new CommonUtil()
+                                            .getMyPrimaryColor())),
+                                    replacement: TextWidget(
+                                        text: FREE,
+                                        fontsize: 16.0.sp,
+                                        fontWeight: FontWeight.w500,
+                                        colors: Color(new CommonUtil()
+                                            .getMyPrimaryColor())),
+                                  )
+                                : Container(),
+                            SizedBox(height: 8.h),
+                            Align(
+                                alignment: Alignment.center,
+                                child: SizedBoxWithChild(
+                                  width: 95.0.w,
+                                  height: 32.0.h,
+                                  child: FlatButton(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(18.0),
+                                        side: BorderSide(
+                                            color: getBorderColor(
+                                                inx.index, planListResult))),
+                                    color: Colors.transparent,
+                                    textColor: planListResult[inx.index]
+                                                ?.isSubscribed ==
+                                            '0'
+                                        ? Color(new CommonUtil()
+                                            .getMyPrimaryColor())
+                                        : Colors.grey,
+                                    padding: EdgeInsets.all(
+                                      8.0.sp,
+                                    ),
+                                    onPressed: planListResult[inx.index]
+                                                    ?.catselecttype ==
+                                                '1' &&
+                                            planListResult[inx.index]
+                                                    ?.isSubscribed ==
+                                                '0' &&
+                                            isSelected
+                                        ? null
+                                        : () async {
+                                            if (planListResult[inx.index]
+                                                    ?.isSubscribed ==
+                                                '0') {
+                                              CommonUtil()
+                                                  .profileValidationCheck(
+                                                      context,
+                                                      packageId:
+                                                          planListResult[inx
+                                                                  .index]
+                                                              ?.packageid,
+                                                      isSubscribed:
+                                                          planListResult[
+                                                                  inx.index]
+                                                              ?.isSubscribed,
+                                                      providerId:
+                                                          planListResult[
+                                                                  inx.index]
+                                                              ?.plinkid,
+                                                      isFrom: strIsFromSubscibe,
+                                                      refresh: () {
+                                                setState(() {});
+                                              });
+                                            }
+                                            /*else {
+                                          CommonUtil().unSubcribeAlertDialog(
+                                              context,
+                                              packageId: planList[i].packageid,
+                                              refresh: () {
+                                            setState(() {});
+                                          });
+                                        }*/
+                                          },
+                                    child: TextWidget(
+                                      text: planListResult[inx.index]
+                                                  ?.isSubscribed ==
+                                              '0'
+                                          ? strSubscribe
+                                          : strSubscribed,
+                                      fontsize: 12.0.sp,
+                                    ),
+                                  ),
+                                )),
+                          ],
+                        ),
+                        SizedBox(width: 4.w),
+                      ],
+                    )
+                  ],
+                ),
+                SizedBox(height: 5.h),
+              ],
+            )),
+      );
+    } else {
+      return SizedBox.shrink();
+    }
+  }
+
+  String getImage(int i, List<PlanListResult> planList) {
+    String image;
+    if (planList[i] != null) {
+      if (planList[i].metadata != null && planList[i].metadata != '') {
+        if (planList[i].metadata.icon != null &&
+            planList[i].metadata.icon != '') {
+          image = planList[i].metadata.icon;
+        } else {
+          if (planList[i].catmetadata != null &&
+              planList[i].catmetadata != '') {
+            if (planList[i].catmetadata.icon != null &&
+                planList[i].catmetadata.icon != '') {
+              image = planList[i].catmetadata.icon;
+            }
+          } else {
+            if (planList[i].providerMetadata != null &&
+                planList[i].providerMetadata != '') {
+              if (planList[i].providerMetadata.icon != null &&
+                  planList[i].providerMetadata.icon != '') {
+                image = planList[i].providerMetadata.icon;
+              }
+            } else {
+              image = '';
+            }
+          }
+        }
+      } else {
+        if (planList[i].catmetadata != null && planList[i].catmetadata != '') {
+          if (planList[i].catmetadata.icon != null &&
+              planList[i].catmetadata.icon != '') {
+            image = planList[i].catmetadata.icon;
+          }
+        } else {
+          if (planList[i].providerMetadata != null &&
+              planList[i].providerMetadata != '') {
+            if (planList[i].providerMetadata.icon != null &&
+                planList[i].providerMetadata.icon != '') {
+              image = planList[i].providerMetadata.icon;
+            }
+          } else {
+            image = '';
+          }
+        }
+      }
+    } else {
+      if (planList[i].catmetadata != null && planList[i].catmetadata != '') {
+        if (planList[i].catmetadata.icon != null &&
+            planList[i].catmetadata.icon != '') {
+          image = planList[i].catmetadata.icon;
+        }
+      } else {
+        if (planList[i].providerMetadata != null &&
+            planList[i].providerMetadata != '') {
+          if (planList[i].providerMetadata.icon != null &&
+              planList[i].providerMetadata.icon != '') {
+            image = planList[i].providerMetadata.icon;
+          }
+        } else {
+          image = '';
+        }
+      }
+    }
+
+    return image;
+  }
+
+  Color getBorderColor(int i, List<PlanListResult> planList) {
+    if (planList[i]?.catselecttype == '1' &&
+        planList[i]?.isSubscribed == '0' &&
+        isSelected) {
+      return Colors.grey;
+    } else {
+      if (planList[i]?.isSubscribed == '0') {
+        return Color(new CommonUtil().getMyPrimaryColor());
+      } else {
+        return Colors.grey;
+      }
+    }
   }
 }
