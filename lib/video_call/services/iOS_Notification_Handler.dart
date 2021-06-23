@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:launch_review/launch_review.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
@@ -11,7 +10,6 @@ import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/ui/SplashScreen.dart';
 import 'package:myfhb/src/ui/bot/SuperMaya.dart';
-import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/telehealth/features/chat/view/home.dart';
 import 'package:myfhb/video_call/model/NotificationModel.dart';
@@ -60,10 +58,7 @@ class IosNotificationHandler {
 
   actionForTheNotification() async {
     if (model.templateName == 'openurl') {
-      LaunchReview.launch(
-          androidAppId: variable.strAppPackage,
-          iOSAppId: variable.iOSAppId,
-          writeReview: false);
+      CommonUtil().launchURL(model.redirect);
     }
 
     if (model.isCall) {
