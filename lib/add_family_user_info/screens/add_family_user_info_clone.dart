@@ -670,6 +670,12 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             TypeAheadFormField<City>(
               textFieldConfiguration: TextFieldConfiguration(
                   controller: cntrlr_addr_city,
+                  onChanged: (value) {
+
+                            cityVal = null;
+                            stateVal=null;
+                            
+                          },
                   decoration: InputDecoration(
                     hintText: "City*",
                     labelText: "City*",
@@ -721,7 +727,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               validator: (value) {
                 if (value.isEmpty) {
                   return 'Please select a city';
-                }
+                }else if (cityVal == null) {
+                            return 'Please select a City from list';
+                          }
                 return null;
               },
               onSaved: (value) => this.city = value,
@@ -736,7 +744,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     hintStyle: TextStyle(
                       fontSize: 16.0.sp,
                     ),
-                  )),
+                  ),onChanged: (value) {
+                            state = null;
+                          },),
               suggestionsCallback: (pattern) async {
                 if (pattern.length >= 3) {
                   return await getStateBasedOnSearch(
@@ -775,7 +785,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               validator: (value) {
                 if (value.isEmpty) {
                   return 'Please select a State';
-                }
+                }else if (stateVal == null) {
+                            return 'Please select a State from list';
+                          }
                 return null;
               },
               onSaved: (value) => this.state = value,
