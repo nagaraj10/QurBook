@@ -1595,7 +1595,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             .myprofileObject.result.userProfileSettingCollection3;
         if (userProfileSettingCollection.length > 0) {
           userProfileSettingCollection3Obj =
-              myProfile.result.userProfileSettingCollection3[0];
+             addFamilyUserInfoBloc.myprofileObject.result.userProfileSettingCollection3[0];
           if (userProfileSettingCollection3Obj.profileSetting != null) {
             profileSetting = userProfileSettingCollection3Obj.profileSetting;
             userProfileSettingCollection3Obj.profileSetting.preferred_language =
@@ -1763,30 +1763,37 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           if (value != null && value.isSuccess) {
             chatViewModel.upateUserNickname(myProf.result.id,
                 firstNameController.text + ' ' + lastNameController.text);
-            _familyListBloc.getFamilyMembersListNew().then((value) async {
-              /*MySliverAppBar.imageURI = null;
-                    fetchedProfileData = null;*/
 
-              if (widget.arguments.myProfileResult.firstName != null) {
+                addFamilyUserInfoBloc.getMyProfileInfo().then((profileValue){
+  if (profileValue.result.firstName != null) {
                 String firstName =
-                    widget.arguments.myProfileResult.firstName != null
-                        ? widget.arguments.myProfileResult.firstName
+                    profileValue.result.firstName != null
+                        ? profileValue.result.firstName
                             .capitalizeFirstofEach
                         : '';
                 String lastName =
-                    widget.arguments.myProfileResult.lastName != null
-                        ? widget.arguments.myProfileResult.lastName
+                    profileValue.result.lastName != null
+                        ? profileValue.result.lastName
                             .capitalizeFirstofEach
                         : '';
 
                 PreferenceUtil.saveString(Constants.FIRST_NAME, firstName);
                 PreferenceUtil.saveString(Constants.LAST_NAME, lastName);
-              }
-
-              imageURI = null;
+PreferenceUtil.saveProfileData(
+                Constants.KEY_PROFILE, profileValue);                }
+                 imageURI = null;
               Navigator.pop(dialogContext);
               Navigator.pop(dialogContext, true);
-            });
+              
+
+                });
+            /* _familyListBloc.getFamilyMembersListNew().then((value) async {
+             MySliverAppBar.imageURI = null;
+                    fetchedProfileData = null;
+
+            
+             
+            });*/
           } else {
             Navigator.pop(dialogContext);
             Alert.displayAlertPlain(context,
@@ -2304,9 +2311,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     }*/
     if (selectedLanguage != null && selectedLanguage != '') {
     } else {
-      if (widget.arguments.myProfileResult.userProfileSettingCollection3
+      if (addFamilyUserInfoBloc.myprofileObject.result?.userProfileSettingCollection3
           ?.isNotEmpty) {
-        ProfileSetting profileSetting = widget.arguments.myProfileResult
+        ProfileSetting profileSetting = addFamilyUserInfoBloc.myprofileObject?.result
             ?.userProfileSettingCollection3[0].profileSetting;
         if (profileSetting != null) {
           CommonUtil.langaugeCodes.forEach((language, languageCode) {
