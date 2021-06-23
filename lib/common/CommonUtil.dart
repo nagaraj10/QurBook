@@ -1704,7 +1704,7 @@ class CommonUtil {
                           ),
                           onPressed: () => Navigator.pop(context),
                         )
-                      : Container(),
+                      : SizedBox.shrink(),
                 ],
               )
             : new AlertDialog(
@@ -1736,7 +1736,7 @@ class CommonUtil {
                           ),
                           onPressed: () => Navigator.pop(context),
                         )
-                      : Container(),
+                      : SizedBox.shrink(),
                 ],
               );
       },

@@ -61,7 +61,7 @@ class _MyPlanState extends State<MyPlanList> {
             () => isFirst
                 ? null
                 : ShowCaseWidget.of(_myContext)
-                    .startShowCase([_PlanCardKey, _GotoRegimentKey]));
+                    .startShowCase([_PlanCardKey]));
       });
     } catch (e) {}
   }

@@ -509,9 +509,10 @@ const String strAppointment = 'Appointments';
 const String strNiceDay = 'Have a nice day';
 const String strRegimen = 'Regimen';
 const String strDevices = 'Devices';
-const String strPlans = 'Hospitals';
+const String strHospitals = 'Hospitals';
 const String strMyPlans = 'My Care Plans';
 const String strCarePlans = 'Care Plans';
+const String strPlans = 'Plans';
 
 const strUploading = 'Uploading...';
 const strSubscribe = 'Subscribe';
