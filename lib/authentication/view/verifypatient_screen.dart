@@ -556,7 +556,13 @@ class _VerifyPatientState extends State<VerifyPatient> {
     } else {
       LoaderClass.hideLoadingDialog(context);
       if (response?.message?.contains('expired') ?? false) {
-        Navigator.pop(context);
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) => PatientSignInScreen(),
+          ),
+          (route) => false,
+        );
       }
       toast.getToast(response.message, Colors.red);
     }
