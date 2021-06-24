@@ -18,25 +18,26 @@ class NotificationModel {
   String doctorId;
   String username;
   String type;
+  String externalLink;
   CallArguments callArguments;
   Map<int, dynamic> redirectData;
 
-  NotificationModel({
-    this.title,
-    this.body,
-    this.ringtone,
-    this.templateName,
-    this.userId,
-    this.idToHighlight,
-    this.redirect,
-    this.healthRecordMetaIds,
-    this.isCall,
-    this.needToHighlight,
-    this.meeting_id,
-    this.doctorId,
-    this.username,
-    this.type,
-  });
+  NotificationModel(
+      {this.title,
+      this.body,
+      this.ringtone,
+      this.templateName,
+      this.userId,
+      this.idToHighlight,
+      this.redirect,
+      this.healthRecordMetaIds,
+      this.isCall,
+      this.needToHighlight,
+      this.meeting_id,
+      this.doctorId,
+      this.username,
+      this.type,
+      this.externalLink});
 
   Map<String, dynamic> toMap() {
     return {
@@ -54,6 +55,7 @@ class NotificationModel {
       'doctorId': doctorId,
       'username': username,
       'type': type,
+      'externalLink': externalLink
     };
   }
 
@@ -72,6 +74,7 @@ class NotificationModel {
     doctorId = message['doctorId'];
     username = message['username'];
     type = message['type'];
+    externalLink = message['externalLink'];
   }
 
   NotificationModel.fromMap(Map<String, dynamic> messageFromNative) {
@@ -120,10 +123,16 @@ class NotificationModel {
         if (message[parameters.strtype] != null) {
           type = message[parameters.strtype];
         }
+        if (message[parameters.externalLink] != null) {
+          externalLink = message[parameters.externalLink];
+        }
+        if (message[parameters.gcmExternalLink] != null) {
+          externalLink = message[parameters.gcmExternalLink];
+        }
       }
     }
     setData(messageFromNative);
-    if (redirect.contains('|')) {
+    if (redirect != null && redirect.contains('|')) {
       final split = redirect.split('|');
       redirectData = {for (int i = 0; i < split.length; i++) i: split[i]};
       redirectData[split.length] = healthRecordMetaIds;
@@ -185,6 +194,12 @@ class NotificationModel {
     }
     if (message[parameters.strtype] != null) {
       type = message[parameters.strtype];
+    }
+    if (message[parameters.externalLink] != null) {
+      externalLink = message[parameters.externalLink];
+    }
+    if (message[parameters.gcmExternalLink] != null) {
+      externalLink = message[parameters.gcmExternalLink];
     }
   }
 }
