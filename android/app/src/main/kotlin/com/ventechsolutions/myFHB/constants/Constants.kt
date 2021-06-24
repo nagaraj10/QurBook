@@ -54,4 +54,5 @@ object Constants {
     val PROP_REDIRECT_TO ="redirectTo"
     val PROP_DATA ="data"
     val PROP_HRMID ="healthRecordMetaIds"
+    val PROB_EXTERNAL_LINK ="externalLink"
 }

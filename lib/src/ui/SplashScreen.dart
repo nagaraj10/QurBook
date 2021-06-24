@@ -4,7 +4,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 import 'package:myfhb/authentication/view/login_screen.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -13,11 +12,12 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/landing/view/landing_arguments.dart';
+import 'package:myfhb/landing/view_model/landing_view_model.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
-import 'package:myfhb/src/ui/Dashboard.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/city.dart';
@@ -34,7 +34,6 @@ import 'package:connectivity/connectivity.dart';
 import 'NetworkScreen.dart';
 import 'package:myfhb/src/ui/bot/SuperMaya.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class SplashScreen extends StatefulWidget {
   final String nsRoute;
@@ -339,6 +338,18 @@ class _SplashScreenState extends State<SplashScreen> {
                               selectedIndex: 1, thTabIndex: 4),
                         ).then((value) => PageNavigator.goToPermanent(
                             context, router.rt_Landing));
+                      } else if (widget.nsRoute == 'openurl') {
+                        fbaLog(eveParams: {
+                          'eventTime': '${DateTime.now()}',
+                          'ns_type': 'landing',
+                          'navigationPage': 'Landing',
+                        });
+                        Provider.of<LandingViewModel>(context, listen: false)
+                            .isURLCome = true;
+                        //ignore: lines_longer_than_80_chars
+                        PageNavigator.goToPermanent(context, router.rt_Landing,
+                            arguments:
+                                LandingArguments(url: widget.bundle ?? null));
                       } else {
                         fbaLog(eveParams: {
                           'eventTime': '${DateTime.now()}',
