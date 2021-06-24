@@ -60,8 +60,8 @@ class FormDataTextField extends StatelessWidget {
             if (fieldData.title.startsWith('_') && value.isEmpty) {
               return '${fieldData.title} is required';
             } else if (isNumberOnly &&
-                fieldData.vmin != null &&
-                fieldData.vmax != null) {
+                (fieldData?.vmin ?? '').isNotEmpty &&
+                (fieldData?.vmax ?? '').isNotEmpty) {
               if (value?.isEmpty) {
                 return '${fieldData.title} is required';
               } else if (isNumberOnly) {
