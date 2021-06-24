@@ -59,6 +59,23 @@ class FormDataTextField extends StatelessWidget {
           validator: (value) {
             if (fieldData.title.startsWith('_') && value.isEmpty) {
               return '${fieldData.title} is required';
+            } else if (isNumberOnly &&
+                fieldData.vmin != null &&
+                fieldData.vmax != null) {
+              if (value?.isEmpty) {
+                return '${fieldData.title} is required';
+              } else if (isNumberOnly) {
+                if (((int.tryParse(value) ?? 0) <
+                        (int.tryParse(fieldData?.vmin) ?? 0)) ||
+                    ((int.tryParse(value) ?? 0) >
+                        (int.tryParse(fieldData?.vmax) ?? 0))) {
+                  return 'Enter a valid ${fieldData.title}';
+                } else {
+                  return null;
+                }
+              } else {
+                return null;
+              }
             } else {
               return null;
             }
