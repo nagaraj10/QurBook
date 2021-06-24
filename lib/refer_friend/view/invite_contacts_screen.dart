@@ -14,7 +14,6 @@ import 'package:provider/provider.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class InviteContactsScreen extends StatefulWidget {
-
   InviteContactsScreen();
 
   @override
@@ -355,11 +354,10 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
       });
     });
     LoaderClass.showLoadingDialog(context);
-    ReferAFriendRequest addPatientContactRequest =
-        ReferAFriendRequest(
-            source:
-                'qurbook', // since it's Qurbook application we have set "qurbook" as static
-            contacts: contacts);
+    ReferAFriendRequest addPatientContactRequest = ReferAFriendRequest(
+        source:
+            'qurbook', // since it's Qurbook application we have set "qurbook" as static
+        contacts: contacts);
     await sendReferalRequest(addPatientContactRequest);
   }
 
@@ -393,12 +391,13 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
                     ),
                   ),
                   Expanded(
-              child: IconButton(
-                  icon: Icon(Icons.close_rounded),
-                  onPressed: () {
-                    Get.back();
-                  }),
-            ),
+                    child: IconButton(
+                        icon: Icon(Icons.close_rounded),
+                        onPressed: () {
+                          Get.back();
+                          Get.back();
+                        }),
+                  ),
                 ],
               ),
               content: Container(
@@ -408,9 +407,8 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
                   shrinkWrap: true,
                   itemCount: referalList.length,
                   itemBuilder: (BuildContext context, int index) {
-                    String trailingText = referalList[index].isExistingUser
-                        ? 'Exists'
-                        : 'Sent';
+                    String trailingText =
+                        referalList[index].isExistingUser ? 'User Exists' : 'Invite Sent';
 
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10),
@@ -426,7 +424,8 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        ('${referalList[index]?.name}').capitalizeFirstofEach,
+                                        ('${referalList[index]?.name}')
+                                            .capitalizeFirstofEach,
                                         style: TextStyle(
                                             fontSize: 12, color: Colors.black),
                                       ),
@@ -436,7 +435,9 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
                                       Text(
                                         '${referalList[index].phoneNumber}',
                                         style: TextStyle(
-                                            fontSize: 10, color: Colors.black45,fontStyle: FontStyle.italic),
+                                            fontSize: 10,
+                                            color: Colors.black45,
+                                            fontStyle: FontStyle.italic),
                                       ),
                                     ],
                                   )),
@@ -445,9 +446,11 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
                                   padding: EdgeInsets.all(5),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(20),
-                                    color: referalList[index].isExistingUser
-                                        ? Colors.yellow[600]
-                                        : Colors.green.withOpacity(0.7),
+                                    // color: referalList[index].isExistingUser
+                                    //     ? Colors.yellow[600]
+                                    //     : Colors.green.withOpacity(0.7),
+                                    color:
+                                        Color(CommonUtil().getMyPrimaryColor()),
                                   ),
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,

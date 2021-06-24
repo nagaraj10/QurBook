@@ -341,10 +341,10 @@ class AuthService {
           await HeaderRequest().getRequestHeadersAuthContent();
     try {
       //! this is need to be uncomment
-      // final response = await http.post(_apiEndpoint + url,
-      //     headers: await headerRequest.getContentAndAuth(), body: jsonBody);
-      final response = await http.post('https://c0f6a853-f0e6-4a92-89b3-8e6cf34f9834.mock.pstmn.io/user/refer-friend',
-          headers: await headerRequest, body: jsonBody);
+      final response = await http.post(Constants.BASE_URL + url,
+          headers:await headerRequest, body: jsonBody);
+      // final response = await http.post('https://c0f6a853-f0e6-4a92-89b3-8e6cf34f9834.mock.pstmn.io/user/refer-friend',
+      //     headers: await headerRequest, body: jsonBody);
       responseJson = jsonDecode(response?.body);
     } on SocketException {
       return spocketException();
