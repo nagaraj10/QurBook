@@ -16,6 +16,7 @@ class OnTapNotification:BroadcastReceiver() {
         val meeting_id = p1?.getStringExtra(p0?.getString(R.string.meetid))
         val username = p1?.getStringExtra(p0?.getString(R.string.username))
         val redirct_to = p1?.getStringExtra(Constants.PROP_REDIRECT_TO)
+        val externalLink = p1?.getStringExtra(Constants.PROB_EXTERNAL_LINK)
         val data = p1?.getStringExtra(Constants.PROP_DATA)
         val templateName = p1?.getStringExtra(Constants.PROP_TEMP_NAME)
         val HRMId = p1?.getStringExtra(Constants.PROP_HRMID)
@@ -37,6 +38,7 @@ class OnTapNotification:BroadcastReceiver() {
         launchIntent?.putExtra(Constants.PROP_HRMID,HRMId)
         launchIntent?.putExtra(Constants.PROP_DATA,data)
         launchIntent?.putExtra(Constants.PROP_TEMP_NAME,templateName)
+        launchIntent?.putExtra(Constants.PROB_EXTERNAL_LINK,externalLink)
         p0.startActivity(launchIntent)
     }
 }

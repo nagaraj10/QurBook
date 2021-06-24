@@ -375,12 +375,13 @@ class MainActivity : FlutterActivity() {
         patId = intent.getStringExtra(getString(R.string.pat_id))
         patName = intent.getStringExtra(getString(R.string.pat_name))
         patPic = intent.getStringExtra(getString(R.string.pat_pic))
+        var externalLink = intent.getStringExtra(Constants.PROB_EXTERNAL_LINK)
         if (sharedValue != null && sharedValue == "chat") {
             sharedValue = "$sharedValue"
-        } else if (templateName != null && templateName == "openurl" && (redirect_to != null && redirect_to != "")) {
-            if (!redirect_to.startsWith("http://") && !redirect_to.startsWith("https://"))
-                redirect_to = "http://" + redirect_to
-            sharedValue = "$templateName&$redirect_to"
+        } else if (externalLink != null && externalLink != "") {
+            if (!externalLink.startsWith("http://") && !externalLink.startsWith("https://"))
+                externalLink = "http://" + externalLink
+            sharedValue = "openurl&$externalLink"
         } else if (sharedValue != null && username != null && docId != null && docPic != null) {
             sharedValue =
                 "$sharedValue&$username&$docId&$docPic&${Constants.PROP_CALL}&${patId}&${patName}&${patPic}"

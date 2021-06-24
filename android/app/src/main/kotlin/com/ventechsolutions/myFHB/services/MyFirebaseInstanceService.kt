@@ -199,7 +199,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
 
         else if(data["templateName"]=="chat"){
             createNotification4Chat(data)
-        }else if(data["templateName"]=="openurl"){
+        }else if(data[Constants.PROB_EXTERNAL_LINK]!= null && data[Constants.PROB_EXTERNAL_LINK] != "" ){
             openURLFromNotification(data)
         }else{
             val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
@@ -455,7 +455,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
 
         val onTapNS = Intent(applicationContext, OnTapNotification::class.java)
         onTapNS.putExtra(getString(R.string.nsid), NS_ID)
-        onTapNS.putExtra(Constants.PROP_TEMP_NAME, template)
+        onTapNS.putExtra(Constants.PROB_EXTERNAL_LINK, data[Constants.PROB_EXTERNAL_LINK])
         onTapNS.putExtra(Constants.PROP_REDIRECT_TO, data[Constants.PROP_REDIRECT_TO])
         val onTapPendingIntent = PendingIntent.getBroadcast(applicationContext, NS_ID, onTapNS, PendingIntent.FLAG_CANCEL_CURRENT)
         
