@@ -29,8 +29,7 @@ class IosNotificationHandler {
         final data = Map<String, dynamic>.from(call.arguments);
         model = NotificationModel.fromMap(data);
         if (model.externalLink != null) {
-          if (model.externalLink ==
-              'https://apps.apple.com/in/app/qurbook/id1526444520') {
+          if (model.externalLink == variable.iOSAppStoreLink) {
             LaunchReview.launch(
                 iOSAppId: variable.iOSAppId, writeReview: false);
           } else {
