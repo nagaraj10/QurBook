@@ -147,7 +147,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
   Future<bool> onBackPress() {
     if (!widget.isHome) {
       Navigator.pop(context);
-    }else{
+    } else {
       widget.onBackPressed();
     }
     return Future.value(false);
@@ -385,7 +385,10 @@ class HomeScreenState extends State<ChatHomeScreen> {
                             builder: (context) => Chat(
                                   peerId: document.documentID,
                                   peerAvatar: document[STR_PHOTO_URL],
-                                  peerName: snapshotUser.data[STR_NICK_NAME],
+                                  peerName:
+                                      snapshotUser?.data[STR_NICK_NAME] != ''
+                                          ? snapshotUser?.data[STR_NICK_NAME]
+                                          : '',
                                   lastDate: getFormattedDateTime(
                                       (document[STR_CREATED_AT] as Timestamp)
                                           .toDate()
@@ -433,10 +436,15 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                                 color: Colors.grey[200],
                                                 child: Center(
                                                     child: Text(
-                                                  snapshotUser
-                                                      .data[STR_NICK_NAME][0]
-                                                      .toString()
-                                                      .toUpperCase(),
+                                                  snapshotUser?.data[
+                                                              STR_NICK_NAME] !=
+                                                          ''
+                                                      ? snapshotUser
+                                                          ?.data[STR_NICK_NAME]
+                                                              [0]
+                                                          .toString()
+                                                          .toUpperCase()
+                                                      : '',
                                                   style: TextStyle(
                                                     color: Color(new CommonUtil()
                                                         .getMyPrimaryColor()),
@@ -468,9 +476,11 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                   child: Text(
                                     /* toBeginningOfSentenceCase(
                                         snapshotUser.data[STR_NICK_NAME]), */
-                                    snapshotUser?.data[STR_NICK_NAME]
-                                        ?.toString()
-                                        ?.capitalizeFirstofEach,
+                                    snapshotUser?.data[STR_NICK_NAME] != ''
+                                        ? snapshotUser?.data[STR_NICK_NAME]
+                                            ?.toString()
+                                            ?.capitalizeFirstofEach
+                                        : '',
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
                                     style: TextStyle(

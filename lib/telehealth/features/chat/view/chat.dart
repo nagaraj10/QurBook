@@ -75,15 +75,16 @@ class ChatState extends State<Chat> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ChatScreen(
-          peerId: widget.peerId,
-          peerAvatar: widget.peerAvatar,
-          peerName: widget.peerName,
-          lastDate: widget.lastDate,
-          patientId: widget.patientId,
-          patientName: widget.patientName,
-          patientPicture: widget.patientPicture,
-          isFromVideoCall: widget.isFromVideoCall,
-          message: widget?.message,),
+        peerId: widget.peerId,
+        peerAvatar: widget.peerAvatar,
+        peerName: widget.peerName,
+        lastDate: widget.lastDate,
+        patientId: widget.patientId,
+        patientName: widget.patientName,
+        patientPicture: widget.patientPicture,
+        isFromVideoCall: widget.isFromVideoCall,
+        message: widget?.message,
+      ),
     );
   }
 
@@ -908,7 +909,9 @@ class ChatScreenState extends State<ChatScreen> {
                                   color: Colors.grey[200],
                                   child: Center(
                                       child: Text(
-                                    peerName[0].toString().toUpperCase(),
+                                    peerName != null && peerName != ''
+                                        ? peerName[0].toString().toUpperCase()
+                                        : '',
                                     style: TextStyle(
                                       color: Color(
                                           new CommonUtil().getMyPrimaryColor()),
@@ -1077,7 +1080,7 @@ class ChatScreenState extends State<ChatScreen> {
                                           children: <Widget>[
                                             CircleAvatar(
                                                 child: Text(
-                                                    peerName.substring(0, 1))),
+                                                    peerName!=null && peerName !=''?peerName.substring(0, 1):'')),
                                             IconButton(
                                               icon: Icon(currentPlayedVoiceURL ==
                                                       document[STR_CONTENT]
@@ -1459,7 +1462,7 @@ class ChatScreenState extends State<ChatScreen> {
                     color: Colors.grey[200],
                     child: Center(
                         child: Text(
-                      widget.peerName[0].toString().toUpperCase(),
+                          widget.peerName!=null && widget.peerName!=''?widget.peerName[0].toString().toUpperCase():'',
                       style: TextStyle(
                         color: Color(new CommonUtil().getMyPrimaryColor()),
                         fontSize: 16.0.sp,
@@ -1478,8 +1481,8 @@ class ChatScreenState extends State<ChatScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                        widget?.peerName
-                            ?.capitalizeFirstofEach /* toBeginningOfSentenceCase(widget.peerName) */,
+                        widget.peerName!=null && widget.peerName!=''?widget.peerName
+                            ?.capitalizeFirstofEach:'' /* toBeginningOfSentenceCase(widget.peerName) */,
                         textAlign: TextAlign.left,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
@@ -1972,7 +1975,7 @@ class ChatScreenState extends State<ChatScreen> {
       context: context,
       builder: (context) => AlertDialog(
         content: Text(
-          'Send to Dr. ' + peerName,
+          'Send to Dr. ' + peerName!=null && peerName!=''?peerName:'',
           style: TextStyle(
             fontSize: 16.0.sp,
           ),
