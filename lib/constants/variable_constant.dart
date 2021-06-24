@@ -585,6 +585,8 @@ const String strLogoutMsg =
     'Stay Healthy.. See you Soon. \nSheela will be waiting to serve you.';
 const String strYes = 'Yes';
 const String strRelaoding = 'Reloading';
+const String strSwitchingUser = 'Switching User';
+
 const String strStartNow = 'Start now';
 const String strAccounts = 'Accounts';
 const String strDevices = 'Devices';
