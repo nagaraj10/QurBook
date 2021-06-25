@@ -65,7 +65,7 @@ class _LandingScreenState extends State<LandingScreen> {
   CommonUtil commonUtil = new CommonUtil();
 
   HealthReportListForUserRepository healthReportListForUserRepository =
-  HealthReportListForUserRepository();
+      HealthReportListForUserRepository();
   GetDeviceSelectionModel selectionResult;
 
   bool bpMonitor = true;
@@ -230,7 +230,9 @@ class _LandingScreenState extends State<LandingScreen> {
           drawer: NavigationDrawer(
             myProfile: myProfile,
             moveToLoginPage: moveToLoginPage,
-            refresh: refresh,
+            refresh: (bool userChanged) => refresh(
+              userChanged: userChanged,
+            ),
           ),
           bottomNavigationBar: Container(
             decoration: const BoxDecoration(
@@ -537,7 +539,7 @@ class _LandingScreenState extends State<LandingScreen> {
       addFamilyUserInfoBloc.getDeviceSelectionValues().then((value) {});
     } catch (e) {}
     try {
-     getDeviceSelectionValues().then((value) => {});
+      getDeviceSelectionValues().then((value) => {});
     } catch (e) {}
   }
 
@@ -547,31 +549,31 @@ class _LandingScreenState extends State<LandingScreen> {
       if (selectionResult.isSuccess) {
         if (selectionResult.result != null) {
           bpMonitor =
-          selectionResult.result[0].profileSetting.bpMonitor != null &&
-              selectionResult.result[0].profileSetting.bpMonitor != ''
-              ? selectionResult.result[0].profileSetting.bpMonitor
-              : true;
+              selectionResult.result[0].profileSetting.bpMonitor != null &&
+                      selectionResult.result[0].profileSetting.bpMonitor != ''
+                  ? selectionResult.result[0].profileSetting.bpMonitor
+                  : true;
           glucoMeter =
-          selectionResult.result[0].profileSetting.glucoMeter != null &&
-              selectionResult.result[0].profileSetting.glucoMeter != ''
-              ? selectionResult.result[0].profileSetting.glucoMeter
-              : true;
+              selectionResult.result[0].profileSetting.glucoMeter != null &&
+                      selectionResult.result[0].profileSetting.glucoMeter != ''
+                  ? selectionResult.result[0].profileSetting.glucoMeter
+                  : true;
           pulseOximeter =
-          selectionResult.result[0].profileSetting.pulseOximeter != null &&
-              selectionResult.result[0].profileSetting.pulseOximeter !=
-                  ''
-              ? selectionResult.result[0].profileSetting.pulseOximeter
-              : true;
+              selectionResult.result[0].profileSetting.pulseOximeter != null &&
+                      selectionResult.result[0].profileSetting.pulseOximeter !=
+                          ''
+                  ? selectionResult.result[0].profileSetting.pulseOximeter
+                  : true;
           thermoMeter =
-          selectionResult.result[0].profileSetting.thermoMeter != null &&
-              selectionResult.result[0].profileSetting.thermoMeter != ''
-              ? selectionResult.result[0].profileSetting.thermoMeter
-              : true;
+              selectionResult.result[0].profileSetting.thermoMeter != null &&
+                      selectionResult.result[0].profileSetting.thermoMeter != ''
+                  ? selectionResult.result[0].profileSetting.thermoMeter
+                  : true;
           weighScale =
-          selectionResult.result[0].profileSetting.weighScale != null &&
-              selectionResult.result[0].profileSetting.weighScale != ''
-              ? selectionResult.result[0].profileSetting.weighScale
-              : true;
+              selectionResult.result[0].profileSetting.weighScale != null &&
+                      selectionResult.result[0].profileSetting.weighScale != ''
+                  ? selectionResult.result[0].profileSetting.weighScale
+                  : true;
           if (selectionResult.result[0].profileSetting != null) {
             if (selectionResult.result[0].profileSetting.preferred_language !=
                 null) {
