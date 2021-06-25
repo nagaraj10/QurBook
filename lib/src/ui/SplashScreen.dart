@@ -83,7 +83,6 @@ class _SplashScreenState extends State<SplashScreen> {
   void setReminder() {
     var selecteTimeInDate =
         "${TimeOfDay.now().hour}-${TimeOfDay.now().minute + 3}";
-    print('currentTime#######${selecteTimeInDate}');
     var ch_android = const MethodChannel('android/notification');
     var mappedReminder = {
       'id': 001,
