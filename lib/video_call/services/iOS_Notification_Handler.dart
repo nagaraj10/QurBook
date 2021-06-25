@@ -5,6 +5,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/regiment/models/regiment_arguments.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
@@ -12,6 +13,7 @@ import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/ui/SplashScreen.dart';
 import 'package:myfhb/src/ui/bot/SuperMaya.dart';
 import 'package:myfhb/src/ui/bot/view/ChatScreen.dart' as bot;
+import 'package:myfhb/src/ui/bot/view/sheela_arguments.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/telehealth/features/chat/view/chat.dart';
@@ -137,16 +139,36 @@ class IosNotificationHandler {
         if (model.rawBody != null) {
           String sheela_lang = PreferenceUtil.getStringValue(SHEELA_LANG);
           if (sheela_lang != null && sheela_lang != '') {
-            Get.to(bot.ChatScreen(
-              isSheelaAskForLang: false,
-              langCode: sheela_lang,
-              rawMessage: model.rawBody,
-            ));
+            Get.toNamed(
+              rt_Sheela,
+              arguments: SheelaArgument(
+                isSheelaAskForLang: false,
+                langCode: sheela_lang,
+                rawMessage: model.rawBody,
+              ),
+            );
+            /*  Get.to(bot.ChatScreen(
+              arguments: SheelaArgument(
+                isSheelaAskForLang: false,
+                langCode: sheela_lang,
+                rawMessage: model.rawBody,
+              ),
+            )); */
           } else {
-            Get.to(bot.ChatScreen(
-              isSheelaAskForLang: true,
-              rawMessage: model.rawBody,
-            ));
+            Get.toNamed(
+              rt_Sheela,
+              arguments: SheelaArgument(
+                isSheelaAskForLang: true,
+                rawMessage: model.rawBody,
+              ),
+            );
+
+            /* Get.to(bot.ChatScreen(
+              arguments: SheelaArgument(
+                isSheelaAskForLang: true,
+                rawMessage: model.rawBody,
+              ),
+            )); */
           }
         } else {
           Get.to(SplashScreen(

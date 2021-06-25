@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:grouped_list/grouped_list.dart';
@@ -10,6 +11,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/customized_checkbox.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/device_integration/model/DeleteDeviceHealthRecord.dart';
 import 'package:myfhb/device_integration/model/DeviceIntervalData.dart';
@@ -22,6 +24,7 @@ import 'package:myfhb/src/model/Media/media_data_list.dart';
 import 'package:myfhb/src/model/Media/media_result.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
 import 'package:myfhb/src/ui/bot/view/ChatScreen.dart';
+import 'package:myfhb/src/ui/bot/view/sheela_arguments.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:provider/provider.dart';
 
@@ -167,7 +170,15 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         icon: Image.asset(icon_mayaMain),
         iconSize: 60,
         onPressed: () {
-          Navigator.of(context).push(
+          Get.toNamed(
+            rt_Sheela,
+            arguments: SheelaArgument(
+              sheelaInputs: widget.sheelaRequestString,
+            ),
+          ).then((value) {
+            setState(() {});
+          });
+          /* Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) {
                 return ChatScreen(
@@ -177,7 +188,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
             ),
           ).then((value) {
             setState(() {});
-          });
+          }); */
         },
       ),
     );
