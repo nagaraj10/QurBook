@@ -588,6 +588,9 @@ class ChatScreenViewModel extends ChangeNotifier {
               }
             }
           });
+          }else{
+            isLoading = false;
+            notifyListeners();
           }
           return jsonResponse;
         }
