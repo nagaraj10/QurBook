@@ -239,7 +239,7 @@ class _CategoryState extends State<CategoryList> {
                   Container(
                     padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
                     width: 1.sw,
-                    color: Colors.grey[300],
+                    color: Color(new CommonUtil().getMyPrimaryColor()),
                     child: Padding(
                       padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                       child: Text(

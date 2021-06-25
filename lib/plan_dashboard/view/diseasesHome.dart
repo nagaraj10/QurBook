@@ -17,7 +17,7 @@ class DiseasesScreen extends StatelessWidget {
         flexibleSpace: GradientAppBar(),
         backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
         elevation: 0,
-        title: Text(strCarePlans),
+        title: Text(strHealthcon),
         leading: IconWidget(
           icon: Icons.arrow_back_ios,
           colors: Colors.white,

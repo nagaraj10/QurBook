@@ -6,6 +6,7 @@ import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
+import 'package:myfhb/plan_dashboard/view/categoryList.dart';
 import 'package:myfhb/plan_dashboard/view/searchProviderList.dart';
 import 'package:myfhb/plan_dashboard/viewModel/planViewModel.dart';
 import 'package:myfhb/plan_dashboard/viewModel/subscribeViewModel.dart';
@@ -32,6 +33,8 @@ class _DiseasesList extends State<DiseasesList> {
   Map<String, List<String>> selectedTitle = {};
 
   Future<PlanListModel> planListModel;
+
+  List<PlanListResult> providerList = [];
 
   @override
   void initState() {
@@ -89,6 +92,8 @@ class _DiseasesList extends State<DiseasesList> {
     categoryListUniq = [];
     selectTitle = {};
     selectedTitle = {};
+    providerList = [];
+
     if (planList != null && planList.length > 0) {
       planList.forEach((element) {
         if (element?.metadata != null && element?.metadata != '') {
@@ -118,7 +123,7 @@ class _DiseasesList extends State<DiseasesList> {
                 padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
                 width: 1.sw,
                 //margin: EdgeInsets.only(left: 16, right: 16, top: 8),
-                color: Colors.deepPurple,
+                color: Color(new CommonUtil().getMyPrimaryColor()),
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                   child: Text(
@@ -296,16 +301,70 @@ class _DiseasesList extends State<DiseasesList> {
       List<PlanListResult> planList, List<PlanListResult> planListFull) {
     return InkWell(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => SearchProviderList(
-                  planList[i]?.metadata?.diseases ?? '', planListFull)),
-        ).then((value) => {
-              setState(() {
-                planListModel = myPlanViewModel.getPlanList('');
-              })
+        try {
+          if (planListFull != null && planList.length > 0) {
+            planListFull.where((element1) {
+              return (element1?.metadata?.diseases ?? '') ==
+                  planList[i]?.metadata?.diseases;
+            }).forEach((element) {
+              bool keysUniq = true;
+              providerList.forEach((catElement) {
+                if (catElement?.plinkid == element.plinkid) {
+                  keysUniq = false;
+                }
+              });
+              if (keysUniq) {
+                providerList.add(element);
+              }
             });
+          }
+        } catch (e) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => SearchProviderList(
+                    planList[i]?.metadata?.diseases ?? '', planListFull)),
+          ).then((value) => {
+                setState(() {
+                  planListModel = myPlanViewModel.getPlanList('');
+                })
+              });
+        }
+
+        if (providerList != null) {
+          if (providerList?.length == 1) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => CategoryList(
+                      planList[i].providerid,
+                      planList[i]?.metadata?.icon,
+                      planList[i]?.metadata?.diseases)),
+            );
+          } else {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => SearchProviderList(
+                      planList[i]?.metadata?.diseases ?? '', planListFull)),
+            ).then((value) => {
+                  setState(() {
+                    planListModel = myPlanViewModel.getPlanList('');
+                  })
+                });
+          }
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => SearchProviderList(
+                    planList[i]?.metadata?.diseases ?? '', planListFull)),
+          ).then((value) => {
+                setState(() {
+                  planListModel = myPlanViewModel.getPlanList('');
+                })
+              });
+        }
       },
       child: Container(
         padding: EdgeInsets.all(6.0),
