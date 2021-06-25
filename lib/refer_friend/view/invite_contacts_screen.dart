@@ -382,7 +382,7 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Spacer(),
+                  //Spacer(),
                   Text(
                     'Invite Summary',
                     style: TextStyle(
@@ -390,14 +390,14 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
                       fontSize: 17.0.sp,
                     ),
                   ),
-                  Expanded(
-                    child: IconButton(
-                        icon: Icon(Icons.close_rounded),
-                        onPressed: () {
-                          Get.back();
-                          Get.back();
-                        }),
-                  ),
+                  // Expanded(
+                  //   child: IconButton(
+                  //       icon: Icon(Icons.close_rounded),
+                  //       onPressed: () {
+                  //         Get.back();
+                  //         Get.back();
+                  //       }),
+                  // ),
                 ],
               ),
               content: Container(
@@ -407,8 +407,9 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
                   shrinkWrap: true,
                   itemCount: referalList.length,
                   itemBuilder: (BuildContext context, int index) {
-                    String trailingText =
-                        referalList[index].isExistingUser ? 'User Exists' : 'Invite Sent';
+                    String trailingText = referalList[index].isExistingUser
+                        ? 'User Exists'
+                        : 'Invite Sent';
 
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10),
@@ -417,31 +418,69 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
                           Row(
                             children: [
                               Expanded(
-                                  flex: 3,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                  flex: 2,
+                                  child: Row(
                                     children: [
-                                      Text(
-                                        ('${referalList[index]?.name}')
-                                            .capitalizeFirstofEach,
-                                        style: TextStyle(
-                                            fontSize: 12, color: Colors.black),
+                                      referalList[index].isExistingUser
+                                          ? CircleAvatar(
+                                              backgroundImage: AssetImage(
+                                                  'assets/launcher/myfhb.png'),
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                            )
+                                          : CircleAvatar(
+                                              radius: 15,
+                                              child: Text(
+                                                referalList[index]
+                                                            ?.name
+                                                            .split(' ')
+                                                            .length >
+                                                        1
+                                                    ? '${referalList[index]?.name?.split(' ')[0][0]}${referalList[index]?.name?.split(' ')[1][0]}'
+                                                    : '${referalList[index]?.name?.split(' ')[0][0]}',
+                                                style: TextStyle(
+                                                  fontSize: 12.0.sp,
+                                                ),
+                                              ),
+                                            ),
+                                      SizedBox(
+                                        width: 5,
                                       ),
-                                      // SizedBox(
-                                      //   height: 10,
-                                      // ),
-                                      Text(
-                                        '${referalList[index].phoneNumber}',
-                                        style: TextStyle(
-                                            fontSize: 10,
-                                            color: Colors.black45,
-                                            fontStyle: FontStyle.italic),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            width: 100,
+                                            child: Text(
+                                              ('${referalList[index]?.name}')
+                                                  .capitalizeFirstofEach,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              softWrap: false,
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.black),
+                                            ),
+                                          ),
+                                          // SizedBox(
+                                          //   height: 10,
+                                          // ),
+                                          Text(
+                                            '${referalList[index].phoneNumber}',
+                                            style: TextStyle(
+                                                fontSize: 10,
+                                                color: Colors.black45,
+                                                fontStyle: FontStyle.italic),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   )),
                               Expanded(
+                                flex: 1,
                                 child: Container(
                                   padding: EdgeInsets.all(5),
                                   decoration: BoxDecoration(
@@ -449,8 +488,7 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
                                     // color: referalList[index].isExistingUser
                                     //     ? Colors.yellow[600]
                                     //     : Colors.green.withOpacity(0.7),
-                                    color:
-                                        Color(CommonUtil().getMyPrimaryColor()),
+                                    color: Colors.white,
                                   ),
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -458,10 +496,34 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
                                         CrossAxisAlignment.center,
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      Text('${trailingText}',
-                                          style: TextStyle(
-                                              fontSize: 10,
-                                              color: Colors.white)),
+                                      referalList[index].isExistingUser
+                                          ? Text('${trailingText}',
+                                              style: TextStyle(
+                                                  fontSize: 10,
+                                                  color: Color(CommonUtil()
+                                                      .getMyPrimaryColor())))
+                                          : Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Icon(
+                                                  Icons.check,
+                                                  size: 15.0.sp,
+                                                  color: Color(CommonUtil()
+                                                      .getMyPrimaryColor()),
+                                                ),
+                                                SizedBox(
+                                                  width: 2,
+                                                ),
+                                                Text('${trailingText}',
+                                                    style: TextStyle(
+                                                        fontSize: 10,
+                                                        color: Color(CommonUtil()
+                                                            .getMyPrimaryColor()))),
+                                              ],
+                                            ),
                                     ],
                                   ),
                                 ),
@@ -492,7 +554,7 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
                     children: [
                       OutlineButton(
                         child: Text(
-                          'DONE'.toUpperCase(),
+                          'Ok'.toUpperCase(),
                           style: TextStyle(
                             color: Color(
                               CommonUtil().getMyPrimaryColor(),
