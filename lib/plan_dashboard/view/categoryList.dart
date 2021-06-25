@@ -245,7 +245,7 @@ class _CategoryState extends State<CategoryList> {
                       child: Text(
                         toBeginningOfSentenceCase(catName),
                         style: TextStyle(
-                            color: Colors.black, fontWeight: FontWeight.w500),
+                            color: Colors.white, fontWeight: FontWeight.w500),
                       ),
                     ),
                   ),
