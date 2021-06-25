@@ -20,6 +20,7 @@ import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
 import 'package:myfhb/my_providers/models/GetDoctorsByIdModel.dart';
+import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/my_providers/models/Doctors.dart';
 import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
@@ -46,6 +47,8 @@ import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/p
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
+
+import 'TelehealthProviders.dart';
 
 class BookingConfirmation extends StatefulWidget {
   final followUpFee;
@@ -144,6 +147,11 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
+  bool checkedValue = false;
+
+  String INR_Price = '';
+  String btnLabelChange = payNow;
+
   @override
   void initState() {
     mInitialTime = DateTime.now();
@@ -160,6 +168,13 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     getCategoryList();
     getDataFromWidget();
     setLengthValue();
+
+    INR_Price = commonWidgets.getMoneyWithForamt(widget.isFollowUp
+        ? getFollowUpFee(false)
+        : widget.isFromHospital
+            ? getFeesFromHospital(
+                widget.resultFromHospitalList[widget.doctorListIndex], false)
+            : getFees(widget.healthOrganizationResult[widget.i], false));
   }
 
   @override
@@ -486,7 +501,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                 height: 30.0.h,
                 child: CircularProgressIndicator(
                     strokeWidth: 1.5,
-                    backgroundColor: Color(new CommonUtil().getMyPrimaryColor()))),
+                    backgroundColor:
+                        Color(new CommonUtil().getMyPrimaryColor()))),
           ),
         ),
         elevation: 6.0,
@@ -714,32 +730,43 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                         ],
                       ),
                     ),
-                    SizedBoxWidget(height: 15.0),
+                    SizedBoxWidget(height: 10.0),
                     new Divider(
                       color: Colors.grey[400],
                     ),
                   ],
                 ),
               ),
-              SizedBoxWidget(height: 25.0),
+              getCSRCheckBox(
+                  widget.isFollowUp
+                      ? getFollowUpFee(true)
+                      : widget.isFromHospital
+                          ? getFeesFromHospital(
+                              widget.resultFromHospitalList[
+                                  widget.doctorListIndex],
+                              true)
+                          : getFees(
+                              widget.healthOrganizationResult[widget.i], true),
+                  commonWidgets.getMoneyWithForamt(widget.isFollowUp
+                      ? getFollowUpFee(false)
+                      : widget.isFromHospital
+                          ? getFeesFromHospital(
+                              widget.resultFromHospitalList[
+                                  widget.doctorListIndex],
+                              false)
+                          : getFees(widget.healthOrganizationResult[widget.i],
+                              false))),
+              SizedBoxWidget(height: 15.0),
               Container(
                 child: Center(
                   child: TextWidget(
-                      text: 'Pay INR ' +
-                          commonWidgets.getMoneyWithForamt(widget.isFollowUp
-                              ? getFollowUpFee()
-                              : widget.isFromHospital
-                                  ? getFeesFromHospital(
-                                      widget.resultFromHospitalList[
-                                          widget.doctorListIndex])
-                                  : getFees(widget
-                                      .healthOrganizationResult[widget.i])),
+                      text: 'Pay INR ' + INR_Price,
                       fontsize: 22.0.sp,
                       fontWeight: FontWeight.w500,
                       colors: Color(new CommonUtil().getMyPrimaryColor())),
                 ),
               ),
-              SizedBoxWidget(height: 35.0),
+              SizedBoxWidget(height: 20.0),
               Container(
                 padding: EdgeInsets.all(8.0),
                 child: Row(
@@ -790,7 +817,28 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                         : PreferenceUtil.getStringValue(
                                             Constants.KEY_USERID));
                               } else {
-                                _displayDialog(context);
+                                if (btnLabelChange == bookNow) {
+                                  bookAppointment(
+                                      createdBy,
+                                      selectedId,
+                                      doctorSessionId,
+                                      scheduleDate,
+                                      slotNumber,
+                                      (healthRecords != null &&
+                                              healthRecords.length > 0)
+                                          ? true
+                                          : false,
+                                      isFollowUp(),
+                                      (healthRecords != null &&
+                                              healthRecords.length > 0)
+                                          ? healthRecords
+                                          : [],
+                                      doc: widget.isFollowUp
+                                          ? widget.doctorsData
+                                          : null);
+                                } else {
+                                  _displayDialog(context);
+                                }
                               }
                             } else {
                               toast.getToast(Constants.STR_NO_CONNECTIVITY,
@@ -799,7 +847,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                           });
                         },
                         child: TextWidget(
-                          text: payNow,
+                          text: btnLabelChange,
                           fontsize: 14.0.sp,
                         ),
                       ),
@@ -814,6 +862,43 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     );
   }
 
+  Widget getCSRCheckBox(String discount, String originalFees) {
+    Widget widget;
+    if (discount != null && discount != '') {
+      widget = Container(
+        child: Center(
+          child: CheckboxListTile(
+            title: Text("CSR Discount (" + discount + '%)'),
+            value: checkedValue,
+            activeColor: Colors.green,
+            onChanged: (newValue) {
+              setState(() {
+                checkedValue = newValue;
+                if (checkedValue) {
+                  INR_Price = getDiscountedFee(
+                      double.parse(discount), double.parse(originalFees));
+                  if (INR_Price == '0' || INR_Price == '0.00') {
+                    btnLabelChange = bookNow;
+                  } else {
+                    btnLabelChange = payNow;
+                  }
+                } else {
+                  INR_Price = originalFees;
+                  btnLabelChange = payNow;
+                }
+              });
+            },
+            controlAffinity:
+                ListTileControlAffinity.leading, //  <-- leading Checkbox
+          ),
+        ),
+      );
+    } else {
+      widget = SizedBox.shrink();
+    }
+    return widget;
+  }
+
   profileValidationCheck(BuildContext context, String userId) async {
     await addFamilyUserInfoRepository.getMyProfileInfoNew(userId).then((value) {
       myProfile = value;
@@ -826,19 +911,21 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     }
   }
 
-  String getFollowUpFee() {
+  String getFollowUpFee(bool isCSRDiscount) {
     if (widget.doctorsData?.plannedFollowupDate != null &&
         widget.followUpFee != null) {
       if (widget.doctorsData.isFollowUpTaken == true) {
         return widget.isFromHospital
             ? getFeesFromHospital(
-                widget.resultFromHospitalList[widget.doctorListIndex])
-            : getFees(widget.healthOrganizationResult[widget.i]);
+                widget.resultFromHospitalList[widget.doctorListIndex],
+                isCSRDiscount)
+            : getFees(widget.healthOrganizationResult[widget.i], isCSRDiscount);
       } else if (widget.doctorsData?.plannedFollowupDate == null) {
         return widget.isFromHospital
             ? getFeesFromHospital(
-                widget.resultFromHospitalList[widget.doctorListIndex])
-            : getFees(widget.healthOrganizationResult[widget.i]);
+                widget.resultFromHospitalList[widget.doctorListIndex],
+                isCSRDiscount)
+            : getFees(widget.healthOrganizationResult[widget.i], isCSRDiscount);
       } else {
         if (widget.selectedDate
                 .difference(
@@ -849,15 +936,17 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         } else {
           return widget.isFromHospital
               ? getFeesFromHospital(
-                  widget.resultFromHospitalList[widget.doctorListIndex])
-              : getFees(widget.healthOrganizationResult[widget.i]);
+                  widget.resultFromHospitalList[widget.doctorListIndex],
+                  isCSRDiscount)
+              : getFees(
+                  widget.healthOrganizationResult[widget.i], isCSRDiscount);
         }
       }
     } else {
       return widget.isFromHospital
           ? getFeesFromHospital(
-              widget.resultFromHospitalList[widget.doctorListIndex])
-          : getFees(widget.healthOrganizationResult[widget.i]);
+              widget.resultFromHospitalList[widget.doctorListIndex], false)
+          : getFees(widget.healthOrganizationResult[widget.i], false);
     }
   }
 
@@ -1012,6 +1101,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       bool isMedicalShared,
       bool isFollowUp,
       List<String> healthRecords,
+      bool isCSRDiscount,
       {Past doc}) async {
     CreateAppointmentModel bookAppointmentModel =
         await createAppointMentViewModel.putBookAppointment(
@@ -1023,6 +1113,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             isMedicalShared,
             isFollowUp,
             healthRecords,
+            isCSRDiscount,
             doc: doc);
 
     return bookAppointmentModel;
@@ -1056,6 +1147,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                 isMedicalShared,
                 isFollowUp,
                 healthRecords,
+                checkedValue,
                 doc: doc);
           } else {
             pr.hide();
@@ -1063,8 +1155,16 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           }
         });
       } else {
-        bookAppointmentOnly(createdBy, bookedFor, doctorSessionId, scheduleDate,
-            slotNumber, isMedicalShared, isFollowUp, healthRecords,
+        bookAppointmentOnly(
+            createdBy,
+            bookedFor,
+            doctorSessionId,
+            scheduleDate,
+            slotNumber,
+            isMedicalShared,
+            isFollowUp,
+            healthRecords,
+            checkedValue,
             doc: doc);
       }
     } catch (e) {
@@ -1082,9 +1182,18 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       bool isMedicalShared,
       bool isFollowUp,
       List<String> healthRecords,
+      bool isCSRDiscount,
       {Past doc}) {
-    bookAppointmentCall(createdBy, bookedFor, doctorSessionId, scheduleDate,
-            slotNumber, isMedicalShared, isFollowUp, healthRecords,
+    bookAppointmentCall(
+            createdBy,
+            bookedFor,
+            doctorSessionId,
+            scheduleDate,
+            slotNumber,
+            isMedicalShared,
+            isFollowUp,
+            healthRecords,
+            isCSRDiscount,
             doc: doc)
         .then((value) {
       if (value != null) {
@@ -1093,18 +1202,27 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             value.result != null) {
           if (value.isSuccess == true &&
               value.message == appointmentCreatedMessage) {
-            if (value.result.paymentInfo.payload.paymentGatewayDetail
-                    .responseInfo.longurl !=
-                null) {
-              PreferenceUtil.saveString(Constants.KEY_USERID_BOOK, '');
+            if (value?.result?.paymentInfo != null) {
+              if (value.result.paymentInfo.payload.paymentGatewayDetail
+                      .responseInfo.longurl !=
+                  null) {
+                PreferenceUtil.saveString(Constants.KEY_USERID_BOOK, '');
 
-              goToPaymentPage(
-                  value.result.paymentInfo.payload.paymentGatewayDetail
-                      .responseInfo.longurl,
-                  value.result.paymentInfo.payload.payment.id);
+                goToPaymentPage(
+                    value.result.paymentInfo.payload.paymentGatewayDetail
+                        .responseInfo.longurl,
+                    value.result.paymentInfo.payload.payment.id);
+              } else {
+                pr.hide();
+                toast.getToast(noUrl, Colors.red);
+              }
             } else {
-              pr.hide();
-              toast.getToast(noUrl, Colors.red);
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => TelehealthProviders(
+                            arguments: HomeScreenArguments(selectedIndex: 0),
+                          )));
             }
           } else {
             pr.hide();
@@ -1517,15 +1635,21 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     return associateResponseList;
   }
 
-  String getFees(HealthOrganizationResult result) {
+  String getFees(HealthOrganizationResult result, bool isCSRDiscount) {
     String fees;
     if (result.doctorFeeCollection != null) {
       if (result.doctorFeeCollection.length > 0) {
         for (int i = 0; i < result.doctorFeeCollection.length; i++) {
           String feesCode = result.doctorFeeCollection[i].feeType.code;
           bool isActive = result.doctorFeeCollection[i].isActive;
-          if (feesCode == CONSULTING && isActive == true) {
-            fees = result.doctorFeeCollection[i].fee;
+          if (isCSRDiscount) {
+            if (feesCode == CSR_DISCOUNT && isActive == true) {
+              fees = result?.doctorFeeCollection[i]?.fee;
+            }
+          } else {
+            if (feesCode == CONSULTING && isActive == true) {
+              fees = result?.doctorFeeCollection[i]?.fee;
+            }
           }
         }
       } else {
@@ -1537,15 +1661,21 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     return fees;
   }
 
-  String getFeesFromHospital(ResultFromHospital result) {
+  String getFeesFromHospital(ResultFromHospital result, bool isCSRDiscount) {
     String fees;
     if (result.doctorFeeCollection != null) {
       if (result.doctorFeeCollection.length > 0) {
         for (int i = 0; i < result.doctorFeeCollection.length; i++) {
           String feesCode = result.doctorFeeCollection[i].feeType.code;
           bool isActive = result.doctorFeeCollection[i].isActive;
-          if (feesCode == CONSULTING && isActive == true) {
-            fees = result.doctorFeeCollection[i].fee;
+          if (isCSRDiscount) {
+            if (feesCode == CSR_DISCOUNT && isActive == true) {
+              fees = result?.doctorFeeCollection[i]?.fee;
+            }
+          } else {
+            if (feesCode == CONSULTING && isActive == true) {
+              fees = result?.doctorFeeCollection[i]?.fee;
+            }
           }
         }
       } else {
@@ -1647,7 +1777,22 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
     if (address1 != '' && city != '' && state != '') {
       //normal appointment
-      _displayDialog(context);
+      if (btnLabelChange == bookNow) {
+        bookAppointment(
+            createdBy,
+            selectedId,
+            doctorSessionId,
+            scheduleDate,
+            slotNumber,
+            (healthRecords != null && healthRecords.length > 0) ? true : false,
+            isFollowUp(),
+            (healthRecords != null && healthRecords.length > 0)
+                ? healthRecords
+                : [],
+            doc: widget.isFollowUp ? widget.doctorsData : null);
+      } else {
+        _displayDialog(context);
+      }
     } else {
       toast.getToast(noAddress, Colors.red);
     }
@@ -1675,5 +1820,17 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         duration: const Duration(seconds: 10),
       ),
     );
+  }
+
+  String getDiscountedFee(double percent, double price) {
+    var discountedPrice;
+
+    if (percent != null && price != null && percent != '' && price != '') {
+      discountedPrice = (percent / 100) * price;
+
+      price = price - discountedPrice;
+    }
+
+    return price?.toStringAsFixed(2);
   }
 }

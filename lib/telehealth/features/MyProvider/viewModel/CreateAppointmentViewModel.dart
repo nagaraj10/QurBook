@@ -16,6 +16,7 @@ class CreateAppointMentViewModel {
       bool isMedicalShared,
       bool isFollowUp,
       List<String> healthRecords,
+      bool isCSRDiscount,
       {Past doc}) async {
     try {
       CreateAppointmentModel bookAppointmentModel =
@@ -28,6 +29,7 @@ class CreateAppointMentViewModel {
               isMedicalShared,
               isFollowUp,
               healthRecords,
+              isCSRDiscount,
               doc: doc);
       bookAppointment = bookAppointmentModel;
       return bookAppointment;
