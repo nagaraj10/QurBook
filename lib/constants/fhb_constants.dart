@@ -512,6 +512,7 @@ const String strDevices = 'Devices';
 const String strHospitals = 'Hospitals';
 const String strMyPlans = 'My Care Plans';
 const String strCarePlans = 'Care Plans';
+const String strHealthcon = 'Health Condition';
 const String strPlans = 'Plans';
 
 const strUploading = 'Uploading...';
