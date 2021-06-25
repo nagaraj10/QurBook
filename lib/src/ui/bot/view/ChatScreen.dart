@@ -8,6 +8,7 @@ import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/ui/bot/common/botutils.dart';
+import 'package:myfhb/src/ui/bot/view/sheela_arguments.dart';
 import 'package:myfhb/src/ui/bot/widgets/chatdata.dart';
 import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'package:provider/provider.dart';
@@ -21,15 +22,9 @@ import 'package:intl/intl.dart';
 // ignore: must_be_immutable
 class ChatScreen extends StatefulWidget {
   //List<Conversation> conversation;
-  final bool isSheelaAskForLang;
-  final String langCode;
-  final String sheelaInputs;
-  final String rawMessage;
+  final SheelaArgument arguments;
   ChatScreen(
-      {@required this.isSheelaAskForLang,
-      this.langCode,
-      this.sheelaInputs,
-      this.rawMessage});
+      {this.arguments});
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -64,16 +59,16 @@ class _ChatScreenState extends State<ChatScreen>
     _controller.forward();
 
     getMyViewModel().clearMyConversation();
-    if (widget.sheelaInputs != null && widget.sheelaInputs != '') {
-      getMyViewModel(sheelaInputs: widget.sheelaInputs);
+    if (widget?.arguments?.sheelaInputs != null && widget?.arguments?.sheelaInputs != '') {
+      getMyViewModel(sheelaInputs: widget?.arguments?.sheelaInputs);
     } else {
-      widget.isSheelaAskForLang
-          ? (widget?.rawMessage != null && widget?.rawMessage?.isNotEmpty)
-              ? getMyViewModel().askUserForLanguage(message: widget?.rawMessage)
+      widget?.arguments?.isSheelaAskForLang
+          ? (widget?.arguments?.rawMessage != null && widget?.arguments?.rawMessage?.isNotEmpty)
+              ? getMyViewModel().askUserForLanguage(message: widget?.arguments?.rawMessage)
               : getMyViewModel().askUserForLanguage()
-          : (widget?.rawMessage != null && widget?.rawMessage?.isNotEmpty)
+          : (widget?.arguments?.rawMessage != null && widget?.arguments?.rawMessage?.isNotEmpty)
               ? getMyViewModel()
-                  .startMayaAutomatically(message: widget?.rawMessage)
+                  .startMayaAutomatically(message: widget?.arguments?.rawMessage)
               : getMyViewModel().startMayaAutomatically();
     }
   }
@@ -90,6 +85,12 @@ class _ChatScreenState extends State<ChatScreen>
           .updateAppState(true);
     }
   }
+
+  @override
+void deactivate() {
+  Provider.of<ChatScreenViewModel>(context, listen: false)?.conversations?.clear();
+  super.deactivate();
+}
 
   @override
   void dispose() {
