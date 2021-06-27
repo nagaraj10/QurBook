@@ -1705,7 +1705,7 @@ class CommonUtil {
                         color: Color(getMyPrimaryColor()),
                       ),
                     ),
-                    onPressed: () => _launchURL(APP_STORE_URL),
+                    onPressed: () => launchURL(APP_STORE_URL),
                   ),
                   !isForceUpdate
                       ? FlatButton(
@@ -1717,7 +1717,7 @@ class CommonUtil {
                           ),
                           onPressed: () => Navigator.pop(context),
                         )
-                      : Container(),
+                      : SizedBox.shrink(),
                 ],
               )
             : new AlertDialog(
@@ -1737,7 +1737,7 @@ class CommonUtil {
                         color: Color(getMyPrimaryColor()),
                       ),
                     ),
-                    onPressed: () => _launchURL(PLAY_STORE_URL),
+                    onPressed: () => launchURL(PLAY_STORE_URL),
                   ),
                   !isForceUpdate
                       ? FlatButton(
@@ -1749,14 +1749,14 @@ class CommonUtil {
                           ),
                           onPressed: () => Navigator.pop(context),
                         )
-                      : Container(),
+                      : SizedBox.shrink(),
                 ],
               );
       },
     );
   }
 
-  _launchURL(String url) async {
+  launchURL(String url) async {
     if (await canLaunch(url)) {
       await launch(url);
     } else {

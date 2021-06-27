@@ -579,6 +579,14 @@ class _MyFHBState extends State<MyFHB> {
         var jsonInput = {};
         jsonInput['providerRequestId'] = passedValArr[1];
         jsonInput['action'] = passedValArr[2];
+      } else if (passedValArr[0] == 'openurl') {
+        var urlInfo = passedValArr[1];
+        fbaLog(eveParams: {
+          'eventTime': '${DateTime.now()}',
+          'ns_type': 'openurl',
+          'navigationPage': 'Browser page',
+        });
+        CommonUtil().launchURL(urlInfo);
       } else if (passedValArr[4] == 'call') {
         try {
           doctorPic = passedValArr[3];
@@ -827,6 +835,11 @@ class _MyFHBState extends State<MyFHB> {
           //   "contextId": parsedData[1]
           // };
           return SplashScreen();
+        } else if (navRoute.split('&')[0] == 'openurl') {
+          return SplashScreen(
+            nsRoute: 'openurl',
+            bundle: navRoute.split('&')[1],
+          );
         } else {
           return StartTheCall();
         }

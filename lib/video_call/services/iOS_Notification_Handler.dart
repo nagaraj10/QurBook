@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:launch_review/launch_review.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
@@ -33,6 +34,14 @@ class IosNotificationHandler {
       if (call.method == variable.notificationResponseMethod) {
         final data = Map<String, dynamic>.from(call.arguments);
         model = NotificationModel.fromMap(data);
+        if (model.externalLink != null) {
+          if (model.externalLink == variable.iOSAppStoreLink) {
+            LaunchReview.launch(
+                iOSAppId: variable.iOSAppId, writeReview: false);
+          } else {
+            CommonUtil().launchURL(model.externalLink);
+          }
+        }
         if (!isAlreadyLoaded) {
           Future.delayed(const Duration(seconds: 4), actionForTheNotification);
         } else {

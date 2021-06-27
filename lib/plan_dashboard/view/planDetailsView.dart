@@ -528,7 +528,7 @@ class PlanDetail extends State<MyPlanDetailView> {
                     ),
                     onPressed: () async {
                       // open profile page
-                      Navigator.of(context).pop();
+                      //Navigator.of(context).pop();
                       Navigator.of(context).pop();
                     },
                     borderSide: BorderSide(

@@ -7,6 +7,8 @@ const String strAppPackage =
     'com.ventechsolutions.myFHB'; //'com.globalmantrainnovations.myfhb';
 const String strHealthRecordChannel = 'Health Record channel';
 const String iOSAppId = '1526444520';
+const String iOSAppStoreLink =
+    'https://apps.apple.com/in/app/qurbook/id1526444520';
 //For class add_family_otp
 //web service call
 const String strSrcName = 'sourceName';

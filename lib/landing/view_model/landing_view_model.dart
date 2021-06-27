@@ -15,6 +15,7 @@ class LandingViewModel extends ChangeNotifier {
   LandingScreenStatus landingScreenStatus = LandingScreenStatus.Loaded;
   DashboardModel dashboardData;
   bool isLoadDone = true;
+  bool isURLCome = false;
 
   void changeSearchBar({bool isEnabled = false, bool needNotify = true}) {
     isSearchVisible = isEnabled;

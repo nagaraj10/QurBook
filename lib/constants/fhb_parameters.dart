@@ -570,9 +570,10 @@ const String make_a_choice = 'Make a Choice!';
 
 // Video call
 const String GCMUserId = 'gcm.notification.userId';
-const String strgcmAppointmentId = "gcm.notification.appointmentId";
+const String strgcmAppointmentId = 'gcm.notification.appointmentId';
+const String gcmExternalLink = 'gcm.notification.externalLink';
 const String gcmredirectTo = 'gcm.notification.redirectTo';
-
+const String externalLink = 'externalLink';
 const String onresume = 'OnResume New';
 const String onlaunch = 'OnLaunch New';
 const String username = 'username';

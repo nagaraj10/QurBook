@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
 import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
@@ -123,6 +125,15 @@ class _LandingScreenState extends State<LandingScreen> {
   @override
   Widget build(BuildContext context) {
     landingViewModel = Provider.of<LandingViewModel>(context);
+    if (landingViewModel.isURLCome) {
+      landingViewModel.isURLCome = false;
+      Future.delayed(Duration(seconds: 2), () {
+        if (widget?.landingArguments?.url != null &&
+            widget?.landingArguments?.url.isNotEmpty) {
+          CommonUtil().launchURL(widget?.landingArguments?.url);
+        }
+      });
+    }
     return FutureBuilder<MyProfileModel>(
       future: profileData,
       builder: (BuildContext context, snapshot) {
