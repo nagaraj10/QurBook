@@ -1136,6 +1136,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             builder: (context) => PaymentPage(
                   redirectUrl: longurl,
                   paymentId: paymentId,
+                  isFromSubscribe: false,
                   closePage: (value) {
                     if (value == 'success') {
                       widget.closePage(value);

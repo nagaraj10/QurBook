@@ -7,8 +7,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
+import 'package:myfhb/plan_dashboard/model/UpdatePaymentStatusSubscribe.dart';
+import 'package:myfhb/plan_dashboard/viewModel/subscribeViewModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/updatePayment/UpdatePaymentModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/UpdatePaymentViewModel.dart';
 import 'package:myfhb/telehealth/features/Payment/ResultPage.dart';
@@ -20,11 +23,13 @@ class PaymentPage extends StatefulWidget {
   final String redirectUrl;
   final String paymentId;
   Function(String) closePage;
+  bool isFromSubscribe;
 
   PaymentPage(
       {Key key,
       @required this.redirectUrl,
       @required this.paymentId,
+      @required this.isFromSubscribe,
       this.closePage})
       : super(key: key);
 
@@ -36,9 +41,14 @@ class _WebViewExampleState extends State<PaymentPage> {
   String PAYMENT_URL;
   String paymentId;
   UpdatePaymentViewModel updatePaymentViewModel;
+  bool isFromSubscribe = false;
 
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
+
+  SubscribeViewModel subscribeViewModel = SubscribeViewModel();
+
+  String paymentOrderIdSub = '';
 
   @override
   void initState() {
@@ -46,6 +56,7 @@ class _WebViewExampleState extends State<PaymentPage> {
     updatePaymentViewModel = new UpdatePaymentViewModel();
     PAYMENT_URL = widget.redirectUrl;
     paymentId = widget.paymentId;
+    isFromSubscribe = widget.isFromSubscribe;
   }
 
   @override
@@ -101,9 +112,54 @@ class _WebViewExampleState extends State<PaymentPage> {
                 paymentOrderId = uri.queryParameters[PAYMENT_ID];
                 paymentRequestId = uri.queryParameters[PAYMENT_REQ_ID];
                 if (paymentStatus != null && paymentStatus == CREDIT) {
-                  updatePayment(paymentId, paymentOrderId, paymentRequestId);
+                  if (isFromSubscribe) {
+                    updatePaymentSubscribe(
+                            paymentId, paymentOrderId, paymentRequestId)
+                        .then((value) {
+                      if (value?.isSuccess == true &&
+                          value?.result?.paymentStatus == PAYSUC) {
+                        paymentOrderIdSub = value?.result?.paymentOrderId ?? '';
+                        subscribeViewModel
+                            .subScribePlan(value?.result?.planPackage?.packageid
+                                .toString())
+                            .then((value) {
+                          if (value?.isSuccess) {
+                            if (value?.result?.result == 'Done') {
+                              callResultPage(true, paymentOrderIdSub);
+                            } else {
+                              FlutterToast().getToast(
+                                  value != null &&
+                                          value?.result?.message != null
+                                      ? value?.result?.message
+                                      : 'Subscribe Failed',
+                                  Colors.red);
+                            }
+                          } else {
+                            FlutterToast()
+                                .getToast(value?.result?.message, Colors.red);
+                          }
+                        });
+                      } else {
+                        callResultPage(false, '');
+                      }
+                    });
+                  } else {
+                    updatePayment(paymentId, paymentOrderId, paymentRequestId);
+                  }
                 } else {
-                  updatePayment(paymentId, paymentOrderId, paymentRequestId);
+                  if (isFromSubscribe) {
+                    updatePaymentSubscribe(
+                            paymentId, paymentOrderId, paymentRequestId)
+                        .then((value) {
+                      if (value?.isSuccess == true) {
+                        callResultPage(false, '');
+                      } else {
+                        callResultPage(false, '');
+                      }
+                    });
+                  } else {
+                    updatePayment(paymentId, paymentOrderId, paymentRequestId);
+                  }
                 }
               }
               return NavigationDecision.navigate;
@@ -187,6 +243,15 @@ class _WebViewExampleState extends State<PaymentPage> {
       String paymentId, String paymentOrderId, String paymentRequestId) async {
     UpdatePaymentModel updatePaymentModel = await updatePaymentViewModel
         .updatePaymentStatus(paymentId, paymentOrderId, paymentRequestId);
+
+    return updatePaymentModel;
+  }
+
+  Future<UpdatePaymentStatusSubscribe> updatePaymentSubscribe(
+      String paymentId, String paymentOrderId, String paymentRequestId) async {
+    UpdatePaymentStatusSubscribe updatePaymentModel =
+        await updatePaymentViewModel.updatePaymentSubscribe(
+            paymentId, paymentOrderId, paymentRequestId);
 
     return updatePaymentModel;
   }
