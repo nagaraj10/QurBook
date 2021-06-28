@@ -269,13 +269,16 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
                   }
                 },
                 leading: (contact.avatar != null && contact.avatar.length > 0)
-                    ? CircleAvatar(backgroundImage: MemoryImage(contact.avatar))
+                    ? CircleAvatar(
+                        backgroundColor: Color(0xFFf7f6f5),
+                        backgroundImage: MemoryImage(contact.avatar))
                     : CircleAvatar(
+                        backgroundColor: Color(0xFFf7f6f5),
                         child: Text(
                           contact.initials(),
                           style: TextStyle(
-                            fontSize: 16.0.sp,
-                          ),
+                              fontSize: 16.0.sp,
+                              color: Color(CommonUtil().getMyPrimaryColor())),
                         ),
                       ),
                 title: Text(
@@ -363,224 +366,220 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
 
   sendReferalRequest(ReferAFriendRequest friendRequest) {
     referAFriend(friendRequest).then((value) {
-      //! this where summary of referAFriend dialog comes
       List<Result> referalList = value?.result;
-      referalList.forEach((element) {
-        print('######${element.phoneNumber}');
-      });
       LoaderClass.hideLoadingDialog(context);
-      // setState(() {
-      //   selectedList.clear();
-      // });
-      showDialog(
-          barrierDismissible: false,
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              contentPadding: EdgeInsets.symmetric(horizontal: 5),
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  //Spacer(),
-                  Text(
-                    'Invite Summary',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 17.0.sp,
+      if (referalList?.length > 1) {
+        showDialog(
+            barrierDismissible: false,
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                contentPadding: EdgeInsets.symmetric(horizontal: 5),
+                title: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Invite Summary',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 20.0.sp,
+                      ),
                     ),
-                  ),
-                  // Expanded(
-                  //   child: IconButton(
-                  //       icon: Icon(Icons.close_rounded),
-                  //       onPressed: () {
-                  //         Get.back();
-                  //         Get.back();
-                  //       }),
-                  // ),
-                ],
-              ),
-              content: Container(
-                height: 300.0, // Change as per your requirement
-                width: 300.0, // Change as per your requirement
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: referalList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    String trailingText = referalList[index].isExistingUser
-                        ? 'User Exists'
-                        : 'Invite Sent';
+                  ],
+                ),
+                content: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  width: 0.75.sw, // Change as per your requirement
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: referalList?.length ?? 0,
+                    itemBuilder: (BuildContext context, int index) {
+                      String trailingText = referalList[index].isExistingUser
+                          ? 'User Exists'
+                          : 'Invite Sent';
 
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                  flex: 2,
-                                  child: Row(
-                                    children: [
-                                      referalList[index].isExistingUser
-                                          ? CircleAvatar(
-                                              backgroundImage: AssetImage(
-                                                  'assets/launcher/myfhb.png'),
-                                              backgroundColor:
-                                                  Colors.transparent,
-                                            )
-                                          : CircleAvatar(
-                                              radius: 15,
-                                              child: Text(
-                                                referalList[index]
-                                                            ?.name
-                                                            .split(' ')
-                                                            .length >
-                                                        1
-                                                    ? '${referalList[index]?.name?.split(' ')[0][0]}${referalList[index]?.name?.split(' ')[1][0]}'
-                                                    : '${referalList[index]?.name?.split(' ')[0][0]}',
-                                                style: TextStyle(
-                                                  fontSize: 12.0.sp,
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Expanded(
+                                    flex: 2,
+                                    child: Row(
+                                      children: [
+                                        referalList[index].isExistingUser
+                                            ? CircleAvatar(
+                                                radius: 15,
+                                                child: Container(
+                                                  alignment: Alignment.center,
+                                                  child: Image.asset(
+                                                      'assets/launcher/myfhb.png'),
+                                                ),
+                                                backgroundColor:
+                                                    Colors.transparent,
+                                              )
+                                            : CircleAvatar(
+                                                backgroundColor:
+                                                    Color(0xFFf7f6f5),
+                                                radius: 15,
+                                                child: Text(
+                                                  referalList[index]
+                                                              ?.name
+                                                              .split(' ')
+                                                              .length >
+                                                          1
+                                                      ? '${referalList[index]?.name?.split(' ')[0][0]}${referalList[index]?.name?.split(' ')[1][0]}'
+                                                      : '${referalList[index]?.name?.split(' ')[0][0]}',
+                                                  style: TextStyle(
+                                                    fontSize: 12.0.sp,
+                                                  ),
                                                 ),
                                               ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            SizedBox(
+                                              width: 100,
+                                              child: Text(
+                                                ('${referalList[index]?.name}')
+                                                    .capitalizeFirstofEach,
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                softWrap: false,
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.black),
+                                              ),
                                             ),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          SizedBox(
-                                            width: 100,
-                                            child: Text(
-                                              ('${referalList[index]?.name}')
-                                                  .capitalizeFirstofEach,
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                              softWrap: false,
-                                              style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: Colors.black),
-                                            ),
-                                          ),
-                                          // SizedBox(
-                                          //   height: 10,
-                                          // ),
-                                          Text(
-                                            '${referalList[index].phoneNumber}',
-                                            style: TextStyle(
-                                                fontSize: 10,
-                                                color: Colors.black45,
-                                                fontStyle: FontStyle.italic),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  )),
-                              Expanded(
-                                flex: 1,
-                                child: Container(
-                                  padding: EdgeInsets.all(5),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    // color: referalList[index].isExistingUser
-                                    //     ? Colors.yellow[600]
-                                    //     : Colors.green.withOpacity(0.7),
-                                    color: Colors.white,
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      referalList[index].isExistingUser
-                                          ? Text('${trailingText}',
+                                            // SizedBox(
+                                            //   height: 10,
+                                            // ),
+                                            Text(
+                                              '${referalList[index].phoneNumber}',
                                               style: TextStyle(
                                                   fontSize: 10,
-                                                  color: Color(CommonUtil()
-                                                      .getMyPrimaryColor())))
-                                          : Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Icon(
-                                                  Icons.check,
-                                                  size: 15.0.sp,
-                                                  color: Color(CommonUtil()
-                                                      .getMyPrimaryColor()),
-                                                ),
-                                                SizedBox(
-                                                  width: 2,
-                                                ),
-                                                Text('${trailingText}',
-                                                    style: TextStyle(
-                                                        fontSize: 10,
-                                                        color: Color(CommonUtil()
-                                                            .getMyPrimaryColor()))),
-                                              ],
+                                                  color: Colors.black45,
+                                                  fontStyle: FontStyle.italic),
                                             ),
-                                    ],
+                                          ],
+                                        ),
+                                      ],
+                                    )),
+                                Expanded(
+                                  flex: 1,
+                                  child: Container(
+                                    padding: EdgeInsets.all(5),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      // color: referalList[index].isExistingUser
+                                      //     ? Colors.yellow[600]
+                                      //     : Colors.green.withOpacity(0.7),
+                                      color: Colors.white,
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        referalList[index].isExistingUser
+                                            ? Text('${trailingText}',
+                                                style: TextStyle(
+                                                    fontSize: 10,
+                                                    color: Color(CommonUtil()
+                                                        .getMyPrimaryColor())))
+                                            : Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.end,
+                                                children: [
+                                                  Icon(
+                                                    Icons.check,
+                                                    size: 15.0.sp,
+                                                    color: Color(CommonUtil()
+                                                        .getMyPrimaryColor()),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 2,
+                                                  ),
+                                                  Text('${trailingText}',
+                                                      style: TextStyle(
+                                                          fontSize: 10,
+                                                          color: Color(CommonUtil()
+                                                              .getMyPrimaryColor()))),
+                                                ],
+                                              ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              )
-                            ],
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          // Divider(
-                          //   height: 1,
-                          //   // indent: 5,
-                          //   // endIndent: 5,
-                          //   color: Colors.black26,
-                          // ),
-                        ],
-                      ),
-                    );
-                  },
+                                )
+                              ],
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            // Divider(
+                            //   height: 1,
+                            //   // indent: 5,
+                            //   // endIndent: 5,
+                            //   color: Colors.black26,
+                            // ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
                 ),
-              ),
-              actions: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      OutlineButton(
-                        child: Text(
-                          'Ok'.toUpperCase(),
-                          style: TextStyle(
+                actions: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        OutlineButton(
+                          child: Text(
+                            'Ok'.toUpperCase(),
+                            style: TextStyle(
+                              color: Color(
+                                CommonUtil().getMyPrimaryColor(),
+                              ),
+                              fontSize: 13,
+                            ),
+                          ),
+                          onPressed: () {
+                            selectedList.clear();
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                          borderSide: BorderSide(
                             color: Color(
                               CommonUtil().getMyPrimaryColor(),
                             ),
-                            fontSize: 13,
+                            style: BorderStyle.solid,
+                            width: 1,
                           ),
                         ),
-                        onPressed: () {
-                          selectedList.clear();
-                          Navigator.pop(context);
-                          //Navigator.pop(context);
-                        },
-                        borderSide: BorderSide(
-                          color: Color(
-                            CommonUtil().getMyPrimaryColor(),
-                          ),
-                          style: BorderStyle.solid,
-                          width: 1,
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            );
-          });
+                      ],
+                    ),
+                  )
+                ],
+              );
+            });
+      } else {
+        //! Error msg need to be finalised here
+        //FlutterToast().getToast('', Colors.red);
+      }
     });
   }
 
