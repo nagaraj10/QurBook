@@ -110,8 +110,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
   Widget getDoctorBar(List<Hospitals> hospitals, int index) {
     return AppBar(
         automaticallyImplyLeading: false,
-        flexibleSpace: 
-        Container(
+        flexibleSpace: Container(
           decoration: BoxDecoration(
               gradient: LinearGradient(
                   begin: Alignment.centerLeft,
@@ -226,8 +225,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
                             ),*/
                         commonWidgets.getCityHospital(hospitals[index]) != ''
                             ? Text(
-                                commonWidgets
-                                    .getCityHospital(hospitals[index]),
+                                commonWidgets.getCityHospital(hospitals[index]),
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
                                 style: TextStyle(
@@ -313,7 +311,8 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
                 refresh: () {
                   setState(() {});
                 },
-                isFromHospital: true,isFromFollowOrReschedule: false),
+                isFromHospital: true,
+                isFromFollowOrReschedule: false),
           ],
         ),
       ),
@@ -387,8 +386,8 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
                           child: Center(
                             child: TextWidget(
                                 text: INR +
-                                    commonWidgets
-                                        .getMoneyWithForamt(getFees(docs[i])),
+                                    commonWidgets.getMoneyWithForamt(
+                                        getFees(docs[i], false)),
                                 fontsize: 16.0.sp,
                                 fontWeight: FontWeight.w400,
                                 colors: Color(
@@ -439,6 +438,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
                                 : SizedBox()
                             : SizedBox()
                         : SizedBox()),
+                getCSRDiscount(getFees(docs[i], true)),
                 commonWidgets.getSizeBoxWidth(10.0),
               ]),
               commonWidgets.getSizedBox(5.0),
@@ -478,15 +478,40 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
     }
   }
 
-  String getFees(ResultFromHospital result) {
-    String fees;
-    if (result.doctorFeeCollection.isNotEmpty) {
-      if (result.doctorFeeCollection.length > 0) {
-        for (int i = 0; i < result.doctorFeeCollection.length; i++) {
-          String feesCode = result.doctorFeeCollection[i].feeType.code;
-          bool isActive = result.doctorFeeCollection[i].isActive;
-          if (feesCode == CONSULTING && isActive == true) {
-            fees = result.doctorFeeCollection[i].fee;
+  Widget getCSRDiscount(String fees) {
+    Widget widget;
+    if (fees != null && fees != '') {
+      widget = Container(
+        child: Center(
+          child: Text('Discount ' + commonWidgets.getMoneyWithForamt(fees) + '%',
+              style: TextStyle(
+                  fontSize: 16.0.sp,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.red),
+              textAlign: TextAlign.center),
+        ),
+      );
+    } else {
+      widget = SizedBox.shrink();
+    }
+    return widget;
+  }
+
+  String getFees(ResultFromHospital result, bool isCSRDiscount) {
+    String fees = '';
+    if (result?.doctorFeeCollection?.isNotEmpty) {
+      if (result?.doctorFeeCollection?.length > 0) {
+        for (int i = 0; i < result?.doctorFeeCollection?.length; i++) {
+          String feesCode = result?.doctorFeeCollection[i]?.feeType?.code;
+          bool isActive = result?.doctorFeeCollection[i]?.isActive;
+          if (isCSRDiscount) {
+            if (feesCode == CSR_DISCOUNT && isActive == true) {
+              fees = result?.doctorFeeCollection[i]?.fee;
+            }
+          } else {
+            if (feesCode == CONSULTING && isActive == true) {
+              fees = result?.doctorFeeCollection[i]?.fee;
+            }
           }
         }
       } else {

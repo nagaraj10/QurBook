@@ -106,6 +106,7 @@ const String qr_is_medical_shared = 'isMedicalRecordsShared';
 const String qr_is_followup = 'isFollowUp';
 const String qr_health_record_ref = 'healthRecordReference';
 const String qr_parent_appointment = 'parentAppointment';
+const String qr_is_csr_discount = 'isCsrDiscount';
 
 const String qr_payment_id = 'paymentId';
 const String qr_appoint_id = 'appointmentId';

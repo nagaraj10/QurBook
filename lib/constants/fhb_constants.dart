@@ -356,6 +356,7 @@ const String CHAT = "Chats";
 
 const String KEY_FAMILYMEMBERNEW = 'familymembernew';
 const String CONSULTING = 'CONSULTING';
+const String CSR_DISCOUNT = 'CSR_DISCOUNT';
 const String HealthOrg = 'Health Organization';
 const String HEALTH_RECORDIDS = 'healthRecordIds';
 const String INR = 'INR ';

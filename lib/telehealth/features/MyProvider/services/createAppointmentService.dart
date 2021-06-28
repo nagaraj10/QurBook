@@ -17,6 +17,7 @@ class CreateAppointmentService {
       bool isMedicalShared,
       bool isFollowUp,
       List<String> healthRecords,
+      bool isCSRDiscount,
       {Past doc}) async {
     var slotInput = {};
     slotInput[qr_created_by] = createdBy;
@@ -42,6 +43,7 @@ class CreateAppointmentService {
     } else {
       slotInput[qr_parent_appointment] = '';
     }
+    slotInput[qr_is_csr_discount] = isCSRDiscount;
     var jsonString = convert.jsonEncode(slotInput);
     print(jsonString);
     final response = await _helper.bookAppointment(qr_bookAppointment, jsonString);
