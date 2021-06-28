@@ -868,7 +868,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       widget = Container(
         child: Center(
           child: CheckboxListTile(
-            title: Text("CSR Discount (" + discount + '%)'),
+            title: Text("Qurhealth Discount (" +
+                commonWidgets.getMoneyWithForamt(discount) +
+                '%)'),
             value: checkedValue,
             activeColor: Colors.green,
             onChanged: (newValue) {
@@ -1202,7 +1204,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             value.result != null) {
           if (value.isSuccess == true &&
               value.message == appointmentCreatedMessage) {
-            if (value?.result?.paymentInfo != null) {
+            if (value?.result?.paymentInfo != null &&
+                value?.result.paymentInfo?.payload?.paymentGatewayDetail !=
+                    null) {
               if (value.result.paymentInfo.payload.paymentGatewayDetail
                       .responseInfo.longurl !=
                   null) {
@@ -1217,6 +1221,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                 toast.getToast(noUrl, Colors.red);
               }
             } else {
+              Navigator.pop(context);
+              Navigator.pop(context);
               Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
@@ -1831,6 +1837,6 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       price = price - discountedPrice;
     }
 
-    return price?.toStringAsFixed(2);
+    return commonWidgets.getMoneyWithForamt(price.toString());
   }
 }

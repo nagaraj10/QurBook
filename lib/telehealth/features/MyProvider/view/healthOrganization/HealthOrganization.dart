@@ -441,7 +441,7 @@ class _HealthOrganizationState extends State<HealthOrganization> {
     if (fees != null && fees != '') {
       widget = Container(
         child: Center(
-          child: Text('Discount ' + fees + '%',
+          child: Text('Discount ' + commonWidgets.getMoneyWithForamt(fees) + '%',
               style: TextStyle(
                   fontSize: 16.0.sp,
                   fontWeight: FontWeight.w500,
