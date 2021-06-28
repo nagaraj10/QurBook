@@ -457,7 +457,9 @@ class _LandingScreenState extends State<LandingScreen> {
                             myProfile.result.firstName != null &&
                                 myProfile.result.firstName != ''
                         ? 'Hey ${toBeginningOfSentenceCase(myProfile.result.firstName)}'
-                        : 'Hey User',
+                        : myProfile != null
+                            ? 'Hey User'
+                            : '',
                     style: TextStyle(
                       fontSize: 18.0.sp,
                       color: Colors.white,
