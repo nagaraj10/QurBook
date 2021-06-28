@@ -673,7 +673,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   onChanged: (value) {
 
                             cityVal = null;
-                            stateVal=null;
                             
                           },
                   decoration: InputDecoration(
@@ -745,7 +744,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                       fontSize: 16.0.sp,
                     ),
                   ),onChanged: (value) {
-                            state = null;
+                            stateVal = null;
                           },),
               suggestionsCallback: (pattern) async {
                 if (pattern.length >= 3) {
@@ -769,6 +768,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 return suggestionsBox;
               },
               errorBuilder: (context, suggestion) {
+                stateVal=null;
                 return ListTile(
                   title: Text(
                     'Oops. We could not find the state you typed.',
