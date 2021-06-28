@@ -22,7 +22,7 @@ class UpdatePaymentStatusSubscribe {
 
 class PaymentSubscribeResult {
   PlanPackage planPackage;
-  int paymentId;
+  String paymentId;
   String paymentOrderId;
   String paymentRequestId;
   String paymentStatus;

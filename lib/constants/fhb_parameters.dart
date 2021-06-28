@@ -360,6 +360,7 @@ const String PROFILE_PH = 'assets/user/profile_pic_ph.png';
 const String PAYMENT_SUCCESS_MSG = 'Payment Successful';
 const String PAYMENT_FAILURE_MSG = 'Payment Failure';
 const String APPOINTMENT_CONFIRM = 'Your appointment is now confirmed';
+const String PLAN_CONFIRM = 'Your plan subscription is now confirmed';
 const String UNABLE_PROCESS = 'We unable to reach your process..';
 
 const String strSourceCode = 'sourceCode';

@@ -133,10 +133,15 @@ class _WebViewExampleState extends State<PaymentPage> {
                                       ? value?.result?.message
                                       : 'Subscribe Failed',
                                   Colors.red);
+                              callResultPage(false, '');
                             }
                           } else {
-                            FlutterToast()
-                                .getToast(value?.result?.message, Colors.red);
+                            FlutterToast().getToast(
+                                value != null && value?.result?.message != null
+                                    ? value?.result?.message
+                                    : 'Subscribe Failed',
+                                Colors.red);
+                            callResultPage(false, '');
                           }
                         });
                       } else {
@@ -190,9 +195,14 @@ class _WebViewExampleState extends State<PaymentPage> {
               ),
               FlatButton(
                 onPressed: () {
-                  widget.closePage(STR_FAILED);
-                  Navigator.pop(context);
-                  Navigator.pop(context);
+                  if (!isFromSubscribe) {
+                    widget.closePage(STR_FAILED);
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  } else {
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  }
                 },
                 child: Text('Yes'),
               ),
@@ -209,6 +219,7 @@ class _WebViewExampleState extends State<PaymentPage> {
             builder: (context) => ResultPage(
                   status: status,
                   refNo: refNo,
+                  isFromSubscribe: isFromSubscribe,
                   closePage: (value) {
                     widget.closePage(value);
                     Navigator.pop(context);

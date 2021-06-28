@@ -1905,6 +1905,7 @@ class CommonUtil {
       String isSubscribed,
       String providerId,
       String isFrom,
+      bool feeZero,
       Function() refresh}) async {
     var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     showLoadingDialog(context, _keyLoader, variable.Please_Wait);
@@ -1919,6 +1920,7 @@ class CommonUtil {
           isSubscribed: isSubscribed,
           providerId: providerId,
           isFrom: isFrom,
+          feeZero: feeZero,
           refresh: refresh);
     } else {
       FlutterToast().getToast(noGender, Colors.red);
@@ -1930,6 +1932,7 @@ class CommonUtil {
       String isSubscribed,
       String providerId,
       String isFrom,
+      bool feeZero,
       Function() refresh}) {
     if (myProfile != null) {
       if (myProfile.isSuccess) {
@@ -1947,6 +1950,7 @@ class CommonUtil {
                           packageId: packageId,
                           isSubscribed: isSubscribed,
                           providerId: providerId,
+                          feeZero: feeZero,
                           refresh: refresh);
                     } else {
                       mCustomAlertDialog(context,
@@ -1954,6 +1958,7 @@ class CommonUtil {
                           packageId: packageId,
                           isSubscribed: isSubscribed,
                           providerId: providerId,
+                          feeZero: feeZero,
                           refresh: refresh);
                     }
                   } else {
@@ -1962,6 +1967,7 @@ class CommonUtil {
                         packageId: packageId,
                         isSubscribed: isSubscribed,
                         providerId: providerId,
+                        feeZero: feeZero,
                         refresh: refresh);
                   }
                 }
@@ -1980,6 +1986,7 @@ class CommonUtil {
                               packageId: packageId,
                               isSubscribed: isSubscribed,
                               providerId: providerId,
+                              feeZero: feeZero,
                               refresh: refresh);
                         } else {
                           mCustomAlertDialog(context,
@@ -1987,6 +1994,7 @@ class CommonUtil {
                               packageId: packageId,
                               providerId: providerId,
                               isSubscribed: isSubscribed,
+                              feeZero: feeZero,
                               refresh: refresh);
                         }
                       } else {
@@ -1995,6 +2003,7 @@ class CommonUtil {
                             packageId: packageId,
                             providerId: providerId,
                             isSubscribed: isSubscribed,
+                            feeZero: feeZero,
                             refresh: refresh);
                       }
                     } else {
@@ -2003,6 +2012,7 @@ class CommonUtil {
                           packageId: packageId,
                           providerId: providerId,
                           isSubscribed: isSubscribed,
+                          feeZero: feeZero,
                           refresh: refresh);
                     }
                   } else {
@@ -2011,6 +2021,7 @@ class CommonUtil {
                         packageId: packageId,
                         providerId: providerId,
                         isSubscribed: isSubscribed,
+                        feeZero: feeZero,
                         refresh: refresh);
                   }
                 }
@@ -2020,6 +2031,7 @@ class CommonUtil {
                     packageId: packageId,
                     providerId: providerId,
                     isSubscribed: isSubscribed,
+                    feeZero: feeZero,
                     refresh: refresh);
               }
             } else {
@@ -2028,6 +2040,7 @@ class CommonUtil {
                   packageId: packageId,
                   providerId: providerId,
                   isSubscribed: isSubscribed,
+                  feeZero: feeZero,
                   refresh: refresh);
             }
           } else {
@@ -2036,6 +2049,7 @@ class CommonUtil {
                 packageId: packageId,
                 providerId: providerId,
                 isSubscribed: isSubscribed,
+                feeZero: feeZero,
                 refresh: refresh);
           }
         } else {
@@ -2044,6 +2058,7 @@ class CommonUtil {
               packageId: packageId,
               providerId: providerId,
               isSubscribed: isSubscribed,
+              feeZero: feeZero,
               refresh: refresh);
         }
       } else {
@@ -2052,6 +2067,7 @@ class CommonUtil {
             packageId: packageId,
             providerId: providerId,
             isSubscribed: isSubscribed,
+            feeZero: feeZero,
             refresh: refresh);
       }
     } else {
@@ -2060,6 +2076,7 @@ class CommonUtil {
           packageId: packageId,
           providerId: providerId,
           isSubscribed: isSubscribed,
+          feeZero: feeZero,
           refresh: refresh);
     }
   }
@@ -2069,6 +2086,7 @@ class CommonUtil {
       {String packageId,
       String isSubscribed,
       String providerId,
+      bool feeZero,
       Function() refresh}) {
     String address1 = userAddressCollection.addressLine1 != null
         ? userAddressCollection.addressLine1
@@ -2129,6 +2147,7 @@ class CommonUtil {
               isSubscribed: isSubscribed,
               providerId: providerId,
               refresh: refresh,
+              feeZero: feeZero,
               context: context);
         }
       } else {
@@ -2137,6 +2156,7 @@ class CommonUtil {
             packageId: packageId,
             isSubscribed: isSubscribed,
             providerId: providerId,
+            feeZero: feeZero,
             refresh: refresh);
       }
     } else {
@@ -2145,6 +2165,7 @@ class CommonUtil {
           packageId: packageId,
           isSubscribed: isSubscribed,
           providerId: providerId,
+          feeZero: feeZero,
           refresh: refresh);
     }
   }
@@ -2154,6 +2175,7 @@ class CommonUtil {
       String content,
       String packageId,
       String isSubscribed,
+      bool feeZero,
       Function() refresh,
       String providerId}) async {
     var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
@@ -2233,6 +2255,7 @@ class CommonUtil {
                                     packageId: packageId,
                                     providerId: providerId,
                                     isSubscribed: isSubscribed,
+                                    feeZero: feeZero,
                                     refresh: refresh));
                           },
                           borderSide: BorderSide(
@@ -2392,6 +2415,7 @@ class CommonUtil {
       String packageId,
       String isSubscribed,
       String providerId,
+      bool feeZero,
       Function() refresh}) async {
     await Get.dialog(
       AlertDialog(
@@ -2453,43 +2477,104 @@ class CommonUtil {
                   ),
                   onPressed: () async {
                     // open profile page
-                    if (isSubscribed == '0') {
+                    if (feeZero) {
                       Navigator.pop(context);
-                      _dialogForSubscribePayment(
-                          context, providerId, packageId, false);
-                    } else {
-                      await subscribeViewModel.UnsubScribePlan(packageId)
+                      CommonUtil.showLoadingDialog(
+                          context, _keyLoader, variable.Please_Wait);
+                      String userId =
+                          PreferenceUtil.getStringValue(Constants.KEY_USERID);
+                      updateProvidersBloc
+                          .mappingHealthOrg(providerId, userId)
                           .then((value) {
                         if (value != null) {
-                          if (value.isSuccess) {
-                            if (value.result != null) {
-                              if (value.result.result == 'Done') {
-                                Navigator.of(_keyLoader.currentContext,
-                                        rootNavigator: true)
-                                    .pop();
-                                Get.back(result: 'refreshUI');
-                                refresh();
-                              } else {
-                                Navigator.of(_keyLoader.currentContext,
-                                        rootNavigator: true)
-                                    .pop();
-                                Get.back(result: 'refreshUI');
-                                FlutterToast().getToast(
-                                    value.result.message != null
-                                        ? value.result.message
-                                        : 'UnSubscribe Failed',
-                                    Colors.red);
+                          if (value.success) {
+                            subscribeViewModel
+                                .subScribePlan(packageId)
+                                .then((value) {
+                              if (value != null) {
+                                if (value.isSuccess) {
+                                  if (value.result != null) {
+                                    if (value.result.result == 'Done') {
+                                      Provider.of<RegimentViewModel>(
+                                        context,
+                                        listen: false,
+                                      ).updateTabIndex(currentIndex: 3);
+                                      Get.offNamedUntil(router.rt_MyPlans,
+                                          (Route<dynamic> route) => false);
+                                    } else {
+                                      Navigator.of(_keyLoader.currentContext,
+                                              rootNavigator: true)
+                                          .pop();
+                                      FlutterToast().getToast(
+                                          value.result.message != null
+                                              ? value.result.message
+                                              : 'Subscribe Failed',
+                                          Colors.red);
+                                    }
+                                  }
+                                } else {
+                                  Navigator.of(_keyLoader.currentContext,
+                                          rootNavigator: true)
+                                      .pop();
+                                  FlutterToast()
+                                    ..getToast('Subscribe Failed', Colors.red);
+                                }
                               }
-                            }
+                            });
                           } else {
                             Navigator.of(_keyLoader.currentContext,
                                     rootNavigator: true)
                                 .pop();
                             FlutterToast()
-                                .getToast('UnSubscribe Failed', Colors.red);
+                                .getToast('Subscribe Map Failed', Colors.red);
                           }
+                        } else {
+                          Navigator.of(_keyLoader.currentContext,
+                                  rootNavigator: true)
+                              .pop();
+                          FlutterToast()
+                              .getToast('Subscribe Map Failed', Colors.red);
                         }
                       });
+                    } else {
+                      if (isSubscribed == '0') {
+                        Navigator.pop(context);
+                        _dialogForSubscribePayment(
+                            context, providerId, packageId, false);
+                      } else {
+                        await subscribeViewModel.UnsubScribePlan(packageId)
+                            .then((value) {
+                          if (value != null) {
+                            if (value.isSuccess) {
+                              if (value.result != null) {
+                                if (value.result.result == 'Done') {
+                                  Navigator.of(_keyLoader.currentContext,
+                                          rootNavigator: true)
+                                      .pop();
+                                  Get.back(result: 'refreshUI');
+                                  refresh();
+                                } else {
+                                  Navigator.of(_keyLoader.currentContext,
+                                          rootNavigator: true)
+                                      .pop();
+                                  Get.back(result: 'refreshUI');
+                                  FlutterToast().getToast(
+                                      value.result.message != null
+                                          ? value.result.message
+                                          : 'UnSubscribe Failed',
+                                      Colors.red);
+                                }
+                              }
+                            } else {
+                              Navigator.of(_keyLoader.currentContext,
+                                      rootNavigator: true)
+                                  .pop();
+                              FlutterToast()
+                                  .getToast('UnSubscribe Failed', Colors.red);
+                            }
+                          }
+                        });
+                      }
                     }
                   },
                   borderSide: BorderSide(
@@ -2954,7 +3039,7 @@ class CommonUtil {
                                                                         builder: (context) =>
                                                                             PaymentPage(
                                                                               redirectUrl: value?.result?.paymentGatewayDetail?.metadata?.longurl,
-                                                                              paymentId: value?.result?.paymentGatewayDetail?.metadata?.id,
+                                                                              paymentId: value?.result?.payment?.id.toString(),
                                                                               isFromSubscribe: true,
                                                                               closePage: (value) {
                                                                                 if (value == STR_SUCCESS) {
@@ -3051,26 +3136,26 @@ class CommonUtil {
                                                                             ?.longurl !=
                                                                         '') {
                                                                   Navigator.pushReplacement(
-                                                                      context,
+                                                                      Get.context,
                                                                       MaterialPageRoute(
                                                                           builder: (context) => PaymentPage(
                                                                                 redirectUrl: value?.result?.paymentGatewayDetail?.metadata?.longurl,
-                                                                                paymentId: value?.result?.paymentGatewayDetail?.metadata?.id,
+                                                                                paymentId: value?.result?.payment?.id?.toString(),
                                                                                 isFromSubscribe: true,
-                                                                                closePage: (value) {
-                                                                                  if (value == STR_SUCCESS) {
-                                                                                    Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-                                                                                    Provider.of<RegimentViewModel>(
-                                                                                      context,
-                                                                                      listen: false,
-                                                                                    ).updateTabIndex(currentIndex: 3);
-                                                                                    Get.offNamedUntil(router.rt_MyPlans, (Route<dynamic> route) => false);
-                                                                                  } else {
-                                                                                    Navigator.pop(context);
-                                                                                  }
-                                                                                },
                                                                               )));
                                                                 }
+                                                              } else {
+                                                                Navigator.of(
+                                                                        _keyLoader
+                                                                            .currentContext,
+                                                                        rootNavigator:
+                                                                            true)
+                                                                    .pop();
+                                                                FlutterToast()
+                                                                  ..getToast(
+                                                                      'Subscribe Failed',
+                                                                      Colors
+                                                                          .red);
                                                               }
                                                             }
                                                           } else {

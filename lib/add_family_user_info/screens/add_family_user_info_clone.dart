@@ -212,6 +212,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             packageId: widget.arguments.packageId,
             isSubscribed: widget.arguments.isSubscribed,
             providerId: widget.arguments.providerId,
+            feeZero: widget.arguments.feeZero,
             refresh: widget.arguments.refresh,
           );
         } else {}
@@ -671,10 +672,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               textFieldConfiguration: TextFieldConfiguration(
                   controller: cntrlr_addr_city,
                   onChanged: (value) {
-
-                            cityVal = null;
-                            
-                          },
+                    cityVal = null;
+                  },
                   decoration: InputDecoration(
                     hintText: "City*",
                     labelText: "City*",
@@ -726,26 +725,28 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               validator: (value) {
                 if (value.isEmpty) {
                   return 'Please select a city';
-                }else if (cityVal == null) {
-                            return 'Please select a City from list';
-                          }
+                } else if (cityVal == null) {
+                  return 'Please select a City from list';
+                }
                 return null;
               },
               onSaved: (value) => this.city = value,
             ),
             TypeAheadFormField<stateObj.State>(
               textFieldConfiguration: TextFieldConfiguration(
-                  controller: cntrlr_addr_state,
-                  decoration: InputDecoration(
-                    hintText: "State",
-                    labelText: 'State',
-                    border: InputBorder.none,
-                    hintStyle: TextStyle(
-                      fontSize: 16.0.sp,
-                    ),
-                  ),onChanged: (value) {
-                            stateVal = null;
-                          },),
+                controller: cntrlr_addr_state,
+                decoration: InputDecoration(
+                  hintText: "State",
+                  labelText: 'State',
+                  border: InputBorder.none,
+                  hintStyle: TextStyle(
+                    fontSize: 16.0.sp,
+                  ),
+                ),
+                onChanged: (value) {
+                  stateVal = null;
+                },
+              ),
               suggestionsCallback: (pattern) async {
                 if (pattern.length >= 3) {
                   return await getStateBasedOnSearch(
@@ -768,7 +769,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 return suggestionsBox;
               },
               errorBuilder: (context, suggestion) {
-                stateVal=null;
+                stateVal = null;
                 return ListTile(
                   title: Text(
                     'Oops. We could not find the state you typed.',
@@ -785,9 +786,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               validator: (value) {
                 if (value.isEmpty) {
                   return 'Please select a State';
-                }else if (stateVal == null) {
-                            return 'Please select a State from list';
-                          }
+                } else if (stateVal == null) {
+                  return 'Please select a State from list';
+                }
                 return null;
               },
               onSaved: (value) => this.state = value,
@@ -1606,8 +1607,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         userProfileSettingCollection = addFamilyUserInfoBloc
             .myprofileObject.result.userProfileSettingCollection3;
         if (userProfileSettingCollection.length > 0) {
-          userProfileSettingCollection3Obj =
-             addFamilyUserInfoBloc.myprofileObject.result.userProfileSettingCollection3[0];
+          userProfileSettingCollection3Obj = addFamilyUserInfoBloc
+              .myprofileObject.result.userProfileSettingCollection3[0];
           if (userProfileSettingCollection3Obj.profileSetting != null) {
             profileSetting = userProfileSettingCollection3Obj.profileSetting;
             userProfileSettingCollection3Obj.profileSetting.preferred_language =
@@ -1776,35 +1777,30 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             chatViewModel.upateUserNickname(myProf.result.id,
                 firstNameController.text + ' ' + lastNameController.text);
 
-                addFamilyUserInfoBloc.getMyProfileInfo().then((profileValue){
-  if (profileValue.result.firstName != null) {
-                String firstName =
-                    profileValue.result.firstName != null
-                        ? profileValue.result.firstName
-                            .capitalizeFirstofEach
-                        : '';
-                String lastName =
-                    profileValue.result.lastName != null
-                        ? profileValue.result.lastName
-                            .capitalizeFirstofEach
-                        : '';
+            addFamilyUserInfoBloc.getMyProfileInfo().then((profileValue) {
+              if (profileValue.result.firstName != null) {
+                String firstName = profileValue.result.firstName != null
+                    ? profileValue.result.firstName.capitalizeFirstofEach
+                    : '';
+                String lastName = profileValue.result.lastName != null
+                    ? profileValue.result.lastName.capitalizeFirstofEach
+                    : '';
 
                 PreferenceUtil.saveString(Constants.FIRST_NAME, firstName);
                 PreferenceUtil.saveString(Constants.LAST_NAME, lastName);
-PreferenceUtil.saveProfileData(
-                Constants.KEY_PROFILE, profileValue);                }
-                 imageURI = null;
+                PreferenceUtil.saveProfileData(
+                    Constants.KEY_PROFILE, profileValue);
+              }
+              imageURI = null;
               Navigator.pop(dialogContext);
               Navigator.pop(dialogContext, true);
-              
-
-                });
+            });
             /* _familyListBloc.getFamilyMembersListNew().then((value) async {
              MySliverAppBar.imageURI = null;
                     fetchedProfileData = null;
 
-            
-             
+
+
             });*/
           } else {
             Navigator.pop(dialogContext);
@@ -2323,10 +2319,10 @@ PreferenceUtil.saveProfileData(
     }*/
     if (selectedLanguage != null && selectedLanguage != '') {
     } else {
-      if (addFamilyUserInfoBloc.myprofileObject.result?.userProfileSettingCollection3
-          ?.isNotEmpty) {
-        ProfileSetting profileSetting = addFamilyUserInfoBloc.myprofileObject?.result
-            ?.userProfileSettingCollection3[0].profileSetting;
+      if (addFamilyUserInfoBloc
+          .myprofileObject.result?.userProfileSettingCollection3?.isNotEmpty) {
+        ProfileSetting profileSetting = addFamilyUserInfoBloc.myprofileObject
+            ?.result?.userProfileSettingCollection3[0].profileSetting;
         if (profileSetting != null) {
           CommonUtil.langaugeCodes.forEach((language, languageCode) {
             if (language == profileSetting.preferred_language) {

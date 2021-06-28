@@ -34,7 +34,7 @@ class UpdatePaymentService{
     paymentInput[qr_payment_req_id] = paymentRequestId;
 
     var jsonString = convert.jsonEncode(paymentInput);
-    final response = await _helper.updatePayment(qr_update_payment, jsonString);
+    final response = await _helper.updatePayment(qr_update_payment_subscribe, jsonString);
     return UpdatePaymentStatusSubscribe.fromJson(response);
   }
 
