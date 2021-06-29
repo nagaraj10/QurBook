@@ -248,6 +248,7 @@ const String Family_Member_Added =
 const String VerifyEmail = 'Tap to verify Email address';
 const String otp_assets = 'assets/icons/otp_icon.png';
 const String planDownload = 'assets/icons/planDownload.png';
+const String sendIcon = 'assets/send.svg';
 
 const String enterFirstName = 'Enter First Name';
 const String enterLastName = 'Enter Last Name';
