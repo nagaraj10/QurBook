@@ -1,5 +1,7 @@
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -404,125 +406,108 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
                         child: Column(
                           children: [
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
-                                Expanded(
-                                    flex: 2,
-                                    child: Row(
-                                      children: [
-                                        referalList[index].isExistingUser
-                                            ? CircleAvatar(
-                                                radius: 15,
-                                                child: Container(
-                                                  alignment: Alignment.center,
-                                                  child: Image.asset(
-                                                      'assets/launcher/myfhb.png'),
-                                                ),
-                                                backgroundColor:
-                                                    Colors.transparent,
-                                              )
-                                            : CircleAvatar(
-                                                backgroundColor:
-                                                    Color(0xFFf7f6f5),
-                                                radius: 15,
-                                                child: Text(
-                                                  referalList[index]
-                                                              ?.name
-                                                              .split(' ')
-                                                              .length >
-                                                          1
-                                                      ? '${referalList[index]?.name?.split(' ')[0][0]}${referalList[index]?.name?.split(' ')[1][0]}'
-                                                      : '${referalList[index]?.name?.split(' ')[0][0]}',
-                                                  style: TextStyle(
-                                                    fontSize: 12.0.sp,
-                                                  ),
-                                                ),
-                                              ),
-                                        SizedBox(
-                                          width: 5,
+                                referalList[index].isExistingUser
+                                    ? CircleAvatar(
+                                        radius: 15,
+                                        child: Container(
+                                          alignment: Alignment.center,
+                                          child: Image.asset(
+                                              'assets/launcher/myfhb.png'),
                                         ),
-                                        Column(
+                                        backgroundColor: Colors.transparent,
+                                      )
+                                    : CircleAvatar(
+                                        backgroundColor: Color(0xFFf7f6f5),
+                                        radius: 15,
+                                        child: Text(
+                                          referalList[index]
+                                                      ?.name
+                                                      .split(' ')
+                                                      .length >
+                                                  1
+                                              ? '${referalList[index]?.name?.split(' ')[0][0]}${referalList[index]?.name?.split(' ')[1][0]}'
+                                              : '${referalList[index]?.name?.split(' ')[0][0]}',
+                                          style: TextStyle(
+                                            fontSize: 12.0.sp,
+                                          ),
+                                        ),
+                                      ),
+                                SizedBox(
+                                  width: 5.0.w,
+                                ),
+                                Expanded(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        ('${referalList[index]?.name}')
+                                            .capitalizeFirstofEach,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        softWrap: false,
+                                        style: TextStyle(
+                                            fontSize: 12, color: Colors.black),
+                                      ),
+                                      // SizedBox(
+                                      //   height: 10,
+                                      // ),
+                                      Text(
+                                        '${referalList[index].phoneNumber}',
+                                        style: TextStyle(
+                                            fontSize: 10,
+                                            color: Colors.black45,
+                                            fontStyle: FontStyle.italic),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 5.0.w,
+                                ),
+                                Container(
+                                  padding: EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    // color: referalList[index].isExistingUser
+                                    //     ? Colors.yellow[600]
+                                    //     : Colors.green.withOpacity(0.7),
+                                    color: Colors.white,
+                                  ),
+                                  child: referalList[index].isExistingUser
+                                      ? Text(
+                                          '${trailingText}',
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                            color: Colors.grey,
+                                          ),
+                                        )
+                                      : Row(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.start,
+                                              MainAxisAlignment.end,
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                              CrossAxisAlignment.end,
                                           children: [
-                                            SizedBox(
-                                              width: 100,
-                                              child: Text(
-                                                ('${referalList[index]?.name}')
-                                                    .capitalizeFirstofEach,
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                softWrap: false,
-                                                style: TextStyle(
-                                                    fontSize: 12,
-                                                    color: Colors.black),
+                                            Text(
+                                              '${trailingText}',
+                                              style: TextStyle(
+                                                fontSize: 10,
+                                                color: Colors.green,
                                               ),
                                             ),
-                                            // SizedBox(
-                                            //   height: 10,
-                                            // ),
-                                            Text(
-                                              '${referalList[index].phoneNumber}',
-                                              style: TextStyle(
-                                                  fontSize: 10,
-                                                  color: Colors.black45,
-                                                  fontStyle: FontStyle.italic),
+                                            SizedBox(
+                                              width: 5.0.w,
+                                            ),
+                                            SvgPicture.asset(
+                                              sendIcon,
+                                              width: 15.0.sp,
+                                              height: 15.0.sp,
                                             ),
                                           ],
                                         ),
-                                      ],
-                                    )),
-                                Expanded(
-                                  flex: 1,
-                                  child: Container(
-                                    padding: EdgeInsets.all(5),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                      // color: referalList[index].isExistingUser
-                                      //     ? Colors.yellow[600]
-                                      //     : Colors.green.withOpacity(0.7),
-                                      color: Colors.white,
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        referalList[index].isExistingUser
-                                            ? Text('${trailingText}',
-                                                style: TextStyle(
-                                                    fontSize: 10,
-                                                    color: Color(CommonUtil()
-                                                        .getMyPrimaryColor())))
-                                            : Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.end,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.end,
-                                                children: [
-                                                  Icon(
-                                                    Icons.check,
-                                                    size: 15.0.sp,
-                                                    color: Color(CommonUtil()
-                                                        .getMyPrimaryColor()),
-                                                  ),
-                                                  SizedBox(
-                                                    width: 2,
-                                                  ),
-                                                  Text('${trailingText}',
-                                                      style: TextStyle(
-                                                          fontSize: 10,
-                                                          color: Color(CommonUtil()
-                                                              .getMyPrimaryColor()))),
-                                                ],
-                                              ),
-                                      ],
-                                    ),
-                                  ),
-                                )
+                                ),
                               ],
                             ),
                             SizedBox(
