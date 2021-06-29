@@ -163,6 +163,8 @@ class CommonConstants {
   static String blood_group = "Blood Group";
   static String blood_range = "+";
   static String date_of_birth = "Date of Birth";
+  static String year_of_birth_with_star = "Year of Birth\t*";
+  static String year_of_birth = "Year of Birth";
   static String user_linking = 'user_linking';
 
   static String height = 'Height(cm)';

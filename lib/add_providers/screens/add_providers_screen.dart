@@ -137,7 +137,7 @@ class AddProvidersState extends State<AddProviders> {
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
   MyProviderViewModel providerViewModel;
   bool teleHealthAlertShown = false;
-  String USERID;
+  String USERID, switchedUserId;
   MyProfileModel myProfile;
   String updatedProfilePic;
   MediaTypeBlock _mediaTypeBlock;
@@ -178,12 +178,6 @@ class AddProvidersState extends State<AddProviders> {
     if (widget.arguments.searchKeyWord == CommonConstants.labs) {
       selectedCategories = widget?.arguments?.labsModel?.sharedCategories;
     }
-
-    /* if (selectedCategories == null) {
-      selectedCategories = new List();
-      selectedCategories.add('e70ed858-246f-4f3b-b82c-513e6f591877');
-      selectedCategories.add('d4e1b1f0-ea4c-4534-a3d5-040d71d9f799');
-    }*/
 
     buildUI();
   }
@@ -344,6 +338,7 @@ class AddProvidersState extends State<AddProviders> {
 
   buildUI() async {
     USERID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    switchedUserId = USERID;
     if (widget.arguments.fromClass != router.rt_myprovider) {
       if (widget.arguments.hasData) {
         if (widget.arguments.searchKeyWord == CommonConstants.doctors) {
@@ -428,13 +423,6 @@ class AddProvidersState extends State<AddProviders> {
             widget.arguments.doctorsModel, 'address1');
         addressLine2 = commonWidgets.getAddressLineForDoctors(
             widget.arguments.doctorsModel, 'address2');
-
-        /* latitude = widget.arguments.data.latitude == null
-            ? 0.0
-            : double.parse(widget.arguments.data.latitude);
-        longtiude = widget.arguments.data.longitude == null
-            ? 0.0
-            : double.parse(widget.arguments.data.longitude);*/
       } else if (widget.arguments.searchKeyWord == CommonConstants.hospitals) {
         doctorController.text = widget.arguments.hospitalsModel.name != null
             ? widget?.arguments?.hospitalsModel?.name
@@ -442,15 +430,6 @@ class AddProvidersState extends State<AddProviders> {
             : '';
         isPreferred = widget.arguments.hospitalsModel.isDefault;
         myprovidersPreferred = widget.arguments.hospitalsModel.isDefault;
-
-        /*latitude = widget.arguments.hospitalsModel.latitude == null
-            ? 0.0
-            : double.parse(widget.arguments.hospitalsModel.latitude);
-        longtiude = widget.arguments.hospitalsModel.longitude == null
-            ? 0.0
-            : double.parse(widget.arguments.hospitalsModel.longitude);
-
-        center = LatLng(latitude, longtiude);*/
 
         addressLine1 = commonWidgets.getAddressLineForHealthOrg(
             widget.arguments.hospitalsModel, 'address1');
@@ -463,15 +442,6 @@ class AddProvidersState extends State<AddProviders> {
             : '';
         isPreferred = widget.arguments.labsModel.isDefault;
         myprovidersPreferred = widget.arguments.labsModel.isDefault;
-
-//        latitude = widget.arguments.labsModel.latitude == null
-//            ? 0.0
-//            : double.parse(widget.arguments.labsModel.latitude);
-//        longtiude = widget.arguments.labsModel.longitude == null
-//            ? 0.0
-//            : double.parse(widget.arguments.labsModel.longitude);
-//
-//        center = LatLng(latitude, longtiude);
 
         addressLine1 = commonWidgets.getAddressLineForHealthOrg(
             widget.arguments.labsModel, 'address1');
@@ -575,28 +545,25 @@ class AddProvidersState extends State<AddProviders> {
     } catch (e) {}
     return InkWell(
         onTap: () {
-          if (widget.arguments.fromClass != router.rt_myprovider) {
-            CommonUtil.showLoadingDialog(
-                context, _keyLoader, variable.Please_Wait);
+          CommonUtil.showLoadingDialog(
+              context, _keyLoader, variable.Please_Wait);
 
-            if (_familyListBloc != null) {
-              _familyListBloc = null;
-              _familyListBloc = new FamilyListBloc();
-            }
-            _familyListBloc.getFamilyMembersListNew().then((familyMembersList) {
-              // Hide Loading
-              Navigator.of(_keyLoader.currentContext, rootNavigator: true)
-                  .pop();
-
-              if (familyMembersList != null &&
-                  familyMembersList.result != null &&
-                  familyMembersList.result.sharedByUsers.length > 0) {
-                getDialogBoxWithFamilyMemberScrap(familyMembersList.result);
-              } else {
-                toast.getToast(Constants.NO_DATA_FAMIY_CLONE, Colors.black54);
-              }
-            });
+          if (_familyListBloc != null) {
+            _familyListBloc = null;
+            _familyListBloc = new FamilyListBloc();
           }
+          _familyListBloc.getFamilyMembersListNew().then((familyMembersList) {
+            // Hide Loading
+            Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+
+            if (familyMembersList != null &&
+                familyMembersList.result != null &&
+                familyMembersList.result.sharedByUsers.length > 0) {
+              getDialogBoxWithFamilyMemberScrap(familyMembersList.result);
+            } else {
+              toast.getToast(Constants.NO_DATA_FAMIY_CLONE, Colors.black54);
+            }
+          });
         },
         child: Align(
           alignment: Alignment.topLeft,
@@ -944,11 +911,12 @@ class AddProvidersState extends State<AddProviders> {
   }
 
   void _addBtnTapped() {
-    providerViewModel.userID = USERID;
-    updateProvidersBloc.userId = USERID;
+    providerViewModel.userID = switchedUserId;
+    updateProvidersBloc.userId = switchedUserId;
     if (widget.arguments.hasData ||
         widget.arguments.fromClass == router.rt_myprovider) {
-      if (widget.arguments.fromClass == router.rt_myprovider) {
+      if (widget.arguments.fromClass == router.rt_myprovider &&
+          switchedUserId == USERID) {
         //  if (myprovidersPreferred) {
         // alert
 //          Alert.displayAlertPlain(context,
@@ -1027,9 +995,15 @@ class AddProvidersState extends State<AddProviders> {
         if (widget.arguments.searchKeyWord == CommonConstants.doctors) {
           if (teleHealthAlertShown) {
             if (widget.arguments.fromClass == router.rt_myprovider) {
-              updateProvidersBloc.providerId = widget.arguments.data.doctorId;
-              updateProvidersBloc.providerReferenceId =
-                  widget.arguments.data.doctorReferenceId;
+              if (switchedUserId != USERID) {
+                updateProvidersBloc.providerId =
+                    widget.arguments.doctorsModel.id;
+                updateProvidersBloc.providerReferenceId = null;
+              } else {
+                updateProvidersBloc.providerId = widget.arguments.data.doctorId;
+                updateProvidersBloc.providerReferenceId =
+                    widget.arguments.data.doctorReferenceId;
+              }
               updateProvidersBloc.selectedCategories = selectedCategories;
             } else {
               updateProvidersBloc.providerId = widget.arguments.data.doctorId;
@@ -1044,10 +1018,16 @@ class AddProvidersState extends State<AddProviders> {
         } else if (widget.arguments.searchKeyWord ==
             CommonConstants.hospitals) {
           if (widget.arguments.fromClass == router.rt_myprovider) {
-            updateProvidersBloc.providerId =
-                widget.arguments.hospitalData.healthOrganizationId;
-            updateProvidersBloc.providerReferenceId =
-                widget.arguments.hospitalData.healthOrganizationReferenceId;
+            if (switchedUserId != USERID) {
+              updateProvidersBloc.providerId =
+                  widget.arguments.hospitalsModel.id;
+              updateProvidersBloc.providerReferenceId = null;
+            } else {
+              updateProvidersBloc.providerId =
+                  widget.arguments.hospitalData.healthOrganizationId;
+              updateProvidersBloc.providerReferenceId =
+                  widget.arguments.hospitalData.healthOrganizationReferenceId;
+            }
             updateProvidersBloc.selectedCategories = selectedCategories;
           } else {
             updateProvidersBloc.providerId =
@@ -1059,10 +1039,15 @@ class AddProvidersState extends State<AddProviders> {
           updateHospitalsIdWithUserDetails();
         } else {
           if (widget.arguments.fromClass == router.rt_myprovider) {
-            updateProvidersBloc.providerId =
-                widget.arguments.labData.healthOrganizationId;
-            updateProvidersBloc.providerReferenceId =
-                widget.arguments.labData.healthOrganizationReferenceId;
+            if (switchedUserId != USERID) {
+              updateProvidersBloc.providerId = widget.arguments.labsModel.id;
+              updateProvidersBloc.providerReferenceId = null;
+            } else {
+              updateProvidersBloc.providerId =
+                  widget.arguments.labData.healthOrganizationId;
+              updateProvidersBloc.providerReferenceId =
+                  widget.arguments.labData.healthOrganizationReferenceId;
+            }
             updateProvidersBloc.selectedCategories = selectedCategories;
           } else {
             updateProvidersBloc.providerId =
@@ -1284,7 +1269,7 @@ class AddProvidersState extends State<AddProviders> {
     return new FamilyListView(familyData)
         .getDialogBoxWithFamilyMember(familyData, context, _keyLoader,
             (context, userId, userName, profilePic) {
-      USERID = userId;
+      switchedUserId = userId;
       selectedFamilyMemberName = userName;
       myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
       updatedProfilePic = profilePic;
@@ -1439,7 +1424,6 @@ class AddProvidersState extends State<AddProviders> {
   List<MediaResult> removeUnwantedCategories(MediaDataList mediaType) {
     List<MediaResult> mediaResultDuplicate = new List();
     for (int i = 0; i < mediaType.result.length; i++) {
-      print(mediaType.result[i].name + ' ***********************');
       if (mediaType.result[i].name != Constants.STR_FEEDBACK &&
           mediaType.result[i].name != Constants.STR_CLAIMSRECORD &&
           mediaType.result[i].name != Constants.STR_WEARABLES &&

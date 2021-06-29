@@ -360,6 +360,7 @@ const String PROFILE_PH = 'assets/user/profile_pic_ph.png';
 const String PAYMENT_SUCCESS_MSG = 'Payment Successful';
 const String PAYMENT_FAILURE_MSG = 'Payment Failure';
 const String APPOINTMENT_CONFIRM = 'Your appointment is now confirmed';
+const String PLAN_CONFIRM = 'Your plan subscription is now confirmed';
 const String UNABLE_PROCESS = 'We unable to reach your process..';
 
 const String strSourceCode = 'sourceCode';
@@ -570,9 +571,10 @@ const String make_a_choice = 'Make a Choice!';
 
 // Video call
 const String GCMUserId = 'gcm.notification.userId';
-const String strgcmAppointmentId = "gcm.notification.appointmentId";
+const String strgcmAppointmentId = 'gcm.notification.appointmentId';
+const String gcmExternalLink = 'gcm.notification.externalLink';
 const String gcmredirectTo = 'gcm.notification.redirectTo';
-
+const String externalLink = 'externalLink';
 const String onresume = 'OnResume New';
 const String onlaunch = 'OnLaunch New';
 const String username = 'username';

@@ -615,8 +615,8 @@ class ClinicName {
 class DoctorFeeCollection {
   String id;
   String fee;
-  String followupValue;
-  String followupIn;
+  //String followupValue;
+  //String followupIn;
   String effectiveFromDate;
   String effectiveToDate;
   bool isActive;
@@ -627,8 +627,8 @@ class DoctorFeeCollection {
   DoctorFeeCollection(
       {this.id,
       this.fee,
-      this.followupValue,
-      this.followupIn,
+      //this.followupValue,
+      //this.followupIn,
       this.effectiveFromDate,
       this.effectiveToDate,
       this.isActive,
@@ -639,8 +639,8 @@ class DoctorFeeCollection {
   DoctorFeeCollection.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     fee = json['fee'];
-    followupValue = json['followupValue'];
-    followupIn = json['followupIn'];
+    //followupValue = json['followupValue'];
+    //followupIn = json['followupIn'];
     effectiveFromDate = json['effectiveFromDate'];
     effectiveToDate = json['effectiveToDate'];
     isActive = json['isActive'];
@@ -654,8 +654,8 @@ class DoctorFeeCollection {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['fee'] = this.fee;
-    data['followupValue'] = this.followupValue;
-    data['followupIn'] = this.followupIn;
+    //data['followupValue'] = this.followupValue;
+    //data['followupIn'] = this.followupIn;
     data['effectiveFromDate'] = this.effectiveFromDate;
     data['effectiveToDate'] = this.effectiveToDate;
     data['isActive'] = this.isActive;

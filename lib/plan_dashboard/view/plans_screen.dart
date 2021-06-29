@@ -17,7 +17,7 @@ class PlansScreen extends StatelessWidget {
         flexibleSpace: GradientAppBar(),
         backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
         elevation: 0,
-        title: Text(strPlans),
+        title: Text(strHospitals),
         leading: IconWidget(
           icon: Icons.arrow_back_ios,
           colors: Colors.white,

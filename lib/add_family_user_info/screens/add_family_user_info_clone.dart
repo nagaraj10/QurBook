@@ -97,6 +97,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   final weightController = TextEditingController(text: '');
   FocusNode weightFocus = FocusNode();
+  FocusNode dobFocus = FocusNode();
   AddFamilyUserInfoBloc addFamilyUserInfoBloc;
   AddFamilyUserInfoRepository _addFamilyUserInfoRepository;
 
@@ -159,10 +160,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     getSupportedLanguages();
     addFamilyUserInfoBloc = new AddFamilyUserInfoBloc();
     _addFamilyUserInfoRepository = new AddFamilyUserInfoRepository();
-    addFamilyUserInfoBloc
-        .getDeviceSelectionValues()
-        .then((value) {
-          fetchUserProfileInfo();
+    setUserId();
+    addFamilyUserInfoBloc.getDeviceSelectionValues().then((value) {
+      //fetchUserProfileInfo();
     });
     setValuesInEditText();
 
@@ -213,6 +213,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             packageId: widget.arguments.packageId,
             isSubscribed: widget.arguments.isSubscribed,
             providerId: widget.arguments.providerId,
+            feeZero: widget.arguments.feeZero,
             refresh: widget.arguments.refresh,
           );
         } else {}
@@ -422,30 +423,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   ],
                 ),
                 widget.arguments.fromClass == CommonConstants.user_update
-                    ? Padding(
-                        padding: EdgeInsets.only(
-                            left: 20, right: 20, top: 5, bottom: 0),
-                        child: DropdownButton(
-                          isExpanded: true,
-                          hint: Text(
-                            CommonConstants.preferredLanguage,
-                            style: TextStyle(
-                              fontSize: 16.0.sp,
-                            ),
-                          ),
-                          value: selectedLanguage,
-                          items: languagesList,
-                          onChanged: (String newLanguage) {
-                            setState(() {
-                              selectedLanguage = newLanguage;
-                            });
-                            addFamilyUserInfoBloc.preferredLanguage =
-                                newLanguage;
-                          },
-                        ),
-                      )
+                    ? getLanguageWidget()
                     : Container(),
-                _showDateOfBirthTextField(),
+                _showDateOfBirthTextFieldNew(),
                 AddressTypeWidget(
                   addressResult: _addressResult,
                   addressList: _addressList,
@@ -535,7 +515,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             autofocus: false,
             readOnly: true,
             keyboardType: TextInputType.text,
-            //          focusNode: dateOfBirthFocus,
+            focusNode: dateOfBirthFocus,
             textInputAction: TextInputAction.done,
             onSubmitted: (term) {
               dateOfBirthFocus.unfocus();
@@ -570,6 +550,18 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             ),
           )),
     );
+  }
+
+  Widget _showDateOfBirthTextFieldNew() {
+    return _showCommonEditText(
+        dateOfBirthController,
+        dateOfBirthFocus,
+        null,
+        CommonConstants.year_of_birth_with_star,
+        CommonConstants.year_of_birth,
+        true,
+        isheightOrWeight: true,
+        maxLength: 4);
   }
 
   void dateOfBirthTapped() {
@@ -611,6 +603,12 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           enabled: isEnabled,
           cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: textEditingController,
+          onChanged: (value) {
+            if (maxLength == 4) {
+              dateofBirthStr =
+                  new FHBUtils().getFormattedDateForUserBirth(value.toString());
+            }
+          },
           maxLines: 1,
           enableInteractiveSelection: false,
           maxLength: maxLength,
@@ -619,6 +617,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           focusNode: focusNode,
           textInputAction: TextInputAction.done,
           onSubmitted: (term) {
+            if (maxLength == 4) {
+              dateofBirthStr =
+                  new FHBUtils().getFormattedDateForUserBirth(term.toString());
+            }
             FocusScope.of(context).requestFocus(nextFocusNode);
           },
           style: new TextStyle(
@@ -692,6 +694,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             TypeAheadFormField<City>(
               textFieldConfiguration: TextFieldConfiguration(
                   controller: cntrlr_addr_city,
+                  onChanged: (value) {
+                    cityVal = null;
+                  },
                   decoration: InputDecoration(
                     hintText: "City*",
                     labelText: "City*",
@@ -743,6 +748,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               validator: (value) {
                 if (value.isEmpty) {
                   return 'Please select a city';
+                } else if (cityVal == null) {
+                  return 'Please select a City from list';
                 }
                 return null;
               },
@@ -750,15 +757,19 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             ),
             TypeAheadFormField<stateObj.State>(
               textFieldConfiguration: TextFieldConfiguration(
-                  controller: cntrlr_addr_state,
-                  decoration: InputDecoration(
-                    hintText: "State",
-                    labelText: 'State',
-                    border: InputBorder.none,
-                    hintStyle: TextStyle(
-                      fontSize: 16.0.sp,
-                    ),
-                  )),
+                controller: cntrlr_addr_state,
+                decoration: InputDecoration(
+                  hintText: "State",
+                  labelText: 'State',
+                  border: InputBorder.none,
+                  hintStyle: TextStyle(
+                    fontSize: 16.0.sp,
+                  ),
+                ),
+                onChanged: (value) {
+                  stateVal = null;
+                },
+              ),
               suggestionsCallback: (pattern) async {
                 if (pattern.length >= 3) {
                   return await getStateBasedOnSearch(
@@ -781,6 +792,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 return suggestionsBox;
               },
               errorBuilder: (context, suggestion) {
+                stateVal = null;
                 return ListTile(
                   title: Text(
                     'Oops. We could not find the state you typed.',
@@ -797,6 +809,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               validator: (value) {
                 if (value.isEmpty) {
                   return 'Please select a State';
+                } else if (stateVal == null) {
+                  return 'Please select a State from list';
                 }
                 return null;
               },
@@ -1163,6 +1177,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     } else if (dateOfBirthController.text.length == 0) {
       isValid = false;
       strErrorMsg = variable.selectDOB;
+    } else if (dateOfBirthController.text.length < 4) {
+      isValid = false;
+      strErrorMsg = "Enter a Valid Year";
     } else if (_addressResult == null || _addressResult.id == null) {
       isValid = false;
       strErrorMsg = 'Select Address type';
@@ -1605,37 +1622,39 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
     profileResult.additionalInfo = additionalInfo;
 
-    try {
-      List<UserProfileSettingCollection3> userProfileSettingCollection =
-          new List();
+    if (widget.arguments.fromClass == CommonConstants.user_update) {
+      try {
+        List<UserProfileSettingCollection3> userProfileSettingCollection =
+            new List();
 
-      UserProfileSettingCollection3 userProfileSettingCollection3Obj =
-          new UserProfileSettingCollection3();
-      ProfileSetting profileSetting = new ProfileSetting();
-      userProfileSettingCollection =
-          addFamilyUserInfoBloc.myprofileObject.result.userProfileSettingCollection3;
-      if (userProfileSettingCollection.length > 0) {
-        userProfileSettingCollection3Obj =
-            myProfile.result.userProfileSettingCollection3[0];
-        if (userProfileSettingCollection3Obj.profileSetting != null) {
-          profileSetting = userProfileSettingCollection3Obj.profileSetting;
-          userProfileSettingCollection3Obj.profileSetting.preferred_language =
-              selectedLanguage;
+        UserProfileSettingCollection3 userProfileSettingCollection3Obj =
+            new UserProfileSettingCollection3();
+        ProfileSetting profileSetting = new ProfileSetting();
+        userProfileSettingCollection = addFamilyUserInfoBloc
+            .myprofileObject.result.userProfileSettingCollection3;
+        if (userProfileSettingCollection.length > 0) {
+          userProfileSettingCollection3Obj = addFamilyUserInfoBloc
+              .myprofileObject.result.userProfileSettingCollection3[0];
+          if (userProfileSettingCollection3Obj.profileSetting != null) {
+            profileSetting = userProfileSettingCollection3Obj.profileSetting;
+            userProfileSettingCollection3Obj.profileSetting.preferred_language =
+                selectedLanguage;
+          } else {
+            profileSetting.preferred_language = selectedLanguage;
+            userProfileSettingCollection3Obj.profileSetting = profileSetting;
+          }
+          userProfileSettingCollection.insert(
+              0, userProfileSettingCollection3Obj);
         } else {
           profileSetting.preferred_language = selectedLanguage;
           userProfileSettingCollection3Obj.profileSetting = profileSetting;
+          userProfileSettingCollection.add(userProfileSettingCollection3Obj);
         }
-        userProfileSettingCollection.insert(
-            0, userProfileSettingCollection3Obj);
-      } else {
-        profileSetting.preferred_language = selectedLanguage;
-        userProfileSettingCollection3Obj.profileSetting = profileSetting;
-        userProfileSettingCollection.add(userProfileSettingCollection3Obj);
-      }
 
-      profileResult.userProfileSettingCollection3 =
-          userProfileSettingCollection;
-    } catch (e) {}
+        profileResult.userProfileSettingCollection3 =
+            userProfileSettingCollection;
+      } catch (e) {}
+    }
 
     if (currentselectedBloodGroup != null &&
         currentselectedBloodGroupRange != null) {
@@ -1760,7 +1779,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           } else {
             Navigator.pop(dialogContext);
             Alert.displayAlertPlain(context,
-                title: variable.Error, content: value?.message ?? 'Error while updating');
+                title: variable.Error,
+                content: value?.message ?? 'Error while updating');
           }
         });
       } else {
@@ -1782,30 +1802,32 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           if (value != null && value.isSuccess) {
             chatViewModel.upateUserNickname(myProf.result.id,
                 firstNameController.text + ' ' + lastNameController.text);
-            _familyListBloc.getFamilyMembersListNew().then((value) async {
-              /*MySliverAppBar.imageURI = null;
-                    fetchedProfileData = null;*/
 
-              if (widget.arguments.myProfileResult.firstName != null) {
-                String firstName =
-                    widget.arguments.myProfileResult.firstName != null
-                        ? widget.arguments.myProfileResult.firstName
-                            .capitalizeFirstofEach
-                        : '';
-                String lastName =
-                    widget.arguments.myProfileResult.lastName != null
-                        ? widget.arguments.myProfileResult.lastName
-                            .capitalizeFirstofEach
-                        : '';
+            addFamilyUserInfoBloc.getMyProfileInfo().then((profileValue) {
+              if (profileValue.result.firstName != null) {
+                String firstName = profileValue.result.firstName != null
+                    ? profileValue.result.firstName.capitalizeFirstofEach
+                    : '';
+                String lastName = profileValue.result.lastName != null
+                    ? profileValue.result.lastName.capitalizeFirstofEach
+                    : '';
 
                 PreferenceUtil.saveString(Constants.FIRST_NAME, firstName);
                 PreferenceUtil.saveString(Constants.LAST_NAME, lastName);
+                PreferenceUtil.saveProfileData(
+                    Constants.KEY_PROFILE, profileValue);
               }
-
               imageURI = null;
               Navigator.pop(dialogContext);
               Navigator.pop(dialogContext, true);
             });
+            /* _familyListBloc.getFamilyMembersListNew().then((value) async {
+             MySliverAppBar.imageURI = null;
+                    fetchedProfileData = null;
+
+
+
+            });*/
           } else {
             Navigator.pop(dialogContext);
             Alert.displayAlertPlain(context,
@@ -1848,7 +1870,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           } else {
             Navigator.pop(dialogContext);
             Alert.displayAlertPlain(context,
-                title: variable.Error, content: value?.message ?? 'Error while updating');
+                title: variable.Error,
+                content: value?.message ?? 'Error while updating');
           }
         });
       } else {
@@ -2300,7 +2323,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     emailController.text = myProfile?.result?.userContactCollection3[0].email;
   }
 
-  void setValueLanguages() {
+  Future<String> setValueLanguages() async {
     /* for (LanguageResult languageResultObj in languageModelList.result) {
       if (languageResultObj.referenceValueCollection.length > 0) {
         for (ReferenceValueCollection referenceValueCollection
@@ -2320,18 +2343,22 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         }
       }
     }*/
-    if (myProfile?.result?.userProfileSettingCollection3?.isNotEmpty) {
-      ProfileSetting profileSetting =
-          myProfile?.result?.userProfileSettingCollection3[0].profileSetting;
-      if (profileSetting != null) {
-        CommonUtil.langaugeCodes.forEach((language, languageCode) {
-          if (language == profileSetting.preferred_language) {
-            //setLanguageToField(language, languageCode);
-            selectedLanguage = language;
-          }
-        });
+    if (selectedLanguage != null && selectedLanguage != '') {
+    } else {
+      if (addFamilyUserInfoBloc
+          .myprofileObject.result?.userProfileSettingCollection3?.isNotEmpty) {
+        ProfileSetting profileSetting = addFamilyUserInfoBloc.myprofileObject
+            ?.result?.userProfileSettingCollection3[0].profileSetting;
+        if (profileSetting != null) {
+          CommonUtil.langaugeCodes.forEach((language, languageCode) {
+            if (language == profileSetting.preferred_language) {
+              selectedLanguage = language;
+            }
+          });
+        }
       }
     }
+    return selectedLanguage;
   }
 
   void setLanguageToField(String language, String languageCode) {
@@ -2348,5 +2375,44 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
     PreferenceUtil.saveString(
         SHEELA_LANG, CommonUtil.langaugeCodes[languageCode] ?? 'en-IN');
+  }
+
+  void setUserId() {
+    if (widget.arguments.fromClass == CommonConstants.my_family) {
+      addFamilyUserInfoBloc.userId = widget.arguments.id;
+    } else if (widget.arguments.fromClass == CommonConstants.user_update) {
+      addFamilyUserInfoBloc.userId = widget.arguments.myProfileResult.id;
+    } else {
+      addFamilyUserInfoBloc.userId =
+          widget.arguments.addFamilyUserInfo.childInfo.id;
+    }
+  }
+
+  getLanguageWidget() {
+    return FutureBuilder(
+        future: setValueLanguages(),
+        builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+          print('I m here');
+          return Padding(
+            padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+            child: DropdownButton(
+              isExpanded: true,
+              hint: Text(
+                CommonConstants.preferredLanguage,
+                style: TextStyle(
+                  fontSize: 16.0.sp,
+                ),
+              ),
+              value: selectedLanguage,
+              items: languagesList,
+              onChanged: (String newLanguage) {
+                setState(() {
+                  selectedLanguage = newLanguage;
+                });
+                addFamilyUserInfoBloc.preferredLanguage = newLanguage;
+              },
+            ),
+          );
+        });
   }
 }

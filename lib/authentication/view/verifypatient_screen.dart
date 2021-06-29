@@ -239,40 +239,47 @@ class _VerifyPatientState extends State<VerifyPatient> {
                                 ),
                               ],
                             ),
-                            OrDivider(),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                RaisedGradientButton(
-                                  gradient: LinearGradient(colors: [
-                                    Color(new CommonUtil().getMyPrimaryColor()),
-                                    Color(
-                                        new CommonUtil().getMyGredientColor()),
-                                  ]),
-                                  width: 200.0.w,
-                                  child: Text(
-                                    strVerifyCall,
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 15.0.sp,
-                                        fontWeight: FontWeight.w600),
+                            Visibility(
+                              visible: from != strFromVerifyFamilyMember,
+                              child: OrDivider(),
+                            ),
+                            Visibility(
+                              visible: from != strFromVerifyFamilyMember,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  RaisedGradientButton(
+                                    gradient: LinearGradient(colors: [
+                                      Color(
+                                          new CommonUtil().getMyPrimaryColor()),
+                                      Color(new CommonUtil()
+                                          .getMyGredientColor()),
+                                    ]),
+                                    width: 200.0.w,
+                                    child: Text(
+                                      strVerifyCall,
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 15.0.sp,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                    onPressed: otpViewModel.timerSeconds == 0
+                                        ? () {
+                                            otpViewModel?.stopOTPTimer();
+                                            otpViewModel.confirmViaCall(
+                                              phoneNumber:
+                                                  widget.PhoneNumber ?? '',
+                                              onOtpReceived: (String otpCode) {
+                                                _verifyDetails(
+                                                  otpCode: otpCode,
+                                                );
+                                              },
+                                            );
+                                          }
+                                        : null,
                                   ),
-                                  onPressed: otpViewModel.timerSeconds == 0
-                                      ? () {
-                                          otpViewModel?.stopOTPTimer();
-                                          otpViewModel.confirmViaCall(
-                                            phoneNumber:
-                                                widget.PhoneNumber ?? '',
-                                            onOtpReceived: (String otpCode) {
-                                              _verifyDetails(
-                                                otpCode: otpCode,
-                                              );
-                                            },
-                                          );
-                                        }
-                                      : null,
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -548,6 +555,15 @@ class _VerifyPatientState extends State<VerifyPatient> {
       _getPatientDetails();
     } else {
       LoaderClass.hideLoadingDialog(context);
+      if (response?.message?.contains('expired') ?? false) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) => PatientSignInScreen(),
+          ),
+          (route) => false,
+        );
+      }
       toast.getToast(response.message, Colors.red);
     }
   }

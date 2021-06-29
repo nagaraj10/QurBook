@@ -1,4 +1,7 @@
 import 'dart:convert';
+import 'package:get/get.dart';
+import 'package:myfhb/constants/router_variable.dart';
+import 'package:myfhb/src/ui/bot/view/sheela_arguments.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -185,15 +188,24 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
             icon: Image.asset(variable.icon_mayaMain),
             iconSize: 60,
             onPressed: () {
-              Navigator.of(context).push(
+              Get.toNamed(
+                rt_Sheela,
+                arguments: SheelaArgument(
+                  sheelaInputs: getDeviceForString(),
+                ),
+              );
+
+              /* Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) {
                     return ChatScreen(
-                      sheelaInputs: getDeviceForString(),
+                      arguments: SheelaArgument(
+                        sheelaInputs: getDeviceForString(),
+                      ),
                     );
                   },
                 ),
-              );
+              ); */
             },
           ),
         ));

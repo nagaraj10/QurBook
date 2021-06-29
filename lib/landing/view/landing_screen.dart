@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
 import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
@@ -16,14 +18,18 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as constants;
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/landing/view/landing_arguments.dart';
 import 'package:myfhb/landing/view_model/landing_view_model.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
+import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
+import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/ui/MyRecordsArguments.dart';
 import 'package:myfhb/src/ui/bot/SuperMaya.dart';
+import 'package:myfhb/src/ui/bot/common/botutils.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/appointments/view/appointmentsMain.dart';
@@ -59,6 +65,16 @@ class _LandingScreenState extends State<LandingScreen> {
   File imageURIProfile;
   LandingViewModel landingViewModel;
   CommonUtil commonUtil = new CommonUtil();
+
+  HealthReportListForUserRepository healthReportListForUserRepository =
+      HealthReportListForUserRepository();
+  GetDeviceSelectionModel selectionResult;
+
+  bool bpMonitor = true;
+  bool glucoMeter = true;
+  bool pulseOximeter = true;
+  bool thermoMeter = true;
+  bool weighScale = true;
 
   @override
   void initState() {
@@ -109,6 +125,15 @@ class _LandingScreenState extends State<LandingScreen> {
   @override
   Widget build(BuildContext context) {
     landingViewModel = Provider.of<LandingViewModel>(context);
+    if (landingViewModel.isURLCome) {
+      landingViewModel.isURLCome = false;
+      Future.delayed(Duration(seconds: 2), () {
+        if (widget?.landingArguments?.url != null &&
+            widget?.landingArguments?.url.isNotEmpty) {
+          CommonUtil().launchURL(widget?.landingArguments?.url);
+        }
+      });
+    }
     return FutureBuilder<MyProfileModel>(
       future: profileData,
       builder: (BuildContext context, snapshot) {
@@ -216,7 +241,9 @@ class _LandingScreenState extends State<LandingScreen> {
           drawer: NavigationDrawer(
             myProfile: myProfile,
             moveToLoginPage: moveToLoginPage,
-            refresh: refresh,
+            refresh: (bool userChanged) => refresh(
+              userChanged: userChanged,
+            ),
           ),
           bottomNavigationBar: Container(
             decoration: const BoxDecoration(
@@ -430,7 +457,9 @@ class _LandingScreenState extends State<LandingScreen> {
                             myProfile.result.firstName != null &&
                                 myProfile.result.firstName != ''
                         ? 'Hey ${toBeginningOfSentenceCase(myProfile.result.firstName)}'
-                        : 'Hey User',
+                        : myProfile != null
+                            ? 'Hey User'
+                            : '',
                     style: TextStyle(
                       fontSize: 18.0.sp,
                       color: Colors.white,
@@ -522,6 +551,104 @@ class _LandingScreenState extends State<LandingScreen> {
       AddFamilyUserInfoBloc addFamilyUserInfoBloc = new AddFamilyUserInfoBloc();
       addFamilyUserInfoBloc.getDeviceSelectionValues().then((value) {});
     } catch (e) {}
+    try {
+      getDeviceSelectionValues().then((value) => {});
+    } catch (e) {}
+  }
+
+  Future<GetDeviceSelectionModel> getDeviceSelectionValues() async {
+    await healthReportListForUserRepository.getDeviceSelection().then((value) {
+      selectionResult = value;
+      if (selectionResult.isSuccess) {
+        if (selectionResult.result != null) {
+          bpMonitor =
+              selectionResult.result[0].profileSetting.bpMonitor != null &&
+                      selectionResult.result[0].profileSetting.bpMonitor != ''
+                  ? selectionResult.result[0].profileSetting.bpMonitor
+                  : true;
+          glucoMeter =
+              selectionResult.result[0].profileSetting.glucoMeter != null &&
+                      selectionResult.result[0].profileSetting.glucoMeter != ''
+                  ? selectionResult.result[0].profileSetting.glucoMeter
+                  : true;
+          pulseOximeter =
+              selectionResult.result[0].profileSetting.pulseOximeter != null &&
+                      selectionResult.result[0].profileSetting.pulseOximeter !=
+                          ''
+                  ? selectionResult.result[0].profileSetting.pulseOximeter
+                  : true;
+          thermoMeter =
+              selectionResult.result[0].profileSetting.thermoMeter != null &&
+                      selectionResult.result[0].profileSetting.thermoMeter != ''
+                  ? selectionResult.result[0].profileSetting.thermoMeter
+                  : true;
+          weighScale =
+              selectionResult.result[0].profileSetting.weighScale != null &&
+                      selectionResult.result[0].profileSetting.weighScale != ''
+                  ? selectionResult.result[0].profileSetting.weighScale
+                  : true;
+          if (selectionResult.result[0].profileSetting != null) {
+            if (selectionResult.result[0].profileSetting.preferred_language !=
+                null) {
+              String preferredLanguage =
+                  selectionResult.result[0].profileSetting.preferred_language;
+              String currentLanguage = '';
+              if (preferredLanguage != "undef") {
+                currentLanguage = preferredLanguage.split("-").first;
+              } else {
+                currentLanguage = 'en';
+              }
+              PreferenceUtil.saveString(Constants.SHEELA_LANG,
+                  Utils.langaugeCodes[currentLanguage] ?? 'en-IN');
+            }
+            if (selectionResult.result[0].profileSetting.preColor != null &&
+                selectionResult.result[0].profileSetting.greColor != null) {
+              PreferenceUtil.saveTheme(Constants.keyPriColor,
+                  selectionResult.result[0].profileSetting.preColor);
+              PreferenceUtil.saveTheme(Constants.keyGreyColor,
+                  selectionResult.result[0].profileSetting.greColor);
+              //HomeScreen.of(context).refresh();
+              //setState(() {});
+            } else {
+              PreferenceUtil.saveTheme(
+                  Constants.keyPriColor,
+                  PreferenceUtil.getSavedTheme(Constants.keyPriColor) != null
+                      ? PreferenceUtil.getSavedTheme(Constants.keyPriColor)
+                      : 0xff5f0cf9);
+              PreferenceUtil.saveTheme(
+                  Constants.keyGreyColor,
+                  PreferenceUtil.getSavedTheme(Constants.keyGreyColor) != null
+                      ? PreferenceUtil.getSavedTheme(Constants.keyGreyColor)
+                      : 0xff9929ea);
+            }
+          } else {
+            PreferenceUtil.saveTheme(
+                Constants.keyPriColor,
+                PreferenceUtil.getSavedTheme(Constants.keyPriColor) != null
+                    ? PreferenceUtil.getSavedTheme(Constants.keyPriColor)
+                    : 0xff5f0cf9);
+            PreferenceUtil.saveTheme(
+                Constants.keyGreyColor,
+                PreferenceUtil.getSavedTheme(Constants.keyGreyColor) != null
+                    ? PreferenceUtil.getSavedTheme(Constants.keyGreyColor)
+                    : 0xff9929ea);
+          }
+        } else {
+          bpMonitor = true;
+          glucoMeter = true;
+          pulseOximeter = true;
+          thermoMeter = true;
+          weighScale = true;
+        }
+      } else {
+        bpMonitor = true;
+        glucoMeter = true;
+        pulseOximeter = true;
+        thermoMeter = true;
+        weighScale = true;
+      }
+    });
+    return selectionResult;
   }
 
   void getFamilyRelationAndMediaType() async {

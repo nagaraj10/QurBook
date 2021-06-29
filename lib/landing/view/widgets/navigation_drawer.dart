@@ -23,7 +23,7 @@ class NavigationDrawer extends StatelessWidget {
 
   final MyProfileModel myProfile;
   final Function moveToLoginPage;
-  final Function refresh;
+  final Function(bool userChanged) refresh;
 
   @override
   Widget build(BuildContext context) => Drawer(
@@ -87,15 +87,18 @@ class NavigationDrawer extends StatelessWidget {
                       DrawerTile(
                         title: variable.strProfile,
                         icon: variable.icon_profile,
-                        onPressed: () {
+                        onPressed: () async {
                           Navigator.pop(context);
-                          Navigator.pushNamed(
+                          await Navigator.pushNamed(
                             context,
                             router.rt_UserAccounts,
                             arguments: UserAccountsArguments(
                               selectedIndex: 0,
                             ),
                           );
+                          if (refresh != null) {
+                            refresh(true);
+                          }
                         },
                       ),
                       // DrawerTile(
@@ -113,15 +116,18 @@ class NavigationDrawer extends StatelessWidget {
                       DrawerTile(
                         title: variable.strMyProvider,
                         icon: variable.icon_provider,
-                        onPressed: () {
+                        onPressed: () async {
                           Navigator.pop(context);
-                          Navigator.pushNamed(
+                          await Navigator.pushNamed(
                             context,
                             router.rt_UserAccounts,
                             arguments: UserAccountsArguments(
                               selectedIndex: 2,
                             ),
                           );
+                          if (refresh != null) {
+                            refresh(true);
+                          }
                         },
                       ),
                       DrawerTile(
@@ -130,15 +136,18 @@ class NavigationDrawer extends StatelessWidget {
                           variable.icon_my_family_menu,
                           color: Colors.black54,
                         ),
-                        onPressed: () {
+                        onPressed: () async {
                           Navigator.pop(context);
-                          Navigator.pushNamed(
+                          await Navigator.pushNamed(
                             context,
                             router.rt_UserAccounts,
                             arguments: UserAccountsArguments(
                               selectedIndex: 1,
                             ),
                           );
+                          if (refresh != null) {
+                            refresh(true);
+                          }
                         },
                       ),
                       DrawerTile(

@@ -46,6 +46,7 @@ const String resheduled = 'rescheduled';
 const String NOT_AVAILABLE = 'not available';
 const String CANCELLATION_CHARGE = 'Cancellation Charges:';
 const String inrLabel = 'INR';
+const String inrLabelZero = 'INR 0';
 
 //Custom Icon
 const String Appointments_notesImage = 'assets/icons/notes.png';

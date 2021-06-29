@@ -1332,8 +1332,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   _selectDate(context);
                 },
               ),
-              labelText: CommonConstants.date_of_birthWithStar,
-              hintText: CommonConstants.date_of_birth,
+              labelText: CommonConstants.year_of_birth,
+              hintText: CommonConstants.year_of_birth,
               labelStyle: TextStyle(
                   fontSize: 15.0.sp,
                   fontWeight: FontWeight.w400,

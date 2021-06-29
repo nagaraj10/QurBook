@@ -4,7 +4,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 import 'package:myfhb/authentication/view/login_screen.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -12,13 +11,18 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/regiment/models/regiment_arguments.dart';
+import 'package:myfhb/landing/view/landing_arguments.dart';
+import 'package:myfhb/landing/view_model/landing_view_model.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
 import 'package:myfhb/src/ui/Dashboard.dart';
+import 'package:myfhb/src/ui/bot/view/sheela_arguments.dart';
+import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/city.dart';
@@ -80,7 +84,6 @@ class _SplashScreenState extends State<SplashScreen> {
   void setReminder() {
     var selecteTimeInDate =
         "${TimeOfDay.now().hour}-${TimeOfDay.now().minute + 3}";
-    print('currentTime#######${selecteTimeInDate}');
     var ch_android = const MethodChannel('android/notification');
     var mappedReminder = {
       'id': 001,
@@ -214,26 +217,56 @@ class _SplashScreenState extends State<SplashScreen> {
                           'ns_type': 'sheela',
                           'navigationPage': 'Sheela Start Page',
                         });
-                        if (widget.bundle != null && widget.bundle .isNotEmpty) {
+                        if (widget.bundle != null && widget.bundle.isNotEmpty) {
                           var rawTitle = widget.bundle?.split('|')[0];
                           var rawBody = widget.bundle?.split('|')[1];
                           String sheela_lang = PreferenceUtil.getStringValue(
                               Constants.SHEELA_LANG);
-                          if (sheela_lang != null && sheela_lang != '') {
-                            Get.to(bot.ChatScreen(
-                              isSheelaAskForLang: false,
-                              langCode: sheela_lang,
-                              rawMessage:rawBody,
-                            )).then((value) =>
-                              PageNavigator.goToPermanent(
-                                  context, router.rt_Landing));
+                          if ((Provider.of<ChatScreenViewModel>(context,
+                                          listen: false)
+                                      ?.conversations
+                                      ?.length ??
+                                  0) >
+                              0) {
+                            Provider.of<ChatScreenViewModel>(context,
+                                    listen: false)
+                                ?.startMayaAutomatically(message: rawBody);
+                          } else if (sheela_lang != null && sheela_lang != '') {
+                            Get.toNamed(
+                              rt_Sheela,
+                              arguments: SheelaArgument(
+                                isSheelaAskForLang: false,
+                                langCode: sheela_lang,
+                                rawMessage: rawBody,
+                              ),
+                            ).then((value) => PageNavigator.goToPermanent(
+                                context, router.rt_Landing));
+
+                            /* Get.to(bot.ChatScreen(
+                              arguments: SheelaArgument(
+                                isSheelaAskForLang: false,
+                                langCode: sheela_lang,
+                                rawMessage: rawBody,
+                              ),
+                            )).then((value) => PageNavigator.goToPermanent(
+                                context, router.rt_Landing)); */
                           } else {
-                            Get.to(bot.ChatScreen(
-                              isSheelaAskForLang: true,
-                              rawMessage:rawBody,
-                            )).then((value) =>
-                              PageNavigator.goToPermanent(
-                                  context, router.rt_Landing));
+                            Get.toNamed(
+                              rt_Sheela,
+                              arguments: SheelaArgument(
+                                isSheelaAskForLang: true,
+                                rawMessage: rawBody,
+                              ),
+                            ).then((value) => PageNavigator.goToPermanent(
+                                context, router.rt_Landing));
+
+                            /* Get.to(bot.ChatScreen(
+                              arguments: SheelaArgument(
+                                isSheelaAskForLang: true,
+                                rawMessage: rawBody,
+                              ),
+                            )).then((value) => PageNavigator.goToPermanent(
+                                context, router.rt_Landing)); */
                           }
                         } else {
                           Get.to(SuperMaya()).then((value) =>
@@ -382,6 +415,18 @@ class _SplashScreenState extends State<SplashScreen> {
                               selectedIndex: 1, thTabIndex: 4),
                         ).then((value) => PageNavigator.goToPermanent(
                             context, router.rt_Landing));
+                      } else if (widget.nsRoute == 'openurl') {
+                        fbaLog(eveParams: {
+                          'eventTime': '${DateTime.now()}',
+                          'ns_type': 'landing',
+                          'navigationPage': 'Landing',
+                        });
+                        Provider.of<LandingViewModel>(context, listen: false)
+                            .isURLCome = true;
+                        //ignore: lines_longer_than_80_chars
+                        PageNavigator.goToPermanent(context, router.rt_Landing,
+                            arguments:
+                                LandingArguments(url: widget.bundle ?? null));
                       } else {
                         fbaLog(eveParams: {
                           'eventTime': '${DateTime.now()}',
