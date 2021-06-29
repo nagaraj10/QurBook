@@ -445,11 +445,18 @@ class _MyPlanState extends State<PlanList> {
                                                           isSubscribed:
                                                               planList[i]
                                                                   .isSubscribed,
-                                                          providerId:
-                                                              planList[i]
-                                                                  .plinkid,
+                                                          providerId: planList[
+                                                                  i]
+                                                              .plinkid,
                                                           isFrom:
                                                               strIsFromSubscibe,
+                                                          feeZero: planListResult[
+                                                                          i]
+                                                                      ?.price ==
+                                                                  '' ||
+                                                              planList[i]
+                                                                      .price ==
+                                                                  '0',
                                                           refresh: () {
                                                         setState(() {});
                                                       });
@@ -504,21 +511,24 @@ class _MyPlanState extends State<PlanList> {
                                                   if (planList[i]
                                                           .isSubscribed ==
                                                       '0') {
-                                                    CommonUtil()
-                                                        .profileValidationCheck(
-                                                            context,
-                                                            packageId:
-                                                                planList[i]
-                                                                    .packageid,
-                                                            isSubscribed:
-                                                                planList[i]
-                                                                    .isSubscribed,
-                                                            providerId:
-                                                                planList[i]
-                                                                    .plinkid,
-                                                            isFrom:
-                                                                strIsFromSubscibe,
-                                                            refresh: () {
+                                                    CommonUtil().profileValidationCheck(
+                                                        context,
+                                                        packageId: planList[i]
+                                                            .packageid,
+                                                        isSubscribed:
+                                                            planList[i]
+                                                                .isSubscribed,
+                                                        providerId:
+                                                            planList[i].plinkid,
+                                                        isFrom:
+                                                            strIsFromSubscibe,
+                                                        feeZero: planList[i]
+                                                                    ?.price ==
+                                                                '' ||
+                                                            planList[i]
+                                                                    ?.price ==
+                                                                '0',
+                                                        refresh: () {
                                                       setState(() {});
                                                     });
                                                   }
