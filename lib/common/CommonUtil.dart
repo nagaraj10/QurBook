@@ -2921,6 +2921,56 @@ class CommonUtil {
     return doctorName?.capitalizeFirstofEach;
   }
 
+  accessContactsDialog() async {
+    final PermissionStatus permissionStatus = await Permission.contacts.status;
+    if (permissionStatus == PermissionStatus.granted) {
+      navigateInviteContact();
+    } else {
+      await getPermission().then((value) {
+        if (value == PermissionStatus.granted) {
+          navigateInviteContact();
+        }else {
+          FlutterToast().getToast(
+              'Please allow access to invite people from your contacts',
+              Colors.red);
+        }
+      });
+    }
+  }
+
+  Future<PermissionStatus> getPermission() async {
+    final PermissionStatus permission = await Permission.contacts.status;
+    if ((permission != PermissionStatus.granted)) {
+      final Map<Permission, PermissionStatus> permissionStatus =
+          await [Permission.contacts].request();
+      return permissionStatus[Permission.contacts] ??
+          PermissionStatus.undetermined;
+    } else {
+      return permission;
+    }
+  }
+
+  navigateInviteContact() {
+    Navigator.pop(Get.context);
+    Navigator.push(
+      Get.context,
+      MaterialPageRoute(
+        builder: (context) => MultiProvider(
+          providers: <SingleChildWidget>[
+            ChangeNotifierProvider<ReferAFriendViewModel>(
+              create: (_) => ReferAFriendViewModel(),
+            ),
+          ],
+          child: InviteContactsScreen(),
+        ),
+      ),
+    );
+  }
+
+
+
+
+
   _dialogForSubscribePayment(BuildContext context, String providerId,
       String packageId, bool isFromRenew) async {
     return showDialog(
