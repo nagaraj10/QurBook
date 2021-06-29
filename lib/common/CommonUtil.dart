@@ -44,6 +44,8 @@ import 'package:myfhb/my_family/models/Sharedbyme.dart';
 import 'package:myfhb/my_providers/models/User.dart';
 import 'package:myfhb/myfhb_weview/myfhb_webview.dart';
 import 'package:myfhb/plan_dashboard/viewModel/subscribeViewModel.dart';
+import 'package:myfhb/refer_friend/view/invite_contacts_screen.dart';
+import 'package:myfhb/refer_friend/viewmodel/referafriend_vm.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
@@ -83,6 +85,7 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showcaseview/showcase.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -98,6 +101,7 @@ class CommonUtil {
   static String BASE_URL_FROM_RES = "";
   static String BASEURL_DEVICE_READINGS = '';
   static String FIREBASE_CHAT_NOTIFY_TOKEN = '';
+  static const bgColor = 0xFFe3e2e2;
 
   static const secondaryGrey = 0xFF545454;
 
