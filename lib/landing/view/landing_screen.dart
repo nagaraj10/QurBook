@@ -531,6 +531,8 @@ class _LandingScreenState extends State<LandingScreen> {
   }
 
   void callImportantsMethod() async {
+    await CommonUtil().validateToken();
+
     try {
       getFamilyRelationAndMediaType();
     } catch (e) {}

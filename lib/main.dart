@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io' show Platform;
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myfhb/IntroScreens/IntroductionScreen.dart';
@@ -264,6 +265,7 @@ class _MyFHBState extends State<MyFHB> {
       provider.setUpListerForTheNotification();
       provider.isAlreadyLoaded = true;
     }
+    FirebaseMessaging().onTokenRefresh.listen(CommonUtil().saveTokenToDatabase);
 
     //gettingResponseFromNative();
     ///un comment this while on production mode for enabling security.

@@ -1404,6 +1404,30 @@ class CommonUtil {
     ///load until snapshot.hasData resolves to true
   }
 
+  Future<void> validateToken() async {
+    var localToken = PreferenceUtil.getStringValue(Constants.STR_PUSH_TOKEN);
+    final currentToken = await FirebaseMessaging().getToken();
+    if (localToken != currentToken) {
+      await saveTokenToDatabase(currentToken);
+    }
+  }
+
+  Future<void> saveTokenToDatabase(String token) async {
+    try {
+      MyProfileModel myProfile =
+          PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+      MyProfileResult profileResult = myProfile.result;
+
+      await CommonUtil().sendDeviceToken(
+        PreferenceUtil.getStringValue(Constants.KEY_USERID),
+        profileResult.userContactCollection3[0].email,
+        profileResult.userContactCollection3[0].phoneNumber,
+        token,
+        false,
+      );
+    } catch (e) {}
+  }
+
   Future<DeviceInfoSucess> sendDeviceToken(String userId, String email,
       String user_mobile_no, String deviceId, bool isActive) async {
     var jsonParam;
@@ -1411,6 +1435,7 @@ class CommonUtil {
     ApiBaseHelper apiBaseHelper = new ApiBaseHelper();
 
     final token = await _firebaseMessaging.getToken();
+    PreferenceUtil.saveString(Constants.STR_PUSH_TOKEN, token);
     Map<String, dynamic> deviceInfo = new Map();
     Map<String, dynamic> user = new Map();
     Map<String, dynamic> jsonData = new Map();
