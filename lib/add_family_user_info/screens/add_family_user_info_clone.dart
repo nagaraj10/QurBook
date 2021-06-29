@@ -97,6 +97,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   final weightController = TextEditingController(text: '');
   FocusNode weightFocus = FocusNode();
+  FocusNode dobFocus = FocusNode();
   AddFamilyUserInfoBloc addFamilyUserInfoBloc;
   AddFamilyUserInfoRepository _addFamilyUserInfoRepository;
 
@@ -424,7 +425,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 widget.arguments.fromClass == CommonConstants.user_update
                     ? getLanguageWidget()
                     : Container(),
-                _showDateOfBirthTextField(),
+                _showDateOfBirthTextFieldNew(),
                 AddressTypeWidget(
                   addressResult: _addressResult,
                   addressList: _addressList,
@@ -514,7 +515,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             autofocus: false,
             readOnly: true,
             keyboardType: TextInputType.text,
-            //          focusNode: dateOfBirthFocus,
+            focusNode: dateOfBirthFocus,
             textInputAction: TextInputAction.done,
             onSubmitted: (term) {
               dateOfBirthFocus.unfocus();
@@ -549,6 +550,18 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             ),
           )),
     );
+  }
+
+  Widget _showDateOfBirthTextFieldNew() {
+    return _showCommonEditText(
+        dateOfBirthController,
+        dateOfBirthFocus,
+        null,
+        CommonConstants.year_of_birth_with_star,
+        CommonConstants.year_of_birth,
+        true,
+        isheightOrWeight: true,
+        maxLength: 4);
   }
 
   void dateOfBirthTapped() {
@@ -590,6 +603,12 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           enabled: isEnabled,
           cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: textEditingController,
+          onChanged: (value) {
+            if (maxLength == 4) {
+              dateofBirthStr =
+                  new FHBUtils().getFormattedDateForUserBirth(value.toString());
+            }
+          },
           maxLines: 1,
           enableInteractiveSelection: false,
           maxLength: maxLength,
@@ -598,6 +617,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           focusNode: focusNode,
           textInputAction: TextInputAction.done,
           onSubmitted: (term) {
+            if (maxLength == 4) {
+              dateofBirthStr =
+                  new FHBUtils().getFormattedDateForUserBirth(term.toString());
+            }
             FocusScope.of(context).requestFocus(nextFocusNode);
           },
           style: new TextStyle(
@@ -1154,6 +1177,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     } else if (dateOfBirthController.text.length == 0) {
       isValid = false;
       strErrorMsg = variable.selectDOB;
+    } else if (dateOfBirthController.text.length < 4) {
+      isValid = false;
+      strErrorMsg = "Enter a Valid Year";
     } else if (_addressResult == null || _addressResult.id == null) {
       isValid = false;
       strErrorMsg = 'Select Address type';
