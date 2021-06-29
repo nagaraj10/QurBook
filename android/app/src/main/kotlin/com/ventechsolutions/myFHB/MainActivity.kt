@@ -4,6 +4,7 @@ import android.app.*
 import android.content.*
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -178,7 +179,8 @@ class MainActivity : FlutterActivity() {
                     when (smsRetrieverStatus.statusCode) {
                         CommonStatusCodes.SUCCESS -> {
                             // Get consent intent
-                            val consentIntent = extras.getParcelable<Intent>(SmsRetriever.EXTRA_CONSENT_INTENT)
+                            val consentIntent =
+                                extras.getParcelable<Intent>(SmsRetriever.EXTRA_CONSENT_INTENT)
                             try {
                                 // Start activity to show consent dialog to user, activity must be started in
                                 // 5 minutes, otherwise you'll receive another TIMEOUT intent
@@ -195,7 +197,10 @@ class MainActivity : FlutterActivity() {
             }
         }
 
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, ROUTE_CHANNEL).setMethodCallHandler { call, result ->
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            ROUTE_CHANNEL
+        ).setMethodCallHandler { call, result ->
             try {
                 if (call.method!!.contentEquals(Constants.FUN_GET_MY_ROUTE)) {
                     result.success(sharedValue)
@@ -209,7 +214,10 @@ class MainActivity : FlutterActivity() {
 
         }
 
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, ONGOING_NS_CHANNEL).setMethodCallHandler { call, result ->
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            ONGOING_NS_CHANNEL
+        ).setMethodCallHandler { call, result ->
             try {
                 if (call.method!!.contentEquals(Constants.FUN_ONG_NS)) {
                     val passedMode = call.argument<String>(Constants.PROP_MODE)
@@ -224,18 +232,21 @@ class MainActivity : FlutterActivity() {
         }
 
         EventChannel(flutterEngine.dartExecutor.binaryMessenger, STREAM).setStreamHandler(
-                object : EventChannel.StreamHandler {
-                    override fun onListen(arguments: Any?, events: EventSink?) {
-                        mEventChannel = events!!
-                    }
-
-                    override fun onCancel(arguments: Any?) {
-                    }
+            object : EventChannel.StreamHandler {
+                override fun onListen(arguments: Any?, events: EventSink?) {
+                    mEventChannel = events!!
                 }
+
+                override fun onCancel(arguments: Any?) {
+                }
+            }
         )
 
 
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, VERSION_CODES_CHANNEL).setMethodCallHandler { call, result ->
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            VERSION_CODES_CHANNEL
+        ).setMethodCallHandler { call, result ->
             if (call.method == Constants.FUN_APP_VERSION) {
                 //logics to get version code
                 val appVersion = getAppVersion();
@@ -245,7 +256,10 @@ class MainActivity : FlutterActivity() {
             }
         }
 
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, LISTEN4SMS).setMethodCallHandler { call, result ->
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            LISTEN4SMS
+        ).setMethodCallHandler { call, result ->
             if (call.method == Constants.FUN_LISTEN_SMS) {
                 listenForSMS()
             } else {
@@ -254,7 +268,10 @@ class MainActivity : FlutterActivity() {
         }
 
 
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, SECURITY_CHANNEL).setMethodCallHandler { call, result ->
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            SECURITY_CHANNEL
+        ).setMethodCallHandler { call, result ->
             if (call.method == Constants.FUN_KEY_GAURD) {
                 //logics to show security methods
                 _securityResult = result
@@ -266,9 +283,13 @@ class MainActivity : FlutterActivity() {
 
 
 
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, VOICE_CHANNEL).setMethodCallHandler { call, result ->
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            VOICE_CHANNEL
+        ).setMethodCallHandler { call, result ->
             if (call.method == Constants.FUN_VOICE_ASST) {
-                val lang_code = call.argument<String>(Constants.PROP_LANG_CODE) //todo uncomment this line
+                val lang_code =
+                    call.argument<String>(Constants.PROP_LANG_CODE) //todo uncomment this line
                 _result = result
                 speakWithVoiceAssistant(lang_code!!) //todo uncomment this line
                 //speakWithVoiceAssistant()//todo line need to remove
@@ -277,12 +298,16 @@ class MainActivity : FlutterActivity() {
             }
         }
 
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, TTS_CHANNEL).setMethodCallHandler { call, result ->
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            TTS_CHANNEL
+        ).setMethodCallHandler { call, result ->
             _TTSResult = result
             if (call.method == Constants.FUN_TEXT2SPEECH) {
                 val msg = call.argument<String>(Constants.PROP_MSG)
                 val iscls = call.argument<Boolean>(Constants.PROP_IS_CLOSE)
-                val langCode = call.argument<String>(Constants.PROP_LANG) //todo this has to be uncomment
+                val langCode =
+                    call.argument<String>(Constants.PROP_LANG) //todo this has to be uncomment
                 tts!!.language = Locale(langCode!!) //todo this has to be uncomment
                 textToSpeech(msg!!, iscls!!)
             } else {
@@ -290,12 +315,15 @@ class MainActivity : FlutterActivity() {
             }
         }
 
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, REMINDER_CHANNEL).setMethodCallHandler { call, result ->
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            REMINDER_CHANNEL
+        ).setMethodCallHandler { call, result ->
             try {
                 if (call.method == REMINDER_METHOD_NAME) {
                     val data = call.argument<String>("data")
                     val retMap: Map<String, Any> = Gson().fromJson(
-                            data, object : TypeToken<HashMap<String?, Any?>?>() {}.type
+                        data, object : TypeToken<HashMap<String?, Any?>?>() {}.type
                     )
 
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
@@ -339,7 +367,7 @@ class MainActivity : FlutterActivity() {
         healthOrgId = intent.getStringExtra(Constants.PROP_healthOrgId)
         templateName = intent.getStringExtra(Constants.PROP_TEMP_NAME)
         val providerReqId = intent.getStringExtra(Constants.PROP_PROVIDER_REQID)
-        val redirect_to = intent.getStringExtra(Constants.PROP_REDIRECT_TO)
+        var redirect_to = intent.getStringExtra(Constants.PROP_REDIRECT_TO)
         val data = intent.getStringExtra(Constants.PROP_DATA)
         val HRMId = intent.getStringExtra(Constants.PROP_HRMID)
         val EVEId = intent.getStringExtra(Constants.PROP_EVEID)
@@ -351,16 +379,24 @@ class MainActivity : FlutterActivity() {
         patName = intent.getStringExtra(getString(R.string.pat_name))
         patPic = intent.getStringExtra(getString(R.string.pat_pic))
         val message = intent.getStringExtra(getString(R.string.message))
+        var externalLink = intent.getStringExtra(Constants.PROB_EXTERNAL_LINK)
         if (sharedValue != null && sharedValue == "chat") {
             sharedValue = "$sharedValue"
+        } else if (externalLink != null && externalLink != "") {
+            if (!externalLink.startsWith("http://") && !externalLink.startsWith("https://"))
+                externalLink = "http://" + externalLink
+            sharedValue = "openurl&$externalLink"
         } else if (sharedValue != null && username != null && docId != null && docPic != null) {
-            sharedValue = "$sharedValue&$username&$docId&$docPic&${Constants.PROP_CALL}&${patId}&${patName}&${patPic}"
+            sharedValue =
+                "$sharedValue&$username&$docId&$docPic&${Constants.PROP_CALL}&${patId}&${patName}&${patPic}"
         } else if (sharedValue == Constants.PROP_DOC_RESCHDULE) {
             //todo redirect to telehealth page
-            sharedValue = "${Constants.PROP_DOC_RESCHDULE}&${docId!!}&${bookingId}&${docSessionId}&${healthOrgId}&${templateName}"
+            sharedValue =
+                "${Constants.PROP_DOC_RESCHDULE}&${docId!!}&${bookingId}&${docSessionId}&${healthOrgId}&${templateName}"
         } else if (sharedValue == Constants.PROP_DOC_CANCELLATION) {
             //todo redirect to telehealth page
-            sharedValue = "${Constants.PROP_DOC_CANCELLATION}&${bookingId!!}&${appDate}&${templateName}"
+            sharedValue =
+                "${Constants.PROP_DOC_CANCELLATION}&${bookingId!!}&${appDate}&${templateName}"
         } else if (providerReqId != null && providerReqId != "") {
             if (sharedValue == Constants.PROP_ACCEPT) {
                 sharedValue = "$sharedValue&${providerReqId}&${"accepted"}"
@@ -426,16 +462,24 @@ class MainActivity : FlutterActivity() {
     //todo this method need to uncomment
     private fun speakWithVoiceAssistant(langCode: String) {
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+        intent.putExtra(
+            RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+            RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+        )
         //intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault()) //todo this has to be comment
         GetSrcTargetLanguages()
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, langCode) //todo this has to be uncomment
         intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
         intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT)
         intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, 50000000)
-        intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, 50000000)
-        intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, 50000000)
+        intent.putExtra(
+            RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS,
+            50000000
+        )
+        intent.putExtra(
+            RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS,
+            50000000
+        )
         //intent.putExtra(RecognizerIntent.EXTRA_PROMPT, Constants.VOICE_ASST_PROMPT)
 
         //Timer().schedule(100){
@@ -446,15 +490,15 @@ class MainActivity : FlutterActivity() {
                 override fun onBeginningOfSpeech() {
                     if (!dialog.isShowing) {
                         this@MainActivity.runOnUiThread(
-                                object : Runnable {
-                                    override fun run() {
-                                        //displayText.text = "Speak now"
-                                        micOn.visibility = View.VISIBLE
-                                        displayText.visibility = View.GONE
-                                        listeningLayout.visibility = View.VISIBLE
-                                        tryMe.visibility = View.GONE
-                                    }
+                            object : Runnable {
+                                override fun run() {
+                                    //displayText.text = "Speak now"
+                                    micOn.visibility = View.VISIBLE
+                                    displayText.visibility = View.GONE
+                                    listeningLayout.visibility = View.VISIBLE
+                                    tryMe.visibility = View.GONE
                                 }
+                            }
                         )
 
                         dialog.show()
@@ -472,29 +516,29 @@ class MainActivity : FlutterActivity() {
                         //do nothing
                     } else {
                         this@MainActivity.runOnUiThread(
-                                object : Runnable {
-                                    override fun run() {
-                                        if (listeningLayout.visibility == View.VISIBLE) {
-                                            listeningLayout.visibility = View.GONE
-                                            tryMe.visibility = View.VISIBLE
-                                            errorTxt.text = "Please Retry"
-                                            customLayout.setOnClickListener {
-                                                this@MainActivity.runOnUiThread(
-                                                        object : Runnable {
-                                                            override fun run() {
-                                                                //displayText.text = "Speak now"
-                                                                micOn.visibility = View.VISIBLE
-                                                                displayText.visibility = View.GONE
-                                                                listeningLayout.visibility = View.VISIBLE
-                                                                tryMe.visibility = View.GONE
-                                                                speechRecognizer!!.startListening(intent)
-                                                            }
-                                                        }
-                                                )
-                                            }
+                            object : Runnable {
+                                override fun run() {
+                                    if (listeningLayout.visibility == View.VISIBLE) {
+                                        listeningLayout.visibility = View.GONE
+                                        tryMe.visibility = View.VISIBLE
+                                        errorTxt.text = "Please Retry"
+                                        customLayout.setOnClickListener {
+                                            this@MainActivity.runOnUiThread(
+                                                object : Runnable {
+                                                    override fun run() {
+                                                        //displayText.text = "Speak now"
+                                                        micOn.visibility = View.VISIBLE
+                                                        displayText.visibility = View.GONE
+                                                        listeningLayout.visibility = View.VISIBLE
+                                                        tryMe.visibility = View.GONE
+                                                        speechRecognizer!!.startListening(intent)
+                                                    }
+                                                }
+                                            )
                                         }
                                     }
                                 }
+                            }
                         )
 
                     }
@@ -505,11 +549,13 @@ class MainActivity : FlutterActivity() {
                     when (errorCode) {
                         SpeechRecognizer.ERROR_AUDIO -> message = "Audio recording error"
                         SpeechRecognizer.ERROR_CLIENT -> message = "Client side error"
-                        SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> message = "Insufficient permissions"
+                        SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> message =
+                            "Insufficient permissions"
                         SpeechRecognizer.ERROR_NETWORK -> message = "Network error"
                         SpeechRecognizer.ERROR_NETWORK_TIMEOUT -> message = "Network timeout"
                         SpeechRecognizer.ERROR_NO_MATCH -> message = "No match"
-                        SpeechRecognizer.ERROR_RECOGNIZER_BUSY -> message = "RecognitionService busy"
+                        SpeechRecognizer.ERROR_RECOGNIZER_BUSY -> message =
+                            "RecognitionService busy"
                         SpeechRecognizer.ERROR_SERVER -> message = "error from server"
                         SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> message = "No speech input"
                         else -> {
@@ -517,11 +563,11 @@ class MainActivity : FlutterActivity() {
                         }
                     }
                     this@MainActivity.runOnUiThread(
-                            object : Runnable {
-                                override fun run() {
-                                    //Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
-                                }
+                        object : Runnable {
+                            override fun run() {
+                                //Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
                             }
+                        }
                     )
                 }
 
@@ -538,29 +584,29 @@ class MainActivity : FlutterActivity() {
                         //do nothing
                     } else {
                         this@MainActivity.runOnUiThread(
-                                object : Runnable {
-                                    override fun run() {
-                                        if (listeningLayout.visibility == View.VISIBLE) {
-                                            listeningLayout.visibility = View.GONE
-                                            tryMe.visibility = View.VISIBLE
-                                            errorTxt.text = "Please Retry"
-                                            customLayout.setOnClickListener {
-                                                this@MainActivity.runOnUiThread(
-                                                        object : Runnable {
-                                                            override fun run() {
-                                                                //displayText.text = "Speak now"
-                                                                micOn.visibility = View.VISIBLE
-                                                                displayText.visibility = View.GONE
-                                                                listeningLayout.visibility = View.VISIBLE
-                                                                tryMe.visibility = View.GONE
-                                                                speechRecognizer!!.startListening(intent)
-                                                            }
-                                                        }
-                                                )
-                                            }
+                            object : Runnable {
+                                override fun run() {
+                                    if (listeningLayout.visibility == View.VISIBLE) {
+                                        listeningLayout.visibility = View.GONE
+                                        tryMe.visibility = View.VISIBLE
+                                        errorTxt.text = "Please Retry"
+                                        customLayout.setOnClickListener {
+                                            this@MainActivity.runOnUiThread(
+                                                object : Runnable {
+                                                    override fun run() {
+                                                        //displayText.text = "Speak now"
+                                                        micOn.visibility = View.VISIBLE
+                                                        displayText.visibility = View.GONE
+                                                        listeningLayout.visibility = View.VISIBLE
+                                                        tryMe.visibility = View.GONE
+                                                        speechRecognizer!!.startListening(intent)
+                                                    }
+                                                }
+                                            )
                                         }
                                     }
                                 }
+                            }
                         )
                     }
                 }
@@ -570,21 +616,21 @@ class MainActivity : FlutterActivity() {
                     finalWords = data!![0].toString()
                     isPartialResultInvoked = true
                     this@MainActivity.runOnUiThread(
-                            object : Runnable {
-                                override fun run() {
-                                    if (micOn.isShown) {
-                                        this@MainActivity.runOnUiThread(
-                                                object : Runnable {
-                                                    override fun run() {
-                                                        displayText.visibility = View.VISIBLE
-                                                        micOn.visibility = View.GONE
-                                                    }
-                                                }
-                                        )
-                                    }
-                                    displayText.text = finalWords
+                        object : Runnable {
+                            override fun run() {
+                                if (micOn.isShown) {
+                                    this@MainActivity.runOnUiThread(
+                                        object : Runnable {
+                                            override fun run() {
+                                                displayText.visibility = View.VISIBLE
+                                                micOn.visibility = View.GONE
+                                            }
+                                        }
+                                    )
                                 }
+                                displayText.text = finalWords
                             }
+                        }
                     )
                 }
 
@@ -663,10 +709,14 @@ class MainActivity : FlutterActivity() {
 
     private fun secureMe() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            val km: KeyguardManager = getSystemService(android.content.Context.KEYGUARD_SERVICE) as KeyguardManager
+            val km: KeyguardManager =
+                getSystemService(android.content.Context.KEYGUARD_SERVICE) as KeyguardManager
             if (km.isKeyguardSecure()) {
                 //user has set pin/password/pattern
-                val authIntent: Intent = km.createConfirmDeviceCredentialIntent(Constants.KEY_GAURD_TITLE, Constants.KEY_GAURD_TITLE_DESC)
+                val authIntent: Intent = km.createConfirmDeviceCredentialIntent(
+                    Constants.KEY_GAURD_TITLE,
+                    Constants.KEY_GAURD_TITLE_DESC
+                )
                 startActivityForResult(authIntent, INTENT_AUTHENTICATE)
             } else {
                 //user has not enabled any password/pin/pattern
@@ -686,8 +736,10 @@ class MainActivity : FlutterActivity() {
         if (isClose) {
             tts!!.stop()
         } else {
-            tts!!.speak(msg, TextToSpeech.QUEUE_FLUSH, null,
-                    TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID)
+            tts!!.speak(
+                msg, TextToSpeech.QUEUE_FLUSH, null,
+                TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID
+            )
         }
 
         tts!!.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
@@ -711,7 +763,11 @@ class MainActivity : FlutterActivity() {
     }
 
     private fun requestPermissionFromUSer() {
-        ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.RECORD_AUDIO), REQ_CODE)
+        ActivityCompat.requestPermissions(
+            this,
+            arrayOf(android.Manifest.permission.RECORD_AUDIO),
+            REQ_CODE
+        )
     }
 
     fun GetSrcTargetLanguages() {
@@ -805,11 +861,24 @@ class MainActivity : FlutterActivity() {
         if (calendar.timeInMillis > Calendar.getInstance().timeInMillis) {
             alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             reminderBroadcaster.putExtra("currentMillis", calendar.timeInMillis)
-            val pendingIntent = PendingIntent.getBroadcast(this, nsId.toInt(), reminderBroadcaster, PendingIntent.FLAG_UPDATE_CURRENT)
+            val pendingIntent = PendingIntent.getBroadcast(
+                this,
+                nsId.toInt(),
+                reminderBroadcaster,
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                alarmManager?.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
+                alarmManager?.setAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    calendar.timeInMillis,
+                    pendingIntent
+                )
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                alarmManager?.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
+                alarmManager?.setExact(
+                    AlarmManager.RTC_WAKEUP,
+                    calendar.timeInMillis,
+                    pendingIntent
+                )
             } else {
                 alarmManager?.set(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
             }
@@ -824,7 +893,12 @@ class MainActivity : FlutterActivity() {
         reminderBroadcaster.putExtra("nsid", nsId.toInt())
         reminderBroadcaster.putExtra("isCancel", true)
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val pendingIntent = PendingIntent.getBroadcast(this, nsId.toInt(), reminderBroadcaster, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent = PendingIntent.getBroadcast(
+            this,
+            nsId.toInt(),
+            reminderBroadcaster,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
         alarmManager.cancel(pendingIntent)
     }
 

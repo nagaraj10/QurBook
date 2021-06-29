@@ -1,4 +1,5 @@
 import 'package:myfhb/authentication/constants/constants.dart';
+
 class ErrorModelResponse {
   int status;
   bool success;
@@ -10,6 +11,12 @@ class ErrorModelResponse {
     status = json[strStatus];
     success = json[strIsSuccess];
     message = json[strmessage];
+    if (json['diagnostics'] != null) {
+      final diagnostics = json['diagnostics'];
+      if (diagnostics['message'] != null) {
+        message = json['message'];
+      }
+    }
   }
 
   Map<String, dynamic> toJson() {

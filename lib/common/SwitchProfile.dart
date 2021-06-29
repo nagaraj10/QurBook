@@ -133,7 +133,7 @@ class SwitchProfile {
   }
 
   getUserProfileData() async {
-    CommonUtil.showLoadingDialog(context, keyLoader, variable.strRelaoding);
+    CommonUtil.showLoadingDialog(context, keyLoader, variable.strSwitchingUser);
     if (_myProfileBloc != null) {
       _myProfileBloc = null;
       _myProfileBloc = new MyProfileBloc();

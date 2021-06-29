@@ -77,6 +77,7 @@ class PlanDetail extends State<MyPlanDetailView> {
   String catIcon = '';
   InAppWebViewController webView;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     super.initState();
@@ -493,6 +494,8 @@ class PlanDetail extends State<MyPlanDetailView> {
                                   packageId: packageId,
                                   isSubscribed: issubscription,
                                   isFrom: strIsFromSubscibe,
+                                  feeZero: price ==
+                                      '' ||price == '0',
                                   providerId: providerId, refresh: () {
                                 Navigator.of(context).pop();
                               });
@@ -528,7 +531,7 @@ class PlanDetail extends State<MyPlanDetailView> {
                     ),
                     onPressed: () async {
                       // open profile page
-                      Navigator.of(context).pop();
+                      //Navigator.of(context).pop();
                       Navigator.of(context).pop();
                     },
                     borderSide: BorderSide(

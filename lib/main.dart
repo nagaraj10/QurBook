@@ -36,6 +36,7 @@ import 'package:myfhb/src/ui/MyRecordsArguments.dart';
 import 'package:myfhb/src/ui/SplashScreen.dart';
 import 'package:myfhb/src/ui/NetworkScreen.dart';
 import 'package:myfhb/src/ui/bot/view/ChatScreen.dart' as bot;
+import 'package:myfhb/src/ui/bot/view/sheela_arguments.dart';
 import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
@@ -150,8 +151,15 @@ Future<void> main() async {
   CommonUtil().isFirstTime();
 
   runApp(
-    provider.ChangeNotifierProvider<RegimentViewModel>(
-      create: (_) => RegimentViewModel(),
+    provider.MultiProvider(
+      providers: [
+        provider.ChangeNotifierProvider<ChatScreenViewModel>(
+          create: (_) => ChatScreenViewModel(),
+        ),
+        provider.ChangeNotifierProvider<RegimentViewModel>(
+          create: (_) => RegimentViewModel(),
+        ),
+      ],
       child: MyFHB(),
     ),
   );
@@ -330,17 +338,30 @@ class _MyFHBState extends State<MyFHB> {
             var rawBody = passedValArr[2]?.split('|')[1];
             String sheela_lang =
                 PreferenceUtil.getStringValue(Constants.SHEELA_LANG);
-            if (sheela_lang != null && sheela_lang != '') {
-              Get.to(bot.ChatScreen(
-                isSheelaAskForLang: false,
-                langCode: sheela_lang,
-                rawMessage:rawBody,
-              ));
+            if ((Provider.of<ChatScreenViewModel>(context, listen: false)
+                        ?.conversations
+                        ?.length ??
+                    0) >
+                0) {
+              Provider.of<ChatScreenViewModel>(context, listen: false)
+                  ?.startMayaAutomatically(message: rawBody);
+            } else if (sheela_lang != null && sheela_lang != '') {
+              Get.toNamed(
+                routervariable.rt_Sheela,
+                arguments: SheelaArgument(
+                  isSheelaAskForLang: false,
+                  langCode: sheela_lang,
+                  rawMessage: rawBody,
+                ),
+              );
             } else {
-              Get.to(bot.ChatScreen(
-                isSheelaAskForLang: true,
-                rawMessage:rawBody,
-              ));
+              Get.toNamed(
+                routervariable.rt_Sheela,
+                arguments: SheelaArgument(
+                  isSheelaAskForLang: true,
+                  rawMessage: rawBody,
+                ),
+              );
             }
           } else {
             Get.to(SuperMaya());
@@ -558,6 +579,14 @@ class _MyFHBState extends State<MyFHB> {
         var jsonInput = {};
         jsonInput['providerRequestId'] = passedValArr[1];
         jsonInput['action'] = passedValArr[2];
+      } else if (passedValArr[0] == 'openurl') {
+        var urlInfo = passedValArr[1];
+        fbaLog(eveParams: {
+          'eventTime': '${DateTime.now()}',
+          'ns_type': 'openurl',
+          'navigationPage': 'Browser page',
+        });
+        CommonUtil().launchURL(urlInfo);
       } else if (passedValArr[4] == 'call') {
         try {
           doctorPic = passedValArr[3];
@@ -637,9 +666,9 @@ class _MyFHBState extends State<MyFHB> {
         provider.ChangeNotifierProvider<MyFamilyViewModel>(
           create: (_) => MyFamilyViewModel(),
         ),
-        provider.ChangeNotifierProvider<ChatScreenViewModel>(
-          create: (_) => ChatScreenViewModel(),
-        ),
+        // provider.ChangeNotifierProvider<ChatScreenViewModel>(
+        //   create: (_) => ChatScreenViewModel(),
+        // ),
         // provider.ChangeNotifierProvider<RegimentViewModel>(
         //   create: (_) => RegimentViewModel(),
         // ),
@@ -806,6 +835,11 @@ class _MyFHBState extends State<MyFHB> {
           //   "contextId": parsedData[1]
           // };
           return SplashScreen();
+        } else if (navRoute.split('&')[0] == 'openurl') {
+          return SplashScreen(
+            nsRoute: 'openurl',
+            bundle: navRoute.split('&')[1],
+          );
         } else {
           return StartTheCall();
         }

@@ -1,4 +1,5 @@
 import 'package:myfhb/constants/fhb_query.dart';
+import 'package:myfhb/plan_dashboard/model/CreateSubscribeModel.dart';
 import 'package:myfhb/plan_dashboard/model/subscribeModel.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'dart:convert' as convert;
@@ -22,5 +23,14 @@ class SubscribeService {
     var jsonString = convert.jsonEncode(body);
     final response = await _helper.getPlanList(qr_plan_list,jsonString);
     return SubscribeModel.fromJson(response);
+  }
+
+  Future<CreateSubscribeModel> createSubscribe(String packageId,String patientId) async {
+    var paymentInput = {};
+    paymentInput['planPackageId'] = packageId;
+    paymentInput['patientId'] = patientId;
+    var jsonString = convert.jsonEncode(paymentInput);
+    final response = await _helper.createSubscribe(qr_createSubscribe,jsonString);
+    return CreateSubscribeModel.fromJson(response);
   }
 }

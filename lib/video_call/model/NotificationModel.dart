@@ -26,6 +26,7 @@ class NotificationModel {
   String patientId;
   String patientName;
   String patientPicture;
+  String externalLink;
   CallArguments callArguments;
   Map<int, dynamic> redirectData;
 
@@ -46,7 +47,8 @@ class NotificationModel {
       this.type,
       this.eventId,
       this.rawTitle,
-      this.rawBody});
+      this.rawBody,
+      this.externalLink});
 
   Map<String, dynamic> toMap() {
     return {
@@ -64,6 +66,7 @@ class NotificationModel {
       'doctorId': doctorId,
       'username': username,
       'type': type,
+      'externalLink': externalLink
     };
   }
 
@@ -82,6 +85,7 @@ class NotificationModel {
     doctorId = message['doctorId'];
     username = message['username'];
     type = message['type'];
+    externalLink = message['externalLink'];
   }
 
   NotificationModel.fromMap(Map<String, dynamic> messageFromNative) {
@@ -156,11 +160,18 @@ class NotificationModel {
         }
         if (message[parameters.gcmEventId] != null) {
           eventId = message[parameters.gcmEventId];
+          if (message[parameters.externalLink] != null) {
+            externalLink = message[parameters.externalLink];
+          }
+          if (message[parameters.gcmExternalLink] != null) {
+            externalLink = message[parameters.gcmExternalLink];
+          }
         }
       }
     }
+
     setData(messageFromNative);
-    if (redirect.contains('|')) {
+    if (redirect != null && redirect.contains('|')) {
       final split = redirect.split('|');
       if (split.first == 'sheela') {
         redirect = split.first;
@@ -254,6 +265,12 @@ class NotificationModel {
     }
     if (message[parameters.patientPicture] != null) {
       patientPicture = message[parameters.patientPicture];
+      if (message[parameters.externalLink] != null) {
+        externalLink = message[parameters.externalLink];
+      }
+      if (message[parameters.gcmExternalLink] != null) {
+        externalLink = message[parameters.gcmExternalLink];
+      }
     }
   }
 }

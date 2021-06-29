@@ -7,6 +7,8 @@ const String strAppPackage =
     'com.ventechsolutions.myFHB'; //'com.globalmantrainnovations.myfhb';
 const String strHealthRecordChannel = 'Health Record channel';
 const String iOSAppId = '1526444520';
+const String iOSAppStoreLink =
+    'https://apps.apple.com/in/app/qurbook/id1526444520';
 //For class add_family_otp
 //web service call
 const String strSrcName = 'sourceName';
@@ -587,6 +589,8 @@ const String strLogoutMsg =
     'Stay Healthy.. See you Soon. \nSheela will be waiting to serve you.';
 const String strYes = 'Yes';
 const String strRelaoding = 'Reloading';
+const String strSwitchingUser = 'Switching User';
+
 const String strStartNow = 'Start now';
 const String strAccounts = 'Accounts';
 const String strDevices = 'Devices';

@@ -13,7 +13,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:gmiwidgetspackage/widgets/sized_box.dart';
+import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments.dart';
@@ -74,6 +77,7 @@ import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
+import 'package:myfhb/telehealth/features/Payment/PaymentPage.dart';
 import 'package:myfhb/telehealth/features/chat/view/BadgeIcon.dart';
 import 'package:myfhb/telehealth/features/chat/view/pdfiosViewer.dart';
 import 'package:package_info/package_info.dart';
@@ -1709,7 +1713,7 @@ class CommonUtil {
                         color: Color(getMyPrimaryColor()),
                       ),
                     ),
-                    onPressed: () => _launchURL(APP_STORE_URL),
+                    onPressed: () => launchURL(APP_STORE_URL),
                   ),
                   !isForceUpdate
                       ? FlatButton(
@@ -1721,7 +1725,7 @@ class CommonUtil {
                           ),
                           onPressed: () => Navigator.pop(context),
                         )
-                      : Container(),
+                      : SizedBox.shrink(),
                 ],
               )
             : new AlertDialog(
@@ -1741,7 +1745,7 @@ class CommonUtil {
                         color: Color(getMyPrimaryColor()),
                       ),
                     ),
-                    onPressed: () => _launchURL(PLAY_STORE_URL),
+                    onPressed: () => launchURL(PLAY_STORE_URL),
                   ),
                   !isForceUpdate
                       ? FlatButton(
@@ -1753,14 +1757,14 @@ class CommonUtil {
                           ),
                           onPressed: () => Navigator.pop(context),
                         )
-                      : Container(),
+                      : SizedBox.shrink(),
                 ],
               );
       },
     );
   }
 
-  _launchURL(String url) async {
+  launchURL(String url) async {
     if (await canLaunch(url)) {
       await launch(url);
     } else {
@@ -1905,6 +1909,7 @@ class CommonUtil {
       String isSubscribed,
       String providerId,
       String isFrom,
+      bool feeZero,
       Function() refresh}) async {
     var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     showLoadingDialog(context, _keyLoader, variable.Please_Wait);
@@ -1919,6 +1924,7 @@ class CommonUtil {
           isSubscribed: isSubscribed,
           providerId: providerId,
           isFrom: isFrom,
+          feeZero: feeZero,
           refresh: refresh);
     } else {
       FlutterToast().getToast(noGender, Colors.red);
@@ -1930,6 +1936,7 @@ class CommonUtil {
       String isSubscribed,
       String providerId,
       String isFrom,
+      bool feeZero,
       Function() refresh}) {
     if (myProfile != null) {
       if (myProfile.isSuccess) {
@@ -1947,6 +1954,7 @@ class CommonUtil {
                           packageId: packageId,
                           isSubscribed: isSubscribed,
                           providerId: providerId,
+                          feeZero: feeZero,
                           refresh: refresh);
                     } else {
                       mCustomAlertDialog(context,
@@ -1954,6 +1962,7 @@ class CommonUtil {
                           packageId: packageId,
                           isSubscribed: isSubscribed,
                           providerId: providerId,
+                          feeZero: feeZero,
                           refresh: refresh);
                     }
                   } else {
@@ -1962,6 +1971,7 @@ class CommonUtil {
                         packageId: packageId,
                         isSubscribed: isSubscribed,
                         providerId: providerId,
+                        feeZero: feeZero,
                         refresh: refresh);
                   }
                 }
@@ -1980,6 +1990,7 @@ class CommonUtil {
                               packageId: packageId,
                               isSubscribed: isSubscribed,
                               providerId: providerId,
+                              feeZero: feeZero,
                               refresh: refresh);
                         } else {
                           mCustomAlertDialog(context,
@@ -1987,6 +1998,7 @@ class CommonUtil {
                               packageId: packageId,
                               providerId: providerId,
                               isSubscribed: isSubscribed,
+                              feeZero: feeZero,
                               refresh: refresh);
                         }
                       } else {
@@ -1995,6 +2007,7 @@ class CommonUtil {
                             packageId: packageId,
                             providerId: providerId,
                             isSubscribed: isSubscribed,
+                            feeZero: feeZero,
                             refresh: refresh);
                       }
                     } else {
@@ -2003,6 +2016,7 @@ class CommonUtil {
                           packageId: packageId,
                           providerId: providerId,
                           isSubscribed: isSubscribed,
+                          feeZero: feeZero,
                           refresh: refresh);
                     }
                   } else {
@@ -2011,6 +2025,7 @@ class CommonUtil {
                         packageId: packageId,
                         providerId: providerId,
                         isSubscribed: isSubscribed,
+                        feeZero: feeZero,
                         refresh: refresh);
                   }
                 }
@@ -2020,6 +2035,7 @@ class CommonUtil {
                     packageId: packageId,
                     providerId: providerId,
                     isSubscribed: isSubscribed,
+                    feeZero: feeZero,
                     refresh: refresh);
               }
             } else {
@@ -2028,6 +2044,7 @@ class CommonUtil {
                   packageId: packageId,
                   providerId: providerId,
                   isSubscribed: isSubscribed,
+                  feeZero: feeZero,
                   refresh: refresh);
             }
           } else {
@@ -2036,6 +2053,7 @@ class CommonUtil {
                 packageId: packageId,
                 providerId: providerId,
                 isSubscribed: isSubscribed,
+                feeZero: feeZero,
                 refresh: refresh);
           }
         } else {
@@ -2044,6 +2062,7 @@ class CommonUtil {
               packageId: packageId,
               providerId: providerId,
               isSubscribed: isSubscribed,
+              feeZero: feeZero,
               refresh: refresh);
         }
       } else {
@@ -2052,6 +2071,7 @@ class CommonUtil {
             packageId: packageId,
             providerId: providerId,
             isSubscribed: isSubscribed,
+            feeZero: feeZero,
             refresh: refresh);
       }
     } else {
@@ -2060,6 +2080,7 @@ class CommonUtil {
           packageId: packageId,
           providerId: providerId,
           isSubscribed: isSubscribed,
+          feeZero: feeZero,
           refresh: refresh);
     }
   }
@@ -2069,6 +2090,7 @@ class CommonUtil {
       {String packageId,
       String isSubscribed,
       String providerId,
+      bool feeZero,
       Function() refresh}) {
     String address1 = userAddressCollection.addressLine1 != null
         ? userAddressCollection.addressLine1
@@ -2129,6 +2151,7 @@ class CommonUtil {
               isSubscribed: isSubscribed,
               providerId: providerId,
               refresh: refresh,
+              feeZero: feeZero,
               context: context);
         }
       } else {
@@ -2137,6 +2160,7 @@ class CommonUtil {
             packageId: packageId,
             isSubscribed: isSubscribed,
             providerId: providerId,
+            feeZero: feeZero,
             refresh: refresh);
       }
     } else {
@@ -2145,6 +2169,7 @@ class CommonUtil {
           packageId: packageId,
           isSubscribed: isSubscribed,
           providerId: providerId,
+          feeZero: feeZero,
           refresh: refresh);
     }
   }
@@ -2154,6 +2179,7 @@ class CommonUtil {
       String content,
       String packageId,
       String isSubscribed,
+      bool feeZero,
       Function() refresh,
       String providerId}) async {
     var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
@@ -2233,6 +2259,7 @@ class CommonUtil {
                                     packageId: packageId,
                                     providerId: providerId,
                                     isSubscribed: isSubscribed,
+                                    feeZero: feeZero,
                                     refresh: refresh));
                           },
                           borderSide: BorderSide(
@@ -2392,6 +2419,7 @@ class CommonUtil {
       String packageId,
       String isSubscribed,
       String providerId,
+      bool feeZero,
       Function() refresh}) async {
     await Get.dialog(
       AlertDialog(
@@ -2453,9 +2481,10 @@ class CommonUtil {
                   ),
                   onPressed: () async {
                     // open profile page
-                    CommonUtil.showLoadingDialog(
-                        context, _keyLoader, variable.Please_Wait);
-                    if (isSubscribed == '0') {
+                    if (feeZero) {
+                      Navigator.pop(context);
+                      CommonUtil.showLoadingDialog(
+                          context, _keyLoader, variable.Please_Wait);
                       String userId =
                           PreferenceUtil.getStringValue(Constants.KEY_USERID);
                       updateProvidersBloc
@@ -2470,30 +2499,16 @@ class CommonUtil {
                                 if (value.isSuccess) {
                                   if (value.result != null) {
                                     if (value.result.result == 'Done') {
-                                      Navigator.of(_keyLoader.currentContext,
-                                              rootNavigator: true)
-                                          .pop();
-                                      // Get.back();
-                                      // Get.back(result: 'refreshUI');
                                       Provider.of<RegimentViewModel>(
                                         context,
                                         listen: false,
                                       ).updateTabIndex(currentIndex: 3);
                                       Get.offNamedUntil(router.rt_MyPlans,
                                           (Route<dynamic> route) => false);
-                                      // refresh();
                                     } else {
                                       Navigator.of(_keyLoader.currentContext,
                                               rootNavigator: true)
                                           .pop();
-                                      // Get.back();
-                                      // Get.back(result: 'refreshUI');
-                                      Provider.of<RegimentViewModel>(
-                                        context,
-                                        listen: false,
-                                      ).updateTabIndex(currentIndex: 3);
-                                      Get.offNamedUntil(router.rt_MyPlans,
-                                          (Route<dynamic> route) => false);
                                       FlutterToast().getToast(
                                           value.result.message != null
                                               ? value.result.message
@@ -2526,38 +2541,44 @@ class CommonUtil {
                         }
                       });
                     } else {
-                      await subscribeViewModel.UnsubScribePlan(packageId)
-                          .then((value) {
-                        if (value != null) {
-                          if (value.isSuccess) {
-                            if (value.result != null) {
-                              if (value.result.result == 'Done') {
-                                Navigator.of(_keyLoader.currentContext,
-                                        rootNavigator: true)
-                                    .pop();
-                                Get.back(result: 'refreshUI');
-                                refresh();
-                              } else {
-                                Navigator.of(_keyLoader.currentContext,
-                                        rootNavigator: true)
-                                    .pop();
-                                Get.back(result: 'refreshUI');
-                                FlutterToast().getToast(
-                                    value.result.message != null
-                                        ? value.result.message
-                                        : 'UnSubscribe Failed',
-                                    Colors.red);
+                      if (isSubscribed == '0') {
+                        Navigator.pop(context);
+                        _dialogForSubscribePayment(
+                            context, providerId, packageId, false);
+                      } else {
+                        await subscribeViewModel.UnsubScribePlan(packageId)
+                            .then((value) {
+                          if (value != null) {
+                            if (value.isSuccess) {
+                              if (value.result != null) {
+                                if (value.result.result == 'Done') {
+                                  Navigator.of(_keyLoader.currentContext,
+                                          rootNavigator: true)
+                                      .pop();
+                                  Get.back(result: 'refreshUI');
+                                  refresh();
+                                } else {
+                                  Navigator.of(_keyLoader.currentContext,
+                                          rootNavigator: true)
+                                      .pop();
+                                  Get.back(result: 'refreshUI');
+                                  FlutterToast().getToast(
+                                      value.result.message != null
+                                          ? value.result.message
+                                          : 'UnSubscribe Failed',
+                                      Colors.red);
+                                }
                               }
+                            } else {
+                              Navigator.of(_keyLoader.currentContext,
+                                      rootNavigator: true)
+                                  .pop();
+                              FlutterToast()
+                                  .getToast('UnSubscribe Failed', Colors.red);
                             }
-                          } else {
-                            Navigator.of(_keyLoader.currentContext,
-                                    rootNavigator: true)
-                                .pop();
-                            FlutterToast()
-                                .getToast('UnSubscribe Failed', Colors.red);
                           }
-                        }
-                      });
+                        });
+                      }
                     }
                   },
                   borderSide: BorderSide(
@@ -2674,44 +2695,9 @@ class CommonUtil {
                             ),
                           ),
                           onPressed: () async {
-                            CommonUtil.showLoadingDialog(
-                                context, _keyLoader, variable.Please_Wait);
-                            subscribeViewModel
-                                .subScribePlan(packageId)
-                                .then((value) {
-                              if (value != null) {
-                                if (value.isSuccess) {
-                                  if (value.result != null) {
-                                    if (value.result.result == 'Done') {
-                                      Navigator.of(_keyLoader.currentContext,
-                                              rootNavigator: true)
-                                          .pop();
-                                      Get.back();
-                                      Get.back(result: 'refreshUI');
-                                      refresh();
-                                    } else {
-                                      Navigator.of(_keyLoader.currentContext,
-                                              rootNavigator: true)
-                                          .pop();
-                                      Get.back();
-                                      FlutterToast().getToast(
-                                          value.result.message != null
-                                              ? 'Unable to renew - ' +
-                                                  value.result.message
-                                              : 'Renew Failed',
-                                          Colors.red);
-                                    }
-                                  }
-                                } else {
-                                  Navigator.of(_keyLoader.currentContext,
-                                          rootNavigator: true)
-                                      .pop();
-                                  Get.back();
-                                  FlutterToast()
-                                      .getToast('Renew Failed', Colors.red);
-                                }
-                              }
-                            });
+                            Navigator.pop(context);
+                            _dialogForSubscribePayment(
+                                context, '', packageId, true);
                           },
                           borderSide: BorderSide(
                             color: Color(
@@ -2933,6 +2919,329 @@ class CommonUtil {
       doctorName = user.userName;
     }
     return doctorName?.capitalizeFirstofEach;
+  }
+
+  _dialogForSubscribePayment(BuildContext context, String providerId,
+      String packageId, bool isFromRenew) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            insetPadding: EdgeInsets.symmetric(horizontal: 8),
+            backgroundColor: Colors.transparent,
+            content: Container(
+              width: double.maxFinite,
+              height: 250.0,
+              child: Column(
+                children: <Widget>[
+                  Column(
+                    children: <Widget>[
+                      Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4.0),
+                        ),
+                        child: Container(
+                          height: 160,
+                          padding: EdgeInsets.all(8.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              Center(
+                                child: TextWidget(
+                                    text: redirectedToPaymentMessage,
+                                    fontsize: 16.0.sp,
+                                    fontWeight: FontWeight.w500,
+                                    colors: Colors.grey[600]),
+                              ),
+                              SizedBoxWidget(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  SizedBoxWithChild(
+                                    width: 90,
+                                    height: 40,
+                                    child: FlatButton(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12.0),
+                                          side: BorderSide(
+                                              color: Color(new CommonUtil()
+                                                  .getMyPrimaryColor()))),
+                                      color: Colors.transparent,
+                                      textColor: Color(
+                                          new CommonUtil().getMyPrimaryColor()),
+                                      padding: EdgeInsets.all(8.0),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: TextWidget(
+                                        text: 'Cancel',
+                                        fontsize: 14.0.sp,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBoxWithChild(
+                                    width: 90,
+                                    height: 40,
+                                    child: FlatButton(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12.0),
+                                          side: BorderSide(
+                                              color: Color(new CommonUtil()
+                                                  .getMyPrimaryColor()))),
+                                      color: Colors.transparent,
+                                      textColor: Color(
+                                          new CommonUtil().getMyPrimaryColor()),
+                                      padding: EdgeInsets.all(8.0),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        CommonUtil.showLoadingDialog(context,
+                                            _keyLoader, variable.Please_Wait);
+                                        String userId =
+                                            PreferenceUtil.getStringValue(
+                                                Constants.KEY_USERID);
+                                        if (isFromRenew) {
+                                          subscribeViewModel
+                                              .createSubscribePayment(packageId)
+                                              .then((value) {
+                                            if (value != null) {
+                                              if (value?.isSuccess) {
+                                                if (value?.result != null) {
+                                                  if (value?.result?.payment !=
+                                                      null) {
+                                                    if (value?.result?.payment
+                                                            ?.status ==
+                                                        'PAYITA') {
+                                                      if (value?.result
+                                                              ?.paymentGatewayDetail !=
+                                                          null) {
+                                                        if (value
+                                                                ?.result
+                                                                ?.paymentGatewayDetail
+                                                                ?.metadata !=
+                                                            null) {
+                                                          if (value
+                                                                      ?.result
+                                                                      ?.paymentGatewayDetail
+                                                                      ?.metadata
+                                                                      ?.longurl !=
+                                                                  null &&
+                                                              value
+                                                                      ?.result
+                                                                      ?.paymentGatewayDetail
+                                                                      ?.metadata
+                                                                      ?.longurl !=
+                                                                  '') {
+                                                            Navigator
+                                                                .pushReplacement(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                        builder: (context) =>
+                                                                            PaymentPage(
+                                                                              redirectUrl: value?.result?.paymentGatewayDetail?.metadata?.longurl,
+                                                                              paymentId: value?.result?.payment?.id.toString(),
+                                                                              isFromSubscribe: true,
+                                                                              closePage: (value) {
+                                                                                if (value == STR_SUCCESS) {
+                                                                                  Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+                                                                                  Provider.of<RegimentViewModel>(
+                                                                                    context,
+                                                                                    listen: false,
+                                                                                  ).updateTabIndex(currentIndex: 3);
+                                                                                  Get.offNamedUntil(router.rt_MyPlans, (Route<dynamic> route) => false);
+                                                                                } else {
+                                                                                  Navigator.pop(context);
+                                                                                }
+                                                                              },
+                                                                            )));
+                                                          }
+                                                        }
+                                                      }
+                                                    } else {
+                                                      Navigator.of(
+                                                              _keyLoader
+                                                                  .currentContext,
+                                                              rootNavigator:
+                                                                  true)
+                                                          .pop();
+                                                      FlutterToast()
+                                                        ..getToast(
+                                                            'Renew Failed',
+                                                            Colors.red);
+                                                    }
+                                                  } else {
+                                                    Navigator.of(
+                                                            _keyLoader
+                                                                .currentContext,
+                                                            rootNavigator: true)
+                                                        .pop();
+                                                    FlutterToast()
+                                                      ..getToast('Renew Failed',
+                                                          Colors.red);
+                                                  }
+                                                }
+                                              } else {
+                                                Navigator.of(
+                                                        _keyLoader
+                                                            .currentContext,
+                                                        rootNavigator: true)
+                                                    .pop();
+                                                FlutterToast()
+                                                  ..getToast('Renew Failed',
+                                                      Colors.red);
+                                              }
+                                            }
+                                          });
+                                        } else {
+                                          updateProvidersBloc
+                                              .mappingHealthOrg(
+                                                  providerId, userId)
+                                              .then((value) {
+                                            if (value != null) {
+                                              if (value.success) {
+                                                subscribeViewModel
+                                                    .createSubscribePayment(
+                                                        packageId)
+                                                    .then((value) {
+                                                  if (value != null) {
+                                                    if (value?.isSuccess) {
+                                                      if (value?.result !=
+                                                          null) {
+                                                        if (value?.result
+                                                                ?.payment !=
+                                                            null) {
+                                                          if (value
+                                                                  ?.result
+                                                                  ?.payment
+                                                                  ?.status ==
+                                                              'PAYITA') {
+                                                            if (value?.result
+                                                                    ?.paymentGatewayDetail !=
+                                                                null) {
+                                                              if (value
+                                                                      ?.result
+                                                                      ?.paymentGatewayDetail
+                                                                      ?.metadata !=
+                                                                  null) {
+                                                                if (value
+                                                                            ?.result
+                                                                            ?.paymentGatewayDetail
+                                                                            ?.metadata
+                                                                            ?.longurl !=
+                                                                        null &&
+                                                                    value
+                                                                            ?.result
+                                                                            ?.paymentGatewayDetail
+                                                                            ?.metadata
+                                                                            ?.longurl !=
+                                                                        '') {
+                                                                  Navigator.pushReplacement(
+                                                                      Get.context,
+                                                                      MaterialPageRoute(
+                                                                          builder: (context) => PaymentPage(
+                                                                                redirectUrl: value?.result?.paymentGatewayDetail?.metadata?.longurl,
+                                                                                paymentId: value?.result?.payment?.id?.toString(),
+                                                                                isFromSubscribe: true,
+                                                                              )));
+                                                                }
+                                                              } else {
+                                                                Navigator.of(
+                                                                        _keyLoader
+                                                                            .currentContext,
+                                                                        rootNavigator:
+                                                                            true)
+                                                                    .pop();
+                                                                FlutterToast()
+                                                                  ..getToast(
+                                                                      'Subscribe Failed',
+                                                                      Colors
+                                                                          .red);
+                                                              }
+                                                            }
+                                                          } else {
+                                                            Navigator.of(
+                                                                    _keyLoader
+                                                                        .currentContext,
+                                                                    rootNavigator:
+                                                                        true)
+                                                                .pop();
+                                                            FlutterToast()
+                                                              ..getToast(
+                                                                  'Subscribe Failed',
+                                                                  Colors.red);
+                                                          }
+                                                        } else {
+                                                          Navigator.of(
+                                                                  _keyLoader
+                                                                      .currentContext,
+                                                                  rootNavigator:
+                                                                      true)
+                                                              .pop();
+                                                          FlutterToast()
+                                                            ..getToast(
+                                                                'Subscribe Failed',
+                                                                Colors.red);
+                                                        }
+                                                      }
+                                                    } else {
+                                                      Navigator.of(
+                                                              _keyLoader
+                                                                  .currentContext,
+                                                              rootNavigator:
+                                                                  true)
+                                                          .pop();
+                                                      FlutterToast()
+                                                        ..getToast(
+                                                            'Subscribe Failed',
+                                                            Colors.red);
+                                                    }
+                                                  }
+                                                });
+                                              } else {
+                                                Navigator.of(
+                                                        _keyLoader
+                                                            .currentContext,
+                                                        rootNavigator: true)
+                                                    .pop();
+                                                FlutterToast().getToast(
+                                                    'Subscribe Map Failed',
+                                                    Colors.red);
+                                              }
+                                            } else {
+                                              Navigator.of(
+                                                      _keyLoader.currentContext,
+                                                      rootNavigator: true)
+                                                  .pop();
+                                              FlutterToast().getToast(
+                                                  'Subscribe Map Failed',
+                                                  Colors.red);
+                                            }
+                                          });
+                                        }
+                                      },
+                                      child: TextWidget(
+                                        text: ok,
+                                        fontsize: 14.0.sp,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          );
+        });
   }
 }
 
