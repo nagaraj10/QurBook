@@ -439,16 +439,21 @@ class _HealthOrganizationState extends State<HealthOrganization> {
   Widget getCSRDiscount(String fees) {
     Widget widget;
     if (fees != null && fees != '') {
-      widget = Container(
-        child: Center(
-          child: Text('Discount ' + commonWidgets.getMoneyWithForamt(fees) + '%',
-              style: TextStyle(
-                  fontSize: 16.0.sp,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.red),
-              textAlign: TextAlign.center),
-        ),
-      );
+      if (fees != '0.00' && fees != '0') {
+        widget = Container(
+          child: Center(
+            child: Text(
+                'Discount ' + commonWidgets.getMoneyWithForamt(fees) + '%',
+                style: TextStyle(
+                    fontSize: 16.0.sp,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.red),
+                textAlign: TextAlign.center),
+          ),
+        );
+      } else {
+        widget = SizedBox.shrink();
+      }
     } else {
       widget = SizedBox.shrink();
     }

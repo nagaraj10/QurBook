@@ -865,36 +865,40 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   Widget getCSRCheckBox(String discount, String originalFees) {
     Widget widget;
     if (discount != null && discount != '') {
-      widget = Container(
-        child: Center(
-          child: CheckboxListTile(
-            title: Text("Qurhealth Discount (" +
-                commonWidgets.getMoneyWithForamt(discount) +
-                '%)'),
-            value: checkedValue,
-            activeColor: Colors.green,
-            onChanged: (newValue) {
-              setState(() {
-                checkedValue = newValue;
-                if (checkedValue) {
-                  INR_Price = getDiscountedFee(
-                      double.parse(discount), double.parse(originalFees));
-                  if (INR_Price == '0' || INR_Price == '0.00') {
-                    btnLabelChange = bookNow;
+      if (discount != '0.00' && discount != '0') {
+        widget = Container(
+          child: Center(
+            child: CheckboxListTile(
+              title: Text("Qurhealth Discount (" +
+                  commonWidgets.getMoneyWithForamt(discount) +
+                  '%)'),
+              value: checkedValue,
+              activeColor: Colors.green,
+              onChanged: (newValue) {
+                setState(() {
+                  checkedValue = newValue;
+                  if (checkedValue) {
+                    INR_Price = getDiscountedFee(
+                        double.parse(discount), double.parse(originalFees));
+                    if (INR_Price == '0' || INR_Price == '0.00') {
+                      btnLabelChange = bookNow;
+                    } else {
+                      btnLabelChange = payNow;
+                    }
                   } else {
+                    INR_Price = originalFees;
                     btnLabelChange = payNow;
                   }
-                } else {
-                  INR_Price = originalFees;
-                  btnLabelChange = payNow;
-                }
-              });
-            },
-            controlAffinity:
-                ListTileControlAffinity.leading, //  <-- leading Checkbox
+                });
+              },
+              controlAffinity:
+                  ListTileControlAffinity.leading, //  <-- leading Checkbox
+            ),
           ),
-        ),
-      );
+        );
+      } else {
+        widget = SizedBox.shrink();
+      }
     } else {
       widget = SizedBox.shrink();
     }
