@@ -596,6 +596,12 @@ class _VerifyPatientState extends State<VerifyPatient> {
     decodesstring =
         await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     saveuser.auth_token = decodesstring;
+    try{
+      ApiBaseHelper apiBaseHelper=new ApiBaseHelper();
+      var res= apiBaseHelper.updateLastVisited();
+    }catch(e){
+
+    }
     if (widget.from == strFromSignUp) {
       if (widget.userConfirm) {
         userId = widget.userId;
