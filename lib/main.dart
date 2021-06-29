@@ -31,6 +31,7 @@ import 'package:myfhb/schedules/add_reminders.dart';
 import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
 import 'package:myfhb/src/model/Category/catergory_result.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
+import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/src/ui/Dashboard.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/ui/MyRecordsArguments.dart';
@@ -102,6 +103,7 @@ Future<void> main() async {
 
   PreferenceUtil.init();
 
+
   await DatabaseUtil.getDBLength().then((length) {
     if (length == 0) {
       DatabaseUtil.insertCountryMetricsData();
@@ -167,6 +169,8 @@ Future<void> main() async {
 
   // await saveToPreference();
   //await PreferenceUtil.saveString(Constants.KEY_AUTHTOKEN, Constants.AuthToken);
+
+
 }
 
 void saveToPreference() async {
@@ -258,6 +262,9 @@ class _MyFHBState extends State<MyFHB> {
     CommonUtil.askPermissionForCameraAndMic();
     getMyRoute();
     _enableTimer();
+
+    ApiBaseHelper apiBaseHelper=new ApiBaseHelper();
+    var res= apiBaseHelper.updateLastVisited();
     isAlreadyLoaded = true;
     if (Platform.isIOS) {
       // Push Notifications

@@ -42,7 +42,7 @@ class ApiBaseHelper {
   final String _baseUrl = Constants.BASE_URL;
   final String _baseUrlDeviceReading = CommonUtil.BASEURL_DEVICE_READINGS;
 
-  String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+ // String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
   HeaderRequest headerRequest = new HeaderRequest();
   ErrorMap errorMap = new ErrorMap();
@@ -170,12 +170,12 @@ class ApiBaseHelper {
     return response.data;
   }
 
-  Future<dynamic> updateTeleHealthProvidersNew(
-      String url, String jsonString) async {
+  Future<dynamic> updateTeleHealthProvidersNew(String url,
+      String jsonString) async {
     Dio dio = new Dio();
     dio.options.headers[variable.straccept] = variable.strAcceptVal;
     dio.options.headers[variable.strAuthorization] =
-        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     var response = await dio.put(_baseUrl + url, data: jsonString);
     print(response.data);
@@ -420,7 +420,7 @@ class ApiBaseHelper {
       case 200:
         var responseJson;
         if (response.headers[variable.strcontenttype] ==
-                variable.file_img_jpg ||
+            variable.file_img_jpg ||
             response.headers[variable.strcontenttype] ==
                 variable.file_img_png ||
             response.headers[variable.strcontenttype] ==
@@ -524,12 +524,14 @@ class ApiBaseHelper {
       dio.options.headers[variable.straccept] = variable.strAcceptVal;
       dio.options.headers[variable.strcontenttype] = variable.strcntVal;
       dio.options.headers[variable.strauthorization] = authToken;
-      String fileNoun = file.path.split('/').last;
+      String fileNoun = file.path
+          .split('/')
+          .last;
 
       FormData formData = new FormData.fromMap({
         parameters.strmediaMetaId: metaID,
         parameters.strfile:
-            await MultipartFile.fromFile(file.path, filename: fileNoun.trim())
+        await MultipartFile.fromFile(file.path, filename: fileNoun.trim())
       });
       response = await dio.post(_baseUrl + url, data: formData);
 
@@ -539,8 +541,8 @@ class ApiBaseHelper {
     }
   }
 
-  Future<dynamic> signUpPage(
-      String url, Map<String, dynamic> mapForSignUp) async {
+  Future<dynamic> signUpPage(String url,
+      Map<String, dynamic> mapForSignUp) async {
     var responseJson;
     try {
       Dio dio = new Dio();
@@ -587,6 +589,8 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> updateFamilyUserProfile(String url, String query) async {
+    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+
     Dio dio = new Dio();
     var responseJson;
 
@@ -617,8 +621,8 @@ class ApiBaseHelper {
     return responseJson;*/
   }
 
-  Future<dynamic> updateRelationShipUserInFamilyLinking(
-      String url, String jsonData) async {
+  Future<dynamic> updateRelationShipUserInFamilyLinking(String url,
+      String jsonData) async {
     var responseJson;
     print(url);
     print(jsonData);
@@ -648,8 +652,8 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<dynamic> saveImageToServerClone1(
-      String url, File file, String jsonBody) async {
+  Future<dynamic> saveImageToServerClone1(String url, File file,
+      String jsonBody) async {
     var response;
     try {
       String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
@@ -659,12 +663,14 @@ class ApiBaseHelper {
       //dio.options.headers[variable.straccept] = variable.strAcceptVal;
       dio.options.headers[variable.strContentType] = variable.strcntVal;
       dio.options.headers[variable.strauthorization] = authToken;
-      String fileNoun = file.path.split('/').last;
+      String fileNoun = file.path
+          .split('/')
+          .last;
 
       Map<String, dynamic> mapForSignUp = new Map();
       mapForSignUp[parameters.strSections] = url;
       mapForSignUp[parameters.strprofilePic] =
-          await MultipartFile.fromFile(file.path, filename: fileNoun);
+      await MultipartFile.fromFile(file.path, filename: fileNoun);
 
       FormData formData = new FormData.fromMap(mapForSignUp);
       response = await dio.post(_baseUrl + jsonBody, data: formData);
@@ -707,8 +713,8 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<List<dynamic>> getDocumentImageListOld(
-      String url, List<MediaMasterIds> metaMasterIdList) async {
+  Future<List<dynamic>> getDocumentImageListOld(String url,
+      List<MediaMasterIds> metaMasterIdList) async {
     var imagesList = new List<dynamic>();
     String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
@@ -727,8 +733,8 @@ class ApiBaseHelper {
     return imagesList;
   }
 
-  Future<List<ImageDocumentResponse>> getDocumentImageList(
-      String url, List<MediaMasterIds> metaMasterIdList) async {
+  Future<List<ImageDocumentResponse>> getDocumentImageList(String url,
+      List<MediaMasterIds> metaMasterIdList) async {
     var imagesList = new List<ImageDocumentResponse>();
     String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
@@ -799,7 +805,9 @@ class ApiBaseHelper {
 
         for (var image in imagePaths) {
           File fileName = new File(image);
-          String fileNoun = fileName.path.split('/').last;
+          String fileNoun = fileName.path
+              .split('/')
+              .last;
           formData.files.addAll([
             MapEntry(
                 "fileName",
@@ -990,7 +998,7 @@ class ApiBaseHelper {
     var responseJson;
     try {
       final response =
-          await http.get(_baseUrlDeviceReading + url, headers: header);
+      await http.get(_baseUrlDeviceReading + url, headers: header);
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
@@ -998,14 +1006,14 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<dynamic> postDeviceId(
-      String url, String jsonBody, bool isActive) async {
+  Future<dynamic> postDeviceId(String url, String jsonBody,
+      bool isActive) async {
     Map<String, String> requestHeadersAuthAccept = new Map();
     requestHeadersAuthAccept['accept'] = 'application/json';
     requestHeadersAuthAccept['Content-type'] = 'application/json';
 
     requestHeadersAuthAccept['Authorization'] =
-        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     var responseJson;
     try {
@@ -1030,7 +1038,7 @@ class ApiBaseHelper {
 
     requestHeadersAuthContent['Content-type'] = 'application/json';
     requestHeadersAuthContent['authorization'] =
-        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     try {
       final response = await http.post(
         _baseUrl + url,
@@ -1044,8 +1052,8 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<GetRecordIdsFilter> getMetaIdURL(
-      List<String> recordIds, String patientId) async {
+  Future<GetRecordIdsFilter> getMetaIdURL(List<String> recordIds,
+      String patientId) async {
     var inputBody = {};
     inputBody[strUserId] = patientId;
     inputBody[HEALTH_RECORDIDS] = recordIds;
@@ -1148,7 +1156,7 @@ class ApiBaseHelper {
   Future<dynamic> createMediaData(String url, String payload,
       List<String> imagePaths, String audioPath, String id) async {
     String authToken =
-        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     String userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     Dio dio = new Dio();
@@ -1165,7 +1173,9 @@ class ApiBaseHelper {
 
       for (var image in imagePaths) {
         File fileName = new File(image);
-        String fileNoun = fileName.path.split('/').last;
+        String fileNoun = fileName.path
+            .split('/')
+            .last;
         formData.files.addAll([
           MapEntry("fileName",
               await MultipartFile.fromFile(fileName.path, filename: fileNoun)),
@@ -1174,7 +1184,9 @@ class ApiBaseHelper {
 
       if (audioPath != null && audioPath != '') {
         File fileName = new File(audioPath);
-        String fileNoun = fileName.path.split('/').last;
+        String fileNoun = fileName.path
+            .split('/')
+            .last;
         formData.files.addAll([
           MapEntry("fileName",
               await MultipartFile.fromFile(fileName.path, filename: fileNoun)),
@@ -1186,7 +1198,9 @@ class ApiBaseHelper {
 
       if (audioPath != null && audioPath != '') {
         File fileName = new File(audioPath);
-        String fileNoun = fileName.path.split('/').last;
+        String fileNoun = fileName.path
+            .split('/')
+            .last;
         formData.files.addAll([
           MapEntry("fileName",
               await MultipartFile.fromFile(fileName.path, filename: fileNoun)),
@@ -1213,7 +1227,7 @@ class ApiBaseHelper {
   Future<dynamic> updateHealthRecords(String url, String payload,
       List<String> imagePaths, String audioPath, String metaId) async {
     String authToken =
-        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     String userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     Dio dio = new Dio();
@@ -1231,7 +1245,9 @@ class ApiBaseHelper {
 
       for (var image in imagePaths) {
         File fileName = new File(image);
-        String fileNoun = fileName.path.split('/').last;
+        String fileNoun = fileName.path
+            .split('/')
+            .last;
         formData.files.addAll([
           MapEntry("fileName",
               await MultipartFile.fromFile(fileName.path, filename: fileNoun)),
@@ -1240,7 +1256,9 @@ class ApiBaseHelper {
 
       if (audioPath != null && audioPath != '') {
         File fileName = new File(audioPath);
-        String fileNoun = fileName.path.split('/').last;
+        String fileNoun = fileName.path
+            .split('/')
+            .last;
         formData.files.addAll([
           MapEntry("fileName",
               await MultipartFile.fromFile(fileName.path, filename: fileNoun)),
@@ -1255,7 +1273,9 @@ class ApiBaseHelper {
       });
       if (audioPath != null && audioPath != '') {
         File fileName = new File(audioPath);
-        String fileNoun = fileName.path.split('/').last;
+        String fileNoun = fileName.path
+            .split('/')
+            .last;
         formData.files.addAll([
           MapEntry("fileName",
               await MultipartFile.fromFile(fileName.path, filename: fileNoun)),
@@ -1323,9 +1343,11 @@ class ApiBaseHelper {
 
   Future<dynamic> uploadUserProfilePicToServer(String url, File image) async {
     String authToken =
-        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     //String userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    String filename = image.path.split('/').last;
+    String filename = image.path
+        .split('/')
+        .last;
     String fileType = filename.split('.')[1];
     Dio dio = new Dio();
     dio.options.headers['content-type'] = 'multipart/form-data';
@@ -1396,7 +1418,7 @@ class ApiBaseHelper {
 
     requestHeadersAuthContent['Content-type'] = 'application/json';
     requestHeadersAuthContent['authorization'] =
-        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     try {
       final response = await http.put(
         _baseUrl + url,
@@ -1475,8 +1497,8 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<dynamic> saveRegimentMedia(
-      String url, String imagePaths, String userId) async {
+  Future<dynamic> saveRegimentMedia(String url, String imagePaths,
+      String userId) async {
     var response;
     try {
       String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
@@ -1493,7 +1515,9 @@ class ApiBaseHelper {
         });
 
         File fileName = new File(imagePaths);
-        String fileNoun = fileName.path.split('/').last;
+        String fileNoun = fileName.path
+            .split('/')
+            .last;
         formData.files.addAll([
           MapEntry("file",
               await MultipartFile.fromFile(fileName.path, filename: fileNoun)),
@@ -1588,6 +1612,36 @@ class ApiBaseHelper {
     }
     return responseJson;
   }
+
+  Future<dynamic> updateLastVisited() async {
+    try {
+      String userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      DateTime dateTime = DateTime.now();
+      var responseJson;
+
+      if (userID != null && userID != "") {
+        Map<String, String> jsobBodyMap = new Map();
+        jsobBodyMap['userId'] = userID;
+        jsobBodyMap['lastVisitedDatetimeUtc'] = dateTime.toUtc().toString();
+        jsobBodyMap['statusType'] = "lastVisitedDate";
+        try {
+          final response = await http.put(
+              _baseUrl + "user/update-last-visited-details",
+              body: json.encode(jsobBodyMap),
+              headers: await headerRequest.getRequestHeadersAuthContent());
+          print(response.body + " ***********************bodyy");
+          responseJson = _returnResponse(response);
+        } on SocketException {
+          throw FetchDataException(variable.strNoInternet);
+        }
+        return responseJson;
+      }
+    }catch(e){
+
+    }
+
+  }
+
 }
 
 void exitFromApp() async {
