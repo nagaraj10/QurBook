@@ -20,6 +20,7 @@ class AddFamilyUserInfoArguments {
   String isSubscribed;
   String providerId;
   Function () refresh;
+  bool feeZero;
 
   AddFamilyUserInfoArguments(
       {this.addFamilyUserInfo,
@@ -37,5 +38,5 @@ class AddFamilyUserInfoArguments {
       this.packageId,
       this.isSubscribed,
       this.providerId,
-      this.refresh});
+      this.refresh,this.feeZero});
 }

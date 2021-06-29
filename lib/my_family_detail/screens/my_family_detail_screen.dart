@@ -1077,8 +1077,8 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                 icon: new Icon(Icons.calendar_today),
                 onPressed: () {},
               ),
-              labelText: CommonConstants.date_of_birth,
-              hintText: CommonConstants.date_of_birth,
+              labelText: CommonConstants.year_of_birth_with_star,
+              hintText: CommonConstants.year_of_birth,
               labelStyle: TextStyle(
                   fontSize: 14.0.sp,
                   fontWeight: FontWeight.w400,

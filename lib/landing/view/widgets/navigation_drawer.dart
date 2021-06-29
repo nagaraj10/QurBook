@@ -169,6 +169,21 @@ class NavigationDrawer extends StatelessWidget {
                         },
                       ),
                       DrawerTile(
+                        title: variable.strRefer_friend,
+                        // iconWidget: SvgPicture.asset(
+                        //   variable.icon_logout,
+                        //   color: Colors.black54,
+                        // ),
+                        iconWidget: Image.asset(
+                          variable.icon_refer_friend_icon,
+                          width: 24.sp,
+                          height: 24.sp,
+                        ),
+                        onPressed: () {
+                          CommonUtil().accessContactsDialog();
+                        },
+                      ),
+                      DrawerTile(
                         title: variable.strLogout,
                         iconWidget: SvgPicture.asset(
                           variable.icon_logout,

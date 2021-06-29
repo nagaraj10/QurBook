@@ -648,23 +648,25 @@ class _CategoryState extends State<CategoryList> {
                                             if (planListResult[inx.index]
                                                     ?.isSubscribed ==
                                                 '0') {
-                                              CommonUtil()
-                                                  .profileValidationCheck(
-                                                      context,
-                                                      packageId:
-                                                          planListResult[inx
-                                                                  .index]
-                                                              ?.packageid,
-                                                      isSubscribed:
-                                                          planListResult[
+                                              CommonUtil().profileValidationCheck(
+                                                  context,
+                                                  packageId:
+                                                      planListResult[inx.index]
+                                                          ?.packageid,
+                                                  isSubscribed:
+                                                      planListResult[inx.index]
+                                                          ?.isSubscribed,
+                                                  providerId:
+                                                      planListResult[inx.index]
+                                                          ?.plinkid,
+                                                  isFrom: strIsFromSubscibe,
+                                                  feeZero: planListResult[
                                                                   inx.index]
-                                                              ?.isSubscribed,
-                                                      providerId:
-                                                          planListResult[
-                                                                  inx.index]
-                                                              ?.plinkid,
-                                                      isFrom: strIsFromSubscibe,
-                                                      refresh: () {
+                                                              ?.price ==
+                                                          '' ||
+                                                      planListResult[inx.index]
+                                                              ?.price ==
+                                                          '0', refresh: () {
                                                 setState(() {});
                                               });
                                             }

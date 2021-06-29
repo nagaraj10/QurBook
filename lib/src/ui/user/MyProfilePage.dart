@@ -541,9 +541,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
                     controller: dob,
                     enabled: false,
                     decoration: InputDecoration(
-                        hintText: CommonConstants.date_of_birth,
+                        hintText: CommonConstants.year_of_birth,
                         hintStyle: TextStyle(fontSize: 16.0.sp),
-                        labelText: CommonConstants.date_of_birth),
+                        labelText: CommonConstants.year_of_birth_with_star),
                   ),
                 ),
                 Padding(

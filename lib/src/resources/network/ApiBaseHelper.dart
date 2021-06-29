@@ -1575,6 +1575,19 @@ class ApiBaseHelper {
       throw InnerException('No Data Found');
     }
   }
+
+  Future<dynamic> createSubscribe(String url, String jsonString) async {
+    var responseJson;
+    try {
+      final response = await http.post(_baseUrl + url,
+          headers: await headerRequest.getRequestHeadersTimeSlot(),
+          body: jsonString);
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
 }
 
 void exitFromApp() async {

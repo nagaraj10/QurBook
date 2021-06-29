@@ -96,6 +96,7 @@ const String qr_doctorid = 'doctorId';
 const String qr_getSlots = 'doctor/checkavailability';
 const String qr_bookAppointment = 'appointment';
 const String qr_update_payment = 'payment/update-payment-status/';
+const String qr_update_payment_subscribe = 'payment/plan-subscription-update-payment-status';
 
 const String qr_created_by = 'createdBy';
 const String qr_booked_for = 'bookedFor';
@@ -232,6 +233,7 @@ const String qr_getUserSearchList = 'Action=GetUserProviderList';
 const String qr_qEqaul = '&q=';
 const String qr_providerEqaul = '&providerid=';
 const String qr_patientEqaul = '&patientId=';
+const String qr_timeEqaul = '&time=';
 const String qr_getUserPackDetail = 'Action=GetUserPlanDetails&packageid=';
 const String qr_subscribePlan = 'Action=Subscribe&packageid=';
 const String qr_UnsubscribePlan = 'Action=UnSubscribe&packageid=';
@@ -251,3 +253,5 @@ const String qr_date = '&date=';
 const String qr_module_equal = '&module=';
 const String qr_healthOrg = 'healthOrganization';
 const String qr_all = 'all';
+
+const String qr_createSubscribe = 'payment/plan-subscription-create-payment';

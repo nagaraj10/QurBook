@@ -186,6 +186,7 @@ const String icon_how_to_use = 'assets/dashboard/how-to-use.svg';
 const String icon_my_family = 'assets/dashboard/my-family.svg';
 const String icon_my_family_menu = 'assets/dashboard/my-family-old.svg';
 const String icon_my_health_regimen = 'assets/dashboard/my-health-regimen.svg';
+const String icon_refer_friend_icon = 'assets/icons/refer_a_friend.png';
 // const String icon_check_symptoms = 'assets/dashboard/symptoms.svg';
 // const String icon_how_to_use = 'assets/dashboard/information.svg';
 // const String icon_my_family = 'assets/dashboard/home.svg';
@@ -583,6 +584,7 @@ const String st_pausedplayer = 'paused player';
 const String strNoData = 'No data Available';
 const String strViewPDF = 'View PDF';
 const String strLogout = 'Logout';
+const String strRefer_friend = 'Refer a Friend';
 const String strLogoutMsg =
     'Stay Healthy.. See you Soon. \nSheela will be waiting to serve you.';
 const String strYes = 'Yes';
