@@ -122,7 +122,7 @@ class CommonUtil {
   final String CONTENT_DISCALIMER =
       'Your selection and use of care plans is voluntary and you acknowledge that care plan(s) offered in Qurbook is based on the best practices of care coordination management specific to a health condition. Plan activities along with any coordinated care suggestions provided by care team is limited to care coordination to a plan and do not provide conclusion or any sort of clinical assessment or shall not be used to make clinical decisions or to change of medical therapies / treatments as prescribed by your physician. please contact your physician for further directions  for activities in a plan that do not apply to your health needs or not listed. Care coordination services from caregivers, Doctors, Hospitals or other healthcare providers from QurBook (collectively referred as “Care Team”) is limited to the information shared by you with care team and/or scope of your subscription. You agree to protect and indemnify Care provider(s)/Care Team/QurHealth Solutions India Pvt Ltd or our partners, on all claims of whatsoever (including but not limited to side effects, illness or sickness) against products, services, suggestions  or received from QurBook.  For emergency please contact your nearest Healthcare facility. Our care givers are available from 9 AM to 7 PM IST.';
   final String CONTENT_PROFILE_CHECK =
-      'Oops! Your profile is incomplete. Please complete the profile to subscribe to a QurPlan.';
+      'Oops! Your profile is incomplete. Please complete the profile to subscribe to a care plan.';
   final String CONTENT_UNSUBSCRIBE_PACKAGE =
       'Are you sure you want to unsubscribe?';
   final String CONTENT_RENEW_PACKAGE = 'Are you sure you want to renew?';

@@ -186,11 +186,11 @@ const String NO_DATA_OTHERS =
 const String COVER_IMG_DESC = 'Add style. \nTap here to add your favorite DP.';
 const String COVER_IMG_TITLE = 'Cover Image';
 const String HospitalDescription =
-    'Choose your Hospital and Tap to see the QurPlans offered by them';
+    'Choose your Hospital and Tap to see the care plan offered by them';
 const String SubscribeDescription =
-    'Tap on Subscribe button to enroll for the QurPlan and complete Payment Process';
+    'Tap on subscribe button to enroll for the care plan and complete Payment Process';
 const String MyPlanCard =
-    'View the list of QurPlans that you’ve Subscribed and Tap on the Plan name for more Details';
+    'View the list of care plans that you’ve subscribed and tap on the plan name for more Details';
 const String SubscribedPlans = 'Subscribed Plans';
 const String Subscribe = 'Subscribe';
 const String GoToRegimentDescription =
