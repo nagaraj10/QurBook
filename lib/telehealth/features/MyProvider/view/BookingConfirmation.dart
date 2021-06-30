@@ -864,7 +864,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
   Widget getCSRCheckBox(String discount, String originalFees) {
     Widget widget;
-    if (discount != null && discount != '') {
+    if (discount != null && discount != '' && originalFees!=null && originalFees!='') {
       if (discount != '0.00' && discount != '0') {
         widget = Container(
           child: Center(
@@ -878,6 +878,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                 setState(() {
                   checkedValue = newValue;
                   if (checkedValue) {
+                    if(originalFees.contains(',')){
+                      originalFees = originalFees.replaceAll(',','');
+                    }
                     INR_Price = getDiscountedFee(
                         double.parse(discount), double.parse(originalFees));
                     if (INR_Price == '0' || INR_Price == '0.00') {
