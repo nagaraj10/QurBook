@@ -54,10 +54,9 @@ class _CategoryState extends State<CategoryList> {
 
   Future<PlanListModel> planListModel;
   Map<String, List<PlanListResult>> planListResultMap;
+  Map<String, bool> isSelectedMap;
 
   List<PlanListResult> planListResult = [];
-
-  bool isSelected = false;
 
   @override
   void initState() {
@@ -147,7 +146,7 @@ class _CategoryState extends State<CategoryList> {
     //selectedTitle = {};
     isSubscribedOne = false;
     planListResultMap = {};
-    isSelected = false;
+    isSelectedMap = {};
     if (planList != null && planList.length > 0) {
       planList.forEach((element) {
         if (element?.metadata?.diseases == diseases) {
@@ -175,12 +174,16 @@ class _CategoryState extends State<CategoryList> {
           elementNew.packcatid,
           () => [],
         );
+        isSelectedMap.putIfAbsent(
+          elementNew.packcatid,
+          () => false,
+        );
         planList.where((elementWhere) {
           return (elementWhere?.metadata?.diseases == diseases) &&
               (elementNew?.packcatid == elementWhere?.packcatid);
         }).forEach((elementLast) {
           if (elementLast?.isSubscribed == '1') {
-            isSelected = true;
+            isSelectedMap[elementLast.packcatid] = true;
             isSubscribedOne = true;
             //selectedTitle[elementLast.packcatid].add(elementLast.title);
           }
@@ -449,10 +452,13 @@ class _CategoryState extends State<CategoryList> {
                       packageDuration:
                           planListResult[inx.index]?.packageDuration,
                       providerId: planListResult[inx.index]?.plinkid,
-                      isDisable:
-                          planListResult[inx.index]?.catselecttype == '1' &&
-                              planListResult[inx.index]?.isSubscribed == '0' &&
-                              isSelected,
+                      isDisable: (planListResult[inx.index]?.catselecttype ==
+                              '1'
+                          ? (planListResult[inx.index]?.isSubscribed == '1' ||
+                              (isSelectedMap[
+                                      planListResult[inx.index]?.packcatid] ??
+                                  false))
+                          : (planListResult[inx.index]?.isSubscribed == '1')),
                       hosIcon:
                           planListResult[inx.index]?.providerMetadata?.icon,
                       iconApi: planListResult[inx.index]?.metadata?.icon,
@@ -636,13 +642,19 @@ class _CategoryState extends State<CategoryList> {
                                     padding: EdgeInsets.all(
                                       8.0.sp,
                                     ),
-                                    onPressed: planListResult[inx.index]
+                                    onPressed: (planListResult[inx.index]
                                                     ?.catselecttype ==
-                                                '1' &&
-                                            planListResult[inx.index]
+                                                '1'
+                                            ? (planListResult[inx.index]
+                                                        ?.isSubscribed ==
+                                                    '1' ||
+                                                (isSelectedMap[planListResult[
+                                                            inx.index]
+                                                        ?.packcatid] ??
+                                                    false))
+                                            : (planListResult[inx.index]
                                                     ?.isSubscribed ==
-                                                '0' &&
-                                            isSelected
+                                                '1'))
                                         ? null
                                         : () async {
                                             if (planListResult[inx.index]
@@ -772,9 +784,10 @@ class _CategoryState extends State<CategoryList> {
   }
 
   Color getBorderColor(int i, List<PlanListResult> planList) {
-    if (planList[i]?.catselecttype == '1' &&
-        planList[i]?.isSubscribed == '0' &&
-        isSelected) {
+    if (planList[i]?.catselecttype == '1'
+        ? (planList[i]?.isSubscribed == '1' ||
+            (isSelectedMap[planList[i]?.packcatid] ?? false))
+        : (planList[i]?.isSubscribed == '1')) {
       return Colors.grey;
     } else {
       if (planList[i]?.isSubscribed == '0') {
