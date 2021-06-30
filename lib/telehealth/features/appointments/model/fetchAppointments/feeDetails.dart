@@ -2,9 +2,9 @@ import 'package:myfhb/telehealth/features/appointments/constants/appointments_pa
 as parameters;
 
 class FeeDetails {
-  int paidAmount;
+  var paidAmount;
   int doctorCancellationCharge;
-  int finalRefundAmount;
+  var finalRefundAmount;
   String paymentMode;
 
   FeeDetails(

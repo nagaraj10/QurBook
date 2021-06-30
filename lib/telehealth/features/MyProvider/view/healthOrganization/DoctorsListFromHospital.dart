@@ -482,6 +482,13 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
     Widget widget;
     if (fees != null && fees != '') {
       if (fees != '0.00' && fees != '0') {
+        try {
+          fees = new CommonUtil()
+              .doubleWithoutDecimalToInt(double.parse(fees))
+              .toString();
+        } catch (e) {
+          widget = SizedBox.shrink();
+        }
         widget = Container(
           child: Center(
             child: Text(
