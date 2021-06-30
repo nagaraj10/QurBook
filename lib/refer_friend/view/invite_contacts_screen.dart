@@ -74,6 +74,7 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
           leading: IconWidget(
             icon: Icons.arrow_back_ios,
             colors: Colors.white,
@@ -86,6 +87,7 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
             selectedList.length != 0
                 ? InkWell(
                     onTap: () {
+                      FocusScope.of(context).unfocus();
                       sendInviteToFriends();
                     },
                     child: Container(
@@ -368,9 +370,9 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
 
   sendReferalRequest(ReferAFriendRequest friendRequest) {
     referAFriend(friendRequest).then((value) {
-      List<Result> referalList = value?.result;
-      LoaderClass.hideLoadingDialog(context);
-      if (referalList?.length > 1) {
+      List<Result> referalList = value?.result ?? [];
+      if (value?.isSuccess && referalList?.length > 0) {
+        LoaderClass.hideLoadingDialog(context);
         showDialog(
             barrierDismissible: false,
             context: context,
@@ -562,8 +564,11 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
               );
             });
       } else {
-        //! Error msg need to be finalised here
-        //FlutterToast().getToast('', Colors.red);
+        FlutterToast().getToast(strInviteErrorMsg, Colors.red);
+        Future.delayed(Duration(seconds: 2), () {
+          LoaderClass.hideLoadingDialog(context);
+          Navigator.pop(context);
+        });
       }
     });
   }

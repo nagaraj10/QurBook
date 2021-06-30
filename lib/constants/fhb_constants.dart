@@ -549,6 +549,7 @@ const String strSearchContacts = 'Search Contacts';
 const String strNoContactsSearchlbl =
     'Looks like there is no contact in this name!!';
 const String strNoContactsLabel = 'Looks Like There are No Contacts!!!';
+const String strInviteErrorMsg = 'Invite sending failed. Please try again';
 
 FirebaseAnalytics _firebaseAnalytics = FirebaseAnalytics();
 var mInitialTime;
