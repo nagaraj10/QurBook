@@ -440,10 +440,16 @@ class _HealthOrganizationState extends State<HealthOrganization> {
     Widget widget;
     if (fees != null && fees != '') {
       if (fees != '0.00' && fees != '0') {
+        try {
+          fees = new CommonUtil()
+              .doubleWithoutDecimalToInt(double.parse(fees))
+              .toString();
+        } catch (e) {
+          widget = SizedBox.shrink();
+        }
         widget = Container(
           child: Center(
-            child: Text(
-                'Discount ' + commonWidgets.getMoneyWithForamt(fees) + '%',
+            child: Text('Discount ' + fees + '%',
                 style: TextStyle(
                     fontSize: 16.0.sp,
                     fontWeight: FontWeight.w500,

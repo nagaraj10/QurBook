@@ -864,22 +864,30 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
   Widget getCSRCheckBox(String discount, String originalFees) {
     Widget widget;
-    if (discount != null && discount != '' && originalFees!=null && originalFees!='') {
+    if (discount != null &&
+        discount != '' &&
+        originalFees != null &&
+        originalFees != '') {
       if (discount != '0.00' && discount != '0') {
+        try {
+          discount = new CommonUtil()
+              .doubleWithoutDecimalToInt(double.parse(discount))
+              .toString();
+        } catch (e) {
+          widget = SizedBox.shrink();
+        }
         widget = Container(
           child: Center(
             child: CheckboxListTile(
-              title: Text("Qurhealth Discount (" +
-                  commonWidgets.getMoneyWithForamt(discount) +
-                  '%)'),
+              title: Text("Qurhealth Discount (" + discount + '%)'),
               value: checkedValue,
               activeColor: Colors.green,
               onChanged: (newValue) {
                 setState(() {
                   checkedValue = newValue;
                   if (checkedValue) {
-                    if(originalFees.contains(',')){
-                      originalFees = originalFees.replaceAll(',','');
+                    if (originalFees.contains(',')) {
+                      originalFees = originalFees.replaceAll(',', '');
                     }
                     INR_Price = getDiscountedFee(
                         double.parse(discount), double.parse(originalFees));
@@ -941,7 +949,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                     DateTime.parse(widget.doctorsData.plannedFollowupDate))
                 .inDays <=
             0) {
-          return widget.followUpFee;
+          return isCSRDiscount?'':widget.followUpFee;
         } else {
           return widget.isFromHospital
               ? getFeesFromHospital(
@@ -1838,13 +1846,22 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
   String getDiscountedFee(double percent, double price) {
     var discountedPrice;
+    String priceLast;
 
     if (percent != null && price != null && percent != '' && price != '') {
       discountedPrice = (percent / 100) * price;
 
       price = price - discountedPrice;
+
+      try {
+        priceLast = new CommonUtil()
+            .doubleWithoutDecimalToInt(double.parse(price.toString()))
+            .toString();
+      } catch (e) {
+        return price.toString();
+      }
     }
 
-    return commonWidgets.getMoneyWithForamt(price.toString());
+    return priceLast.toString();
   }
 }
