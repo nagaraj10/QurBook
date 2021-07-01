@@ -1,16 +1,16 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:myfhb/src/model/Authentication/SignIn.dart';
-import 'package:myfhb/src/model/Authentication/SignOutResponse.dart';
-import 'package:myfhb/src/model/Authentication/SignUp.dart';
-import 'package:myfhb/src/resources/network/ApiResponse.dart';
-import 'package:myfhb/src/resources/repository/AuthenticationRepository.dart';
-import 'package:myfhb/src/utils/Validators.dart';
+import '../../model/Authentication/SignIn.dart';
+import '../../model/Authentication/SignOutResponse.dart';
+import '../../model/Authentication/SignUp.dart';
+import '../../resources/network/ApiResponse.dart';
+import '../../resources/repository/AuthenticationRepository.dart';
+import '../../utils/Validators.dart';
 import 'package:rxdart/rxdart.dart';
 import 'dart:convert' as convert;
 
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
+import '../../../constants/fhb_parameters.dart' as parameters;
+import '../../../constants/variable_constant.dart' as variable;
 
 
 
@@ -47,7 +47,7 @@ class LoginBloc with Validators implements BaseBloc {
   }
 
   Future<SignIn> submit(String phoneNumber, String countryCode) async {
-    var signInData = {};
+    final signInData = {};
     //signInData['sourceName'] = CommonConstants.strTrident;
     signInData[parameters.strCountryCode] = '+' + countryCode;
     signInData[parameters.strPhoneNumber] = phoneNumber;
@@ -55,7 +55,7 @@ class LoginBloc with Validators implements BaseBloc {
     signInData[parameters.strEntityId] =parameters.strEntityIdVal;
     signInData[parameters.strRoleId] = parameters.strRoleIdVal;
 
-    var jsonString = convert.jsonEncode(signInData);
+    final jsonString = convert.jsonEncode(signInData);
 
     signInSink.add(ApiResponse.loading(variable.strSignUp));
     SignIn signIn;

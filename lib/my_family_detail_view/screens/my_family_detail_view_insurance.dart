@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
-import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
-import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:myfhb/src/model/Health/CompleteData.dart';
-import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/constants/fhb_query.dart' as query;
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import '../../colors/fhb_colors.dart' as fhbColors;
+import '../../common/CommonConstants.dart';
+import '../../common/CommonUtil.dart';
+import '../../common/PreferenceUtil.dart';
+import '../../constants/fhb_constants.dart' as Constants;
+import '../../constants/fhb_constants.dart';
+import '../../record_detail/screens/record_detail_screen.dart';
+import '../../src/model/Health/UserHealthResponseList.dart';
+import '../../src/model/Health/asgard/health_record_list.dart';
+import '../../src/utils/FHBUtils.dart';
+import '../../src/model/Health/CompleteData.dart';
+import '../../src/model/Health/MediaMetaInfo.dart';
+import '../../constants/variable_constant.dart' as variable;
+import '../../constants/fhb_query.dart' as query;
+import '../../src/utils/screenutils/size_extensions.dart';
 
 class MyFamilyDetailViewInsurance extends StatefulWidget {
   HealthRecordList completeData;
@@ -55,14 +55,14 @@ class MyFamilyDetailViewInsuranceState
   }
 
   Widget getWidgetToDisplayIDDocs(HealthRecordList completeData) {
-    List<HealthResult> mediaMetaInfoObj = new List();
+    var mediaMetaInfoObj = List<HealthResult>();
 
-    mediaMetaInfoObj = new CommonUtil().getDataForInsurance(
+    mediaMetaInfoObj = CommonUtil().getDataForInsurance(
         completeData,
         CommonConstants.categoryDescriptionIDDocs,
         CommonConstants.CAT_JSON_INSURANCE);
 
-    return mediaMetaInfoObj.length > 0
+    return mediaMetaInfoObj.isNotEmpty
         ? Container(
             color: const Color(fhbColors.bgColorContainer),
             child: ListView.builder(
@@ -71,6 +71,7 @@ class MyFamilyDetailViewInsuranceState
               itemCount: mediaMetaInfoObj.length,
             ))
         : Container(
+            color: const Color(fhbColors.bgColorContainer),
             child: Center(
               child: Text(
                 variable.strNodata,
@@ -79,7 +80,6 @@ class MyFamilyDetailViewInsuranceState
                 ),
               ),
             ),
-            color: const Color(fhbColors.bgColorContainer),
           );
   }
 
@@ -96,7 +96,7 @@ class MyFamilyDetailViewInsuranceState
           );
         },
         child: Container(
-            padding: EdgeInsets.all(10.0),
+            padding: EdgeInsets.all(10),
             margin: EdgeInsets.only(left: 10, right: 10, top: 10),
             decoration: BoxDecoration(
               color: Colors.white,
@@ -104,8 +104,7 @@ class MyFamilyDetailViewInsuranceState
               boxShadow: [
                 BoxShadow(
                   color: const Color(fhbColors.cardShadowColor),
-                  blurRadius: 16, // has the effect of softening the shadow
-                  spreadRadius: 0, // has the effect of extending the shadow
+                  blurRadius: 16, // has the effect of extending the shadow
                 )
               ],
             ),
@@ -135,9 +134,7 @@ class MyFamilyDetailViewInsuranceState
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        mediaMetaInfoObj.metadata.fileName != null
-                            ? mediaMetaInfoObj.metadata.fileName
-                            : '',
+                        mediaMetaInfoObj.metadata.fileName ?? '',
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 16.0.sp,
@@ -162,7 +159,7 @@ class MyFamilyDetailViewInsuranceState
                             ),
                           )),
                       Text(
-                        new FHBUtils().getFormattedDateString(mediaMetaInfoObj
+                        FHBUtils().getFormattedDateString(mediaMetaInfoObj
                             .metadata.healthRecordType.createdOn),
                         style: TextStyle(
                             fontSize: 14.0.sp,
@@ -173,16 +170,13 @@ class MyFamilyDetailViewInsuranceState
                   ),
                 ),
                 Expanded(
-                  flex: 1,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       mediaMetaInfoObj.isBookmarked
                           ? ImageIcon(
                               AssetImage(variable.icon_record_fav_active),
-                              color:
-                                  Color(new CommonUtil().getMyPrimaryColor()),
+                              color: Color(CommonUtil().getMyPrimaryColor()),
                               size: 20.0.sp,
                             )
                           : ImageIcon(
@@ -198,7 +192,7 @@ class MyFamilyDetailViewInsuranceState
   }
 
   void getCategoryPreference() {
-    for (var e in PreferenceUtil.getCategoryType()) {
+    for (final e in PreferenceUtil.getCategoryType()) {
       if (e.categoryDescription == CommonConstants.categoryDescriptionIDDocs) {
         PreferenceUtil.saveString(Constants.KEY_DEVICENAME, null)
             .then((onValue) {

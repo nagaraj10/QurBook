@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:agora_rtc_engine/agora_rtc_engine.dart';
+import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
@@ -16,11 +16,10 @@ import 'package:myfhb/video_call/pages/localpreview.dart';
 import 'package:myfhb/video_call/pages/prescription_module.dart';
 import 'package:myfhb/video_call/utils/callstatus.dart';
 import 'package:myfhb/video_call/utils/hideprovider.dart';
+import 'package:myfhb/video_call/utils/settings.dart';
 import 'package:provider/provider.dart';
 
-class CallMain extends StatelessWidget {
-  BuildContext globalContext;
-
+class CallMain extends StatefulWidget {
   /// non-modifiable channel name of the page
   String channelName;
 
@@ -38,9 +37,7 @@ class CallMain extends StatelessWidget {
 
   ///check call is made from NS
   bool isAppExists;
-  bool _isFirstTime = true;
-  bool _isMute = false;
-  bool _isVideoHide = false;
+
   CallMain(
       {this.channelName,
       this.role,
@@ -52,6 +49,38 @@ class CallMain extends StatelessWidget {
       this.patientId,
       this.patientName,
       this.patientPicUrl});
+
+  @override
+  _CallMainState createState() => _CallMainState();
+}
+
+class _CallMainState extends State<CallMain> {
+  BuildContext globalContext;
+
+  RtcEngine rtcEngine;
+
+  bool _isFirstTime = true;
+
+  bool _isMute = false;
+
+  bool _isVideoHide = false;
+
+  @override
+  void initState() {
+    super.initState();
+    createRtcEngine();
+  }
+
+  createRtcEngine() async {
+    rtcEngine = await RtcEngine.create(APP_ID);
+  }
+
+  @override
+  void dispose() {
+    rtcEngine.leaveChannel();
+    rtcEngine.destroy();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,10 +104,11 @@ class CallMain extends StatelessWidget {
           child: Stack(
             children: <Widget>[
               CallPage(
-                role: role,
-                channelName: channelName,
-                arguments: arguments,
-                isAppExists: isAppExists,
+                rtcEngine: rtcEngine,
+                role: widget.role,
+                channelName: widget.channelName,
+                arguments: widget.arguments,
+                isAppExists: widget.isAppExists,
               ),
               /* InkWell(
                 onTap: () {
@@ -93,8 +123,12 @@ class CallMain extends StatelessWidget {
                 },
                 child: Container(),
               ), */
-              LocalPreview(),
-              CustomAppBar(Platform.isIOS ? arguments.userName : doctorName),
+              LocalPreview(
+                rtcEngine: rtcEngine,
+              ),
+              CustomAppBar(Platform.isIOS
+                  ? widget.arguments.userName
+                  : widget.doctorName),
               Consumer<HideProvider>(
                 builder: (context, status, child) {
                   return Visibility(
@@ -105,13 +139,24 @@ class CallMain extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            MyControllers(callStatus, role, isAppExists,
-                                Platform.isIOS ? arguments.doctorId : doctorId,
-                                (isMute, isVideoHide) {
+                            MyControllers(
+                                rtcEngine,
+                                callStatus,
+                                widget.role,
+                                widget.isAppExists,
+                                Platform.isIOS
+                                    ? widget.arguments.doctorId
+                                    : widget.doctorId, (isMute, isVideoHide) {
                               _isMute = isMute;
                               _isVideoHide = isVideoHide;
-                            }, _isMute, _isVideoHide, doctorName, doctorPic,
-                                patientId, patientName, patientPicUrl),
+                            },
+                                _isMute,
+                                _isVideoHide,
+                                widget.doctorName,
+                                widget.doctorPic,
+                                widget.patientId,
+                                widget.patientName,
+                                widget.patientPicUrl),
                             SizedBox(
                               height: 20.0.h,
                             ),
@@ -172,7 +217,7 @@ class CallMain extends StatelessWidget {
                           if (Platform.isIOS) {
                             Navigator.of(context);
                           } else {
-                            if (isAppExists) {
+                            if (widget.isAppExists) {
                               Navigator.of(context).pop(true);
                               Navigator.pop(context);
                             } else {

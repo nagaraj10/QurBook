@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'package:simple_pdf_viewer/simple_pdf_viewer.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class PDFViewURL extends StatefulWidget {
@@ -37,10 +36,11 @@ class _MyAppState extends State<PDFViewURL> {
               onPressed: () {
                 Navigator.of(context).pop();
               })),
-      body: SimplePdfViewerWidget(
-        completeCallback: (bool result) {},
-        initialUrl: widget.url,
-      ),
+      // body: SimplePdfViewerWidget(
+      //   completeCallback: (bool result) {},
+      //   initialUrl: widget.url,
+      // ),
+      body: SizedBox.shrink(),
     );
   }
 }

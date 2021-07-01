@@ -1,4 +1,4 @@
-import 'package:myfhb/my_providers/models/MyProviderResponseData.dart';
+import 'MyProviderResponseData.dart';
 
 class MyProvidersResponse {
   bool isSuccess;
@@ -12,17 +12,17 @@ class MyProvidersResponse {
     message = json['message'];
     if (json.containsKey('result')) {
       result = json['result'] != null
-          ? new MyProvidersResponseData.fromJson(json['result'])
+          ? MyProvidersResponseData.fromJson(json['result'])
           : null;
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['isSuccess'] = this.isSuccess;
-    data['message'] = this.message;
-    if (this.result != null) {
-      data['result'] = this.result.toJson();
+    final data = <String, dynamic>{};
+    data['isSuccess'] = isSuccess;
+    data['message'] = message;
+    if (result != null) {
+      data['result'] = result.toJson();
     }
     return data;
   }

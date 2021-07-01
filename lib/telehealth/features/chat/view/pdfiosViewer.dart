@@ -6,8 +6,8 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:http/http.dart' as http;
-import 'package:simple_pdf_viewer/simple_pdf_viewer.dart';
+import 'package:myfhb/src/resources/network/api_services.dart';
+// import 'package:simple_pdf_viewer/simple_pdf_viewer.dart';
 
 class PDFiOSViewer extends StatefulWidget {
   String url;
@@ -50,7 +50,7 @@ class _PDFiOSViewerState extends State<PDFiOSViewer> {
   }
 
   Future<Uint8List> fetchPost() async {
-    final response = await http.get(widget.url);
+    final response = await ApiServices.get(widget.url);
     final responseJson = response.bodyBytes;
     return responseJson;
   }
@@ -84,11 +84,14 @@ class _PDFiOSViewerState extends State<PDFiOSViewer> {
                   Navigator.of(context).pop();
                 })),
         body: Center(
+          // child: (widget.path != null)
+          //     ? SimplePdfViewerWidget(
+          //         completeCallback: (bool result) {},
+          //         initialUrl: widget.path,
+          //       )
+          //     : CircularProgressIndicator(),
           child: (widget.path != null)
-              ? SimplePdfViewerWidget(
-                  completeCallback: (bool result) {},
-                  initialUrl: widget.path,
-                )
+              ? SizedBox.shrink()
               : CircularProgressIndicator(),
         ),
       ),

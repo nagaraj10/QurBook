@@ -1,4 +1,4 @@
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import '../../../constants/fhb_parameters.dart' as parameters;
 
 class DeviceMeasurementsData {
   String parameter;

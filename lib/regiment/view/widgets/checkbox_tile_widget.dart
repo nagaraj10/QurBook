@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/common/CommonUtil.dart';
+import '../../../src/utils/screenutils/size_extensions.dart';
+import '../../../common/CommonUtil.dart';
 import 'custom_image_network.dart';
 
 class CheckboxTileWidget extends StatefulWidget {
-  CheckboxTileWidget({
+  const CheckboxTileWidget({
     @required this.title,
     @required this.onSelected,
     @required this.value,
@@ -26,7 +26,7 @@ class _CheckboxTileWidgetState extends State<CheckboxTileWidget> {
   Widget build(BuildContext context) {
     var titleText;
     var imagePath;
-    List<dynamic> dataList = widget.title.split(':');
+    final List<dynamic> dataList = widget.title.split(':');
     if (dataList.length == 2) {
       imagePath = dataList[0];
       titleText = dataList[1];

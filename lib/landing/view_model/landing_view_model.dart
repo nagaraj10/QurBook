@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as constants;
-import 'package:myfhb/landing/model/qur_plan_dashboard_model.dart';
-import 'package:myfhb/landing/service/landing_service.dart';
+import '../../common/CommonUtil.dart';
+import '../../constants/fhb_constants.dart' as constants;
+import '../model/qur_plan_dashboard_model.dart';
+import '../service/landing_service.dart';
 
 enum LandingScreenStatus { Loading, Loaded }
 
@@ -63,7 +63,7 @@ class LandingViewModel extends ChangeNotifier {
         updateStatus(LandingScreenStatus.Loading);
       }
       isLoadDone = false;
-      var dashboardResponse = await LandingService.getQurPlanDashBoard();
+      final dashboardResponse = await LandingService.getQurPlanDashBoard();
       isLoadDone = true;
       if (dashboardResponse?.isSuccess ?? false) {
         dashboardData = dashboardResponse.dashboardData;

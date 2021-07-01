@@ -6,23 +6,23 @@ import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/FHBBasicWidget.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/common/errors_widget.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/fhb_parameters.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
-import 'package:myfhb/plan_dashboard/view/planDetailsView.dart';
-import 'package:myfhb/plan_dashboard/viewModel/planViewModel.dart';
-import 'package:myfhb/plan_dashboard/viewModel/subscribeViewModel.dart';
-import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
+import '../../common/CommonUtil.dart';
+import '../../common/FHBBasicWidget.dart';
+import '../../common/PreferenceUtil.dart';
+import '../../common/errors_widget.dart';
+import '../../constants/fhb_constants.dart';
+import '../../constants/fhb_constants.dart' as Constants;
+import '../../constants/fhb_parameters.dart';
+import '../../constants/variable_constant.dart' as variable;
+import '../model/PlanListModel.dart';
+import 'planDetailsView.dart';
+import '../viewModel/planViewModel.dart';
+import '../viewModel/subscribeViewModel.dart';
+import '../../regiment/view_model/regiment_view_model.dart';
+import '../../src/utils/colors_utils.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
+import '../../telehealth/features/SearchWidget/view/SearchWidget.dart';
+import '../../widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
 import 'package:showcaseview/showcaseview.dart';
 
@@ -37,17 +37,17 @@ class PlanList extends StatefulWidget {
 
   final List<PlanListResult> planListResult;
 
-  PlanList(this.categoryId, this.planListResult, this.hosIcon, this.catIcon,
+  const PlanList(this.categoryId, this.planListResult, this.hosIcon, this.catIcon,
       this.diseases);
 }
 
 class _MyPlanState extends State<PlanList> {
   PlanListModel myPlanListModel;
-  PlanViewModel myPlanViewModel = new PlanViewModel();
+  PlanViewModel myPlanViewModel = PlanViewModel();
   bool isSearch = false;
-  List<PlanListResult> myPLanListResult = List();
-  SubscribeViewModel subscribeViewModel = new SubscribeViewModel();
-  FlutterToast toast = new FlutterToast();
+  List<PlanListResult> myPLanListResult = [];
+  SubscribeViewModel subscribeViewModel = SubscribeViewModel();
+  FlutterToast toast = FlutterToast();
 
   String categoryId = '';
   String hosIcon = '';
@@ -81,7 +81,7 @@ class _MyPlanState extends State<PlanList> {
     planListResult = widget.planListResult;
     PreferenceUtil.init();
 
-    var isFirst = PreferenceUtil.isKeyValid(Constants.KEY_SHOWCASE_Plan);
+    final isFirst = PreferenceUtil.isKeyValid(Constants.KEY_SHOWCASE_Plan);
     try {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Future.delayed(
@@ -109,16 +109,16 @@ class _MyPlanState extends State<PlanList> {
           appBar: AppBar(
             flexibleSpace: GradientAppBar(),
             leading: GestureDetector(
-              onTap: () => Get.back(),
+              onTap: Get.back,
               child: Icon(
                 Icons.arrow_back_ios, // add custom icons also
-                size: 24.0,
+                size: 24,
               ),
             ),
             title: Text(
               'Plans',
               style: TextStyle(
-                fontSize: 18.0,
+                fontSize: 18,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -153,7 +153,7 @@ class _MyPlanState extends State<PlanList> {
     myPLanListResult.clear();
     if (title != null) {
       myPLanListResult =
-          await myPlanViewModel.getSearchForPlanList(title, planListOld);
+          myPlanViewModel.getSearchForPlanList(title, planListOld);
     }
     setState(() {});
   }
@@ -161,7 +161,7 @@ class _MyPlanState extends State<PlanList> {
   Widget planList(List<PlanListResult> planList) {
     planListUniq = [];
     isSelected = false;
-    if (planList != null && planList.length > 0) {
+    if (planList != null && planList.isNotEmpty) {
       planList.where((element1) {
         return element1?.packcatid == categoryId &&
             (element1?.metadata?.diseases == diseases);
@@ -173,13 +173,13 @@ class _MyPlanState extends State<PlanList> {
       });
     }
 
-    return (planListUniq != null && planListUniq.length > 0)
+    return (planListUniq != null && planListUniq.isNotEmpty)
         ? ListView.builder(
             shrinkWrap: true,
             padding: EdgeInsets.only(
               bottom: 8.0.h,
             ),
-            itemBuilder: (BuildContext ctx, int i) => planListItem(
+            itemBuilder: (ctx, i) => planListItem(
                 ctx, i, isSearch ? myPLanListResult : planListUniq),
             itemCount: isSearch ? myPLanListResult.length : planListUniq.length,
           )
@@ -267,7 +267,7 @@ class _MyPlanState extends State<PlanList> {
         });
       },
       child: Container(
-          padding: EdgeInsets.all(4.0),
+          padding: EdgeInsets.all(4),
           margin: EdgeInsets.only(left: 12, right: 12, top: 8),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -276,16 +276,15 @@ class _MyPlanState extends State<PlanList> {
               BoxShadow(
                 color: const Color(0xFFe3e2e2),
                 blurRadius: 16, // has the effect of softening the shadow
-                spreadRadius: 5.0, // has the effect of extending the shadow
+                spreadRadius: 5, // has the effect of extending the shadow
                 offset: Offset(
-                  0.0, // horizontal, move right 10
-                  0.0, // vertical, move down 10
+                  0, // horizontal, move right 10
+                  0, // vertical, move down 10
                 ),
               )
             ],
           ),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Row(
                 children: [
@@ -337,45 +336,36 @@ class _MyPlanState extends State<PlanList> {
                                       fontSize: 10.0.sp,
                                       fontWeight: FontWeight.w400),
                                 ),
-                                planList[i].packageDuration != null
-                                    ? Text(
+                                if (planList[i].packageDuration != null) Text(
                                         planList[i].packageDuration + ' days',
                                         maxLines: 1,
                                         style: TextStyle(
                                             fontSize: 10.0.sp,
                                             fontWeight: FontWeight.w600),
-                                      )
-                                    : Container()
+                                      ) else Container()
                               ],
                             ),
                           ],
                         ),
                         Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Row(
                               children: [
-                                planList[i].isSubscribed == '1'
-                                    ? Text(
+                                if (planList[i].isSubscribed == '1') Text(
                                         'Start Date: ',
                                         style: TextStyle(
                                             fontSize: 10.0.sp,
                                             fontWeight: FontWeight.w400),
-                                      )
-                                    : SizedBox(width: 55.w),
-                                planList[i].isSubscribed == '1'
-                                    ? Text(
+                                      ) else SizedBox(width: 55.w),
+                                if (planList[i].isSubscribed == '1') Text(
                                         new CommonUtil().dateFormatConversion(
                                             planList[i].startDate),
                                         maxLines: 1,
                                         style: TextStyle(
                                             fontSize: 10.0.sp,
                                             fontWeight: FontWeight.w600),
-                                      )
-                                    : SizedBox(width: 55.w),
-                                planList[i].isSubscribed == '0'
-                                    ? SizedBox(width: 60.w)
-                                    : SizedBox(width: 55.w),
+                                      ) else SizedBox(width: 55.w),
+                                if (planList[i].isSubscribed == '0') SizedBox(width: 60.w) else SizedBox(width: 55.w),
                               ],
                             )
                           ],
@@ -387,8 +377,7 @@ class _MyPlanState extends State<PlanList> {
                     children: [
                       Column(
                         children: [
-                          planList[i].price != null
-                              ? Visibility(
+                          if (planList[i].price != null) Visibility(
                                   visible: planList[i].price.isNotEmpty &&
                                       planList[i].price != '0',
                                   child: TextWidget(
@@ -403,11 +392,9 @@ class _MyPlanState extends State<PlanList> {
                                       fontWeight: FontWeight.w500,
                                       colors: Color(new CommonUtil()
                                           .getMyPrimaryColor())),
-                                )
-                              : Container(),
+                                ) else Container(),
                           SizedBox(height: 8.h),
                           Align(
-                              alignment: Alignment.center,
                               child: i != 0
                                   ? SizedBoxWithChild(
                                       width: 95.0.w,
@@ -415,14 +402,14 @@ class _MyPlanState extends State<PlanList> {
                                       child: FlatButton(
                                         shape: RoundedRectangleBorder(
                                             borderRadius:
-                                                BorderRadius.circular(18.0),
+                                                BorderRadius.circular(18),
                                             side: BorderSide(
                                                 color: getBorderColor(
                                                     i, planList))),
                                         color: Colors.transparent,
                                         textColor:
                                             planList[i].isSubscribed == '0'
-                                                ? Color(new CommonUtil()
+                                                ? Color(CommonUtil()
                                                     .getMyPrimaryColor())
                                                 : Colors.grey,
                                         padding: EdgeInsets.all(
@@ -487,14 +474,14 @@ class _MyPlanState extends State<PlanList> {
                                         child: FlatButton(
                                           shape: RoundedRectangleBorder(
                                               borderRadius:
-                                                  BorderRadius.circular(18.0),
+                                                  BorderRadius.circular(18),
                                               side: BorderSide(
                                                   color: getBorderColor(
                                                       i, planList))),
                                           color: Colors.transparent,
                                           textColor:
                                               planList[i].isSubscribed == '0'
-                                                  ? Color(new CommonUtil()
+                                                  ? Color(CommonUtil()
                                                       .getMyPrimaryColor())
                                                   : Colors.grey,
                                           padding: EdgeInsets.all(
@@ -615,7 +602,7 @@ class _MyPlanState extends State<PlanList> {
       return Colors.grey;
     } else {
       if (planList[i].isSubscribed == '0') {
-        return Color(new CommonUtil().getMyPrimaryColor());
+        return Color(CommonUtil().getMyPrimaryColor());
       } else {
         return Colors.grey;
       }

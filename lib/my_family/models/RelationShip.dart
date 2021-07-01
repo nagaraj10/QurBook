@@ -1,4 +1,4 @@
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import '../../constants/fhb_parameters.dart' as parameters;
 
 class RelationShip {
   String id;
@@ -26,13 +26,13 @@ class RelationShip {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[parameters.strId] = this.id;
-    data[parameters.strRoleName] = this.roleName;
-    data[parameters.strRoleDescription] = this.roleDescription;
-    data[parameters.strIsActive] = this.isActive;
-    data[parameters.strCreatedOn] = this.createdOn;
-    data[parameters.strLastModifiedOn] = this.lastModifiedOn;
+    final data = <String, dynamic>{};
+    data[parameters.strId] = id;
+    data[parameters.strRoleName] = roleName;
+    data[parameters.strRoleDescription] = roleDescription;
+    data[parameters.strIsActive] = isActive;
+    data[parameters.strCreatedOn] = createdOn;
+    data[parameters.strLastModifiedOn] = lastModifiedOn;
 
     return data;
   }

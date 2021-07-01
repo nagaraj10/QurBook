@@ -123,7 +123,6 @@ class RegimentDataModel {
         metadata: json['metadata'] is List
             ? Metadata()
             : Metadata.fromJson(json['metadata'] ?? {}),
-        isPlaying: false,
       );
 
   Map<String, dynamic> toJson() => {
@@ -202,9 +201,9 @@ class UformData {
   List<VitalsData> vitalsData;
 
   UformData fromJson(Map<String, dynamic> json) {
-    List<VitalsData> vitalsDataList = [];
+    final vitalsDataList = <VitalsData>[];
     json.forEach((key, value) {
-      Map<String, dynamic> vitalsMap = {};
+      final vitalsMap = <String, dynamic>{};
       vitalsMap.addAll(value);
       vitalsMap.putIfAbsent('vitalName', () => key);
       vitalsDataList.add(VitalsData.fromJson(vitalsMap ?? {}));
@@ -215,7 +214,7 @@ class UformData {
   }
 
   Map<String, dynamic> toJson() {
-    Map<String, dynamic> jsonMap = {};
+    final jsonMap = <String, dynamic>{};
     vitalsData.forEach((vitalData) {
       jsonMap.putIfAbsent(vitalData.vitalName, () => vitalData.toJson());
     });
@@ -303,9 +302,7 @@ class EnumValues<T> {
   EnumValues(this.map);
 
   Map<T, String> get reverse {
-    if (reverseMap == null) {
-      reverseMap = map.map((k, v) => new MapEntry(v, k));
-    }
+    reverseMap ??= map.map((k, v) => new MapEntry(v, k));
     return reverseMap;
   }
 }

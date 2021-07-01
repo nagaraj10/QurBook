@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:myfhb/constants/variable_constant.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
+import '../constants/variable_constant.dart';
+import '../src/utils/colors_utils.dart';
 
 class TopCommonCureveWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
     return Container(
       height: height / 3,
       width: width,
@@ -17,7 +17,7 @@ class TopCommonCureveWidget extends StatelessWidget {
           Align(
               alignment: Alignment.bottomCenter,
               child: Image.asset(
-                (icon_qurplan),
+                icon_qurplan,
                 height: width / 3,
                 width: width / 3,
               ))
@@ -41,7 +41,7 @@ class CurveForIntro extends StatelessWidget {
       height: heightForTheCurve,
       child: CustomPaint(
         painter: SemiCurveWithRectPainter(
-            istopSemiCurve ? HexColor("dce1f4") : HexColor("e9ecf8")),
+            istopSemiCurve ? HexColor('dce1f4') : HexColor('e9ecf8')),
       ),
     );
   }
@@ -53,10 +53,10 @@ class SemiCurveWithRectPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    Paint paint = Paint()
+    var paint = Paint()
       ..color = fillingColor
       ..style = PaintingStyle.fill;
-    Path path = Path();
+    var path = Path();
     path.moveTo(0, 0);
     path.lineTo(0, size.height);
     path.quadraticBezierTo(

@@ -1,11 +1,11 @@
 import 'dart:async';
-import 'package:myfhb/bookmark_record/model/bookmarkRequest.dart';
-import 'package:myfhb/bookmark_record/model/bookmarkResponse.dart';
-import 'package:myfhb/bookmark_record/services/bookmark_repository.dart';
-import 'package:myfhb/src/resources/network/ApiResponse.dart';
-import 'package:myfhb/src/utils/Validators.dart';
+import '../model/bookmarkRequest.dart';
+import '../model/bookmarkResponse.dart';
+import '../services/bookmark_repository.dart';
+import '../../src/resources/network/ApiResponse.dart';
+import '../../src/utils/Validators.dart';
 import 'dart:convert' as convert;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
+import '../../constants/variable_constant.dart' as variable;
 
 class BookmarkRecordBloc with Validators implements BaseBloc {
   BookmarkRepository _bookmarkRepository;
@@ -27,13 +27,13 @@ class BookmarkRecordBloc with Validators implements BaseBloc {
 
   Future<BookmarkResponse> bookMarcRecord(
       List<String> recordId, bool bookMarkFlag) async {
-    Map<String, dynamic> bookmarkRequest = new Map();
+    var bookmarkRequest = Map<String, dynamic>();
 
     //BookmarkRequest bookmarkRequest = new BookmarkRequest();
     bookmarkRequest['healthRecordMetaIds'] = recordId;
     bookmarkRequest['isBookmarked'] = bookMarkFlag;
 
-    var jsonString = convert.jsonEncode(bookmarkRequest);
+    final jsonString = convert.jsonEncode(bookmarkRequest);
     bookmarkSink.add(ApiResponse.loading(variable.strBookmarkRecord));
     BookmarkResponse bookmarkResponse;
     try {

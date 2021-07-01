@@ -2,12 +2,12 @@ import 'dart:math' as math;
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/devices_tensorflow/models/tensorflow_model.dart';
+import '../../common/PreferenceUtil.dart';
+import '../../constants/fhb_constants.dart' as Constants;
+import '../models/tensorflow_model.dart';
 import 'package:tflite/tflite.dart';
 
-typedef void Callback(
+typedef Callback = void Function(
     List<dynamic> list, int h, int w, CameraController controller);
 
 class Camera extends StatefulWidget {
@@ -15,26 +15,26 @@ class Camera extends StatefulWidget {
   final Callback setRecognitions;
   final String model;
 
-  Camera(this.cameras, this.model, this.setRecognitions);
+  const Camera(this.cameras, this.model, this.setRecognitions);
 
   @override
-  _CameraState createState() => new _CameraState();
+  _CameraState createState() => _CameraState();
 }
 
 class _CameraState extends State<Camera> {
   CameraController controller;
   bool isDetecting = false;
 
-  String stryolo = "YOLO";
-  String ssmobileNet = "SSDMobileNet";
+  String stryolo = 'YOLO';
+  String ssmobileNet = 'SSDMobileNet';
 
   @override
   void initState() {
     super.initState();
 
-    if (widget.cameras == null || widget.cameras.length < 1) {
+    if (widget.cameras == null || widget.cameras.isEmpty) {
     } else {
-      controller = new CameraController(
+      controller = CameraController(
         widget.cameras[0],
         ResolutionPreset.high,
       );
@@ -43,10 +43,10 @@ class _CameraState extends State<Camera> {
           return;
         }
         setState(() {
-          int startTime = new DateTime.now().millisecondsSinceEpoch;
-          controller.startImageStream((CameraImage img) {
+          var startTime = DateTime.now().millisecondsSinceEpoch;
+          controller.startImageStream((img) {
             if (!isDetecting) {
-              String stopDetect =
+              var stopDetect =
                   PreferenceUtil.getStringValue(Constants.stop_detecting);
 
               if (stopDetect == 'YES') {
@@ -116,7 +116,7 @@ class _CameraState extends State<Camera> {
                   bytesList: img.planes.map((plane) {
                     return plane.bytes;
                   }).toList(),
-                  model: "SSDMobileNet",
+                  model: 'SSDMobileNet',
                   imageHeight: img.height,
                   imageWidth: img.width,
                   imageMean: 127.5,
@@ -156,13 +156,13 @@ class _CameraState extends State<Camera> {
 //        child: CameraPreview(controller));
 
     var tmp = MediaQuery.of(context).size;
-    var screenH = math.max(tmp.height, tmp.width);
-    var screenW = math.min(tmp.height, tmp.width);
+    final screenH = math.max(tmp.height, tmp.width);
+    final screenW = math.min(tmp.height, tmp.width);
     tmp = controller.value.previewSize;
-    var previewH = math.max(tmp.height, tmp.width);
-    var previewW = math.min(tmp.height, tmp.width);
-    var screenRatio = screenH / screenW;
-    var previewRatio = previewH / previewW;
+    final previewH = math.max(tmp.height, tmp.width);
+    final previewW = math.min(tmp.height, tmp.width);
+    final screenRatio = screenH / screenW;
+    final previewRatio = previewH / previewW;
 
     return OverflowBox(
       maxHeight:

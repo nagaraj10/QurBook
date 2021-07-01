@@ -12,10 +12,10 @@ class UpdateSelfProfileModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['isSuccess'] = this.isSuccess;
-    data['message'] = this.message;
-    data['result'] = this.result;
+    final data = <String, dynamic>{};
+    data['isSuccess'] = isSuccess;
+    data['message'] = message;
+    data['result'] = result;
     return data;
   }
 }

@@ -24,7 +24,7 @@ import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/src/utils/PageNavigator.dart';
 
 class IosNotificationHandler {
-  final myDB = Firestore.instance;
+  final myDB = FirebaseFirestore.instance;
   bool isAlreadyLoaded = false;
   NotificationModel model;
 
@@ -55,8 +55,8 @@ class IosNotificationHandler {
     try {
       await myDB
           .collection("call_log")
-          .document("${model.callArguments.channelName}")
-          .setData({"call_status": status});
+          .doc("${model.callArguments.channelName}")
+          .set({"call_status": status});
     } catch (e) {
       print(e);
     }

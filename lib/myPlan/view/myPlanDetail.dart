@@ -3,13 +3,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/authentication/constants/constants.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/responseModel.dart';
-import 'package:myfhb/myPlan/viewModel/myPlanViewModel.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
+import '../../authentication/constants/constants.dart';
+import '../../common/CommonUtil.dart';
+import '../../constants/fhb_constants.dart';
+import '../../constants/responseModel.dart';
+import '../viewModel/myPlanViewModel.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
+import '../../widgets/GradientAppBar.dart';
 
 class MyPlanDetail extends StatefulWidget {
   final String title;
@@ -24,7 +24,7 @@ class MyPlanDetail extends StatefulWidget {
   final String providerIcon;
   final String descriptionURL;
 
-  MyPlanDetail(
+  const MyPlanDetail(
       {Key key,
       @required this.title,
       @required this.providerName,
@@ -46,7 +46,7 @@ class MyPlanDetail extends StatefulWidget {
 }
 
 class PlanDetail extends State<MyPlanDetail> {
-  MyPlanViewModel myPlanViewModel = new MyPlanViewModel();
+  MyPlanViewModel myPlanViewModel = MyPlanViewModel();
 
   String title;
   String providerName;
@@ -59,7 +59,7 @@ class PlanDetail extends State<MyPlanDetail> {
   String catIcon = '';
   String providerIcon = '';
   String descriptionURL = '';
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   InAppWebViewController webView;
 
@@ -113,7 +113,6 @@ class PlanDetail extends State<MyPlanDetail> {
         margin: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
         height: 1.sh - AppBar().preferredSize.height,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
@@ -122,11 +121,9 @@ class PlanDetail extends State<MyPlanDetail> {
               ),
               child: SingleChildScrollView(
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
-                      flex: 1,
                       child: CircleAvatar(
                           backgroundColor: Colors.grey[200],
                           radius: 26,
@@ -135,7 +132,6 @@ class PlanDetail extends State<MyPlanDetail> {
                     Expanded(
                       flex: 3,
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
@@ -165,21 +161,21 @@ class PlanDetail extends State<MyPlanDetail> {
                           ),
                           Row(
                             children: [
-                              Text("Start Date: ",
+                              Text('Start Date: ',
                                   style: TextStyle(fontSize: 9)),
                               Text(
                                   startDate != null && startDate != ''
-                                      ? new CommonUtil()
+                                      ? CommonUtil()
                                           .dateFormatConversion(startDate)
                                       : '-',
                                   style: TextStyle(
                                       fontSize: 9,
                                       fontWeight: FontWeight.bold)),
                               SizedBox(width: 5),
-                              Text("End Date: ", style: TextStyle(fontSize: 9)),
+                              Text('End Date: ', style: TextStyle(fontSize: 9)),
                               Text(
                                   endDate != null && endDate != ''
-                                      ? new CommonUtil()
+                                      ? CommonUtil()
                                           .dateFormatConversion(endDate)
                                       : '-',
                                   style: TextStyle(
@@ -215,8 +211,8 @@ class PlanDetail extends State<MyPlanDetail> {
                             ),
                           ),
                           onPressed: () async {
-                            final common = CommonUtil();
-                            final updatedData =
+                            var common = CommonUtil();
+                            var updatedData =
                                 common.getFileNameAndUrl(descriptionURL);
                             if (updatedData.isEmpty) {
                               common.showStatusToUser(
@@ -227,7 +223,7 @@ class PlanDetail extends State<MyPlanDetail> {
                               if (Platform.isIOS) {
                                 downloadFileForIos(updatedData);
                               } else {
-                                common.downloader(updatedData.first);
+                                await common.downloader(updatedData.first);
                               }
                             }
                           },
@@ -235,8 +231,6 @@ class PlanDetail extends State<MyPlanDetail> {
                             color: Color(
                               CommonUtil().getMyPrimaryColor(),
                             ),
-                            style: BorderStyle.solid,
-                            width: 1,
                           ),
                         ),
                       ],
@@ -250,23 +244,27 @@ class PlanDetail extends State<MyPlanDetail> {
                           EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                       height: 0.65.sh,
                       child: InAppWebView(
-                          initialUrl: "${descriptionURL}",
-                          initialHeaders: {},
+                          initialUrlRequest: URLRequest(
+                            url: Uri.parse(
+                                descriptionURL ?? ''),
+                            headers: {},
+                          ),
                           initialOptions: InAppWebViewGroupOptions(
                             crossPlatform: InAppWebViewOptions(
-                                debuggingEnabled: true,
+                                // debuggingEnabled: true,
                                 useOnDownloadStart: true),
                           ),
                           onWebViewCreated: (controller) {
                             webView = controller;
                           },
-                          onLoadStart: (InAppWebViewController controller,
-                              String url) {},
-                          onLoadStop: (InAppWebViewController controller,
-                              String url) {},
+                          onLoadStart: (controller,
+                              url) {},
+                          onLoadStop: (controller,
+                              url) {},
                           onDownloadStart: (controller, url) async {
-                            final common = CommonUtil();
-                            final updatedData = common.getFileNameAndUrl(url);
+                            var common = CommonUtil();
+                            //TODO: Check if any error in Inappwebview
+                            var updatedData = common.getFileNameAndUrl(url.path);
                             if (updatedData.isEmpty) {
                               common.showStatusToUser(
                                   ResultFromResponse(false,
@@ -276,7 +274,7 @@ class PlanDetail extends State<MyPlanDetail> {
                               if (Platform.isIOS) {
                                 downloadFileForIos(updatedData);
                               } else {
-                                common.downloader(updatedData.first);
+                                await common.downloader(updatedData.first);
                               }
                             }
                           }),
@@ -286,7 +284,6 @@ class PlanDetail extends State<MyPlanDetail> {
                       children: [
                         SizedBox(height: 20.h),
                         Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Container(
@@ -303,10 +300,26 @@ class PlanDetail extends State<MyPlanDetail> {
                     ),
             ),
             Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 OutlineButton(
+                  onPressed: () async {
+                    if (isExpired == '1') {
+                      await CommonUtil()
+                          .renewAlertDialog(context, packageId: packageId);
+                    } else {
+                      await CommonUtil().unSubcribeAlertDialog(
+                        context,
+                        packageId: packageId,
+                        fromDetail: true,
+                      );
+                    }
+                  },
+                  borderSide: BorderSide(
+                    color: isExpired == '1'
+                        ? Color(CommonUtil().getMyPrimaryColor())
+                        : Colors.red,
+                  ),
                   child: Text(
                     isExpired == '1' ? strIsRenew : strUnSubscribe,
                     style: TextStyle(
@@ -316,38 +329,12 @@ class PlanDetail extends State<MyPlanDetail> {
                       fontSize: 13.sp,
                     ),
                   ),
-                  onPressed: () async {
-                    if (isExpired == '1') {
-                      CommonUtil()
-                          .renewAlertDialog(context, packageId: packageId);
-                    } else {
-                      CommonUtil().unSubcribeAlertDialog(
-                        context,
-                        packageId: packageId,
-                        fromDetail: true,
-                      );
-                    }
-                  },
-                  borderSide: BorderSide(
-                    color: isExpired == '1'
-                        ? Color(new CommonUtil().getMyPrimaryColor())
-                        : Colors.red,
-                    style: BorderStyle.solid,
-                    width: 1,
-                  ),
                 ),
                 SizedBox(
                   width: 10,
                 ),
                 OutlineButton(
                   //hoverColor: Color(getMyPrimaryColor()),
-                  child: Text(
-                    'cancel'.toUpperCase(),
-                    style: TextStyle(
-                      color: Color(CommonUtil().getMyPrimaryColor()),
-                      fontSize: 13.sp,
-                    ),
-                  ),
                   onPressed: () async {
                     Navigator.of(context).pop();
                   },
@@ -355,8 +342,14 @@ class PlanDetail extends State<MyPlanDetail> {
                     color: Color(
                       CommonUtil().getMyPrimaryColor(),
                     ),
-                    style: BorderStyle.solid,
-                    width: 1,
+                  ),
+                  //hoverColor: Color(getMyPrimaryColor()),
+                  child: Text(
+                    'cancel'.toUpperCase(),
+                    style: TextStyle(
+                      color: Color(CommonUtil().getMyPrimaryColor()),
+                      fontSize: 13.sp,
+                    ),
                   ),
                 ),
               ],
@@ -477,7 +470,7 @@ class PlanDetail extends State<MyPlanDetail> {
         ));
   }*/
   downloadFileForIos(List<String> updatedData) async {
-    final response = await CommonUtil()
+    var response = await CommonUtil()
         .loadPdf(url: updatedData.first, fileName: updatedData.last);
     CommonUtil().showStatusToUser(response, _scaffoldKey);
   }

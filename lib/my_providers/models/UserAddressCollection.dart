@@ -1,4 +1,4 @@
-import 'package:myfhb/my_providers/models/PhoneNumberType.dart';
+import 'PhoneNumberType.dart';
 
 class UserAddressCollection3 {
   String id;
@@ -35,31 +35,31 @@ class UserAddressCollection3 {
     isActive = json['isActive'];
     createdOn = json['createdOn'];
     lastModifiedOn = json['lastModifiedOn'];
-    city = json['city'] != null ? new City.fromJson(json['city']) : null;
-    state = json['state'] != null ? new State.fromJson(json['state']) : null;
+    city = json['city'] != null ? City.fromJson(json['city']) : null;
+    state = json['state'] != null ? State.fromJson(json['state']) : null;
     addressType = json['addressType'] != null
-        ? new PhoneNumberType.fromJson(json['addressType'])
+        ? PhoneNumberType.fromJson(json['addressType'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['addressLine1'] = this.addressLine1;
-    data['addressLine2'] = this.addressLine2;
-    data['pincode'] = this.pincode;
-    data['isPrimary'] = this.isPrimary;
-    data['isActive'] = this.isActive;
-    data['createdOn'] = this.createdOn;
-    data['lastModifiedOn'] = this.lastModifiedOn;
-    if (this.city != null) {
-      data['city'] = this.city.toJson();
+    final data = Map<String, dynamic>();
+    data['id'] = id;
+    data['addressLine1'] = addressLine1;
+    data['addressLine2'] = addressLine2;
+    data['pincode'] = pincode;
+    data['isPrimary'] = isPrimary;
+    data['isActive'] = isActive;
+    data['createdOn'] = createdOn;
+    data['lastModifiedOn'] = lastModifiedOn;
+    if (city != null) {
+      data['city'] = city.toJson();
     }
-    if (this.state != null) {
-      data['state'] = this.state.toJson();
+    if (state != null) {
+      data['state'] = state.toJson();
     }
-    if (this.addressType != null) {
-      data['addressType'] = this.addressType.toJson();
+    if (addressType != null) {
+      data['addressType'] = addressType.toJson();
     }
     return data;
   }
@@ -84,12 +84,12 @@ class City {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['isActive'] = this.isActive;
-    data['createdOn'] = this.createdOn;
-    data['lastModifiedOn'] = this.lastModifiedOn;
+    final data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['isActive'] = isActive;
+    data['createdOn'] = createdOn;
+    data['lastModifiedOn'] = lastModifiedOn;
     return data;
   }
 }
@@ -120,13 +120,13 @@ class State {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['countryCode'] = this.countryCode;
-    data['isActive'] = this.isActive;
-    data['createdOn'] = this.createdOn;
-    data['lastModifiedOn'] = this.lastModifiedOn;
+    final data = Map<String, dynamic>();
+    data['id'] = id;
+    data['name'] = name;
+    data['countryCode'] = countryCode;
+    data['isActive'] = isActive;
+    data['createdOn'] = createdOn;
+    data['lastModifiedOn'] = lastModifiedOn;
     return data;
   }
 }

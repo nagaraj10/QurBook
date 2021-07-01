@@ -3,22 +3,22 @@ import 'dart:convert' as convert;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/add_family_otp/bloc/add_family_otp_bloc.dart';
-import 'package:myfhb/add_family_otp/models/add_family_otp_arguments.dart';
-import 'package:myfhb/add_family_otp/models/add_family_otp_response.dart';
-import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments.dart';
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/FHBBasicWidget.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
-import 'package:myfhb/src/utils/alert.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import '../bloc/add_family_otp_bloc.dart';
+import '../models/add_family_otp_arguments.dart';
+import '../models/add_family_otp_response.dart';
+import '../../add_family_user_info/models/add_family_user_info_arguments.dart';
+import '../../common/CommonConstants.dart';
+import '../../common/CommonUtil.dart';
+import '../../common/FHBBasicWidget.dart';
+import '../../common/PreferenceUtil.dart';
+import '../../constants/fhb_constants.dart';
+import '../../constants/fhb_parameters.dart' as parameters;
+import '../../constants/router_variable.dart' as router;
+import '../../constants/variable_constant.dart' as variable;
+import '../../my_family/bloc/FamilyListBloc.dart';
+import '../../src/utils/alert.dart';
+import '../../widgets/GradientAppBar.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
 
 class AddFamilyOTPScreen extends StatefulWidget {
   AddFamilyOTPArguments arguments;
@@ -32,17 +32,17 @@ class AddFamilyOTPScreen extends StatefulWidget {
 }
 
 class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
-  TextEditingController controller1 = new TextEditingController();
-  TextEditingController controller2 = new TextEditingController();
-  TextEditingController controller3 = new TextEditingController();
-  TextEditingController controller4 = new TextEditingController();
-  TextEditingController controller5 = new TextEditingController();
-  TextEditingController controller6 = new TextEditingController();
-  TextEditingController currController = new TextEditingController();
+  TextEditingController controller1 = TextEditingController();
+  TextEditingController controller2 = TextEditingController();
+  TextEditingController controller3 = TextEditingController();
+  TextEditingController controller4 = TextEditingController();
+  TextEditingController controller5 = TextEditingController();
+  TextEditingController controller6 = TextEditingController();
+  TextEditingController currController = TextEditingController();
 
   AddFamilyOTPBloc _addFamilyOTPBloc;
 
-  GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
+  GlobalKey<ScaffoldState> scaffold_state = GlobalKey<ScaffoldState>();
 
   @override
   void dispose() {
@@ -73,13 +73,13 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> widgetList = [
+    var widgetList = <Widget>[
       Padding(
         padding: EdgeInsets.only(
           left: 0.0.w,
           right: 2.0.w,
         ),
-        child: new Container(
+        child: Container(
           color: Colors.transparent,
         ),
       ),
@@ -88,15 +88,14 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
           right: 2.0.w,
           left: 2.0.w,
         ),
-        child: new Container(
+        child: Container(
           alignment: Alignment.center,
-          child: new TextField(
+          child: TextField(
             inputFormatters: [
               LengthLimitingTextInputFormatter(1),
             ],
             enabled: false,
             controller: controller1,
-            autofocus: false,
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 16.0.sp,
@@ -110,14 +109,13 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
           right: 2.0.w,
           left: 2.0.w,
         ),
-        child: new Container(
+        child: Container(
           alignment: Alignment.center,
-          child: new TextField(
+          child: TextField(
             inputFormatters: [
               LengthLimitingTextInputFormatter(1),
             ],
             controller: controller2,
-            autofocus: false,
             enabled: false,
             keyboardType: TextInputType.number,
             textAlign: TextAlign.center,
@@ -133,16 +131,15 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
           right: 2.0.w,
           left: 2.0.w,
         ),
-        child: new Container(
+        child: Container(
           alignment: Alignment.center,
-          child: new TextField(
+          child: TextField(
             inputFormatters: [
               LengthLimitingTextInputFormatter(1),
             ],
             keyboardType: TextInputType.number,
             controller: controller3,
             textAlign: TextAlign.center,
-            autofocus: false,
             enabled: false,
             style: TextStyle(
               fontSize: 16.0.sp,
@@ -156,15 +153,14 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
           right: 2.0.w,
           left: 2.0.w,
         ),
-        child: new Container(
+        child: Container(
           alignment: Alignment.center,
-          child: new TextField(
+          child: TextField(
             inputFormatters: [
               LengthLimitingTextInputFormatter(1),
             ],
             textAlign: TextAlign.center,
             controller: controller4,
-            autofocus: false,
             enabled: false,
             style: TextStyle(
               fontSize: 16.0.sp,
@@ -178,7 +174,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
           left: 2.0.w,
           right: 0.0.w,
         ),
-        child: new Container(
+        child: Container(
           color: Colors.transparent,
         ),
       ),
@@ -205,7 +201,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                 toBeginningOfSentenceCase(
                     '${widget.arguments.enteredFirstName} ${widget.arguments.enteredMiddleName} ${widget.arguments.enteredLastName}'),
                 style: TextStyle(
-                  color: Color(new CommonUtil().getMyPrimaryColor()),
+                  color: Color(CommonUtil().getMyPrimaryColor()),
                   fontWeight: FontWeight.w500,
                   fontSize: 16.0.sp,
                 ),
@@ -240,10 +236,9 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                     crossAxisSpacing: 10,
                     shrinkWrap: true,
                     primary: false,
-                    scrollDirection: Axis.vertical,
                     children: List<Container>.generate(
                       6,
-                      (int index) => Container(
+                      (index) => Container(
                         constraints: BoxConstraints(maxWidth: 20.0.w),
                         child: widgetList[index],
                       ),
@@ -269,7 +264,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                       variable.strResendCode,
                       style: TextStyle(
                           //color: Colors.deepPurple[300],
-                          color: Color(new CommonUtil().getMyPrimaryColor()),
+                          color: Color(CommonUtil().getMyPrimaryColor()),
                           fontWeight: FontWeight.w600),
                     ),
                   ),
@@ -283,15 +278,13 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
               flex: 3,
               child: SingleChildScrollView(
                 child: Column(
-                  mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    new Container(
+                    Container(
                       child: Padding(
-                        padding: const EdgeInsets.only(
-                            left: 8.0, top: 8.0, right: 8.0, bottom: 0.0),
+                        padding:
+                            const EdgeInsets.only(left: 8, top: 8, right: 8),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             MaterialButton(
@@ -316,12 +309,11 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                         ),
                       ),
                     ),
-                    new Container(
+                    Container(
                       child: Padding(
                         padding: const EdgeInsets.only(
-                            left: 8.0, top: 4.0, right: 8.0, bottom: 0.0),
+                            left: 8, top: 4, right: 8, bottom: 0),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             MaterialButton(
@@ -346,12 +338,11 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                         ),
                       ),
                     ),
-                    new Container(
+                    Container(
                       child: Padding(
                         padding: const EdgeInsets.only(
-                            left: 8.0, top: 4.0, right: 8.0, bottom: 0.0),
+                            left: 8, top: 4, right: 8, bottom: 0),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             MaterialButton(
@@ -376,12 +367,11 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                         ),
                       ),
                     ),
-                    new Container(
+                    Container(
                       child: Padding(
-                        padding: const EdgeInsets.only(
-                            left: 8.0, top: 4.0, right: 8.0, bottom: 0.0),
+                        padding:
+                            const EdgeInsets.only(left: 8, top: 4, right: 8),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             MaterialButton(
@@ -390,8 +380,8 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                                 },
                                 child: Icon(
                                   Icons.backspace,
-                                  color: Color(
-                                      new CommonUtil().getMyPrimaryColor()),
+                                  color:
+                                      Color(CommonUtil().getMyPrimaryColor()),
                                   size: 24.0.sp,
                                 )),
                             MaterialButton(
@@ -403,11 +393,11 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                             //submitButton(_otpVerifyBloc)
                             MaterialButton(
                               onPressed: () {
-                                if (controller1.text.length > 0 &&
-                                    controller2.text.length > 0 &&
-                                    controller3.text.length > 0 &&
-                                    controller4.text.length > 0) {
-                                  String otp =
+                                if (controller1.text.isNotEmpty &&
+                                    controller2.text.isNotEmpty &&
+                                    controller3.text.isNotEmpty &&
+                                    controller4.text.isNotEmpty) {
+                                  final otp =
                                       '${controller1.text}${controller2.text}${controller3.text}${controller4.text}';
                                   _addFamilyOTPBloc.fromClass =
                                       CommonConstants.add_family_otp;
@@ -416,9 +406,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                                           widget.arguments.enteredMobNumber,
                                           widget.arguments.selectedCountryCode,
                                           otp)
-                                      .then((otpResponse) {
-                                    checkOTPResponse(otpResponse);
-                                  });
+                                      .then(checkOTPResponse);
                                 } else {
                                   Alert.displayAlertPlain(context,
                                       title: variable.strError,
@@ -428,8 +416,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                               },
                               child: Icon(
                                 Icons.done,
-                                color:
-                                    Color(new CommonUtil().getMyPrimaryColor()),
+                                color: Color(CommonUtil().getMyPrimaryColor()),
                                 size: 24.0.sp,
                               ),
                             ),
@@ -484,29 +471,29 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
   }
 
   void deleteText() {
-    if (currController.text.length == 0) {
+    if (currController.text.isEmpty) {
     } else {
-      currController.text = "";
+      currController.text = '';
       currController = controller4;
       return;
     }
 
     if (currController == controller1) {
-      controller1.text = "";
+      controller1.text = '';
     } else if (currController == controller2) {
-      controller1.text = "";
+      controller1.text = '';
       currController = controller1;
     } else if (currController == controller3) {
-      controller2.text = "";
+      controller2.text = '';
       currController = controller2;
     } else if (currController == controller4) {
-      controller3.text = "";
+      controller3.text = '';
       currController = controller3;
     } else if (currController == controller5) {
-      controller4.text = "";
+      controller4.text = '';
       currController = controller4;
     } else if (currController == controller6) {
-      controller5.text = "";
+      controller5.text = '';
       currController = controller5;
     }
   }
@@ -514,7 +501,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
   void matchOtp() {
     showDialog(
         context: context,
-        builder: (BuildContext context) {
+        builder: (context) {
           return AlertDialog(
             title: Text(variable.strSuccessfully),
             content: Text(variable.strOTPMatched),
@@ -547,9 +534,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                       enteredLastName: widget.arguments.enteredLastName,
                       relationShip: widget.arguments.relationShip,
                       isPrimaryNoSelected: widget.arguments.isPrimaryNoSelected,
-                      addFamilyUserInfo: addFamilyOTPResponse.result != null
-                          ? addFamilyOTPResponse.result
-                          : ''))
+                      addFamilyUserInfo: addFamilyOTPResponse.result ?? ''))
               .then((value) {});
         },
       );
@@ -560,16 +545,16 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
   }
 
   void generateOtp(String selectedCountryCode, String enteredMobNumber) {
-    FamilyListBloc _familyListBloc = new FamilyListBloc();
+    var _familyListBloc = FamilyListBloc();
 
-    var signInData = {};
+    final signInData = {};
     signInData[variable.strCountryCode] = '+$selectedCountryCode';
     signInData[variable.strPhoneNumber] = enteredMobNumber;
     signInData[variable.strisPrimaryUser] =
         widget.arguments.isPrimaryNoSelected;
     signInData[variable.strFirstName] = widget.arguments.enteredFirstName;
     signInData[variable.strMiddleName] =
-        widget.arguments.enteredMiddleName.length > 0
+        widget.arguments.enteredMiddleName.isNotEmpty
             ? widget.arguments.enteredMiddleName
             : '';
     signInData[variable.strLastName] = widget.arguments.enteredLastName;
@@ -579,28 +564,26 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
     signInData[parameters.strSourceId] = parameters.strSrcIdVal;
     signInData[parameters.strEntityId] = parameters.strEntityIdVal;
     signInData[parameters.strRoleId] = parameters.strRoleIdVal;
-    var jsonString = convert.jsonEncode(signInData);
+    final jsonString = convert.jsonEncode(signInData);
 
     if (widget.arguments.isPrimaryNoSelected) {
       _familyListBloc
           .postUserLinkingForPrimaryNo(jsonString)
           .then((addFamilyOTPResponse) {
         if (addFamilyOTPResponse.isSuccess) {
-          new FHBBasicWidget()
+          FHBBasicWidget()
               .showInSnackBar('New Family has been added', scaffold_state);
         } else {
-          new FHBBasicWidget()
+          FHBBasicWidget()
               .showInSnackBar('Error Adding Family member', scaffold_state);
         }
       });
     } else {
       _familyListBloc.postUserLinking(jsonString).then((userLinking) {
         if (userLinking.success && userLinking.status == 200) {
-          new FHBBasicWidget()
-              .showInSnackBar(userLinking.message, scaffold_state);
+          FHBBasicWidget().showInSnackBar(userLinking.message, scaffold_state);
         } else {
-          new FHBBasicWidget()
-              .showInSnackBar(userLinking.message, scaffold_state);
+          FHBBasicWidget().showInSnackBar(userLinking.message, scaffold_state);
         }
       });
     }

@@ -13,15 +13,15 @@ class GetDoctorsByIdModel {
     isSuccess = json['isSuccess'];
     message = json['message'];
     result =
-    json['result'] != null ? new DoctorResult.fromJson(json['result']) : null;
+    json['result'] != null ? DoctorResult.fromJson(json['result']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['isSuccess'] = this.isSuccess;
-    data['message'] = this.message;
-    if (this.result != null) {
-      data['result'] = this.result.toJson();
+    final data = Map<String, dynamic>();
+    data['isSuccess'] = isSuccess;
+    data['message'] = message;
+    if (result != null) {
+      data['result'] = result.toJson();
     }
     return data;
   }
@@ -65,46 +65,45 @@ class DoctorResult {
     createdOn = json['createdOn'];
     lastModifiedBy = json['lastModifiedBy'];
     lastModifiedOn = json['lastModifiedOn'];
-    user = json['user'] != null ? new User.fromJson(json['user']) : null;
+    user = json['user'] != null ? User.fromJson(json['user']) : null;
     if (json['doctorProfessionalDetailCollection'] != null) {
       doctorProfessionalDetailCollection =
-      new List<DoctorProfessionalDetailCollection>();
+      <DoctorProfessionalDetailCollection>[];
       json['doctorProfessionalDetailCollection'].forEach((v) {
         doctorProfessionalDetailCollection
-            .add(new DoctorProfessionalDetailCollection.fromJson(v));
+            .add(DoctorProfessionalDetailCollection.fromJson(v));
       });
     }
     if (json['doctorLanguageCollection'] != null) {
-      doctorLanguageCollection = new List<DoctorLanguageCollection>();
+      doctorLanguageCollection = <DoctorLanguageCollection>[];
       json['doctorLanguageCollection'].forEach((v) {
-        doctorLanguageCollection.add(new DoctorLanguageCollection.fromJson(v));
+        doctorLanguageCollection.add(DoctorLanguageCollection.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['specialization'] = this.specialization;
-    data['isTelehealthEnabled'] = this.isTelehealthEnabled;
-    data['isMciVerified'] = this.isMciVerified;
-    data['isActive'] = this.isActive;
-    data['isWelcomeMailSent'] = this.isWelcomeMailSent;
-    data['createdOn'] = this.createdOn;
-    data['lastModifiedBy'] = this.lastModifiedBy;
-    data['lastModifiedOn'] = this.lastModifiedOn;
-    if (this.user != null) {
-      data['user'] = this.user.toJson();
+    final data = <String, dynamic>{};
+    data['id'] = id;
+    data['specialization'] = specialization;
+    data['isTelehealthEnabled'] = isTelehealthEnabled;
+    data['isMciVerified'] = isMciVerified;
+    data['isActive'] = isActive;
+    data['isWelcomeMailSent'] = isWelcomeMailSent;
+    data['createdOn'] = createdOn;
+    data['lastModifiedBy'] = lastModifiedBy;
+    data['lastModifiedOn'] = lastModifiedOn;
+    if (user != null) {
+      data['user'] = user.toJson();
     }
-    if (this.doctorProfessionalDetailCollection != null) {
-      data['doctorProfessionalDetailCollection'] = this
-          .doctorProfessionalDetailCollection
+    if (doctorProfessionalDetailCollection != null) {
+      data['doctorProfessionalDetailCollection'] = doctorProfessionalDetailCollection
           .map((v) => v.toJson())
           .toList();
     }
-    if (this.doctorLanguageCollection != null) {
+    if (doctorLanguageCollection != null) {
       data['doctorLanguageCollection'] =
-          this.doctorLanguageCollection.map((v) => v.toJson()).toList();
+          doctorLanguageCollection.map((v) => v.toJson()).toList();
     }
     return data;
   }

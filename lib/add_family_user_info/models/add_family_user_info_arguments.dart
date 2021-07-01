@@ -1,7 +1,7 @@
-import 'package:myfhb/add_family_otp/models/add_family_otp_response.dart';
-import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
-import 'package:myfhb/my_family/models/relationships.dart';
-import 'package:myfhb/src/model/user/MyProfileResult.dart';
+import '../../add_family_otp/models/add_family_otp_response.dart';
+import '../../my_family/models/FamilyMembersRes.dart';
+import '../../my_family/models/relationships.dart';
+import '../../src/model/user/MyProfileResult.dart';
 
 class AddFamilyUserInfoArguments {
   Result addFamilyUserInfo;

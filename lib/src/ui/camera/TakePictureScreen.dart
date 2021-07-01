@@ -15,7 +15,7 @@ import 'package:myfhb/exception/FetchException.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:showcaseview/showcase_widget.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'CropAndRotateScreen.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
@@ -239,10 +239,15 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                     callDisplayPictureScreen(context);
                                   } else {
                                     try {
-                                      var image = await FilePicker.getFile(
-                                          type: FileType.custom,
-                                          allowedExtensions: [variable.strpdf]);
-                                      imagePaths.add(image.path);
+                                      var image = await FilePicker.platform
+                                          .pickFiles(
+                                              type: FileType.custom,
+                                              allowedExtensions: [
+                                            variable.strpdf
+                                          ]);
+                                      if ((image?.files?.length ?? 0) > 0) {
+                                        imagePaths.add(image.files[0].path);
+                                      }
                                       callDisplayPictureScreen(context);
                                     } catch (e) {
                                       // If an error occurs, log the error to the console.
@@ -278,8 +283,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                     );
 
                                     // Attempt to take a picture and log where it's been saved.
-                                    await _controller.takePicture(path);
-                                    imagePaths.add(path);
+                                    XFile xpath = await _controller.takePicture();
+                                    imagePaths.add(xpath?.path);
                                     setState(() {});
                                   } catch (e) {
                                     // If an error occurs, log the error to the console.
@@ -347,10 +352,10 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                       } else {
                                         try {
                                           String filePath;
-                                          var image =
-                                              await ImagePicker.pickImage(
+                                          var image = await ImagePicker.platform
+                                              .pickImage(
                                                   source: ImageSource.gallery);
-                                          filePath = image.uri.path;
+                                          filePath = image.path;
                                           imagePaths.add(filePath);
                                           callDisplayPictureScreen(context);
                                         } catch (e) {
@@ -383,8 +388,9 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                       } else {
                                         try {
                                           var image =
-                                              await FilePicker.getFile();
-                                          imagePaths.add(image.path);
+                                              await FilePicker.platform.pickFiles();
+                                          if((image?.files?.length ?? 0) > 0)
+                                          imagePaths.add(image.files[0].path);
                                           callDisplayPictureScreen(context);
                                         } catch (e) {
                                           // If an error occurs, log the error to the console.
@@ -421,16 +427,16 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                     );
 
                                     // Attempt to take a picture and log where it's been saved.
-                                    await _controller.takePicture(path);
+                                    XFile xpath = await _controller.takePicture();
 
                                     if (isMultipleImages) {
                                       isThumbnails = true;
-                                      imagePaths.add(path);
+                                      imagePaths.add(xpath?.path);
 
                                       setState(() {});
                                     } else {
                                       // If the picture was taken, display it on a new screen.
-                                      imagePaths.add(path);
+                                      imagePaths.add(xpath?.path);
                                       callDisplayPictureScreen(context);
                                     }
                                   } catch (e) {
@@ -608,14 +614,15 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   }
 
   Future<void> getFilePath() async {
-    List<File> filePaths = await FilePicker.getMultiFile(
+    FilePickerResult filePaths = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: [variable.strpdf],
     );
-
-    for (File file in filePaths) {
-      String filePath = await FlutterAbsolutePath.getAbsolutePath(file.path);
-      imagePaths.add(filePath);
+    if((filePaths?.files?.length ?? 0) > 0) {
+      for (PlatformFile file in filePaths?.files) {
+        String filePath = await FlutterAbsolutePath.getAbsolutePath(file.path);
+        imagePaths.add(filePath);
+      }
     }
   }
 }

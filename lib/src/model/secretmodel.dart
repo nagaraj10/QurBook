@@ -4,7 +4,7 @@ class Secret {
   Secret({this.myScerets});
 
   factory Secret.fromJson(Map<String, dynamic> jsonMap) {
-    return new Secret(myScerets: jsonMap);
+    return Secret(myScerets: jsonMap);
   }
 
 }

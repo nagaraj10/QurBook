@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:myfhb/my_providers/bloc/providers_block.dart';
-import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
-import 'package:myfhb/my_providers/widgets/my_providers_appbar.dart';
-import 'package:myfhb/my_providers/widgets/my_providers_tab_bar.dart';
-import 'package:myfhb/search_providers/models/search_arguments.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import '../../colors/fhb_colors.dart' as fhbColors;
+import '../../common/CommonConstants.dart';
+import '../../common/CommonUtil.dart';
+import '../../constants/fhb_constants.dart';
+import '../../constants/router_variable.dart' as router;
+import '../bloc/providers_block.dart';
+import '../models/MyProviderResponseNew.dart';
+import '../widgets/my_providers_appbar.dart';
+import '../widgets/my_providers_tab_bar.dart';
+import '../../search_providers/models/search_arguments.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
 
 class MyProvider extends StatefulWidget {
   @override
@@ -29,10 +29,10 @@ class MyProviderState extends State<MyProvider>
     mInitialTime = DateTime.now();
     super.initState();
 
-    _tabController = new TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
     _tabController.addListener(_setActiveTabIndex);
 
-    _providersBloc = new ProvidersBloc();
+    _providersBloc = ProvidersBloc();
     _providersBloc.getMedicalPreferencesAll().then((value) {
       setState(() {
         myProvidersResponseList = value;
@@ -59,7 +59,7 @@ class MyProviderState extends State<MyProvider>
     setState(() {
       myProvidersResponseList = null;
     });
-    _providersBloc = new ProvidersBloc();
+    _providersBloc = ProvidersBloc();
     _providersBloc.getMedicalPreferencesAll().then((value) {
       setState(() {
         myProvidersResponseList = value;
@@ -72,11 +72,6 @@ class MyProviderState extends State<MyProvider>
     return Scaffold(
       appBar: MyProvidersAppBar(tabController: _tabController),
       floatingActionButton: FloatingActionButton(
-        child: Icon(
-          Icons.add,
-          color: Colors.white,
-          size: 24.0.sp,
-        ),
         backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
         onPressed: () {
           switch (_activeTabIndex) {
@@ -113,6 +108,11 @@ class MyProviderState extends State<MyProvider>
             default:
           }
         },
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+          size: 24.0.sp,
+        ),
       ),
       body: Container(
         color: Color(fhbColors.bgColorContainer),
@@ -127,11 +127,11 @@ class MyProviderState extends State<MyProvider>
               )
             : Center(
                 child: SizedBox(
+                width: 30.0.h,
+                height: 30.0.h,
                 child: CircularProgressIndicator(
                   backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
                 ),
-                width: 30.0.h,
-                height: 30.0.h,
               )),
       ),
     );

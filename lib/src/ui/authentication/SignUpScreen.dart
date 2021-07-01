@@ -41,7 +41,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       lastName;
   String strErrorMsg = '';
   String dropDownValue = 'Male';
-  File imageURI;
+  PickedFile imageURI;
   @override
   void initState() {
     super.initState();
@@ -196,7 +196,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             image: DecorationImage(
                                 fit: BoxFit.cover,
                                 image: imageURI != null
-                                    ? FileImage(imageURI)
+                                    ? FileImage(File(imageURI.path))
                                     : AssetImage(variable.icon_fhb))),
                       ),
                       onTap: () {
@@ -249,7 +249,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               '',
               '',
               '',
-              imageURI,
+              File(imageURI.path),
               middleName.text,
               lastName.text)
           .then((onValue) {
@@ -280,10 +280,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
     } else {
       showDialog(
           context: context,
-          child: new AlertDialog(
-            title: new Text(variable.strAPP_NAME),
-            content: new Text(strErrorMsg),
-          ));
+          builder: (context) => new AlertDialog(
+                title: new Text(variable.strAPP_NAME),
+                content: new Text(strErrorMsg),
+              ));
     }
   }
 
@@ -323,8 +323,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       onTap: () {
                         Navigator.pop(context);
 
-                        var image =
-                            ImagePicker.pickImage(source: ImageSource.gallery);
+                        var image = ImagePicker.platform
+                            .pickImage(source: ImageSource.gallery);
                         image.then((value) {
                           imageURI = value;
 
@@ -340,8 +340,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       onTap: () {
                         Navigator.pop(context);
 
-                        var image =
-                            ImagePicker.pickImage(source: ImageSource.camera);
+                        var image = ImagePicker.platform
+                            .pickImage(source: ImageSource.camera);
                         image.then((value) {
                           imageURI = value;
 
@@ -358,12 +358,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Future getImageFromCamera() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.camera);
+    var image =
+        await ImagePicker.platform.pickImage(source: ImageSource.camera);
     imageURI = image;
   }
 
   Future getImageFromGallery() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    var image =
+        await ImagePicker.platform.pickImage(source: ImageSource.gallery);
     imageURI = image;
   }
 }

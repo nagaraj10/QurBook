@@ -7,18 +7,18 @@ class LabsSearchListResponse {
   LabsSearchListResponse.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['result'] != null) {
-      result = new List<LabListResult>();
+      result = List<LabListResult>();
       json['result'].forEach((v) {
-        result.add(new LabListResult.fromJson(v));
+        result.add(LabListResult.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['isSuccess'] = this.isSuccess;
-    if (this.result != null) {
-      data['result'] = this.result.map((v) => v.toJson()).toList();
+    final data = Map<String, dynamic>();
+    data['isSuccess'] = isSuccess;
+    if (result != null) {
+      data['result'] = result.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -71,20 +71,20 @@ class LabListResult {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['healthOrganizationId'] = this.healthOrganizationId;
-    data['healthOrganizationName'] = this.healthOrganizationName;
-    data['healthOrganizationTypeId'] = this.healthOrganizationTypeId;
-    data['healthOrganizationTypeName'] = this.healthOrganizationTypeName;
-    data['addressLine1'] = this.addressLine1;
-    data['addressLine2'] = this.addressLine2;
-    data['pincode'] = this.pincode;
-    data['cityName'] = this.cityName;
-    data['stateName'] = this.stateName;
-    data['phoneNumber'] = this.phoneNumber;
-    data['phoneNumberTypeId'] = this.phoneNumberTypeId;
-    data['phoneNumberTypeName'] = this.phoneNumberTypeName;
-    data['healthOrganizationReferenceId'] = this.healthOrganizationReferenceId;
+    final data = Map<String, dynamic>();
+    data['healthOrganizationId'] = healthOrganizationId;
+    data['healthOrganizationName'] = healthOrganizationName;
+    data['healthOrganizationTypeId'] = healthOrganizationTypeId;
+    data['healthOrganizationTypeName'] = healthOrganizationTypeName;
+    data['addressLine1'] = addressLine1;
+    data['addressLine2'] = addressLine2;
+    data['pincode'] = pincode;
+    data['cityName'] = cityName;
+    data['stateName'] = stateName;
+    data['phoneNumber'] = phoneNumber;
+    data['phoneNumberTypeId'] = phoneNumberTypeId;
+    data['phoneNumberTypeName'] = phoneNumberTypeName;
+    data['healthOrganizationReferenceId'] = healthOrganizationReferenceId;
     return data;
   }
 }

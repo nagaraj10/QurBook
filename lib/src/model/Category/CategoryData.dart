@@ -1,4 +1,4 @@
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import '../../../constants/fhb_parameters.dart' as parameters;
 
 class CategoryData {
   String id;
@@ -44,19 +44,19 @@ class CategoryData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[parameters.strId] = this.id;
-    data[parameters.strCategoryName] = this.categoryName;
-    data[parameters.strCategoryDesc] = this.categoryDescription;
-    data[parameters.strLogo] = this.logo;
-    data[parameters.strIsActive] = this.isActive;
-    data[parameters.strCreatedOn] = this.createdOn;
-    data[parameters.strLastModifiedOn] = this.lastModifiedOn;
-    data[parameters.strIsDisplay] = this.isDisplay;
-    data[parameters.strIsCreate] = this.isCreate;
-    data[parameters.strIsRead] = this.isRead;
-    data[parameters.strIsEdit] = this.isEdit;
-    data[parameters.strIsDelete] = this.isDelete;
+    final data = Map<String, dynamic>();
+    data[parameters.strId] = id;
+    data[parameters.strCategoryName] = categoryName;
+    data[parameters.strCategoryDesc] = categoryDescription;
+    data[parameters.strLogo] = logo;
+    data[parameters.strIsActive] = isActive;
+    data[parameters.strCreatedOn] = createdOn;
+    data[parameters.strLastModifiedOn] = lastModifiedOn;
+    data[parameters.strIsDisplay] = isDisplay;
+    data[parameters.strIsCreate] = isCreate;
+    data[parameters.strIsRead] = isRead;
+    data[parameters.strIsEdit] = isEdit;
+    data[parameters.strIsDelete] = isDelete;
     return data;
   }
 }

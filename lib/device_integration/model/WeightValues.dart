@@ -1,4 +1,4 @@
-import 'package:myfhb/constants/fhb_parameters.dart';
+import '../../constants/fhb_parameters.dart';
 
 class WeightValues {
   bool isSuccess;
@@ -9,19 +9,19 @@ class WeightValues {
   WeightValues.fromJson(Map<String, dynamic> json) {
     isSuccess = json[is_Success];
     if (json[dataResult] != null) {
-      result = new List<WVResult>();
+      result = <WVResult>[];
       json[dataResult].forEach((wgtvalue) {
-        result.add(new WVResult.fromJson(wgtvalue));
+        result.add(WVResult.fromJson(wgtvalue));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[is_Success] = this.isSuccess;
-    if (this.result != null) {
+    final data = Map<String, dynamic>();
+    data[is_Success] = isSuccess;
+    if (result != null) {
       data[dataResult] =
-          this.result.map((wgtvalue) => wgtvalue.toJson()).toList();
+          result.map((wgtvalue) => wgtvalue.toJson()).toList();
     }
     return data;
   }
@@ -53,12 +53,12 @@ class WVResult {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[strsourcetype] = this.sourceType;
-    data[strStartTimeStamp] = this.startDateTime;
-    data[strEndTimeStamp] = this.endDateTime;
-    data[strParamWeight] = this.weight;
-    data[strParamWeightUnit] = this.weightUnit;
+    final data = <String, dynamic>{};
+    data[strsourcetype] = sourceType;
+    data[strStartTimeStamp] = startDateTime;
+    data[strEndTimeStamp] = endDateTime;
+    data[strParamWeight] = weight;
+    data[strParamWeightUnit] = weightUnit;
     return data;
   }
 }

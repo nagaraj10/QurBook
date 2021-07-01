@@ -11,17 +11,17 @@ class CityListModel {
     success = json['success'];
     message = json['message'];
     response = json['response'] != null
-        ? new Response.fromJson(json['response'])
+        ? Response.fromJson(json['response'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['success'] = this.success;
-    data['message'] = this.message;
-    if (this.response != null) {
-      data['response'] = this.response.toJson();
+    final data = <String, dynamic>{};
+    data['status'] = status;
+    data['success'] = success;
+    data['message'] = message;
+    if (response != null) {
+      data['response'] = response.toJson();
     }
     return data;
   }
@@ -36,16 +36,16 @@ class Response {
   Response.fromJson(Map<String, dynamic> json) {
     count = json['count'];
     if (json['data'] != null) {
-      data = new List<CityData>();
+      data = List<CityData>();
       json['data'].forEach((v) {
-        data.add(new CityData.fromJson(v));
+        data.add(CityData.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['count'] = this.count;
+    final data = Map<String, dynamic>();
+    data['count'] = count;
     if (this.data != null) {
       data['data'] = this.data.map((v) => v.toJson()).toList();
     }
@@ -65,9 +65,9 @@ class CityData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
+    final data = Map<String, dynamic>();
+    data['id'] = id;
+    data['name'] = name;
     return data;
   }
 }

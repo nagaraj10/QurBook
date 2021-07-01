@@ -1,13 +1,13 @@
 import 'dart:async';
-import 'package:myfhb/record_detail/model/deleteRecord.dart';
-import 'package:myfhb/record_detail/model/deleteRecordResponse.dart';
-import 'package:myfhb/record_detail/services/deleteRecordRepository.dart';
-import 'package:myfhb/src/resources/network/ApiResponse.dart';
+import '../model/deleteRecord.dart';
+import '../model/deleteRecordResponse.dart';
+import '../services/deleteRecordRepository.dart';
+import '../../src/resources/network/ApiResponse.dart';
 
-import 'package:myfhb/src/utils/Validators.dart';
+import '../../src/utils/Validators.dart';
 import 'dart:convert' as convert;
 
-import 'package:myfhb/constants/variable_constant.dart' as variable;
+import '../../constants/variable_constant.dart' as variable;
 
 class DeleteRecordBloc with Validators implements BaseBloc {
   DeleteRecordRepository _deleteRecordRepository;
@@ -42,7 +42,7 @@ class DeleteRecordBloc with Validators implements BaseBloc {
 
   Future<DeleteRecordResponse> deleteRecordOnMediaMasterID(
       String metaId) async {
-    DeleteRecord deleteRecord = new DeleteRecord();
+    final deleteRecord = DeleteRecord();
 
     delteRecordSink.add(ApiResponse.loading(variable.strDeletingRecords));
     DeleteRecordResponse deleteRecordResponse;

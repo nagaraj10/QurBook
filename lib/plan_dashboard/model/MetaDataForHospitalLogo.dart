@@ -24,13 +24,13 @@ class MetaDataForHospitalLogo {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['icon'] = this.icon;
-    data['Address'] = this.address;
-    data['City'] = this.city;
-    data['Zip'] = this.zip;
-    data['DescriptionURL'] = this.descriptionURL;
-    data['SiteURL'] = this.siteURL;
+    final data = Map<String, dynamic>();
+    data['icon'] = icon;
+    data['Address'] = address;
+    data['City'] = city;
+    data['Zip'] = zip;
+    data['DescriptionURL'] = descriptionURL;
+    data['SiteURL'] = siteURL;
     return data;
   }
 }

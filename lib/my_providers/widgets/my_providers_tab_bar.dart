@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/my_providers/bloc/providers_block.dart';
-import 'package:myfhb/my_providers/models/Doctors.dart';
-import 'package:myfhb/my_providers/models/Hospitals.dart';
-import 'package:myfhb/my_providers/models/MyProviderResponseData.dart';
-import 'package:myfhb/my_providers/screens/my_provider.dart';
-import 'package:myfhb/my_providers/screens/my_providers_doctors_list.dart';
-import 'package:myfhb/my_providers/screens/my_providers_hospitals_list.dart';
-import 'package:myfhb/my_providers/screens/my_providers_labs_list.dart';
+import '../../colors/fhb_colors.dart' as fhbColors;
+import '../../constants/fhb_constants.dart' as Constants;
+import '../bloc/providers_block.dart';
+import '../models/Doctors.dart';
+import '../models/Hospitals.dart';
+import '../models/MyProviderResponseData.dart';
+import '../screens/my_provider.dart';
+import '../screens/my_providers_doctors_list.dart';
+import '../screens/my_providers_hospitals_list.dart';
+import '../screens/my_providers_labs_list.dart';
 
 class MyProvidersTabBar extends StatefulWidget {
   MyProvidersResponseData data;
@@ -32,9 +32,9 @@ class MyProvidersTabBar extends StatefulWidget {
 }
 
 class MyProviderTabBarState extends State<MyProvidersTabBar> {
-  List<Hospitals> hospitalsModel = new List();
-  List<Doctors> doctorsModel = new List();
-  List<Hospitals> labsModel = new List();
+  List<Hospitals> hospitalsModel = [];
+  List<Doctors> doctorsModel = [];
+  List<Hospitals> labsModel = List();
 
   @override
   void initState() {
@@ -112,7 +112,7 @@ class MyProviderTabBarState extends State<MyProvidersTabBar> {
     return TabBarView(
       controller: widget.tabController,
       children: [
-        doctorsModel != null && doctorsModel.length > 0
+        doctorsModel != null && doctorsModel.isNotEmpty
             ? Container(
                 color: Color(fhbColors.bgColorContainer),
                 child: MyProvidersDoctorsList(
@@ -124,6 +124,7 @@ class MyProviderTabBarState extends State<MyProvidersTabBar> {
                   },
                 ))
             : Container(
+                color: Color(fhbColors.bgColorContainer),
                 child: Center(
                   child: Padding(
                     padding: EdgeInsets.only(left: 40, right: 40),
@@ -133,54 +134,55 @@ class MyProviderTabBarState extends State<MyProvidersTabBar> {
                     ),
                   ),
                 ),
-                color: Color(fhbColors.bgColorContainer),
               ),
-        hospitalsModel.length > 0
-            ? Container(
-                color: Color(fhbColors.bgColorContainer),
-                child: MyProvidersHospitalsList(
-                  hospitalsModel: hospitalsModel,
-                  providersBloc: widget.providersBloc,
-                  myProviderState: widget.myProviderState,
-                  isRefresh: () {
-                    widget.refresh();
-                  },
-                ))
-            : Container(
-                child: Center(
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 40, right: 40),
-                    child: Text(
-                      Constants.NO_DATA_HOSPITAL,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
+        if (hospitalsModel.length > 0)
+          Container(
+              color: Color(fhbColors.bgColorContainer),
+              child: MyProvidersHospitalsList(
+                hospitalsModel: hospitalsModel,
+                providersBloc: widget.providersBloc,
+                myProviderState: widget.myProviderState,
+                isRefresh: () {
+                  widget.refresh();
+                },
+              ))
+        else
+          Container(
+            child: Center(
+              child: Padding(
+                padding: EdgeInsets.only(left: 40, right: 40),
+                child: Text(
+                  Constants.NO_DATA_HOSPITAL,
+                  textAlign: TextAlign.center,
                 ),
-                color: Color(fhbColors.bgColorContainer),
               ),
-        labsModel.length > 0
-            ? Container(
-                color: Color(fhbColors.bgColorContainer),
-                child: MyProvidersLabsList(
-                  labsModel: labsModel,
-                  providersBloc: widget.providersBloc,
-                  myProviderState: widget.myProviderState,
-                  isRefresh: () {
-                    widget.refresh();
-                  },
-                ))
-            : Container(
-                child: Center(
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 40, right: 40),
-                    child: Text(
-                      Constants.NO_DATA_LAB,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
+            ),
+            color: Color(fhbColors.bgColorContainer),
+          ),
+        if (labsModel.length > 0)
+          Container(
+              color: Color(fhbColors.bgColorContainer),
+              child: MyProvidersLabsList(
+                labsModel: labsModel,
+                providersBloc: widget.providersBloc,
+                myProviderState: widget.myProviderState,
+                isRefresh: () {
+                  widget.refresh();
+                },
+              ))
+        else
+          Container(
+            child: Center(
+              child: Padding(
+                padding: EdgeInsets.only(left: 40, right: 40),
+                child: Text(
+                  Constants.NO_DATA_LAB,
+                  textAlign: TextAlign.center,
                 ),
-                color: Color(fhbColors.bgColorContainer),
               ),
+            ),
+            color: Color(fhbColors.bgColorContainer),
+          ),
       ],
     );
   }

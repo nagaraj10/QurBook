@@ -1,5 +1,5 @@
-import 'package:myfhb/add_providers/models/add_more_data.dart';
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'add_more_data.dart';
+import '../../constants/fhb_parameters.dart' as parameters;
 class AddDoctorsProvidersId {
   int status;
   bool success;
@@ -14,7 +14,7 @@ class AddDoctorsProvidersId {
     success = json[parameters.strSuccess];
     message = json[parameters.strMessage];
     response = json[parameters.strResponse] != null
-        ? new Response.fromJson(json[parameters.strResponse])
+        ? Response.fromJson(json[parameters.strResponse])
         : null;
   }
 }

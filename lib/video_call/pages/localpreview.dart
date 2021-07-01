@@ -1,10 +1,16 @@
-import 'package:agora_rtc_engine/agora_rtc_engine.dart';
+import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/video_call/utils/hideprovider.dart';
 import 'package:provider/provider.dart';
+import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 
 class LocalPreview extends StatefulWidget {
+  RtcEngine rtcEngine;
+
+  LocalPreview({
+    this.rtcEngine,
+  });
   @override
   _LocalPreviewState createState() => _LocalPreviewState();
 }
@@ -17,18 +23,18 @@ class _LocalPreviewState extends State<LocalPreview> {
       backgroundColor: Colors.transparent,
       body: Stack(children: [
         InkWell(
-                onTap: () {
-                  if (hideStatus.isControlStatus) {
-                    hideStatus.hideMe();
-                  } else {
-                    hideStatus.showMe();
-                    Future.delayed(Duration(seconds: 10), () {
-                      hideStatus.hideMe();
-                    });
-                  }
-                },
-                child: Container(),
-              ),
+          onTap: () {
+            if (hideStatus.isControlStatus) {
+              hideStatus.hideMe();
+            } else {
+              hideStatus.showMe();
+              Future.delayed(Duration(seconds: 10), () {
+                hideStatus.hideMe();
+              });
+            }
+          },
+          child: Container(),
+        ),
         Positioned.fill(
           child: Align(
             alignment: Alignment.bottomRight,
@@ -42,7 +48,7 @@ class _LocalPreviewState extends State<LocalPreview> {
               margin: EdgeInsets.symmetric(vertical: 120, horizontal: 10),
               child: Stack(
                 children: [
-                  AgoraRenderWidget(0, local: true, preview: true),
+                  RtcLocalView.SurfaceView(),
                   Align(
                     alignment: FractionalOffset.topRight,
                     child: IconButton(
@@ -50,7 +56,7 @@ class _LocalPreviewState extends State<LocalPreview> {
                         iconSize: 30,
                         color: Colors.white,
                         onPressed: () {
-                          AgoraRtcEngine.switchCamera();
+                          widget.rtcEngine.switchCamera();
                         }),
                   )
                 ],

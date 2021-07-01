@@ -19,9 +19,9 @@ class Buttons {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['payload'] = this.payload;
-    data['title'] = this.title;
+    final data = Map<String, dynamic>();
+    data['payload'] = payload;
+    data['title'] = title;
     return data;
   }
 }

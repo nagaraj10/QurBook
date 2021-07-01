@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
+import '../widgets/GradientAppBar.dart';
 import 'package:pdf_render/pdf_render_widgets.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import '../constants/variable_constant.dart' as variable;
+import '../src/utils/screenutils/size_extensions.dart';
 
 class PDFViewer extends StatelessWidget {
   /// render at 100 dpi
@@ -18,11 +18,11 @@ class PDFViewer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: new Scaffold(
+      home: Scaffold(
           appBar: AppBar(
-              title: Text(title != null ? title : ''),
+              title: Text(title ?? ''),
               elevation: 0,
               automaticallyImplyLeading: false,
               flexibleSpace: GradientAppBar(),
@@ -36,8 +36,8 @@ class PDFViewer extends StatelessWidget {
                   })),
           backgroundColor: Colors.grey,
           body: Center(
-              child: PdfDocumentLoader(
-            filePath: pdfData,
+              child: PdfDocumentLoader.openFile(
+            pdfData,
             documentBuilder: (context, pdfDocument, pageCount) => LayoutBuilder(
               builder: (context, constraints) => ListView.builder(
                 controller: controller,
@@ -48,19 +48,32 @@ class PDFViewer extends StatelessWidget {
                   color: Colors.black12,
                   child: PdfPageView(
                     pageNumber: index + 1,
-                    calculateSize: (pageWidth, pageHeight, aspectRatio) => Size(
-                        constraints.maxWidth - wmargin,
-                        (constraints.maxWidth - wmargin) / aspectRatio),
-                    customizer: (context, page, size) => Stack(
-                      alignment: Alignment.bottomCenter,
-                      children: <Widget>[
-                        page != null ? page : 0,
-                        Text(
-                          '',
-                          style: TextStyle(fontSize: 2.0.sp),
-                        ) // adding page number on the bottom of rendered page
-                      ],
-                    ),
+                    // calculateSize: (pageWidth, pageHeight, aspectRatio) => Size(
+                    //     constraints.maxWidth - wmargin,
+                    //     (constraints.maxWidth - wmargin) / aspectRatio),
+                    pageBuilder: (BuildContext context,
+                        PdfPageTextureBuilder textureBuilder, Size pageSize) {
+                      return Stack(
+                        alignment: Alignment.bottomCenter,
+                        children: <Widget>[
+                          if (textureBuilder != null) textureBuilder(),
+                          Text(
+                            '',
+                            style: TextStyle(fontSize: 2.0.sp),
+                          ) // adding page number on the bottom of rendered page
+                        ],
+                      );
+                    },
+                    // customizer: (context, page, size) => Stack(
+                    //   alignment: Alignment.bottomCenter,
+                    //   children: <Widget>[
+                    //     if (page != null) page,
+                    //     Text(
+                    //       '',
+                    //       style: TextStyle(fontSize: 2.0.sp),
+                    //     ) // adding page number on the bottom of rendered page
+                    //   ],
+                    // ),
                   ),
                 ),
               ),

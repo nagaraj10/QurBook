@@ -23,7 +23,6 @@ const String rt_TakePictureForDevices = '/take-picture-screen-for-devices';
 const String rt_TakePictureScreen = '/take-picture-screen';
 const String rt_TelehealthProvider = '/telehealth-providers';
 const String rt_Signinscreen = '/sign-in-screen';
-const String rt_IntroSlider = '/intro-slider';
 const String rt_ConfirmLocation = '/confirm-location';
 const String rt_AddReminders = '/add-reminders';
 const String rt_FeedbackSucess = '/feedbacks-success';

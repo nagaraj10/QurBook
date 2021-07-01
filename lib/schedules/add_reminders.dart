@@ -2,20 +2,20 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/src/model/ReminderModel.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'package:myfhb/widgets/RaisedGradientButton.dart';
+import '../src/model/ReminderModel.dart';
+import '../src/utils/FHBUtils.dart';
+import '../widgets/GradientAppBar.dart';
+import '../widgets/RaisedGradientButton.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import '../common/CommonUtil.dart';
+import '../constants/fhb_constants.dart' as Constants;
+import '../constants/variable_constant.dart' as variable;
+import '../src/utils/screenutils/size_extensions.dart';
 
 class AddReminder extends StatefulWidget {
   final ReminderModel model;
 
-  AddReminder({this.model});
+  const AddReminder({this.model});
 
   @override
   _AddReminderState createState() => _AddReminderState();
@@ -39,12 +39,12 @@ class _AddReminderState extends State<AddReminder> {
       isUpdate = true;
       tileContoller.text = widget.model.title;
       notesController.text = widget.model.notes;
-      var timeArray = widget.model.time.split(':');
+      final timeArray = widget.model.time.split(':');
       selectedDate = DateTime.parse(widget.model.date);
       selectedTime = TimeOfDay(
           hour: int.parse(timeArray[0]),
           minute: int.parse(timeArray[1].substring(0, 2)));
-      int intervalIndex =
+      var intervalIndex =
           variable.selectedInterval.indexOf(widget.model.interval);
       isSelected[intervalIndex] = true;
     } else {
@@ -64,8 +64,8 @@ class _AddReminderState extends State<AddReminder> {
 
   SharedPreferences prefs;
   dynamic detailsList =
-      new List(); // our default setting is to login, and we should switch to creating an account when the user chooses to
-  dynamic reverseDetailsList = new List();
+      List(); // our default setting is to login, and we should switch to creating an account when the user chooses to
+  dynamic reverseDetailsList = List();
 
   @override
   Widget build(BuildContext context) {
@@ -116,11 +116,11 @@ class _AddReminderState extends State<AddReminder> {
                                   _isNoteEmpty ? variable.strNoteEmpty : null),
                         ),
                         Padding(
+                          padding: EdgeInsets.only(top: 20),
                           child: Text(
                             variable.strRemindMe,
                             textAlign: TextAlign.start,
                           ),
-                          padding: EdgeInsets.only(top: 20),
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -183,12 +183,20 @@ class _AddReminderState extends State<AddReminder> {
                         Center(
                           child: ToggleButtons(
                             borderColor: Colors.black,
-                            fillColor:
-                                Color(new CommonUtil().getMyPrimaryColor()),
+                            fillColor: Color(CommonUtil().getMyPrimaryColor()),
                             borderWidth: 1,
                             selectedBorderColor: Colors.black,
                             selectedColor: Colors.white,
                             borderRadius: BorderRadius.circular(30),
+                            onPressed: (index) {
+                              setState(() {
+                                for (var i = 0; i < isSelected.length; i++) {
+                                  isSelected[i] = i == index;
+                                }
+                                intervalIndex = index;
+                              });
+                            },
+                            isSelected: isSelected,
                             children: <Widget>[
                               Container(
                                 alignment: Alignment.center,
@@ -230,15 +238,6 @@ class _AddReminderState extends State<AddReminder> {
                                 ),
                               ),
                             ],
-                            onPressed: (int index) {
-                              setState(() {
-                                for (int i = 0; i < isSelected.length; i++) {
-                                  isSelected[i] = i == index;
-                                }
-                                intervalIndex = index;
-                              });
-                            },
-                            isSelected: isSelected,
                           ),
                         ),
                       ]),
@@ -246,10 +245,13 @@ class _AddReminderState extends State<AddReminder> {
               ),
               RaisedGradientButton(
                 gradient: LinearGradient(colors: [
-                  Color(new CommonUtil().getMyPrimaryColor()),
-                  Color(new CommonUtil().getMyGredientColor()),
+                  Color(CommonUtil().getMyPrimaryColor()),
+                  Color(CommonUtil().getMyGredientColor()),
                 ]),
                 width: 200.0.w,
+                onPressed: () {
+                  setReminder();
+                },
                 child: Text(
                   isUpdate ? variable.strUpate : variable.strSave,
                   style: TextStyle(
@@ -257,9 +259,6 @@ class _AddReminderState extends State<AddReminder> {
                     fontSize: 16.0.sp,
                   ),
                 ),
-                onPressed: () {
-                  setReminder();
-                },
               )
             ]),
       ),
@@ -267,16 +266,17 @@ class _AddReminderState extends State<AddReminder> {
   }
 
   Future<Null> _selectDate(BuildContext context) async {
-    final DateTime pickedDate = await showDatePicker(
+    final pickedDate = await showDatePicker(
         context: context,
         initialDate: selectedDate,
         firstDate: DateTime.now().subtract(Duration(days: 1)),
         lastDate: DateTime(2100));
 
-    if (pickedDate != null && pickedDate != selectedDate)
+    if (pickedDate != null && pickedDate != selectedDate) {
       setState(() {
         selectedDate = pickedDate;
       });
+    }
 
     if (FHBUtils().checkdate(selectedDate)) {
       setState(() {
@@ -296,10 +296,10 @@ class _AddReminderState extends State<AddReminder> {
   }
 
   Future<Null> _selectTime(BuildContext context) async {
-    final TimeOfDay pickedTime = await showTimePicker(
+    final pickedTime = await showTimePicker(
       context: context,
       initialTime: selectedTime,
-      builder: (BuildContext context, Widget child) {
+      builder: (context, child) {
         return MediaQuery(
           data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
           child: child,
@@ -307,10 +307,11 @@ class _AddReminderState extends State<AddReminder> {
       },
     );
 
-    if (pickedTime != null && pickedTime != selectedTime)
+    if (pickedTime != null && pickedTime != selectedTime) {
       setState(() {
         selectedTime = pickedTime;
       });
+    }
 
     if (!FHBUtils().checkdate(selectedDate)) {
       if (FHBUtils().checkTime(selectedTime)) {
@@ -338,7 +339,7 @@ class _AddReminderState extends State<AddReminder> {
     } else if (!_isTimeAfter) {
       //do nothing
     } else {
-      ReminderModel model = new ReminderModel(
+      final model = ReminderModel(
           title: tileContoller.text,
           notes: notesController.text,
           interval: variable.selectedInterval[intervalIndex],
@@ -360,21 +361,21 @@ class _AddReminderState extends State<AddReminder> {
   }
 
   void _triggerNotification(ReminderModel model) async {
-    var androidPlatformChannelSpecifies = new AndroidNotificationDetails(
+    final androidPlatformChannelSpecifies = AndroidNotificationDetails(
         variable.strAppPackage,
         variable.strAPP_NAME,
         variable.strHealthRecordChannel,
         importance: Importance.max,
         priority: Priority.high);
-    var iosPlatformChannelSpecifies = new IOSNotificationDetails();
-    var platformChannelSpecifies = new NotificationDetails();
-    var timeArray = model.time.split(':');
+    final iosPlatformChannelSpecifies = IOSNotificationDetails();
+    final platformChannelSpecifies = NotificationDetails();
+    final timeArray = model.time.split(':');
     var hour = int.parse(timeArray[0]);
-    var mintues = int.parse(timeArray[1].substring(0, 2));
-    var isAMPM = timeArray[1].substring(3);
-    var dayFormat =
+    final mintues = int.parse(timeArray[1].substring(0, 2));
+    final isAMPM = timeArray[1].substring(3);
+    final dayFormat =
         DateFormat(variable.strFormatEE).format(DateTime.parse(model.date));
-    var weekDays = {
+    final weekDays = {
       variable.strSunday: 0,
       variable.strMonday: 1,
       variable.strTuesday: 2,
@@ -384,7 +385,7 @@ class _AddReminderState extends State<AddReminder> {
       variable.strSaturday: 6,
     };
 
-    var myCurrentDay = weekDays['$dayFormat'];
+    final myCurrentDay = weekDays[dayFormat];
 
     if (isAMPM == variable.strPM) {
       hour = hour + 12;
@@ -393,7 +394,7 @@ class _AddReminderState extends State<AddReminder> {
     switch (model.interval) {
       case variable.strDay:
         {
-          var time = Time(hour, mintues, 0);
+          final time = Time(hour, mintues);
           await flutterLocalNotificationsPlugin.showDailyAtTime(
               1, model.title, model.notes, time, platformChannelSpecifies);
         }
@@ -401,7 +402,7 @@ class _AddReminderState extends State<AddReminder> {
         break;
       case variable.strWeek:
         {
-          var time = Time(hour, mintues, 0);
+          final time = Time(hour, mintues);
           await flutterLocalNotificationsPlugin.showWeeklyAtDayAndTime(
               2,
               model.title,
@@ -413,7 +414,7 @@ class _AddReminderState extends State<AddReminder> {
         break;
       case variable.strMonth:
         {
-          var time = DateTime.parse(widget.model.date);
+          final time = DateTime.parse(widget.model.date);
           await flutterLocalNotificationsPlugin.schedule(
               3, model.title, model.notes, time, platformChannelSpecifies);
         }

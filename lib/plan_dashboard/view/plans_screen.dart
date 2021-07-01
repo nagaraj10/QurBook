@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/router_variable.dart';
-import 'package:myfhb/landing/view/landing_arguments.dart';
-import 'package:myfhb/plan_dashboard/view/planUserProviderList.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
+import '../../common/CommonUtil.dart';
+import '../../constants/fhb_constants.dart';
+import '../../constants/router_variable.dart';
+import '../../landing/view/landing_arguments.dart';
+import 'planUserProviderList.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
+import '../../widgets/GradientAppBar.dart';
 
 class PlansScreen extends StatelessWidget {
   @override
@@ -15,7 +15,7 @@ class PlansScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: GradientAppBar(),
-        backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
+        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
         elevation: 0,
         title: Text(strHospitals),
         leading: IconWidget(

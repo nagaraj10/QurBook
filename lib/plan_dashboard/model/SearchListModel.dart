@@ -11,18 +11,18 @@ class SearchListModel {
   SearchListModel.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['result'] != null) {
-      result = new List<SearchListResult>();
+      result = <SearchListResult>[];
       json['result'].forEach((v) {
-        result.add(new SearchListResult.fromJson(v));
+        result.add(SearchListResult.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['isSuccess'] = this.isSuccess;
-    if (this.result != null) {
-      data['result'] = this.result.map((v) => v.toJson()).toList();
+    final data = Map<String, dynamic>();
+    data['isSuccess'] = isSuccess;
+    if (result != null) {
+      data['result'] = result.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -43,18 +43,18 @@ class SearchListResult {
         description : json['description'],
         linkid : json['linkid'],
         metadata : json['metadata'] != null && json['metadata'].toString().isNotEmpty
-        ? MetaDataForHospitalLogo.fromJson(jsonDecode(json["metadata"] ?? '{}'))
+        ? MetaDataForHospitalLogo.fromJson(jsonDecode(json['metadata'] ?? '{}'))
         : null);
 
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['providerid'] = this.providerid;
-    data['title'] = this.title;
-    data['description'] = this.description;
-    data['linkid'] = this.linkid;
-    data['metadata'] = this.metadata;
+    final data = Map<String, dynamic>();
+    data['providerid'] = providerid;
+    data['title'] = title;
+    data['description'] = description;
+    data['linkid'] = linkid;
+    data['metadata'] = metadata;
     return data;
   }
 }

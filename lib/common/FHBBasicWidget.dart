@@ -1,28 +1,28 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/services.dart';
-import 'package:myfhb/common/errors_widget.dart';
-import 'package:myfhb/my_providers/models/Doctors.dart';
-import 'package:myfhb/src/model/user/MyProfileModel.dart';
-import 'package:myfhb/src/utils/alert.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import 'errors_widget.dart';
+import '../my_providers/models/Doctors.dart';
+import '../src/model/user/MyProfileModel.dart';
+import '../src/utils/alert.dart';
+import '../src/utils/screenutils/size_extensions.dart';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/common/AudioWidget.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/database/model/UnitsMesurement.dart';
-import 'package:myfhb/src/model/user/ProfilePicThumbnail.dart';
-import 'package:myfhb/src/ui/audio/AudioScreenArguments.dart';
-import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
-import 'package:myfhb/widgets/RaisedGradientButton.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:showcaseview/showcase.dart';
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'AudioWidget.dart';
+import 'PreferenceUtil.dart';
+import '../database/model/UnitsMesurement.dart';
+import '../src/model/user/ProfilePicThumbnail.dart';
+import '../src/ui/audio/AudioScreenArguments.dart';
+import '../src/ui/audio/audio_record_screen.dart';
+import '../src/utils/colors_utils.dart';
+import '../widgets/RaisedGradientButton.dart';
+import 'CommonUtil.dart';
+import 'package:showcaseview/showcaseview.dart';
+import '../colors/fhb_colors.dart' as fhbColors;
+import '../constants/variable_constant.dart' as variable;
+import '../constants/fhb_parameters.dart' as parameters;
+import '../constants/fhb_constants.dart' as Constants;
 
 import 'CommonConstants.dart';
 import 'dart:math' as math;
@@ -33,7 +33,7 @@ class FHBBasicWidget {
   DateTime dateTime = DateTime.now();
   String authToken;
 
-  var commonConstants = new CommonConstants();
+  var commonConstants = CommonConstants();
   var actionWidgetSize = 55.0;
   var plusIconSize = 14.0;
 
@@ -49,7 +49,7 @@ class FHBBasicWidget {
   Widget getPlusIcon(Function onTap) {
     return Positioned(
       bottom: 0,
-      left: ((55 / 2) - (55 / 2)),
+      left: (55 / 2) - (55 / 2),
       child: InkWell(
         onTap: () {
           onTap();
@@ -61,11 +61,11 @@ class FHBBasicWidget {
 
             decoration: BoxDecoration(
                 color: ColorUtils.countColor,
-                borderRadius: BorderRadius.circular(15.0)),
+                borderRadius: BorderRadius.circular(15)),
             child: Icon(
               Icons.add,
               color: Colors.white,
-              size: 12.0,
+              size: 12,
             )),
       ),
     );
@@ -75,6 +75,16 @@ class FHBBasicWidget {
     return RaisedGradientButton(
       width: width ?? 120.0.w,
       height: 40.0.h,
+      borderRadius: 30,
+      gradient: LinearGradient(
+        colors: <Color>[
+          Color(CommonUtil().getMyPrimaryColor()),
+          Color(CommonUtil().getMyGredientColor())
+        ],
+      ),
+      onPressed: () {
+        onSavedPressed();
+      },
       child: Text(
         text ?? variable.strSave,
         style: TextStyle(
@@ -82,16 +92,6 @@ class FHBBasicWidget {
             fontSize: 16.0.sp,
             fontWeight: FontWeight.w500),
       ),
-      borderRadius: 30,
-      gradient: LinearGradient(
-        colors: <Color>[
-          Color(new CommonUtil().getMyPrimaryColor()),
-          Color(new CommonUtil().getMyGredientColor())
-        ],
-      ),
-      onPressed: () {
-        onSavedPressed();
-      },
     );
   }
 
@@ -103,7 +103,6 @@ class FHBBasicWidget {
     return Container(
         width: 1.sw - 60,
         child: TextField(
-          autofocus: false,
           onTap: () {
             onTextFieldtap(context, searchParam);
           },
@@ -116,7 +115,6 @@ class FHBBasicWidget {
     return Container(
         width: 1.sw - 60,
         child: TextField(
-          autofocus: false,
           controller: searchController,
         ));
   }
@@ -127,7 +125,6 @@ class FHBBasicWidget {
         width: 1.sw - 60,
         child: TextField(
           maxLength: 500,
-          autofocus: false,
           controller: searchController,
         ));
   }
@@ -142,7 +139,7 @@ class FHBBasicWidget {
   }
 
   void showInSnackBar(String value, GlobalKey<ScaffoldState> scaffoldstate) {
-    final snackBar = SnackBar(content: Text(value));
+    var snackBar = SnackBar(content: Text(value));
     scaffoldstate.currentState.showSnackBar(snackBar);
   }
 
@@ -153,12 +150,11 @@ class FHBBasicWidget {
     return Container(
         width: 1.sw - 60,
         child: TextField(
-          autofocus: false,
           onTap: () {},
           controller: dateController,
           decoration: InputDecoration(
-              suffixIcon: new IconButton(
-            icon: new Icon(Icons.calendar_today),
+              suffixIcon: IconButton(
+            icon: Icon(Icons.calendar_today),
             onPressed: () {
               return _selectDate(context, onDateSelected, dateTime);
             },
@@ -167,7 +163,7 @@ class FHBBasicWidget {
   }
 
   _selectDate(BuildContext context, onDateSelected, DateTime dateTime) async {
-    final DateTime picked = await showDatePicker(
+    final picked = await showDatePicker(
         context: context,
         initialDate: dateTime,
         firstDate: DateTime(2015, 8),
@@ -178,7 +174,7 @@ class FHBBasicWidget {
 
       return onDateSelected(
           dateTime,
-          new DateFormat(variable.strDateFormatDay)
+          DateFormat(variable.strDateFormatDay)
               .format(dateTime)
               .toString());
     }
@@ -188,7 +184,6 @@ class FHBBasicWidget {
     return Container(
         width: 1.sw - 60,
         child: TextField(
-          autofocus: false,
           onTap: () {},
         ));
   }
@@ -197,7 +192,7 @@ class FHBBasicWidget {
     return Text(
       textTitle,
       textAlign: TextAlign.center,
-      style: TextStyle(color: Color(new CommonUtil().getMyPrimaryColor())),
+      style: TextStyle(color: Color(CommonUtil().getMyPrimaryColor())),
     );
   }
 
@@ -242,11 +237,11 @@ class FHBBasicWidget {
           fit: BoxFit.cover,
           headers: {HttpHeaders.authorizationHeader: authToken},
           errorBuilder:
-              (BuildContext context, Object exception, StackTrace stackTrace) {
+              (context, exception, stackTrace) {
             return Container(
               height: 50.0.h,
               width: 50.0.h,
-              color: Color(new CommonUtil().getMyPrimaryColor()),
+              color: Color(CommonUtil().getMyPrimaryColor()),
               child: Center(
                 child: getFirstLastNameText(myProfile),
               ),
@@ -283,11 +278,11 @@ class FHBBasicWidget {
           fit: BoxFit.cover,
           headers: {HttpHeaders.authorizationHeader: authToken},
           errorBuilder:
-              (BuildContext context, Object exception, StackTrace stackTrace) {
+              (context, exception, stackTrace) {
             return Container(
               height: 50.0.h,
               width: 50.0.h,
-              color: circleColor ?? Color(new CommonUtil().getMyPrimaryColor()),
+              color: circleColor ?? Color(CommonUtil().getMyPrimaryColor()),
               child: Center(
                 child: getFirstLastNameTextForProfile(
                   myProfile,
@@ -316,7 +311,7 @@ class FHBBasicWidget {
   }
 
   Future<String> setAuthToken() async {
-    authToken = await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     return authToken;
   }
 
@@ -336,11 +331,10 @@ class FHBBasicWidget {
       Function(String) onTextChanged,
       String error,
       String unitsTosearch) {
-    String errorValue = error;
+    var errorValue = error;
     return Container(
         width: 1.sw - 60,
         child: TextField(
-          autofocus: false,
           onTap: () {},
           controller: controllerValue,
           decoration: InputDecoration(
@@ -350,7 +344,7 @@ class FHBBasicWidget {
               errorMaxLines: 2),
           keyboardType: TextInputType.number,
           onChanged: (value) {
-            var number = int.parse(value);
+            final number = int.parse(value);
             if (number < unitsMesurements.minValue ||
                 number > unitsMesurements.maxValue) {
               errorValue = CommonConstants.strErrorStringForDevices +
@@ -373,7 +367,6 @@ class FHBBasicWidget {
     return Container(
         width: 1.sw - 60,
         child: TextField(
-            autofocus: false,
             enabled: enabled ?? true,
             onTap: () {},
             controller: memoController,
@@ -396,9 +389,9 @@ class FHBBasicWidget {
           child: CircleAvatar(
             //backgroundColor: Colors.transparent,
             backgroundColor: ColorUtils.greycolor,
+            radius: 30.0.sp,
             child: Icon(Icons.mic,
                 size: 40.0.sp, color: Color(CommonUtil().getMyPrimaryColor())),
-            radius: 30.0.sp,
           ),
         ),
       ),
@@ -433,14 +426,14 @@ class FHBBasicWidget {
     return containsAudioMain
         ? Column(
             children: <Widget>[
-              new AudioWidget(audioPathMain, (containsAudio, audioPath) {
+              AudioWidget(audioPathMain, (containsAudio, audioPath) {
                 audioPathMain = audioPath;
                 containsAudioMain = containsAudio;
 
                 updateUI(containsAudioMain, audioPathMain);
               }),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(8),
               ),
               getSaveButton(() {
                 onPostDataToServer(context, imagePath);
@@ -471,10 +464,10 @@ class FHBBasicWidget {
           children: [
             Container(
               padding: EdgeInsets.symmetric(vertical: 10),
+              width: 0.5.sw,
               child: Text(
                 element.user.name,
               ),
-              width: 0.5.sw,
             ),
             SizedBox(height: 10),
             getSaveButton(() {
@@ -488,7 +481,7 @@ class FHBBasicWidget {
   Future<bool> exitApp(BuildContext context, Function logout) {
     return showDialog(
           context: context,
-          child: AlertDialog(
+          builder: (context) => AlertDialog(
             title: Text(
               variable.strLogout,
               style: TextStyle(
@@ -539,15 +532,29 @@ class FHBBasicWidget {
         container: Container(
             height: 120.0.h,
             margin: const EdgeInsets.symmetric(
-              vertical: 16.0,
-              horizontal: 24.0,
+              vertical: 16,
+              horizontal: 24,
             ),
-            child: new Stack(
+            child: Stack(
               children: <Widget>[
                 Container(
                   height: 110.0.h,
                   width: 320.0.w,
-                  margin: new EdgeInsets.only(left: 40.0),
+                  margin: EdgeInsets.only(left: 40),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(colors: [
+                      Color(CommonUtil().getMyPrimaryColor()),
+                      Color(CommonUtil().getMyGredientColor())
+                    ]),
+                    borderRadius: BorderRadius.circular(8),
+                    boxShadow: <BoxShadow>[
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 10,
+                        offset: Offset(0, 10),
+                      ),
+                    ],
+                  ),
                   child: Padding(
                       padding: EdgeInsets.only(left: 40, right: 10),
                       child: Column(
@@ -571,28 +578,13 @@ class FHBBasicWidget {
                           ),
                         ],
                       )),
-                  decoration: new BoxDecoration(
-                    gradient: LinearGradient(colors: [
-                      Color(CommonUtil().getMyPrimaryColor()),
-                      Color(CommonUtil().getMyGredientColor())
-                    ]),
-                    shape: BoxShape.rectangle,
-                    borderRadius: new BorderRadius.circular(8.0),
-                    boxShadow: <BoxShadow>[
-                      new BoxShadow(
-                        color: Colors.black12,
-                        blurRadius: 10.0,
-                        offset: new Offset(0.0, 10.0),
-                      ),
-                    ],
-                  ),
                 ),
                 Container(
-                  margin: new EdgeInsets.symmetric(vertical: 30.0),
+                  margin: EdgeInsets.symmetric(vertical: 30),
                   padding: EdgeInsets.all(4),
                   alignment: FractionalOffset.centerLeft,
-                  child: new Image(
-                    image: new AssetImage(variable.icon_mayaMain),
+                  child: Image(
+                    image: AssetImage(variable.icon_mayaMain),
                     height: 80.0.h,
                     width: 80.0.h,
                   ),
@@ -619,15 +611,29 @@ class FHBBasicWidget {
         container: Container(
             height: 120.0.h,
             margin: const EdgeInsets.symmetric(
-              vertical: 16.0,
-              horizontal: 24.0,
+              vertical: 16,
+              horizontal: 24,
             ),
-            child: new Stack(
+            child: Stack(
               children: <Widget>[
                 Container(
                   height: 110.0.h,
                   width: 320.0.w,
-                  margin: new EdgeInsets.only(left: 40.0),
+                  margin: EdgeInsets.only(left: 40),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(colors: [
+                      Color(CommonUtil().getMyPrimaryColor()),
+                      Color(CommonUtil().getMyGredientColor())
+                    ]),
+                    borderRadius: BorderRadius.circular(8),
+                    boxShadow: <BoxShadow>[
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 10,
+                        offset: Offset(0, 10),
+                      ),
+                    ],
+                  ),
                   child: Padding(
                       padding: EdgeInsets.only(left: 40, right: 10),
                       child: Column(
@@ -651,33 +657,18 @@ class FHBBasicWidget {
                           ),
                         ],
                       )),
-                  decoration: new BoxDecoration(
-                    gradient: LinearGradient(colors: [
-                      Color(CommonUtil().getMyPrimaryColor()),
-                      Color(CommonUtil().getMyGredientColor())
-                    ]),
-                    shape: BoxShape.rectangle,
-                    borderRadius: new BorderRadius.circular(8.0),
-                    boxShadow: <BoxShadow>[
-                      new BoxShadow(
-                        color: Colors.black12,
-                        blurRadius: 10.0,
-                        offset: new Offset(0.0, 10.0),
-                      ),
-                    ],
-                  ),
                 ),
                 Container(
-                  margin: new EdgeInsets.symmetric(vertical: 30.0),
+                  margin: EdgeInsets.symmetric(vertical: 30),
                   padding: EdgeInsets.all(4),
                   alignment: FractionalOffset.centerLeft,
+                  decoration: BoxDecoration(
+                      color: Colors.white, shape: BoxShape.circle),
                   child: new Image(
                     image: new AssetImage(variable.icon_mayaMain),
                     height: 80.0.h,
                     width: 80.0.h,
                   ),
-                  decoration: BoxDecoration(
-                      color: Colors.white, shape: BoxShape.circle),
                 ),
               ],
             )));
@@ -706,7 +697,7 @@ class FHBBasicWidget {
       BuildContext context, Function logout, String title, String msg) {
     return showDialog(
           context: context,
-          child: AlertDialog(
+          builder: (context) => AlertDialog(
             title: Text(
               title,
               style: TextStyle(
@@ -745,7 +736,6 @@ class FHBBasicWidget {
     return Container(
       height: 1.sh / 5,
       child: TextField(
-        autofocus: false,
         decoration: InputDecoration(
             disabledBorder:
                 OutlineInputBorder(borderSide: BorderSide(width: 5)),
@@ -772,16 +762,15 @@ class FHBBasicWidget {
       String error,
       String unitsTosearch,
       String deviceName) {
-    final node = FocusScope.of(context);
+    var node = FocusScope.of(context);
 
     setValues(unitsTosearch);
 
-    String valueEnterd = '';
-    String errorValue = error;
+    var valueEnterd = '';
+    var errorValue = error;
     return Container(
         width: 50.0.w,
         child: TextField(
-          autofocus: false,
           textAlign: TextAlign.center,
           maxLength: deviceName == Constants.STR_THERMOMETER ? 4 : 3,
           style: TextStyle(
@@ -812,7 +801,7 @@ class FHBBasicWidget {
             }
           }, // Move focus to next
           decoration: InputDecoration(
-              counterText: "",
+              counterText: '',
               border: UnderlineInputBorder(
                 borderSide: BorderSide(
                     color: getColorBasedOnDevice(deviceName, unitsTosearch, ''),
@@ -830,7 +819,7 @@ class FHBBasicWidget {
           onChanged: (value) {
             if (value.length < 4) {
               valueEnterd = value;
-              var number = int.parse(value);
+              final number = int.parse(value);
               if (number < unitsMesurements.minValue ||
                   number > unitsMesurements.maxValue) {
                 errorValue = CommonConstants.strErrorStringForDevices +
@@ -849,7 +838,7 @@ class FHBBasicWidget {
             } else if (deviceName == Constants.STR_THERMOMETER &&
                 value.length < 5) {
               valueEnterd = value;
-              var number = int.parse(value);
+              final number = int.parse(value);
               if (number < unitsMesurements.minValue ||
                   number > unitsMesurements.maxValue) {
                 errorValue = CommonConstants.strErrorStringForDevices +
@@ -893,36 +882,39 @@ class FHBBasicWidget {
     switch (deviceName) {
       case Constants.STR_BP_MONITOR:
         if (text != null && text != '') {
-          var number = int.parse(text);
+          final number = int.parse(text);
           if (number < unitsMesurements.minValue ||
               number > unitsMesurements.maxValue) {
             return Colors.red;
-          } else
+          } else {
             return Color(CommonConstants.bpDarkColor);
+          }
         } else {
           return Color(CommonConstants.bpDarkColor);
         }
         break;
       case Constants.STR_GLUCOMETER:
         if (text != null && text != '') {
-          var number = int.parse(text);
+          final number = int.parse(text);
           if (number < unitsMesurements.minValue ||
               number > unitsMesurements.maxValue) {
             return Colors.red;
-          } else
+          } else {
             return Color(CommonConstants.GlucoDarkColor);
+          }
         } else {
           return Color(CommonConstants.GlucoDarkColor);
         }
         break;
       case Constants.STR_WEIGHING_SCALE:
         if (text != null && text != '') {
-          var number = int.parse(text);
+          final number = int.parse(text);
           if (number < unitsMesurements.minValue ||
               number > unitsMesurements.maxValue) {
             return Colors.red;
-          } else
+          } else {
             return Color(CommonConstants.weightDarkColor);
+          }
         } else {
           return Color(CommonConstants.weightDarkColor);
         }
@@ -930,12 +922,13 @@ class FHBBasicWidget {
 
       case Constants.STR_THERMOMETER:
         if (text != null && text != '') {
-          var number = double.parse(text);
+          final number = double.parse(text);
           if (number < unitsMesurements.minValue ||
               number > unitsMesurements.maxValue) {
             return Colors.red;
-          } else
+          } else {
             return Color(CommonConstants.ThermoDarkColor);
+          }
         } else {
           return Color(CommonConstants.ThermoDarkColor);
         }
@@ -943,24 +936,26 @@ class FHBBasicWidget {
 
       case Constants.STR_PULSE_OXIMETER:
         if (text != null && text != '') {
-          var number = int.parse(text);
+          final number = int.parse(text);
           if (number < unitsMesurements.minValue ||
               number > unitsMesurements.maxValue) {
             return Colors.red;
-          } else
+          } else {
             return Color(CommonConstants.pulseDarkColor);
+          }
         } else {
           return Color(CommonConstants.pulseDarkColor);
         }
         break;
       default:
         if (text != null && text != '') {
-          var number = int.parse(text);
+          final number = int.parse(text);
           if (number < unitsMesurements.minValue ||
               number > unitsMesurements.maxValue) {
             return Colors.red;
-          } else
+          } else {
             return Color(CommonConstants.pulseDarkColor);
+          }
         } else {
           return Color(CommonConstants.pulseDarkColor);
         }
@@ -970,12 +965,13 @@ class FHBBasicWidget {
 
   bool checkifValueisInRange(String text, String deviceName) {
     if (text != null && text != '') {
-      var number = int.parse(text);
+      final number = int.parse(text);
       if (number < unitsMesurements.minValue ||
           number > unitsMesurements.maxValue) {
         return true;
-      } else
+      } else {
         return false;
+      }
     } else {
       return false;
     }
@@ -993,18 +989,18 @@ class DecimalTextInputFormatter extends TextInputFormatter {
     TextEditingValue oldValue, // unused.
     TextEditingValue newValue,
   ) {
-    TextSelection newSelection = newValue.selection;
-    String truncated = newValue.text;
+    var newSelection = newValue.selection;
+    var truncated = newValue.text;
 
     if (decimalRange != null) {
-      String value = newValue.text;
+      var value = newValue.text;
 
-      if (value.contains(".") &&
-          value.substring(value.indexOf(".") + 1).length > decimalRange) {
+      if (value.contains('.') &&
+          value.substring(value.indexOf('.') + 1).length > decimalRange) {
         truncated = oldValue.text;
         newSelection = oldValue.selection;
-      } else if (value == ".") {
-        truncated = "0.";
+      } else if (value == '.') {
+        truncated = '0.';
 
         newSelection = newValue.selection.copyWith(
           baseOffset: math.min(truncated.length, truncated.length + 1),
@@ -1015,7 +1011,6 @@ class DecimalTextInputFormatter extends TextInputFormatter {
       return TextEditingValue(
         text: truncated,
         selection: newSelection,
-        composing: TextRange.empty,
       );
     }
     return newValue;
@@ -1083,7 +1078,7 @@ Widget getFirstLastNameTextForProfile(MyProfileModel myProfile,
     return Text(
       '',
       style: TextStyle(
-        color: Color(new CommonUtil().getMyPrimaryColor()),
+        color: Color(CommonUtil().getMyPrimaryColor()),
         fontSize: 16.0.sp,
         fontWeight: FontWeight.w200,
       ),

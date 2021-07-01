@@ -22,26 +22,26 @@ class RefrenceValueMeta {
     dynamic lastModifiedOn;
 
     factory RefrenceValueMeta.fromJson(Map<String, dynamic> json) => RefrenceValueMeta(
-        id: json["id"],
-        code: json["code"],
-        name: json["name"],
-        description: json["description"],
-        sortOrder: json["sortOrder"],
-        isActive: json["isActive"],
-        createdBy: json["createdBy"],
-        createdOn: DateTime.parse(json["createdOn"]),
-        lastModifiedOn: json["lastModifiedOn"],
+        id: json['id'],
+        code: json['code'],
+        name: json['name'],
+        description: json['description'],
+        sortOrder: json['sortOrder'],
+        isActive: json['isActive'],
+        createdBy: json['createdBy'],
+        createdOn: DateTime.parse(json['createdOn']),
+        lastModifiedOn: json['lastModifiedOn'],
     );
 
     Map<String, dynamic> toJson() => {
-        "id": id,
-        "code": code,
-        "name": name,
-        "description": description,
-        "sortOrder": sortOrder,
-        "isActive": isActive,
-        "createdBy": createdBy,
-        "createdOn": createdOn.toIso8601String(),
-        "lastModifiedOn": lastModifiedOn,
+        'id': id,
+        'code': code,
+        'name': name,
+        'description': description,
+        'sortOrder': sortOrder,
+        'isActive': isActive,
+        'createdBy': createdBy,
+        'createdOn': createdOn.toIso8601String(),
+        'lastModifiedOn': lastModifiedOn,
     };
 }

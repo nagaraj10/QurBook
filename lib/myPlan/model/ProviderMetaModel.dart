@@ -8,8 +8,8 @@ class ProviderMetaModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['icon'] = this.icon;
+    final data = <String, dynamic>{};
+    data['icon'] = icon;
     return data;
   }
 }

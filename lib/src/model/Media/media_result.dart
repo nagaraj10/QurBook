@@ -1,5 +1,5 @@
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/src/model/Category/catergory_result.dart';
+import '../../../constants/fhb_parameters.dart' as parameters;
+import '../Category/catergory_result.dart';
 
 class MediaResult {
   String id;
@@ -38,27 +38,27 @@ class MediaResult {
     lastModifiedOn = json[parameters.strLastModifiedOn];
     if (json.containsKey(parameters.strHealthRecordCategory)) {
       healthRecordCategory = json[parameters.strHealthRecordCategory] != null
-          ? new CategoryResult.fromJson(
+          ? CategoryResult.fromJson(
               json[parameters.strHealthRecordCategory])
           : null;
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[parameters.strId] = this.id;
-    data[parameters.strName] = this.name;
-    data[parameters.strDescription] = this.description;
-    data[parameters.strLogo] = this.logo;
-    data[parameters.strIsDisplay] = this.isDisplay;
-    data[parameters.strIsAiTranscription] = this.isAiTranscription;
-    data[parameters.strIsActive] = this.isActive;
-    data[parameters.strCreatedOn] = this.createdOn;
-    data[parameters.strLastModifiedOn] = this.lastModifiedOn;
+    final data = Map<String, dynamic>();
+    data[parameters.strId] = id;
+    data[parameters.strName] = name;
+    data[parameters.strDescription] = description;
+    data[parameters.strLogo] = logo;
+    data[parameters.strIsDisplay] = isDisplay;
+    data[parameters.strIsAiTranscription] = isAiTranscription;
+    data[parameters.strIsActive] = isActive;
+    data[parameters.strCreatedOn] = createdOn;
+    data[parameters.strLastModifiedOn] = lastModifiedOn;
     if (data.containsKey(parameters.strHealthRecordCategory)) {
-      if (this.healthRecordCategory != null) {
+      if (healthRecordCategory != null) {
         data[parameters.strHealthRecordCategory] =
-            this.healthRecordCategory.toJson();
+            healthRecordCategory.toJson();
       }
     }
 

@@ -1,4 +1,4 @@
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import '../../../constants/fhb_parameters.dart' as parameters;
 
 class CategoryResult {
   String id;
@@ -52,23 +52,27 @@ class CategoryResult {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[parameters.strId] = this.id;
-    data[parameters.strCategoryName] = this.categoryName;
-    data[parameters.strCategoryDesc] = this.categoryDescription;
-    data[parameters.strLogo] = this.logo;
-    data[parameters.strIsDisplay] = this.isDisplay;
-    data[parameters.strIsActive] = this.isActive;
-    data[parameters.strCreatedOn] = this.createdOn;
-    data[parameters.strLastModifiedOn] = this.lastModifiedOn;
-    if (data.containsKey(parameters.strIsCreate))
-      data[parameters.strIsCreate] = this.isCreate;
-    if (data.containsKey(parameters.strIsRead))
-      data[parameters.strIsRead] = this.isRead;
-    if (data.containsKey(parameters.strIsEdit))
-      data[parameters.strIsEdit] = this.isEdit;
-    if (data.containsKey(parameters.strIsDelete))
-      data[parameters.strIsDelete] = this.isDelete;
+    final data = <String, dynamic>{};
+    data[parameters.strId] = id;
+    data[parameters.strCategoryName] = categoryName;
+    data[parameters.strCategoryDesc] = categoryDescription;
+    data[parameters.strLogo] = logo;
+    data[parameters.strIsDisplay] = isDisplay;
+    data[parameters.strIsActive] = isActive;
+    data[parameters.strCreatedOn] = createdOn;
+    data[parameters.strLastModifiedOn] = lastModifiedOn;
+    if (data.containsKey(parameters.strIsCreate)) {
+      data[parameters.strIsCreate] = isCreate;
+    }
+    if (data.containsKey(parameters.strIsRead)) {
+      data[parameters.strIsRead] = isRead;
+    }
+    if (data.containsKey(parameters.strIsEdit)) {
+      data[parameters.strIsEdit] = isEdit;
+    }
+    if (data.containsKey(parameters.strIsDelete)) {
+      data[parameters.strIsDelete] = isDelete;
+    }
 
     return data;
   }

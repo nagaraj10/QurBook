@@ -1,8 +1,10 @@
 import 'dart:core';
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:myfhb/constants/fhb_parameters.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import 'package:myfhb/src/resources/network/api_services.dart';
+
+import '../../constants/fhb_parameters.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -11,49 +13,49 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:http/http.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/bookmark_record/bloc/bookmarkRecordBloc.dart';
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
-import 'package:myfhb/common/AudioWidget.dart';
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/common/CommonDialogBox.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/FHBBasicWidget.dart';
-import 'package:myfhb/common/PDFViewer.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
-import 'package:myfhb/my_family/models/FamilyData.dart';
-import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
-import 'package:myfhb/my_family/screens/FamilyListView.dart';
-import 'package:myfhb/record_detail/bloc/deleteRecordBloc.dart';
-import 'package:myfhb/record_detail/model/ImageDocumentResponse.dart';
-import 'package:myfhb/record_detail/model/deleteRecordResponse.dart';
-import 'package:myfhb/record_detail/screens/record_info_card.dart';
-import 'package:myfhb/record_detail/services/downloadmultipleimages.dart';
-import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
-import 'package:myfhb/src/model/Health/MediaMasterIds.dart';
-import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
-import 'package:myfhb/src/model/Health/MetaInfo.dart';
-import 'package:myfhb/src/model/Health/PostImageResponse.dart';
-import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
-import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
-import 'package:myfhb/src/resources/network/ApiResponse.dart';
-import 'package:myfhb/src/ui/audio/AudioScreenArguments.dart';
-import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
-import 'package:myfhb/src/ui/imageSlider.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
+import '../../bookmark_record/bloc/bookmarkRecordBloc.dart';
+import '../../colors/fhb_colors.dart' as fhbColors;
+import '../../common/AudioWidget.dart';
+import '../../common/CommonConstants.dart';
+import '../../common/CommonDialogBox.dart';
+import '../../common/CommonUtil.dart';
+import '../../common/FHBBasicWidget.dart';
+import '../../common/PDFViewer.dart';
+import '../../common/PreferenceUtil.dart';
+import '../../constants/fhb_constants.dart' as Constants;
+import '../../constants/fhb_parameters.dart' as parameters;
+import '../../constants/variable_constant.dart' as variable;
+import '../../my_family/bloc/FamilyListBloc.dart';
+import '../../my_family/models/FamilyData.dart';
+import '../../my_family/models/FamilyMembersRes.dart';
+import '../../my_family/screens/FamilyListView.dart';
+import '../bloc/deleteRecordBloc.dart';
+import '../model/ImageDocumentResponse.dart';
+import '../model/deleteRecordResponse.dart';
+import 'record_info_card.dart';
+import '../services/downloadmultipleimages.dart';
+import '../../src/blocs/health/HealthReportListForUserBlock.dart';
+import '../../src/model/Health/MediaMasterIds.dart';
+import '../../src/model/Health/MediaMetaInfo.dart';
+import '../../src/model/Health/MetaInfo.dart';
+import '../../src/model/Health/PostImageResponse.dart';
+import '../../src/model/Health/asgard/health_record_collection.dart';
+import '../../src/model/Health/asgard/health_record_list.dart';
+import '../../src/resources/network/ApiResponse.dart';
+import '../../src/ui/audio/AudioScreenArguments.dart';
+import '../../src/ui/audio/audio_record_screen.dart';
+import '../../src/ui/imageSlider.dart';
+import '../../src/utils/FHBUtils.dart';
+import '../../widgets/GradientAppBar.dart';
 import 'package:open_file/open_file.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shimmer/shimmer.dart';
 
 export 'package:myfhb/my_family/models/relationship_response_list.dart';
-import 'package:http/http.dart' as http;
-import 'package:myfhb/common/errors_widget.dart';
+import 'package:myfhb/src/resources/network/api_services.dart';
+import '../../common/errors_widget.dart';
 
-typedef void OnError(Exception exception);
+typedef OnError = void Function(Exception exception);
 
 class RecordDetailScreen extends StatefulWidget {
   final HealthResult data;
@@ -62,7 +64,6 @@ class RecordDetailScreen extends StatefulWidget {
     Key key,
     @required this.data,
   }) : super(key: key);
-
   @override
   _RecordDetailScreenState createState() => _RecordDetailScreenState();
 }
@@ -75,18 +76,18 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   String audioPath = '';
   HealthReportListForUserBlock _healthReportListForUserBlock;
   FamilyListBloc _familyListBloc;
-  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+  final GlobalKey<State> _keyLoader = GlobalKey<State>();
 
   String categoryName, createdDate;
   var doctorsData, hospitalData, labData;
   bool isAudioDownload = false;
 
   String deviceName;
-  CarouselSlider carouselSlider;
+  CarouselController carouselSlider;
   int _current = 0;
   int index = 0;
   int length = 0;
-  List<ImageDocumentResponse> imagesPathMain = new List();
+  List<ImageDocumentResponse> imagesPathMain = List();
   // PermissionStatus permissionStatus = PermissionStatus.unknown;
   //final PermissionHandler _storagePermission = Platform.isAndroid ? Permission.storage : Permission.photos;
   bool firsTym = true;
@@ -95,12 +96,12 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   HealthRecordCollection audioMediaId;
   HealthRecordCollection pdfId;
 
-  GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
+  GlobalKey<ScaffoldState> scaffold_state = GlobalKey<ScaffoldState>();
   String authToken;
 
   var pdfFile;
-  List<HealthRecordCollection> mediMasterId = new List();
-  FlutterToast toast = new FlutterToast();
+  List<HealthRecordCollection> mediMasterId = [];
+  FlutterToast toast = FlutterToast();
 
   @override
   void initState() {
@@ -112,8 +113,8 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     _deleteRecordBloc = DeleteRecordBloc();
     _bookmarkRecordBloc = BookmarkRecordBloc();
     _isRecordBookmarked = widget.data.isBookmarked;
-    _healthReportListForUserBlock = new HealthReportListForUserBlock();
-    _familyListBloc = new FamilyListBloc();
+    _healthReportListForUserBlock = HealthReportListForUserBlock();
+    _familyListBloc = FamilyListBloc();
     _familyListBloc.getFamilyMembersListNew();
 
     if (checkIfMp3IsPresent(widget.data) != '') {
@@ -122,10 +123,10 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     }
 
     if (widget.data.healthRecordCollection != null &&
-        widget.data.healthRecordCollection.length > 0) {
-      mediMasterId = new CommonUtil().getMetaMasterIdList(widget.data);
+        widget.data.healthRecordCollection.isNotEmpty) {
+      mediMasterId = CommonUtil().getMetaMasterIdList(widget.data);
 
-      HealthRecordCollection getMediaMasterIDForPdfTypeStr = new CommonUtil()
+      final getMediaMasterIDForPdfTypeStr = CommonUtil()
           .getMediaMasterIDForPdfTypeStr(widget.data.healthRecordCollection);
       if (getMediaMasterIDForPdfTypeStr != null) {
         ispdfPresent = true;
@@ -136,7 +137,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       }
     }
 
-    if (mediMasterId.length > 0) {
+    if (mediMasterId.isNotEmpty) {
       length = mediMasterId.length;
       index = 1;
     }
@@ -169,7 +170,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                         widget.data.metadata.fileName))
                     : toBeginningOfSentenceCase(widget.data.metadata.fileName),
             maxLines: 1,
-            minFontSize: 12,
             maxFontSize: 16,
           ),
           leading: IconButton(
@@ -197,7 +197,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                             flex: 7,
                             child: Padding(
                                 padding: EdgeInsets.all(10),
-                                child: (mediMasterId.length > 0 &&
+                                child: (mediMasterId.isNotEmpty &&
                                         mediMasterId != null)
                                     ? getCarousalImage(mediMasterId)
                                     : (widget.data.metadata.healthRecordType
@@ -210,7 +210,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                             ? getCarousalImage(null)
                                             : getDocumentImageWidgetClone())),
                         Expanded(
-                          flex: 1,
                           child: Padding(
                             padding: EdgeInsets.only(left: 20, right: 20),
                             child: Row(
@@ -220,7 +219,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                     ? SizedBox()
                                     : IconButton(
                                         onPressed: () {
-                                          if (mediMasterId.length > 0)
+                                          if (mediMasterId.isNotEmpty) {
                                             Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
@@ -229,6 +228,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                                           imageList:
                                                               mediMasterId,
                                                         )));
+                                          }
                                         },
                                         icon: Icon(
                                           Icons.fullscreen,
@@ -236,12 +236,14 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                           size: 24.0.sp,
                                         ),
                                       ),
-                                widget?.data?.metadata?.sourceName == 'SHEELA'
-                                    ? SizedBox()
-                                    : Text(
-                                        '$index /$length',
-                                        style: TextStyle(color: Colors.white),
-                                      )
+                                if (widget?.data?.metadata?.sourceName ==
+                                    'SHEELA')
+                                  SizedBox()
+                                else
+                                  Text(
+                                    '$index /$length',
+                                    style: TextStyle(color: Colors.white),
+                                  )
                               ],
                             ),
                           ),
@@ -251,7 +253,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                 Padding(
                   padding: EdgeInsets.all(10),
                   child: Builder(
-                    builder: (BuildContext contxt) {
+                    builder: (contxt) {
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
@@ -262,7 +264,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                           variable.icon_record_fav_active),
                                       //TODO chnage theme
                                       color: Color(
-                                          new CommonUtil().getMyPrimaryColor()),
+                                          CommonUtil().getMyPrimaryColor()),
                                     )
                                   : ImageIcon(
                                       AssetImage(variable.icon_record_fav),
@@ -271,61 +273,65 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                               onPressed: () {
                                 bookMarkRecord(widget.data);
                               }),
-                          widget.data.metadata.sourceName == strsourceCARGIVER
-                              ? IconButton(
-                                  icon: ImageIcon(
+                          if (widget.data.metadata.sourceName ==
+                              strsourceCARGIVER)
+                            IconButton(
+                                icon: ImageIcon(
+                              AssetImage(variable.icon_record_switch),
+                              color: Colors.grey,
+                            ))
+                          else
+                            IconButton(
+                                icon: ImageIcon(
                                   AssetImage(variable.icon_record_switch),
-                                  color: Colors.grey,
-                                ))
-                              : IconButton(
-                                  icon: ImageIcon(
-                                    AssetImage(variable.icon_record_switch),
-                                    color: Colors.black,
-                                  ),
-                                  onPressed: () {
-                                    //getAllFamilyMembers();
+                                  color: Colors.black,
+                                ),
+                                onPressed: () {
+                                  //getAllFamilyMembers();
 
-                                    CommonUtil.showLoadingDialog(contxt,
-                                        _keyLoader, variable.Please_Wait);
+                                  CommonUtil.showLoadingDialog(
+                                      contxt, _keyLoader, variable.Please_Wait);
 
-                                    if (_familyListBloc != null) {
-                                      _familyListBloc = null;
-                                      _familyListBloc = new FamilyListBloc();
+                                  if (_familyListBloc != null) {
+                                    _familyListBloc = null;
+                                    _familyListBloc = new FamilyListBloc();
+                                  }
+                                  _familyListBloc
+                                      .getFamilyMembersListNew()
+                                      .then((familyMembersList) {
+                                    Navigator.of(_keyLoader.currentContext,
+                                            rootNavigator: true)
+                                        .pop();
+                                    if (familyMembersList != null &&
+                                        familyMembersList.result != null &&
+                                        familyMembersList
+                                                .result.sharedByUsers.length >
+                                            0) {
+                                      getDialogBoxWithFamilyMember(
+                                          familyMembersList.result);
+                                    } else {
+                                      toast.getToast(
+                                          Constants.NO_DATA_FAMIY_CLONE,
+                                          Colors.black54);
                                     }
-                                    _familyListBloc
-                                        .getFamilyMembersListNew()
-                                        .then((familyMembersList) {
-                                      Navigator.of(_keyLoader.currentContext,
-                                              rootNavigator: true)
-                                          .pop();
-                                      if (familyMembersList != null &&
-                                          familyMembersList.result != null &&
-                                          familyMembersList
-                                                  .result.sharedByUsers.length >
-                                              0) {
-                                        getDialogBoxWithFamilyMember(
-                                            familyMembersList.result);
-                                      } else {
-                                        toast.getToast(
-                                            Constants.NO_DATA_FAMIY_CLONE,
-                                            Colors.black54);
-                                      }
-                                    });
-                                  }),
-                          widget.data.metadata.sourceName == strsourceCARGIVER
-                              ? IconButton(
-                                  icon: ImageIcon(
+                                  });
+                                }),
+                          if (widget.data.metadata.sourceName ==
+                              strsourceCARGIVER)
+                            IconButton(
+                                icon: ImageIcon(
+                              AssetImage(variable.icon_edit),
+                              color: Colors.grey,
+                            ))
+                          else
+                            IconButton(
+                                icon: ImageIcon(
                                   AssetImage(variable.icon_edit),
-                                  color: Colors.grey,
-                                ))
-                              : IconButton(
-                                  icon: ImageIcon(
-                                    AssetImage(variable.icon_edit),
-                                    color: Colors.black,
-                                  ),
-                                  onPressed: () {
-                                    openAlertDialogBasedOnRecordDetails();
-                                  }),
+                                  color: Colors.black,
+                                ),
+                                onPressed: () {
+                                  openAlertDialogBasedOnRecordDetails();
+                                }),
                           IconButton(
                               icon: ImageIcon(
                                 AssetImage(variable.icon_download),
@@ -352,7 +358,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                     color: Colors.black,
                                   ),
                                   onPressed: () {
-                                    new FHBBasicWidget()
+                                    FHBBasicWidget()
                                         .showDialogWithTwoButtons(context, () {
                                       deleteRecord(widget.data.id,
                                           isDeviceReadings: widget
@@ -360,7 +366,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                                   .metadata
                                                   .healthRecordCategory
                                                   .categoryName ==
-                                              "Devices");
+                                              'Devices');
                                     }, 'Confirmation',
                                             'Are you sure you want to delete');
                                   })
@@ -375,21 +381,22 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                 )
               ],
             ),
-            containsAudio
-                ? getAudioIconWithFile()
-                : Container(
-                    color: const Color(fhbColors.bgColorContainer),
-                    child: widget.data.metadata.hasVoiceNotes != null &&
-                            widget.data.metadata.hasVoiceNotes
-                        ? isAudioDownload
-                            ? getAudioIconWithFile()
-                            : showAudioWidgetIfVoiceNotesAvailable(widget.data)
-                        /*Shimmer.fromColors(
+            if (containsAudio)
+              getAudioIconWithFile()
+            else
+              Container(
+                color: const Color(fhbColors.bgColorContainer),
+                child: widget.data.metadata.hasVoiceNotes != null &&
+                        widget.data.metadata.hasVoiceNotes
+                    ? isAudioDownload
+                        ? getAudioIconWithFile()
+                        : showAudioWidgetIfVoiceNotesAvailable(widget.data)
+                    /*Shimmer.fromColors(
                                 baseColor: Colors.grey[300],
                                 highlightColor: Colors.grey[200],
                                 child: showProgressIndicator(widget.data))*/
-                        : getAudioWidget(),
-                  )
+                    : getAudioWidget(),
+              )
           ],
         ));
   }
@@ -440,14 +447,14 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           children: <Widget>[
             Icon(
               Icons.mic,
-              color: Color(new CommonUtil().getMyPrimaryColor()),
+              color: Color(CommonUtil().getMyPrimaryColor()),
               size: 24.0.sp,
             ),
             SizedBox(width: 10.0.w),
             Text(variable.strAddVoiceNote,
                 style: TextStyle(
                   fontSize: 16.0.sp,
-                  color: Color(new CommonUtil().getMyPrimaryColor()),
+                  color: Color(CommonUtil().getMyPrimaryColor()),
                 ))
           ],
         ),
@@ -464,12 +471,12 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       List<HealthRecordCollection> imagesPathMain, BuildContext contxt) async {
     //check the storage permission for both android and ios!
     //request gallery permission
-    String albumName = 'myfhb';
-    bool downloadStatus = false;
-    PermissionStatus storagePermission = Platform.isAndroid
+    final albumName = 'myfhb';
+    var downloadStatus = false;
+    final storagePermission = Platform.isAndroid
         ? await Permission.storage.status
         : await Permission.photos.status;
-    if (storagePermission.isUndetermined || storagePermission.isRestricted) {
+    if (storagePermission.isDenied || storagePermission.isRestricted) {
       Platform.isAndroid
           ? await Permission.storage.request()
           : await Permission.photos.request();
@@ -484,7 +491,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     if (ispdfPresent) {
       print('audioPath' + pdfFile);
       if (Platform.isIOS) {
-        CommonUtil.downloadFile(pdfId.healthRecordUrl, pdfId.fileType);
+        await CommonUtil.downloadFile(pdfId.healthRecordUrl, pdfId.fileType);
       } else {
         await ImageGallerySaver.saveFile(pdfFile).then((res) {
           setState(() {
@@ -498,7 +505,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       } else {
         _currentImage = imagesPathMain[0];
         try {
-          CommonUtil.downloadFile(
+          await CommonUtil.downloadFile(
                   _currentImage.healthRecordUrl, _currentImage.fileType)
               .then((filePath) async {
             if (Platform.isAndroid) {
@@ -609,7 +616,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   }
 
   deleteMediRecord(HealthRecordCollection healthRecordCollection) {
-    List<String> mediaIds = [];
+    final mediaIds = <String>[];
     mediaIds.add(healthRecordCollection.id);
     _deleteRecordBloc
         .deleteRecordOnMediaMasterID(healthRecordCollection.id)
@@ -629,7 +636,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   }
 
   bookMarkRecord(HealthResult data) {
-    List<String> mediaIds = [];
+    var mediaIds = <String>[];
     mediaIds.add(data.id);
 
     if (_isRecordBookmarked) {
@@ -652,7 +659,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   }
 
   Widget getAudioIconWithFile({String fpath}) {
-    var path = (fpath != null || fpath != '') ? fpath : audioPath;
+    final path = (fpath != null || fpath != '') ? fpath : audioPath;
 
     return Container(
         //height: 60.0.h,
@@ -660,10 +667,10 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
-        new AudioWidget(audioPath, (containsAudioClone, audioPathClone) {
+        AudioWidget(audioPath, (containsAudioClone, audioPathClone) {
           containsAudio = containsAudioClone;
           audioPath = audioPathClone;
-          new FHBBasicWidget().showDialogWithTwoButtons(context, () {
+          FHBBasicWidget().showDialogWithTwoButtons(context, () {
             deleteMediRecord(audioMediaId);
           }, 'Confirmation', 'Are you sure you want to delete');
         }),
@@ -678,7 +685,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   }
 
   Future<Widget> getDialogBoxWithFamilyMember(FamilyMemberResult familyData) {
-    return new FamilyListView(familyData).getDialogBoxWithFamilyMember(
+    return FamilyListView(familyData).getDialogBoxWithFamilyMember(
         familyData, context, _keyLoader, (context, userId, userName, _) {
       _healthReportListForUserBlock
           .switchDataToOtherUser(userId, widget.data.id)
@@ -688,7 +695,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
             PreferenceUtil.saveCompleteData(Constants.KEY_COMPLETE_DATA, value);
 
             Future.delayed(const Duration(seconds: 2), () {
-              new FHBBasicWidget()
+              FHBBasicWidget()
                   .showInSnackBar(moveMetaDataResponse.message, scaffold_state);
             });
 
@@ -697,7 +704,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           });
         } else {
           Navigator.pop(context);
-          new FHBBasicWidget()
+          FHBBasicWidget()
               .showInSnackBar(moveMetaDataResponse.message, scaffold_state);
         }
       });
@@ -707,33 +714,34 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   void openAlertDialogBasedOnRecordDetails() {
     categoryName = widget.data.metadata.healthRecordCategory.categoryName;
 
-    if (widget.data.metadata.doctor != null)
+    if (widget.data.metadata.doctor != null) {
       doctorsData = widget.data.metadata.doctor.toJson();
-    if (widget.data.metadata.laboratory != null)
+    }
+    if (widget.data.metadata.laboratory != null) {
       labData = widget.data.metadata.laboratory.toJson();
-    if (widget.data.metadata.hospital != null)
+    }
+    if (widget.data.metadata.hospital != null) {
       hospitalData = widget.data.metadata.hospital.toJson();
+    }
     createdDateMethod();
 
     if (categoryName != Constants.STR_DEVICES) {
-      String date = widget.data.metadata.dateOfVisit != null
-          ? widget.data.metadata.dateOfVisit
-          : '';
+      var date = widget.data.metadata.dateOfVisit ?? '';
 
       if (date != '') {
         date = FHBUtils().getFormattedDateOnly(date);
       }
       switch (categoryName) {
         case Constants.STR_PRESCRIPTION:
-          String fileName = widget.data.metadata.fileName;
+          final fileName = widget.data.metadata.fileName;
 
-          new CommonDialogBox().getDialogBoxForPrescription(
+          CommonDialogBox().getDialogBoxForPrescription(
               context,
-              new TextEditingController(
+              TextEditingController(
                   text: hospitalData != null
                       ? hospitalData[variable.strHealthOrganizationName]
                       : ''),
-              new TextEditingController(
+              TextEditingController(
                   text: doctorsData != null
                       ? doctorsData[variable.strName] != '' &&
                               doctorsData[variable.strName] != null
@@ -742,7 +750,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                               ' ' +
                               doctorsData[variable.strLastName]
                       : ''),
-              new TextEditingController(text: date),
+              TextEditingController(text: date),
               containsAudio,
               audioPath, (containsAudio, audioPath) {
             setState(() {
@@ -756,15 +764,14 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
             containsAudio = containsAudio;
 
             setState(() {});
-          }, new List(), widget.data, true,
-              new TextEditingController(text: fileName));
+          }, [], widget.data, true, TextEditingController(text: fileName));
 
           break;
 
         case Constants.STR_BILLS:
-          String fileName = widget.data.metadata.fileName;
+          final fileName = widget.data.metadata.fileName;
 
-          new CommonDialogBox().getDialogBoxForBillsAndOthers(
+          CommonDialogBox().getDialogBoxForBillsAndOthers(
               context,
               containsAudio,
               audioPath,
@@ -774,7 +781,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                   containsAudio = containsAudio;
                 });
               },
-              new List(),
+              List(),
               (containsAudio, audioPath) {
                 audioPath = audioPath;
                 containsAudio = containsAudio;
@@ -783,20 +790,20 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               },
               widget.data,
               true,
-              new TextEditingController(text: fileName));
+              TextEditingController(text: fileName));
 
           break;
 
         case Constants.STR_LABREPORT:
-          String fileName = widget.data.metadata.fileName;
+          var fileName = widget.data.metadata.fileName;
 
-          new CommonDialogBox().getDialogBoxForLabReport(
+          CommonDialogBox().getDialogBoxForLabReport(
               context,
-              new TextEditingController(
+              TextEditingController(
                   text: labData != null
                       ? labData[variable.strHealthOrganizationName]
                       : ''),
-              new TextEditingController(
+              TextEditingController(
                   text: doctorsData != null
                       ? doctorsData[variable.strName] != '' &&
                               doctorsData[variable.strName] != null
@@ -805,7 +812,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                               ' ' +
                               doctorsData[variable.strLastName]
                       : ''),
-              new TextEditingController(text: date),
+              TextEditingController(text: date),
               containsAudio,
               audioPath, (containsAudio, audioPath) {
             setState(() {
@@ -819,19 +826,18 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
             containsAudio = containsAudio;
 
             setState(() {});
-          }, new List(), widget.data, true,
-              new TextEditingController(text: fileName));
+          }, [], widget.data, true, TextEditingController(text: fileName));
           break;
         case Constants.STR_MEDICALREPORT:
-          String fileName = widget.data.metadata.fileName;
+          final fileName = widget.data.metadata.fileName;
 
-          new CommonDialogBox().getDialogBoxForPrescription(
+          CommonDialogBox().getDialogBoxForPrescription(
               context,
-              new TextEditingController(
+              TextEditingController(
                   text: hospitalData != null
                       ? hospitalData[variable.strHealthOrganizationName]
                       : ''),
-              new TextEditingController(
+              TextEditingController(
                   text: doctorsData != null
                       ? doctorsData[variable.strName] != '' &&
                               doctorsData[variable.strName] != null
@@ -840,10 +846,8 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                               ' ' +
                               doctorsData[variable.strLastName]
                       : ''),
-              new TextEditingController(
-                  text: widget.data.metadata.dateOfVisit != null
-                      ? widget.data.metadata.dateOfVisit
-                      : ''),
+              TextEditingController(
+                  text: widget.data.metadata.dateOfVisit ?? ''),
               containsAudio,
               audioPath, (containsAudio, audioPath) {
             setState(() {
@@ -857,14 +861,13 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
             containsAudio = containsAudio;
 
             setState(() {});
-          }, new List(), widget.data, true,
-              new TextEditingController(text: fileName));
+          }, List(), widget.data, true, TextEditingController(text: fileName));
 
           break;
         case Constants.STR_CLAIMSRECORD:
-          String fileName = widget.data.metadata.fileName;
+          var fileName = widget.data.metadata.fileName;
 
-          new CommonDialogBox().getDialogBoxForBillsAndOthers(
+          CommonDialogBox().getDialogBoxForBillsAndOthers(
               context,
               containsAudio,
               audioPath,
@@ -874,7 +877,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                   containsAudio = containsAudio;
                 });
               },
-              new List(),
+              [],
               (containsAudio, audioPath) {
                 audioPath = audioPath;
                 containsAudio = containsAudio;
@@ -883,13 +886,13 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               },
               widget.data,
               true,
-              new TextEditingController(text: fileName));
+              TextEditingController(text: fileName));
 
           break;
         case Constants.STR_IDDOCS:
-          String fileName = widget.data.metadata.fileName;
+          final fileName = widget.data.metadata.fileName;
 
-          new CommonDialogBox().getDialogForIDDocs(
+          CommonDialogBox().getDialogForIDDocs(
               context,
               containsAudio,
               audioPath,
@@ -899,7 +902,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                   containsAudio = containsAudio;
                 });
               },
-              new List(),
+              [],
               (containsAudio, audioPath) {
                 audioPath = audioPath;
                 containsAudio = containsAudio;
@@ -908,16 +911,16 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               },
               widget.data,
               true,
-              new TextEditingController(text: fileName),
-              new TextEditingController(text: date),
+              TextEditingController(text: fileName),
+              TextEditingController(text: date),
               // widget.data.metaInfo.idType
               widget.data.healthRecordTypeId);
           break;
 
         case Constants.STR_OTHERS:
-          String fileName = widget.data.metadata.fileName;
+          var fileName = widget.data.metadata.fileName;
 
-          new CommonDialogBox().getDialogBoxForBillsAndOthers(
+          CommonDialogBox().getDialogBoxForBillsAndOthers(
               context,
               containsAudio,
               audioPath,
@@ -927,7 +930,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                   containsAudio = containsAudio;
                 });
               },
-              new List(),
+              [],
               (containsAudio, audioPath) {
                 audioPath = audioPath;
                 containsAudio = containsAudio;
@@ -936,13 +939,13 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               },
               widget.data,
               true,
-              new TextEditingController(text: fileName));
+              TextEditingController(text: fileName));
 
           break;
         case Constants.STR_VOICERECORDS:
-          String fileName = widget.data.metadata.fileName;
+          var fileName = widget.data.metadata.fileName;
 
-          new CommonDialogBox().getDialogBoxForBillsAndOthers(
+          CommonDialogBox().getDialogBoxForBillsAndOthers(
               context,
               containsAudio,
               audioPath,
@@ -952,7 +955,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                   containsAudio = containsAudio;
                 });
               },
-              new List(),
+              List(),
               (containsAudio, audioPath) {
                 audioPath = audioPath;
                 containsAudio = containsAudio;
@@ -961,14 +964,14 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               },
               widget.data,
               true,
-              new TextEditingController(text: fileName));
+              TextEditingController(text: fileName));
 
           break;
 
         case Constants.STR_NOTES:
-          String fileName = widget.data.metadata.fileName;
+          final fileName = widget.data.metadata.fileName;
 
-          new CommonDialogBox().getDialogBoxForNotes(
+          CommonDialogBox().getDialogBoxForNotes(
               context,
               containsAudio,
               audioPath,
@@ -978,7 +981,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                   containsAudio = containsAudio;
                 });
               },
-              new List(),
+              List(),
               (containsAudio, audioPath) {
                 audioPath = audioPath;
                 containsAudio = containsAudio;
@@ -987,7 +990,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               },
               widget.data,
               true,
-              new TextEditingController(text: fileName),
+              TextEditingController(text: fileName),
               (value) {
                 if (value) {
                   setState(() {});
@@ -1004,16 +1007,17 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         switch (deviceName) {
           case Constants.STR_GLUCOMETER:
             //String glucoMeterValue = '';
-            String fileName = widget.data.metadata.fileName;
+            final fileName = widget.data.metadata.fileName;
             //List<bool> isSelected;
-            String glucoMeterValue = widget.data.metadata.deviceReadings != null
-                ? widget.data.metadata.deviceReadings[0].value
-                : '';
-            List<bool> isSelected =
+            final String glucoMeterValue =
+                widget.data.metadata.deviceReadings != null
+                    ? widget.data.metadata.deviceReadings[0].value
+                    : '';
+            var isSelected =
                 widget.data.metadata.deviceReadings[1].unit == variable.strAfter
                     ? [false, true]
                     : [true, false];
-            new CommonDialogBox().getDialogBoxForGlucometer(
+            CommonDialogBox().getDialogBoxForGlucometer(
                 context,
                 deviceName,
                 containsAudio,
@@ -1024,7 +1028,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                     containsAudio = containsAudio;
                   });
                 },
-                new List(),
+                [],
                 (containsAudio, audioPath) {
                   audioPath = audioPath;
                   containsAudio = containsAudio;
@@ -1033,20 +1037,20 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                 },
                 widget.data,
                 true,
-                new TextEditingController(text: glucoMeterValue),
+                TextEditingController(text: glucoMeterValue),
                 isSelected,
-                new TextEditingController(text: fileName));
+                TextEditingController(text: fileName));
             break;
 
           case Constants.STR_THERMOMETER:
             //String thermometerValue = '';
-            String thermometerValue =
+            final String thermometerValue =
                 widget.data.metadata.deviceReadings != null
                     ? widget.data.metadata.deviceReadings[0].value
                     : '';
-            String fileName = widget.data.metadata.fileName;
+            final fileName = widget.data.metadata.fileName;
 
-            new CommonDialogBox().getDialogBoxForTemperature(
+            CommonDialogBox().getDialogBoxForTemperature(
                 context,
                 deviceName,
                 containsAudio,
@@ -1057,7 +1061,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                     containsAudio = containsAudio;
                   });
                 },
-                new List(),
+                [],
                 (containsAudio, audioPath) {
                   audioPath = audioPath;
                   containsAudio = containsAudio;
@@ -1066,16 +1070,17 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                 },
                 widget.data,
                 true,
-                new TextEditingController(text: thermometerValue),
-                new TextEditingController(text: fileName));
+                TextEditingController(text: thermometerValue),
+                TextEditingController(text: fileName));
             break;
           case Constants.STR_WEIGHING_SCALE:
-            String weightInKgs = widget.data.metadata.deviceReadings != null
-                ? widget.data.metadata.deviceReadings[0].value
-                : '';
-            String fileName = widget.data.metadata.fileName;
+            final String weightInKgs =
+                widget.data.metadata.deviceReadings != null
+                    ? widget.data.metadata.deviceReadings[0].value
+                    : '';
+            var fileName = widget.data.metadata.fileName;
 
-            new CommonDialogBox().getDialogBoxForWeightingScale(
+            CommonDialogBox().getDialogBoxForWeightingScale(
                 context,
                 deviceName,
                 containsAudio,
@@ -1086,7 +1091,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                     containsAudio = containsAudio;
                   });
                 },
-                new List(),
+                List(),
                 (containsAudio, audioPath) {
                   audioPath = audioPath;
                   containsAudio = containsAudio;
@@ -1095,23 +1100,23 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                 },
                 widget.data,
                 true,
-                new TextEditingController(text: weightInKgs),
-                new TextEditingController(text: fileName));
+                TextEditingController(text: weightInKgs),
+                TextEditingController(text: fileName));
             break;
 
           case Constants.STR_PULSE_OXIMETER:
             //String oxygenSaturation = '';
-            String oxygenSaturation =
+            final String oxygenSaturation =
                 widget.data.metadata.deviceReadings != null
                     ? widget.data.metadata.deviceReadings[0].value
                     : '';
             //String pulse = '';
-            String pulse = widget.data.metadata.deviceReadings != null
+            final String pulse = widget.data.metadata.deviceReadings != null
                 ? widget.data.metadata.deviceReadings[1].value
                 : '';
-            String fileName = widget.data.metadata.fileName;
+            final fileName = widget.data.metadata.fileName;
 
-            new CommonDialogBox().getDialogBoxForPulseOxidometer(
+            CommonDialogBox().getDialogBoxForPulseOxidometer(
                 context,
                 deviceName,
                 containsAudio,
@@ -1122,7 +1127,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                     containsAudio = containsAudio;
                   });
                 },
-                new List(),
+                List(),
                 (containsAudio, audioPath) {
                   audioPath = audioPath;
                   containsAudio = containsAudio;
@@ -1131,28 +1136,28 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                 },
                 widget.data,
                 true,
-                new TextEditingController(text: oxygenSaturation),
-                new TextEditingController(text: pulse),
-                new TextEditingController(text: fileName));
+                TextEditingController(text: oxygenSaturation),
+                TextEditingController(text: pulse),
+                TextEditingController(text: fileName));
             break;
           case Constants.STR_BP_MONITOR:
             /*String systolicPressure = '';
             String diastolicPressure = '';
             String pulse = '';*/
-            String systolicPressure =
+            final String systolicPressure =
                 widget.data.metadata.deviceReadings != null
                     ? widget.data.metadata.deviceReadings[0].value
                     : '';
-            String diastolicPressure =
+            final String diastolicPressure =
                 widget.data.metadata.deviceReadings != null
                     ? widget.data.metadata.deviceReadings[1].value
                     : '';
-            String pulse = widget.data.metadata.deviceReadings != null
+            final String pulse = widget.data.metadata.deviceReadings != null
                 ? widget.data.metadata.deviceReadings[2].value
                 : '';
-            String fileName = widget.data.metadata.fileName;
+            var fileName = widget.data.metadata.fileName;
 
-            new CommonDialogBox().getDialogBoxForBPMonitor(
+            CommonDialogBox().getDialogBoxForBPMonitor(
                 context,
                 deviceName,
                 containsAudio,
@@ -1163,7 +1168,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                     containsAudio = containsAudio;
                   });
                 },
-                new List(),
+                [],
                 (containsAudio, audioPath) {
                   audioPath = audioPath;
                   containsAudio = containsAudio;
@@ -1172,10 +1177,10 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                 },
                 widget.data,
                 true,
-                new TextEditingController(text: systolicPressure),
-                new TextEditingController(text: pulse),
-                new TextEditingController(text: diastolicPressure),
-                new TextEditingController(text: fileName));
+                TextEditingController(text: systolicPressure),
+                TextEditingController(text: pulse),
+                TextEditingController(text: diastolicPressure),
+                TextEditingController(text: fileName));
             break;
         }
       });
@@ -1183,7 +1188,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   }
 
   void postAudioToServer(String mediaMetaID) {
-    Map<String, dynamic> postImage = new Map();
+    final Map<String, dynamic> postImage = {};
 
     postImage[parameters.strmediaMetaId] = mediaMetaID;
 
@@ -1201,14 +1206,14 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   }
 
   void createdDateMethod() {
-    var parsedDate =
+    final parsedDate =
         DateTime.parse(widget.data.metadata.healthRecordType.createdOn);
-    final dateFormatter = DateFormat(variable.strDateFormatDay);
+    var dateFormatter = DateFormat(variable.strDateFormatDay);
     createdDate = dateFormatter.format(parsedDate);
   }
 
   Widget getCarousalImage(List<HealthRecordCollection> imagesPath) {
-    if (imagesPath != null && imagesPath.length > 0) {
+    if (imagesPath != null && imagesPath.isNotEmpty) {
       index = _current + 1;
       _current = 0;
       length = imagesPath.length;
@@ -1220,29 +1225,16 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     return Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           widget.data.metadata.healthRecordType.name !=
                   Constants.STR_VOICE_NOTES
-              ? (imagesPath != null && imagesPath.length > 0)
+              ? (imagesPath != null && imagesPath.isNotEmpty)
                   ? Expanded(
-                      child: carouselSlider = CarouselSlider(
-                        height: 400.0.h,
-                        //width: 1.sw,
-                        initialPage: 0,
-                        enlargeCenterPage: true,
-                        reverse: false,
-                        enableInfiniteScroll: false,
-                        pauseAutoPlayOnTouch: Duration(seconds: 10),
-                        scrollDirection: Axis.horizontal,
-                        onPageChanged: (index) {
-                          setState(() {
-                            _current = index;
-                          });
-                        },
+                      child: CarouselSlider(
+                        carouselController: carouselSlider,
                         items: imagesPath.map((imgUrl) {
                           return Builder(
-                            builder: (BuildContext context) {
+                            builder: (context) {
                               return Container(
                                   height: double.infinity,
                                   child: Image.network(
@@ -1263,6 +1255,21 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                             },
                           );
                         }).toList(),
+                        options: CarouselOptions(
+                          height: 400.0.h,
+                          //width: 1.sw,
+                          initialPage: 0,
+                          enlargeCenterPage: true,
+                          reverse: false,
+                          enableInfiniteScroll: false,
+                          // pauseAutoPlayOnTouch: Duration(seconds: 10),
+                          scrollDirection: Axis.horizontal,
+                          onPageChanged: (index, carouselPageChangedReason) {
+                            setState(() {
+                              _current = index;
+                            });
+                          },
+                        ),
                       ),
                     )
                   : ispdfPresent
@@ -1271,7 +1278,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                           : Container(
                               child: Center(
                                   child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
@@ -1305,8 +1311,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                           : Container(
                               child: Icon(
                                 Icons.mic,
-                                color:
-                                    Color(new CommonUtil().getMyPrimaryColor()),
+                                color: Color(CommonUtil().getMyPrimaryColor()),
                                 size: 24.0.sp,
                               ),
                             )
@@ -1341,25 +1346,24 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   Widget getDocumentImageWidgetClone() {
     if (_healthReportListForUserBlock != null) {
       _healthReportListForUserBlock = null;
-      _healthReportListForUserBlock = new HealthReportListForUserBlock();
+      _healthReportListForUserBlock = HealthReportListForUserBlock();
     } else {
-      _healthReportListForUserBlock = new HealthReportListForUserBlock();
+      _healthReportListForUserBlock = HealthReportListForUserBlock();
     }
 
     //_healthReportListForUserBlock.getDocumentImageList(mediMasterId);
 
     return StreamBuilder<ApiResponse<List<ImageDocumentResponse>>>(
       stream: _healthReportListForUserBlock.imageListStream,
-      builder: (context,
-          AsyncSnapshot<ApiResponse<List<ImageDocumentResponse>>> snapshot) {
+      builder: (context, snapshot) {
         if (snapshot.hasData) {
           switch (snapshot.data.status) {
             case Status.LOADING:
               return Center(
                   child: SizedBox(
-                child: CircularProgressIndicator(),
                 width: 30.0.h,
                 height: 30.0.h,
+                child: CircularProgressIndicator(),
               ));
               break;
 
@@ -1414,8 +1418,8 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     HealthRecordCollection mediaMetaId;
 
     if (data.healthRecordCollection != null &&
-        data.healthRecordCollection.length > 0) {
-      mediaMetaId = new CommonUtil()
+        data.healthRecordCollection.isNotEmpty) {
+      mediaMetaId = CommonUtil()
           .getMediaMasterIDForAudioFileType(data.healthRecordCollection);
     }
     return mediaMetaId;
@@ -1427,12 +1431,12 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   }
 
   Widget getValuesFromSharedPrefernce() {
-    return new FutureBuilder<bool>(
+    return FutureBuilder<bool>(
       future: downloadFile(audioMediaId, '.mp3'),
-      builder: (BuildContext context, snapshot) {
+      builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          new CircularProgressIndicator(
-            backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
+          CircularProgressIndicator(
+            backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
           );
         } else if (snapshot.hasError) {
           return ErrorsWidget();
@@ -1445,17 +1449,17 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
   downloadMedia(String url, BuildContext context, String fileType) async {
     var path;
-    FHBUtils.createFolderInAppDocDirClone(variable.stAudioPath)
+    await FHBUtils.createFolderInAppDocDirClone(variable.stAudioPath)
         .then((filePath) async {
-      final bytes = await _loadFileBytes(url,
-          onError: (Exception exception) =>
-              debugPrint('audio_provider.load => exception ${exception}'));
+      var bytes = await _loadFileBytes(url,
+          onError: (exception) =>
+              debugPrint('audio_provider.load => exception $exception'));
       if (fileType == '.mp3') {
         path = '$filePath${widget.data.metadata.fileName}' + fileType;
       } else {
         path = '$filePath${widget.data.metadata.fileName}';
       }
-      new File(path).writeAsBytes(bytes);
+      File(path).writeAsBytes(bytes);
       if (fileType == '.mp3') {
         //await path.writeAsBytes(bytes);
 
@@ -1471,15 +1475,14 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
   Future<bool> downloadFile(
       HealthRecordCollection audioMediaId, String fileType) async {
-    FHBUtils.createFolderInAppDocDirClone(variable.stAudioPath)
+    await FHBUtils.createFolderInAppDocDirClone(variable.stAudioPath)
         .then((filePath) async {
-      File file =
-          new File('$filePath${widget.data.metadata.fileName}' + fileType);
-      var request = await http.get(
+      var file = File('$filePath${widget.data.metadata.fileName}' + fileType);
+      final request = await ApiServices.get(
         audioMediaId.healthRecordUrl,
         headers: {HttpHeaders.authorizationHeader: authToken},
       );
-      var bytes = await request.bodyBytes; //close();
+      final bytes = request.bodyBytes; //close();
       await file.writeAsBytes(bytes);
 
       setState(() {
@@ -1500,7 +1503,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   Future<Uint8List> _loadFileBytes(String url, {OnError onError}) async {
     Uint8List bytes;
     try {
-      bytes = await readBytes(url);
+      bytes = await readBytes(Uri.parse(url));
     } on ClientException {
       rethrow;
     }
@@ -1514,9 +1517,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   void getPdfFileData(HealthRecordCollection pdfFileMediaId) {
     if (_healthReportListForUserBlock != null) {
       _healthReportListForUserBlock = null;
-      _healthReportListForUserBlock = new HealthReportListForUserBlock();
+      _healthReportListForUserBlock = HealthReportListForUserBlock();
     } else {
-      _healthReportListForUserBlock = new HealthReportListForUserBlock();
+      _healthReportListForUserBlock = HealthReportListForUserBlock();
     }
     downloadFile(pdfFileMediaId, '.pdf');
   }
@@ -1525,8 +1528,8 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     if (pdfFileName.contains('.pdf')) {
       pdfFileName = pdfFileName.replaceAll('.pdf', '');
       try {
-        var spilit = pdfFileName.split('_');
-        String value = toBeginningOfSentenceCase(spilit[1]) + '_' + spilit[0];
+        final spilit = pdfFileName.split('_');
+        var value = toBeginningOfSentenceCase(spilit[1]) + '_' + spilit[0];
         return value;
       } catch (e) {
         return pdfFileName = pdfFileName.replaceAll('.pdf', '');
@@ -1535,13 +1538,13 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   }
 
   void setAuthToken() async {
-    authToken = await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
   }
 
   void checkTheSpecifiedMetaID(
       HealthRecordList value, PostImageResponse postImageResponse) {
     // showAudioWidgetIfVoiceNotesAvailable(value);
-    for (HealthResult healthResult in value.result) {
+    for (final healthResult in value.result) {
       if (widget.data.id == healthResult.id) {
         // widget.data=healthResult
         //widget.data.healthRecordCollection = healthResult.healthRecordCollection;

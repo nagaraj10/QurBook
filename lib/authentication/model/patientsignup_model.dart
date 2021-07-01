@@ -1,4 +1,4 @@
-import 'package:myfhb/authentication/constants/constants.dart';
+import '../constants/constants.dart';
 
 class PatientSignUp {
   String firstName;
@@ -28,29 +28,29 @@ class PatientSignUp {
     message = json[strmessage];
     isSuccess = json[strIsSuccess];
     if (json[struserContactCollection3] != null) {
-      userContactCollection3 = new List<UserContactCollection3>();
+      userContactCollection3 = <UserContactCollection3>[];
       json[struserContactCollection3].forEach((v) {
-        userContactCollection3.add(new UserContactCollection3.fromJson(v));
+        userContactCollection3.add(UserContactCollection3.fromJson(v));
       });
     }
     result =
-        json[strResult] != null ? new Result.fromJson(json[strResult]) : null;
+        json[strResult] != null ? Result.fromJson(json[strResult]) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[strfirstName] = this.firstName;
-    data[strlastName] = this.lastName;
-    data[strsource] = this.source;
-    data[strpassword] = this.password;
-    data[strmessage] = this.message;
-    data[strIsSuccess] = this.isSuccess;
-    if (this.userContactCollection3 != null) {
+    final data = Map<String, dynamic>();
+    data[strfirstName] = firstName;
+    data[strlastName] = lastName;
+    data[strsource] = source;
+    data[strpassword] = password;
+    data[strmessage] = message;
+    data[strIsSuccess] = isSuccess;
+    if (userContactCollection3 != null) {
       data[struserContactCollection3] =
-          this.userContactCollection3.map((v) => v.toJson()).toList();
+          userContactCollection3.map((v) => v.toJson()).toList();
     }
-    if (this.result != null) {
-      data[strResult] = this.result.toJson();
+    if (result != null) {
+      data[strResult] = result.toJson();
     }
     return data;
   }
@@ -70,10 +70,10 @@ class UserContactCollection3 {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[strphoneNumber] = this.phoneNumber;
-    data[stremail] = this.email;
-    data[strisPrimary] = this.isPrimary;
+    final data = Map<String, dynamic>();
+    data[strphoneNumber] = phoneNumber;
+    data[stremail] = email;
+    data[strisPrimary] = isPrimary;
     return data;
   }
 }
@@ -90,9 +90,9 @@ class Result {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[strUserId] = this.userId;
-    data[struserName] = this.userName;
+    final data = <String, dynamic>{};
+    data[strUserId] = userId;
+    data[struserName] = userName;
     return data;
   }
 }

@@ -1,4 +1,4 @@
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import '../../../constants/fhb_parameters.dart' as parameters;
 
 class MediaData {
   String id;
@@ -53,22 +53,22 @@ class MediaData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[parameters.strId] = this.id;
-    data[parameters.strName] = this.name;
-    data[parameters.strDescription] = this.description;
-    data[parameters.strLogo] = this.logo;
-    data[parameters.strcategoryId] = this.categoryId;
-    data[parameters.strIsActive] = this.isActive;
-    data[parameters.strCreatedOn] = this.createdOn;
-    data[parameters.strLastModifiedOn] = this.lastModifiedOn;
-    data[parameters.strIsDisplay] = this.isDisplay;
-    data[parameters.strIsCreate] = this.isCreate;
-    data[parameters.strIsRead] = this.isRead;
-    data[parameters.strIsEdit] = this.isEdit;
-    data[parameters.strIsDelete] = this.isDelete;
-    data[parameters.strisManualTranscription] = this.isManualTranscription;
-    data[parameters.strisAITranscription] = this.isAITranscription;
+    final data = <String, dynamic>{};
+    data[parameters.strId] = id;
+    data[parameters.strName] = name;
+    data[parameters.strDescription] = description;
+    data[parameters.strLogo] = logo;
+    data[parameters.strcategoryId] = categoryId;
+    data[parameters.strIsActive] = isActive;
+    data[parameters.strCreatedOn] = createdOn;
+    data[parameters.strLastModifiedOn] = lastModifiedOn;
+    data[parameters.strIsDisplay] = isDisplay;
+    data[parameters.strIsCreate] = isCreate;
+    data[parameters.strIsRead] = isRead;
+    data[parameters.strIsEdit] = isEdit;
+    data[parameters.strIsDelete] = isDelete;
+    data[parameters.strisManualTranscription] = isManualTranscription;
+    data[parameters.strisAITranscription] = isAITranscription;
     return data;
   }
 

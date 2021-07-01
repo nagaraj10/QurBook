@@ -236,19 +236,19 @@ class ChatScreenState extends State<ChatScreen> {
 
   updateReadCount() async {
     try {
-      final snapShot = await Firestore.instance
+      final snapShot = await FirebaseFirestore.instance
           .collection(STR_CHAT_LIST)
-          .document(patientId)
+          .doc(patientId)
           .collection(STR_USER_LIST)
-          .document(peerId)
+          .doc(peerId)
           .get();
       if (snapShot.data != null) {
-        await Firestore.instance
+        await FirebaseFirestore.instance
             .collection(STR_CHAT_LIST)
-            .document(patientId)
+            .doc(patientId)
             .collection(STR_USER_LIST)
-            .document(peerId)
-            .updateData({STR_IS_READ_COUNT: 0});
+            .doc(peerId)
+            .update({STR_IS_READ_COUNT: 0});
       }
     } catch (e) {}
   }
@@ -385,10 +385,10 @@ class ChatScreenState extends State<ChatScreen> {
   Future uploadFile(String path) async {
     File file = File(path);
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-    StorageReference reference =
+    Reference reference =
         FirebaseStorage.instance.ref().child(fileName + '.m4a');
-    StorageUploadTask uploadTask = reference.putFile(file);
-    StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
+    UploadTask uploadTask = reference.putFile(file);
+    TaskSnapshot storageTaskSnapshot = await uploadTask.snapshot;
     storageTaskSnapshot.ref.getDownloadURL().then((downloadUrl) {
       imageUrl = downloadUrl;
       setState(() {
@@ -408,7 +408,7 @@ class ChatScreenState extends State<ChatScreen> {
       isPlaying = false;
     });
     currentPlayedVoiceURL = '';
-    await flutterSound.stopPlayer().then((value) {
+    await flutterSound.thePlayer.stopPlayer().then((value) {
       // flutterPlaySound(url);
     });
   }
@@ -418,38 +418,39 @@ class ChatScreenState extends State<ChatScreen> {
     setState(() {
       isPlaying = true;
     });
-    await flutterSound.startPlayer(url);
-    flutterSound.onPlayerStateChanged.listen((e) {
-      if (e != null) {
-        if (flutterSound.audioState == t_AUDIO_STATE.IS_STOPPED) {
-          flutterStopPlayer(url);
-        }
-      }
-    });
+    await flutterSound.thePlayer.startPlayer(fromURI: url);
+    // flutterSound.onPlayerStateChanged.listen((e) {
+    //   if (e != null) {
+    //     if (flutterSound.thePlayer.playerState == PlayerState.isStopped) {
+    //       flutterStopPlayer(url);
+    //     }
+    //   }
+    // });
+    //TODO: Check for audio
   }
 
   void onSendMessage(String content, int type) async {
     // type: 0 = text, 1 = image, 2 = sticker
     if (content.trim() != '') {
       bool isMuted = false;
-      final snapShot = await Firestore.instance
+      final snapShot = await FirebaseFirestore.instance
           .collection(STR_CHAT_LIST)
-          .document(peerId)
+          .doc(peerId)
           .collection(STR_USER_LIST)
-          .document(patientId)
+          .doc(patientId)
           .get();
       if (snapShot.data != null) {
-        isMuted = snapShot.data[STR_IS_MUTED] ?? false;
+        isMuted = snapShot.data()[STR_IS_MUTED] ?? false;
       }
       textValue = textEditingController.text;
       textEditingController.clear();
-      var documentReference = Firestore.instance
+      var documentReference = FirebaseFirestore.instance
           .collection(STR_MESSAGES)
-          .document(groupChatId)
+          .doc(groupChatId)
           .collection(groupChatId)
-          .document(DateTime.now().millisecondsSinceEpoch.toString());
+          .doc(DateTime.now().millisecondsSinceEpoch.toString());
 
-      Firestore.instance.runTransaction((transaction) async {
+      FirebaseFirestore.instance.runTransaction((transaction) async {
         await transaction.set(
           documentReference,
           {
@@ -471,15 +472,15 @@ class ChatScreenState extends State<ChatScreen> {
   getReadCount() async {
     int count = 0;
     try {
-      final snapShot = await Firestore.instance
+      final snapShot = await FirebaseFirestore.instance
           .collection(STR_CHAT_LIST)
-          .document(peerId)
+          .doc(peerId)
           .collection(STR_USER_LIST)
-          .document(patientId)
+          .doc(patientId)
           .get();
 
       if (snapShot.data != null) {
-        count = snapShot.data[STR_IS_READ_COUNT];
+        count = snapShot.data()[STR_IS_READ_COUNT];
       }
     } catch (ex) {
       count = 0;
@@ -488,12 +489,12 @@ class ChatScreenState extends State<ChatScreen> {
   }
 
   void addChatList(String content, int type, bool isMuted) async {
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection(STR_CHAT_LIST)
-        .document(patientId)
+        .doc(patientId)
         .collection(STR_USER_LIST)
-        .document(peerId)
-        .setData({
+        .doc(peerId)
+        .set({
       STR_NICK_NAME: peerName != null ? peerName : '',
       STR_PHOTO_URL: peerAvatar != null ? peerAvatar : '',
       STR_ID: peerId,
@@ -504,12 +505,12 @@ class ChatScreenState extends State<ChatScreen> {
     });
 
     await getReadCount().then((value) async {
-      await Firestore.instance
+      await FirebaseFirestore.instance
           .collection(STR_CHAT_LIST)
-          .document(peerId)
+          .doc(peerId)
           .collection(STR_USER_LIST)
-          .document(patientId)
-          .setData({
+          .doc(patientId)
+          .set({
         STR_NICK_NAME: patientName != null ? patientName : '',
         STR_PHOTO_URL: patientPicUrl != null ? patientPicUrl : '',
         STR_ID: patientId,
@@ -578,7 +579,7 @@ class ChatScreenState extends State<ChatScreen> {
     PermissionStatus storagePermission = Platform.isAndroid
         ? await Permission.storage.status
         : await Permission.photos.status;
-    if (storagePermission.isUndetermined || storagePermission.isRestricted) {
+    if (storagePermission.isDenied || storagePermission.isRestricted) {
       Platform.isAndroid
           ? await Permission.storage.request()
           : await Permission.photos.request();
@@ -1079,8 +1080,10 @@ class ChatScreenState extends State<ChatScreen> {
                                               MainAxisAlignment.spaceBetween,
                                           children: <Widget>[
                                             CircleAvatar(
-                                                child: Text(
-                                                    peerName!=null && peerName !=''?peerName.substring(0, 1):'')),
+                                                child: Text(peerName != null &&
+                                                        peerName != ''
+                                                    ? peerName.substring(0, 1)
+                                                    : '')),
                                             IconButton(
                                               icon: Icon(currentPlayedVoiceURL ==
                                                       document[STR_CONTENT]
@@ -1214,10 +1217,10 @@ class ChatScreenState extends State<ChatScreen> {
         isShowSticker = false;
       });
     } else {
-      Firestore.instance
+      FirebaseFirestore.instance
           .collection(STR_USERS)
-          .document(id == "" ? patientId : id)
-          .updateData({STR_CHATTING_WITH: null});
+          .doc(id == "" ? patientId : id)
+          .update({STR_CHATTING_WITH: null});
       Navigator.pop(context);
     }
 
@@ -1462,7 +1465,9 @@ class ChatScreenState extends State<ChatScreen> {
                     color: Colors.grey[200],
                     child: Center(
                         child: Text(
-                          widget.peerName!=null && widget.peerName!=''?widget.peerName[0].toString().toUpperCase():'',
+                      widget.peerName != null && widget.peerName != ''
+                          ? widget.peerName[0].toString().toUpperCase()
+                          : '',
                       style: TextStyle(
                         color: Color(new CommonUtil().getMyPrimaryColor()),
                         fontSize: 16.0.sp,
@@ -1481,8 +1486,9 @@ class ChatScreenState extends State<ChatScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                        widget.peerName!=null && widget.peerName!=''?widget.peerName
-                            ?.capitalizeFirstofEach:'' /* toBeginningOfSentenceCase(widget.peerName) */,
+                        widget.peerName != null && widget.peerName != ''
+                            ? widget.peerName?.capitalizeFirstofEach
+                            : '' /* toBeginningOfSentenceCase(widget.peerName) */,
                         textAlign: TextAlign.left,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
@@ -1880,27 +1886,28 @@ class ChatScreenState extends State<ChatScreen> {
           ? Center(
               child: CircularProgressIndicator(
                   backgroundColor: Color(new CommonUtil().getMyPrimaryColor())))
-          : StreamBuilder(
-              stream: Firestore.instance
+          : StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+              stream: FirebaseFirestore.instance
                   .collection(STR_MESSAGES)
-                  .document(groupChatId)
+                  .doc(groupChatId)
                   .collection(groupChatId)
                   .orderBy(STR_TIME_STAMP, descending: true)
                   .limit(50)
                   .snapshots(),
-              builder: (context, snapshot) {
+              builder: (context,
+                  AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
                 if (!snapshot.hasData) {
                   return Center(
                       child: CircularProgressIndicator(
                           valueColor:
                               AlwaysStoppedAnimation<Color>(themeColor)));
                 } else {
-                  listMessage = snapshot.data.documents;
-                  for (var data in snapshot.data.documents) {
+                  listMessage = snapshot.data.docs;
+                  for (var data in snapshot.data.docs) {
                     if (data[STR_ID_TO] == patientId &&
                         data[STR_IS_READ] == false) {
                       if (data.reference != null) {
-                        Firestore.instance
+                        FirebaseFirestore.instance
                             .runTransaction((Transaction myTransaction) async {
                           await myTransaction
                               .update(data.reference, {STR_IS_READ: true});
@@ -1911,8 +1918,8 @@ class ChatScreenState extends State<ChatScreen> {
                   return ScrollablePositionedList.builder(
                     padding: EdgeInsets.all(10.0),
                     itemBuilder: (context, index) =>
-                        buildItem(index, snapshot.data.documents[index]),
-                    itemCount: snapshot.data.documents.length,
+                        buildItem(index, snapshot.data.docs[index]),
+                    itemCount: snapshot.data.docs.length,
                     reverse: true,
                     itemScrollController: listScrollController,
                   );
@@ -1975,7 +1982,7 @@ class ChatScreenState extends State<ChatScreen> {
       context: context,
       builder: (context) => AlertDialog(
         content: Text(
-          'Send to Dr. ' + peerName!=null && peerName!=''?peerName:'',
+          'Send to Dr. ' + peerName != null && peerName != '' ? peerName : '',
           style: TextStyle(
             fontSize: 16.0.sp,
           ),

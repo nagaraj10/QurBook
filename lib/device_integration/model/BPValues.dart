@@ -1,4 +1,4 @@
-import 'package:myfhb/constants/fhb_parameters.dart';
+import '../../constants/fhb_parameters.dart';
 
 class BPValues {
   bool isSuccess;
@@ -9,19 +9,19 @@ class BPValues {
   BPValues.fromJson(Map<String, dynamic> json) {
     isSuccess = json[is_Success];
     if (json[dataResult] != null) {
-      result = new List<BPResult>();
+      result = <BPResult>[];
       json[dataResult].forEach((bpvalue) {
-        result.add(new BPResult.fromJson(bpvalue));
+        result.add(BPResult.fromJson(bpvalue));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[is_Success] = this.isSuccess;
-    if (this.result != null) {
+    final data = Map<String, dynamic>();
+    data[is_Success] = isSuccess;
+    if (result != null) {
       data[dataResult] =
-          this.result.map((bpvalue) => bpvalue.toJson()).toList();
+          result.map((bpvalue) => bpvalue.toJson()).toList();
     }
     return data;
   }
@@ -56,12 +56,12 @@ class BPResult {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[strsourcetype] = this.sourceType;
-    data[strStartTimeStamp] = this.startDateTime;
-    data[strEndTimeStamp] = this.endDateTime;
-    data[strParamSystolic] = this.systolic;
-    data[strParamDiastolic] = this.diastolic;
+    final data = Map<String, dynamic>();
+    data[strsourcetype] = sourceType;
+    data[strStartTimeStamp] = startDateTime;
+    data[strEndTimeStamp] = endDateTime;
+    data[strParamSystolic] = systolic;
+    data[strParamDiastolic] = diastolic;
     return data;
   }
 }

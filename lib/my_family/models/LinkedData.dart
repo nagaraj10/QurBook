@@ -1,4 +1,4 @@
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import '../../constants/fhb_parameters.dart' as parameters;
 
 class LinkedData {
   String nickName;
@@ -17,11 +17,11 @@ class LinkedData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[parameters.strnickName] = this.nickName;
-    data[parameters.strcustomRoleId] = this.customRoleId;
-    data[parameters.strroleName] = this.roleName;
-    data[parameters.strmodeOfShare] = this.modeOfShare;
+    final data = Map<String, dynamic>();
+    data[parameters.strnickName] = nickName;
+    data[parameters.strcustomRoleId] = customRoleId;
+    data[parameters.strroleName] = roleName;
+    data[parameters.strmodeOfShare] = modeOfShare;
     return data;
   }
 }

@@ -1,13 +1,13 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:myfhb/add_address/models/place.dart';
-import 'package:myfhb/add_address/services/google_map_service.dart';
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/confirm_location/models/confirm_location_arguments.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
+import '../models/place.dart';
+import '../services/google_map_service.dart';
+import '../../common/CommonConstants.dart';
+import '../../confirm_location/models/confirm_location_arguments.dart';
+import '../../src/utils/colors_utils.dart';
 import 'package:uuid/uuid.dart';
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import '../../constants/router_variable.dart' as router;
+import '../../src/utils/screenutils/size_extensions.dart';
 
 class AddAddressList extends StatefulWidget {
   List<Place> placesListArray;
@@ -41,13 +41,11 @@ class AddAddressListState extends State<AddAddressList> {
 
   Widget buildGooglePlacesList() {
     return ListView.builder(
-      itemBuilder: (BuildContext context, index) {
-        Place eachPlaceModel = widget.placesListArray[index];
+      itemBuilder: (context, index) {
+        var eachPlaceModel = widget.placesListArray[index];
         return InkWell(
           onTap: () {
-            if (sessionToken == null) {
-              sessionToken = uuid.v4();
-            }
+            sessionToken ??= uuid.v4();
             googleMapServices = GoogleMapServices(sessionToken: sessionToken);
             futurePlaceDetail = googleMapServices.getPlaceDetail(
               eachPlaceModel.placeId,
@@ -69,7 +67,6 @@ class AddAddressListState extends State<AddAddressList> {
           },
           child: Container(
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 SizedBox(
                   width: 10.0.w,
@@ -84,7 +81,6 @@ class AddAddressListState extends State<AddAddressList> {
                 ),
                 Expanded(
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       SizedBox(

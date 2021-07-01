@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:agora_rtc_engine/agora_rtc_engine.dart';
+import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -25,8 +25,10 @@ class MyControllers extends StatefulWidget {
   String patientId;
   String patientName;
   String patientPicUrl;
+  RtcEngine rtcEngine;
 
   MyControllers(
+      this.rtcEngine,
       this.callStatus,
       this.role,
       this.isAppExists,
@@ -220,7 +222,7 @@ class _MyControllersState extends State<MyControllers> {
       widget.muted = !widget.muted;
     });
     widget.controllerState(widget.muted, widget._isHideMyVideo);
-    AgoraRtcEngine.muteLocalAudioStream(widget.muted);
+    widget.rtcEngine.muteLocalAudioStream(widget.muted);
   }
 
   void _onToggleVideo() {
@@ -228,6 +230,6 @@ class _MyControllersState extends State<MyControllers> {
       widget._isHideMyVideo = !widget._isHideMyVideo;
     });
     widget.controllerState(widget.muted, widget._isHideMyVideo);
-    AgoraRtcEngine.muteLocalVideoStream(widget._isHideMyVideo);
+    widget.rtcEngine.muteLocalVideoStream(widget._isHideMyVideo);
   }
 }

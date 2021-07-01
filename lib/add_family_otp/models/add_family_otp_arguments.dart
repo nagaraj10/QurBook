@@ -1,4 +1,4 @@
-import 'package:myfhb/my_family/models/relationships.dart';
+import '../../my_family/models/relationships.dart';
 
 class AddFamilyOTPArguments {
   String enteredFirstName;

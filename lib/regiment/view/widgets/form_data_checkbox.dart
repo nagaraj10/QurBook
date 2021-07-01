@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:myfhb/regiment/models/regiment_data_model.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/regiment/models/field_response_model.dart';
+import '../../models/regiment_data_model.dart';
+import '../../../src/utils/screenutils/size_extensions.dart';
+import '../../../common/CommonUtil.dart';
+import '../../models/field_response_model.dart';
 import 'checkbox_tile_widget.dart';
 
 class FormDataCheckbox extends StatefulWidget {
@@ -33,17 +33,17 @@ class _FormDataCheckboxState extends State<FormDataCheckbox> {
   }
 
   List<Widget> loadCheckboxItems() {
-    List<String> checkboxList = (widget?.fieldData?.fdata ?? '')?.split('|');
-    if (checkboxList?.length > 0 && checkboxList.length.isEven) {
+    final checkboxList = (widget?.fieldData?.fdata ?? '')?.split('|');
+    if (checkboxList.isNotEmpty && checkboxList.length.isEven) {
       checkboxWidget.clear();
-      for (int index = 0; index < checkboxList.length; index++) {
+      for (var index = 0; index < checkboxList.length; index++) {
         checkboxWidget.add(
           CheckboxTileWidget(
             canEdit: widget.canEdit,
             title: checkboxList[index + 1] ?? '',
             value: checkboxList[index],
             onSelected: (selectedValue, valueText) {
-              FieldModel updatedFieldData = widget.fieldData;
+              final updatedFieldData = widget.fieldData;
               updatedFieldData.value = valueText;
               if (selectedValue) {
                 widget.updateValue(updatedFieldData,

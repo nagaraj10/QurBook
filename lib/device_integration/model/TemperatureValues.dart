@@ -1,4 +1,4 @@
-import 'package:myfhb/constants/fhb_parameters.dart';
+import '../../constants/fhb_parameters.dart';
 
 class TemperatureValues {
   bool isSuccess;
@@ -9,19 +9,19 @@ class TemperatureValues {
   TemperatureValues.fromJson(Map<String, dynamic> json) {
     isSuccess = json[is_Success];
     if (json[dataResult] != null) {
-      result = new List<TMPResult>();
+      result = <TMPResult>[];
       json[dataResult].forEach((tempaturevalue) {
-        result.add(new TMPResult.fromJson(tempaturevalue));
+        result.add(TMPResult.fromJson(tempaturevalue));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[is_Success] = this.isSuccess;
-    if (this.result != null) {
+    final data = Map<String, dynamic>();
+    data[is_Success] = isSuccess;
+    if (result != null) {
       data[dataResult] =
-          this.result.map((tempaturevalue) => tempaturevalue.toJson()).toList();
+          result.map((tempaturevalue) => tempaturevalue.toJson()).toList();
     }
     return data;
   }
@@ -53,12 +53,12 @@ class TMPResult {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[strsourcetype] = this.sourceType;
-    data[strStartTimeStamp] = this.startDateTime;
-    data[strEndTimeStamp] = this.endDateTime;
-    data[strParamTemp] = this.temperature;
-    data[strParamTempUnit] = this.temperatureUnit;
+    final data = <String, dynamic>{};
+    data[strsourcetype] = sourceType;
+    data[strStartTimeStamp] = startDateTime;
+    data[strEndTimeStamp] = endDateTime;
+    data[strParamTemp] = temperature;
+    data[strParamTempUnit] = temperatureUnit;
     return data;
   }
 }

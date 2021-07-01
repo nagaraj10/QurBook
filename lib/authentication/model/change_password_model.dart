@@ -1,4 +1,4 @@
-import 'package:myfhb/authentication/constants/constants.dart';
+import '../constants/constants.dart';
 
 class ChangePasswordModel {
   String newPassword;
@@ -23,12 +23,12 @@ class ChangePasswordModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[strNewPassword] = this.newPassword;
-    data[strOldPassword] = this.oldPassword;
-    data[strsource] = this.source;
-    data[strmessage] = this.message;
-    data[strIsSuccess] = this.isSuccess;
+    final data = Map<String, dynamic>();
+    data[strNewPassword] = newPassword;
+    data[strOldPassword] = oldPassword;
+    data[strsource] = source;
+    data[strmessage] = message;
+    data[strIsSuccess] = isSuccess;
     return data;
   }
 }

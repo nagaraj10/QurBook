@@ -133,10 +133,10 @@ const String qr_User = 'user';
 const String qr_LastSyncGF = '?source=Google Fit';
 const String qr_LastSyncHK = '?source=Apple Health';
 
-const String BOOKING_ID = "bookingId";
-const String BOOKING_ID_CAPS = "bookingID";
-const String META_IDS = "mediaMetaIds";
-const String INCLUDE_MEDIA = "includeMedia";
+const String BOOKING_ID = 'bookingId';
+const String BOOKING_ID_CAPS = 'bookingID';
+const String META_IDS = 'mediaMetaIds';
+const String INCLUDE_MEDIA = 'includeMedia';
 
 const String qr_media_meta = 'mediameta/';
 const String qr_get_media_master = '/getmediamaster/';

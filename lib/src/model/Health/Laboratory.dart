@@ -1,4 +1,4 @@
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import '../../../constants/fhb_parameters.dart' as parameters;
 
 class Laboratory {
   int localLabId;
@@ -35,7 +35,7 @@ class Laboratory {
       this.zipcode});
 
   Laboratory.fromJson(Map<String, dynamic> json) {
-    localLabId = json[parameters.strLocal_Lab_Id]==null?0:json[parameters.strLocal_Lab_Id];
+    localLabId = json[parameters.strLocal_Lab_Id] ?? 0;
     addressLine1 = json[parameters.strAddressLine1];
     addressLine2 = json[parameters.strAddressLine2];
     branch = json[parameters.strBranch];
@@ -43,7 +43,7 @@ class Laboratory {
     description = json[parameters.strDescription];
     email = json[parameters.strEmail];
     id = json[parameters.strId];
-    isUserDefined = json[parameters.strIsUserDefined]!=null?json[parameters.strIsUserDefined]:false;
+    isUserDefined = json[parameters.strIsUserDefined] ?? false;
     if (json[parameters.strLatitude] is String) {
       latitude = json[parameters.strLatitude];
     } else {
@@ -54,7 +54,7 @@ class Laboratory {
     } else {
       longitude = json[parameters.strLongitute].toString();
     }
-    logoThumbnail = json[parameters.strLogothumbnail]!=null?json[parameters.strLogothumbnail]:'';
+    logoThumbnail = json[parameters.strLogothumbnail] ?? '';
     name = json[parameters.strName];
     website = json[parameters.strWebsite];
     if (json[parameters.strZipcode] is String) {
@@ -65,22 +65,22 @@ class Laboratory {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[parameters.strLocal_Lab_Id] = this.localLabId;
-    data[parameters.strAddressLine1] = this.addressLine1;
-    data[parameters.strAddressLine2] = this.addressLine2;
-    data[parameters.strBranch] = this.branch;
-    data[parameters.strCity] = this.city;
-    data[parameters.strDescription] = this.description;
-    data[parameters.strEmail] = this.email;
-    data[parameters.strId] = this.id;
-    data[parameters.strIsUserDefined] = this.isUserDefined;
-    data[parameters.strLatitude] = this.latitude;
-    data[parameters.strLogothumbnail] = this.logoThumbnail;
-    data[parameters.strLongitute] = this.longitude;
-    data[parameters.strName] = this.name;
-    data[parameters.strWebsite] = this.website;
-    data[parameters.strZipcode] = this.zipcode;
+    final data = Map<String, dynamic>();
+    data[parameters.strLocal_Lab_Id] = localLabId;
+    data[parameters.strAddressLine1] = addressLine1;
+    data[parameters.strAddressLine2] = addressLine2;
+    data[parameters.strBranch] = branch;
+    data[parameters.strCity] = city;
+    data[parameters.strDescription] = description;
+    data[parameters.strEmail] = email;
+    data[parameters.strId] = id;
+    data[parameters.strIsUserDefined] = isUserDefined;
+    data[parameters.strLatitude] = latitude;
+    data[parameters.strLogothumbnail] = logoThumbnail;
+    data[parameters.strLongitute] = longitude;
+    data[parameters.strName] = name;
+    data[parameters.strWebsite] = website;
+    data[parameters.strZipcode] = zipcode;
     return data;
   }
 }

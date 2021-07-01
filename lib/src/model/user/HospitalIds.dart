@@ -1,4 +1,4 @@
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import '../../../constants/fhb_parameters.dart' as parameters;
 
 class HospitalIds {
   String id;
@@ -86,33 +86,33 @@ class HospitalIds {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[parameters.strId] = this.id;
-    data[parameters.strCreatedBy] = this.createdBy;
-    data[parameters.strName] = this.name;
-    data[parameters.strPhoneNumber1] = this.phoneNumber1;
-    data[parameters.strPhoneNumber2] = this.phoneNumber2;
-    data[parameters.strPhoneNumber3] = this.phoneNumber3;
-    data[parameters.strPhoneNumber4] = this.phoneNumber4;
-    data[parameters.strAddressLine1] = this.addressLine1;
-    data[parameters.strAddressLine2] = this.addressLine2;
-    data[parameters.strCity] = this.city;
-    data[parameters.strState] = this.state;
-    data[parameters.strLatitude] = this.latitude;
-    data[parameters.strLongitute] = this.longitude;
-    data[parameters.strLogo] = this.logo;
-    data[parameters.strLogothumbnail] = this.logoThumbnail;
-    data[parameters.strZipcode] = this.zipCode;
-    data[parameters.strWebsite] = this.website;
-    data[parameters.strEmail] = this.email;
-    data[parameters.strGoogleMapUrl] = this.googleMapUrl;
-    data[parameters.strBranch] = this.branch;
-    data[parameters.strIsUserDefined] = this.isUserDefined;
-    data[parameters.strDescription] = this.description;
-    data[parameters.strIsActive] = this.isActive;
-    data[parameters.strCreatedOn] = this.createdOn;
-    data[parameters.strLastModifiedOn] = this.lastModifiedOn;
-    data[parameters.strisDefault] = this.isDefault;
+    final data = <String, dynamic>{};
+    data[parameters.strId] = id;
+    data[parameters.strCreatedBy] = createdBy;
+    data[parameters.strName] = name;
+    data[parameters.strPhoneNumber1] = phoneNumber1;
+    data[parameters.strPhoneNumber2] = phoneNumber2;
+    data[parameters.strPhoneNumber3] = phoneNumber3;
+    data[parameters.strPhoneNumber4] = phoneNumber4;
+    data[parameters.strAddressLine1] = addressLine1;
+    data[parameters.strAddressLine2] = addressLine2;
+    data[parameters.strCity] = city;
+    data[parameters.strState] = state;
+    data[parameters.strLatitude] = latitude;
+    data[parameters.strLongitute] = longitude;
+    data[parameters.strLogo] = logo;
+    data[parameters.strLogothumbnail] = logoThumbnail;
+    data[parameters.strZipcode] = zipCode;
+    data[parameters.strWebsite] = website;
+    data[parameters.strEmail] = email;
+    data[parameters.strGoogleMapUrl] = googleMapUrl;
+    data[parameters.strBranch] = branch;
+    data[parameters.strIsUserDefined] = isUserDefined;
+    data[parameters.strDescription] = description;
+    data[parameters.strIsActive] = isActive;
+    data[parameters.strCreatedOn] = createdOn;
+    data[parameters.strLastModifiedOn] = lastModifiedOn;
+    data[parameters.strisDefault] = isDefault;
     return data;
   }
 }

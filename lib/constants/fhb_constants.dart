@@ -1,7 +1,7 @@
 library fhb_constants;
 
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:myfhb/common/CommonUtil.dart';
+import '../common/CommonUtil.dart';
 
 String BASE_URL = CommonUtil.BASE_URL_FROM_RES;
 
@@ -275,10 +275,10 @@ const String preferred_descrip =
     'We allow only one preferred provider for a user. To remove your preference, please set another Provider as Preferred.';
 
 //ICONS LINK
-const String NOTES_ICON_LINK = "assets/icons/notes.png";
-const String RECORDS_ICON_LINK = "assets/navicons/my_records.png";
-const String VOICE_ICON_LINK = "assets/icons/voice-notes.png";
-const String DEVICE_ICON_LINK = "assets/navicons/reading.png";
+const String NOTES_ICON_LINK = 'assets/icons/notes.png';
+const String RECORDS_ICON_LINK = 'assets/navicons/my_records.png';
+const String VOICE_ICON_LINK = 'assets/icons/voice-notes.png';
+const String DEVICE_ICON_LINK = 'assets/navicons/reading.png';
 
 const String AddAppointment = 'Add Appointment';
 const String HospitalName = 'Hospital Name';
@@ -327,33 +327,33 @@ const String KEY_EMAIL = 'email';
 //For Google Fit Integration
 const String asgurduserID = '49cdc4be-afd9-419e-b3f9-1bd35207c74f';
 
-const String activateGF = "activateGF"; // activate googleFit
-const String activateHK = "activateHK"; // activate appleHealth
-const String isFirstTym = "FirsTym";
+const String activateGF = 'activateGF'; // activate googleFit
+const String activateHK = 'activateHK'; // activate appleHealth
+const String isFirstTym = 'FirsTym';
 const String isHealthFirstTime =
-    "HealthFirstTime"; // Activating HealthKit For First Time
-const String bpMon = "bpMon";
-const String glMon = "GLMon";
-const String oxyMon = "OxyMon";
-const String thMon = "THMon";
-const String wsMon = "WSMon";
+    'HealthFirstTime'; // Activating HealthKit For First Time
+const String bpMon = 'bpMon';
+const String glMon = 'GLMon';
+const String oxyMon = 'OxyMon';
+const String thMon = 'THMon';
+const String wsMon = 'WSMon';
 
 //// Check Internet connectivity
-const String failed_wifi = "Failed to get Wifi Name";
-const String failed_wifi_bssid = "Failed to get Wifi BSSID";
-const String failed_wifi_ip = "Failed to get Wifi IP";
-const String wifi_connected = "Wifi connected";
-const String data_connected = "Mobile data connected";
-const String no_internet_conn = "No internet connection";
-const String failed_get_conn = "Failed to get connectivity.";
-const String failed_get_connectivity = "Failed to get internet connectivity.";
-const String NOT_FILE_IMAGE = "Something went wrong";
-const String TRY_AGAIN = "Please try again or report the issue to support";
-const String EXIT_APP = "Exit app";
-const String EXIT_APP_TO_EXIT = "Are you sure to exit app?";
-const String CANCEL = "CANCEL";
-const String YES = "YES";
-const String CHAT = "Chats";
+const String failed_wifi = 'Failed to get Wifi Name';
+const String failed_wifi_bssid = 'Failed to get Wifi BSSID';
+const String failed_wifi_ip = 'Failed to get Wifi IP';
+const String wifi_connected = 'Wifi connected';
+const String data_connected = 'Mobile data connected';
+const String no_internet_conn = 'No internet connection';
+const String failed_get_conn = 'Failed to get connectivity.';
+const String failed_get_connectivity = 'Failed to get internet connectivity.';
+const String NOT_FILE_IMAGE = 'Something went wrong';
+const String TRY_AGAIN = 'Please try again or report the issue to support';
+const String EXIT_APP = 'Exit app';
+const String EXIT_APP_TO_EXIT = 'Are you sure to exit app?';
+const String CANCEL = 'CANCEL';
+const String YES = 'YES';
+const String CHAT = 'Chats';
 
 const String KEY_FAMILYMEMBERNEW = 'familymembernew';
 const String CONSULTING = 'CONSULTING';
@@ -553,7 +553,7 @@ const String strNoContactsLabel = 'Looks Like There are No Contacts!!!';
 FirebaseAnalytics _firebaseAnalytics = FirebaseAnalytics();
 var mInitialTime;
 
-Future<void> fbaLog({String eveName, dynamic eveParams}) async {
+Future<void> fbaLog({String eveName, eveParams}) async {
   try {
     await _firebaseAnalytics.logEvent(
         name: eveName ?? 'qurbook_ns_event',

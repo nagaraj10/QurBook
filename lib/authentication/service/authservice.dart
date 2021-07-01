@@ -1,22 +1,24 @@
 import 'dart:io';
 
-import 'package:myfhb/authentication/constants/constants.dart';
+import 'package:myfhb/src/resources/network/api_services.dart';
+
+import '../constants/constants.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:myfhb/authentication/model/error_response_model.dart';
-import 'package:myfhb/authentication/model/otp_response_model.dart';
-import 'package:myfhb/authentication/model/ivr_number_model.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/HeaderRequest.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import '../model/error_response_model.dart';
+import '../model/otp_response_model.dart';
+import '../model/ivr_number_model.dart';
+import '../../common/CommonUtil.dart';
+import '../../common/PreferenceUtil.dart';
+import '../../constants/HeaderRequest.dart';
+import '../../constants/fhb_constants.dart' as Constants;
 
 class AuthService {
-  String _auth_base_url = CommonUtil.BASE_URL_FROM_RES + 'auth/';
-  HeaderRequest headerRequest = new HeaderRequest();
+  final String _auth_base_url = CommonUtil.BASE_URL_FROM_RES + 'auth/';
+  HeaderRequest headerRequest = HeaderRequest();
   Future<dynamic> patientsignupservice(Map<String, dynamic> params) async {
     try {
-      final response = await http.post(
+      var response = await ApiServices.post(
         _auth_base_url + strSignUpEndpoint,
         headers: <String, String>{
           c_content_type_key: c_content_type_val,
@@ -24,8 +26,8 @@ class AuthService {
         body: json.encode(params),
       );
       if (response.statusCode == 200) {
-        var responseResult = jsonDecode(response.body);
-        String responseString = responseResult[strResult][strUserId];
+        final responseResult = jsonDecode(response.body);
+        final String responseString = responseResult[strResult][strUserId];
         await PreferenceUtil.saveString(
             Constants.KEY_USERID_MAIN, responseString);
         return responseResult;
@@ -39,7 +41,7 @@ class AuthService {
 
   Future<dynamic> patientloginservice(Map<String, dynamic> params) async {
     try {
-      final response = await http.post(
+      var response = await ApiServices.post(
         _auth_base_url + strSignEndpoint,
         headers: <String, String>{
           c_content_type_key: c_content_type_val,
@@ -47,14 +49,14 @@ class AuthService {
         body: jsonEncode(params),
       );
       if (response.statusCode == 200) {
-        var responseResult = jsonDecode(response.body);
-        String responseString = responseResult[strResult];
+        final responseResult = jsonDecode(response.body);
+        final String responseString = responseResult[strResult];
         await PreferenceUtil.saveString(
             Constants.KEY_AUTHTOKEN, responseString);
         return responseResult;
       } else if (response.statusCode == 500) {
-        var responseResult = jsonDecode(response.body);
-        String responseString = responseResult[strResult];
+        final responseResult = jsonDecode(response.body);
+        final String responseString = responseResult[strResult];
         await PreferenceUtil.saveString(
             Constants.KEY_AUTHTOKEN, responseString);
         return responseResult;
@@ -68,7 +70,7 @@ class AuthService {
 
   Future<dynamic> resendOtpservice(Map<String, dynamic> params) async {
     try {
-      final response = await http.post(
+      var response = await ApiServices.post(
         _auth_base_url + strResendConfirmCode,
         headers: <String, String>{
           c_content_type_key: c_content_type_val,
@@ -76,7 +78,7 @@ class AuthService {
         body: jsonEncode(params),
       );
       if (response.statusCode == 200) {
-        var responseResult = jsonDecode(response.body);
+        final responseResult = jsonDecode(response.body);
         return responseResult;
       } else {
         return createErrorJsonString(response);
@@ -88,13 +90,13 @@ class AuthService {
 
   Future<dynamic> resendOtpserviceForAddingFamilyMember(
       Map<String, dynamic> params) async {
-    final path = Constants.BASE_URL + strResendGenerateOTP;
-    final headers = await headerRequest.getRequestHeadersAuthContents();
+    var path = Constants.BASE_URL + strResendGenerateOTP;
+    var headers = await headerRequest.getRequestHeadersAuthContents();
     try {
-      var response =
-          await http.post(path, headers: headers, body: jsonEncode(params));
+      final response = await ApiServices.post(path,
+          headers: headers, body: jsonEncode(params));
       if (response.statusCode == 200) {
-        var responseResult = jsonDecode(response.body);
+        final responseResult = jsonDecode(response.body);
         return responseResult;
       } else {
         return createErrorJsonString(response);
@@ -106,7 +108,7 @@ class AuthService {
 
   Future<dynamic> forgotPasswordservice(Map<String, dynamic> params) async {
     try {
-      final response = await http.post(
+      var response = await ApiServices.post(
         _auth_base_url + strKeyForgotPassword,
         headers: <String, String>{
           c_content_type_key: c_content_type_val,
@@ -114,7 +116,7 @@ class AuthService {
         body: jsonEncode(params),
       );
       if (response.statusCode == 200) {
-        var responseResult = jsonDecode(response.body);
+        final responseResult = jsonDecode(response.body);
         return responseResult;
       } else {
         return createErrorJsonString(response);
@@ -127,7 +129,7 @@ class AuthService {
   Future<dynamic> forgotConfirmPasswordservice(
       Map<String, dynamic> params) async {
     try {
-      final response = await http.post(
+      var response = await ApiServices.post(
         _auth_base_url + strKeyConfirmForgotPassword,
         headers: <String, String>{
           c_content_type_key: c_content_type_val,
@@ -135,7 +137,7 @@ class AuthService {
         body: jsonEncode(params),
       );
       if (response.statusCode == 200) {
-        var responseResult = jsonDecode(response.body);
+        final responseResult = jsonDecode(response.body);
         return responseResult;
       } else {
         return createErrorJsonString(response);
@@ -147,7 +149,7 @@ class AuthService {
 
   Future<dynamic> verifyPatientService(Map<String, dynamic> params) async {
     try {
-      final response = await http.post(
+      var response = await ApiServices.post(
         _auth_base_url + strUserVerifyEndpoint,
         headers: <String, String>{
           c_content_type_key: c_content_type_val,
@@ -155,8 +157,8 @@ class AuthService {
         body: jsonEncode(params),
       );
       if (response.statusCode == 200) {
-        var responseResult = jsonDecode(response.body);
-        String responseString = responseResult[strResult];
+        final responseResult = jsonDecode(response.body);
+        final String responseString = responseResult[strResult];
         await PreferenceUtil.saveString(
             Constants.KEY_AUTHTOKEN, responseString);
         return responseResult;
@@ -170,7 +172,7 @@ class AuthService {
 
   Future<dynamic> verifyOtpService(Map<String, dynamic> params) async {
     try {
-      final response = await http.post(
+      var response = await ApiServices.post(
         Constants.BASE_URL + strOtpVerifyEndpoint,
         /* headers: <String, String>{
           c_content_type_key: c_content_type_val,
@@ -181,8 +183,8 @@ class AuthService {
         body: jsonEncode(params),
       );
       if (response.statusCode == 200) {
-        var responseResult = jsonDecode(response.body);
-        String responseString = responseResult[strResult];
+        final responseResult = jsonDecode(response.body);
+        final String responseString = responseResult[strResult];
         await PreferenceUtil.saveString(
             Constants.KEY_AUTHTOKEN, responseString);
         return responseResult;
@@ -196,17 +198,17 @@ class AuthService {
 
   Future<dynamic> changePasswordservice(Map<String, dynamic> params) async {
     try {
-      final response = await http.post(
+      var response = await ApiServices.post(
         _auth_base_url + strKeyChangeUserService,
         headers: <String, String>{
           c_content_type_key: c_content_type_val,
           c_auth_key:
-              '$strBearer ${await PreferenceUtil.getStringValue(strKeyVerifyOtpService)}',
+              '$strBearer ${PreferenceUtil.getStringValue(strKeyVerifyOtpService)}',
         },
         body: jsonEncode(params),
       );
       if (response.statusCode == 200) {
-        var responseResult = jsonDecode(response.body);
+        final responseResult = jsonDecode(response.body);
         return responseResult;
       } else {
         return createErrorJsonString(response);
@@ -218,7 +220,7 @@ class AuthService {
 
   Future<dynamic> verifyOTPservice(Map<String, dynamic> params) async {
     try {
-      final response = await http.post(
+      var response = await ApiServices.post(
         Constants.BASE_URL + strKeyVerifyFamilyMemberEP,
         headers: <String, String>{
           c_content_type_key: c_content_type_val,
@@ -228,7 +230,7 @@ class AuthService {
         body: jsonEncode(params),
       );
       if (response.statusCode == 200) {
-        var responseResult = jsonDecode(response.body);
+        final responseResult = jsonDecode(response.body);
         return responseResult;
       } else {
         return createErrorJsonString(response);
@@ -239,9 +241,9 @@ class AuthService {
   }
 
   dynamic createErrorJsonString(http.Response response) {
-    ErrorModelResponse errorModelResponse =
+    final errorModelResponse =
         ErrorModelResponse.fromJson(jsonDecode(response.body));
-    Map<String, dynamic> errorJson = new Map();
+    final errorJson = Map<String, dynamic>();
     errorJson[strStatus] = errorModelResponse.status;
     errorJson[strmessage] = errorModelResponse.message;
     errorJson[strIsSuccess] = errorModelResponse.success;
@@ -250,7 +252,7 @@ class AuthService {
   }
 
   dynamic spocketException() {
-    Map<String, dynamic> errorJson = new Map();
+    var errorJson = Map<String, dynamic>();
     errorJson[strStatus] = 100;
     errorJson[strmessage] = strWentWrong;
     errorJson[strIsSuccess] = false;
@@ -260,13 +262,13 @@ class AuthService {
 
   Future<dynamic> verifyUserOtpService(Map<String, dynamic> params) async {
     try {
-      final response = await http.post(
+      var response = await ApiServices.post(
         Constants.BASE_URL + strUserOtpVerifyEndpoint,
         headers: await headerRequest.getRequestHeadersAuthContents(),
         body: jsonEncode(params),
       );
       if (response.statusCode == 200) {
-        var responseResult = jsonDecode(response.body);
+        final responseResult = jsonDecode(response.body);
         //String responseString = responseResult[strResult];
         // await PreferenceUtil.saveString(
         //     Constants.KEY_AUTHTOKEN, responseString);
@@ -281,12 +283,12 @@ class AuthService {
 
   Future<dynamic> addDoctorAsProvider(String jsonBody) async {
     var responseJson;
-    Map<String, String> requestHeaders = {
+    var requestHeaders = <String, String>{
       'authorization': PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN),
       'Content-Type': 'application/json'
     };
     try {
-      final response = await http.put(
+      var response = await ApiServices.put(
           Constants.BASE_URL + 'doctor/onboard-existing-entity-acknowledgement',
           body: jsonBody,
           headers: requestHeaders);
@@ -300,12 +302,12 @@ class AuthService {
 
   Future<IvrNumberModel> getIVRNumbers() async {
     var responseJson;
-    Map<String, String> requestHeaders = {
+    var requestHeaders = <String, String>{
       'authorization': PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN),
       'Content-Type': 'application/json'
     };
     try {
-      final response = await http.get(
+      var response = await ApiServices.get(
           Constants.BASE_URL + 'authentication-log/get-ivr-number/',
           headers: requestHeaders);
       responseJson = IvrNumberModel.fromJson(jsonDecode(response.body));
@@ -316,9 +318,9 @@ class AuthService {
   }
 
   Future<OtpResponseModel> getOTPFromCall(String phoneNumber) async {
-    final headerRequest = await HeaderRequest().getRequestHeadersAuthContent();
+    var headerRequest = await HeaderRequest().getRequestHeadersAuthContent();
     try {
-      final response = await http.get(
+      var response = await ApiServices.get(
         Constants.BASE_URL +
             'authentication-log/polling/?phone=${phoneNumber ?? ''}&source=myFHB',
         headers: headerRequest,
@@ -335,15 +337,15 @@ class AuthService {
     }
   }
 
-  Future<dynamic> getApiForAddContactsPatient(String url, String jsonBody) async {
+  Future<dynamic> getApiForAddContactsPatient(
+      String url, String jsonBody) async {
     var responseJson;
-    final headerRequest =
-          await HeaderRequest().getRequestHeadersAuthContent();
+    var headerRequest = await HeaderRequest().getRequestHeadersAuthContent();
     try {
       //! this is need to be uncomment
-      final response = await http.post(Constants.BASE_URL + url,
-          headers:await headerRequest, body: jsonBody);
-      // final response = await http.post('https://c0f6a853-f0e6-4a92-89b3-8e6cf34f9834.mock.pstmn.io/user/refer-friend',
+      var response = await ApiServices.post(Constants.BASE_URL + url,
+          headers: headerRequest, body: jsonBody);
+      // final response = await ApiServices.post('https://c0f6a853-f0e6-4a92-89b3-8e6cf34f9834.mock.pstmn.io/user/refer-friend',
       //     headers: await headerRequest, body: jsonBody);
       responseJson = jsonDecode(response?.body);
     } on SocketException {

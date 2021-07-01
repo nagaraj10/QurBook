@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'package:myfhb/constants/fhb_parameters.dart';
-import 'package:myfhb/device_integration/model/googleFitBucket.dart';
+import '../../constants/fhb_parameters.dart';
+import 'googleFitBucket.dart';
 
 GoogleFitResponseModel ResponseFromJson(String str) =>
     GoogleFitResponseModel.fromJson(json.decode(str));

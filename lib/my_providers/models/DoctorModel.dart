@@ -1,5 +1,5 @@
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/my_providers/models/ProfilePic.dart';
+import '../../constants/fhb_parameters.dart' as parameters;
+import 'ProfilePic.dart';
 
 class DoctorsModel {
   String id;
@@ -77,48 +77,48 @@ class DoctorsModel {
     createdBy = json[parameters.strCreatedBy];
     lastModifiedOn = json[parameters.strLastModifiedOn];
     profilePic = json[parameters.strprofilePic] != null
-        ? new ProfilePic.fromJson(json[parameters.strprofilePic])
+        ? ProfilePic.fromJson(json[parameters.strprofilePic])
         : null;
     profilePicThumbnail = json[parameters.strprofilePicThumbnail] != null
-        ? new ProfilePic.fromJson(json[parameters.strprofilePicThumbnail])
+        ? ProfilePic.fromJson(json[parameters.strprofilePicThumbnail])
         : null;
     isDefault = json[parameters.strisDefault];
-    profilePicThumbnailUrl = json["profilePicThumbnailURL"] != null
-        ? json["profilePicThumbnailURL"]
+    profilePicThumbnailUrl = json['profilePicThumbnailURL'] != null
+        ? json['profilePicThumbnailURL']
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[parameters.strId] = this.id;
-    data[parameters.strName] = this.name;
-    data[parameters.strAddressLine1] = this.addressLine1;
-    data[parameters.strAddressLine2] = this.addressLine2;
-    data[parameters.strWebsite] = this.website;
-    data[parameters.strGoogleMapUrl] = this.googleMapUrl;
-    data[parameters.strPhoneNumber1] = this.phoneNumber1;
-    data[parameters.strPhoneNumber2] = this.phoneNumber2;
-    data[parameters.strPhoneNumber3] = this.phoneNumber3;
-    data[parameters.strPhoneNumber4] = this.phoneNumber4;
-    data[parameters.strEmail] = this.email;
-    data[parameters.strState] = this.state;
-    data[parameters.strCity] = this.city;
-    data[parameters.strLatitude] = this.latitude;
-    data[parameters.strLongitute] = this.longitude;
-    data[parameters.strIsActive] = this.isActive;
-    data[parameters.strSpecilization] = this.specialization;
-    data[parameters.strIsUserDefined] = this.isUserDefined;
-    data[parameters.strDescription] = this.description;
-    data[parameters.strCreatedBy] = this.createdBy;
-    data[parameters.strLastModifiedOn] = this.lastModifiedOn;
-    if (this.profilePic != null) {
-      data[parameters.strprofilePic] = this.profilePic.toJson();
+    final data = Map<String, dynamic>();
+    data[parameters.strId] = id;
+    data[parameters.strName] = name;
+    data[parameters.strAddressLine1] = addressLine1;
+    data[parameters.strAddressLine2] = addressLine2;
+    data[parameters.strWebsite] = website;
+    data[parameters.strGoogleMapUrl] = googleMapUrl;
+    data[parameters.strPhoneNumber1] = phoneNumber1;
+    data[parameters.strPhoneNumber2] = phoneNumber2;
+    data[parameters.strPhoneNumber3] = phoneNumber3;
+    data[parameters.strPhoneNumber4] = phoneNumber4;
+    data[parameters.strEmail] = email;
+    data[parameters.strState] = state;
+    data[parameters.strCity] = city;
+    data[parameters.strLatitude] = latitude;
+    data[parameters.strLongitute] = longitude;
+    data[parameters.strIsActive] = isActive;
+    data[parameters.strSpecilization] = specialization;
+    data[parameters.strIsUserDefined] = isUserDefined;
+    data[parameters.strDescription] = description;
+    data[parameters.strCreatedBy] = createdBy;
+    data[parameters.strLastModifiedOn] = lastModifiedOn;
+    if (profilePic != null) {
+      data[parameters.strprofilePic] = profilePic.toJson();
     }
-    if (this.profilePicThumbnail != null) {
+    if (profilePicThumbnail != null) {
       data[parameters.strprofilePicThumbnail] =
-          this.profilePicThumbnail.toJson();
+          profilePicThumbnail.toJson();
     }
-    data[parameters.strisDefault] = this.isDefault;
+    data[parameters.strisDefault] = isDefault;
     data[parameters.strprofilePicThumbnailURL] = profilePicThumbnailUrl;
 
     return data;

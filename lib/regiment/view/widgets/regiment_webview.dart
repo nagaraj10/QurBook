@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import '../../../common/CommonUtil.dart';
+import '../../../constants/fhb_constants.dart';
+import '../../../widgets/GradientAppBar.dart';
+import '../../../src/utils/screenutils/size_extensions.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter_html/flutter_html.dart';
 
@@ -10,7 +10,7 @@ class RegimentWebView extends StatefulWidget {
   final String title;
   final String selectedUrl;
 
-  RegimentWebView({
+  const RegimentWebView({
     @required this.title,
     @required this.selectedUrl,
   });
@@ -60,7 +60,10 @@ class _RegimentWebViewState extends State<RegimentWebView> {
           children: <Widget>[
             Html(
               data: widget.selectedUrl.replaceAll('src="//', 'src="'),
-              onLinkTap: (linkUrl) {
+              onLinkTap: (linkUrl,
+                   context,
+                   attributes,
+                   element) {
                 CommonUtil().openWebViewNew(widget.title, linkUrl, false);
                 print(linkUrl);
               },

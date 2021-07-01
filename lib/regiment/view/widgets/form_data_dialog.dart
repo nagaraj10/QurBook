@@ -1,30 +1,30 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_query.dart';
-import 'package:myfhb/regiment/view_model/AddRegimentModel.dart';
-import 'package:myfhb/regiment/view_model/pickImageController.dart';
-import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
-import 'package:myfhb/src/ui/audio/AudioScreenArguments.dart';
-import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/regiment/models/regiment_data_model.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
+import '../../../common/PreferenceUtil.dart';
+import '../../../constants/fhb_query.dart';
+import '../../view_model/AddRegimentModel.dart';
+import '../../view_model/pickImageController.dart';
+import '../../../src/resources/network/ApiBaseHelper.dart';
+import '../../../src/ui/audio/AudioScreenArguments.dart';
+import '../../../src/ui/audio/audio_record_screen.dart';
+import '../../../src/utils/screenutils/size_extensions.dart';
+import '../../../common/CommonUtil.dart';
+import '../../models/regiment_data_model.dart';
+import '../../../constants/fhb_constants.dart';
 import 'form_field_widget.dart';
-import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
-import 'package:myfhb/regiment/models/field_response_model.dart';
-import 'package:myfhb/regiment/models/save_response_model.dart';
+import '../../view_model/regiment_view_model.dart';
+import '../../models/field_response_model.dart';
+import '../../models/save_response_model.dart';
 import 'package:provider/provider.dart';
 import 'media_icon_widget.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/src/ui/loader_class.dart';
+import '../../../constants/fhb_constants.dart' as Constants;
+import '../../../src/ui/loader_class.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 
 class FormDataDialog extends StatefulWidget {
-  FormDataDialog({
+  const FormDataDialog({
     @required this.fieldsData,
     @required this.eid,
     @required this.color,
@@ -49,7 +49,7 @@ class FormDataDialogState extends State<FormDataDialog> {
   String eid;
   Color color;
   Otherinfo mediaData;
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   String videoFileName = 'Add Video';
   String audioFileName = 'Add Audio';
@@ -58,7 +58,7 @@ class FormDataDialogState extends State<FormDataDialog> {
 
   String imagePaths = '';
 
-  ApiBaseHelper _helper = ApiBaseHelper();
+  final ApiBaseHelper _helper = ApiBaseHelper();
   Map<String, dynamic> saveMap = {};
 
   @override
@@ -131,26 +131,26 @@ class FormDataDialogState extends State<FormDataDialog> {
                         canEdit: widget.canEdit ?? false,
                         fieldData: fieldsData[index],
                         updateValue: (
-                          FieldModel updatedFieldData, {
-                          bool isAdd,
-                          String title,
+                          updatedFieldData, {
+                          isAdd,
+                          title,
                         }) {
                           if (isAdd == null || isAdd) {
                             isAdd = isAdd ?? false;
-                            var oldValue = saveMap.putIfAbsent(
+                            final oldValue = saveMap.putIfAbsent(
                               isAdd
-                                  ? 'pf_${title}'
+                                  ? 'pf_$title'
                                   : 'pf_${updatedFieldData.title}',
                               () => updatedFieldData.value,
                             );
                             if (oldValue != null) {
                               saveMap[isAdd
-                                      ? 'pf_${title}'
+                                      ? 'pf_$title'
                                       : 'pf_${updatedFieldData.title}'] =
                                   updatedFieldData.value;
                             }
                           } else {
-                            saveMap.remove('pf_${title}');
+                            saveMap.remove('pf_$title');
                           }
                         },
                       ),
@@ -207,7 +207,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                                 )),
                               ))
                                   .then((results) {
-                                String audioPath =
+                                final String audioPath =
                                     results[Constants.keyAudioFile];
                                 if (audioPath != null && audioPath != '') {
                                   imagePaths = audioPath;
@@ -221,7 +221,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                                           audioFileName =
                                               audioPath.split('/').last;
                                         });
-                                        var oldValue = saveMap.putIfAbsent(
+                                        final oldValue = saveMap.putIfAbsent(
                                           'audio',
                                           () => value.result.accessUrl,
                                         );
@@ -331,18 +331,11 @@ class FormDataDialogState extends State<FormDataDialog> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   RaisedButton(
-                    child: Text(
-                      saveButton,
-                      style: TextStyle(
-                        fontSize: 16.0.sp,
-                        color: Colors.white,
-                      ),
-                    ),
                     onPressed: widget.canEdit
                         ? () async {
                             if (widget.canEdit) {
                               if (_formKey.currentState.validate()) {
-                                String events = '';
+                                var events = '';
                                 saveMap.forEach((key, value) {
                                   events += '&$key=$value';
                                 });
@@ -350,7 +343,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                                   Get.context,
                                   canDismiss: false,
                                 );
-                                SaveResponseModel saveResponse =
+                                final saveResponse =
                                     await Provider.of<RegimentViewModel>(
                                             context,
                                             listen: false)
@@ -387,6 +380,13 @@ class FormDataDialogState extends State<FormDataDialog> {
                         5.0.sp,
                       )),
                     ),
+                    child: Text(
+                      saveButton,
+                      style: TextStyle(
+                        fontSize: 16.0.sp,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -404,9 +404,9 @@ class FormDataDialogState extends State<FormDataDialog> {
   }
 
   Future<AddMediaRegimentModel> saveMediaRegiment(String imagePaths) async {
-    String patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    var patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
-    var response = await _helper.saveRegimentMedia(
+    final response = await _helper.saveRegimentMedia(
         qr_save_regi_media, imagePaths, patientId);
     return AddMediaRegimentModel.fromJson(response);
   }
@@ -432,7 +432,7 @@ class FormDataDialogState extends State<FormDataDialog> {
         if (imagePaths != null && imagePaths != '') {
           saveMediaRegiment(imagePaths).then((value) {
             if (value.isSuccess) {
-              File file = new File(croppedFile.path);
+              var file = File(croppedFile.path);
               setState(() {
                 if (fromPath == strGallery) {
                   imageFileName = file.path.split('/').last;
@@ -445,12 +445,12 @@ class FormDataDialogState extends State<FormDataDialog> {
                 }
               });
 
-              var oldValue = saveMap.putIfAbsent(
-                '$fromPath',
+              final oldValue = saveMap.putIfAbsent(
+                fromPath,
                 () => value.result.accessUrl,
               );
               if (oldValue != null) {
-                saveMap['$fromPath'] = value.result.accessUrl;
+                saveMap[fromPath] = value.result.accessUrl;
               }
             } else {
               setState(() {
@@ -473,8 +473,8 @@ class FormDataDialogState extends State<FormDataDialog> {
 
   imgFromCamera(String fromPath) async {
     File _image;
-    final picker = ImagePicker();
-    final pickedFile = await picker.getImage(source: ImageSource.camera);
+    var picker = ImagePicker();
+    var pickedFile = await picker.getImage(source: ImageSource.camera);
     setState(() {
       if (pickedFile != null) {
         imageFileName = strUploading;
@@ -483,18 +483,18 @@ class FormDataDialogState extends State<FormDataDialog> {
       }
     });
     if (imagePaths != null && imagePaths != '') {
-      saveMediaRegiment(imagePaths).then((value) {
+      await saveMediaRegiment(imagePaths).then((value) {
         if (value.isSuccess) {
           setState(() {
             imageFileName = _image.path.split('/').last;
           });
 
-          var oldValue = saveMap.putIfAbsent(
-            '$fromPath',
+          final oldValue = saveMap.putIfAbsent(
+            fromPath,
             () => value.result.accessUrl,
           );
           if (oldValue != null) {
-            saveMap['$fromPath'] = value.result.accessUrl;
+            saveMap[fromPath] = value.result.accessUrl;
           }
         } else {
           imageFileName = 'Add Image';
@@ -506,22 +506,22 @@ class FormDataDialogState extends State<FormDataDialog> {
   Future<void> _showSelectionDialog(BuildContext context) {
     return showDialog(
         context: context,
-        builder: (BuildContext context) {
+        builder: (context) {
           return AlertDialog(
-              title: Text("Choose an action"),
+              title: Text('Choose an action'),
               content: SingleChildScrollView(
                 child: ListBody(
                   children: <Widget>[
                     GestureDetector(
-                      child: Text("Gallery"),
                       onTap: () {
                         getOpenGallery(strGallery);
                         Navigator.of(context).pop();
                       },
+                      child: Text("Gallery"),
                     ),
-                    Padding(padding: EdgeInsets.all(8.0)),
+                    Padding(padding: EdgeInsets.all(8)),
                     GestureDetector(
-                      child: Text("Camera"),
+                      child: Text('Camera'),
                       onTap: () {
                         imgFromCamera(strGallery);
                         Navigator.of(context).pop();

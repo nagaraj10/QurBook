@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:myfhb/plan_dashboard/model/MetaDataForURL.dart';
+import '../../plan_dashboard/model/MetaDataForURL.dart';
 
 import 'ProviderMetaModel.dart';
 
@@ -13,18 +13,18 @@ class MyPlanListModel {
   MyPlanListModel.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['result'] != null) {
-      result = new List<MyPlanListResult>();
+      result = List<MyPlanListResult>();
       json['result'].forEach((v) {
-        result.add(new MyPlanListResult.fromJson(v));
+        result.add(MyPlanListResult.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['isSuccess'] = this.isSuccess;
-    if (this.result != null) {
-      data['result'] = this.result.map((v) => v.toJson()).toList();
+    final data = <String, dynamic>{};
+    data['isSuccess'] = isSuccess;
+    if (result != null) {
+      data['result'] = result.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -88,38 +88,38 @@ class MyPlanListResult {
         isexpired: json['isexpired'],
         metadata:
             json['metadata'] != null && json['metadata'].toString().isNotEmpty
-                ? MetaDataForURL.fromJson(jsonDecode(json["metadata"] ?? '{}'))
+                ? MetaDataForURL.fromJson(jsonDecode(json['metadata'] ?? '{}'))
                 : null,
         catmetadata: json['catmetadata'] != null &&
                 json['catmetadata'].toString().isNotEmpty
-            ? MetaDataForURL.fromJson(jsonDecode(json["catmetadata"] ?? '{}'))
+            ? MetaDataForURL.fromJson(jsonDecode(json['catmetadata'] ?? '{}'))
             : null,
     providermetadata: json['providermetadata'] != null &&
         json['providermetadata'].toString().isNotEmpty
-        ? ProviderMetaModel.fromJson(jsonDecode(json["providermetadata"] ?? '{}'))
+        ? ProviderMetaModel.fromJson(jsonDecode(json['providermetadata'] ?? '{}'))
         : null);
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['packageid'] = this.packageid;
-    data['title'] = this.title;
-    data['docid'] = this.docid;
-    data['price'] = this.price;
-    data['paid'] = this.paid;
-    data['packcatid'] = this.packcatid;
-    data['catname'] = this.catname;
-    data['catdesc'] = this.catdesc;
-    data['doc_nick'] = this.docNick;
-    data['providerid'] = this.providerid;
-    data['provider_name'] = this.providerName;
-    data['startdate'] = this.startdate;
-    data['duration'] = this.duration;
-    data['enddate'] = this.enddate;
-    data['isexpired'] = this.isexpired;
-    data['metadata'] = this.metadata;
-    data['catmetadata'] = this.catmetadata;
-    data['providermetadata'] = this.providermetadata;
+    final data = Map<String, dynamic>();
+    data['packageid'] = packageid;
+    data['title'] = title;
+    data['docid'] = docid;
+    data['price'] = price;
+    data['paid'] = paid;
+    data['packcatid'] = packcatid;
+    data['catname'] = catname;
+    data['catdesc'] = catdesc;
+    data['doc_nick'] = docNick;
+    data['providerid'] = providerid;
+    data['provider_name'] = providerName;
+    data['startdate'] = startdate;
+    data['duration'] = duration;
+    data['enddate'] = enddate;
+    data['isexpired'] = isexpired;
+    data['metadata'] = metadata;
+    data['catmetadata'] = catmetadata;
+    data['providermetadata'] = providermetadata;
     return data;
   }
 }

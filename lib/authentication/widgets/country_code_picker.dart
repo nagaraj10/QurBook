@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:country_pickers/country.dart';
 import 'package:country_pickers/country_pickers.dart';
-import 'package:myfhb/authentication/constants/constants.dart' as constants;
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import '../constants/constants.dart' as constants;
+import '../../common/CommonUtil.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
 
 class CountryCodePickerPage extends StatefulWidget {
   CountryCodePickerPage(
@@ -26,8 +26,8 @@ class _CountryCodePickerState extends State<CountryCodePickerPage> {
           builder: (context) => Theme(
             data: Theme.of(context).copyWith(primaryColor: Colors.black),
             child: CountryPickerDialog(
-              titlePadding: EdgeInsets.all(8.0),
-              searchCursorColor: Color(new CommonUtil().getMyPrimaryColor()),
+              titlePadding: EdgeInsets.all(8),
+              searchCursorColor: Color(CommonUtil().getMyPrimaryColor()),
               searchInputDecoration: InputDecoration(
                   hintText: constants.strSearchCountry,
                   hintStyle: TextStyle(

@@ -2,9 +2,10 @@ import 'dart:convert';
 
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/HeaderRequest.dart';
-import 'package:http/http.dart' as http;
+import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_query.dart' as variable;
+import 'package:myfhb/src/resources/network/api_services.dart';
 
 class Service {
   String mayaUrl = CommonUtil.SHEELA_URL;
@@ -15,7 +16,7 @@ class Service {
 
       HeaderRequest headerRequest = new HeaderRequest();
 
-      var response = await http.post(
+      var response = await ApiServices.post(
         mayaUrl,
         body: jsonString,
         headers: await headerRequest.getRequesHeaderWithoutToken(),
@@ -33,7 +34,7 @@ class Service {
       final jsonString = jsonEncode(reqJson);
       final headerRequest =
           await HeaderRequest().getRequestHeadersAuthContent();
-      final response = await http.post(
+      final response = await ApiServices.post(
         urlForTTS,
         body: jsonString,
         headers: headerRequest,
@@ -51,7 +52,7 @@ class Service {
       final jsonString = jsonEncode(reqJson);
       final headerRequest =
           await HeaderRequest().getRequestHeadersAuthContent();
-      final response = await http.post(
+      final response = await ApiServices.post(
         urlForTTS,
         body: jsonString,
         headers: headerRequest,

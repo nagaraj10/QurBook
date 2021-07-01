@@ -1,4 +1,4 @@
-import 'package:myfhb/authentication/constants/constants.dart';
+import '../constants/constants.dart';
 
 class ResendOtpModel {
   String userName;
@@ -17,12 +17,12 @@ class ResendOtpModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[struserName] = this.userName;
-    data[strsource] = this.source;
-    data[strUserId] = this.userId;
-    data[strmessage] = this.message;
-    data[strIsSuccess] = this.isSuccess;
+    final data = <String, dynamic>{};
+    data[struserName] = userName;
+    data[strsource] = source;
+    data[strUserId] = userId;
+    data[strmessage] = message;
+    data[strIsSuccess] = isSuccess;
     return data;
   }
 }

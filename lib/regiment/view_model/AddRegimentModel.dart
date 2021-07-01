@@ -7,15 +7,15 @@ class AddMediaRegimentModel {
   AddMediaRegimentModel.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     result = json['result'] != null
-        ? new AddMediaRegimentResult.fromJson(json['result'])
+        ? AddMediaRegimentResult.fromJson(json['result'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['isSuccess'] = this.isSuccess;
-    if (this.result != null) {
-      data['result'] = this.result.toJson();
+    final data = <String, dynamic>{};
+    data['isSuccess'] = isSuccess;
+    if (result != null) {
+      data['result'] = result.toJson();
     }
     return data;
   }
@@ -35,10 +35,10 @@ class AddMediaRegimentResult {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['url'] = this.url;
-    data['fileName'] = this.fileName;
-    data['accessUrl'] = this.accessUrl;
+    final data = Map<String, dynamic>();
+    data['url'] = url;
+    data['fileName'] = fileName;
+    data['accessUrl'] = accessUrl;
     return data;
   }
 }

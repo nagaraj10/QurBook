@@ -437,7 +437,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       }
                     } else {
                       FirebaseMessaging _firebaseMessaging =
-                          FirebaseMessaging();
+                          FirebaseMessaging.instance;
 
                       _firebaseMessaging.getToken().then((token) {
                         new CommonUtil()

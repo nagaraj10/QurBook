@@ -5,13 +5,13 @@ class LoginDetails {
 
   LoginDetails.fromJson(Map<String, dynamic> json) {
     result =
-        json['result'] != null ? new Result.fromJson(json['result']) : null;
+        json['result'] != null ? Result.fromJson(json['result']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.result != null) {
-      data['result'] = this.result.toJson();
+    final data = Map<String, dynamic>();
+    if (result != null) {
+      data['result'] = result.toJson();
     }
     return data;
   }
@@ -67,21 +67,21 @@ class Result {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['lastLoggedIn'] = this.lastLoggedIn;
-    data['status'] = this.status;
-    data['verificationCode'] = this.verificationCode;
-    data['codeExpirationDatetime'] = this.codeExpirationDatetime;
-    data['isLocked'] = this.isLocked;
-    data['failedVerificationCount'] = this.failedVerificationCount;
-    data['accountLockedDatetime'] = this.accountLockedDatetime;
-    data['resetPasswordExpiryDatetime'] = this.resetPasswordExpiryDatetime;
-    data['isActive'] = this.isActive;
-    data['createdOn'] = this.createdOn;
-    data['lastModifiedOn'] = this.lastModifiedOn;
-    data['passwordChangedOn'] = this.passwordChangedOn;
-    data['firstLoggedIn'] = this.firstLoggedIn;
+    final data = <String, dynamic>{};
+    data['id'] = id;
+    data['lastLoggedIn'] = lastLoggedIn;
+    data['status'] = status;
+    data['verificationCode'] = verificationCode;
+    data['codeExpirationDatetime'] = codeExpirationDatetime;
+    data['isLocked'] = isLocked;
+    data['failedVerificationCount'] = failedVerificationCount;
+    data['accountLockedDatetime'] = accountLockedDatetime;
+    data['resetPasswordExpiryDatetime'] = resetPasswordExpiryDatetime;
+    data['isActive'] = isActive;
+    data['createdOn'] = createdOn;
+    data['lastModifiedOn'] = lastModifiedOn;
+    data['passwordChangedOn'] = passwordChangedOn;
+    data['firstLoggedIn'] = firstLoggedIn;
     return data;
   }
 }

@@ -24,7 +24,6 @@ class AddProvidersMapView extends StatelessWidget {
   Widget build(BuildContext context) {
     return GoogleMap(
       scrollGesturesEnabled: false,
-      mapType: MapType.normal,
       initialCameraPosition: kGooglePlex,
       onCameraMove: _onCameraMove,
       markers: markers,

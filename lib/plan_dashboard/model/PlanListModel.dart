@@ -12,18 +12,18 @@ class PlanListModel {
   PlanListModel.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['result'] != null) {
-      result = new List<PlanListResult>();
+      result = List<PlanListResult>();
       json['result'].forEach((v) {
-        result.add(new PlanListResult.fromJson(v));
+        result.add(PlanListResult.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['isSuccess'] = this.isSuccess;
-    if (this.result != null) {
-      data['result'] = this.result.map((v) => v.toJson()).toList();
+    final data = Map<String, dynamic>();
+    data['isSuccess'] = isSuccess;
+    if (result != null) {
+      data['result'] = result.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -108,46 +108,46 @@ class PlanListResult {
         startDate: json['startdate'],
         metadata:
             json['metadata'] != null && json['metadata'].toString().isNotEmpty
-                ? MetaDataForURL.fromJson(jsonDecode(json["metadata"] ?? '{}'))
+                ? MetaDataForURL.fromJson(jsonDecode(json['metadata'] ?? '{}'))
                 : null,
         catmetadata: json['catmetadata'] != null &&
                 json['catmetadata'].toString().isNotEmpty
-            ? MetaDataForURL.fromJson(jsonDecode(json["catmetadata"] ?? '{}'))
+            ? MetaDataForURL.fromJson(jsonDecode(json['catmetadata'] ?? '{}'))
             : null,
         providerMetadata: json['providermetadata'] != null &&
                 json['providermetadata'].toString().isNotEmpty
             ? MetaDataForHospitalLogo.fromJson(
-                jsonDecode(json["providermetadata"] ?? '{}'))
+                jsonDecode(json['providermetadata'] ?? '{}'))
             : null);
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['packageid'] = this.packageid;
-    data['title'] = this.title;
-    data['description'] = this.description;
-    data['docid'] = this.docid;
-    data['price'] = this.price;
-    data['issubscription'] = this.issubscription;
-    data['ispublic'] = this.ispublic;
-    data['html'] = this.html;
-    data['PackageDuration'] = this.packageDuration;
-    data['BillingCycle'] = this.billingCycle;
-    data['ts'] = this.ts;
-    data['providerid'] = this.providerid;
-    data['provider_name'] = this.providerName;
-    data['providerdescription'] = this.providerDesc;
-    data['plinkid'] = this.plinkid;
-    data['packcatid'] = this.packcatid;
-    data['catname'] = this.catname;
-    data['catdesc'] = this.catdesc;
-    data['catselecttype'] = this.catselecttype;
-    data['userpackid'] = this.userpackid;
-    data['IsSubscribed'] = this.isSubscribed;
-    data['startdate'] = this.startDate;
-    data['metadata'] = this.metadata;
-    data['catmetadata'] = this.catmetadata;
-    data['providermetadata'] = this.providerMetadata;
+    final data = Map<String, dynamic>();
+    data['packageid'] = packageid;
+    data['title'] = title;
+    data['description'] = description;
+    data['docid'] = docid;
+    data['price'] = price;
+    data['issubscription'] = issubscription;
+    data['ispublic'] = ispublic;
+    data['html'] = html;
+    data['PackageDuration'] = packageDuration;
+    data['BillingCycle'] = billingCycle;
+    data['ts'] = ts;
+    data['providerid'] = providerid;
+    data['provider_name'] = providerName;
+    data['providerdescription'] = providerDesc;
+    data['plinkid'] = plinkid;
+    data['packcatid'] = packcatid;
+    data['catname'] = catname;
+    data['catdesc'] = catdesc;
+    data['catselecttype'] = catselecttype;
+    data['userpackid'] = userpackid;
+    data['IsSubscribed'] = isSubscribed;
+    data['startdate'] = startDate;
+    data['metadata'] = metadata;
+    data['catmetadata'] = catmetadata;
+    data['providermetadata'] = providerMetadata;
     return data;
   }
 }
