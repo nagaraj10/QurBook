@@ -2524,12 +2524,10 @@ class CommonUtil {
                                 if (value.isSuccess) {
                                   if (value.result != null) {
                                     if (value.result.result == 'Done') {
-                                      Provider.of<RegimentViewModel>(
-                                        context,
-                                        listen: false,
-                                      ).updateTabIndex(currentIndex: 3);
-                                      Get.offNamedUntil(router.rt_MyPlans,
-                                          (Route<dynamic> route) => false);
+                                      Navigator.of(_keyLoader.currentContext,
+                                              rootNavigator: true)
+                                          .pop();
+                                      refresh();
                                     } else {
                                       Navigator.of(_keyLoader.currentContext,
                                               rootNavigator: true)
@@ -2569,7 +2567,9 @@ class CommonUtil {
                       if (isSubscribed == '0') {
                         Navigator.pop(context);
                         _dialogForSubscribePayment(
-                            context, providerId, packageId, false);
+                            context, providerId, packageId, false, () {
+                          refresh();
+                        });
                       } else {
                         await subscribeViewModel.UnsubScribePlan(packageId)
                             .then((value) {
@@ -2722,7 +2722,9 @@ class CommonUtil {
                           onPressed: () async {
                             Navigator.pop(context);
                             _dialogForSubscribePayment(
-                                context, '', packageId, true);
+                                context, '', packageId, true, () {
+                              refresh();
+                            });
                           },
                           borderSide: BorderSide(
                             color: Color(
@@ -2954,7 +2956,7 @@ class CommonUtil {
       await getPermission().then((value) {
         if (value == PermissionStatus.granted) {
           navigateInviteContact();
-        }else {
+        } else {
           FlutterToast().getToast(
               'Please allow access to invite people from your contacts',
               Colors.red);
@@ -2992,12 +2994,8 @@ class CommonUtil {
     );
   }
 
-
-
-
-
   _dialogForSubscribePayment(BuildContext context, String providerId,
-      String packageId, bool isFromRenew) async {
+      String packageId, bool isFromRenew, Function() refresh) async {
     return showDialog(
         context: context,
         builder: (context) {
@@ -3122,12 +3120,14 @@ class CommonUtil {
                                                                               isFromSubscribe: true,
                                                                               closePage: (value) {
                                                                                 if (value == STR_SUCCESS) {
-                                                                                  Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+                                                                                  refresh();
+                                                                                  /*Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
                                                                                   Provider.of<RegimentViewModel>(
                                                                                     context,
                                                                                     listen: false,
                                                                                   ).updateTabIndex(currentIndex: 3);
-                                                                                  Get.offNamedUntil(router.rt_MyPlans, (Route<dynamic> route) => false);
+                                                                                  Get.offNamedUntil(router.rt_MyPlans, (Route<dynamic> route) => false);*/
+
                                                                                 } else {
                                                                                   Navigator.pop(context);
                                                                                 }
@@ -3221,6 +3221,13 @@ class CommonUtil {
                                                                                 redirectUrl: value?.result?.paymentGatewayDetail?.metadata?.longurl,
                                                                                 paymentId: value?.result?.payment?.id?.toString(),
                                                                                 isFromSubscribe: true,
+                                                                                closePage: (value) {
+                                                                                  if (value == 'success') {
+                                                                                    refresh();
+                                                                                  } else {
+                                                                                    Navigator.pop(context);
+                                                                                  }
+                                                                                },
                                                                               )));
                                                                 }
                                                               } else {
