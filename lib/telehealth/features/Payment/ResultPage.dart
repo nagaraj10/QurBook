@@ -104,20 +104,10 @@ class _ResultPage extends State<ResultPage> {
                       textColor: Colors.white,
                       padding: EdgeInsets.all(12.0),
                       onPressed: () {
-                        if (!isFromSubscribe) {
                           status
                               ? widget.closePage(STR_SUCCESS)
                               : widget.closePage(STR_FAILED);
-                        }
-                        if (isFromSubscribe && status) {
-                          Provider.of<RegimentViewModel>(
-                            context,
-                            listen: false,
-                          ).updateTabIndex(currentIndex: 3);
-                          Get.offNamedUntil(router.rt_MyPlans,
-                              (Route<dynamic> route) => false);
-                        } else {
-                          status
+                          status && !isFromSubscribe
                               ? Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
@@ -126,7 +116,7 @@ class _ResultPage extends State<ResultPage> {
                                                 selectedIndex: 0),
                                           )))
                               : Navigator.pop(context);
-                        }
+
                       },
                       child: Text(
                         STR_DONE.toUpperCase(),

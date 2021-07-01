@@ -679,7 +679,9 @@ class _CategoryState extends State<CategoryList> {
                                                       planListResult[inx.index]
                                                               ?.price ==
                                                           '0', refresh: () {
-                                                setState(() {});
+                                                setState(() {
+                                                  planListModel = myPlanViewModel.getPlanList(providerId);
+                                                });
                                               });
                                             }
                                             /*else {
