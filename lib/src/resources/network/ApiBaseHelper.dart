@@ -1629,7 +1629,8 @@ class ApiBaseHelper {
               _baseUrl + "user/update-last-visited-details",
               body: json.encode(jsobBodyMap),
               headers: await headerRequest.getRequestHeadersAuthContent());
-          print(response.body + " ***********************bodyy");
+          print(response.body + " ***********************Last viviited bodyy");
+          print(userID + " ***********************Last viviited bodyy");
           responseJson = _returnResponse(response);
         } on SocketException {
           throw FetchDataException(variable.strNoInternet);
