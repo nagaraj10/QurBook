@@ -1176,10 +1176,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       strErrorMsg = variable.selectGender;
     } else if (dateOfBirthController.text.length == 0) {
       isValid = false;
-      strErrorMsg = variable.selectDOB;
+      strErrorMsg = variable.selectYOB;
     } else if (dateOfBirthController.text.length < 4) {
       isValid = false;
       strErrorMsg = "Enter a Valid Year";
+    }else if (checkIfYearIsGreaterThanCurrentYear(dateOfBirthController.text)) {
+      isValid = false;
+      strErrorMsg = "Year cannot be greater than curent year";
     } else if (_addressResult == null || _addressResult.id == null) {
       isValid = false;
       strErrorMsg = 'Select Address type';
@@ -2414,5 +2417,19 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             ),
           );
         });
+  }
+
+  bool checkIfYearIsGreaterThanCurrentYear(String text) {
+    bool condition;
+
+    DateTime current=DateTime.now();
+
+    if(current.year>=int.parse(text)){
+      condition=false;
+    }else
+      condition=true;
+
+    return condition;
+
   }
 }
