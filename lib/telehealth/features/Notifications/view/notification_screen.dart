@@ -5,10 +5,13 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/src/ui/bot/view/sheela_arguments.dart';
+import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/MyProvidersMain.dart';
 import 'package:myfhb/telehealth/features/Notifications/constants/notification_constants.dart'
-    as constants;
+as constants;
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/telehealth/features/Notifications/model/notificationResult.dart';
@@ -16,7 +19,7 @@ import 'package:myfhb/telehealth/features/Notifications/model/notification_ontap
 import 'package:myfhb/telehealth/features/Notifications/model/payload.dart';
 import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart'
-    as AppConstants;
+as AppConstants;
 import 'package:myfhb/telehealth/features/Notifications/model/messageContent.dart';
 import 'package:myfhb/telehealth/features/Notifications/model/notification_model.dart';
 import 'package:myfhb/telehealth/features/Notifications/viewModel/fetchNotificationViewModel.dart';
@@ -42,6 +45,7 @@ import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/ui/MyRecordsArguments.dart';
 import 'package:myfhb/src/model/Category/catergory_result.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/router_variable.dart' as routervariable;
 
 class NotificationScreen extends StatefulWidget {
   @override
@@ -69,7 +73,7 @@ class _NotificationScreen extends State<NotificationScreen> {
       'eventTime': '${DateTime.now()}',
       'pageName': 'Notification Screen',
       'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+      '${DateTime.now().difference(mInitialTime).inSeconds} secs'
     });
   }
 
@@ -116,20 +120,20 @@ class _NotificationScreen extends State<NotificationScreen> {
       case LoadingStatus.completed:
         return (notificationData != null)
             ? (notificationData.notifications != null)
-                ? (notificationData.notifications?.result != null) &&
-                        (notificationData.notifications?.result.length > 0)
-                    ? ListView.builder(
-                        itemCount: notificationData.notifications.result.length,
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          notificationData.notifications.result.sort(
-                              (a, b) => b.createdOn.compareTo(a.createdOn));
-                          return notificationView(
-                              notification: notificationData.notifications,
-                              index: index);
-                        })
-                    : emptyNotification()
-                : emptyNotification()
+            ? (notificationData.notifications?.result != null) &&
+            (notificationData.notifications?.result.length > 0)
+            ? ListView.builder(
+            itemCount: notificationData.notifications.result.length,
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              notificationData.notifications.result.sort(
+                      (a, b) => b.createdOn.compareTo(a.createdOn));
+              return notificationView(
+                  notification: notificationData.notifications,
+                  index: index);
+            })
+            : emptyNotification()
+            : emptyNotification()
             : emptyNotification();
       case LoadingStatus.empty:
       default:
@@ -155,312 +159,317 @@ class _NotificationScreen extends State<NotificationScreen> {
       return (message.messageBody == "" || message.messageTitle == "")
           ? Container()
           : InkWell(
-              splashColor: Color(CommonUtil.secondaryGrey),
-              onTap: (notification?.result[index]?.isUnread != null &&
-                      notification?.result[index]?.isUnread)
-                  ? () {
-                      var tempRedirectTo = payload?.redirectTo != null &&
-                              payload?.redirectTo != ''
-                          ? payload?.redirectTo.split('|')[0]
-                          : '';
-                      if (tempRedirectTo == 'myRecords') {
-                        notificationOnTapActions(
-                            notification?.result[index], tempRedirectTo,
-                            bundles: {
-                              'catName': payload?.redirectTo.split('|')[1],
-                              'healthRecordMetaIds':
-                                  payload?.healthRecordMetaIds
-                            });
-                      } else {
-                        notificationOnTapActions(
-                            notification?.result[index],
-                            notification?.result[index]?.messageDetails?.content
-                                ?.templateName);
-                      }
-                      // notificationOnTapActions(
-                      //     notification?.result[index],
-                      //     notification?.result[index]?.messageDetails?.content
-                      //         ?.templateName);
-                    }
-                  : null,
+        splashColor: Color(CommonUtil.secondaryGrey),
+        onTap: (notification?.result[index]?.isUnread != null &&
+            notification?.result[index]?.isUnread)
+            ? () {
+          var tempRedirectTo = payload?.redirectTo != null &&
+              payload?.redirectTo != ''
+              ? payload?.redirectTo.split('|')[0]
+              : '';
+          if (tempRedirectTo == 'myRecords') {
+            notificationOnTapActions(
+                notification?.result[index], tempRedirectTo,
+                bundles: {
+                  'catName': payload?.redirectTo.split('|')[1],
+                  'healthRecordMetaIds':
+                  payload?.healthRecordMetaIds
+                });
+          } else if (payload?.redirectTo == 'sheela|pushMessage') {
+            notificationOnTapActions(
+              notification?.result[index],
+              payload?.redirectTo,
+            );
+          } else {
+            notificationOnTapActions(
+                notification?.result[index],
+                notification?.result[index]?.messageDetails?.content
+                    ?.templateName);
+          }
+          // notificationOnTapActions(
+          //     notification?.result[index],
+          //     notification?.result[index]?.messageDetails?.content
+          //         ?.templateName);
+        }
+            : null,
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(top: 5, bottom: 5),
               child: Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5, bottom: 5),
-                    child: Column(
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              flex: 3,
-                              child: Container(
-                                padding: EdgeInsets.only(top: 5, left: 10),
-                                width: 1.sw * 0.8,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        flex: 3,
+                        child: Container(
+                          padding: EdgeInsets.only(top: 5, left: 10),
+                          width: 1.sw * 0.8,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              TextWidget(
+                                text: message.messageTitle,
+                                colors: (notification?.result[index]
+                                    ?.isUnread ==
+                                    null ||
+                                    !notification
+                                        ?.result[index]?.isUnread)
+                                    ? Colors.black
+                                    : Color(
+                                    CommonUtil().getMyPrimaryColor()),
+                                overflow: TextOverflow.visible,
+                                fontWeight: FontWeight.w600,
+                                fontsize: 15.0.sp,
+                                softwrap: true,
+                              ),
+                              SizedBox(
+                                height: 5.0.h,
+                              ),
+                              TextWidget(
+                                text: message.messageBody,
+                                colors: Color(CommonUtil.secondaryGrey),
+                                overflow: TextOverflow.visible,
+                                fontWeight: FontWeight.w500,
+                                fontsize: 14.0.sp,
+                                softwrap: true,
+                              ),
+                              SizedBox(
+                                height: 5.0.h,
+                              ),
+                              (payload?.templateName ==
+                                  constants.strCancelByDoctor ||
+                                  payload?.templateName ==
+                                      constants.strRescheduleByDoctor)
+                                  ? Padding(
+                                padding: EdgeInsets.only(
+                                    left: 0, right: 0),
+                                child: Row(
                                   children: [
-                                    TextWidget(
-                                      text: message.messageTitle,
-                                      colors: (notification?.result[index]
-                                                      ?.isUnread ==
-                                                  null ||
-                                              !notification
-                                                  ?.result[index]?.isUnread)
-                                          ? Colors.black
-                                          : Color(
-                                              CommonUtil().getMyPrimaryColor()),
-                                      overflow: TextOverflow.visible,
-                                      fontWeight: FontWeight.w600,
-                                      fontsize: 15.0.sp,
-                                      softwrap: true,
+                                    OutlineButton(
+                                      onPressed:
+                                      !notification
+                                          ?.result[index]
+                                          ?.isActionDone
+                                          ? () {
+                                        //Reschedule
+                                        var body = {};
+                                        body['templateName'] =
+                                            payload
+                                                ?.templateName;
+                                        body['contextId'] =
+                                            payload
+                                                ?.bookingId;
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder:
+                                                  (context) =>
+                                                  ResheduleMain(
+                                                    isFromNotification: false,
+                                                    closePage: (value) {},
+                                                    isReshedule: true,
+                                                    doc: Past(doctor: Doctor(id: notification.result[index].messageDetails.payload.doctorId), doctorSessionId: notification.result[index].messageDetails.payload.doctorSessionId, healthOrganization: City(id: notification.result[index].messageDetails.payload.healthOrganizationId), bookingId: notification.result[index].messageDetails.payload.bookingId),
+                                                    body: body,
+                                                  )),
+                                        ).then((value) {
+                                          if (notification
+                                              ?.result[
+                                          index]
+                                              ?.isUnread !=
+                                              null &&
+                                              notification
+                                                  ?.result[
+                                              index]
+                                                  ?.isUnread) {
+                                            NotificationOntapRequest
+                                            req =
+                                            NotificationOntapRequest();
+                                            req.logIds = [
+                                              notification
+                                                  ?.result[
+                                              index]
+                                                  ?.id
+                                            ];
+                                            final body = req
+                                                .toJson();
+                                            FetchNotificationService()
+                                                .updateNsOnTapAction(
+                                                body)
+                                                .then(
+                                                    (data) {
+                                                  if (data !=
+                                                      null &&
+                                                      data[
+                                                      'isSuccess']) {
+                                                    Provider.of<
+                                                        FetchNotificationViewModel>(
+                                                        context,
+                                                        listen:
+                                                        false)
+                                                      ..clearNotifications()
+                                                      ..fetchNotifications();
+                                                  } else {
+                                                    Provider.of<
+                                                        FetchNotificationViewModel>(
+                                                        context,
+                                                        listen:
+                                                        false)
+                                                      ..clearNotifications()
+                                                      ..fetchNotifications();
+                                                  }
+                                                });
+                                          }
+                                        });
+                                      }
+                                          : null,
+                                      borderSide: !notification
+                                          ?.result[index]
+                                          ?.isActionDone
+                                          ? BorderSide(
+                                          color: Color(CommonUtil()
+                                              .getMyPrimaryColor()))
+                                          : BorderSide(
+                                          color: Colors.grey),
+                                      child: TextWidget(
+                                        text: AppConstants
+                                            .Appointments_reshedule,
+                                        colors: !notification
+                                            ?.result[index]
+                                            ?.isActionDone
+                                            ? Color(CommonUtil()
+                                            .getMyPrimaryColor())
+                                            : Colors.grey,
+                                        overflow:
+                                        TextOverflow.visible,
+                                        fontWeight: FontWeight.w600,
+                                        fontsize: 15.0.sp,
+                                      ),
                                     ),
                                     SizedBox(
-                                      height: 5.0.h,
+                                      width: 15.0.w,
                                     ),
-                                    TextWidget(
-                                      text: message.messageBody,
-                                      colors: Color(CommonUtil.secondaryGrey),
-                                      overflow: TextOverflow.visible,
-                                      fontWeight: FontWeight.w500,
-                                      fontsize: 14.0.sp,
-                                      softwrap: true,
-                                    ),
-                                    SizedBox(
-                                      height: 5.0.h,
-                                    ),
-                                    (payload?.templateName ==
-                                                constants.strCancelByDoctor ||
-                                            payload?.templateName ==
-                                                constants.strRescheduleByDoctor)
-                                        ? Padding(
-                                            padding: EdgeInsets.only(
-                                                left: 0, right: 0),
-                                            child: Row(
-                                              children: [
-                                                OutlineButton(
-                                                  onPressed:
-                                                      !notification
-                                                              ?.result[index]
-                                                              ?.isActionDone
-                                                          ? () {
-                                                              //Reschedule
-                                                              var body = {};
-                                                              body['templateName'] =
-                                                                  payload
-                                                                      ?.templateName;
-                                                              body['contextId'] =
-                                                                  payload
-                                                                      ?.bookingId;
-                                                              Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) =>
-                                                                            ResheduleMain(
-                                                                              isFromNotification: false,
-                                                                              closePage: (value) {},
-                                                                              isReshedule: true,
-                                                                              doc: Past(doctor: Doctor(id: notification.result[index].messageDetails.payload.doctorId), doctorSessionId: notification.result[index].messageDetails.payload.doctorSessionId, healthOrganization: City(id: notification.result[index].messageDetails.payload.healthOrganizationId), bookingId: notification.result[index].messageDetails.payload.bookingId),
-                                                                              body: body,
-                                                                            )),
-                                                              ).then((value) {
-                                                                if (notification
-                                                                            ?.result[
-                                                                                index]
-                                                                            ?.isUnread !=
-                                                                        null &&
-                                                                    notification
-                                                                        ?.result[
-                                                                            index]
-                                                                        ?.isUnread) {
-                                                                  NotificationOntapRequest
-                                                                      req =
-                                                                      NotificationOntapRequest();
-                                                                  req.logIds = [
-                                                                    notification
-                                                                        ?.result[
-                                                                            index]
-                                                                        ?.id
-                                                                  ];
-                                                                  final body = req
-                                                                      .toJson();
-                                                                  FetchNotificationService()
-                                                                      .updateNsOnTapAction(
-                                                                          body)
-                                                                      .then(
-                                                                          (data) {
-                                                                    if (data !=
-                                                                            null &&
-                                                                        data[
-                                                                            'isSuccess']) {
-                                                                      Provider.of<
-                                                                              FetchNotificationViewModel>(
-                                                                          context,
-                                                                          listen:
-                                                                              false)
-                                                                        ..clearNotifications()
-                                                                        ..fetchNotifications();
-                                                                    } else {
-                                                                      Provider.of<
-                                                                              FetchNotificationViewModel>(
-                                                                          context,
-                                                                          listen:
-                                                                              false)
-                                                                        ..clearNotifications()
-                                                                        ..fetchNotifications();
-                                                                    }
-                                                                  });
-                                                                }
-                                                              });
-                                                            }
-                                                          : null,
-                                                  borderSide: !notification
-                                                          ?.result[index]
-                                                          ?.isActionDone
-                                                      ? BorderSide(
-                                                          color: Color(CommonUtil()
-                                                              .getMyPrimaryColor()))
-                                                      : BorderSide(
-                                                          color: Colors.grey),
-                                                  child: TextWidget(
-                                                    text: AppConstants
-                                                        .Appointments_reshedule,
-                                                    colors: !notification
-                                                            ?.result[index]
-                                                            ?.isActionDone
-                                                        ? Color(CommonUtil()
-                                                            .getMyPrimaryColor())
-                                                        : Colors.grey,
-                                                    overflow:
-                                                        TextOverflow.visible,
-                                                    fontWeight: FontWeight.w600,
-                                                    fontsize: 15.0.sp,
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  width: 15.0.w,
-                                                ),
-                                                OutlineButton(
-                                                  onPressed:
-                                                      !notification
-                                                              ?.result[index]
-                                                              ?.isActionDone
-                                                          ? () {
-                                                              var body = {};
-                                                              body['templateName'] =
-                                                                  payload
-                                                                      ?.templateName;
-                                                              body['contextId'] =
-                                                                  payload
-                                                                      ?.bookingId;
-                                                              _displayDialog(
-                                                                  context,
-                                                                  [
-                                                                    Past(
-                                                                        bookingId: notification
-                                                                            .result[
-                                                                                index]
-                                                                            .messageDetails
-                                                                            .payload
-                                                                            .bookingId,
-                                                                        plannedStartDateTime: notification
-                                                                            .result[index]
-                                                                            .messageDetails
-                                                                            .payload
-                                                                            .plannedStartDateTime)
-                                                                  ],
-                                                                  body,
-                                                                  notification
-                                                                          .result[
-                                                                      index]);
-                                                            }
-                                                          : null,
-                                                  borderSide: !notification
-                                                          ?.result[index]
-                                                          ?.isActionDone
-                                                      ? BorderSide(
-                                                          color: Color(CommonUtil()
-                                                              .getMyPrimaryColor()))
-                                                      : BorderSide(
-                                                          color: Colors.grey),
-                                                  child: TextWidget(
-                                                    text: AppConstants
-                                                        .Appointments_cancel,
-                                                    colors: !notification
-                                                            ?.result[index]
-                                                            ?.isActionDone
-                                                        ? Color(CommonUtil()
-                                                            .getMyPrimaryColor())
-                                                        : Colors.grey,
-                                                    overflow:
-                                                        TextOverflow.visible,
-                                                    fontWeight: FontWeight.w600,
-                                                    fontsize: 15.0.sp,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          )
-                                        : Container()
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 1,
-                              child: Container(
-                                padding: EdgeInsets.only(top: 5),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    TextWidget(
-                                      text: constants.notificationDate(
-                                          notification
-                                              ?.result[index]?.createdOn),
-                                      colors: Colors.black,
-                                      overflow: TextOverflow.visible,
-                                      fontWeight: FontWeight.w500,
-                                      fontsize: 12.0.sp,
-                                      softwrap: true,
-                                    ),
-                                    SizedBox(
-                                      height: 5.0.h,
-                                    ),
-                                    TextWidget(
-                                      text: constants.notificationTime(
-                                          notification
-                                              ?.result[index]?.createdOn),
-                                      colors: (notification?.result[index]
-                                                      ?.isUnread ==
-                                                  null ||
-                                              !notification
-                                                  ?.result[index]?.isUnread)
-                                          ? Colors.black
-                                          : Color(
-                                              CommonUtil().getMyPrimaryColor()),
-                                      //colors: Color(CommonUtil.primaryColor),
-                                      overflow: TextOverflow.visible,
-                                      fontWeight: FontWeight.w600,
-                                      fontsize: 12.0.sp,
-                                      softwrap: true,
+                                    OutlineButton(
+                                      onPressed:
+                                      !notification
+                                          ?.result[index]
+                                          ?.isActionDone
+                                          ? () {
+                                        var body = {};
+                                        body['templateName'] =
+                                            payload
+                                                ?.templateName;
+                                        body['contextId'] =
+                                            payload
+                                                ?.bookingId;
+                                        _displayDialog(
+                                            context,
+                                            [
+                                              Past(
+                                                  bookingId: notification
+                                                      .result[
+                                                  index]
+                                                      .messageDetails
+                                                      .payload
+                                                      .bookingId,
+                                                  plannedStartDateTime: notification
+                                                      .result[index]
+                                                      .messageDetails
+                                                      .payload
+                                                      .plannedStartDateTime)
+                                            ],
+                                            body,
+                                            notification
+                                                .result[
+                                            index]);
+                                      }
+                                          : null,
+                                      borderSide: !notification
+                                          ?.result[index]
+                                          ?.isActionDone
+                                          ? BorderSide(
+                                          color: Color(CommonUtil()
+                                              .getMyPrimaryColor()))
+                                          : BorderSide(
+                                          color: Colors.grey),
+                                      child: TextWidget(
+                                        text: AppConstants
+                                            .Appointments_cancel,
+                                        colors: !notification
+                                            ?.result[index]
+                                            ?.isActionDone
+                                            ? Color(CommonUtil()
+                                            .getMyPrimaryColor())
+                                            : Colors.grey,
+                                        overflow:
+                                        TextOverflow.visible,
+                                        fontWeight: FontWeight.w600,
+                                        fontsize: 15.0.sp,
+                                      ),
                                     ),
                                   ],
                                 ),
-                              ),
-                            ),
-                          ],
+                              )
+                                  : Container()
+                            ],
+                          ),
                         ),
-                      ],
-                    ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Container(
+                          padding: EdgeInsets.only(top: 5),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              TextWidget(
+                                text: constants.notificationDate(
+                                    notification
+                                        ?.result[index]?.createdOn),
+                                colors: Colors.black,
+                                overflow: TextOverflow.visible,
+                                fontWeight: FontWeight.w500,
+                                fontsize: 12.0.sp,
+                                softwrap: true,
+                              ),
+                              SizedBox(
+                                height: 5.0.h,
+                              ),
+                              TextWidget(
+                                text: constants.notificationTime(
+                                    notification
+                                        ?.result[index]?.createdOn),
+                                colors: (notification?.result[index]
+                                    ?.isUnread ==
+                                    null ||
+                                    !notification
+                                        ?.result[index]?.isUnread)
+                                    ? Colors.black
+                                    : Color(
+                                    CommonUtil().getMyPrimaryColor()),
+                                //colors: Color(CommonUtil.primaryColor),
+                                overflow: TextOverflow.visible,
+                                fontWeight: FontWeight.w600,
+                                fontsize: 12.0.sp,
+                                softwrap: true,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  Container(
-                    height: 0.2.h,
-                    color: Colors.black,
-                  )
                 ],
               ),
-            );
+            ),
+            Container(
+              height: 0.2.h,
+              color: Colors.black,
+            )
+          ],
+        ),
+      );
       /* : Column(
           children: <Widget>[
             Padding(
@@ -682,7 +691,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                               ),
                               Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                                MainAxisAlignment.spaceEvenly,
                                 children: <Widget>[
                                   SizedBoxWithChild(
                                     width: 90.0.w,
@@ -690,7 +699,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                                     child: FlatButton(
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
-                                              BorderRadius.circular(12.0),
+                                          BorderRadius.circular(12.0),
                                           side: BorderSide(
                                               color: Color(CommonUtil()
                                                   .getMyPrimaryColor()))),
@@ -713,7 +722,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                                     child: FlatButton(
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
-                                              BorderRadius.circular(12.0),
+                                          BorderRadius.circular(12.0),
                                           side: BorderSide(
                                               color: Color(new CommonUtil()
                                                   .getMyPrimaryColor()))),
@@ -816,7 +825,7 @@ class _NotificationScreen extends State<NotificationScreen> {
               date: result?.messageDetails?.payload?.appointmentDate,
               templateName: result?.messageDetails?.content?.templateName),
         )).then(
-            (value) => PageNavigator.goToPermanent(context, router.rt_Landing));
+                (value) => PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);
         break;
       case "PaymentReceipt":
@@ -828,7 +837,7 @@ class _NotificationScreen extends State<NotificationScreen> {
               date: result?.messageDetails?.payload?.appointmentDate,
               templateName: result?.messageDetails?.content?.templateName),
         )).then(
-            (value) => PageNavigator.goToPermanent(context, router.rt_Landing));
+                (value) => PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);
         break;
       case "SlotsFull":
@@ -839,11 +848,11 @@ class _NotificationScreen extends State<NotificationScreen> {
               date: result?.messageDetails?.payload?.appointmentDate,
               templateName: result?.messageDetails?.content?.templateName),
         )).then(
-            (value) => PageNavigator.goToPermanent(context, router.rt_Landing));
+                (value) => PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);
         break;
       case "PatientPrescription":
-        //* navigate user to prescription page.
+      //* navigate user to prescription page.
         Navigator.pushNamed(
           context,
           router.rt_HomeScreen,
@@ -858,34 +867,34 @@ class _NotificationScreen extends State<NotificationScreen> {
         break;
       case "sheela":
         Get.to(SuperMaya()).then(
-            (value) => PageNavigator.goToPermanent(context, router.rt_Landing));
+                (value) => PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);
         break;
       case "profile_page":
         Get.toNamed(router.rt_UserAccounts,
-                arguments: UserAccountsArguments(selectedIndex: 0))
+            arguments: UserAccountsArguments(selectedIndex: 0))
             .then((value) =>
-                PageNavigator.goToPermanent(context, router.rt_Landing));
+            PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);
         break;
       case "googlefit":
         Get.toNamed(router.rt_AppSettings).then(
-            (value) => PageNavigator.goToPermanent(context, router.rt_Landing));
+                (value) => PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);
         break;
       case "th_provider":
         Get.toNamed(router.rt_TelehealthProvider,
-                arguments: HomeScreenArguments(selectedIndex: 1))
+            arguments: HomeScreenArguments(selectedIndex: 1))
             .then((value) =>
-                PageNavigator.goToPermanent(context, router.rt_Landing));
+            PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);
         break;
       case "my_record":
         getProfileData();
         Get.toNamed(router.rt_HomeScreen,
-                arguments: HomeScreenArguments(selectedIndex: 1))
+            arguments: HomeScreenArguments(selectedIndex: 1))
             .then((value) =>
-                PageNavigator.goToPermanent(context, router.rt_Landing));
+            PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);
         break;
       case "myRecords":
@@ -896,6 +905,53 @@ class _NotificationScreen extends State<NotificationScreen> {
         CommonUtil()
             .navigateToMyRecordsCategory(categoryName, _listOfhrmId, false);
         readUnreadAction(result);
+        break;
+      case "sheela|pushMessage":
+        if (result?.messageDetails?.payload?.redirectTo?.contains("sheela")) {
+          var redirectArray =
+          result?.messageDetails?.payload?.redirectTo?.split("|");
+          if (redirectArray.length > 1 && redirectArray[1] == "pushMessage") {
+            var rawBody, rawTitle;
+            rawBody = result?.messageDetails?.rawMessage?.messageBody;
+            rawTitle = result?.messageDetails?.rawMessage?.messageTitle;
+
+            fbaLog(eveParams: {
+              'eventTime': '${DateTime.now()}',
+              'ns_type': 'sheela',
+              'navigationPage': 'Sheela Start Page',
+            });
+
+            String sheela_lang =
+            PreferenceUtil.getStringValue(Constants.SHEELA_LANG);
+            if ((Provider.of<ChatScreenViewModel>(context, listen: false)
+                ?.conversations
+                ?.length ??
+                0) >
+                0) {
+              Provider.of<ChatScreenViewModel>(context, listen: false)
+                  ?.startMayaAutomatically(message: rawBody);
+            } else if (sheela_lang != null && sheela_lang != '') {
+              Get.toNamed(
+                routervariable.rt_Sheela,
+                arguments: SheelaArgument(
+                  isSheelaAskForLang: false,
+                  langCode: sheela_lang,
+                  rawMessage: rawBody,
+                ),
+              );
+            } else {
+              Get.toNamed(
+                routervariable.rt_Sheela,
+                arguments: SheelaArgument(
+                  isSheelaAskForLang: true,
+                  rawMessage: rawBody,
+                ),
+              );
+            }
+          } else {
+            Get.to(SuperMaya());
+          }
+        }
         break;
       default:
         readUnreadAction(result);
