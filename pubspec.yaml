@@ -19,9 +19,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  
   gmiwidgetspackage:
-    path: ../../fhb/fhbCommon
+    path: C:\Users\MohamedFaisal\Documents\projects\gmi_common_flutter_new
 
   # The following adds the Cupertino Icons font to your application.
   firebase_core: ^1.3.0
@@ -46,7 +46,7 @@ dependencies:
   auto_size_text: ^2.1.0
   dio: ^4.0.0
   flutter_sound: ^8.1.4
-  #  flutter_google_places: ^0.3.0
+#  flutter_google_places: ^0.3.0
   geocoder: ^0.2.1
   geolocator: ^7.2.0+1
   uuid: ^3.0.4

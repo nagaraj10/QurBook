@@ -1929,8 +1929,8 @@ class ChatScreenState extends State<ChatScreen> {
                 } else {
                   listMessage = snapshot.data.docs;
                   for (var data in snapshot.data.docs) {
-                    if (data[STR_ID_TO] == patientId &&
-                        data[STR_IS_READ] == false) {
+                    if (data.data()[STR_ID_TO] == patientId &&
+                        data.data()[STR_IS_READ] == false) {
                       if (data.reference != null) {
                         FirebaseFirestore.instance
                             .runTransaction((Transaction myTransaction) async {

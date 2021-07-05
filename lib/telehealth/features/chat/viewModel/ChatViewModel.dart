@@ -86,7 +86,7 @@ class ChatViewModel extends ChangeNotifier {
       await prefs.setString(ID, documents[0][ID]);
       await prefs.setString(NICK_NAME, documents[0][NICK_NAME]);
       await prefs.setString(PHOTO_URL, documents[0][PHOTO_URL]);
-      await prefs.setString(ABOUT_ME, documents[0][ABOUT_ME]);
+      //await prefs.setString(ABOUT_ME, documents[0][ABOUT_ME]);
     }
 
     goToChatPage(doctorId, doctorName, doctorPic, patientId, patientName,
