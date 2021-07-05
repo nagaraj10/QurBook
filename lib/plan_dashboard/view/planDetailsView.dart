@@ -12,7 +12,6 @@ import '../../common/CommonUtil.dart';
 import '../../constants/fhb_constants.dart';
 import '../../constants/fhb_parameters.dart';
 import '../../constants/responseModel.dart';
-import '../../telehealth/features/chat/view/pdfiosViewer.dart';
 import '../../widgets/GradientAppBar.dart';
 import 'package:path/path.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
@@ -22,7 +21,6 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
 import '../model/MetaDataForURL.dart';
-import 'dart:developer' as dev;
 
 class MyPlanDetailView extends StatefulWidget {
   final String title;

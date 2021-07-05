@@ -81,7 +81,6 @@ import '../src/utils/screenutils/size_extensions.dart';
 import '../telehealth/features/Notifications/view/notification_main.dart';
 import '../telehealth/features/Payment/PaymentPage.dart';
 import '../telehealth/features/chat/view/BadgeIcon.dart';
-import '../telehealth/features/chat/view/pdfiosViewer.dart';
 import 'package:package_info/package_info.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -91,6 +90,10 @@ import 'package:provider/single_child_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import 'package:myfhb/telehealth/features/chat/view/PDFModel.dart';
+import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
+import 'package:myfhb/telehealth/features/chat/view/PDFView.dart';
 
 class CommonUtil {
   static String SHEELA_URL = '';
@@ -1465,6 +1468,7 @@ class CommonUtil {
       final dir = Platform.isIOS
           ? await FHBUtils.createFolderInAppDocDirForIOS('images')
           : await FHBUtils.createFolderInAppDocDir('images');
+
       var file = File('$dir/${basename(url)}$extension');
       await file.writeAsBytes(bytes);
       return file;
@@ -2859,7 +2863,7 @@ class CommonUtil {
       var path = directory.path;
       var file = File('$path/$fileName');
       await file.writeAsBytes(responseJson);
-      path = url;
+      path = file.path;
       return ResultFromResponse(true, path);
     } catch (e) {
       print(e.toString());
@@ -2870,23 +2874,29 @@ class CommonUtil {
   showStatusToUser(
       ResultFromResponse response, GlobalKey<ScaffoldState> scaffoldKey) {
     if (response.status) {
-      scaffoldKey.currentState.showSnackBar(SnackBar(
-        backgroundColor: Colors.green,
-        content: Text('Downloaded'),
-        action: SnackBarAction(
-          label: 'Open',
-          onPressed: () {
-            Get.to(PDFiOSViewer(
-              url: response.result,
-            ));
-          },
+      scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.green,
+          content: Text('Downloaded'),
+          action: SnackBarAction(
+            label: 'Open',
+            onPressed: () {
+              final controller = Get.find<PDFViewController>();
+              final data =
+                  OpenPDF(type: PDFLocation.Path, path: response.result);
+              controller.data = data;
+              Get.to(() => PDFView());
+            },
+          ),
         ),
-      ));
+      );
     } else {
-      scaffoldKey.currentState.showSnackBar(SnackBar(
-        backgroundColor: Colors.red,
-        content: Text(response.result),
-      ));
+      scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(response.result),
+        ),
+      );
     }
   }
 

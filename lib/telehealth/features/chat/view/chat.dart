@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -28,15 +29,15 @@ import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:myfhb/telehealth/features/chat/model/AppointmentDetailModel.dart';
-import 'package:myfhb/telehealth/features/chat/view/PdfViewURL.dart';
+import 'package:myfhb/telehealth/features/chat/view/PDFModel.dart';
+import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
+import 'package:myfhb/telehealth/features/chat/view/PDFView.dart';
 import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
 import 'package:myfhb/telehealth/features/chat/view/loading.dart';
-import 'package:myfhb/telehealth/features/chat/view/pdfiosViewer.dart';
 import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'package:myfhb/telehealth/features/chat/viewModel/notificationController.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
-import 'package:open_file/open_file.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../common/CommonUtil.dart';
@@ -598,7 +599,27 @@ class ChatScreenState extends State<ChatScreen> {
 
     if (isPdfPresent) {
       if (Platform.isIOS) {
-        CommonUtil.downloadFile(fileUrl, fileType);
+        final file = await CommonUtil.downloadFile(fileUrl, fileType);
+        Scaffold.of(contxt).showSnackBar(
+          SnackBar(
+            content: Text(
+              variable.strFileDownloaded,
+              style: TextStyle(
+                fontSize: 16.0.sp,
+              ),
+            ),
+            backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+            action: SnackBarAction(
+              label: 'Open',
+              onPressed: () async {
+                final controller = Get.find<PDFViewController>();
+                final data = OpenPDF(type: PDFLocation.Path, path: file.path);
+                controller.data = data;
+                Get.to(() => PDFView());
+              },
+            ),
+          ),
+        );
       } else {
         await ImageGallerySaver.saveFile(fileUrl).then((res) {
           setState(() {
@@ -622,7 +643,11 @@ class ChatScreenState extends State<ChatScreen> {
               action: SnackBarAction(
                 label: 'Open',
                 onPressed: () async {
-                  await OpenFile.open(filePath.path);
+                  final controller = Get.find<PDFViewController>();
+                  final data =
+                      OpenPDF(type: PDFLocation.Path, path: filePath.path);
+                  controller.data = data;
+                  Get.to(() => PDFView());
                 },
               ),
             ));
@@ -1167,10 +1192,10 @@ class ChatScreenState extends State<ChatScreen> {
   }
 
   goToPDFViewBasedonURL(String url) {
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) =>
-          Platform.isIOS ? PDFiOSViewer(url: url) : PDFViewURL(url: url),
-    ));
+    final controller = Get.find<PDFViewController>();
+    final data = OpenPDF(type: PDFLocation.URL, path: url);
+    controller.data = data;
+    Get.to(() => PDFView());
   }
 
   String getFormattedDateTime(String datetime) {
