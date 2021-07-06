@@ -99,6 +99,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
         currentLanguage = langCode;
       } else {
         currentLanguage = 'en';
+        PreferenceUtil.saveString(
+            SHEELA_LANG, 'en-IN');
       }
       if (currentLanguage.isNotEmpty) {
         CommonUtil.supportedLanguages.forEach((language, languageCode) {
@@ -112,6 +114,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
   }
 
   String setValueLanguages(MyProfileResult myProfile) {
+    String languagePreferred="English";
     if (myProfile?.userProfileSettingCollection3?.isNotEmpty) {
       ProfileSetting profileSetting =
           myProfile?.userProfileSettingCollection3[0].profileSetting;
@@ -124,17 +127,21 @@ class _MyProfilePageState extends State<MyProfilePage> {
             if (currentLanguage.isNotEmpty) {
               CommonUtil.supportedLanguages.forEach((language, languageCode) {
                 if (currentLanguage == languageCode) {
-                  languageController.text = toBeginningOfSentenceCase(language);
+                  languagePreferred = toBeginningOfSentenceCase(language);
                   PreferenceUtil.saveString(
         SHEELA_LANG, CommonUtil.langaugeCodes[languageCode] ?? 'en-IN');
                 }
               });
             }
 
-            return languageController.text;
           }
         });
+      }else{
+        languagePreferred="English";
+
       }
+
+      return languagePreferred;
     }
   }
 
@@ -663,7 +670,11 @@ class _MyProfilePageState extends State<MyProfilePage> {
     return FutureBuilder(
         future: getPreferredLanguage(myProfile?.result),
         builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-          languageController.text = snapshot.data;
+          if(snapshot.data!=null && snapshot.data!="") {
+            languageController.text = snapshot.data;
+          }else{
+            languageController.text="English";
+          }
           return Padding(
             padding: EdgeInsets.all(10),
             child: TextField(
