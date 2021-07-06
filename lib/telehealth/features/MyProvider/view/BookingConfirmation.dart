@@ -169,8 +169,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     getDataFromWidget();
     setLengthValue();
 
-    INR_Price = commonWidgets.getMoneyWithForamt(widget.isFollowUp
-        ? getFollowUpFee(false)
+    INR_Price = commonWidgets.getMoneyWithForamt(isFollowUp()
+        ? getFollowUpFee()
         : widget.isFromHospital
             ? getFeesFromHospital(
                 widget.resultFromHospitalList[widget.doctorListIndex], false)
@@ -737,19 +737,17 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                   ],
                 ),
               ),
-              getCSRCheckBox(
-                  widget.isFollowUp
-                      ? getFollowUpFee(true)
-                      : widget.isFromHospital
+              isFollowUp()
+                  ? SizedBox.shrink()
+                  : getCSRCheckBox(
+                      widget.isFromHospital
                           ? getFeesFromHospital(
                               widget.resultFromHospitalList[
                                   widget.doctorListIndex],
                               true)
                           : getFees(
                               widget.healthOrganizationResult[widget.i], true),
-                  commonWidgets.getMoneyWithForamt(widget.isFollowUp
-                      ? getFollowUpFee(false)
-                      : widget.isFromHospital
+                      commonWidgets.getMoneyWithForamt(widget.isFromHospital
                           ? getFeesFromHospital(
                               widget.resultFromHospitalList[
                                   widget.doctorListIndex],
@@ -759,11 +757,14 @@ class BookingConfirmationState extends State<BookingConfirmation> {
               SizedBoxWidget(height: 15.0),
               Container(
                 child: Center(
-                  child: TextWidget(
-                      text: 'Pay INR ' + INR_Price,
-                      fontsize: 22.0.sp,
-                      fontWeight: FontWeight.w500,
-                      colors: Color(new CommonUtil().getMyPrimaryColor())),
+                  child: Text(
+                    'Pay INR ' + INR_Price,
+                    maxLines: 1,
+                    style: TextStyle(
+                        fontSize: 22.0.sp,
+                        fontWeight: FontWeight.w500,
+                        color: Color(new CommonUtil().getMyPrimaryColor())),
+                  ),
                 ),
               ),
               SizedBoxWidget(height: 20.0),
@@ -928,42 +929,11 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     }
   }
 
-  String getFollowUpFee(bool isCSRDiscount) {
-    if (widget.doctorsData?.plannedFollowupDate != null &&
-        widget.followUpFee != null) {
-      if (widget.doctorsData.isFollowUpTaken == true) {
-        return widget.isFromHospital
-            ? getFeesFromHospital(
-                widget.resultFromHospitalList[widget.doctorListIndex],
-                isCSRDiscount)
-            : getFees(widget.healthOrganizationResult[widget.i], isCSRDiscount);
-      } else if (widget.doctorsData?.plannedFollowupDate == null) {
-        return widget.isFromHospital
-            ? getFeesFromHospital(
-                widget.resultFromHospitalList[widget.doctorListIndex],
-                isCSRDiscount)
-            : getFees(widget.healthOrganizationResult[widget.i], isCSRDiscount);
-      } else {
-        if (widget.selectedDate
-                .difference(
-                    DateTime.parse(widget.doctorsData.plannedFollowupDate))
-                .inDays <=
-            0) {
-          return isCSRDiscount?'':widget.followUpFee;
-        } else {
-          return widget.isFromHospital
-              ? getFeesFromHospital(
-                  widget.resultFromHospitalList[widget.doctorListIndex],
-                  isCSRDiscount)
-              : getFees(
-                  widget.healthOrganizationResult[widget.i], isCSRDiscount);
-        }
-      }
+  String getFollowUpFee() {
+    if (widget.followUpFee != null && widget.followUpFee != '') {
+      return widget?.followUpFee;
     } else {
-      return widget.isFromHospital
-          ? getFeesFromHospital(
-              widget.resultFromHospitalList[widget.doctorListIndex], false)
-          : getFees(widget.healthOrganizationResult[widget.i], false);
+      return '';
     }
   }
 
@@ -1090,7 +1060,15 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         widget.followUpFee != null &&
         widget.isFollowUp == true) {
       if (widget.doctorsData.isFollowUpTaken == true) {
-        return false;
+        if (widget.selectedDate
+            .difference(
+            DateTime.parse(widget.doctorsData.plannedFollowupDate))
+            .inDays <=
+            0) {
+          return true;
+        } else {
+          return false;
+        }
       } else if (widget.doctorsData?.plannedFollowupDate == null) {
         return false;
       } else {

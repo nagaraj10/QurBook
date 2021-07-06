@@ -560,6 +560,7 @@ class _MyFHBState extends State<MyFHB> {
         Get.to(ResheduleMain(
           isFromNotification: true,
           isReshedule: true,
+          isFromFollowUpApp: false,
           doc: Past(
             //! this is has to be correct
             doctorSessionId: passedValArr[3],

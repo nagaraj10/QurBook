@@ -268,6 +268,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                                                   (context) =>
                                                   ResheduleMain(
                                                     isFromNotification: false,
+                                                    isFromFollowUpApp: false,
                                                     closePage: (value) {},
                                                     isReshedule: true,
                                                     doc: Past(doctor: Doctor(id: notification.result[index].messageDetails.payload.doctorId), doctorSessionId: notification.result[index].messageDetails.payload.doctorSessionId, healthOrganization: City(id: notification.result[index].messageDetails.payload.healthOrganizationId), bookingId: notification.result[index].messageDetails.payload.bookingId),

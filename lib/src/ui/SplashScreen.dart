@@ -140,6 +140,7 @@ class _SplashScreenState extends State<SplashScreen> {
                           ResheduleMain(
                             isFromNotification: true,
                             isReshedule: true,
+                            isFromFollowUpApp: false,
                             doc: Past(
                               //! this is has to be correct
                               doctorSessionId: widget.doctorSessionId,

@@ -242,7 +242,7 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
                           isFromHospital: widget.isFromHospital,
                           body: widget.body,
                           isFromFollowReschedule:
-                              widget.isFromFollowOrReschedule,
+                              widget.isFromFollowOrReschedule
                         ),
                       )
                     : Column(
