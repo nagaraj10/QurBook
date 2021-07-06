@@ -805,8 +805,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               onSuggestionSelected: (suggestion) {
                 cntrlr_addr_state.text = suggestion.name;
                 stateVal = suggestion;
-                cntrlr_addr_city.text="";
-                cityVal=null;
+                cntrlr_addr_city.text = "";
+                cityVal = null;
               },
               validator: (value) {
                 if (value.isEmpty) {
@@ -1182,9 +1182,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     } else if (dateOfBirthController.text.length < 4) {
       isValid = false;
       strErrorMsg = "Enter a Valid Year";
-    }else if (checkIfYearIsGreaterThanCurrentYear(dateOfBirthController.text)) {
+    } else if (checkIfYearIsGreaterThanCurrentYear(
+        int.parse(dateOfBirthController.text))) {
       isValid = false;
-      strErrorMsg = "Year cannot be greater than curent year";
     } else if (_addressResult == null || _addressResult.id == null) {
       isValid = false;
       strErrorMsg = 'Select Address type';
@@ -2421,17 +2421,22 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         });
   }
 
-  bool checkIfYearIsGreaterThanCurrentYear(String text) {
+  bool checkIfYearIsGreaterThanCurrentYear(int year) {
     bool condition;
 
-    DateTime current=DateTime.now();
+    DateTime current = DateTime.now();
+    int currentYear = current.year;
 
-    if(current.year>=int.parse(text)){
-      condition=false;
-    }else
-      condition=true;
+    if (year < 1800) {
+      condition = true;
+      strErrorMsg = "Year cannot be less than 1800";
+    } else if (year > currentYear) {
+      condition = true;
+      strErrorMsg = "Year cannot be greater than curent year";
+    } else {
+      condition = false;
+    }
 
     return condition;
-
   }
 }
