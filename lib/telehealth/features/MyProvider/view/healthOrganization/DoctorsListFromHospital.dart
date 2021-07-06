@@ -294,25 +294,26 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
             getDoctorWidget(i, docs),
             commonWidgets.getSizedBox(20.0.h),
             DoctorSessionTimeSlot(
-                date: _selectedValue.toString(),
-                doctorId: docs[i].doctor.id,
-                isReshedule: false,
-                i: i,
-                doctorListIndex: i,
-                healthOrganizationId: docs[i].healthOrganization.id,
-                healthOrganizationResult: [],
-                resultFromHospitalList: docs,
-                doctorListPos: widget.index,
-                onChanged: (value) {},
-                closePage: (value) {
-                  widget.closePage(value);
-                  Navigator.pop(context);
-                },
-                refresh: () {
-                  setState(() {});
-                },
-                isFromHospital: true,
-                isFromFollowOrReschedule: false),
+              date: _selectedValue.toString(),
+              doctorId: docs[i].doctor.id,
+              isReshedule: false,
+              i: i,
+              doctorListIndex: i,
+              healthOrganizationId: docs[i].healthOrganization.id,
+              healthOrganizationResult: [],
+              resultFromHospitalList: docs,
+              doctorListPos: widget.index,
+              onChanged: (value) {},
+              closePage: (value) {
+                widget.closePage(value);
+                Navigator.pop(context);
+              },
+              refresh: () {
+                setState(() {});
+              },
+              isFromHospital: true,
+              isFromFollowOrReschedule: false,
+            ),
           ],
         ),
       ),

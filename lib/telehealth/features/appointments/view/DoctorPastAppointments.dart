@@ -98,9 +98,11 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                           children: <Widget>[
                             commonWidget.docName(
                                 context,
-                                widget?.doc?.doctor?.user?.firstName?.capitalizeFirstofEach +
+                                widget?.doc?.doctor?.user?.firstName
+                                        ?.capitalizeFirstofEach +
                                     ' ' +
-                                    widget?.doc?.doctor?.user?.lastName?.capitalizeFirstofEach),
+                                    widget?.doc?.doctor?.user?.lastName
+                                        ?.capitalizeFirstofEach),
                             SizedBoxWidget(height: 3.0.h, width: 0.0.h),
                             widget.doc?.doctor?.specialization == null
                                 ? Container()
@@ -311,11 +313,28 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                 isFromNotification: false,
                 doc: doc,
                 isReshedule: isReshedule,
+                isFromFollowUpApp: getFollowup(doc),
                 closePage: (value) {
                   widget.closePage(value);
                 },
               )),
     );
+  }
+
+  bool getFollowup(Past doc) {
+    bool status = false;
+
+    if (doc != null && doc != '') {
+      if (doc?.plannedFollowupDate != null && doc?.plannedFollowupDate != '') {
+        status = true;
+      } else {
+        status = false;
+      }
+    } else {
+      status = false;
+    }
+
+    return status;
   }
 
   void goToChatIntegration(Past doc) {

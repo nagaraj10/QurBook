@@ -13,9 +13,10 @@ class ResheduleMain extends StatefulWidget {
   String bookId, id;
   Function(String) closePage;
   bool isFromNotification;
+  bool isFromFollowUpApp;
   dynamic body;
   ResheduleMain(
-      {this.doc, this.isReshedule, this.closePage, this.isFromNotification,this.body});
+      {this.doc, this.isReshedule, this.closePage, this.isFromNotification,this.isFromFollowUpApp,this.body});
 
   @override
   _ResheduleMainState createState() => _ResheduleMainState();
@@ -46,6 +47,7 @@ class _ResheduleMainState extends State<ResheduleMain> {
           widget.closePage(value);
         },
         isFromNotification: widget.isFromNotification,
+        isFromFollowUpApp: widget.isFromFollowUpApp,
         body: widget.body,
       ),
     ));

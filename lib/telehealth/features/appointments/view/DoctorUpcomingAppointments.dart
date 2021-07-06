@@ -283,6 +283,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
           builder: (context) => ResheduleMain(
                 doc: doc,
                 isReshedule: isReshedule,
+                isFromFollowUpApp: false,
                 isFromNotification: false,
               )),
     ).then((value) => widget.onChanged(Constants.callBack));
