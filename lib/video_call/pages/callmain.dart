@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ import 'package:myfhb/video_call/pages/localpreview.dart';
 import 'package:myfhb/video_call/pages/prescription_module.dart';
 import 'package:myfhb/video_call/utils/callstatus.dart';
 import 'package:myfhb/video_call/utils/hideprovider.dart';
+import 'package:myfhb/video_call/utils/rtc_engine.dart';
 import 'package:myfhb/video_call/utils/settings.dart';
 import 'package:provider/provider.dart';
 
@@ -67,8 +69,10 @@ class _CallMainState extends State<CallMain> {
 
   @override
   void initState() {
-    super.initState();
+    Provider.of<RTCEngineProvider>(context, listen: false)?.isVideoPaused =
+        false;
     createRtcEngine();
+    super.initState();
   }
 
   createRtcEngine() async {
@@ -79,6 +83,8 @@ class _CallMainState extends State<CallMain> {
   void dispose() {
     rtcEngine.leaveChannel();
     rtcEngine.destroy();
+    Provider.of<RTCEngineProvider>(context, listen: false)?.isVideoPaused =
+        false;
     super.dispose();
   }
 
@@ -101,76 +107,69 @@ class _CallMainState extends State<CallMain> {
       child: Scaffold(
         backgroundColor: Colors.black,
         body: Center(
-          child: Stack(
-            children: <Widget>[
-              CallPage(
-                rtcEngine: rtcEngine,
-                role: widget.role,
-                channelName: widget.channelName,
-                arguments: widget.arguments,
-                isAppExists: widget.isAppExists,
-              ),
-              /* InkWell(
-                onTap: () {
-                  if (hideStatus.isControlStatus) {
-                    hideStatus.hideMe();
-                  } else {
-                    hideStatus.showMe();
-                    Future.delayed(Duration(seconds: 10), () {
-                      hideStatus.hideMe();
-                    });
-                  }
-                },
-                child: Container(),
-              ), */
-              LocalPreview(
-                rtcEngine: rtcEngine,
-              ),
-              CustomAppBar(Platform.isIOS
-                  ? widget.arguments.userName
-                  : widget.doctorName),
-              Consumer<HideProvider>(
-                builder: (context, status, child) {
-                  return Visibility(
-                    visible: status.isControlStatus,
-                    child: Align(
-                        alignment: Alignment.bottomLeft,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            MyControllers(
-                                rtcEngine,
-                                callStatus,
-                                widget.role,
-                                widget.isAppExists,
-                                Platform.isIOS
-                                    ? widget.arguments.doctorId
-                                    : widget.doctorId, (isMute, isVideoHide) {
-                              _isMute = isMute;
-                              _isVideoHide = isVideoHide;
-                            },
-                                _isMute,
-                                _isVideoHide,
-                                widget.doctorName,
-                                widget.doctorPic,
-                                widget.patientId,
-                                widget.patientName,
-                                widget.patientPicUrl),
-                            SizedBox(
-                              height: 20.0.h,
-                            ),
-                          ],
-                        )),
-                  );
-                },
-              ),
-              SizedBoxWidget(
-                height: 20.0.h,
-              ),
-              PrescriptionModule(),
-            ],
-          ),
+          child: FutureBuilder(
+              future: Future.delayed(Duration(seconds: 1)),
+              builder: (context, snapshot) => snapshot.connectionState ==
+                      ConnectionState.done
+                  ? Stack(
+                      children: <Widget>[
+                        CallPage(
+                          rtcEngine: rtcEngine,
+                          role: widget.role,
+                          channelName: widget.channelName,
+                          arguments: widget.arguments,
+                          isAppExists: widget.isAppExists,
+                        ),
+                        LocalPreview(
+                          rtcEngine: rtcEngine,
+                        ),
+                        CustomAppBar(Platform.isIOS
+                            ? widget.arguments.userName
+                            : widget.doctorName),
+                        Consumer<HideProvider>(
+                          builder: (context, status, child) => Visibility(
+                            visible: status.isControlStatus,
+                            child: Align(
+                                alignment: Alignment.bottomLeft,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    MyControllers(
+                                        rtcEngine,
+                                        callStatus,
+                                        widget.role,
+                                        widget.isAppExists,
+                                        Platform.isIOS
+                                            ? widget.arguments.doctorId
+                                            : widget.doctorId,
+                                        (isMute, isVideoHide) {
+                                      _isMute = isMute;
+                                      _isVideoHide = isVideoHide;
+                                    },
+                                        _isMute,
+                                        _isVideoHide,
+                                        widget.doctorName,
+                                        widget.doctorPic,
+                                        widget.patientId,
+                                        widget.patientName,
+                                        widget.patientPicUrl),
+                                    SizedBox(
+                                      height: 20.0.h,
+                                    ),
+                                  ],
+                                )),
+                          ),
+                        ),
+                        SizedBoxWidget(
+                          height: 20.0.h,
+                        ),
+                        PrescriptionModule(),
+                      ],
+                    )
+                  : CircularProgressIndicator(
+                      backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                    )),
         ),
       ),
     );

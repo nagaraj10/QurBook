@@ -58,14 +58,15 @@ class _CallPageState extends State<CallPage> {
   bool _internetconnection = false;
   bool isCustomViewShown = false;
   int videoPauseResumeState = 0;
+  RtcEngineEventHandler rtcEngineEventHandler = RtcEngineEventHandler();
 
   @override
   void dispose() {
     // clear users
     _users.clear();
     // destroy sdk
-    // rtcEngine.leaveChannel();
-    // rtcEngine.destroy();
+    // widget.rtcEngine.leaveChannel();
+    // widget.rtcEngine.destroy();
     cancelOnGoingNS();
     super.dispose();
     Screen.keepOn(false);
@@ -150,23 +151,14 @@ class _CallPageState extends State<CallPage> {
       });
       return;
     }
-    // rtcEngine = await RtcEngine.create(APP_ID);
 
-    // await _initAgoraRtcEngine();
-    // _addAgoraEventHandlers();
-    // await rtcEngine.enableWebSdkInteroperability(true);
-    // VideoEncoderConfiguration configuration = VideoEncoderConfiguration();
-    // configuration.dimensions = VideoDimensions(1920, 1080);
-    // await rtcEngine.setVideoEncoderConfiguration(configuration);
-    await widget.rtcEngine
-        .joinChannel(null, widget.channelName, null, 0)
-        .then((value) async {
-      //todo name has to be change with dynamic
-      await _initAgoraRtcEngine();
-      _addAgoraEventHandlers();
-      await platform.invokeMethod(
-          parameters.startOnGoingNS, {parameters.mode: parameters.start});
-    });
+    //todo name has to be change with dynamic
+    await _initAgoraRtcEngine();
+    _addAgoraEventHandlers();
+    widget?.rtcEngine?.setEventHandler(rtcEngineEventHandler);
+    await widget?.rtcEngine?.joinChannel(null, widget.channelName, null, 0);
+    await platform.invokeMethod(
+        parameters.startOnGoingNS, {parameters.mode: parameters.start});
   }
 
   /// Create agora sdk instance and initialize
@@ -174,23 +166,23 @@ class _CallPageState extends State<CallPage> {
     await widget.rtcEngine.enableWebSdkInteroperability(true);
     VideoEncoderConfiguration configuration = VideoEncoderConfiguration();
     configuration.dimensions = VideoDimensions(1920, 1080);
-    await widget.rtcEngine.setVideoEncoderConfiguration(configuration);
-    await widget.rtcEngine.enableVideo();
-    await widget.rtcEngine.setChannelProfile(ChannelProfile.LiveBroadcasting);
-    await widget.rtcEngine.setClientRole(widget.role);
+    await widget?.rtcEngine?.setVideoEncoderConfiguration(configuration);
+    await widget?.rtcEngine?.enableVideo();
+    await widget?.rtcEngine?.setChannelProfile(ChannelProfile.LiveBroadcasting);
+    await widget?.rtcEngine?.setClientRole(widget.role);
   }
 
   /// Add agora event handlers
   void _addAgoraEventHandlers() {
     var user_id;
-    RtcEngineEventHandler().error = (dynamic code) {
+    rtcEngineEventHandler.error = (dynamic code) {
       setState(() {
         final info = 'onError: $code';
         _infoStrings.add(info);
       });
     };
 
-    RtcEngineEventHandler().joinChannelSuccess = (
+    rtcEngineEventHandler.joinChannelSuccess = (
       String channel,
       int uid,
       int elapsed,
@@ -201,7 +193,7 @@ class _CallPageState extends State<CallPage> {
       });
     };
 
-    RtcEngineEventHandler().leaveChannel = (RtcStats rtcStats) {
+    rtcEngineEventHandler.leaveChannel = (RtcStats rtcStats) {
       setState(() {
         _infoStrings.add('onLeaveChannel');
         _users.clear();
@@ -209,7 +201,7 @@ class _CallPageState extends State<CallPage> {
       });
     };
 
-    RtcEngineEventHandler().userJoined = (int uid, int elapsed) {
+    rtcEngineEventHandler.userJoined = (int uid, int elapsed) {
       setState(() {
         user_id = uid;
         final info = 'userJoined: $uid';
@@ -218,7 +210,7 @@ class _CallPageState extends State<CallPage> {
       });
     };
 
-    RtcEngineEventHandler().remoteAudioStateChanged = (int uid,
+    rtcEngineEventHandler.remoteAudioStateChanged = (int uid,
         AudioRemoteState audioRemoteState,
         AudioRemoteStateReason audioRemoteStateReason,
         int) {
@@ -245,7 +237,7 @@ class _CallPageState extends State<CallPage> {
     //   });
     // };
 
-    RtcEngineEventHandler().userOffline = (int uid, UserOfflineReason reason) {
+    rtcEngineEventHandler.userOffline = (int uid, UserOfflineReason reason) {
       setState(() {
         if (reason == UserOfflineReason.Dropped) {
           noResponseDialog(context, 'Disconnected due to Network Failure!');
@@ -265,7 +257,7 @@ class _CallPageState extends State<CallPage> {
       });
     };
 
-    RtcEngineEventHandler().remoteVideoStateChanged = (
+    rtcEngineEventHandler.remoteVideoStateChanged = (
       int uid,
       VideoRemoteState videoRemoteState,
       VideoRemoteStateReason videoRemoteStateReason,
@@ -279,7 +271,7 @@ class _CallPageState extends State<CallPage> {
       });
     };
 
-    RtcEngineEventHandler().localVideoStateChanged =
+    rtcEngineEventHandler.localVideoStateChanged =
         (LocalVideoStreamState localVideoStreamState,
             LocalVideoStreamError localVideoStreamError) {
       if (localVideoStreamState == LocalVideoStreamState.Stopped) {
@@ -321,7 +313,7 @@ class _CallPageState extends State<CallPage> {
       }
     };
 
-    RtcEngineEventHandler().remoteVideoStateChanged =
+    rtcEngineEventHandler.remoteVideoStateChanged =
         (uid, state, reason, elapsed) {
       // if (state == 'REMOTE_VIDEO_STATE_STARTING') {
       //   FlutterToast().getToast('Remote Video call is started', Colors.green);
@@ -348,7 +340,7 @@ class _CallPageState extends State<CallPage> {
       }
     };
 
-    RtcEngineEventHandler().localAudioStateChanged = (state, error) {
+    rtcEngineEventHandler.localAudioStateChanged = (state, error) {
       if (state == AudioLocalState.Recording) {
         //FlutterToast().getToast('Your on UnMute', Colors.red);
       } else {
@@ -356,7 +348,7 @@ class _CallPageState extends State<CallPage> {
       }
     };
 
-    RtcEngineEventHandler().remoteAudioStateChanged =
+    rtcEngineEventHandler.remoteAudioStateChanged =
         (uid, state, reason, elapsed) {
       switch (reason) {
         case AudioRemoteStateReason.RemoteUnmuted:
@@ -396,7 +388,7 @@ class _CallPageState extends State<CallPage> {
       } */
     };
 
-    RtcEngineEventHandler().networkTypeChanged = (networkType) {
+    rtcEngineEventHandler.networkTypeChanged = (networkType) {
       if (networkType == NetworkType.LAN) {
         print('network type is LAN');
       } else if (networkType == NetworkType.WIFI) {
@@ -418,13 +410,13 @@ class _CallPageState extends State<CallPage> {
       });
     }
 
-    RtcEngineEventHandler().rejoinChannelSuccess = (channel, uid, elapsedTime) {
+    rtcEngineEventHandler.rejoinChannelSuccess = (channel, uid, elapsedTime) {
       print('After rejoining channel successfully');
       //print('channel $channel &uid $uid &elapsedTime $elapsedTime');
     };
 
     //Local user call status
-    RtcEngineEventHandler().connectionStateChanged = (nwState, reason) {
+    rtcEngineEventHandler.connectionStateChanged = (nwState, reason) {
       if (nwState == ConnectionStateType.Disconnected) {
         FlutterToast().getToast('Disconnected', Colors.red);
         //print('call was disconnected');
@@ -442,7 +434,7 @@ class _CallPageState extends State<CallPage> {
       }
     };
 
-    RtcEngineEventHandler().networkQuality = (uid, tx, rx) {
+    rtcEngineEventHandler.networkQuality = (uid, tx, rx) {
       //uplink quality speed of local network state
       if (tx == NetworkQuality.Excellent) {
         print('The quality is excellent QUALITY_EXCELLENT');
@@ -504,7 +496,7 @@ class _CallPageState extends State<CallPage> {
       }
     };
 
-    RtcEngineEventHandler().remoteVideoStats = (stats) {
+    rtcEngineEventHandler.remoteVideoStats = (stats) {
       if (videoPauseResumeState != 0) {
         // dont show try to reconnect view
       } else {
@@ -523,11 +515,11 @@ class _CallPageState extends State<CallPage> {
 
   /// Helper function to get list of native views
   List<Widget> _getRenderViews() {
-    final list = [];
+    final list = <Widget>[];
     if (widget.role == ClientRole.Broadcaster) {
-      list.add(
-        RtcLocalView.SurfaceView(),
-      );
+      // list.add(
+      //   RtcLocalView.SurfaceView(),
+      // );
     }
     _users.forEach(
       (int uid) => list.add(

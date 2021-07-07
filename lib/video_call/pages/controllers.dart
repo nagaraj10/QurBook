@@ -9,6 +9,8 @@ import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.da
 import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'package:myfhb/video_call/utils/callstatus.dart';
 import 'package:myfhb/video_call/utils/hideprovider.dart';
+import 'package:myfhb/video_call/utils/rtc_engine.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
@@ -229,6 +231,7 @@ class _MyControllersState extends State<MyControllers> {
     setState(() {
       widget._isHideMyVideo = !widget._isHideMyVideo;
     });
+    Provider.of<RTCEngineProvider>(Get.context, listen: false)?.changeLocalVideoStatus(widget?._isHideMyVideo);
     widget.controllerState(widget.muted, widget._isHideMyVideo);
     widget.rtcEngine.muteLocalVideoStream(widget._isHideMyVideo);
   }

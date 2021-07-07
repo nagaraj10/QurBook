@@ -6,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:myfhb/video_call/utils/rtc_engine.dart';
 import 'IntroScreens/IntroductionScreen.dart';
 import 'regiment/models/regiment_arguments.dart';
 //import 'package:myfhb/QurPlan/WelcomeScreens/qurplan_welcome_screen.dart';
@@ -161,6 +162,9 @@ Future<void> main() async {
         ),
         provider.ChangeNotifierProvider<RegimentViewModel>(
           create: (_) => RegimentViewModel(),
+        ),
+        provider.ChangeNotifierProvider<RTCEngineProvider>(
+          create: (_) => RTCEngineProvider(),
         ),
       ],
       child: MyFHB(),
