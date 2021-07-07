@@ -662,7 +662,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
             );
           }
         } else {
-          return new CircularProgressIndicator();
+          return new SizedBox.shrink();
         }
       },
     );

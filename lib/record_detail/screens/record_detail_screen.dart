@@ -20,7 +20,6 @@ import '../../common/CommonConstants.dart';
 import '../../common/CommonDialogBox.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/FHBBasicWidget.dart';
-import '../../common/PDFViewer.dart';
 import '../../common/PreferenceUtil.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/fhb_parameters.dart' as parameters;
@@ -47,13 +46,16 @@ import '../../src/ui/audio/audio_record_screen.dart';
 import '../../src/ui/imageSlider.dart';
 import '../../src/utils/FHBUtils.dart';
 import '../../widgets/GradientAppBar.dart';
-import 'package:open_file/open_file.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shimmer/shimmer.dart';
 
 export 'package:myfhb/my_family/models/relationship_response_list.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
 import '../../common/errors_widget.dart';
+import 'package:get/get.dart';
+import 'package:myfhb/telehealth/features/chat/view/PDFModel.dart';
+import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
+import 'package:myfhb/telehealth/features/chat/view/PDFView.dart';
 
 typedef OnError = void Function(Exception exception);
 
@@ -491,7 +493,26 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     if (ispdfPresent) {
       print('audioPath' + pdfFile);
       if (Platform.isIOS) {
-        await CommonUtil.downloadFile(pdfId.healthRecordUrl, pdfId.fileType);
+        final path = await CommonUtil.downloadFile(
+            pdfId.healthRecordUrl, pdfId.fileType);
+        Scaffold.of(contxt).showSnackBar(
+          SnackBar(
+            content: const Text(variable.strFileDownloaded),
+            backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+            action: SnackBarAction(
+              label: 'Open',
+              onPressed: () async {
+                final controller = Get.find<PDFViewController>();
+                final data = OpenPDF(
+                    type: PDFLocation.Path,
+                    path: path.path,
+                    title: widget.data.metadata.fileName);
+                controller.data = data;
+                Get.to(() => PDFView());
+              },
+            ),
+          ),
+        );
       } else {
         await ImageGallerySaver.saveFile(pdfFile).then((res) {
           setState(() {
@@ -508,18 +529,20 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           await CommonUtil.downloadFile(
                   _currentImage.healthRecordUrl, _currentImage.fileType)
               .then((filePath) async {
-            if (Platform.isAndroid) {
-              Scaffold.of(contxt).showSnackBar(SnackBar(
-                content: const Text(variable.strFileDownloaded),
-                backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-                action: SnackBarAction(
-                  label: 'Open',
-                  onPressed: () async {
-                    await OpenFile.open(filePath.path);
-                  },
-                ),
-              ));
-            }
+            Scaffold.of(contxt).showSnackBar(SnackBar(
+              content: const Text(variable.strFileDownloaded),
+              backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+              action: SnackBarAction(
+                label: 'Open',
+                onPressed: () async {
+                  final controller = Get.find<PDFViewController>();
+                  final data =
+                      OpenPDF(type: PDFLocation.Path, path: filePath.path);
+                  controller.data = data;
+                  Get.to(() => PDFView());
+                },
+              ),
+            ));
 
             /* GallerySaver.saveImage(filePath.path, albumName: 'myfhb')
                 .then((value) {
@@ -1290,11 +1313,14 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                         AssetImage(variable.icon_attach),
                                         color: Colors.white),
                                     onPressed: () {
-                                      Navigator.of(context)
-                                          .push(MaterialPageRoute(
-                                        builder: (context) => PDFViewer(pdfFile,
-                                            widget.data.metadata.fileName),
-                                      ));
+                                      final controller =
+                                          Get.find<PDFViewController>();
+                                      final data = OpenPDF(
+                                          type: PDFLocation.Path,
+                                          path: pdfFile,
+                                          title: widget.data.metadata.fileName);
+                                      controller.data = data;
+                                      Get.to(() => PDFView());
                                     },
                                   )
                                 ],
