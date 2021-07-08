@@ -11,6 +11,7 @@ import 'package:myfhb/my_family_detail_view/screens/my_family_detail_view.dart';
 import 'package:myfhb/my_providers/screens/my_provider.dart';
 import 'package:myfhb/plan_dashboard/view/diseasesHome.dart';
 import 'package:myfhb/plan_dashboard/view/plans_screen.dart';
+import 'package:myfhb/plan_wizard/view/plan_wizard_screen.dart';
 import 'package:myfhb/regiment/view/regiment_screen.dart';
 import 'package:myfhb/schedules/add_appointments.dart';
 import 'package:myfhb/schedules/add_reminders.dart';
@@ -21,6 +22,7 @@ import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/ui/SplashScreen.dart';
 import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
 import 'package:myfhb/src/ui/authentication/SignInScreen.dart';
+import 'package:myfhb/src/ui/bot/view/ChatScreen.dart';
 import 'package:myfhb/src/ui/camera/TakePictureScreen.dart';
 import 'package:myfhb/src/ui/camera/take_picture_screen_for_devices.dart';
 import 'package:myfhb/src/ui/devices_screen.dart';
@@ -30,7 +32,6 @@ import 'package:myfhb/telehealth/features/MyProvider/view/MyProvidersMain.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/video_call/pages/callmain.dart';
 import 'package:provider/provider.dart';
-import 'package:myfhb/src/ui/bot/view/ChatScreen.dart';
 
 import '../add_address/screens/add_address_screen.dart';
 import '../add_family_otp/screens/add_family_otp_screen.dart';
@@ -44,7 +45,9 @@ setRouter(List<CameraDescription> listOfCameras) async {
   var firstCamera = listOfCameras[0];
 
   var fhb_router = <String, WidgetBuilder>{
-    router.rt_Sheela: (BuildContext context) => ChatScreen(arguments: ModalRoute.of(context).settings.arguments,),
+    router.rt_Sheela: (BuildContext context) => ChatScreen(
+          arguments: ModalRoute.of(context).settings.arguments,
+        ),
     router.rt_Splash: (BuildContext context) => SplashScreen(),
     router.rt_SignIn: (BuildContext context) => SignInScreen(),
     router.rt_Dashboard: (BuildContext context) => DevicesScreen(),
@@ -109,7 +112,8 @@ setRouter(List<CameraDescription> listOfCameras) async {
     router.rt_CallMain: (BuildContext context) =>
         CallMain(arguments: ModalRoute.of(context).settings.arguments),
     router.rt_AudioScreen: (BuildContext context) =>
-        AudioRecordScreen(arguments: ModalRoute.of(context).settings.arguments)
+        AudioRecordScreen(arguments: ModalRoute.of(context).settings.arguments),
+    router.rt_PlanWizard: (BuildContext context) => PlanWizardScreen(),
   };
 
   return fhb_router;

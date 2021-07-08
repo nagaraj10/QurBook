@@ -41,6 +41,7 @@ const String rt_myApp = '/myApp';
 const String rt_ShowDevice = '/showDevice';
 const String rt_deviceDashboard = '/deviceDashboard';
 const String rt_Sheela = '/sheela';
+const String rt_PlanWizard = '/plan-wizard';
 
 const String cn_AddProvider = 'add_providers';
 

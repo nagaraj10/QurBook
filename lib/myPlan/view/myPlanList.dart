@@ -81,7 +81,9 @@ class _MyPlanState extends State<MyPlanList> {
       return Scaffold(
           floatingActionButton: FloatingActionButton(
             onPressed: () async {
-              await Get.toNamed(rt_Diseases);
+              //TODO: Uncomment for actual plans screen
+              // await Get.toNamed(rt_Diseases);
+              await Get.toNamed(rt_PlanWizard);
             },
             elevation: 2.0,
             backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
