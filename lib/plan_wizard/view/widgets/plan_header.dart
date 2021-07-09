@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class PlanHeader extends StatelessWidget {
@@ -15,17 +14,17 @@ class PlanHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 1.sw,
-      color: titleColor ?? Color(CommonUtil().getMyPrimaryColor()),
-      padding: EdgeInsets.symmetric(
-        horizontal: 10.0.w,
-        vertical: 10.0.h,
+      padding: EdgeInsets.only(
+        left: 10.0.w,
+        right: 10.0.w,
+        top: 10.0.h,
       ),
       child: Text(
         title,
         style: TextStyle(
-          color: Colors.white,
+          color: Colors.black,
           fontSize: 14.0.sp,
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.w600,
         ),
       ),
     );

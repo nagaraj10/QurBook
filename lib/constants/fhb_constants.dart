@@ -527,7 +527,9 @@ const String strDontPlan = 'Don\'t find your plan?';
 const String strDontDietPlan = 'Don\'t find your diet plan?';
 const String strSearchHealth = 'Search health condition';
 const String strPlanHospitalDiet = 'Search Plan or Hospital or Doctor';
-const String stSearchDietPlan = 'Search Diet Plan';
+const String strSearchDietPlan = 'Search Diet Plan';
+const String strLetsAdd = 'Let\'s add it';
+const String strTellToUs = 'Tell to us';
 
 const strUploading = 'Uploading...';
 const strSubscribe = 'Subscribe';

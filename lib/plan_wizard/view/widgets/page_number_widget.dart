@@ -5,10 +5,12 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 class PageNumberWidget extends StatelessWidget {
   const PageNumberWidget({
     this.isSelected = false,
+    this.isLastItem = false,
     this.pageNumber,
   });
 
   final bool isSelected;
+  final bool isLastItem;
   final String pageNumber;
 
   @override
@@ -42,14 +44,15 @@ class PageNumberWidget extends StatelessWidget {
             ),
           ), // inner content
         ),
-        Container(
-          width: 40.0.w,
-          height: 1.0.h,
-          color: Color(CommonUtil().getMyPrimaryColor()),
-          margin: EdgeInsets.symmetric(
-            horizontal: 5.0.w,
+        if (!isLastItem)
+          Container(
+            width: 40.0.w,
+            height: 1.0.h,
+            color: Color(CommonUtil().getMyPrimaryColor()),
+            margin: EdgeInsets.symmetric(
+              horizontal: 5.0.w,
+            ),
           ),
-        ),
       ],
     );
   }

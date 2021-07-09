@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:myfhb/myPlan/model/myPlanListModel.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
+import 'plan_card.dart';
 import 'plan_header.dart';
 
 class PlansGridView extends StatelessWidget {
@@ -13,7 +13,8 @@ class PlansGridView extends StatelessWidget {
 
   final String title;
   final Color titleColor;
-  final List<MyPlanListResult> planList;
+  //TODO: Replace with actual list type
+  final List<dynamic> planList;
 
   @override
   Widget build(BuildContext context) {
@@ -25,33 +26,14 @@ class PlansGridView extends StatelessWidget {
         ),
         GridView.builder(
           shrinkWrap: true,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
+          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: 140.0.w,
           ),
           physics: NeverScrollableScrollPhysics(),
-          itemCount: 10,
+          itemCount: planList?.length ?? 0,
           itemBuilder: (context, index) {
-            return Padding(
-              padding: EdgeInsets.all(10.0.sp),
-              child: Material(
-                borderRadius: BorderRadius.circular(
-                  20.0.sp,
-                ),
-                elevation: 5.0.sp,
-                color: Colors.white,
-                child: InkWell(
-                  onTap: () {},
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(
-                        20.0.sp,
-                      ),
-                    ),
-                    child: Center(child: Text('Plan $index')),
-                  ),
-                ),
-              ),
-            );
+            //TODO: Pass actual params
+            return PlanCard();
           },
         ),
       ],

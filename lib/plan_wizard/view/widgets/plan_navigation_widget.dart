@@ -12,20 +12,20 @@ class PlanNavigationWidget extends StatelessWidget {
     return Container(
       height: 70.0.h,
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Expanded(
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              shrinkWrap: true,
-              itemCount: 3,
-              itemBuilder: (ctxt, index) {
-                return PageNumberWidget(
-                  pageNumber: '${index + 1}',
-                  isSelected: index <=
-                      Provider.of<PlanWizardViewModel>(context).currentPage,
-                );
-              },
-            ),
+          ListView.builder(
+            scrollDirection: Axis.horizontal,
+            shrinkWrap: true,
+            itemCount: 3,
+            itemBuilder: (ctxt, index) {
+              return PageNumberWidget(
+                isLastItem: index == 2,
+                pageNumber: '${index + 1}',
+                isSelected: index <=
+                    Provider.of<PlanWizardViewModel>(context).currentPage,
+              );
+            },
           ),
           Container(
             margin: EdgeInsets.all(
