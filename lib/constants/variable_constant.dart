@@ -286,6 +286,7 @@ List<int> myGradient = [
 ];
 
 const String strSettings = 'Settings';
+const String strMyOrders = 'My Orders';
 const String strHelp = 'Help and support';
 const String strPrivacy = 'Privacy policy';
 const String strRateus = 'Rate us';

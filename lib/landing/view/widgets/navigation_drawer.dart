@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/Orders/View/OrdersView.dart';
 import 'package:myfhb/colors/fhb_colors.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
@@ -165,6 +167,19 @@ class NavigationDrawer extends StatelessWidget {
                                 refresh: refresh,
                               ),
                             ),
+                          );
+                        },
+                      ),
+                      DrawerTile(
+                        title: variable.strMyOrders,
+                        iconWidget: SvgPicture.asset(
+                          variable.icon_settings,
+                          color: Colors.black54,
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          Get.to(
+                            OrdersView(),
                           );
                         },
                       ),

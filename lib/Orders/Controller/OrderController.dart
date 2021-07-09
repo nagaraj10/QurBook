@@ -5,12 +5,6 @@ class OrderController extends GetController {
   var orders = [].obs;
   var isLoading = false.obs;
 
-  @override
-  onReady() {
-    getOrders();
-    super.onReady();
-  }
-
   getOrders() async {
     isLoading.value = true;
     await Future.delayed(
@@ -18,11 +12,14 @@ class OrderController extends GetController {
         seconds: 4,
       ),
     );
-    final plan = OrderPlan(title: 'Inital plan', price: '200');
+    final plan = OrderPlan(
+      title: 'Inital plan',
+      price: '200',
+    );
     final order = OrderModel(
       title: "Covid Care",
       description:
-          "This plan provides you the detail discription about the covid.",
+          'This plan provides you the detail discription about the covid.',
       purchaseDate: "08 July 2021",
       totalAmount: "2400",
       plans: [
