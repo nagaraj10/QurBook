@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:myfhb/IntroScreens/curves.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/variable_constant.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
 
 class IntroWidget extends StatelessWidget {
   String imageForScreen;
@@ -55,13 +53,13 @@ class IntroWidget extends StatelessWidget {
         return '150+ Personalized Health Care Plans \n from Trusted Doctors & Hospitals';
         break;
       case icon_SheelaIntro:
-        return 'Follow Your Prescribed Care Regime.\n Stay on Top of Health Risks.';
+        return 'Use Sheela G to Record Vitals, \nTrack Symptoms, and Disease Education';
         break;
       case icon_qurplanIntro:
         return 'One Call or Chat with Your Caregiver \n for all Medical Assistance';
         break;
       case icon_TrustedAnswerIntro:
-        return 'Use Sheela G to Record Vitals, \nTrack Symptoms, and Disease Education';
+        return 'Follow Your Prescribed Care Regime.\n Stay on Top of Health Risks.';
         break;
       case icon_ReminderIntro:
         return 'Get Peace of Mind & \nProtection for You & Your Family';

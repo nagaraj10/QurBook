@@ -27,6 +27,7 @@ const String KEY_CATEGORYID = 'categoryID';
 const String KEY_CATEGORYLIST = 'categoryList';
 const String KEY_PROFILE = 'profile';
 const String KEY_USERID = 'userID';
+const String KEY_LASTLOGGEDTIME = 'lastLoggedIn';
 const String KEY_AUTHTOKEN = 'authToken';
 const String KEY_FAMILYMEMBERID = 'familyMemberId';
 const String KEY_IDDOCSCATEGORYTYPE = 'idDocsCategoryType';
@@ -185,11 +186,11 @@ const String NO_DATA_OTHERS =
 const String COVER_IMG_DESC = 'Add style. \nTap here to add your favorite DP.';
 const String COVER_IMG_TITLE = 'Cover Image';
 const String HospitalDescription =
-    'Choose your Hospital and Tap to see the QurPlans offered by them';
+    'Choose your Hospital and Tap to see the care plan offered by them';
 const String SubscribeDescription =
-    'Tap on Subscribe button to enroll for the QurPlan and complete Payment Process';
+    'Tap on subscribe button to enroll for the care plan and complete Payment Process';
 const String MyPlanCard =
-    'View the list of QurPlans that you’ve Subscribed and Tap on the Plan name for more Details';
+    'View the list of care plans that you’ve subscribed and tap on the plan name for more Details';
 const String SubscribedPlans = 'Subscribed Plans';
 const String Subscribe = 'Subscribe';
 const String GoToRegimentDescription =
@@ -247,11 +248,13 @@ const String Family_Member_Added =
 const String VerifyEmail = 'Tap to verify Email address';
 const String otp_assets = 'assets/icons/otp_icon.png';
 const String planDownload = 'assets/icons/planDownload.png';
+const String sendIcon = 'assets/send.svg';
 
 const String enterFirstName = 'Enter First Name';
 const String enterLastName = 'Enter Last Name';
 const String selectGender = 'Select Gender';
 const String selectDOB = 'Select DOB';
+const String selectYOB = 'Select year of birth';
 const String selectRHType = 'Select Rh type';
 const String selectBloodGroup = 'Select Blood group';
 
@@ -355,6 +358,7 @@ const String CHAT = "Chats";
 
 const String KEY_FAMILYMEMBERNEW = 'familymembernew';
 const String CONSULTING = 'CONSULTING';
+const String CSR_DISCOUNT = 'CSR_DISCOUNT';
 const String HealthOrg = 'Health Organization';
 const String HEALTH_RECORDIDS = 'healthRecordIds';
 const String INR = 'INR ';
@@ -481,38 +485,39 @@ const strVideo = 'video';
 const strFiles = 'file';
 const strAudio = 'audio';
 
-const strYourQurplans = 'Your Care Plans';
-const strNoQurplans = 'Add your Care Plans to start your Regimen';
+const strYourQurplans = 'Care Plans';
+const strNoQurplans = 'Care Plans';
 const strPlansActive = ' Plans active';
-const strYourRegimen = 'Your Regimen';
-const strNoRegimen = 'Your Regimen';
-const strActivitiesDue = ' activities due today';
-const strLastEntered = 'Recent entry';
+const strYourRegimen = 'Regimen';
+const strNoPlansAdded = 'No plans added';
+const strActivitiesDue = ' missed activities today';
 const strVitals = 'Vitals';
-const strVitalsDevice = 'devices available';
+const strVitalsDevice = 'Devices available';
 const strVitalsNoDevice = 'No devices available';
 const strSymptomsCheckIn = 'Symptoms';
-const strYourFamily = 'Your Family';
+const strYourFamily = 'Family';
 const strNoFamily = 'No family members added';
-const strFamilyActive = 'family members';
-const strYourProviders = 'Your Providers';
+const strFamilyActive = 'Family members';
+const strYourProviders = 'Providers';
 const strNoProvider = 'No providers added';
-const strProviderActive = 'providers';
-const strHowVideos = 'How to use Videos?';
+const strProviderActive = 'Providers';
+const strHowVideos = 'Help';
 const strNoVideos = 'No videos available';
 const strVideosAvailable = 'videos available';
 const strChatWithUs = 'Chat with us';
 const strChatAvailable = ' is available';
 const strChatNotAvailable = 'No care provider assigned';
 const strMyDashboard = 'Dashboard';
-const String strSheelaG = 'Sheela G';
+const String strSheelaG = 'Sheela';
 const String strAppointment = 'Appointments';
 const String strNiceDay = 'Have a nice day';
 const String strRegimen = 'Regimen';
 const String strDevices = 'Devices';
-const String strPlans = 'Hospitals';
-const String strMyPlans = 'My QurPlans';
+const String strHospitals = 'Hospitals';
+const String strMyPlans = 'My Care Plans';
 const String strCarePlans = 'Care Plans';
+const String strHealthcon = 'Health Condition';
+const String strPlans = 'Plans';
 
 const strUploading = 'Uploading...';
 const strSubscribe = 'Subscribe';
@@ -539,6 +544,13 @@ const strCovidFree = 'Choose your FREE CARE PLANS';
 const strDiseasesImage = 'https://qurplan.com/assets/icons/diseases/';
 const strSVG = '.svg';
 const strAllPlans = 'All Plans';
+const String strSendInvite = 'Send Invite';
+const String strContactsLabel = 'Contacts';
+const String strSearchContacts = 'Search Contacts';
+const String strNoContactsSearchlbl =
+    'Looks like there is no contact in this name!!';
+const String strNoContactsLabel = 'Looks Like There are No Contacts!!!';
+const String strInviteErrorMsg = 'Invite sending failed. Please try again';
 
 FirebaseAnalytics _firebaseAnalytics = FirebaseAnalytics();
 var mInitialTime;

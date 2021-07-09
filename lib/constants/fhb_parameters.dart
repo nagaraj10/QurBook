@@ -100,6 +100,7 @@ const String strButtons = 'buttons';
 const String strVideoLinks = 'videoLinks';
 const String strPlatforType = 'device_type';
 const String strScreen = 'screen';
+const String strProviderMsg = 'provider_msg';
 const String strRedirect = 'redirect';
 const String strEnableMic = 'enable_mic';
 const String strDashboard = 'dashboard';
@@ -359,6 +360,7 @@ const String PROFILE_PH = 'assets/user/profile_pic_ph.png';
 const String PAYMENT_SUCCESS_MSG = 'Payment Successful';
 const String PAYMENT_FAILURE_MSG = 'Payment Failure';
 const String APPOINTMENT_CONFIRM = 'Your appointment is now confirmed';
+const String PLAN_CONFIRM = 'Your plan subscription is now confirmed';
 const String UNABLE_PROCESS = 'We unable to reach your process..';
 
 const String strSourceCode = 'sourceCode';
@@ -569,9 +571,10 @@ const String make_a_choice = 'Make a Choice!';
 
 // Video call
 const String GCMUserId = 'gcm.notification.userId';
-const String strgcmAppointmentId = "gcm.notification.appointmentId";
+const String strgcmAppointmentId = 'gcm.notification.appointmentId';
+const String gcmExternalLink = 'gcm.notification.externalLink';
 const String gcmredirectTo = 'gcm.notification.redirectTo';
-
+const String externalLink = 'externalLink';
 const String onresume = 'OnResume New';
 const String onlaunch = 'OnLaunch New';
 const String username = 'username';
@@ -584,6 +587,11 @@ const String alert = 'alert';
 const String title = 'title';
 const String body = 'body';
 const String sound = 'sound';
+const String PROP_EVEID = 'eventId';
+const String gcmEventId = 'gcm.notification.eventId';
+
+const String PROP_RAWTITLE = 'rawTitle';
+const String PROP_RAWBODY = 'rawBody';
 const String custom_sound = 'Custom_Sound';
 const String channel_id = 'channel id';
 const String channel_name = 'channel NAME';
@@ -617,6 +625,8 @@ const String warning = 'warning!';
 const String Yes = 'Yes';
 const String No = 'No';
 const String patientName = 'patientName';
+const String patientPicture = 'patientPicture';
+
 const String doctorName = 'doctorName';
 const String planName = 'planName';
 const String healthOrganizationName = 'healthOrganizationName';

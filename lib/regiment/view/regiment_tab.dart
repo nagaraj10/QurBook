@@ -22,6 +22,9 @@ import 'package:showcaseview/showcase_widget.dart';
 import 'widgets/regiment_data_card.dart';
 
 class RegimentTab extends StatefulWidget {
+  final String eventId;
+
+  RegimentTab({this.eventId});
   @override
   _RegimentTabState createState() => _RegimentTabState();
 }
@@ -63,10 +66,11 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
         .updateInitialShowIndex(
       index: Provider.of<RegimentViewModel>(context, listen: false)
                   .regimentFilter ==
-              RegimentFilter.Missed
+              RegimentFilter.Missed  && widget.eventId == null
           ? 0
           : null,
       isInitial: true,
+      eventId: widget?.eventId,
     );
     Provider.of<ChatScreenViewModel>(context, listen: false)?.updateAppState(
       true,

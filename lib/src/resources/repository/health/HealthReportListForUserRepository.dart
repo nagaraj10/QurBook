@@ -236,8 +236,15 @@ class HealthReportListForUserRepository {
     return HealthRecordSuccess.fromJson(response.data);
   }
 
-  Future<GetDeviceSelectionModel> getDeviceSelection() async {
-    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+  Future<GetDeviceSelectionModel> getDeviceSelection(
+      {String userIdFromBloc}) async {
+    var userId;
+    if (userIdFromBloc != null) {
+      userId = userIdFromBloc;
+    } else {
+      userId = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+    }
+
     final response = await _helper.getDeviceSelection(query.qr_user_profile +
         query.qr_user +
         query.qr_my_profile +

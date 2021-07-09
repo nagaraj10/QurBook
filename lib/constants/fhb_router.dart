@@ -30,6 +30,7 @@ import 'package:myfhb/telehealth/features/MyProvider/view/MyProvidersMain.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/video_call/pages/callmain.dart';
 import 'package:provider/provider.dart';
+import 'package:myfhb/src/ui/bot/view/ChatScreen.dart';
 
 import '../add_address/screens/add_address_screen.dart';
 import '../add_family_otp/screens/add_family_otp_screen.dart';
@@ -43,13 +44,15 @@ setRouter(List<CameraDescription> listOfCameras) async {
   var firstCamera = listOfCameras[0];
 
   var fhb_router = <String, WidgetBuilder>{
+    router.rt_Sheela: (BuildContext context) => ChatScreen(arguments: ModalRoute.of(context).settings.arguments,),
     router.rt_Splash: (BuildContext context) => SplashScreen(),
     router.rt_SignIn: (BuildContext context) => SignInScreen(),
     router.rt_Dashboard: (BuildContext context) => DevicesScreen(),
+    router.rt_Regimen: (BuildContext context) =>
+        RegimentScreen(aruguments: ModalRoute.of(context).settings.arguments),
     router.rt_Landing: (BuildContext context) => LandingScreen(
           landingArguments: ModalRoute.of(context).settings.arguments,
         ),
-    router.rt_Regimen: (BuildContext context) => RegimentScreen(),
     router.rt_MyPlans: (BuildContext context) => MyPlansScreen(),
     router.rt_Plans: (BuildContext context) => PlansScreen(),
     router.rt_Diseases: (BuildContext context) => DiseasesScreen(),

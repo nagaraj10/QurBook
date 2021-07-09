@@ -1,17 +1,23 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:launch_review/launch_review.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/regiment/models/regiment_arguments.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/ui/SplashScreen.dart';
 import 'package:myfhb/src/ui/bot/SuperMaya.dart';
+import 'package:myfhb/src/ui/bot/view/ChatScreen.dart' as bot;
+import 'package:myfhb/src/ui/bot/view/sheela_arguments.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
+import 'package:myfhb/telehealth/features/chat/view/chat.dart';
 import 'package:myfhb/telehealth/features/chat/view/home.dart';
 import 'package:myfhb/video_call/model/NotificationModel.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
@@ -28,6 +34,14 @@ class IosNotificationHandler {
       if (call.method == variable.notificationResponseMethod) {
         final data = Map<String, dynamic>.from(call.arguments);
         model = NotificationModel.fromMap(data);
+        if (model.externalLink != null) {
+          if (model.externalLink == variable.iOSAppStoreLink) {
+            LaunchReview.launch(
+                iOSAppId: variable.iOSAppId, writeReview: false);
+          } else {
+            CommonUtil().launchURL(model.externalLink);
+          }
+        }
         if (!isAlreadyLoaded) {
           Future.delayed(const Duration(seconds: 4), actionForTheNotification);
         } else {
@@ -100,22 +114,81 @@ class IosNotificationHandler {
             ));
       ;
     } else if (model.redirect == parameters.chat) {
-      isAlreadyLoaded
-          ? Get.to(ChatHomeScreen())
-          : Get.to(SplashScreen(
-              nsRoute: parameters.chat,
-            ));
+      if (isAlreadyLoaded) {
+        if (model.doctorId != null &&
+            model.doctorName != null &&
+            model.doctorPicture != null &&
+            model.patientId != null &&
+            model.patientName != null &&
+            model.patientPicture != null) {
+          Get.to(Chat(
+            peerId: model.doctorId,
+            peerName: model.doctorName,
+            peerAvatar: model.doctorPicture,
+            patientId: model.patientId,
+            patientName: model.patientName,
+            patientPicture: model.patientPicture,
+            isFromVideoCall: false,
+          ));
+        } else {
+          Get.to(ChatHomeScreen());
+        }
+      } else {
+        Get.to(SplashScreen(
+          nsRoute: parameters.chat,
+        ));
+      }
     } else if (model.redirect == 'sheela') {
       fbaLog(eveParams: {
         'eventTime': '${DateTime.now()}',
         'ns_type': 'sheela',
         'navigationPage': 'Sheela Start Page',
       });
-      isAlreadyLoaded
-          ? Get.to(SuperMaya())
-          : Get.to(SplashScreen(
-              nsRoute: 'sheela',
-            ));
+      if (isAlreadyLoaded) {
+        if (model.rawBody != null) {
+          String sheela_lang = PreferenceUtil.getStringValue(SHEELA_LANG);
+          if (sheela_lang != null && sheela_lang != '') {
+            Get.toNamed(
+              rt_Sheela,
+              arguments: SheelaArgument(
+                isSheelaAskForLang: false,
+                langCode: sheela_lang,
+                rawMessage: model.rawBody,
+              ),
+            );
+            /*  Get.to(bot.ChatScreen(
+              arguments: SheelaArgument(
+                isSheelaAskForLang: false,
+                langCode: sheela_lang,
+                rawMessage: model.rawBody,
+              ),
+            )); */
+          } else {
+            Get.toNamed(
+              rt_Sheela,
+              arguments: SheelaArgument(
+                isSheelaAskForLang: true,
+                rawMessage: model.rawBody,
+              ),
+            );
+
+            /* Get.to(bot.ChatScreen(
+              arguments: SheelaArgument(
+                isSheelaAskForLang: true,
+                rawMessage: model.rawBody,
+              ),
+            )); */
+          }
+        } else {
+          Get.to(SplashScreen(
+            nsRoute: 'sheela',
+          ));
+        }
+      } else {
+        Get.to(SplashScreen(
+          nsRoute: 'sheela',
+        ));
+      }
     } else if ((model.redirect == 'profile_page') ||
         (model.redirect == 'profile')) {
       fbaLog(eveParams: {
@@ -205,11 +278,20 @@ class IosNotificationHandler {
         'ns_type': 'regiment_screen',
         'navigationPage': 'Regimen Screen',
       });
-      isAlreadyLoaded
-          ? Get.toNamed(router.rt_Regimen)
-          : Get.to(SplashScreen(
-              nsRoute: 'regiment_screen',
-            ));
+      if (isAlreadyLoaded) {
+        if (model.eventId != null) {
+          Get.toNamed(router.rt_Regimen,
+              arguments: RegimentArguments(eventId: model.eventId));
+        } else {
+          Get.to(SplashScreen(
+            nsRoute: 'regiment_screen',
+          ));
+        }
+      } else {
+        Get.to(SplashScreen(
+          nsRoute: 'regiment_screen',
+        ));
+      }
     } else if (model.redirect == 'dashboard') {
       fbaLog(eveParams: {
         'eventTime': '${DateTime.now()}',

@@ -94,12 +94,14 @@ class ChatScreenViewModel extends ChangeNotifier {
     user_id = PreferenceUtil.getStringValue(constants.KEY_USERID);
   }
 
-  startMayaAutomatically() {
+  startMayaAutomatically({String message}) {
     isLoading = true;
     notifyListeners();
     Future.delayed(Duration(seconds: 1), () {
       _screen = parameters.strSheela;
-      sendToMaya(variable.strhiMaya, screen: _screen);
+      sendToMaya(
+          (message != null && message.isNotEmpty) ? '/provider_message' : variable.strhiMaya,
+          screen: _screen, providerMsg: (message != null && message.isNotEmpty) ? message : null);
     });
 
     // var date = new FHBUtils().getFormattedDateString(DateTime.now().toString());
@@ -177,7 +179,6 @@ class ChatScreenViewModel extends ChangeNotifier {
     bool isButtonText: false,
     Function onStop,
   }) async {
-    print('newAudioPlay1.state == ${newAudioPlay1.state}');
     if (stopPrevious) {
       stopTTSEngine();
     }
@@ -372,10 +373,10 @@ class ChatScreenViewModel extends ChangeNotifier {
     }
   }
 
-  askUserForLanguage() {
+  askUserForLanguage({String message}) {
     Future.delayed(Duration(seconds: 1), () {
       _screen = parameters.strSheela;
-      sendToMaya(variable.strhiMaya, screen: _screen);
+      sendToMaya( (message != null && message.isNotEmpty) ? '/provider_message' : variable.strhiMaya, screen: _screen, providerMsg: (message != null && message.isNotEmpty) ? message : null);
     });
 
     // var date = new FHBUtils().getFormattedDateString(DateTime.now().toString());
@@ -393,7 +394,7 @@ class ChatScreenViewModel extends ChangeNotifier {
     // notifyListeners();
   }
 
-  sendToMaya(String msg, {String screen}) async {
+  sendToMaya(String msg, {String screen, String providerMsg}) async {
     prof = await PreferenceUtil.getProfileData(constants.KEY_PROFILE);
     user_name = prof.result != null
         ? prof.result.firstName + ' ' + prof.result.lastName
@@ -416,6 +417,7 @@ class ChatScreenViewModel extends ChangeNotifier {
 
     reqJson[parameters.strPlatforType] = Platform.isAndroid ? 'android' : 'ios';
     reqJson[parameters.strScreen] = screen;
+    reqJson[parameters.strProviderMsg] = providerMsg;
     screenValue = screen;
     isLoading = true;
 
@@ -429,7 +431,8 @@ class ChatScreenViewModel extends ChangeNotifier {
         List<dynamic> list = jsonResponse;
         if (list.length > 0) {
           SpeechModelResponse res = SpeechModelResponse.fromJson(list[0]);
-          isEndOfConv = res.endOfConv;
+          if((conversations?.length ?? 0) == 0 || (conversations?.length > 0 && (res?.text ?? '') != conversations[conversations?.length-1].text)){
+            isEndOfConv = res.endOfConv;
           isRedirect = res.redirect;
           PreferenceUtil.saveString(constants.SHEELA_LANG, res.lang);
           var date =
@@ -585,6 +588,10 @@ class ChatScreenViewModel extends ChangeNotifier {
               }
             }
           });
+          }else{
+            isLoading = false;
+            notifyListeners();
+          }
           return jsonResponse;
         }
       }
@@ -690,9 +697,7 @@ class ChatScreenViewModel extends ChangeNotifier {
                 } else {
                   audioPlayerForTTS.play(path, isLocal: true);
                 }
-                print('Check delayTime - $delayTime');
                 await Future.delayed(Duration(milliseconds: 500), () async {
-                  print('Check delayTime - new $delayTime');
                   await Future.delayed(
                       Duration(
                         milliseconds: delayTime > 0 ? delayTime : 0,
@@ -722,7 +727,6 @@ class ChatScreenViewModel extends ChangeNotifier {
 
   Future<bool> setTimeDuration(AudioPlayer audioPlayer) async {
     delayTime = await audioPlayer.duration.inMilliseconds;
-    print('delayTime - $delayTime');
   }
 
   stopAudioPlayer() {

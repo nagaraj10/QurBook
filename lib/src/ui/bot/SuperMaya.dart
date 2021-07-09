@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
@@ -7,7 +8,9 @@ import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/src/ui/bot/view/sheela_arguments.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/widgets/RaisedGradientButton.dart';
@@ -175,26 +178,44 @@ class _SuperMayaState extends State<SuperMaya> {
                                             Constants.SHEELA_LANG);
                                     if (sheela_lang != null &&
                                         sheela_lang != '') {
-                                      Navigator.of(context).push(
+                                      Get.toNamed(
+                                        rt_Sheela,
+                                        arguments: SheelaArgument(
+                                          isSheelaAskForLang: false,
+                                          langCode: sheela_lang,
+                                        ),
+                                      );
+                                      /*  Navigator.of(context).push(
                                         MaterialPageRoute(
                                           builder: (context) {
                                             return ChatScreen(
-                                              isSheelaAskForLang: false,
-                                              langCode: sheela_lang,
+                                              arguments: SheelaArgument(
+                                                isSheelaAskForLang: false,
+                                                langCode: sheela_lang,
+                                              ),
                                             );
                                           },
                                         ),
-                                      );
+                                      ); */
                                     } else {
-                                      Navigator.of(context).push(
+                                      Get.toNamed(
+                                        rt_Sheela,
+                                        arguments: SheelaArgument(
+                                          isSheelaAskForLang: true,
+                                        ),
+                                      );
+
+                                      /* Navigator.of(context).push(
                                         MaterialPageRoute(
                                           builder: (context) {
                                             return ChatScreen(
-                                              isSheelaAskForLang: true,
+                                              arguments: SheelaArgument(
+                                                isSheelaAskForLang: true,
+                                              ),
                                             );
                                           },
                                         ),
-                                      );
+                                      ); */
                                     }
 
                                     /* requestPermission(_micpermission)

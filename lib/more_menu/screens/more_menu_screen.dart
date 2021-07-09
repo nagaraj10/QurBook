@@ -28,7 +28,7 @@ import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MoreMenuScreen extends StatefulWidget {
-  final Function refresh;
+  final Function(bool userChanged) refresh;
 
   MoreMenuScreen({this.refresh});
 
@@ -87,7 +87,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   void initState() {
     mInitialTime = DateTime.now();
     //getProfileImage();
-    getAppColorValues();
+    //getAppColorValues();
     PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
       version = packageInfo.version;
     });
@@ -247,7 +247,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
               ),
             ).then((value) {
               if (value) {
-                getAppColorValues();
+                setState(() {});
               }
             });
             //PageNavigator.goTo(context, router.rt_AppSettings);
@@ -447,7 +447,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                               HomeScreen.of(context)?.refresh();
                               LandingScreen.of(context)?.refresh();
                               if (widget.refresh != null) {
-                                widget.refresh();
+                                widget.refresh(false);
                               }
 
                               setState(() {});
@@ -521,89 +521,80 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   }
 
   setValues(GetDeviceSelectionModel getDeviceSelectionModel) {
-    setState(() {
-      preColor = getDeviceSelectionModel.result[0].profileSetting.preColor;
-      greColor = getDeviceSelectionModel.result[0].profileSetting.greColor;
+    preColor = getDeviceSelectionModel.result[0].profileSetting.preColor;
+    greColor = getDeviceSelectionModel.result[0].profileSetting.greColor;
 
-      _isdeviceRecognition = getDeviceSelectionModel
-                      .result[0].profileSetting.allowDevice !=
-                  null &&
-              getDeviceSelectionModel.result[0].profileSetting.allowDevice != ''
-          ? getDeviceSelectionModel.result[0].profileSetting.allowDevice
-          : true;
-      _isdigitRecognition =
-          getDeviceSelectionModel.result[0].profileSetting.allowDigit != null &&
-                  getDeviceSelectionModel.result[0].profileSetting.allowDigit !=
-                      ''
-              ? getDeviceSelectionModel.result[0].profileSetting.allowDigit
-              : true;
-      _isGFActive =
-          getDeviceSelectionModel.result[0].profileSetting.googleFit != null &&
-                  getDeviceSelectionModel.result[0].profileSetting.googleFit !=
-                      ''
-              ? getDeviceSelectionModel.result[0].profileSetting.googleFit
-              : false;
-      _isHKActive =
-          getDeviceSelectionModel.result[0].profileSetting.healthFit != null &&
-                  getDeviceSelectionModel.result[0].profileSetting.healthFit !=
-                      ''
-              ? getDeviceSelectionModel.result[0].profileSetting.healthFit
-              : false;
-      _isBPActive =
-          getDeviceSelectionModel.result[0].profileSetting.bpMonitor != null &&
-                  getDeviceSelectionModel.result[0].profileSetting.bpMonitor !=
-                      ''
-              ? getDeviceSelectionModel.result[0].profileSetting.bpMonitor
-              : true;
-      _isGLActive =
-          getDeviceSelectionModel.result[0].profileSetting.glucoMeter != null &&
-                  getDeviceSelectionModel.result[0].profileSetting.glucoMeter !=
-                      ''
-              ? getDeviceSelectionModel.result[0].profileSetting.glucoMeter
-              : true;
-      _isOxyActive = getDeviceSelectionModel
-                      .result[0].profileSetting.pulseOximeter !=
-                  null &&
-              getDeviceSelectionModel.result[0].profileSetting.pulseOximeter !=
-                  ''
-          ? getDeviceSelectionModel.result[0].profileSetting.pulseOximeter
-          : true;
-      _isWSActive =
-          getDeviceSelectionModel.result[0].profileSetting.weighScale != null &&
-                  getDeviceSelectionModel.result[0].profileSetting.weighScale !=
-                      ''
-              ? getDeviceSelectionModel.result[0].profileSetting.weighScale
-              : true;
-      _isTHActive = getDeviceSelectionModel
-                      .result[0].profileSetting.thermoMeter !=
-                  null &&
-              getDeviceSelectionModel.result[0].profileSetting.thermoMeter != ''
-          ? getDeviceSelectionModel.result[0].profileSetting.thermoMeter
-          : true;
+    _isdeviceRecognition =
+        getDeviceSelectionModel.result[0].profileSetting.allowDevice != null &&
+                getDeviceSelectionModel.result[0].profileSetting.allowDevice !=
+                    ''
+            ? getDeviceSelectionModel.result[0].profileSetting.allowDevice
+            : true;
+    _isdigitRecognition =
+        getDeviceSelectionModel.result[0].profileSetting.allowDigit != null &&
+                getDeviceSelectionModel.result[0].profileSetting.allowDigit !=
+                    ''
+            ? getDeviceSelectionModel.result[0].profileSetting.allowDigit
+            : true;
+    _isGFActive =
+        getDeviceSelectionModel.result[0].profileSetting.googleFit != null &&
+                getDeviceSelectionModel.result[0].profileSetting.googleFit != ''
+            ? getDeviceSelectionModel.result[0].profileSetting.googleFit
+            : false;
+    _isHKActive =
+        getDeviceSelectionModel.result[0].profileSetting.healthFit != null &&
+                getDeviceSelectionModel.result[0].profileSetting.healthFit != ''
+            ? getDeviceSelectionModel.result[0].profileSetting.healthFit
+            : false;
+    _isBPActive =
+        getDeviceSelectionModel.result[0].profileSetting.bpMonitor != null &&
+                getDeviceSelectionModel.result[0].profileSetting.bpMonitor != ''
+            ? getDeviceSelectionModel.result[0].profileSetting.bpMonitor
+            : true;
+    _isGLActive = getDeviceSelectionModel.result[0].profileSetting.glucoMeter !=
+                null &&
+            getDeviceSelectionModel.result[0].profileSetting.glucoMeter != ''
+        ? getDeviceSelectionModel.result[0].profileSetting.glucoMeter
+        : true;
+    _isOxyActive = getDeviceSelectionModel
+                    .result[0].profileSetting.pulseOximeter !=
+                null &&
+            getDeviceSelectionModel.result[0].profileSetting.pulseOximeter != ''
+        ? getDeviceSelectionModel.result[0].profileSetting.pulseOximeter
+        : true;
+    _isWSActive = getDeviceSelectionModel.result[0].profileSetting.weighScale !=
+                null &&
+            getDeviceSelectionModel.result[0].profileSetting.weighScale != ''
+        ? getDeviceSelectionModel.result[0].profileSetting.weighScale
+        : true;
+    _isTHActive =
+        getDeviceSelectionModel.result[0].profileSetting.thermoMeter != null &&
+                getDeviceSelectionModel.result[0].profileSetting.thermoMeter !=
+                    ''
+            ? getDeviceSelectionModel.result[0].profileSetting.thermoMeter
+            : true;
 
-      preferred_language = getDeviceSelectionModel
-                      .result[0].profileSetting.preferred_language !=
-                  null &&
-              getDeviceSelectionModel
-                      .result[0].profileSetting.preferred_language !=
-                  ''
-          ? getDeviceSelectionModel.result[0].profileSetting.preferred_language
-          : 'undef';
+    preferred_language = getDeviceSelectionModel
+                    .result[0].profileSetting.preferred_language !=
+                null &&
+            getDeviceSelectionModel
+                    .result[0].profileSetting.preferred_language !=
+                ''
+        ? getDeviceSelectionModel.result[0].profileSetting.preferred_language
+        : 'undef';
 
-      qa_subscription =
-          getDeviceSelectionModel.result[0].profileSetting.qa_subscription !=
-                      null &&
-                  getDeviceSelectionModel
-                          .result[0].profileSetting.qa_subscription !=
-                      ''
-              ? getDeviceSelectionModel.result[0].profileSetting.qa_subscription
-              : 'Y';
+    qa_subscription = getDeviceSelectionModel
+                    .result[0].profileSetting.qa_subscription !=
+                null &&
+            getDeviceSelectionModel.result[0].profileSetting.qa_subscription !=
+                ''
+        ? getDeviceSelectionModel.result[0].profileSetting.qa_subscription
+        : 'Y';
 
-      selectedPrimaryColor =
-          PreferenceUtil.getSavedTheme(Constants.keyPriColor) != null
-              ? PreferenceUtil.getSavedTheme(Constants.keyPriColor)
-              : preColor;
-    });
+    selectedPrimaryColor =
+        PreferenceUtil.getSavedTheme(Constants.keyPriColor) != null
+            ? PreferenceUtil.getSavedTheme(Constants.keyPriColor)
+            : preColor;
   }
 
   Future<CreateDeviceSelectionModel> createAppColorSelection(
@@ -668,6 +659,25 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   Widget getValuesFromSharedPrefernce() {
     return new FutureBuilder<MyProfileModel>(
       future: getMyProfile(),
+      builder: (BuildContext context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return new Center(
+            child: new CircularProgressIndicator(
+              backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return ErrorsWidget();
+        } else {
+          return getAppColorsAndDeviceValues();
+        }
+      },
+    );
+  }
+
+  Widget getAppColorsAndDeviceValues() {
+    return new FutureBuilder<GetDeviceSelectionModel>(
+      future: getAppColorValues(),
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return new Center(

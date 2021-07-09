@@ -7,6 +7,8 @@ const String strAppPackage =
     'com.ventechsolutions.myFHB'; //'com.globalmantrainnovations.myfhb';
 const String strHealthRecordChannel = 'Health Record channel';
 const String iOSAppId = '1526444520';
+const String iOSAppStoreLink =
+    'https://apps.apple.com/in/app/qurbook/id1526444520';
 //For class add_family_otp
 //web service call
 const String strSrcName = 'sourceName';
@@ -81,6 +83,7 @@ const String enterFirstName = 'Enter First Name';
 const String enterLastName = 'Enter Last Name';
 const String selectGender = 'Select Gender';
 const String selectDOB = 'Select DOB';
+const String selectYOB = 'Select year of birth';
 const String selectRHType = 'Select Rh type';
 const String selectBloodGroup = 'Select Blood group';
 
@@ -184,6 +187,7 @@ const String icon_how_to_use = 'assets/dashboard/how-to-use.svg';
 const String icon_my_family = 'assets/dashboard/my-family.svg';
 const String icon_my_family_menu = 'assets/dashboard/my-family-old.svg';
 const String icon_my_health_regimen = 'assets/dashboard/my-health-regimen.svg';
+const String icon_refer_friend_icon = 'assets/icons/refer_a_friend.png';
 // const String icon_check_symptoms = 'assets/dashboard/symptoms.svg';
 // const String icon_how_to_use = 'assets/dashboard/information.svg';
 // const String icon_my_family = 'assets/dashboard/home.svg';
@@ -285,8 +289,8 @@ const String strSettings = 'Settings';
 const String strHelp = 'Help and support';
 const String strPrivacy = 'Privacy policy';
 const String strRateus = 'Rate us';
-const String strMaya = 'Sheela G';
-const String strMAYA = 'SHEELA G';
+const String strMaya = 'Sheela';
+const String strMAYA = 'SHEELA';
 
 const String strColorPalete = 'Color palette';
 
@@ -472,7 +476,7 @@ const security = const MethodChannel('flutter.native/security');
 const String strWaitLoading = 'wait! Its loading';
 
 const String _wordsFromMaya = 'waiting for maya to speak';
-const String strhiMaya = 'Hi Sheela G';
+const String strhiMaya = 'Hi Sheela';
 const String strtts = 'textToSpeech';
 const String strtapToSpeak = 'Tap to Speak';
 const String requestSheelaForbp = 'record my bp';
@@ -483,7 +487,7 @@ const String requestSheelaForweight = 'record my weight';
 const String strspeakAssistant = 'speakWithVoiceAssistant';
 const String strdevice = 'device';
 
-const String strIntromaya = 'Hi, I am Sheela G your voice health assistant.';
+const String strIntromaya = 'Hi, I am Sheela your voice health assistant.';
 const String strTapMaya = 'Tap me and invoke. Lets converse';
 const String strpdf = 'pdf';
 const String strCropper = 'Cropper';
@@ -581,10 +585,13 @@ const String st_pausedplayer = 'paused player';
 const String strNoData = 'No data Available';
 const String strViewPDF = 'View PDF';
 const String strLogout = 'Logout';
+const String strRefer_friend = 'Refer a Friend';
 const String strLogoutMsg =
     'Stay Healthy.. See you Soon. \nSheela will be waiting to serve you.';
 const String strYes = 'Yes';
 const String strRelaoding = 'Reloading';
+const String strSwitchingUser = 'Switching User';
+
 const String strStartNow = 'Start now';
 const String strAccounts = 'Accounts';
 const String strDevices = 'Devices';

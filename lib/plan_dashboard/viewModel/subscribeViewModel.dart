@@ -4,20 +4,20 @@ import 'package:myfhb/myPlan/model/myPlanDetailModel.dart';
 import 'package:myfhb/myPlan/model/myPlanListModel.dart';
 import 'package:myfhb/myPlan/services/myPlanService.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/plan_dashboard/model/CreateSubscribeModel.dart';
 import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
 import 'package:myfhb/plan_dashboard/model/subscribeModel.dart';
 import 'package:myfhb/plan_dashboard/services/planService.dart';
 import 'package:myfhb/plan_dashboard/services/subscribeService.dart';
 
 class SubscribeViewModel extends ChangeNotifier {
-
   SubscribeService myPlanService = new SubscribeService();
 
   Future<SubscribeModel> subScribePlan(String packageId) async {
     var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     try {
       SubscribeModel myPlanListModel =
-      await myPlanService.subscribePlan(packageId,userid);
+          await myPlanService.subscribePlan(packageId, userid);
       return myPlanListModel;
     } catch (e) {}
   }
@@ -26,9 +26,17 @@ class SubscribeViewModel extends ChangeNotifier {
     var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     try {
       SubscribeModel myPlanListModel =
-      await myPlanService.UnsubscribePlan(packageId,userid);
+          await myPlanService.UnsubscribePlan(packageId, userid);
       return myPlanListModel;
     } catch (e) {}
   }
 
+  Future<CreateSubscribeModel> createSubscribePayment(String packageId) async {
+    var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    try {
+      CreateSubscribeModel createSubscribeModel =
+          await myPlanService.createSubscribe(packageId, userid);
+      return createSubscribeModel;
+    } catch (e) {}
+  }
 }

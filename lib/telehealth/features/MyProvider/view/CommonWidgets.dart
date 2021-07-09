@@ -503,11 +503,12 @@ class CommonWidgets {
   }
 
   Widget getProfilePicWidget(Doctors docs) {
-    return docs.user.profilePicThumbnailUrl != null
+    return docs?.user?.profilePicThumbnailUrl != null
         ? Image.network(docs.user.profilePicThumbnailUrl,
             height: 40.0.h,
             width: 40.0.h,
-            fit: BoxFit.cover, errorBuilder: (BuildContext context,
+            fit: BoxFit.cover,
+        errorBuilder: (BuildContext context,
                 Object exception, StackTrace stackTrace) {
             return Container(
               height: 40.0.h,
@@ -1361,12 +1362,22 @@ class CommonWidgets {
   }
 
   Widget getFirstLastNameText(Doctors myProfile) {
+
+    String fullName="";
+    String firstName="";
+    String lastName="";
+    if(myProfile.user != null && myProfile.user.firstName != null && myProfile.user.firstName !=""){
+      firstName=myProfile.user.firstName;
+    }
+    if(myProfile.user != null && myProfile.user.lastName != null && myProfile.user.lastName !=""){
+      lastName=myProfile.user.lastName;
+    }
     if (myProfile.user != null &&
         myProfile.user.firstName != null &&
-        myProfile.user.lastName != null) {
+        myProfile.user.lastName != null && myProfile.user.firstName != "" && myProfile.user.lastName != "") {
       return Text(
-        myProfile.user.firstName[0].toUpperCase() +
-            myProfile.user.lastName[0].toUpperCase(),
+        firstName[0].toUpperCase() +
+            lastName[0].toUpperCase(),
         style: TextStyle(
           color: Color(new CommonUtil().getMyPrimaryColor()),
           fontSize: 16.0.sp,

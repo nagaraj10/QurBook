@@ -5,6 +5,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart';
+import 'package:myfhb/regiment/models/regiment_arguments.dart';
 import 'package:myfhb/landing/view/landing_arguments.dart';
 import 'package:myfhb/regiment/view/regiment_tab.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
@@ -13,6 +14,10 @@ import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
 
 class RegimentScreen extends StatelessWidget {
+
+  final RegimentArguments aruguments;
+
+  RegimentScreen({this.aruguments});
   final GlobalKey<State> _key = GlobalKey<State>();
 
   @override
@@ -49,7 +54,7 @@ class RegimentScreen extends StatelessWidget {
           onBackPressed(context);
           return Future.value(false);
         },
-        child: RegimentTab(),
+        child: RegimentTab(eventId: aruguments?.eventId,),
       ),
     );
   }

@@ -5,8 +5,8 @@ class PageNavigator {
     Navigator.pushNamed(context, route);
   }
 
-  static void goToPermanent(BuildContext context, route) {
+  static void goToPermanent(BuildContext context, route,{dynamic arguments}) {
     Navigator.of(context)
-        .pushNamedAndRemoveUntil(route, (Route<dynamic> route) => false);
+        .pushNamedAndRemoveUntil(route, (Route<dynamic> route) => false,arguments: arguments);
   }
 }

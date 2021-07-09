@@ -35,6 +35,7 @@ class ResheduleAppointments extends StatefulWidget {
   Past doc;
   bool isFromNotification;
   bool isReshedule;
+  bool isFromFollowUpApp;
   Function(String) closePage;
   dynamic body;
 
@@ -43,6 +44,7 @@ class ResheduleAppointments extends StatefulWidget {
       this.isReshedule,
       this.closePage,
       this.isFromNotification,
+      this.isFromFollowUpApp,
       this.body});
 
   @override
@@ -432,8 +434,8 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                                   .getMoneyWithForamt(widget.isReshedule
                                       ? 0.toString()
                                       : widget.doc.isFollowUpTaken == true
-                                          ? getFees(eachHospitalModel[i])
-                                          : followUpFee(eachHospitalModel[i])),
+                                          ? followUpFee(eachHospitalModel[i])
+                                          : getFees(eachHospitalModel[i], false)),
 //                                  widget.doc.plannedFollowupDate == null
 //                                          ? getFees(eachHospitalModel[i])
 //                                          : widget.doc.doctorFollowUpFee != null
@@ -444,11 +446,45 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                           colors: Color(new CommonUtil().getMyPrimaryColor())),
                     ),
                   ),
+                  SizedBox(height: 5),
+                  widget.isReshedule || widget.isFromFollowUpApp
+                      ? SizedBox.shrink()
+                      : getCSRDiscount(getFees(eachHospitalModel[i], true))
                 ],
               ),
             )),
       ],
     );
+  }
+
+  Widget getCSRDiscount(String fees) {
+    Widget widget;
+    if (fees != null && fees != '') {
+      if (fees != '0.00' && fees != '0') {
+        try {
+          fees = new CommonUtil()
+              .doubleWithoutDecimalToInt(double.parse(fees))
+              .toString();
+        } catch (e) {
+          widget = SizedBox.shrink();
+        }
+        widget = Container(
+          child: Center(
+            child: Text('Discount ' + fees + '%',
+                style: TextStyle(
+                    fontSize: 16.0.sp,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.red),
+                textAlign: TextAlign.center),
+          ),
+        );
+      } else {
+        widget = SizedBox.shrink();
+      }
+    } else {
+      widget = SizedBox.shrink();
+    }
+    return widget;
   }
 
   String followUpFee(value) {
@@ -461,10 +497,10 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
             0) {
           return widget.doc.doctorFollowUpFee;
         } else {
-          return getFees(value);
+          return getFees(value, false);
         }
       } else if (widget.doc?.plannedFollowupDate == null) {
-        return getFees(value);
+        return getFees(value, false);
       } else {
         if (DateTime.now()
                 .difference(DateTime.parse(widget.doc.plannedFollowupDate))
@@ -472,23 +508,29 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
             0) {
           return widget.doc.doctorFollowUpFee;
         } else {
-          return getFees(value);
+          return getFees(value, false);
         }
       }
     } else {
-      return getFees(value);
+      return getFees(value, false);
     }
   }
 
-  String getFees(HealthOrganizationResult result) {
+  String getFees(HealthOrganizationResult result, bool isCSRDiscount) {
     String fees;
     if (result.doctorFeeCollection != null) {
       if (result.doctorFeeCollection.length > 0) {
         for (int i = 0; i < result.doctorFeeCollection.length; i++) {
           String feesCode = result.doctorFeeCollection[i].feeType.code;
           bool isActive = result.doctorFeeCollection[i].isActive;
-          if (feesCode == CONSULTING && isActive == true) {
-            fees = result.doctorFeeCollection[i].fee;
+          if (isCSRDiscount) {
+            if (feesCode == CSR_DISCOUNT && isActive == true) {
+              fees = result?.doctorFeeCollection[i]?.fee;
+            }
+          } else {
+            if (feesCode == CONSULTING && isActive == true) {
+              fees = result?.doctorFeeCollection[i]?.fee;
+            }
           }
         }
       } else {

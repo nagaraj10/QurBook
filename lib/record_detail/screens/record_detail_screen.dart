@@ -598,7 +598,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           Navigator.of(context).pop();
           toast.getToast(
               isDeviceReadings
-                  ? 'Record deleted successfully. Latest record added through Sheela G can be updated/deleted through Sheela G itself'
+                  ? 'Record deleted successfully. Latest record added through Sheela can be updated/deleted through Sheela itself'
                   : 'Record Deleted Successfully',
               Colors.green);
         });

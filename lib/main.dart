@@ -2,9 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io' show Platform;
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myfhb/IntroScreens/IntroductionScreen.dart';
+import 'package:myfhb/regiment/models/regiment_arguments.dart';
 //import 'package:myfhb/QurPlan/WelcomeScreens/qurplan_welcome_screen.dart';
 // import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
@@ -29,11 +31,14 @@ import 'package:myfhb/schedules/add_reminders.dart';
 import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
 import 'package:myfhb/src/model/Category/catergory_result.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
+import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/src/ui/Dashboard.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/ui/MyRecordsArguments.dart';
 import 'package:myfhb/src/ui/SplashScreen.dart';
 import 'package:myfhb/src/ui/NetworkScreen.dart';
+import 'package:myfhb/src/ui/bot/view/ChatScreen.dart' as bot;
+import 'package:myfhb/src/ui/bot/view/sheela_arguments.dart';
 import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
@@ -43,6 +48,7 @@ import 'package:myfhb/telehealth/features/Notifications/view/notification_main.d
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/doctor.dart'
     as doc;
 import 'package:myfhb/telehealth/features/appointments/view/resheduleMain.dart';
+import 'package:myfhb/telehealth/features/chat/view/chat.dart';
 import 'package:myfhb/telehealth/features/chat/view/home.dart';
 import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'package:myfhb/telehealth/features/chat/viewModel/notificationController.dart';
@@ -97,6 +103,7 @@ Future<void> main() async {
 
   PreferenceUtil.init();
 
+
   await DatabaseUtil.getDBLength().then((length) {
     if (length == 0) {
       DatabaseUtil.insertCountryMetricsData();
@@ -147,14 +154,23 @@ Future<void> main() async {
   CommonUtil().isFirstTime();
 
   runApp(
-    provider.ChangeNotifierProvider<RegimentViewModel>(
-      create: (_) => RegimentViewModel(),
+    provider.MultiProvider(
+      providers: [
+        provider.ChangeNotifierProvider<ChatScreenViewModel>(
+          create: (_) => ChatScreenViewModel(),
+        ),
+        provider.ChangeNotifierProvider<RegimentViewModel>(
+          create: (_) => RegimentViewModel(),
+        ),
+      ],
       child: MyFHB(),
     ),
   );
 
   // await saveToPreference();
   //await PreferenceUtil.saveString(Constants.KEY_AUTHTOKEN, Constants.AuthToken);
+
+
 }
 
 void saveToPreference() async {
@@ -246,6 +262,9 @@ class _MyFHBState extends State<MyFHB> {
     CommonUtil.askPermissionForCameraAndMic();
     getMyRoute();
     _enableTimer();
+
+    ApiBaseHelper apiBaseHelper=new ApiBaseHelper();
+    var res= apiBaseHelper.updateLastVisited();
     isAlreadyLoaded = true;
     if (Platform.isIOS) {
       // Push Notifications
@@ -253,6 +272,7 @@ class _MyFHBState extends State<MyFHB> {
       provider.setUpListerForTheNotification();
       provider.isAlreadyLoaded = true;
     }
+    FirebaseMessaging().onTokenRefresh.listen(CommonUtil().saveTokenToDatabase);
 
     //gettingResponseFromNative();
     ///un comment this while on production mode for enabling security.
@@ -322,7 +342,39 @@ class _MyFHBState extends State<MyFHB> {
             'ns_type': 'sheela',
             'navigationPage': 'Sheela Start Page',
           });
-          Get.to(SuperMaya());
+          if (passedValArr[2] != null && passedValArr[2].isNotEmpty) {
+            var rawTitle = passedValArr[2]?.split('|')[0];
+            var rawBody = passedValArr[2]?.split('|')[1];
+            String sheela_lang =
+                PreferenceUtil.getStringValue(Constants.SHEELA_LANG);
+            if ((Provider.of<ChatScreenViewModel>(context, listen: false)
+                        ?.conversations
+                        ?.length ??
+                    0) >
+                0) {
+              Provider.of<ChatScreenViewModel>(context, listen: false)
+                  ?.startMayaAutomatically(message: rawBody);
+            } else if (sheela_lang != null && sheela_lang != '') {
+              Get.toNamed(
+                routervariable.rt_Sheela,
+                arguments: SheelaArgument(
+                  isSheelaAskForLang: false,
+                  langCode: sheela_lang,
+                  rawMessage: rawBody,
+                ),
+              );
+            } else {
+              Get.toNamed(
+                routervariable.rt_Sheela,
+                arguments: SheelaArgument(
+                  isSheelaAskForLang: true,
+                  rawMessage: rawBody,
+                ),
+              );
+            }
+          } else {
+            Get.to(SuperMaya());
+          }
         } else if (passedValArr[1] == 'profile_page' ||
             passedValArr[1] == 'profile') {
           fbaLog(eveParams: {
@@ -375,8 +427,9 @@ class _MyFHBState extends State<MyFHB> {
             listen: false,
           )?.regimentMode = RegimentMode.Schedule;
           Provider.of<RegimentViewModel>(context, listen: false)
-              ?.regimentFilter = RegimentFilter.All;
-          Get.toNamed(router.rt_Regimen);
+              ?.regimentFilter = RegimentFilter.Missed;
+          Get.toNamed(router.rt_Regimen,
+              arguments: RegimentArguments(eventId: passedValArr[2]));
         } else if (passedValArr[1] == 'dashboard') {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
@@ -450,6 +503,24 @@ class _MyFHBState extends State<MyFHB> {
             arguments: HomeScreenArguments(selectedIndex: 1, thTabIndex: 4),
           ).then((value) =>
               PageNavigator.goToPermanent(context, router.rt_Landing));
+        } else if (passedValArr[1] == 'chat') {
+          fbaLog(eveParams: {
+            'eventTime': '${DateTime.now()}',
+            'ns_type': 'initiate screen',
+            'navigationPage': 'Chat Screen',
+          });
+          var chatParsedData = passedValArr[2]?.split('|');
+          Get.to(Chat(
+            peerId: chatParsedData[0],
+            peerName: chatParsedData[1],
+            peerAvatar: chatParsedData[2],
+            patientId: chatParsedData[3],
+            patientName: chatParsedData[4],
+            patientPicture: chatParsedData[5],
+            isFromVideoCall: false,
+            message: chatParsedData[6],
+          )).then((value) =>
+              PageNavigator.goToPermanent(context, router.rt_Landing));
         } else {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
@@ -489,6 +560,7 @@ class _MyFHBState extends State<MyFHB> {
         Get.to(ResheduleMain(
           isFromNotification: true,
           isReshedule: true,
+          isFromFollowUpApp: false,
           doc: Past(
             //! this is has to be correct
             doctorSessionId: passedValArr[3],
@@ -517,6 +589,14 @@ class _MyFHBState extends State<MyFHB> {
         var jsonInput = {};
         jsonInput['providerRequestId'] = passedValArr[1];
         jsonInput['action'] = passedValArr[2];
+      } else if (passedValArr[0] == 'openurl') {
+        var urlInfo = passedValArr[1];
+        fbaLog(eveParams: {
+          'eventTime': '${DateTime.now()}',
+          'ns_type': 'openurl',
+          'navigationPage': 'Browser page',
+        });
+        CommonUtil().launchURL(urlInfo);
       } else if (passedValArr[4] == 'call') {
         try {
           doctorPic = passedValArr[3];
@@ -596,9 +676,9 @@ class _MyFHBState extends State<MyFHB> {
         provider.ChangeNotifierProvider<MyFamilyViewModel>(
           create: (_) => MyFamilyViewModel(),
         ),
-        provider.ChangeNotifierProvider<ChatScreenViewModel>(
-          create: (_) => ChatScreenViewModel(),
-        ),
+        // provider.ChangeNotifierProvider<ChatScreenViewModel>(
+        //   create: (_) => ChatScreenViewModel(),
+        // ),
         // provider.ChangeNotifierProvider<RegimentViewModel>(
         //   create: (_) => RegimentViewModel(),
         // ),
@@ -670,6 +750,7 @@ class _MyFHBState extends State<MyFHB> {
           } else if (parsedData[1] == 'sheela') {
             return SplashScreen(
               nsRoute: 'sheela',
+              bundle: parsedData[2],
             );
           } else if (parsedData[1] == 'profile_page' ||
               parsedData[1] == 'profile') {
@@ -695,6 +776,7 @@ class _MyFHBState extends State<MyFHB> {
             //this need to be navigte to Regiment screen
             return SplashScreen(
               nsRoute: 'regiment_screen',
+              bundle: parsedData[2],
             );
           } else if (parsedData[1] == 'th_provider_hospital') {
             //this need to be navigte to TH provider screen
@@ -727,6 +809,12 @@ class _MyFHBState extends State<MyFHB> {
             return SplashScreen(
               nsRoute: 'bills',
             );
+          } else if (parsedData[1] == 'chat') {
+            //this need to be navigte to My Plans screen
+            return SplashScreen(
+              nsRoute: 'chat',
+              bundle: parsedData[2],
+            );
           } else {
             return SplashScreen(
               nsRoute: '',
@@ -757,6 +845,11 @@ class _MyFHBState extends State<MyFHB> {
           //   "contextId": parsedData[1]
           // };
           return SplashScreen();
+        } else if (navRoute.split('&')[0] == 'openurl') {
+          return SplashScreen(
+            nsRoute: 'openurl',
+            bundle: navRoute.split('&')[1],
+          );
         } else {
           return StartTheCall();
         }

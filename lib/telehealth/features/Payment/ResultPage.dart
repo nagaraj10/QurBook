@@ -1,29 +1,43 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
+import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import 'package:provider/provider.dart';
+import 'package:myfhb/constants/router_variable.dart' as router;
 
 class ResultPage extends StatefulWidget {
   final bool status;
+  final bool isFromSubscribe;
   final String refNo;
   Function(String) closePage;
-  ResultPage({Key key, @required this.status, this.refNo, this.closePage})
+
+  ResultPage(
+      {Key key,
+      @required this.status,
+      this.refNo,
+      this.closePage,
+      this.isFromSubscribe})
       : super(key: key);
+
   @override
   _ResultPage createState() => _ResultPage();
 }
 
 class _ResultPage extends State<ResultPage> {
   bool status;
+  bool isFromSubscribe;
 
   @override
   void initState() {
     mInitialTime = DateTime.now();
     status = widget.status;
+    isFromSubscribe = widget.isFromSubscribe;
     super.initState();
   }
 
@@ -61,7 +75,12 @@ class _ResultPage extends State<ResultPage> {
                             color: Colors.white,
                             fontWeight: FontWeight.bold)),
                     SizedBox(height: 10.0.h),
-                    Text(status ? APPOINTMENT_CONFIRM : UNABLE_PROCESS,
+                    Text(
+                        isFromSubscribe
+                            ? PLAN_CONFIRM
+                            : status
+                                ? APPOINTMENT_CONFIRM
+                                : UNABLE_PROCESS,
                         style: TextStyle(
                             fontSize: 16.0.sp,
                             color: Colors.white,
@@ -85,18 +104,19 @@ class _ResultPage extends State<ResultPage> {
                       textColor: Colors.white,
                       padding: EdgeInsets.all(12.0),
                       onPressed: () {
-                        status
-                            ? widget.closePage(STR_SUCCESS)
-                            : widget.closePage(STR_FAILED);
-                        status
-                            ? Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => TelehealthProviders(
-                                          arguments: HomeScreenArguments(
-                                              selectedIndex: 0),
-                                        )))
-                            : Navigator.pop(context);
+                          status
+                              ? widget.closePage(STR_SUCCESS)
+                              : widget.closePage(STR_FAILED);
+                          status && !isFromSubscribe
+                              ? Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => TelehealthProviders(
+                                            arguments: HomeScreenArguments(
+                                                selectedIndex: 0),
+                                          )))
+                              : Navigator.pop(context);
+
                       },
                       child: Text(
                         STR_DONE.toUpperCase(),

@@ -72,7 +72,11 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
       body: Form(
         key: _SignupKey,
         child: Theme(
-          data: Theme.of(context).copyWith(primaryColor: Color(CommonUtil().getMyPrimaryColor(),),),
+          data: Theme.of(context).copyWith(
+            primaryColor: Color(
+              CommonUtil().getMyPrimaryColor(),
+            ),
+          ),
           child: Container(
             height: height,
             child: Stack(
@@ -416,6 +420,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                         '${strPlusSymbol}${_selectedDialogCountry.phoneCode}${mobileNoController.text.trim()}',
                     from: strFromSignUp,
                     userConfirm: false,
+                    emailId: emailController.text.trim(),
                   )));
     } else {
       toast.getToast(response.message, Colors.red);

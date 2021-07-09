@@ -128,9 +128,14 @@ class FHBUtils {
   }
 
   String getFormattedDateForUserBirth(String strDate) {
-    String formattedDate =
-        DateFormat('yyyy-MM-dd').format(DateTime.parse(strDate));
-    return formattedDate;
+    if(strDate.contains("-")) {
+      String formattedDate =
+      DateFormat('yyyy-MM-dd').format(DateTime.parse(strDate));
+      return formattedDate;
+    }else{
+      strDate=strDate+"-01-01";
+      return strDate;
+    }
   }
 
   String getFormattedDateOnly(String strDate) {
@@ -153,6 +158,24 @@ class FHBUtils {
   }
 
   String getFormattedDateOnlyNew(String strDate) {
+    String formattedDate;
+    try {
+      if (CURRENT_DATE_CODE == 'MDY') {
+        formattedDate =
+            DateFormat('yyyy').format(DateTime.parse(strDate).toLocal());
+      } else if (CURRENT_DATE_CODE == 'YMD') {
+        formattedDate =
+            DateFormat('yyyy').format(DateTime.parse(strDate).toLocal());
+      } else {
+        formattedDate =
+            DateFormat('yyyy').format(DateTime.parse(strDate).toLocal());
+      }
+    } catch (e) {
+      formattedDate = strDate;
+    }
+    return formattedDate;
+  }
+  String getFormattedDateOnlyNewClone(String strDate) {
     String formattedDate;
     try {
       if (CURRENT_DATE_CODE == 'MDY') {

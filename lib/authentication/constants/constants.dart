@@ -98,6 +98,7 @@ const String strSignEndpoint = 'login';
 const String strUserVerifyEndpoint = 'confirm-user';
 const String strOtpVerifyEndpoint = 'auth/verify-otp';
 const String strUserOtpVerifyEndpoint = 'user-relationship/verify-otp';
+const String qr_refer_friend = "/user/refer-friend";
 const String strResult = "result";
 const String strmessage = "message";
 const String strIsSuccess = 'isSuccess';
@@ -155,7 +156,7 @@ const String strresendOtp = 'Resend OTP';
 const String strVerifyCall = 'Confirm via Call';
 const String strOrText = 'OR';
 const String strOtpNotReceived =
-    'Don\'t you receive the OTP ? you can re-try in ';
+    'Didn\'t receive the OTP ? Retry in ';
 const String strCallDirect =
     'Please call from your registered mobile number to a phone number below. Thank you for your understanding';
 const String primaryNumber = 'Primary Number';

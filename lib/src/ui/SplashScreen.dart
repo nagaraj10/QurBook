@@ -4,7 +4,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 import 'package:myfhb/authentication/view/login_screen.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -12,12 +11,18 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/regiment/models/regiment_arguments.dart';
+import 'package:myfhb/landing/view/landing_arguments.dart';
+import 'package:myfhb/landing/view_model/landing_view_model.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
 import 'package:myfhb/src/ui/Dashboard.dart';
+import 'package:myfhb/src/ui/bot/view/sheela_arguments.dart';
+import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/city.dart';
@@ -27,6 +32,7 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
 import 'package:myfhb/telehealth/features/appointments/view/resheduleMain.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/telehealth/features/chat/view/chat.dart';
 import 'package:myfhb/telehealth/features/chat/view/home.dart';
 import 'package:provider/provider.dart';
 import '../utils/PageNavigator.dart';
@@ -35,6 +41,7 @@ import 'NetworkScreen.dart';
 import 'package:myfhb/src/ui/bot/SuperMaya.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:myfhb/src/ui/bot/view/ChatScreen.dart' as bot;
 
 class SplashScreen extends StatefulWidget {
   final String nsRoute;
@@ -77,7 +84,6 @@ class _SplashScreenState extends State<SplashScreen> {
   void setReminder() {
     var selecteTimeInDate =
         "${TimeOfDay.now().hour}-${TimeOfDay.now().minute + 3}";
-    print('currentTime#######${selecteTimeInDate}');
     var ch_android = const MethodChannel('android/notification');
     var mappedReminder = {
       'id': 001,
@@ -134,6 +140,7 @@ class _SplashScreenState extends State<SplashScreen> {
                           ResheduleMain(
                             isFromNotification: true,
                             isReshedule: true,
+                            isFromFollowUpApp: false,
                             doc: Past(
                               //! this is has to be correct
                               doctorSessionId: widget.doctorSessionId,
@@ -171,9 +178,24 @@ class _SplashScreenState extends State<SplashScreen> {
                           'ns_type': 'chat',
                           'navigationPage': 'Tele Health Chat list',
                         });
-                        Get.to(ChatHomeScreen()).then((value) =>
-                            PageNavigator.goToPermanent(
-                                context, router.rt_Landing));
+                        if (widget.bundle != null && widget.bundle != '') {
+                          var chatParsedData = widget.bundle?.split('|');
+                          Get.to(Chat(
+                            peerId: chatParsedData[0],
+                            peerName: chatParsedData[1],
+                            peerAvatar: chatParsedData[2],
+                            patientId: chatParsedData[3],
+                            patientName: chatParsedData[4],
+                            patientPicture: chatParsedData[5],
+                            isFromVideoCall: false,
+                            message: chatParsedData[6],
+                          )).then((value) => PageNavigator.goToPermanent(
+                              context, router.rt_Landing));
+                        } else {
+                          Get.to(ChatHomeScreen()).then((value) =>
+                              PageNavigator.goToPermanent(
+                                  context, router.rt_Landing));
+                        }
                       } else if (widget.nsRoute == 'appointmentList' ||
                           widget.nsRoute == 'appointmentHistory') {
                         fbaLog(eveParams: {
@@ -196,9 +218,62 @@ class _SplashScreenState extends State<SplashScreen> {
                           'ns_type': 'sheela',
                           'navigationPage': 'Sheela Start Page',
                         });
-                        Get.to(SuperMaya()).then((value) =>
-                            PageNavigator.goToPermanent(
+                        if (widget.bundle != null && widget.bundle.isNotEmpty) {
+                          var rawTitle = widget.bundle?.split('|')[0];
+                          var rawBody = widget.bundle?.split('|')[1];
+                          String sheela_lang = PreferenceUtil.getStringValue(
+                              Constants.SHEELA_LANG);
+                          if ((Provider.of<ChatScreenViewModel>(context,
+                                          listen: false)
+                                      ?.conversations
+                                      ?.length ??
+                                  0) >
+                              0) {
+                            Provider.of<ChatScreenViewModel>(context,
+                                    listen: false)
+                                ?.startMayaAutomatically(message: rawBody);
+                          } else if (sheela_lang != null && sheela_lang != '') {
+                            Get.toNamed(
+                              rt_Sheela,
+                              arguments: SheelaArgument(
+                                isSheelaAskForLang: false,
+                                langCode: sheela_lang,
+                                rawMessage: rawBody,
+                              ),
+                            ).then((value) => PageNavigator.goToPermanent(
                                 context, router.rt_Landing));
+
+                            /* Get.to(bot.ChatScreen(
+                              arguments: SheelaArgument(
+                                isSheelaAskForLang: false,
+                                langCode: sheela_lang,
+                                rawMessage: rawBody,
+                              ),
+                            )).then((value) => PageNavigator.goToPermanent(
+                                context, router.rt_Landing)); */
+                          } else {
+                            Get.toNamed(
+                              rt_Sheela,
+                              arguments: SheelaArgument(
+                                isSheelaAskForLang: true,
+                                rawMessage: rawBody,
+                              ),
+                            ).then((value) => PageNavigator.goToPermanent(
+                                context, router.rt_Landing));
+
+                            /* Get.to(bot.ChatScreen(
+                              arguments: SheelaArgument(
+                                isSheelaAskForLang: true,
+                                rawMessage: rawBody,
+                              ),
+                            )).then((value) => PageNavigator.goToPermanent(
+                                context, router.rt_Landing)); */
+                          }
+                        } else {
+                          Get.to(SuperMaya()).then((value) =>
+                              PageNavigator.goToPermanent(
+                                  context, router.rt_Landing));
+                        }
                       } else if (widget.nsRoute == 'profile_page' ||
                           widget.nsRoute == 'profile') {
                         fbaLog(eveParams: {
@@ -268,8 +343,10 @@ class _SplashScreenState extends State<SplashScreen> {
                           listen: false,
                         )?.regimentMode = RegimentMode.Schedule;
                         Provider.of<RegimentViewModel>(context, listen: false)
-                            ?.regimentFilter = RegimentFilter.All;
-                        PageNavigator.goToPermanent(context, router.rt_Regimen);
+                            ?.regimentFilter = RegimentFilter.Missed;
+                        PageNavigator.goToPermanent(context, router.rt_Regimen,
+                            arguments:
+                                RegimentArguments(eventId: widget.bundle));
                       } else if (widget.nsRoute == 'th_provider_hospital') {
                         fbaLog(eveParams: {
                           'eventTime': '${DateTime.now()}',
@@ -339,6 +416,18 @@ class _SplashScreenState extends State<SplashScreen> {
                               selectedIndex: 1, thTabIndex: 4),
                         ).then((value) => PageNavigator.goToPermanent(
                             context, router.rt_Landing));
+                      } else if (widget.nsRoute == 'openurl') {
+                        fbaLog(eveParams: {
+                          'eventTime': '${DateTime.now()}',
+                          'ns_type': 'landing',
+                          'navigationPage': 'Landing',
+                        });
+                        Provider.of<LandingViewModel>(context, listen: false)
+                            .isURLCome = true;
+                        //ignore: lines_longer_than_80_chars
+                        PageNavigator.goToPermanent(context, router.rt_Landing,
+                            arguments:
+                                LandingArguments(url: widget.bundle ?? null));
                       } else {
                         fbaLog(eveParams: {
                           'eventTime': '${DateTime.now()}',

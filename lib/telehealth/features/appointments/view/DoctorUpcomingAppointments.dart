@@ -17,6 +17,7 @@ import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
 import 'package:myfhb/src/model/Category/catergory_result.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/healthOrganization/HealthOrganization.dart';
+import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart';
 import 'package:myfhb/telehealth/features/appointments/model/cancelAppointments/cancelModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/healthRecord.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
@@ -97,9 +98,11 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                             children: <Widget>[
                               commonWidget.docName(
                                   context,
-                                  widget?.doc?.doctor?.user?.firstName?.capitalizeFirstofEach +
+                                  widget?.doc?.doctor?.user?.firstName
+                                          ?.capitalizeFirstofEach +
                                       ' ' +
-                                      widget?.doc?.doctor?.user?.lastName?.capitalizeFirstofEach),
+                                      widget?.doc?.doctor?.user?.lastName
+                                          ?.capitalizeFirstofEach),
                               SizedBoxWidget(height: 3.0.h, width: 0.0.h),
                               widget.doc?.doctor?.specialization == null
                                   ? Container()
@@ -280,6 +283,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
           builder: (context) => ResheduleMain(
                 doc: doc,
                 isReshedule: isReshedule,
+                isFromFollowUpApp: false,
                 isFromNotification: false,
               )),
     ).then((value) => widget.onChanged(Constants.callBack));
@@ -333,8 +337,11 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                                                   color: Colors.black),
                                               children: <InlineSpan>[
                                               TextSpan(
-                                                  text:
-                                                      ' ${Constants.inrLabel} ${widget.doc.feeDetails.doctorCancellationCharge}',
+                                                  text: widget.doc?.feeDetails
+                                                              ?.paymentMode ==
+                                                          strOFFMODE
+                                                      ? ' ${Constants.inrLabelZero} '
+                                                      : ' ${Constants.inrLabel} ${widget.doc.feeDetails.doctorCancellationCharge}',
                                                   style: TextStyle(
                                                       fontSize: 14.0.sp,
                                                       fontFamily:

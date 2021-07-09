@@ -15,6 +15,7 @@ import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
+import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/src/ui/user/UserAccounts.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
@@ -126,6 +127,12 @@ class SwitchProfile {
         }
 
         Navigator.of(context).pop();
+        try{
+          ApiBaseHelper apiBaseHelper=new ApiBaseHelper();
+          var res= apiBaseHelper.updateLastVisited();
+        }catch(e){
+
+        }
 
         getUserProfileData();
       });
@@ -133,7 +140,7 @@ class SwitchProfile {
   }
 
   getUserProfileData() async {
-    CommonUtil.showLoadingDialog(context, keyLoader, variable.strRelaoding);
+    CommonUtil.showLoadingDialog(context, keyLoader, variable.strSwitchingUser);
     if (_myProfileBloc != null) {
       _myProfileBloc = null;
       _myProfileBloc = new MyProfileBloc();
