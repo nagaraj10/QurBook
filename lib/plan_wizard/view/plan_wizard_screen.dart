@@ -9,6 +9,8 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
 
+import 'widgets/plan_navigation_widget.dart';
+
 class PlanWizardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -33,10 +35,7 @@ class PlanWizardScreen extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             children: [
               //TODO: Replace Placeholder with page number widget
-              Placeholder(
-                fallbackHeight: 100.0.h,
-                fallbackWidth: 1.0.sw,
-              ),
+              PlanNavigationWidget(),
               Expanded(
                 child: PageView(
                   controller: planWizardViewModel.pageController,
