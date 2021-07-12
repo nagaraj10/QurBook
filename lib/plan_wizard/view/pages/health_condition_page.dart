@@ -16,7 +16,6 @@ class _HealthConditionPageState extends State<HealthConditionPage> {
   @override
   void initState() {
     super.initState();
-    Provider.of<PlanWizardViewModel>(context).currentPage = 0;
   }
 
   @override
