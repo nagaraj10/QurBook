@@ -8,6 +8,7 @@ import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:myfhb/add_family_user_info/models/address_type_list.dart';
+import 'package:myfhb/add_new_plan/model/PlanCode.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/authentication/view/login_screen.dart';
 import 'package:myfhb/common/CommonConstants.dart';
@@ -1656,6 +1657,33 @@ class ApiBaseHelper {
 
   }
 
+  Future<dynamic> addNewPlan(String jsonData) async{
+    var responseJson;
+    try {
+      final response = await http.post(_baseUrl + "user/feedback",
+          body: jsonData,
+          headers: await headerRequest.getRequestHeadersTimeSlot());
+    responseJson = _returnResponse(response);
+    } on SocketException {
+    throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
+  Future<PlanCode> getPlanCode(String responseQuery) async {
+    final response = await http.post(_baseUrl + responseQuery,
+        headers: await headerRequest.getRequestHeadersAuthContent(),
+        body: '["FEEDBKTYP"]');
+
+    print(response.body);
+
+    if (response.statusCode == 200) {
+      return PlanCode.fromJson(jsonDecode(response.body));
+    } else {
+      return PlanCode.fromJson(
+          errorMap.createErrorJsonString(response));
+    }
+  }
 }
 
 void exitFromApp() async {

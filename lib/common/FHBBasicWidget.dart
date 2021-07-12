@@ -741,7 +741,7 @@ class FHBBasicWidget {
   }
 
   Widget getRichTextFieldWithNoCallbacks(
-      BuildContext context, TextEditingController searchController) {
+      BuildContext context, TextEditingController searchController,String hintText,int length) {
     return Container(
       height: 1.sh / 5,
       child: TextField(
@@ -751,12 +751,12 @@ class FHBBasicWidget {
                 OutlineInputBorder(borderSide: BorderSide(width: 5)),
             hintStyle: TextStyle(fontSize: 15.0.sp),
             hintText:
-                'Provide details on existing illness, allergies, history of the disease and medication taken',
+            hintText,
             border: OutlineInputBorder(
                 borderSide: BorderSide(width: 5.0.w),
                 borderRadius: BorderRadius.circular(7))),
         controller: searchController,
-        maxLength: 500,
+        maxLength: length,
         maxLines: 4,
         onChanged: (value) {},
       ),

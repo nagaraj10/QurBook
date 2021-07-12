@@ -566,6 +566,9 @@ const String strNoContactsSearchlbl =
 const String strNoContactsLabel = 'Looks Like There are No Contacts!!!';
 const String strInviteErrorMsg = 'Invite sending failed. Please try again';
 
+const String STR_NOTES_HINT="Provide details on existing illness, allergies, history of the disease and medication taken";
+const String STR_HINT_PLAN="Tell us more about your expectations";
+
 const String STR_YES = 'yes';
 const String STR_NO = 'no';
 
