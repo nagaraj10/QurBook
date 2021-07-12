@@ -14,6 +14,7 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/myPlan/model/myPlanListModel.dart';
 import 'package:myfhb/myPlan/view/myPlanDetail.dart';
 import 'package:myfhb/myPlan/viewModel/myPlanViewModel.dart';
+import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
@@ -81,7 +82,9 @@ class _MyPlanState extends State<MyPlanList> {
       return Scaffold(
           floatingActionButton: FloatingActionButton(
             onPressed: () async {
-              await Get.toNamed(rt_Diseases);
+              //TODO: Uncomment for actual plans screen
+              // await Get.toNamed(rt_Diseases);
+              await Get.toNamed(rt_PlanWizard);
             },
             elevation: 2.0,
             backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),

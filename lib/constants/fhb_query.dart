@@ -96,7 +96,8 @@ const String qr_doctorid = 'doctorId';
 const String qr_getSlots = 'doctor/checkavailability';
 const String qr_bookAppointment = 'appointment';
 const String qr_update_payment = 'payment/update-payment-status/';
-const String qr_update_payment_subscribe = 'payment/plan-subscription-update-payment-status';
+const String qr_update_payment_subscribe =
+    'payment/plan-subscription-update-payment-status';
 
 const String qr_created_by = 'createdBy';
 const String qr_booked_for = 'bookedFor';
@@ -241,6 +242,9 @@ const String qr_get = 'get';
 const String regiment = 'plan-package-master/wrapperApi';
 const String qr_save_regi_media = 'media-details/store-media';
 const String regimentImagePath = 'https://qurplan.com/assets/images/';
+
+const String getMenuCarePlans =
+    'Action=GetMenuTaggedPackages&tags=DB2,DB1,diet';
 
 const String qr_list = 'list/';
 const String qr_doctorlist = 'doctorsList?';
