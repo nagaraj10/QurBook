@@ -445,11 +445,13 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                     ),
                   ),
                 ),
-                Row(
-                  children: [
-                    Visibility(
-                      visible: _regimentViewModel.regimentMode ==
-                          RegimentMode.Schedule,
+                Flexible(
+                  flex: 3,
+                  child: Visibility(
+                    visible: _regimentViewModel.regimentMode ==
+                        RegimentMode.Schedule,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
                       child: Row(
                         children: [
                           FilterWidget(
@@ -485,19 +487,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                         ],
                       ),
                     ),
-                    // InkWell(
-                    //   onTap: () {
-                    //     _regimentViewModel.changeSearchExpanded(true);
-                    //   },
-                    //   child: Center(
-                    //     child: Icon(
-                    //       Icons.search,
-                    //       color: Colors.black,
-                    //       size: 30.0.sp,
-                    //     ),
-                    //   ),
-                    // ),
-                  ],
+                  ),
                 ),
               ],
             ),
