@@ -5,18 +5,17 @@ import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
 import 'package:myfhb/plan_wizard/view/widgets/care_plan_card.dart';
+import 'package:myfhb/plan_wizard/view/widgets/search_widget.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class DietPlanPage extends StatefulWidget {
-
   @override
   _DietPlanPageState createState() => _DietPlanPageState();
 }
 
 class _DietPlanPageState extends State<DietPlanPage> {
-
   List<PlanListResult> planListResult;
 
   Future<PlanListModel> planListModel;
@@ -26,6 +25,7 @@ class _DietPlanPageState extends State<DietPlanPage> {
 
   @override
   void initState() {
+    FocusManager.instance.primaryFocus.unfocus();
     planListModel = myPlanViewModel.getPlanList();
   }
 
@@ -34,9 +34,17 @@ class _DietPlanPageState extends State<DietPlanPage> {
     return Scaffold(
         body: Column(
           children: [
-            SearchWidget(
-              hintText: strSearchDietPlan,
-              onChanged: (providerName) {},
+            Row(
+              children: [
+                Expanded(
+                  child: SearchWidgetWizard((value) {}, strSearchDietPlan),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 12.0),
+                  child: Icon(Icons.filter_alt_sharp, size: 28.sp),
+                ),
+                SizedBox(width: 20.w)
+              ],
             ),
             Expanded(
               child: myPlanListModel != null ?? myPlanListModel.isSuccess
@@ -47,8 +55,7 @@ class _DietPlanPageState extends State<DietPlanPage> {
         ),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
-          onPressed: () {
-          },
+          onPressed: () {},
           child: Icon(
             Icons.navigate_next,
             color: Colors.white,
@@ -71,7 +78,7 @@ class _DietPlanPageState extends State<DietPlanPage> {
                   height: 30.0.h,
                   child: new CircularProgressIndicator(
                       backgroundColor:
-                      Color(new CommonUtil().getMyPrimaryColor())),
+                          Color(new CommonUtil().getMyPrimaryColor())),
                 ),
               ),
             ),
@@ -89,8 +96,8 @@ class _DietPlanPageState extends State<DietPlanPage> {
                 height: 1.sh / 1.3,
                 child: Container(
                     child: Center(
-                      child: Text(strNoPackages),
-                    )),
+                  child: Text(strNoPackages),
+                )),
               ),
             );
           }
@@ -102,23 +109,22 @@ class _DietPlanPageState extends State<DietPlanPage> {
   Widget carePlanList(List<PlanListResult> planList) {
     return (planList != null && planList.length > 0)
         ? ListView.builder(
-      shrinkWrap: true,
-      padding: EdgeInsets.only(
-        bottom: 8.0.h,
-      ),
-      itemBuilder: (BuildContext ctx, int i) => CarePlanCard(i, planList,(){
-
-      }),
-      itemCount: planList.length,
-    )
+            shrinkWrap: true,
+            padding: EdgeInsets.only(
+              bottom: 8.0.h,
+            ),
+            itemBuilder: (BuildContext ctx, int i) =>
+                CarePlanCard(i: i, planList: planList),
+            itemCount: planList.length,
+          )
         : SafeArea(
-      child: SizedBox(
-        height: 1.sh / 1.3,
-        child: Container(
-            child: Center(
-              child: Text(strNoPlans),
-            )),
-      ),
-    );
+            child: SizedBox(
+              height: 1.sh / 1.3,
+              child: Container(
+                  child: Center(
+                child: Text(strNoPlans),
+              )),
+            ),
+          );
   }
 }

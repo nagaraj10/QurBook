@@ -15,16 +15,14 @@ import 'Rounded_CheckBox.dart';
 class CarePlanCard extends StatefulWidget {
   final int i;
   final List<PlanListResult> planList;
-  final Function() isPlanChecked;
 
-  CarePlanCard(this.i, this.planList,this.isPlanChecked);
+  CarePlanCard({this.i, this.planList});
 
   @override
   _CarePlanCardState createState() => _CarePlanCardState();
 }
 
 class _CarePlanCardState extends State<CarePlanCard> {
-
   List<PlanListResult> planList;
   int i;
 
@@ -69,7 +67,7 @@ class _CarePlanCardState extends State<CarePlanCard> {
                     backgroundColor: Colors.grey[200],
                     radius: 20,
                     child:
-                    CommonUtil().customImage(planList[i]?.metadata?.icon),
+                        CommonUtil().customImage(planList[i]?.metadata?.icon),
                   ),
                   SizedBox(
                     width: 20.0.w,
@@ -94,7 +92,7 @@ class _CarePlanCardState extends State<CarePlanCard> {
                         Text(
                           planList[i].providerName != null
                               ? toBeginningOfSentenceCase(
-                              planList[i].providerName)
+                                  planList[i].providerName)
                               : '',
                           style: TextStyle(
                               fontSize: 15.0.sp,
@@ -115,14 +113,14 @@ class _CarePlanCardState extends State<CarePlanCard> {
                                 ),
                                 planList[i].packageDuration != null
                                     ? Text(
-                                  planList[i].packageDuration + ' days',
-                                  maxLines: 1,
-                                  style: TextStyle(
-                                      fontSize: 12.0.sp,
-                                      fontWeight: FontWeight.w600,
-                                      color: Color(new CommonUtil()
-                                          .getMyPrimaryColor())),
-                                )
+                                        planList[i].packageDuration + ' days',
+                                        maxLines: 1,
+                                        style: TextStyle(
+                                            fontSize: 12.0.sp,
+                                            fontWeight: FontWeight.w600,
+                                            color: Color(new CommonUtil()
+                                                .getMyPrimaryColor())),
+                                      )
                                     : Container(),
                                 SizedBox(width: 20.w),
                                 Text(
@@ -134,21 +132,21 @@ class _CarePlanCardState extends State<CarePlanCard> {
                                 ),
                                 planList[i].price != null
                                     ? Visibility(
-                                  visible: planList[i].price.isNotEmpty &&
-                                      planList[i].price != '0',
-                                  child: TextWidget(
-                                      text: INR + planList[i].price,
-                                      fontsize: 12.0.sp,
-                                      fontWeight: FontWeight.w500,
-                                      colors: Color(new CommonUtil()
-                                          .getMyPrimaryColor())),
-                                  replacement: TextWidget(
-                                      text: FREE,
-                                      fontsize: 12.0.sp,
-                                      fontWeight: FontWeight.w500,
-                                      colors: Color(new CommonUtil()
-                                          .getMyPrimaryColor())),
-                                )
+                                        visible: planList[i].price.isNotEmpty &&
+                                            planList[i].price != '0',
+                                        child: TextWidget(
+                                            text: INR + planList[i].price,
+                                            fontsize: 12.0.sp,
+                                            fontWeight: FontWeight.w500,
+                                            colors: Color(new CommonUtil()
+                                                .getMyPrimaryColor())),
+                                        replacement: TextWidget(
+                                            text: FREE,
+                                            fontsize: 12.0.sp,
+                                            fontWeight: FontWeight.w500,
+                                            colors: Color(new CommonUtil()
+                                                .getMyPrimaryColor())),
+                                      )
                                     : Container(),
                               ],
                             ),
@@ -159,15 +157,15 @@ class _CarePlanCardState extends State<CarePlanCard> {
                   ),
                   Row(
                     children: [
-                      RoundedCheckBox(() {
-                        widget.isPlanChecked();
-                        setState(() {
-                          planList.forEach((element) {
-                            element.isSelected = false;
-                          });
-                          planList[i].isSelected = true;
-                        });
-                      },planList[i].isSelected),
+                      RoundedCheckBox(
+                          isSelected: Provider.of<PlanWizardViewModel>(context)
+                                  .currentPackageId ==
+                              planList[i].packageid,
+                          onTap: () {
+                            Provider.of<PlanWizardViewModel>(context,
+                                    listen: false)
+                                .updateSingleSelection(planList[i].packageid);
+                          }),
                       SizedBox(width: 5.w),
                     ],
                   )

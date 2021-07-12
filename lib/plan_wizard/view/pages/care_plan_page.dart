@@ -23,10 +23,9 @@ class _CarePlanPageState extends State<CarePlanPage> {
 
   PlanListModel myPlanListModel;
 
-  bool isPlanChecked = false;
-
   @override
   void initState() {
+    FocusManager.instance.primaryFocus.unfocus();
     planListModel = myPlanViewModel.getPlanList();
   }
 
@@ -38,12 +37,11 @@ class _CarePlanPageState extends State<CarePlanPage> {
             Row(
               children: [
                 Expanded(
-                  child: SearchWidgetWizard((value){
-                  },strPlanHospitalDiet),
+                  child: SearchWidgetWizard((value) {}, strPlanHospitalDiet),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 12.0),
-                  child: Icon(Icons.filter_alt_sharp,size: 28.sp),
+                  child: Icon(Icons.filter_alt_sharp, size: 28.sp),
                 ),
                 SizedBox(width: 20.w)
               ],
@@ -58,7 +56,8 @@ class _CarePlanPageState extends State<CarePlanPage> {
         floatingActionButton: FloatingActionButton(
           backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
           onPressed: () {
-            if (!isPlanChecked) {
+            if ((Provider.of<PlanWizardViewModel>(context, listen: false)
+                ?.currentPackageId??'').isEmpty) {
               _alertForUncheckPlan();
             } else {
               Provider.of<PlanWizardViewModel>(context, listen: false)
@@ -120,12 +119,10 @@ class _CarePlanPageState extends State<CarePlanPage> {
         ? ListView.builder(
             shrinkWrap: true,
             padding: EdgeInsets.only(
-              bottom: 8.0.h,
+              bottom: 50.0.h,
             ),
             itemBuilder: (BuildContext ctx, int i) =>
-                CarePlanCard(i, planList, () {
-              isPlanChecked = true;
-            }),
+                CarePlanCard(i: i, planList: planList),
             itemCount: planList.length,
           )
         : SafeArea(

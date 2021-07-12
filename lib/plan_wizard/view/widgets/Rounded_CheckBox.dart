@@ -1,42 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
+import 'package:provider/provider.dart';
 
-class RoundedCheckBox extends StatefulWidget {
-  final Function() onCheck;
+
+class RoundedCheckBox extends StatelessWidget {
   bool isSelected;
+  Function() onTap;
 
-  RoundedCheckBox(this.onCheck,this.isSelected);
-
-  @override
-  _RoundedCheckBoxState createState() => _RoundedCheckBoxState();
-}
-
-class _RoundedCheckBoxState extends State<RoundedCheckBox> {
-  bool _value;
-
-  @override
-  void initState() {
-    super.initState();
-    _value = widget.isSelected;
-  }
+  RoundedCheckBox({this.isSelected,this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return Center(
         child: InkWell(
       onTap: () {
-        widget.onCheck();
-        setState(() {
-          _value = widget.isSelected;
-        });
+        onTap();
       },
       child: Container(
         decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: _value ? Colors.teal[300] : Colors.white,
-            border: Border.all(color: _value?Colors.teal[300]:Colors.grey)),
+            color: isSelected ? Colors.teal[300] : Colors.white,
+            border: Border.all(color: isSelected?Colors.teal[300]:Colors.grey)),
         child: Padding(
           padding: const EdgeInsets.all(2.0),
-          child: _value
+          child: isSelected
               ? Icon(
                   Icons.check,
                   size: 22.0,

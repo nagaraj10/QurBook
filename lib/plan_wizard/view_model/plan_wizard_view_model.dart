@@ -13,9 +13,21 @@ class PlanWizardViewModel extends ChangeNotifier {
   List<MyPlanListResult> carePlanList = [];
   List<MyPlanListResult> dietPlanList = [];
   List<MyPlanListResult> cartItemsList = [];
+  String currentPackageId = '';
+
+  void updateSingleSelection(String packageId) {
+    if (packageId == currentPackageId) {
+      currentPackageId = '';
+    } else {
+      currentPackageId = packageId;
+    }
+
+    notifyListeners();
+  }
 
   void changeCurrentPage(int newPage) {
-    pageController.animateToPage(newPage, duration: Duration(milliseconds: 100), curve: Curves.easeIn);
+    pageController.animateToPage(newPage,
+        duration: Duration(milliseconds: 100), curve: Curves.easeIn);
     currentPage = newPage;
     notifyListeners();
   }
@@ -42,8 +54,7 @@ class PlanWizardViewModel extends ChangeNotifier {
   Future<PlanListModel> getPlanList() async {
     try {
       var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-      PlanListModel myPlanListModel =
-      await myPlanService.getPlanList(userid);
+      PlanListModel myPlanListModel = await myPlanService.getPlanList(userid);
       return myPlanListModel;
     } catch (e) {}
   }
