@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/plan_wizard/view/widgets/plans_grid_view.dart';
+import 'package:myfhb/plan_wizard/view/widgets/search_widget.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
 
@@ -9,19 +10,9 @@ class HealthConditionPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SearchWidget(
-          hintText: strSearchHealth,
-          onChanged: (providerName) {
-            // if (providerName != '' && providerName.length > 2) {
-            //   isSearch = true;
-            //   onSearchedNew(providerName);
-            // } else {
-            //   setState(() {
-            //     isSearch = false;
-            //   });
-            // }
-          },
-        ),
+        SearchWidgetWizard((value){
+
+        },strSearchHealth),
         Expanded(
           child: SingleChildScrollView(
             child: Column(

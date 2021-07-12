@@ -5,9 +5,9 @@ import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
 import 'package:myfhb/plan_wizard/view/widgets/care_plan_card.dart';
+import 'package:myfhb/plan_wizard/view/widgets/search_widget.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
 import 'package:provider/provider.dart';
 
 class CarePlanPage extends StatefulWidget {
@@ -35,9 +35,18 @@ class _CarePlanPageState extends State<CarePlanPage> {
     return Scaffold(
         body: Column(
           children: [
-            SearchWidget(
-              hintText: strPlanHospitalDiet,
-              onChanged: (providerName) {},
+            Row(
+              children: [
+                Expanded(
+                  child: SearchWidgetWizard((value){
+                  },strPlanHospitalDiet),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 12.0),
+                  child: Icon(Icons.filter_alt_sharp,size: 28.sp),
+                ),
+                SizedBox(width: 20.w)
+              ],
             ),
             Expanded(
               child: myPlanListModel != null ?? myPlanListModel.isSuccess
