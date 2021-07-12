@@ -566,6 +566,9 @@ const String strNoContactsSearchlbl =
 const String strNoContactsLabel = 'Looks Like There are No Contacts!!!';
 const String strInviteErrorMsg = 'Invite sending failed. Please try again';
 
+const String STR_YES = 'yes';
+const String STR_NO = 'no';
+
 FirebaseAnalytics _firebaseAnalytics = FirebaseAnalytics();
 var mInitialTime;
 

@@ -55,6 +55,7 @@ class PlanListResult {
   MetaDataForURL metadata;
   MetaDataForURL catmetadata;
   MetaDataForHospitalLogo providerMetadata;
+  bool isSelected;
 
   PlanListResult(
       {this.packageid,
@@ -80,7 +81,9 @@ class PlanListResult {
       this.startDate,
       this.metadata,
       this.catmetadata,
-      this.providerMetadata,this.providerDesc});
+      this.providerMetadata,
+      this.providerDesc,
+      this.isSelected=false});
 
   factory PlanListResult.fromJson(Map<String, dynamic> json) {
     return PlanListResult(

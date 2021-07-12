@@ -1,8 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/myPlan/model/myPlanListModel.dart';
+import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/plan_wizard/services/PlanWizardService.dart';
 
 class PlanWizardViewModel extends ChangeNotifier {
+  PlanWizardService myPlanService = new PlanWizardService();
   final PageController pageController = PageController();
   int currentPage = 0;
   List<MyPlanListResult> carePlanList = [];
@@ -10,6 +15,7 @@ class PlanWizardViewModel extends ChangeNotifier {
   List<MyPlanListResult> cartItemsList = [];
 
   void changeCurrentPage(int newPage) {
+    pageController.animateToPage(newPage, duration: Duration(milliseconds: 100), curve: Curves.easeIn);
     currentPage = newPage;
     notifyListeners();
   }
@@ -31,5 +37,14 @@ class PlanWizardViewModel extends ChangeNotifier {
     cartItemsList.addAll(carePlanList);
     cartItemsList.addAll(dietPlanList);
     notifyListeners();
+  }
+
+  Future<PlanListModel> getPlanList() async {
+    try {
+      var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      PlanListModel myPlanListModel =
+      await myPlanService.getPlanList(userid);
+      return myPlanListModel;
+    } catch (e) {}
   }
 }
