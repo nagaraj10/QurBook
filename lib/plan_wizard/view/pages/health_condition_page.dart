@@ -23,9 +23,7 @@ class _HealthConditionPageState extends State<HealthConditionPage> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SearchWidgetWizard((value){
-
-        },strSearchHealth),
+        SearchWidgetWizard((value) {}, strSearchHealth),
         Expanded(
           child: SingleChildScrollView(
             child: Column(
