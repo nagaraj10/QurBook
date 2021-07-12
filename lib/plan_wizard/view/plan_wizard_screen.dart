@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/plan_wizard/view/pages/care_plan_page.dart';
+import 'package:myfhb/plan_wizard/view/pages/diet_plan_page.dart';
 import 'package:myfhb/plan_wizard/view/pages/health_condition_page.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
@@ -58,7 +59,7 @@ class PlanWizardScreen extends StatelessWidget {
                     children: [
                       HealthConditionPage(),
                       CarePlanPage(),
-                      HealthConditionPage(),
+                      DietPlanPage(),
                     ],
                   ),
                 ),

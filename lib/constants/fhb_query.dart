@@ -244,7 +244,7 @@ const String qr_save_regi_media = 'media-details/store-media';
 const String regimentImagePath = 'https://qurplan.com/assets/images/';
 
 const String getMenuCarePlans =
-    'Action=GetMenuTaggedPackages&tags=DB2,DB1&extags=diet';
+    'Action=GetMenuTaggedPackages&tags=DB2,DB1,diet';
 
 const String qr_list = 'list/';
 const String qr_doctorlist = 'doctorsList?';

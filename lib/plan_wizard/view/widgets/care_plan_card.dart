@@ -15,8 +15,9 @@ import 'Rounded_CheckBox.dart';
 class CarePlanCard extends StatefulWidget {
   final int i;
   final List<PlanListResult> planList;
+  final Function() isPlanChecked;
 
-  CarePlanCard(this.i, this.planList);
+  CarePlanCard(this.i, this.planList,this.isPlanChecked);
 
   @override
   _CarePlanCardState createState() => _CarePlanCardState();
@@ -38,8 +39,8 @@ class _CarePlanCardState extends State<CarePlanCard> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Provider.of<PlanWizardViewModel>(context, listen: false)
-            .changeCurrentPage(2);
+        /*Provider.of<PlanWizardViewModel>(context, listen: false)
+            .changeCurrentPage(2);*/
       },
       child: Container(
           padding: EdgeInsets.all(10.0),
@@ -159,6 +160,7 @@ class _CarePlanCardState extends State<CarePlanCard> {
                   Row(
                     children: [
                       RoundedCheckBox(() {
+                        widget.isPlanChecked();
                         setState(() {
                           planList.forEach((element) {
                             element.isSelected = false;

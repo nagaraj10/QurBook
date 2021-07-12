@@ -2,28 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
 import 'package:myfhb/plan_wizard/view/widgets/care_plan_card.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
-import 'package:provider/provider.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
-class CarePlanPage extends StatefulWidget {
+class DietPlanPage extends StatefulWidget {
+
   @override
-  _CarePlanPageState createState() => _CarePlanPageState();
+  _DietPlanPageState createState() => _DietPlanPageState();
 }
 
-class _CarePlanPageState extends State<CarePlanPage> {
+class _DietPlanPageState extends State<DietPlanPage> {
+
   List<PlanListResult> planListResult;
 
   Future<PlanListModel> planListModel;
   PlanWizardViewModel myPlanViewModel = new PlanWizardViewModel();
 
   PlanListModel myPlanListModel;
-
-  bool isPlanChecked = false;
 
   @override
   void initState() {
@@ -36,7 +35,7 @@ class _CarePlanPageState extends State<CarePlanPage> {
         body: Column(
           children: [
             SearchWidget(
-              hintText: strPlanHospitalDiet,
+              hintText: strSearchDietPlan,
               onChanged: (providerName) {},
             ),
             Expanded(
@@ -49,12 +48,6 @@ class _CarePlanPageState extends State<CarePlanPage> {
         floatingActionButton: FloatingActionButton(
           backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
           onPressed: () {
-            if (!isPlanChecked) {
-              _alertForUncheckPlan();
-            } else {
-              Provider.of<PlanWizardViewModel>(context, listen: false)
-                  .changeCurrentPage(2);
-            }
           },
           child: Icon(
             Icons.navigate_next,
@@ -78,7 +71,7 @@ class _CarePlanPageState extends State<CarePlanPage> {
                   height: 30.0.h,
                   child: new CircularProgressIndicator(
                       backgroundColor:
-                          Color(new CommonUtil().getMyPrimaryColor())),
+                      Color(new CommonUtil().getMyPrimaryColor())),
                 ),
               ),
             ),
@@ -96,8 +89,8 @@ class _CarePlanPageState extends State<CarePlanPage> {
                 height: 1.sh / 1.3,
                 child: Container(
                     child: Center(
-                  child: Text(variable.strNoPackages),
-                )),
+                      child: Text(strNoPackages),
+                    )),
               ),
             );
           }
@@ -109,49 +102,23 @@ class _CarePlanPageState extends State<CarePlanPage> {
   Widget carePlanList(List<PlanListResult> planList) {
     return (planList != null && planList.length > 0)
         ? ListView.builder(
-            shrinkWrap: true,
-            padding: EdgeInsets.only(
-              bottom: 8.0.h,
-            ),
-            itemBuilder: (BuildContext ctx, int i) =>
-                CarePlanCard(i, planList, () {
-              isPlanChecked = true;
-            }),
-            itemCount: planList.length,
-          )
-        : SafeArea(
-            child: SizedBox(
-              height: 1.sh / 1.3,
-              child: Container(
-                  child: Center(
-                child: Text(variable.strNoPlans),
-              )),
-            ),
-          );
-  }
+      shrinkWrap: true,
+      padding: EdgeInsets.only(
+        bottom: 8.0.h,
+      ),
+      itemBuilder: (BuildContext ctx, int i) => CarePlanCard(i, planList,(){
 
-  Future<bool> _alertForUncheckPlan() {
-    return showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text('Are you sure?'),
-            content: Text('Do you want to continue without choose any plan'),
-            actions: <Widget>[
-              FlatButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text('No'),
-              ),
-              FlatButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  Provider.of<PlanWizardViewModel>(context, listen: false)
-                      .changeCurrentPage(2);
-                },
-                child: Text('Yes'),
-              ),
-            ],
-          ),
-        ) ??
-        false;
+      }),
+      itemCount: planList.length,
+    )
+        : SafeArea(
+      child: SizedBox(
+        height: 1.sh / 1.3,
+        child: Container(
+            child: Center(
+              child: Text(strNoPlans),
+            )),
+      ),
+    );
   }
 }
