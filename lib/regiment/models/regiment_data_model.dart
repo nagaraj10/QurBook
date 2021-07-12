@@ -39,6 +39,8 @@ class RegimentDataModel {
     this.doseRepeat,
     this.metadata,
     this.isPlaying = false,
+    this.scheduled = false,
+    this.asNeeded = false,
   });
 
   final String eid;
@@ -78,6 +80,8 @@ class RegimentDataModel {
   final String doseRepeat;
   final Metadata metadata;
   bool isPlaying;
+  final bool scheduled;
+  final bool asNeeded;
 
   factory RegimentDataModel.fromJson(Map<String, dynamic> json) =>
       RegimentDataModel(
@@ -118,7 +122,13 @@ class RegimentDataModel {
         providername: json['providername'],
         hasform: (json['hasform'] ?? 0) == 1,
         saytext: json['saytext'],
-        doseMeal: (json['dosemeal'] ?? 0).toString() == '64',
+        doseMeal: ((json['dosemeal'] ?? 0).toString() == '64') &&
+            (activitynameValues.map[json['activityname']] ==
+                Activityname.SYMPTOM),
+        asNeeded: ((json['dosemeal'] ?? 0).toString() == '64') &&
+            (activitynameValues.map[json['activityname']] !=
+                Activityname.SYMPTOM),
+        scheduled: ((json['dosemeal'] ?? 0).toString() != '64'),
         doseRepeat: json['doserepeat'],
         metadata: json['metadata'] is List
             ? Metadata()
@@ -267,13 +277,14 @@ class VitalsData {
       };
 }
 
-enum Activityname { DIET, VITALS, MEDICATION, SCREENING }
+enum Activityname { DIET, VITALS, MEDICATION, SCREENING, SYMPTOM }
 
 final activitynameValues = EnumValues({
   'diet': Activityname.DIET,
   'medication': Activityname.MEDICATION,
   'screening': Activityname.SCREENING,
-  'vitals': Activityname.VITALS
+  'vitals': Activityname.VITALS,
+  'symptom': Activityname.SYMPTOM
 });
 
 enum FieldType { NUMBER, CHECKBOX, TEXT, LOOKUP, RADIO }

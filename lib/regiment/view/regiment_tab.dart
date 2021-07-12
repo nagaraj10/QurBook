@@ -11,6 +11,7 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/regiment/models/profile_response_model.dart';
 import 'package:myfhb/regiment/models/regiment_data_model.dart';
 import 'package:myfhb/regiment/view/widgets/event_list_widget.dart';
+import 'package:myfhb/regiment/view/widgets/filter_widget.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
@@ -65,8 +66,9 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
     Provider.of<RegimentViewModel>(context, listen: false)
         .updateInitialShowIndex(
       index: Provider.of<RegimentViewModel>(context, listen: false)
-                  .regimentFilter ==
-              RegimentFilter.Missed  && widget.eventId == null
+                      .regimentFilter ==
+                  RegimentFilter.Missed &&
+              widget.eventId == null
           ? 0
           : null,
       isInitial: true,
@@ -434,7 +436,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                 Flexible(
                   child: Text(
                     _regimentViewModel.regimentMode == RegimentMode.Schedule
-                        ? planActivities
+                        ? scheduled
                         : planSymptoms,
                     style: TextStyle(
                       fontSize: 16.0.sp,
@@ -450,37 +452,35 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                           RegimentMode.Schedule,
                       child: Row(
                         children: [
-                          Theme(
-                            data: Theme.of(context).copyWith(
-                              unselectedWidgetColor:
-                                  Color(CommonUtil().getMyPrimaryColor()),
-                            ),
-                            child: Checkbox(
-                              materialTapTargetSize:
-                                  MaterialTapTargetSize.shrinkWrap,
-                              value: _regimentViewModel.regimentFilter ==
-                                  RegimentFilter.Missed,
-                              activeColor:
-                                  Color(CommonUtil().getMyPrimaryColor()),
-                              onChanged: (isMissed) {
-                                _regimentViewModel.changeFilter(isMissed
-                                    ? RegimentFilter.Missed
-                                    : RegimentFilter.All);
-                              },
-                            ),
+                          FilterWidget(
+                            title: scheduledActivities,
+                            value: _regimentViewModel.regimentFilter ==
+                                RegimentFilter.Scheduled,
+                            onChanged: (isScheduled) {
+                              _regimentViewModel.changeFilter(isScheduled
+                                  ? RegimentFilter.Scheduled
+                                  : RegimentFilter.All);
+                            },
                           ),
-                          Padding(
-                            padding: EdgeInsets.only(
-                              right: 15.0.w,
-                            ),
-                            child: Text(
-                              missedActivities,
-                              style: TextStyle(
-                                fontSize: 14.0.sp,
-                                fontWeight: FontWeight.w500,
-                                color: Color(CommonUtil().getMyPrimaryColor()),
-                              ),
-                            ),
+                          FilterWidget(
+                            title: asNeededActivities,
+                            value: _regimentViewModel.regimentFilter ==
+                                RegimentFilter.AsNeeded,
+                            onChanged: (isAsNeeded) {
+                              _regimentViewModel.changeFilter(isAsNeeded
+                                  ? RegimentFilter.AsNeeded
+                                  : RegimentFilter.All);
+                            },
+                          ),
+                          FilterWidget(
+                            title: missedActivities,
+                            value: _regimentViewModel.regimentFilter ==
+                                RegimentFilter.Missed,
+                            onChanged: (isMissed) {
+                              _regimentViewModel.changeFilter(isMissed
+                                  ? RegimentFilter.Missed
+                                  : RegimentFilter.All);
+                            },
                           ),
                         ],
                       ),
