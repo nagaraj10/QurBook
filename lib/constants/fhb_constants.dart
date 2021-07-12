@@ -518,7 +518,8 @@ const String strMyPlans = 'My Care Plans';
 const String strCarePlans = 'Care Plans';
 const String strHealthcon = 'Health Condition';
 const String strPlans = 'Plans';
-const String strTopPlans = 'Top Plans';
+const String strTopHealth = 'Top Health Conditions';
+const String strAllHealth = 'All Health Conditions';
 const String strSelectHealth = 'Select your Health Conditions';
 const String strSelectCare = 'Select your Care Plan';
 const String strSelectTherapeutic = 'Select your Therapeutic Diet';
@@ -530,6 +531,7 @@ const String strPlanHospitalDiet = 'Search Plan or Hospital or Doctor';
 const String strSearchDietPlan = 'Search Diet Plan';
 const String strLetsAdd = 'Let\'s add it';
 const String strTellToUs = 'Tell to us';
+const String strDietPlan = 'Diet Plans';
 
 const strUploading = 'Uploading...';
 const strSubscribe = 'Subscribe';
