@@ -32,12 +32,19 @@ class PlanWizardScreen extends StatelessWidget {
           flexibleSpace: GradientAppBar(),
           backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
           elevation: 0,
-          title: const Text(strHealthcon),
+          title: Text(_getAppBarText(planWizardViewModel.currentPage)),
           leading: IconWidget(
             icon: Icons.arrow_back_ios,
             colors: Colors.white,
             size: 24.0.sp,
-            onTap: () => Get.back(),
+            onTap: () {
+              if (planWizardViewModel.currentPage == 0) {
+                Get.back();
+              } else {
+                planWizardViewModel
+                    .changeCurrentPage(planWizardViewModel.currentPage - 1);
+              }
+            },
           ),
         ),
         body: Stack(
@@ -46,7 +53,6 @@ class PlanWizardScreen extends StatelessWidget {
             Column(
               mainAxisSize: MainAxisSize.max,
               children: [
-                //TODO: Replace Placeholder with page number widget
                 PlanNavigationWidget(),
                 Expanded(
                   child: PageView(
@@ -136,6 +142,20 @@ class PlanWizardScreen extends StatelessWidget {
         break;
       case 2:
         return strTellToUs;
+        break;
+    }
+  }
+
+  String _getAppBarText(int currentPage) {
+    switch (currentPage) {
+      case 0:
+        return strHealthcon;
+        break;
+      case 1:
+        return strCarePlans;
+        break;
+      case 2:
+        return strDietPlan;
         break;
     }
   }

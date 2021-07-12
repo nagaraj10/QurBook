@@ -2,10 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/plan_wizard/view/widgets/plans_grid_view.dart';
 import 'package:myfhb/plan_wizard/view/widgets/search_widget.dart';
+import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
+import 'package:provider/provider.dart';
 
-class HealthConditionPage extends StatelessWidget {
+class HealthConditionPage extends StatefulWidget {
+  @override
+  _HealthConditionPageState createState() => _HealthConditionPageState();
+}
+
+class _HealthConditionPageState extends State<HealthConditionPage> {
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<PlanWizardViewModel>(context).currentPage = 0;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -21,7 +34,7 @@ class HealthConditionPage extends StatelessWidget {
                   height: 5.0.h,
                 ),
                 PlansGridView(
-                  title: strTopPlans,
+                  title: strTopHealth,
                   //TODO: Replace with actual plans list
                   planList: List.generate(5, (index) => null),
                 ),
@@ -29,7 +42,7 @@ class HealthConditionPage extends StatelessWidget {
                   height: 5.0.h,
                 ),
                 PlansGridView(
-                  title: strAllPlans,
+                  title: strAllHealth,
                   //TODO: Replace with actual plans list
                   planList: List.generate(10, (index) => null),
                 ),
