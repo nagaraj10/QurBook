@@ -1,40 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
+import 'package:myfhb/plan_dashboard/view/planDetailsView.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:provider/provider.dart';
-
 import 'Rounded_CheckBox.dart';
 
-class CarePlanCard extends StatefulWidget {
+class CarePlanCard extends StatelessWidget {
   final PlanListResult planList;
+  final Function() onClick;
 
-  CarePlanCard({this.planList});
+  CarePlanCard({this.planList, this.onClick});
 
-  @override
-  _CarePlanCardState createState() => _CarePlanCardState();
-}
+  PlanWizardViewModel planWizardViewModel = new PlanWizardViewModel();
 
-class _CarePlanCardState extends State<CarePlanCard> {
-  PlanListResult planList;
-
-  @override
-  void initState() {
-    super.initState();
-    planList = widget.planList;
-  }
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        /*Provider.of<PlanWizardViewModel>(context, listen: false)
-            .changeCurrentPage(2);*/
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => MyPlanDetailView(
+                title: planList?.title,
+                providerName: planList?.providerName,
+                description: planList?.description,
+                issubscription: planList?.isSubscribed,
+                packageId: planList?.packageid,
+                price: planList?.price,
+                packageDuration:
+                planList?.packageDuration,
+                providerId: planList?.plinkid,
+                isDisable: false,
+                hosIcon:
+                planList?.providerMetadata?.icon,
+                iconApi: planList?.metadata?.icon,
+                catIcon: planList?.catmetadata?.icon,
+                metaDataForURL: planList?.metadata,
+              )),
+        );
       },
       child: Container(
           padding: EdgeInsets.all(10.0),
@@ -62,8 +73,8 @@ class _CarePlanCardState extends State<CarePlanCard> {
                   CircleAvatar(
                     backgroundColor: Colors.grey[200],
                     radius: 20,
-                    child:
-                        CommonUtil().customImage(planList?.metadata?.icon??''),
+                    child: CommonUtil()
+                        .customImage(planList?.metadata?.icon ?? ''),
                   ),
                   SizedBox(
                     width: 20.0.w,
@@ -87,8 +98,7 @@ class _CarePlanCardState extends State<CarePlanCard> {
                         ),
                         Text(
                           planList.providerName != null
-                              ? toBeginningOfSentenceCase(
-                                  planList.providerName)
+                              ? toBeginningOfSentenceCase(planList.providerName)
                               : '',
                           style: TextStyle(
                               fontSize: 15.0.sp,
@@ -161,6 +171,33 @@ class _CarePlanCardState extends State<CarePlanCard> {
                             Provider.of<PlanWizardViewModel>(context,
                                     listen: false)
                                 .updateSingleSelection(planList.packageid);
+
+                            if (Provider.of<PlanWizardViewModel>(context,
+                                        listen: false)
+                                    .currentPackageId ==
+                                planList.packageid) {
+                              planWizardViewModel
+                                  .addToCartItem(
+                                      packageId: planList.packageid,
+                                      price: planList.price,
+                                      isRenew: planList.isexpired == '1'
+                                          ? true
+                                          : false)
+                                  .then((value) {
+                                if (value?.isSuccess) {
+                                  FlutterToast().getToast(
+                                      'Plan Added to Cart', Colors.green);
+                                } else {
+                                  FlutterToast().getToast(
+                                      value?.message != null
+                                          ? value?.message
+                                          : 'Adding Failed! Try again',
+                                      Colors.green);
+                                }
+                              });
+                            } else {
+                              print('removeItem'); //Mohan delete api
+                            }
                           }),
                       SizedBox(width: 5.w),
                     ],

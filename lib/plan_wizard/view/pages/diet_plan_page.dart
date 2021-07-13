@@ -113,7 +113,9 @@ class _DietPlanPageState extends State<DietPlanPage> {
               bottom: 8.0.h,
             ),
             itemBuilder: (BuildContext ctx, int i) =>
-                CarePlanCard(planList: planList[i]),
+                CarePlanCard(planList: planList[i],onClick: (){
+
+                },),
             itemCount: planList.length,
           )
         : SafeArea(

@@ -57,6 +57,7 @@ class PlanWizardScreen extends StatelessWidget {
             Column(
               mainAxisSize: MainAxisSize.max,
               children: [
+                SizedBox(height: 5.h),
                 PlanNavigationWidget(),
                 Expanded(
                   child: PageView(

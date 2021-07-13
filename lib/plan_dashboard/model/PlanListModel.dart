@@ -52,6 +52,7 @@ class PlanListResult {
   String userpackid;
   String isSubscribed;
   String startDate;
+  String isexpired;
   MetaDataForURL metadata;
   MetaDataForURL catmetadata;
   MetaDataForHospitalLogo providerMetadata;
@@ -83,6 +84,7 @@ class PlanListResult {
       this.catmetadata,
       this.providerMetadata,
       this.providerDesc,
+      this.isexpired,
       this.isSelected=false});
 
   factory PlanListResult.fromJson(Map<String, dynamic> json) {
@@ -109,6 +111,7 @@ class PlanListResult {
         userpackid: json['userpackid'],
         isSubscribed: json['IsSubscribed'],
         startDate: json['startdate'],
+        isexpired: json['isexpired'],
         metadata:
             json['metadata'] != null && json['metadata'].toString().isNotEmpty
                 ? MetaDataForURL.fromJson(jsonDecode(json["metadata"] ?? '{}'))
@@ -148,6 +151,7 @@ class PlanListResult {
     data['userpackid'] = this.userpackid;
     data['IsSubscribed'] = this.isSubscribed;
     data['startdate'] = this.startDate;
+    data['isexpired'] = this.isexpired;
     data['metadata'] = this.metadata;
     data['catmetadata'] = this.catmetadata;
     data['providermetadata'] = this.providerMetadata;

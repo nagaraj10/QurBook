@@ -1627,6 +1627,19 @@ class ApiBaseHelper {
     return responseJson;
   }
 
+  Future<dynamic> addToCartHelper(String url, String jsonString) async {
+    var responseJson;
+    try {
+      final response = await http.post(_baseUrl + url,
+          headers: await headerRequest.getRequestHeadersTimeSlot(),
+          body: jsonString);
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
   Future<dynamic> updateLastVisited() async {
     try {
       String userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);

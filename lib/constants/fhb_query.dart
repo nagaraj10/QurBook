@@ -261,3 +261,4 @@ const String qr_healthOrg = 'healthOrganization';
 const String qr_all = 'all';
 
 const String qr_createSubscribe = 'payment/plan-subscription-create-payment';
+const String qr_add_cart = 'cart/add-product';
