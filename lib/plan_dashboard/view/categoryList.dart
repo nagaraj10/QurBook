@@ -15,12 +15,10 @@ import 'package:myfhb/plan_dashboard/view/planDetailsView.dart';
 import 'package:myfhb/plan_dashboard/view/planList.dart';
 import 'package:myfhb/plan_dashboard/viewModel/planViewModel.dart';
 import 'package:myfhb/plan_dashboard/viewModel/subscribeViewModel.dart';
-import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'package:provider/provider.dart';
 
 class CategoryList extends StatefulWidget {
   @override
@@ -62,13 +60,13 @@ class _CategoryState extends State<CategoryList> {
   void initState() {
     FocusManager.instance.primaryFocus.unfocus();
     super.initState();
-    Provider.of<RegimentViewModel>(
-      context,
-      listen: false,
-    ).updateTabIndex(currentIndex: 2);
-    Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
-      isInitial: true,
-    );
+    // Provider.of<RegimentViewModel>(
+    //   context,
+    //   listen: false,
+    // ).updateTabIndex(currentIndex: 2);
+    // Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
+    //   isInitial: true,
+    // );
 
     providerId = widget.providerId;
     icon = widget.icon;
@@ -680,7 +678,10 @@ class _CategoryState extends State<CategoryList> {
                                                               ?.price ==
                                                           '0', refresh: () {
                                                 setState(() {
-                                                  planListModel = myPlanViewModel.getPlanList(providerId);
+                                                  planListModel =
+                                                      myPlanViewModel
+                                                          .getPlanList(
+                                                              providerId);
                                                 });
                                               });
                                             }

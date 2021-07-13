@@ -1,9 +1,4 @@
-import 'dart:math';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
@@ -11,21 +6,13 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
 import 'package:myfhb/plan_dashboard/model/SearchListModel.dart';
 import 'package:myfhb/plan_dashboard/services/SearchListService.dart';
 import 'package:myfhb/plan_dashboard/view/categoryList.dart';
-import 'package:myfhb/plan_dashboard/view/planList.dart';
-import 'package:myfhb/plan_dashboard/view/searchProviderList.dart';
 import 'package:myfhb/plan_dashboard/viewModel/planViewModel.dart';
-import 'package:myfhb/plan_dashboard/viewModel/subscribeViewModel.dart';
-import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
-import 'package:provider/provider.dart';
 import 'package:showcaseview/showcase_widget.dart';
 
 class SearchListHome extends StatefulWidget {
@@ -55,9 +42,9 @@ class _SearchListState extends State<SearchListHome> {
   void initState() {
     FocusManager.instance.primaryFocus.unfocus();
     super.initState();
-    Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
-      isInitial: true,
-    );
+    // Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
+    //   isInitial: true,
+    // );
     providerList = myPlanViewModel.getUserSearchListInit();
     isFirst = PreferenceUtil.isKeyValid(Constants.KEY_SHOWCASE_hospitalList);
 
@@ -291,7 +278,7 @@ class _SearchListState extends State<SearchListHome> {
           context,
           MaterialPageRoute(
               builder: (context) => CategoryList(
-                  searchList[i].providerid, searchList[i]?.metadata?.icon,'')),
+                  searchList[i].providerid, searchList[i]?.metadata?.icon, '')),
         ).then((value) {
           setState(() {});
         });

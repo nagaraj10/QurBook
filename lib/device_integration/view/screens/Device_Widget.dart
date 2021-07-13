@@ -1,55 +1,39 @@
 // ignore: file_names
 import 'dart:io';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:myfhb/common/errors_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
-import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/common/SwitchProfile.dart';
+import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_parameters.dart';
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/variable_constant.dart';
-import 'package:myfhb/device_integration/view/screens/Clipper.dart';
+import 'package:myfhb/device_integration/model/LastMeasureSync.dart';
+import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
+import 'package:myfhb/device_integration/view/screens/Device_Value.dart';
+import 'package:myfhb/device_integration/viewModel/Device_model.dart';
 import 'package:myfhb/device_integration/viewModel/deviceDataHelper.dart';
 import 'package:myfhb/devices/device_dashboard_arguments.dart';
-import 'package:myfhb/myPlan/view/myPlanList.dart';
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
-import 'package:myfhb/my_family/screens/MyFamily.dart';
-import 'package:myfhb/plan_dashboard/view/categoryList.dart';
-import 'package:myfhb/plan_dashboard/view/planList.dart';
-import 'package:myfhb/plan_dashboard/view/planUserProviderList.dart';
-import 'package:myfhb/regiment/view/regiment_tab.dart';
+import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/common_response.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
-import 'package:myfhb/src/ui/HomeScreen.dart';
-import 'package:myfhb/src/ui/user/UserAccounts.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:provider/provider.dart';
 import 'package:myfhb/src/ui/bot/common/botutils.dart';
-import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
-
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-
-import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
-import 'package:myfhb/device_integration/view/screens/Device_Value.dart';
-
-import 'package:myfhb/device_integration/viewModel/Device_model.dart';
-
-import 'package:myfhb/device_integration/model/LastMeasureSync.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/src/ui/user/UserAccounts.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/authentication/view/login_screen.dart';
+import 'package:provider/provider.dart';
 
 class ShowDevicesNew extends StatefulWidget {
   ShowDevicesNew({
@@ -155,11 +139,11 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
     mInitialTime = DateTime.now();
     _familyListBloc = new FamilyListBloc();
     getFamilyLength();
-    Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
-      isInitial: true,
-      setIndex: true,
-      fromPlans: widget.fromPlans,
-    );
+    // Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
+    //   isInitial: true,
+    //   setIndex: true,
+    //   fromPlans: widget.fromPlans,
+    // );
     super.initState();
   }
 
