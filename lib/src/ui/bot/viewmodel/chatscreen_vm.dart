@@ -96,7 +96,6 @@ class ChatScreenViewModel extends ChangeNotifier {
 
   startMayaAutomatically({String message}) {
     isLoading = true;
-    notifyListeners();
     Future.delayed(Duration(seconds: 1), () {
       _screen = parameters.strSheela;
       sendToMaya(
