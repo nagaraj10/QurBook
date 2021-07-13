@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/plan_wizard/view/widgets/plans_grid_view.dart';
-import 'package:myfhb/plan_wizard/view/widgets/search_widget.dart';
-import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
-import 'package:provider/provider.dart';
 
 class HealthConditionPage extends StatefulWidget {
   @override
@@ -22,7 +19,9 @@ class _HealthConditionPageState extends State<HealthConditionPage> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SearchWidgetWizard((value) {}, strSearchHealth),
+        SearchWidget(onChanged: (value){
+
+        },hintText: strSearchHealth),
         Expanded(
           child: SingleChildScrollView(
             child: Column(

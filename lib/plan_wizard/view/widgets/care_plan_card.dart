@@ -1,36 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:provider/provider.dart';
-import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
 
 import 'Rounded_CheckBox.dart';
 
 class CarePlanCard extends StatefulWidget {
-  final int i;
-  final List<PlanListResult> planList;
+  final PlanListResult planList;
 
-  CarePlanCard({this.i, this.planList});
+  CarePlanCard({this.planList});
 
   @override
   _CarePlanCardState createState() => _CarePlanCardState();
 }
 
 class _CarePlanCardState extends State<CarePlanCard> {
-  List<PlanListResult> planList;
-  int i;
+  PlanListResult planList;
 
   @override
   void initState() {
     super.initState();
     planList = widget.planList;
-    i = widget.i;
   }
 
   @override
@@ -67,7 +63,7 @@ class _CarePlanCardState extends State<CarePlanCard> {
                     backgroundColor: Colors.grey[200],
                     radius: 20,
                     child:
-                        CommonUtil().customImage(planList[i]?.metadata?.icon),
+                        CommonUtil().customImage(planList?.metadata?.icon??''),
                   ),
                   SizedBox(
                     width: 20.0.w,
@@ -78,8 +74,8 @@ class _CarePlanCardState extends State<CarePlanCard> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          planList[i].title != null
-                              ? toBeginningOfSentenceCase(planList[i].title)
+                          planList.title != null
+                              ? toBeginningOfSentenceCase(planList.title)
                               : '',
                           style: TextStyle(
                             fontSize: 16.0.sp,
@@ -90,9 +86,9 @@ class _CarePlanCardState extends State<CarePlanCard> {
                           maxLines: 2,
                         ),
                         Text(
-                          planList[i].providerName != null
+                          planList.providerName != null
                               ? toBeginningOfSentenceCase(
-                                  planList[i].providerName)
+                                  planList.providerName)
                               : '',
                           style: TextStyle(
                               fontSize: 15.0.sp,
@@ -111,9 +107,9 @@ class _CarePlanCardState extends State<CarePlanCard> {
                                       fontWeight: FontWeight.w400,
                                       color: Colors.black),
                                 ),
-                                planList[i].packageDuration != null
+                                planList.packageDuration != null
                                     ? Text(
-                                        planList[i].packageDuration + ' days',
+                                        planList.packageDuration + ' days',
                                         maxLines: 1,
                                         style: TextStyle(
                                             fontSize: 12.0.sp,
@@ -130,12 +126,12 @@ class _CarePlanCardState extends State<CarePlanCard> {
                                       fontWeight: FontWeight.w400,
                                       color: Colors.black),
                                 ),
-                                planList[i].price != null
+                                planList.price != null
                                     ? Visibility(
-                                        visible: planList[i].price.isNotEmpty &&
-                                            planList[i].price != '0',
+                                        visible: planList.price.isNotEmpty &&
+                                            planList.price != '0',
                                         child: TextWidget(
-                                            text: INR + planList[i].price,
+                                            text: INR + planList.price,
                                             fontsize: 12.0.sp,
                                             fontWeight: FontWeight.w500,
                                             colors: Color(new CommonUtil()
@@ -160,11 +156,11 @@ class _CarePlanCardState extends State<CarePlanCard> {
                       RoundedCheckBox(
                           isSelected: Provider.of<PlanWizardViewModel>(context)
                                   .currentPackageId ==
-                              planList[i].packageid,
+                              planList.packageid,
                           onTap: () {
                             Provider.of<PlanWizardViewModel>(context,
                                     listen: false)
-                                .updateSingleSelection(planList[i].packageid);
+                                .updateSingleSelection(planList.packageid);
                           }),
                       SizedBox(width: 5.w),
                     ],

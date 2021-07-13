@@ -56,7 +56,7 @@ class SearchWdigetState extends State<SearchWidget> {
                     focusNode: widget.searchFocus,
                     autofocus: false,
                     decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(4),
+                      contentPadding: EdgeInsets.all(0),
                       hintText: widget.hintText != null && widget.hintText != ''
                           ? widget.hintText
                           : variable.strSearch,

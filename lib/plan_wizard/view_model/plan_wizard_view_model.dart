@@ -14,6 +14,7 @@ class PlanWizardViewModel extends ChangeNotifier {
   List<MyPlanListResult> dietPlanList = [];
   List<MyPlanListResult> cartItemsList = [];
   String currentPackageId = '';
+  List<PlanListResult> planSearchList = [];
 
   void updateSingleSelection(String packageId) {
     if (packageId == currentPackageId) {
@@ -57,5 +58,25 @@ class PlanWizardViewModel extends ChangeNotifier {
       PlanListModel myPlanListModel = await myPlanService.getPlanList(userid);
       return myPlanListModel;
     } catch (e) {}
+  }
+
+  List<PlanListResult> filterPlanNameProvider(
+      String title, List<PlanListResult> planListOld) {
+    List<PlanListResult> filterSearch = new List();
+    for (PlanListResult searchList in planListOld) {
+      if (searchList?.title != null && searchList?.title != '') {
+        if (searchList?.title
+            .toLowerCase()
+            .trim()
+            .contains(title.toLowerCase().trim()) ||
+            searchList?.providerName
+                .toLowerCase()
+                .trim()
+                .contains(title.toLowerCase().trim())) {
+          filterSearch.add(searchList);
+        }
+      }
+    }
+    return filterSearch;
   }
 }
