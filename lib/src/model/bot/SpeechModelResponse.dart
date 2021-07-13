@@ -13,6 +13,7 @@ class SpeechModelResponse {
   List<VideoLinks> videoLinks;
   bool redirect;
   bool enableMic;
+  bool provider_msg;
   SpeechModelResponse({
     this.recipientId,
     this.text,
@@ -24,6 +25,7 @@ class SpeechModelResponse {
     this.videoLinks,
     this.redirect,
     this.enableMic,
+    this.provider_msg,
   });
 
   //setter
@@ -50,6 +52,7 @@ class SpeechModelResponse {
     }
     redirect = json[parameters.strRedirect];
     enableMic = json[parameters.strEnableMic] ?? false;
+    provider_msg = json[parameters.strProviderMsg] ?? false;
   }
 
   //getter
@@ -71,6 +74,7 @@ class SpeechModelResponse {
     }
     data[parameters.strRedirect] = this.redirect;
     data[parameters.strEnableMic] = this.enableMic;
+    data[parameters.strProviderMsg] = this.provider_msg;
     return data;
   }
 }

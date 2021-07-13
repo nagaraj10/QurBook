@@ -100,8 +100,12 @@ class ChatScreenViewModel extends ChangeNotifier {
     Future.delayed(Duration(seconds: 1), () {
       _screen = parameters.strSheela;
       sendToMaya(
-          (message != null && message.isNotEmpty) ? '/provider_message' : variable.strhiMaya,
-          screen: _screen, providerMsg: (message != null && message.isNotEmpty) ? message : null);
+          (message != null && message.isNotEmpty)
+              ? '/provider_message'
+              : variable.strhiMaya,
+          screen: _screen,
+          providerMsg:
+              (message != null && message.isNotEmpty) ? message : null);
     });
 
     // var date = new FHBUtils().getFormattedDateString(DateTime.now().toString());
@@ -376,7 +380,13 @@ class ChatScreenViewModel extends ChangeNotifier {
   askUserForLanguage({String message}) {
     Future.delayed(Duration(seconds: 1), () {
       _screen = parameters.strSheela;
-      sendToMaya( (message != null && message.isNotEmpty) ? '/provider_message' : variable.strhiMaya, screen: _screen, providerMsg: (message != null && message.isNotEmpty) ? message : null);
+      sendToMaya(
+          (message != null && message.isNotEmpty)
+              ? '/provider_message'
+              : variable.strhiMaya,
+          screen: _screen,
+          providerMsg:
+              (message != null && message.isNotEmpty) ? message : null);
     });
 
     // var date = new FHBUtils().getFormattedDateString(DateTime.now().toString());
@@ -431,130 +441,92 @@ class ChatScreenViewModel extends ChangeNotifier {
         List<dynamic> list = jsonResponse;
         if (list.length > 0) {
           SpeechModelResponse res = SpeechModelResponse.fromJson(list[0]);
-          if((conversations?.length ?? 0) == 0 || (conversations?.length > 0 && (res?.text ?? '') != conversations[conversations?.length-1].text)){
+          if ((conversations?.length ?? 0) == 0 ||
+              (conversations?.length > 0 &&
+                  (res?.text ?? '') !=
+                      conversations[conversations?.length - 1].text)) {
             isEndOfConv = res.endOfConv;
-          isRedirect = res.redirect;
-          PreferenceUtil.saveString(constants.SHEELA_LANG, res.lang);
-          var date =
-              new FHBUtils().getFormattedDateString(DateTime.now().toString());
-          Conversation model = new Conversation(
-              isMayaSaid: true,
-              text: res.text,
-              name: prof.result != null
-                  ? prof.result.firstName + ' ' + prof.result.lastName
-                  : '',
-              imageUrl: res.imageURL,
-              timeStamp: date,
-              buttons: res.buttons,
-              langCode: res.lang,
-              searchURL: res.searchURL,
-              videoLinks: res.videoLinks,
-              redirect: isRedirect,
-              screen: screenValue,
-              isSpeaking: false);
-          conversations.add(model);
-          if ((res?.buttons?.length ?? 0) > 0) {
-            isButtonResponse = true;
-          } else {
-            isButtonResponse = false;
-          }
-          isSheelaSpeaking = false;
-          enableMic = res.enableMic ?? false;
-          notifyListeners();
-          Future.delayed(
-              Duration(
-                seconds: 1,
-              ), () async {
-            isMayaSpeaks = 0;
-            final lan = Utils.getCurrentLanCode();
-            String langCodeForRequest;
-            if (lan != "undef") {
-              final langCode = lan.split("-").first;
-              langCodeForRequest = langCode;
-              //print(langCode);
+            isRedirect = res.redirect;
+            PreferenceUtil.saveString(constants.SHEELA_LANG, res.lang);
+            var date = new FHBUtils()
+                .getFormattedDateString(DateTime.now().toString());
+            Conversation model = new Conversation(
+                isMayaSaid: true,
+                text: res.text,
+                name: prof.result != null
+                    ? prof.result.firstName + ' ' + prof.result.lastName
+                    : '',
+                imageUrl: res.imageURL,
+                timeStamp: date,
+                buttons: res.buttons,
+                langCode: res.lang,
+                searchURL: res.searchURL,
+                videoLinks: res.videoLinks,
+                redirect: isRedirect,
+                screen: screenValue,
+                isSpeaking: false,
+                provider_msg: res.provider_msg);
+            if (res.text == null || res.text == '') {
+              isLoading = false;
             }
+            conversations.add(model);
+            if ((res?.buttons?.length ?? 0) > 0) {
+              isButtonResponse = true;
+            } else {
+              isButtonResponse = false;
+            }
+            isSheelaSpeaking = false;
+            enableMic = res.enableMic ?? false;
+            notifyListeners();
+            Future.delayed(
+                Duration(
+                  seconds: 1,
+                ), () async {
+              isMayaSpeaks = 0;
+              final lan = Utils.getCurrentLanCode();
+              String langCodeForRequest;
+              if (lan != "undef") {
+                final langCode = lan.split("-").first;
+                langCodeForRequest = langCode;
+                //print(langCode);
+              }
 
-            if (canSpeak) {
-              if (Platform.isIOS ||
-                  lan == "undef" ||
-                  lan.toLowerCase() == "en-IN".toLowerCase() ||
-                  lan.toLowerCase() == "en-US".toLowerCase()) {
-                String textToSpeak = '';
-                // if ((res?.buttons?.length ?? 0) > 0) {
-                //   textToSpeak = '.';
-                //   await Future.forEach(res.buttons, (button) async {
-                //     textToSpeak = textToSpeak + button.title + '.';
-                //   });
-                // }
-                if (res.lang == null || res.lang == "undef") {
-                  res.lang = "en-IN";
-                }
-                isLoading = false;
-                conversations[conversations.length - 1].isSpeaking = true;
-                isSheelaSpeaking = true;
-                notifyListeners();
-                variable.tts_platform.invokeMethod(variable.strtts, {
-                  parameters.strMessage: res.text + textToSpeak,
-                  parameters.strIsClose: false,
-                  parameters.strLanguage: res.lang
-                }).then((response) async {
-                  if (response == 1) {
-                    isMayaSpeaks = 1;
+              if (canSpeak) {
+                if (Platform.isIOS ||
+                    lan == "undef" ||
+                    lan.toLowerCase() == "en-IN".toLowerCase() ||
+                    lan.toLowerCase() == "en-US".toLowerCase()) {
+                  String textToSpeak = '';
+                  // if ((res?.buttons?.length ?? 0) > 0) {
+                  //   textToSpeak = '.';
+                  //   await Future.forEach(res.buttons, (button) async {
+                  //     textToSpeak = textToSpeak + button.title + '.';
+                  //   });
+                  // }
+                  if (res.lang == null || res.lang == "undef") {
+                    res.lang = "en-IN";
                   }
-                  if (!isButtonResponse) {
-                    conversations[conversations.length - 1].isSpeaking = false;
-                    isSheelaSpeaking = false;
-                    notifyListeners();
-                    if (!isEndOfConv) {
-                      gettingReposnseFromNative();
-                    } else {
-                      refreshData();
-                    }
-                  } else {
-                    playingIndex = conversations.length - 1;
-                    await startButtonsSpeech(
-                      index: conversations.length - 1,
-                      langCode: res.lang,
-                      buttons: res.buttons,
-                    );
-                  }
-                }).catchError((error) {
-                  conversations[conversations.length - 1].isSpeaking = false;
-                  isSheelaSpeaking = false;
+                  isLoading = false;
+                  conversations[conversations.length - 1].isSpeaking = true;
+                  isSheelaSpeaking = true;
                   notifyListeners();
-                  if (!isEndOfConv) {
-                    gettingReposnseFromNative();
-                  }
-                });
-              } else {
-                //print(res.text);
-                String textToSpeak = '';
-                // if ((res?.buttons?.length ?? 0) > 0) {
-                //   textToSpeak = '.';
-                //   await Future.forEach(res.buttons, (button) async {
-                //     textToSpeak = textToSpeak + button.title + '.';
-                //   });
-                // }
-                audioPlayerForTTS = AudioPlayer();
-                final languageForTTS = Utils.getCurrentLanCode();
-                audioPlayerForTTS.onPlayerStateChanged.listen((event) async {
-                  if (event == AudioPlayerState.PLAYING) {
-                    isLoading = false;
-                    conversations[conversations.length - 1].isSpeaking = true;
-                    isSheelaSpeaking = true;
-                    notifyListeners();
-                    isAudioPlayerPlaying = true;
-                    await setTimeDuration(audioPlayerForTTS);
-                  }
-                  if (event == AudioPlayerState.COMPLETED) {
+                  variable.tts_platform.invokeMethod(variable.strtts, {
+                    parameters.strMessage: res.text + textToSpeak,
+                    parameters.strIsClose: false,
+                    parameters.strLanguage: res.lang
+                  }).then((response) async {
+                    if (response == 1) {
+                      isMayaSpeaks = 1;
+                    }
                     if (!isButtonResponse) {
-                      isLoading = false;
                       conversations[conversations.length - 1].isSpeaking =
                           false;
                       isSheelaSpeaking = false;
                       notifyListeners();
                       if (!isEndOfConv) {
                         gettingReposnseFromNative();
+                      } else {
+                        refreshData();
                       }
                     } else {
                       playingIndex = conversations.length - 1;
@@ -564,31 +536,77 @@ class ChatScreenViewModel extends ChangeNotifier {
                         buttons: res.buttons,
                       );
                     }
-                  }
-                  if (event == AudioPlayerState.PAUSED ||
-                      event == AudioPlayerState.STOPPED) {
-                    isLoading = false;
-                    if (!isButtonResponse) {
-                      conversations[conversations.length - 1].isSpeaking =
-                          false;
-                      isSheelaSpeaking = false;
-                      notifyListeners();
-                    } else {
-                      playingIndex = conversations.length - 1;
-                      await startButtonsSpeech(
-                        index: conversations.length - 1,
-                        langCode: res.lang,
-                        buttons: res.buttons,
-                      );
+                  }).catchError((error) {
+                    conversations[conversations.length - 1].isSpeaking = false;
+                    isSheelaSpeaking = false;
+                    notifyListeners();
+                    if (!isEndOfConv) {
+                      gettingReposnseFromNative();
                     }
-                  }
-                });
-                await getGoogleTTSResponse(res.text + textToSpeak,
-                    languageForTTS != null ? languageForTTS : "en", false);
+                  });
+                } else {
+                  //print(res.text);
+                  String textToSpeak = '';
+                  // if ((res?.buttons?.length ?? 0) > 0) {
+                  //   textToSpeak = '.';
+                  //   await Future.forEach(res.buttons, (button) async {
+                  //     textToSpeak = textToSpeak + button.title + '.';
+                  //   });
+                  // }
+                  audioPlayerForTTS = AudioPlayer();
+                  final languageForTTS = Utils.getCurrentLanCode();
+                  audioPlayerForTTS.onPlayerStateChanged.listen((event) async {
+                    if (event == AudioPlayerState.PLAYING) {
+                      isLoading = false;
+                      conversations[conversations.length - 1].isSpeaking = true;
+                      isSheelaSpeaking = true;
+                      notifyListeners();
+                      isAudioPlayerPlaying = true;
+                      await setTimeDuration(audioPlayerForTTS);
+                    }
+                    if (event == AudioPlayerState.COMPLETED) {
+                      if (!isButtonResponse) {
+                        isLoading = false;
+                        conversations[conversations.length - 1].isSpeaking =
+                            false;
+                        isSheelaSpeaking = false;
+                        notifyListeners();
+                        if (!isEndOfConv) {
+                          gettingReposnseFromNative();
+                        }
+                      } else {
+                        playingIndex = conversations.length - 1;
+                        await startButtonsSpeech(
+                          index: conversations.length - 1,
+                          langCode: res.lang,
+                          buttons: res.buttons,
+                        );
+                      }
+                    }
+                    if (event == AudioPlayerState.PAUSED ||
+                        event == AudioPlayerState.STOPPED) {
+                      isLoading = false;
+                      if (!isButtonResponse) {
+                        conversations[conversations.length - 1].isSpeaking =
+                            false;
+                        isSheelaSpeaking = false;
+                        notifyListeners();
+                      } else {
+                        playingIndex = conversations.length - 1;
+                        await startButtonsSpeech(
+                          index: conversations.length - 1,
+                          langCode: res.lang,
+                          buttons: res.buttons,
+                        );
+                      }
+                    }
+                  });
+                  await getGoogleTTSResponse(res.text + textToSpeak,
+                      languageForTTS != null ? languageForTTS : "en", false);
+                }
               }
-            }
-          });
-          }else{
+            });
+          } else {
             isLoading = false;
             notifyListeners();
           }
