@@ -291,6 +291,7 @@ const String strPrivacy = 'Privacy policy';
 const String strRateus = 'Rate us';
 const String strMaya = 'Sheela';
 const String strMAYA = 'SHEELA';
+const String strMsgFromProvider = 'Message from provider';
 
 const String strColorPalete = 'Color palette';
 

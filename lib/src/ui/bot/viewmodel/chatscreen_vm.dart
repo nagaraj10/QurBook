@@ -463,7 +463,11 @@ class ChatScreenViewModel extends ChangeNotifier {
                 videoLinks: res.videoLinks,
                 redirect: isRedirect,
                 screen: screenValue,
-                isSpeaking: false);
+                isSpeaking: false,
+                provider_msg: res.provider_msg);
+            if (res.text == null || res.text == '') {
+              isLoading = false;
+            }
             conversations.add(model);
             if ((res?.buttons?.length ?? 0) > 0) {
               isButtonResponse = true;
