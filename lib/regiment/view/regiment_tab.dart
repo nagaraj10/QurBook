@@ -445,11 +445,9 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                     ),
                   ),
                 ),
-                Flexible(
-                  flex: 3,
-                  child: Visibility(
-                    visible: _regimentViewModel.regimentMode ==
-                        RegimentMode.Schedule,
+                if (_regimentViewModel.regimentMode == RegimentMode.Schedule)
+                  Flexible(
+                    flex: 3,
                     child: SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Row(
@@ -488,7 +486,6 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                       ),
                     ),
                   ),
-                ),
               ],
             ),
           ),
