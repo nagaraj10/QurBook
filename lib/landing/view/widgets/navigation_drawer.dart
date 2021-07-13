@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/colors/fhb_colors.dart';
@@ -13,6 +14,7 @@ import 'package:myfhb/landing/view/widgets/drawer_tile.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/widgets/checkout_page.dart';
 
 class NavigationDrawer extends StatelessWidget {
   NavigationDrawer({
@@ -180,7 +182,9 @@ class NavigationDrawer extends StatelessWidget {
                           height: 24.sp,
                         ),
                         onPressed: () {
-                          CommonUtil().accessContactsDialog();
+                          //CommonUtil().accessContactsDialog();
+                          Navigator.pop(context);
+                          Get.to(CheckoutPage());
                         },
                       ),
                       DrawerTile(
