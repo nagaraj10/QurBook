@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -19,6 +20,7 @@ import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as constants;
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/landing/view/landing_arguments.dart';
 import 'package:myfhb/landing/view_model/landing_view_model.dart';
@@ -483,7 +485,18 @@ class _LandingScreenState extends State<LandingScreen> {
         ),
         Expanded(
           child: _getUserName(),
-        )
+        ),
+        if (kDebugMode)
+          IconButton(
+            icon: Icon(
+              Icons.add,
+            ),
+            onPressed: () {
+              Get.toNamed(
+                rt_PlanWizard,
+              );
+            },
+          ),
       ],
     );
   }

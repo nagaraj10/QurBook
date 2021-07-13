@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/plan_wizard/models/health_condition_response_model.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:provider/provider.dart';
 
 class PlanCard extends StatelessWidget {
+  const PlanCard({
+    @required this.healthCondition,
+  });
+
+  final MenuItem healthCondition;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -28,15 +35,14 @@ class PlanCard extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                //TODO: Replace with actual url
                 Expanded(
                   flex: 2,
-                  child: CommonUtil().customImage(
-                      'https://qurplan.com/assets/icons/./PlanPackageIcon/Covid Recovery Adult.png'),
+                  child: CommonUtil()
+                      .customImage(healthCondition?.metadata?.icon ?? ''),
                 ),
                 Expanded(
                   child: Text(
-                    'Plan Title will be displayed hereeeeee',
+                    healthCondition.title,
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.w500,

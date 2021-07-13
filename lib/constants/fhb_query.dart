@@ -243,6 +243,8 @@ const String regiment = 'plan-package-master/wrapperApi';
 const String qr_save_regi_media = 'media-details/store-media';
 const String regimentImagePath = 'https://qurplan.com/assets/images/';
 
+const String qr_health_conditions = 'Action=GetMenu';
+
 const String getMenuCarePlans =
     'Action=GetMenuTaggedPackages&tags=DB2,DB1&extags=diet';
 

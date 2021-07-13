@@ -5,6 +5,7 @@ import 'package:myfhb/myPlan/model/myPlanListModel.dart';
 import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/plan_wizard/services/PlanWizardService.dart';
+import 'package:myfhb/plan_wizard/models/health_condition_response_model.dart';
 
 class PlanWizardViewModel extends ChangeNotifier {
   PlanWizardService myPlanService = new PlanWizardService();
@@ -15,6 +16,7 @@ class PlanWizardViewModel extends ChangeNotifier {
   List<MyPlanListResult> cartItemsList = [];
   String currentPackageId = '';
   List<PlanListResult> planSearchList = [];
+  List<PlanListResult> healthConditionsList = [];
 
   void updateSingleSelection(String packageId) {
     if (packageId == currentPackageId) {
@@ -60,15 +62,39 @@ class PlanWizardViewModel extends ChangeNotifier {
     } catch (e) {}
   }
 
+  Future<Map<String, List<MenuItem>>> getHealthConditions() async {
+    Map<String, List<MenuItem>> healthConditions = {};
+    try {
+      var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      HealthConditionResponseModel healthConditionResponseModel =
+          await myPlanService.getHealthConditions(userid);
+      var currentSeperator = '';
+      if (healthConditionResponseModel?.isSuccess ?? false) {
+        healthConditionResponseModel?.healthConditionData?.menuitems
+            ?.forEach((menuItem) {
+          if (menuItem.menuitemtype == Menuitemtype.SEPERATOR) {
+            currentSeperator = menuItem.title;
+            healthConditions.putIfAbsent(currentSeperator, () => []);
+          } else {
+            healthConditions[currentSeperator]?.add(menuItem);
+          }
+        });
+      } else {
+        healthConditions = {};
+      }
+      return healthConditions;
+    } catch (e) {}
+  }
+
   List<PlanListResult> filterPlanNameProvider(
       String title, List<PlanListResult> planListOld) {
     List<PlanListResult> filterSearch = new List();
     for (PlanListResult searchList in planListOld) {
       if (searchList?.title != null && searchList?.title != '') {
         if (searchList?.title
-            .toLowerCase()
-            .trim()
-            .contains(title.toLowerCase().trim()) ||
+                .toLowerCase()
+                .trim()
+                .contains(title.toLowerCase().trim()) ||
             searchList?.providerName
                 .toLowerCase()
                 .trim()

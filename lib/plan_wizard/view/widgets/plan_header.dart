@@ -4,11 +4,9 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 class PlanHeader extends StatelessWidget {
   const PlanHeader({
     @required this.title,
-    this.titleColor,
   });
 
   final String title;
-  final Color titleColor;
 
   @override
   Widget build(BuildContext context) {

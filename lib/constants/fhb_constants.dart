@@ -518,8 +518,6 @@ const String strMyPlans = 'My Care Plans';
 const String strCarePlans = 'Care Plans';
 const String strHealthcon = 'Health Condition';
 const String strPlans = 'Plans';
-const String strTopHealth = 'Top Health Conditions';
-const String strAllHealth = 'All Health Conditions';
 const String strSelectHealth = 'Select your Health Conditions';
 const String strSelectCare = 'Select your Care Plan';
 const String strSelectTherapeutic = 'Select your Therapeutic Diet';
@@ -532,6 +530,7 @@ const String strSearchDietPlan = 'Search Diet Plan';
 const String strLetsAdd = 'Let\'s add it';
 const String strTellToUs = 'Tell to us';
 const String strDietPlan = 'Diet Plans';
+const String strNoHealthConditions = 'No Health Conditions Available';
 
 const strUploading = 'Uploading...';
 const strSubscribe = 'Subscribe';
@@ -566,8 +565,9 @@ const String strNoContactsSearchlbl =
 const String strNoContactsLabel = 'Looks Like There are No Contacts!!!';
 const String strInviteErrorMsg = 'Invite sending failed. Please try again';
 
-const String STR_NOTES_HINT="Provide details on existing illness, allergies, history of the disease and medication taken";
-const String STR_HINT_PLAN="Tell us more about your expectations";
+const String STR_NOTES_HINT =
+    "Provide details on existing illness, allergies, history of the disease and medication taken";
+const String STR_HINT_PLAN = "Tell us more about your expectations";
 
 const String STR_YES = 'yes';
 const String STR_NO = 'no';
