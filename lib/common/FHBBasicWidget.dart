@@ -193,11 +193,11 @@ class FHBBasicWidget {
         ));
   }
 
-  Widget getTextTextTitleWithPurpleColor(String textTitle) {
+  Widget getTextTextTitleWithPurpleColor(String textTitle,{double fontSize}) {
     return Text(
       textTitle,
       textAlign: TextAlign.center,
-      style: TextStyle(color: Color(new CommonUtil().getMyPrimaryColor())),
+      style: TextStyle(color: Color(new CommonUtil().getMyPrimaryColor()),fontSize: fontSize??20.0)
     );
   }
 
@@ -741,12 +741,16 @@ class FHBBasicWidget {
   }
 
   Widget getRichTextFieldWithNoCallbacks(
-      BuildContext context, TextEditingController searchController,String hintText,int length) {
+      BuildContext context, TextEditingController searchController,String hintText,int length,String error,Function(String) onTextChanged,bool condiiton) {
+    String errorValue = error;
+
     return Container(
       height: 1.sh / 5,
       child: TextField(
         autofocus: false,
         decoration: InputDecoration(
+            errorText: errorValue == '' ? null : errorValue,
+            errorMaxLines: 2,
             disabledBorder:
                 OutlineInputBorder(borderSide: BorderSide(width: 5)),
             hintStyle: TextStyle(fontSize: 15.0.sp),
@@ -758,7 +762,15 @@ class FHBBasicWidget {
         controller: searchController,
         maxLength: length,
         maxLines: 4,
-        onChanged: (value) {},
+        onChanged: (value) {
+          if(condiiton) {
+            if (value.length > 0) {
+              errorValue = error;
+
+              onTextChanged(errorValue);
+            }
+          }
+        },
       ),
     );
   }

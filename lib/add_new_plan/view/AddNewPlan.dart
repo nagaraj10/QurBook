@@ -11,26 +11,28 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
-class AddNewPlan{
+class AddNewPlan {
   FHBBasicWidget fhbBasicWidget = new FHBBasicWidget();
   TextEditingController planContent = new TextEditingController();
   String validationMsg;
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
   String feedBackType;
+  String titleName;
+  bool _validate = false;
+  AddNewBlock _addNewPlanBlock = new AddNewBlock();
 
-  AddNewBlock _addNewPlanBlock =
-  new AddNewBlock();
-  Future<Widget> addNewPlan(BuildContext context,
-     String titleName,Function(bool) refresh ){
-    feedBackType=titleName;
+  Future<Widget> addNewPlan(BuildContext context, String feedbackCode,
+      String titleNameNew, Function(bool) refresh) {
+    feedBackType = feedbackCode;
+    titleName = titleNameNew;
     StatefulBuilder dialog = new StatefulBuilder(builder: (context, setState) {
       return new AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            fhbBasicWidget.getTextTextTitleWithPurpleColor(
-                titleName),
+            fhbBasicWidget.getTextTextTitleWithPurpleColor(titleName,
+                fontSize: 14),
             IconButton(
               icon: Icon(
                 Icons.close,
@@ -44,24 +46,35 @@ class AddNewPlan{
         ),
         content: SingleChildScrollView(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                
-                fhbBasicWidget.getTextForAlertDialog(
-                    context, Constants.STR_HINT_PLAN),
-                fhbBasicWidget.getRichTextFieldWithNoCallbacks(
-                    context, planContent,Constants.STR_HINT_PLAN,150),
-                SizedBox(
-                  height: 15.0.h,
-                ),
-                fhbBasicWidget.getSaveButton(() {
-                  onPostAddPlan(context, onRefresh: refresh);
-                })
-                    
-                   ,
-              ],
-            )),
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            fhbBasicWidget.getRichTextFieldWithNoCallbacks(context, planContent,
+                Constants.STR_HINT_PLAN, 150, validationMsg, (error) {
+              setState(() {
+                validationMsg = error;
+              });
+            }, true),
+            SizedBox(
+              height: 15.0.h,
+            ),
+            fhbBasicWidget.getSaveButton(() {
+
+
+              if (!planContent.text.isEmpty) {
+                onPostAddPlan(context);
+              } else {
+                validationMsg =
+                    "Please Enter " + feedBackType.replaceAll("Missing", "");
+                setState(() {
+                  planContent.text.isEmpty
+                      ? _validate = true
+                      : _validate = false;
+                });
+              }
+            }),
+          ],
+        )),
       );
     });
 
@@ -69,51 +82,53 @@ class AddNewPlan{
         context: context, builder: (BuildContext context) => dialog);
   }
 
-  void onPostAddPlan(BuildContext context, {onRefresh}) async{
-    if(doValidationBeforePosting()){
-
+  void onPostAddPlan(BuildContext context, {onRefresh}) async {
       CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
 
-      List<PlanCodeResult> planCodeResult=await _addNewPlanBlock.getPlanCode();
+      List<PlanCodeResult> planCodeResult =
+          await _addNewPlanBlock.getPlanCode();
 
-      String feedBackID=getFeedbackId(planCodeResult,feedBackType);
+      String feedBackID = getFeedbackId(planCodeResult, feedBackType);
 
       Map<String, dynamic> postMediaData = new Map();
       Map<String, dynamic> postMediaFeedBack = new Map();
-      postMediaFeedBack["id"]=feedBackID;
-      postMediaData["feedbackType"]=postMediaFeedBack;
-      postMediaData["content"]=planContent.text;
+      postMediaFeedBack["id"] = feedBackID;
+      postMediaData["feedbackType"] = postMediaFeedBack;
+      postMediaData["content"] = planContent.text;
       var params = json.encode(postMediaData);
       print(params);
 
       _addNewPlanBlock.addNewPlan(params).then((value) {
-        if(value.isSuccess){
+        if (value.isSuccess) {
           Navigator.of(context).pop();
           Navigator.of(context).pop();
           onRefresh(value.isSuccess);
-        }
+        }else{
+          Navigator.of(context).pop();
 
+        }
       });
 
-    }
+
   }
 
   bool doValidationBeforePosting() {
     bool validationConditon = false;
     if (planContent.text == '') {
       validationConditon = false;
-      validationMsg = CommonConstants.strMemoEmpty;
+      validationMsg = "Please Enter " + feedBackType.replaceAll("Missing", "");
     } else {
       validationConditon = true;
     }
     return validationConditon;
   }
 
-  String getFeedbackId(List<PlanCodeResult> planCodeResultList, String feedBackType) {
+  String getFeedbackId(
+      List<PlanCodeResult> planCodeResultList, String feedBackType) {
     String feedbackID;
-    for(PlanCodeResult planCodeResult in planCodeResultList){
-      if(feedBackType==planCodeResult.code){
-        feedbackID=planCodeResult.id;
+    for (PlanCodeResult planCodeResult in planCodeResultList) {
+      if (feedBackType == planCodeResult.code) {
+        feedbackID = planCodeResult.id;
       }
     }
 

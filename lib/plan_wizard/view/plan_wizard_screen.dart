@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/add_new_plan/view/AddNewPlan.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/plan_wizard/view/pages/care_plan_page.dart';
 import 'package:myfhb/plan_wizard/view/pages/diet_plan_page.dart';
@@ -14,6 +16,8 @@ import 'package:provider/provider.dart';
 import 'widgets/plan_navigation_widget.dart';
 
 class PlanWizardScreen extends StatelessWidget {
+  String feedbackCode="MissingCondition";
+  String titleName="Missing condition";
   @override
   Widget build(BuildContext context) {
     var planWizardViewModel = Provider.of<PlanWizardViewModel>(context);
@@ -101,7 +105,14 @@ class PlanWizardScreen extends StatelessWidget {
                             10.0.sp,
                           ),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          new AddNewPlan().addNewPlan(context, feedbackCode,titleName, (bool) {
+                            FlutterToast toast = new FlutterToast();
+                            if(bool) {
+                              toast.getToast("Successful", Colors.green);
+                            }
+                          });
+                        },
                         color: Colors.white,
                         child: Text(
                           _getBottomButtonText(planWizardViewModel.currentPage),
@@ -135,12 +146,20 @@ class PlanWizardScreen extends StatelessWidget {
   String _getBottomButtonText(int currentPage) {
     switch (currentPage) {
       case 0:
+        feedbackCode="MissingCondition";
+        titleName="Missing condition";
         return strLetsAdd;
         break;
       case 1:
+        feedbackCode="MissingCarePlan";
+        titleName="Missing care plan";
+
         return strTellToUs;
         break;
       case 2:
+        titleName="Missing diet plan";
+
+        feedbackCode="MissingDietPlan";
         return strTellToUs;
         break;
     }
