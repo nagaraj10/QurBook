@@ -452,35 +452,17 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         children: [
-                          FilterWidget(
+                          const FilterWidget(
                             title: scheduledActivities,
-                            value: _regimentViewModel.regimentFilter ==
-                                RegimentFilter.Scheduled,
-                            onChanged: (isScheduled) {
-                              _regimentViewModel.changeFilter(isScheduled
-                                  ? RegimentFilter.Scheduled
-                                  : RegimentFilter.All);
-                            },
+                            value: RegimentFilter.Scheduled,
                           ),
-                          FilterWidget(
+                          const FilterWidget(
                             title: asNeededActivities,
-                            value: _regimentViewModel.regimentFilter ==
-                                RegimentFilter.AsNeeded,
-                            onChanged: (isAsNeeded) {
-                              _regimentViewModel.changeFilter(isAsNeeded
-                                  ? RegimentFilter.AsNeeded
-                                  : RegimentFilter.All);
-                            },
+                            value: RegimentFilter.AsNeeded,
                           ),
-                          FilterWidget(
+                          const FilterWidget(
                             title: missedActivities,
-                            value: _regimentViewModel.regimentFilter ==
-                                RegimentFilter.Missed,
-                            onChanged: (isMissed) {
-                              _regimentViewModel.changeFilter(isMissed
-                                  ? RegimentFilter.Missed
-                                  : RegimentFilter.All);
-                            },
+                            value: RegimentFilter.Missed,
                           ),
                         ],
                       ),
