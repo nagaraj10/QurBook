@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 
 class OrderModel {
+  String orderId;
   String title;
   String imageURL;
   String description;
@@ -10,6 +11,7 @@ class OrderModel {
   String totalAmount;
   List<OrderPlan> plans;
   OrderModel({
+    this.orderId,
     this.title,
     this.imageURL,
     this.description,
@@ -20,6 +22,7 @@ class OrderModel {
 
   Map<String, dynamic> toMap() {
     return {
+      'orderId': orderId,
       'title': title,
       'imageURL': imageURL,
       'description': description,
@@ -31,6 +34,7 @@ class OrderModel {
 
   factory OrderModel.fromMap(Map<String, dynamic> map) {
     return OrderModel(
+      orderId: map['orderId'],
       title: map['title'],
       imageURL: map['imageURL'],
       description: map['description'],
@@ -48,7 +52,7 @@ class OrderModel {
 
   @override
   String toString() {
-    return 'OrderModel(title: $title, imageURL: $imageURL, description: $description, purchaseDate: $purchaseDate, totalAmount: $totalAmount, plans: $plans)';
+    return 'OrderModel(orderId: $orderId, title: $title, imageURL: $imageURL, description: $description, purchaseDate: $purchaseDate, totalAmount: $totalAmount, plans: $plans)';
   }
 
   @override
@@ -56,6 +60,7 @@ class OrderModel {
     if (identical(this, other)) return true;
 
     return other is OrderModel &&
+        other.orderId == orderId &&
         other.title == title &&
         other.imageURL == imageURL &&
         other.description == description &&
@@ -66,7 +71,8 @@ class OrderModel {
 
   @override
   int get hashCode {
-    return title.hashCode ^
+    return orderId.hashCode ^
+        title.hashCode ^
         imageURL.hashCode ^
         description.hashCode ^
         purchaseDate.hashCode ^

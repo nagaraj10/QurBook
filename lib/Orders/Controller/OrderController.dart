@@ -17,6 +17,7 @@ class OrderController extends GetController {
       price: '200',
     );
     final order = OrderModel(
+      orderId: "12345678",
       title: "Covid Care",
       description:
           'This plan provides you the detail discription about the covid.',
@@ -25,10 +26,9 @@ class OrderController extends GetController {
       plans: [
         plan,
         plan,
-        plan,
-        plan,
       ],
     );
+    orders.value = [];
     orders.value.addAll(
       [
         order,

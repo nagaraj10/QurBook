@@ -3,8 +3,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:myfhb/Orders/Model/OrderModel.dart';
 import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/constants/variable_constant.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class OrderTile extends StatelessWidget {
   final OrderModel order;
@@ -15,54 +13,32 @@ class OrderTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: Padding(
-        padding: const EdgeInsets.all(
-          4,
+        padding: const EdgeInsets.symmetric(
+          horizontal: 8,
+          vertical: 4,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 8,
-              ),
-              child: Row(
-                children: [
-                  //if (order.imageURL.isNotEmpty)
-                  Image(
-                    image: const AssetImage(
-                      icon_maya,
-                    ),
-                    height: 40.0.h,
-                    width: 40.0.h,
+            Text(
+              'OrderId : ${order.orderId}',
+              style: Theme.of(context).textTheme.bodyText1.copyWith(
+                    fontWeight: FontWeight.bold,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: 16,
-                      top: 4,
-                      bottom: 4,
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            bottom: 2,
-                          ),
-                          child: Text(
-                            order.title,
-                            style: Theme.of(context).textTheme.headline6,
-                          ),
-                        ),
-                        Text(
-                          order.purchaseDate,
-                          style: Theme.of(context).textTheme.bodyText2,
-                        )
-                      ],
-                    ),
-                  )
-                ],
-              ),
+            ),
+            const SizedBox(
+              height: 2,
+            ),
+            Text(
+              order.title,
+              style: Theme.of(context).textTheme.bodyText1,
+            ),
+            const SizedBox(
+              height: 2,
+            ),
+            Text(
+              order.purchaseDate,
+              style: Theme.of(context).textTheme.bodyText2,
             ),
             Column(
               children: order.plans
@@ -71,25 +47,25 @@ class OrderTile extends StatelessWidget {
                   )
                   .toList(),
             ),
-            Padding(
-              padding: const EdgeInsets.all(4),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    "Total : ",
-                    style: Theme.of(context).textTheme.subtitle1,
-                  ),
-                  Text(
-                    "INR ${order.totalAmount}",
-                    style: Theme.of(context).textTheme.subtitle1.copyWith(
-                          color: Color(
-                            CommonUtil().getMyPrimaryColor(),
-                          ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  "Paid : ",
+                  style: Theme.of(context).textTheme.subtitle1,
+                ),
+                Text(
+                  "INR ${order.totalAmount}",
+                  style: Theme.of(context).textTheme.subtitle1.copyWith(
+                        color: Color(
+                          CommonUtil().getMyPrimaryColor(),
                         ),
-                  ),
-                ],
-              ),
+                      ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 2,
             ),
             MySeparator(),
           ],
@@ -102,7 +78,6 @@ class OrderTile extends StatelessWidget {
         width: double.infinity,
         child: Padding(
           padding: const EdgeInsets.symmetric(
-            horizontal: 4,
             vertical: 2,
           ),
           child: Row(
