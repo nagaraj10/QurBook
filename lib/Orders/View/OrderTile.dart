@@ -100,13 +100,13 @@ class OrderTile extends StatelessWidget {
             SizedBox(
               width: 4,
             ),
-            i == 0
-                ? Text(
-                    'Subscription -',
-                    textAlign: TextAlign.left,
-                    style: Theme.of(context).textTheme.bodyText1,
-                  )
-                : Container(),
+            // i == 0
+            //     ? Text(
+            //         'Subscription -',
+            //         textAlign: TextAlign.left,
+            //         style: Theme.of(context).textTheme.bodyText1,
+            //       )
+            //     : Container(),
             Expanded(
               child: Text(
                 order.plans[i],
