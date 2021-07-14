@@ -12,6 +12,7 @@ import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/chat/view/chat.dart';
+import 'package:myfhb/telehealth/features/chat/view/home.dart';
 import 'package:provider/provider.dart';
 
 import 'landing_card.dart';
@@ -79,6 +80,9 @@ class HomeWidget extends StatelessWidget {
                         (dashboardData?.careGiverInfo?.firstName ?? '') +
                             ' ' +
                             (dashboardData?.careGiverInfo?.lastName ?? '');
+
+                    var careProvidersCount =
+                        dashboardData?.careGiverList?.length ?? 0;
                     return GridView(
                       padding: EdgeInsets.symmetric(
                         vertical: 10.0.h,
@@ -384,30 +388,44 @@ class HomeWidget extends StatelessWidget {
                           title: constants.strChatWithUs,
                           lastStatus: '',
                           isEnabled: activePlanCount > 0,
-                          alerts: availableCareProvider > 0 &&
-                                  (careProviderName?.trim()?.isNotEmpty ??
-                                      false)
-                              ? '$careProviderName ${constants.strChatAvailable}'
+                          // alerts: availableCareProvider > 0 &&
+                          //         (careProviderName?.trim()?.isNotEmpty ??
+                          //             false)
+                          //     ? '$careProviderName ${constants.strChatAvailable}'
+                          //     : constants.strChatNotAvailable,
+                          alerts: careProvidersCount > 0
+                              ? '$careProvidersCount ${constants.strCareProvidersAvailable}'
                               : constants.strChatNotAvailable,
                           icon: variable.icon_chat_dash,
                           color: Color(CommonConstants.bplightColor),
                           onPressed: () {
-                            if (availableCareProvider > 0) {
+                            // if (availableCareProvider > 0) {
+                            //   Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //       builder: (context) => Chat(
+                            //         peerId:
+                            //             dashboardData?.careGiverInfo?.doctorId,
+                            //         peerAvatar: dashboardData
+                            //                 ?.careGiverInfo?.profilePic ??
+                            //             '',
+                            //         peerName: careProviderName,
+                            //         lastDate: null,
+                            //         patientId: '',
+                            //         patientName: '',
+                            //         patientPicture: '',
+                            //         isFromVideoCall: false,
+                            //       ),
+                            //     ),
+                            //   );
+                            // }
+                            if (careProvidersCount > 0) {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => Chat(
-                                    peerId:
-                                        dashboardData?.careGiverInfo?.doctorId,
-                                    peerAvatar: dashboardData
-                                            ?.careGiverInfo?.profilePic ??
-                                        '',
-                                    peerName: careProviderName,
-                                    lastDate: null,
-                                    patientId: '',
-                                    patientName: '',
-                                    patientPicture: '',
-                                    isFromVideoCall: false,
+                                  builder: (context) => ChatHomeScreen(
+                                    careGiversList:
+                                        dashboardData?.careGiverList ?? [],
                                   ),
                                 ),
                               );
