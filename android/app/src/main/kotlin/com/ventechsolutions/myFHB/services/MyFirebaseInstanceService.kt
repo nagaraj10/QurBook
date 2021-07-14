@@ -201,7 +201,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             createNotification4Chat(data)
         }
 
-        else if(data["templateName"]=="DoctorPatientAssociation"){
+        else if((data["templateName"]=="DoctorPatientAssociation") || (data["templateName"] == "QurplanCargiverPatientAssociation")){
             createNotification4DocAndPatAssociation(data)
         }
 
