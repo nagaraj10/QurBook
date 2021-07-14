@@ -35,7 +35,7 @@ class RegimentViewModel extends ChangeNotifier {
   int tabIndex = 0;
   double scrollOffset;
   int initialShowIndex;
-  RegimentFilter regimentFilter = RegimentFilter.All;
+  RegimentFilter regimentFilter = RegimentFilter.Scheduled;
   String redirectEventId = '';
 
   void updateInitialShowIndex({
@@ -119,7 +119,7 @@ class RegimentViewModel extends ChangeNotifier {
         ? RegimentMode.Symptoms
         : RegimentMode.Schedule;
     if (regimentMode == RegimentMode.Symptoms) {
-      regimentFilter = RegimentFilter.All;
+      regimentFilter = RegimentFilter.Scheduled;
       updateInitialShowIndex(index: 0);
     }
     fetchRegimentData(

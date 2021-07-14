@@ -121,10 +121,14 @@ class HomeWidget extends StatelessWidget {
                               Get.context,
                               listen: false,
                             ).regimentMode = RegimentMode.Schedule;
+                            // Provider.of<RegimentViewModel>(
+                            //   Get.context,
+                            //   listen: false,
+                            // ).regimentFilter = RegimentFilter.Event;
                             Provider.of<RegimentViewModel>(
-                              Get.context,
+                              context,
                               listen: false,
-                            ).regimentFilter = RegimentFilter.Event;
+                            ).regimentFilter = RegimentFilter.Scheduled;
                             Provider.of<RegimentViewModel>(
                               Get.context,
                               listen: false,
@@ -163,9 +167,10 @@ class HomeWidget extends StatelessWidget {
                                     Get.context,
                                     listen: false,
                                   ).regimentMode = RegimentMode.Schedule;
-                                  Provider.of<RegimentViewModel>(Get.context,
-                                          listen: false)
-                                      .regimentFilter = RegimentFilter.All;
+                                  Provider.of<RegimentViewModel>(
+                                    context,
+                                    listen: false,
+                                  ).regimentFilter = RegimentFilter.Scheduled;
                                   await Get.toNamed(rt_Regimen);
                                   var newUserId = PreferenceUtil.getStringValue(
                                       constants.KEY_USERID);
@@ -271,9 +276,10 @@ class HomeWidget extends StatelessWidget {
                                     Get.context,
                                     listen: false,
                                   ).regimentMode = RegimentMode.Symptoms;
-                                  Provider.of<RegimentViewModel>(Get.context,
-                                          listen: false)
-                                      .regimentFilter = RegimentFilter.All;
+                                  Provider.of<RegimentViewModel>(
+                                    context,
+                                    listen: false,
+                                  ).regimentFilter = RegimentFilter.Scheduled;
                                   await Get.toNamed(rt_Regimen);
                                   var newUserId = PreferenceUtil.getStringValue(
                                       constants.KEY_USERID);
