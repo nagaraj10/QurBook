@@ -25,6 +25,8 @@ class PlanCard extends StatelessWidget {
         child: InkWell(
           onTap: () {
             Provider.of<PlanWizardViewModel>(context, listen: false)
+                .selectedTag = healthCondition?.tags ?? '';
+            Provider.of<PlanWizardViewModel>(context, listen: false)
                 .changeCurrentPage(1);
           },
           child: Container(

@@ -246,7 +246,16 @@ const String regimentImagePath = 'https://qurplan.com/assets/images/';
 const String qr_health_conditions = 'Action=GetMenu';
 
 const String getMenuCarePlans =
-    'Action=GetMenuTaggedPackages&tags=DB2,DB1&extags=diet';
+    'Action=GetMenuTaggedPackages&tags=';
+
+const String excludeDiet =
+    '&extags=diet';
+
+const String getMenuDietPlans =
+    'Action=GetMenuTaggedPackages2&tags=';
+
+const String prid =
+    '&prid=';
 
 const String qr_list = 'list/';
 const String qr_doctorlist = 'doctorsList?';

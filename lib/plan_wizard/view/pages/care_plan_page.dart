@@ -31,7 +31,7 @@ class _CarePlanPageState extends State<CarePlanPage> {
 
   @override
   void initState() {
-    planListModel = planWizardViewModel.getPlanList();
+    planListModel = planWizardViewModel.getCarePlanList();
   }
 
   @override
