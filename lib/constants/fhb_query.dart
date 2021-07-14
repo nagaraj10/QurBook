@@ -254,6 +254,9 @@ const String excludeDiet =
 const String getMenuDietPlans =
     'Action=GetMenuTaggedPackages2&tags=';
 
+const String diet =
+    ',diet';
+
 const String prid =
     '&prid=';
 

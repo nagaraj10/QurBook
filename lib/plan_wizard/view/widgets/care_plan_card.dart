@@ -9,6 +9,7 @@ import 'package:myfhb/plan_dashboard/view/planDetailsView.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import 'package:myfhb/widgets/checkout_page_provider.dart';
 import 'package:provider/provider.dart';
 import 'Rounded_CheckBox.dart';
 
@@ -162,43 +163,34 @@ class CarePlanCard extends StatelessWidget {
                     children: [
                       RoundedCheckBox(
                           isSelected: Provider.of<PlanWizardViewModel>(context)
-                                  .currentPackageId ==
-                              planList.packageid,
-                          onTap: () {
-                            Provider.of<PlanWizardViewModel>(context,
+                                  .checkItemInCart(
+                                      planList.packageid, 'Care') ||
+                              Provider.of<PlanWizardViewModel>(context)
+                                      .currentPackageId ==
+                                  planList.packageid,
+                          onTap: () async {
+                            var isSelected = Provider.of<PlanWizardViewModel>(
+                                    context,
                                     listen: false)
-                                .updateSingleSelection(planList.packageid);
-                            if (Provider.of<PlanWizardViewModel>(context,
-                                        listen: false)
-                                    .currentPackageId ==
-                                planList.packageid) {
-                              Provider.of<PlanWizardViewModel>(context,
+                                .checkItemInCart(planList.packageid, 'Care');
+                            if (isSelected) {
+                              await Provider.of<PlanWizardViewModel>(context,
                                       listen: false)
-                                  .providerId = planList?.providerid ?? '';
-                              planWizardViewModel
-                                  .addToCartItem(
-                                      packageId: planList.packageid,
-                                      price: planList.price,
-                                      isRenew: planList.isexpired == '1'
-                                          ? true
-                                          : false)
-                                  .then((value) {
-                                if (value?.isSuccess) {
-                                  FlutterToast().getToast(
-                                      'Plan Added to Cart', Colors.green);
-                                } else {
-                                  FlutterToast().getToast(
-                                      value?.message != null
-                                          ? value?.message
-                                          : 'Adding Failed! Try again',
-                                      Colors.green);
-                                }
-                              });
+                                  ?.removeCart(packageId: planList.packageid);
                             } else {
-                              Provider.of<PlanWizardViewModel>(context,
+                              if (!Provider.of<PlanWizardViewModel>(context,
                                       listen: false)
-                                  .providerId = '';
-                              print('removeItem'); //Mohan delete api
+                                  .checkAllItems()) {
+                                await Provider.of<PlanWizardViewModel>(context,
+                                        listen: false)
+                                    ?.addToCartItem(
+                                        packageId: planList.packageid,
+                                        price: planList.price,
+                                        isRenew: planList.isexpired == '1'
+                                            ? true
+                                            : false,
+                                        providerId: planList.providerid);
+                              }
                             }
                           }),
                       SizedBox(width: 5.w),

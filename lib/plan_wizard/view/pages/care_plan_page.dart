@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
@@ -21,21 +22,27 @@ class _CarePlanPageState extends State<CarePlanPage> {
 
   PlanListModel myPlanListModel;
 
-  PlanWizardViewModel planWizardViewModel = new PlanWizardViewModel();
-
   bool isSearch = false;
 
   List<PlanListResult> planSearchList = List();
 
   String _selectedView = popUpChoiceDefault;
 
+  int carePlanListLength = 0;
+
+  PlanWizardViewModel planListProvider;
+
   @override
   void initState() {
-    planListModel = planWizardViewModel.getCarePlanList();
+    planListModel = Provider.of<PlanWizardViewModel>(context, listen: false)
+        .getCarePlanList();
   }
 
   @override
   Widget build(BuildContext context) {
+
+    planListProvider = Provider.of<PlanWizardViewModel>(context);
+
     return Scaffold(
         body: Column(
           children: [
@@ -72,14 +79,11 @@ class _CarePlanPageState extends State<CarePlanPage> {
         floatingActionButton: FloatingActionButton(
           backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
           onPressed: () {
-            if ((Provider.of<PlanWizardViewModel>(context, listen: false)
-                        ?.currentPackageId ??
-                    '')
-                .isEmpty) {
+            if (carePlanListLength > 0 &&
+                (planListProvider?.currentPackageId ?? '').isEmpty) {
               _alertForUncheckPlan();
             } else {
-              Provider.of<PlanWizardViewModel>(context, listen: false)
-                  .changeCurrentPage(2);
+              planListProvider.changeCurrentPage(2);
             }
           },
           child: Icon(
@@ -93,17 +97,14 @@ class _CarePlanPageState extends State<CarePlanPage> {
   onSearched(String title, String filterBy) async {
     planSearchList.clear();
     if (filterBy == popUpChoicePrice) {
-      planSearchList =
-          await planWizardViewModel.filterSorting(popUpChoicePrice);
+      planSearchList = await planListProvider.filterSorting(popUpChoicePrice);
     } else if (filterBy == popUpChoiceDura) {
-      planSearchList = await planWizardViewModel.filterSorting(popUpChoiceDura);
+      planSearchList = await planListProvider.filterSorting(popUpChoiceDura);
     } else if (filterBy == popUpChoiceDefault) {
-      planSearchList =
-          await planWizardViewModel.filterSorting(popUpChoiceDefault);
+      planSearchList = await planListProvider.filterSorting(popUpChoiceDefault);
     } else if (filterBy == 'localSearch') {
       if (title != null) {
-        planSearchList =
-            await planWizardViewModel.filterPlanNameProvider(title);
+        planSearchList = await planListProvider.filterPlanNameProvider(title);
       }
     }
     setState(() {});
@@ -134,6 +135,7 @@ class _CarePlanPageState extends State<CarePlanPage> {
           if (snapshot?.hasData &&
               snapshot?.data?.result != null &&
               snapshot?.data?.result?.length > 0) {
+            carePlanListLength = snapshot?.data?.result?.length ?? 0;
             return carePlanList(snapshot?.data?.result);
           } else {
             return SafeArea(
@@ -160,9 +162,7 @@ class _CarePlanPageState extends State<CarePlanPage> {
             ),
             itemBuilder: (BuildContext ctx, int i) => CarePlanCard(
               planList: isSearch ? planSearchList[i] : planList[i],
-              onClick: () {
-
-              },
+              onClick: () {},
             ),
             itemCount: isSearch ? planSearchList.length : planList.length,
           )
@@ -178,6 +178,7 @@ class _CarePlanPageState extends State<CarePlanPage> {
   }
 
   Future<bool> _alertForUncheckPlan() {
+
     return showDialog(
           context: context,
           builder: (context) => AlertDialog(

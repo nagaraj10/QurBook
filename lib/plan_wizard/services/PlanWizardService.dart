@@ -32,7 +32,7 @@ class PlanWizardService {
         Provider.of<PlanWizardViewModel>(Get.context, listen: false).providerId;
     var body = {};
     body['method'] = qr_get;
-    body['data'] = getMenuDietPlans + tag + prid + providerId;
+    body['data'] = getMenuDietPlans + tag + diet + prid + providerId;
     var jsonString = convert.jsonEncode(body);
     final response = await _helper.getPlanList(qr_plan_list, jsonString);
     return DietPlanModel.fromJson(response);

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/errors_widget.dart';
@@ -11,6 +12,7 @@ import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
+import 'package:myfhb/widgets/checkout_page.dart';
 import 'package:provider/provider.dart';
 
 class DietPlanPage extends StatefulWidget {
@@ -82,8 +84,7 @@ class _DietPlanPageState extends State<DietPlanPage> {
                 .isEmpty) {
               _alertForUncheckPlan();
             } else {
-              Provider.of<PlanWizardViewModel>(context, listen: false)
-                  .changeCurrentPage(2);
+              Get.to(CheckoutPage());
             }
           },
           child: Icon(
@@ -200,8 +201,7 @@ class _DietPlanPageState extends State<DietPlanPage> {
               FlatButton(
                 onPressed: () {
                   Navigator.pop(context);
-                 /* Provider.of<PlanWizardViewModel>(context, listen: false)
-                      .changeCurrentPage(2);*/
+                  Get.to(CheckoutPage());
                 },
                 child: Text('Yes'),
               ),
