@@ -82,7 +82,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
               var cartCount =
                   value?.fetchingCartItemsModel?.result?.productsCount ?? 0;
               value?.updateCartCount(cartCount);
-              return !(value?.fetchingCartItemsModel?.isSuccess)
+              return !(value?.fetchingCartItemsModel?.isSuccess ?? false)
                   ? Container(
                       alignment: Alignment.center,
                       child: Column(
@@ -287,7 +287,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                         onTap: () {
                                           Timer(Duration(milliseconds: 1000),
                                               () {
-                                            if (_controller.hasClients) {
+                                            if (_controller?.hasClients) {
                                               _controller.jumpTo(_controller
                                                   .position.maxScrollExtent);
                                             }

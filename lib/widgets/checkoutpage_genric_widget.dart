@@ -108,16 +108,6 @@ class CheckoutPageWidgets {
                                             /* its may be paid and free paln
                                                         hence you should call the updatePayment 
                                                        */
-
-                                            /* var body = {
-                                                    "paymentId":
-                                                        "${res?.result?.payment?.id}",
-                                                    "paymentOrderId":
-                                                        "MOJO1713V05N32851243", //TODO should be get it from instamojo
-                                                    "paymentRequestId":
-                                                        "${res?.result?.paymentGatewayDetail?.paymentGatewayRequestId}"
-                                                  }; */
-
                                             if (value != null) {
                                               if (value?.isSuccess) {
                                                 if (value?.result != null) {
