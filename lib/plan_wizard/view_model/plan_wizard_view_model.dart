@@ -20,6 +20,9 @@ class PlanWizardViewModel extends ChangeNotifier {
   List<PlanListResult> cartList = [];
   List<PlanListResult> planSearchList = [];
   List<PlanListResult> healthConditionsList = [];
+  Map<String, List<MenuItem>> healthConditions = {};
+  Map<String, List<MenuItem>> filteredHealthConditions = {};
+  bool isHealthSearch = false;
 
   void updateSingleSelection(String packageId) {
     if (packageId == currentPackageId) {
@@ -42,7 +45,8 @@ class PlanWizardViewModel extends ChangeNotifier {
   Future<PlanListModel> getPlanList() async {
     try {
       var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-      PlanListModel myPlanListModel = await planWizardService.getPlanList(userid);
+      PlanListModel myPlanListModel =
+          await planWizardService.getPlanList(userid);
       if (myPlanListModel.isSuccess) {
         planListResult = myPlanListModel.result;
       }
@@ -51,7 +55,7 @@ class PlanWizardViewModel extends ChangeNotifier {
   }
 
   Future<Map<String, List<MenuItem>>> getHealthConditions() async {
-    Map<String, List<MenuItem>> healthConditions = {};
+    healthConditions = {};
     try {
       var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
       HealthConditionResponseModel healthConditionResponseModel =
@@ -70,8 +74,31 @@ class PlanWizardViewModel extends ChangeNotifier {
       } else {
         healthConditions = {};
       }
+      notifyListeners();
       return healthConditions;
     } catch (e) {}
+  }
+
+  void getFilteredHealthConditions(
+    String filterText,
+  ) async {
+    if ((filterText ?? '')?.isNotEmpty ?? false) {
+      isHealthSearch = true;
+      filteredHealthConditions = {};
+      healthConditions?.forEach((categoryName, menuItemsList) {
+        menuItemsList?.forEach((menuItem) {
+          if (menuItem.menuitemtype != Menuitemtype.SEPERATOR &&
+              (menuItem?.title?.toLowerCase()?.trim() ?? '')
+                  .contains(filterText?.toLowerCase()?.trim())) {
+            filteredHealthConditions.putIfAbsent(categoryName, () => []);
+            filteredHealthConditions[categoryName ?? ''].add(menuItem);
+          }
+        });
+      });
+    } else {
+      isHealthSearch = false;
+    }
+    notifyListeners();
   }
 
   List<PlanListResult> filterPlanNameProvider(String title) {

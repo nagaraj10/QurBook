@@ -2744,7 +2744,7 @@ class CommonUtil {
         });
   }
 
-  Widget customImage(String iconApi) {
+  Widget customImage(String iconApi, {Widget defaultWidget}) {
     print(iconApi);
     return ClipOval(
       child: Container(
@@ -2778,12 +2778,14 @@ class CommonUtil {
                             strokeWidth: 1.5,
                             backgroundColor:
                                 Color(new CommonUtil().getMyPrimaryColor())),
-                    errorWidget: (context, url, error) => ClipOval(
-                        child: CircleAvatar(
-                      backgroundImage: AssetImage(qurHealthLogo),
-                      radius: 32,
-                      backgroundColor: Colors.transparent,
-                    )),
+                    errorWidget: (context, url, error) =>
+                        defaultWidget ??
+                        ClipOval(
+                            child: CircleAvatar(
+                          backgroundImage: AssetImage(qurHealthLogo),
+                          radius: 32,
+                          backgroundColor: Colors.transparent,
+                        )),
                     imageBuilder: (context, imageProvider) => Container(
                       width: 80.0,
                       height: 80.0,
@@ -2811,12 +2813,14 @@ class CommonUtil {
                                 strokeWidth: 1.5,
                                 backgroundColor: Color(
                                     new CommonUtil().getMyPrimaryColor())),
-                        errorWidget: (context, url, error) => ClipOval(
-                            child: CircleAvatar(
-                          backgroundImage: AssetImage(qurHealthLogo),
-                          radius: 32,
-                          backgroundColor: Colors.transparent,
-                        )),
+                        errorWidget: (context, url, error) =>
+                            defaultWidget ??
+                            ClipOval(
+                                child: CircleAvatar(
+                              backgroundImage: AssetImage(qurHealthLogo),
+                              radius: 32,
+                              backgroundColor: Colors.transparent,
+                            )),
                         imageBuilder: (context, imageProvider) => Container(
                           width: 80.0,
                           height: 80.0,
@@ -2827,12 +2831,13 @@ class CommonUtil {
                           ),
                         ),
                       )
-                : ClipOval(
-                    child: CircleAvatar(
-                    backgroundImage: AssetImage(qurHealthLogo),
-                    radius: 32,
-                    backgroundColor: Colors.transparent,
-                  )),
+                : defaultWidget ??
+                    ClipOval(
+                        child: CircleAvatar(
+                      backgroundImage: AssetImage(qurHealthLogo),
+                      radius: 32,
+                      backgroundColor: Colors.transparent,
+                    )),
       ),
     );
   }

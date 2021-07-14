@@ -37,8 +37,24 @@ class PlanCard extends StatelessWidget {
               children: [
                 Expanded(
                   flex: 2,
-                  child: CommonUtil()
-                      .customImage(healthCondition?.metadata?.icon ?? ''),
+                  child: CommonUtil().customImage(
+                    healthCondition?.metadata?.icon ?? '',
+                    defaultWidget: ClipOval(
+                        child: CircleAvatar(
+                      radius: 32,
+                      backgroundColor: Colors.grey[200],
+                      child: Text(
+                        healthCondition?.title
+                                ?.substring(0, 1)
+                                ?.toUpperCase() ??
+                            '',
+                        style: TextStyle(
+                          fontSize: 25.0.sp,
+                          color: Color(CommonUtil().getMyPrimaryColor()),
+                        ),
+                      ),
+                    )),
+                  ),
                 ),
                 Expanded(
                   child: Text(
