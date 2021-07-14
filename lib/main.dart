@@ -56,6 +56,8 @@ import 'package:myfhb/video_call/pages/callmain.dart';
 import 'package:myfhb/video_call/services/iOS_Notification_Handler.dart';
 import 'package:myfhb/video_call/utils/callstatus.dart';
 import 'package:myfhb/video_call/utils/hideprovider.dart';
+import 'package:myfhb/widgets/shopping_card_provider.dart';
+import 'package:myfhb/widgets/checkout_page_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart' as provider;
 import 'package:provider/provider.dart';
@@ -679,7 +681,11 @@ class _MyFHBState extends State<MyFHB> {
         ),
         provider.ChangeNotifierProvider<LandingViewModel>(
           create: (_) => LandingViewModel(),
-        ),
+        ),provider.ChangeNotifierProvider<ShoppingCardProvider>(
+          create: (_) => ShoppingCardProvider(),
+        ),provider.ChangeNotifierProvider<CheckoutPageProvider>(
+          create: (_) => CheckoutPageProvider(),
+        )
       ],
       child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
