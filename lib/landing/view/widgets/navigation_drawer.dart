@@ -157,6 +157,8 @@ class NavigationDrawer extends StatelessWidget {
                         iconWidget: Image.asset(
                           variable.icon_orderHistory,
                           color: Colors.black54,
+                          width: 24.sp,
+                          height: 24.sp,
                         ),
                         onPressed: () {
                           Navigator.pop(context);

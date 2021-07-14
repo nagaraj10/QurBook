@@ -30,7 +30,7 @@ class OrderController extends GetController {
 
   Future<dynamic> getMyOrders() async {
     final url = BASE_URL + qr_user + qr_myOrders;
-    final headers = await HeaderRequest().getRequestHeadersTimeSlotDumy();
+    final headers = await HeaderRequest().getRequestHeadersTimeSlot();
     try {
       final response = await http.get(
         url,

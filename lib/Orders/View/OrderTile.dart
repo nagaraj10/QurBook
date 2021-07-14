@@ -87,10 +87,15 @@ class OrderTile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text(
-              '${i + 1} )',
-              textAlign: TextAlign.left,
-              style: Theme.of(context).textTheme.bodyText1,
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 4,
+              ),
+              child: Text(
+                ' * ',
+                textAlign: TextAlign.left,
+                style: Theme.of(context).textTheme.bodyText1,
+              ),
             ),
             SizedBox(
               width: 4,
@@ -112,7 +117,6 @@ class OrderTile extends StatelessWidget {
           ],
         ),
       );
-
       plans.add(widget);
     }
     return plans;
