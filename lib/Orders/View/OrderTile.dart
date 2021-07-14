@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/Orders/Model/OrderModel.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 
@@ -14,14 +15,14 @@ class OrderTile extends StatelessWidget {
     return Container(
       child: Padding(
         padding: const EdgeInsets.symmetric(
-          horizontal: 8,
           vertical: 4,
+          horizontal: 16,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'OrderId : ${order.orderId}',
+              'Order id : ${order.orderId}',
               style: Theme.of(context).textTheme.bodyText1.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -29,68 +30,93 @@ class OrderTile extends StatelessWidget {
             const SizedBox(
               height: 2,
             ),
-            Text(
-              order.title,
-              style: Theme.of(context).textTheme.bodyText1,
-            ),
+            order.date != null
+                ? Text(
+                    "${DateFormat('MMMM dd, hh:mm a').format(order.date)}",
+                    style: Theme.of(context).textTheme.bodyText2,
+                  )
+                : Container(),
             const SizedBox(
-              height: 2,
-            ),
-            Text(
-              order.purchaseDate,
-              style: Theme.of(context).textTheme.bodyText2,
+              height: 4,
             ),
             Column(
-              children: order.plans
-                  .map(
-                    (e) => getPlanTile(context),
-                  )
-                  .toList(),
-            ),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  "Paid : ",
-                  style: Theme.of(context).textTheme.subtitle1,
-                ),
-                Text(
-                  "INR ${order.totalAmount}",
-                  style: Theme.of(context).textTheme.subtitle1.copyWith(
-                        color: Color(
-                          CommonUtil().getMyPrimaryColor(),
-                        ),
-                      ),
-                ),
-              ],
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: getPlans(context),
             ),
             const SizedBox(
-              height: 2,
+              height: 4,
             ),
-            MySeparator(),
+            order.feePaid != null
+                ? Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Paid  ',
+                        style: Theme.of(context).textTheme.subtitle1,
+                      ),
+                      Text(
+                        'INR ${double.parse(order.feePaid).toInt()}',
+                        style: Theme.of(context).textTheme.subtitle1.copyWith(
+                              color: Color(
+                                CommonUtil().getMyPrimaryColor(),
+                              ),
+                            ),
+                      ),
+                    ],
+                  )
+                : Container(),
+            const SizedBox(
+              height: 4,
+            ),
+            MySeparator(
+              color: Colors.grey.shade400,
+            ),
           ],
         ),
       ),
     );
   }
 
-  Container getPlanTile(BuildContext context) => Container(
-        width: double.infinity,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 2,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                order.plans[0].title,
+  List<Widget> getPlans(BuildContext context) {
+    List<Widget> plans = [];
+
+    for (var i = 0; i < order.plans.length; i++) {
+      final widget = Padding(
+        padding: const EdgeInsets.all(4),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text(
+              '${i + 1} )',
+              textAlign: TextAlign.left,
+              style: Theme.of(context).textTheme.bodyText1,
+            ),
+            SizedBox(
+              width: 4,
+            ),
+            i == 0
+                ? Text(
+                    'Subscription -',
+                    textAlign: TextAlign.left,
+                    style: Theme.of(context).textTheme.bodyText1,
+                  )
+                : Container(),
+            Expanded(
+              child: Text(
+                order.plans[i],
+                textAlign: TextAlign.left,
                 style: Theme.of(context).textTheme.bodyText1,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       );
+
+      plans.add(widget);
+    }
+    return plans;
+  }
 }
 
 class MySeparator extends StatelessWidget {
@@ -99,7 +125,7 @@ class MySeparator extends StatelessWidget {
 
   const MySeparator({
     this.height = 1,
-    this.color = Colors.black,
+    this.color = Colors.grey,
   });
 
   @override

@@ -36,7 +36,7 @@ class _OrdersViewState extends State<OrdersView> {
           },
         ),
         title: const Text(
-          'Health Conditions',
+          'My Orders',
         ),
       ),
       body: obx(
@@ -61,14 +61,18 @@ class _OrdersViewState extends State<OrdersView> {
     return controller.orders.value.length == 0
         ? Center(
             child: Text(
-              "No Orders Placed",
+              'No Orders Placed',
+              style: Theme.of(context).textTheme.headline6,
             ),
           )
         : Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 4,
+                ),
                 child: Text(
                   "Past Orders",
                   style: Theme.of(context).textTheme.headline6,

@@ -4,44 +4,40 @@ import 'package:flutter/foundation.dart';
 
 class OrderModel {
   String orderId;
-  String title;
-  String imageURL;
-  String description;
-  String purchaseDate;
-  String totalAmount;
-  List<OrderPlan> plans;
+  DateTime date;
+  String feePaid;
+  List<String> plans;
+  String paymentReferenceId;
   OrderModel({
     this.orderId,
-    this.title,
-    this.imageURL,
-    this.description,
-    this.purchaseDate,
-    this.totalAmount,
+    this.date,
+    this.feePaid,
     this.plans,
+    this.paymentReferenceId,
   });
 
   Map<String, dynamic> toMap() {
     return {
       'orderId': orderId,
-      'title': title,
-      'imageURL': imageURL,
-      'description': description,
-      'purchaseDate': purchaseDate,
-      'totalAmount': totalAmount,
-      'plans': plans?.map((x) => x.toMap())?.toList(),
+      'date': date,
+      'feePaid': feePaid,
+      'plans': plans,
+      'paymentReferenceId': paymentReferenceId,
     };
   }
 
   factory OrderModel.fromMap(Map<String, dynamic> map) {
     return OrderModel(
-      orderId: map['orderId'],
-      title: map['title'],
-      imageURL: map['imageURL'],
-      description: map['description'],
-      purchaseDate: map['purchaseDate'],
-      totalAmount: map['totalAmount'],
-      plans:
-          List<OrderPlan>.from(map['plans']?.map((x) => OrderPlan.fromMap(x))),
+      orderId: map['orderId'] ?? '',
+      date: map['date'] != null
+          ? DateTime.tryParse(
+              map['date'],
+            ).toLocal()
+          : null,
+      feePaid: map['feePaid'] ?? '',
+      plans: List<String>.from(map['plans'] ?? [])
+        ..removeWhere((element) => element == null),
+      paymentReferenceId: map['paymentReferenceId'] ?? '',
     );
   }
 
@@ -52,7 +48,7 @@ class OrderModel {
 
   @override
   String toString() {
-    return 'OrderModel(orderId: $orderId, title: $title, imageURL: $imageURL, description: $description, purchaseDate: $purchaseDate, totalAmount: $totalAmount, plans: $plans)';
+    return 'OrderModel(orderId: $orderId, date: $date, feePaid: $feePaid, plans: $plans, paymentReferenceId: $paymentReferenceId,)';
   }
 
   @override
@@ -61,63 +57,62 @@ class OrderModel {
 
     return other is OrderModel &&
         other.orderId == orderId &&
-        other.title == title &&
-        other.imageURL == imageURL &&
-        other.description == description &&
-        other.purchaseDate == purchaseDate &&
-        other.totalAmount == totalAmount &&
-        listEquals(other.plans, plans);
+        other.date == date &&
+        other.feePaid == feePaid &&
+        listEquals(other.plans, plans) &&
+        other.paymentReferenceId == paymentReferenceId;
   }
 
   @override
   int get hashCode {
     return orderId.hashCode ^
-        title.hashCode ^
-        imageURL.hashCode ^
-        description.hashCode ^
-        purchaseDate.hashCode ^
-        totalAmount.hashCode ^
-        plans.hashCode;
+        date.hashCode ^
+        feePaid.hashCode ^
+        plans.hashCode ^
+        paymentReferenceId.hashCode;
   }
 }
 
-class OrderPlan {
-  String title;
-  String price;
-  OrderPlan({
-    this.title,
-    this.price,
+class OrderDataModel {
+  bool isSuccess;
+  List<OrderModel> result;
+  OrderDataModel({
+    this.isSuccess,
+    this.result,
   });
 
   Map<String, dynamic> toMap() {
     return {
-      'title': title,
-      'price': price,
+      'isSuccess': isSuccess,
+      'result': result?.map((x) => x.toMap())?.toList(),
     };
   }
 
-  factory OrderPlan.fromMap(Map<String, dynamic> map) {
-    return OrderPlan(
-      title: map['title'],
-      price: map['price'],
+  factory OrderDataModel.fromMap(Map<String, dynamic> map) {
+    return OrderDataModel(
+      isSuccess: map['isSuccess'] ?? false,
+      result: List<OrderModel>.from(
+          map['result']?.map((x) => OrderModel.fromMap(x))),
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory OrderPlan.fromJson(String source) =>
-      OrderPlan.fromMap(json.decode(source));
+  factory OrderDataModel.fromJson(String source) =>
+      OrderDataModel.fromMap(json.decode(source));
 
   @override
-  String toString() => 'OrderPlan(title: $title, price: $price)';
+  String toString() => 'OrderDataModel(isSuccess: $isSuccess, result: $result)';
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is OrderPlan && other.title == title && other.price == price;
+    return other is OrderDataModel &&
+        other.isSuccess == isSuccess &&
+        listEquals(other.result, result);
   }
 
   @override
-  int get hashCode => title.hashCode ^ price.hashCode;
+  int get hashCode => isSuccess.hashCode ^ result.hashCode;
 }

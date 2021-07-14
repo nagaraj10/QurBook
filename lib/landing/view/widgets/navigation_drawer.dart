@@ -153,6 +153,19 @@ class NavigationDrawer extends StatelessWidget {
                         },
                       ),
                       DrawerTile(
+                        title: variable.strMyOrders,
+                        iconWidget: Image.asset(
+                          variable.icon_orderHistory,
+                          color: Colors.black54,
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          Get.to(
+                            OrdersView(),
+                          );
+                        },
+                      ),
+                      DrawerTile(
                         title: variable.strSettings,
                         iconWidget: SvgPicture.asset(
                           variable.icon_settings,
@@ -170,19 +183,7 @@ class NavigationDrawer extends StatelessWidget {
                           );
                         },
                       ),
-                      DrawerTile(
-                        title: variable.strMyOrders,
-                        iconWidget: SvgPicture.asset(
-                          variable.icon_settings,
-                          color: Colors.black54,
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          Get.to(
-                            OrdersView(),
-                          );
-                        },
-                      ),
+
                       DrawerTile(
                         title: variable.strRefer_friend,
                         // iconWidget: SvgPicture.asset(
