@@ -1753,15 +1753,15 @@ class ApiBaseHelper {
     } catch (e) {}
   }
 
-  Future<dynamic> addNewPlan(String jsonData) async{
+  Future<dynamic> addNewPlan(String jsonData) async {
     var responseJson;
     try {
       final response = await http.post(_baseUrl + "user/feedback",
           body: jsonData,
           headers: await headerRequest.getRequestHeadersTimeSlot());
-    responseJson = _returnResponse(response);
+      responseJson = _returnResponse(response);
     } on SocketException {
-    throw FetchDataException(variable.strNoInternet);
+      throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
   }
@@ -1776,10 +1776,10 @@ class ApiBaseHelper {
     if (response.statusCode == 200) {
       return PlanCode.fromJson(jsonDecode(response.body));
     } else {
-      return PlanCode.fromJson(
-          errorMap.createErrorJsonString(response));
+      return PlanCode.fromJson(errorMap.createErrorJsonString(response));
     }
   }
+
   Future<UpdatePaymentResponse> updatePaymentStatus(dynamic body) async {
     try {
       String userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
