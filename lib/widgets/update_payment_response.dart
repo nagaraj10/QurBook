@@ -27,6 +27,7 @@ class Result {
   String paymentRequestId;
   String paymentStatus;
   String cartId;
+  String cartUserId;
 
   Result(
       {this.subscribeResponse,
@@ -34,7 +35,8 @@ class Result {
       this.paymentOrderId,
       this.paymentRequestId,
       this.paymentStatus,
-      this.cartId});
+      this.cartId,
+      this.cartUserId});
 
   Result.fromJson(Map<String, dynamic> json) {
     subscribeResponse = json['subscribeResponse'] != null
@@ -45,6 +47,7 @@ class Result {
     paymentRequestId = json['paymentRequestId'];
     paymentStatus = json['paymentStatus'];
     cartId = json['cartId'];
+    cartUserId = json['cartUserId'];
   }
 
   Map<String, dynamic> toJson() {
@@ -57,6 +60,7 @@ class Result {
     data['paymentRequestId'] = this.paymentRequestId;
     data['paymentStatus'] = this.paymentStatus;
     data['cartId'] = this.cartId;
+    data['cartUserId'] = this.cartUserId;
     return data;
   }
 }

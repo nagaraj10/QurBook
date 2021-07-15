@@ -363,6 +363,7 @@ const String PAYMENT_FAILURE_MSG = 'Payment Failure';
 const String APPOINTMENT_CONFIRM = 'Your appointment is now confirmed';
 const String PLAN_CONFIRM = 'Your plan subscription is now confirmed';
 const String UNABLE_PROCESS = 'We unable to reach your process..';
+const String PAYMENT_FAILURE_CONTENT = 'If the amount was deducted, we will refund it automatically and immediately. Your bank might take 7 to 8 days to process the refund';
 
 const String strSourceCode = 'sourceCode';
 const String strEntityCode = 'entityCode';

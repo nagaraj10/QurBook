@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:get/get.dart';
+import 'package:myfhb/landing/view/landing_arguments.dart';
 import 'package:myfhb/myPlan/view/myPlanList.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/material.dart';
@@ -69,13 +71,31 @@ class _UserAccountsState extends State<UserAccounts>
     });
   }
 
+  Future<bool> onBackPressed(BuildContext context) {
+    // if (widget?.cartType == CartType.RETRY_CART) {
+    //   PageNavigator.goToPermanent(context, router.rt_Landing);
+    // }
+    // Navigator.of(context).pop(true);
+
+    if (Navigator.canPop(context)) {
+      Get.back();
+    } else {
+      Get.offAllNamed(
+        router.rt_Landing,
+        arguments: LandingArguments(
+          needFreshLoad: true,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     //MyProfileModel myProfile;
     if (!islogout) fetchUserProfileInfo();
 
     return new WillPopScope(
-        onWillPop: () async => true,
+        onWillPop: () => onBackPressed(context),
         child: Scaffold(
           backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
           appBar: AppBar(
@@ -86,7 +106,8 @@ class _UserAccountsState extends State<UserAccounts>
                 Icons.arrow_back_ios,
                 size: 24.0.sp,
               ),
-              onPressed: () {
+              onPressed: () => onBackPressed(
+                  context), /* {
                 Navigator.popUntil(context, (Route<dynamic> route) {
                   if (Navigator.canPop(context)) {
                     bool shouldPop = false;
@@ -100,7 +121,7 @@ class _UserAccountsState extends State<UserAccounts>
                   }
                 });
                 // Navigator.pop(context);
-              },
+              } */
             ),
             actions: <Widget>[
               // IconButton(

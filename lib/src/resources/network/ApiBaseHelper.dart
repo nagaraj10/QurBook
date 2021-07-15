@@ -1649,7 +1649,7 @@ class ApiBaseHelper {
     } catch (e) {}
   }
 
-  Future<FetchingCartItemsModel> fetchCartItems() async {
+  Future<FetchingCartItemsModel> fetchCartItems({String cartUserId}) async {
     try {
       String userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
       String createBy =
@@ -1659,7 +1659,7 @@ class ApiBaseHelper {
 
       if (userID != null && userID != "" && ((createBy ?? '').isNotEmpty)) {
         Map<String, String> jsobBodyMap = new Map();
-        jsobBodyMap['userId'] = userID;
+        jsobBodyMap['userId'] = ((cartUserId ?? '').isNotEmpty) ? cartUserId : userID;
         jsobBodyMap['createdBy'] = createBy;
         try {
           final response = await http.post(
@@ -1788,9 +1788,7 @@ class ApiBaseHelper {
       DateTime dateTime = DateTime.now();
       UpdatePaymentResponse responseJson;
 
-      if (userID != null && userID != "" && ((createBy ?? '').isNotEmpty)) {
-        body['userId'] = userID;
-        body['createdBy'] = createBy;
+      //if (userID != null && userID != "" && ((createBy ?? '').isNotEmpty)) {
         try {
           final response = await http.post(
               _baseUrl + "payment/plan-subscription-update-payment-status",
@@ -1803,7 +1801,7 @@ class ApiBaseHelper {
           throw FetchDataException(variable.strNoInternet);
         }
         return responseJson;
-      }
+      //}
     } catch (e) {}
   }
 }

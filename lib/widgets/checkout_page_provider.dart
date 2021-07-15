@@ -3,7 +3,7 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/widgets/fetching_cart_items_model.dart';
 
-enum CartType { DEFAULT_CART, EMPTY_CART, PAYMENT_SUCC_CART, PAYMENT_FAIL_CART }
+enum CartType { DEFAULT_CART, RETRY_CART, PAYMENT_SUCC_CART, PAYMENT_FAIL_CART, SUBSCRIBTION_SUMMARY }
 enum CartStatus { LOADING, LOADED }
 
 class CheckoutPageProvider extends ChangeNotifier {
@@ -14,7 +14,17 @@ class CheckoutPageProvider extends ChangeNotifier {
 
   int _cartCount = 0;
 
+  bool isLoading = false;
+
+  
+
   int get currentCartCount => _cartCount;
+
+
+  void loader(bool currentIsLoading) {
+    isLoading = currentIsLoading;
+    notifyListeners();
+  }
 
   void updateCartCount(int currentCount) {
     _cartCount = currentCount;
@@ -26,9 +36,9 @@ class CheckoutPageProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> fetchCartItems({bool isNeedRelod = true}) async {
+  Future<void> fetchCartItems({bool isNeedRelod = true, String cartUserId}) async {
     changeCartStatus(CartStatus.LOADING, isNeedRelod: isNeedRelod);
-    fetchingCartItemsModel = await helper.fetchCartItems();
+    fetchingCartItemsModel = await helper.fetchCartItems(cartUserId: cartUserId);
     changeCartStatus(CartStatus.LOADED, isNeedRelod: isNeedRelod);
   }
 

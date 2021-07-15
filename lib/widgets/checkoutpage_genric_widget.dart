@@ -14,11 +14,12 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/telehealth/features/Payment/PaymentPage.dart';
 import 'package:myfhb/widgets/payment_gatway.dart';
+import 'package:myfhb/widgets/result_page_new.dart';
 
 class CheckoutPageWidgets {
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
   Future<dynamic> showPaymentConfirmationDialog(
-      {dynamic body, dynamic totalCartAmount}) {
+      {dynamic body, dynamic totalCartAmount, Function(String) closePage}) {
     return showDialog(
         context: Get.context,
         builder: (context) {
@@ -104,98 +105,81 @@ class CheckoutPageWidgets {
                                         ApiBaseHelper()
                                             .makePayment(body)
                                             .then((value) {
-                                          if (totalCartAmount > 0) {
-                                            /* its may be paid and free paln
-                                                        hence you should call the updatePayment 
-                                                       */
-                                            if (value != null) {
-                                              if (value?.isSuccess) {
-                                                if (value?.result != null) {
-                                                  if (value?.result?.payment !=
-                                                      null) {
-                                                    if (value
-                                                            ?.result
-                                                            ?.payment
-                                                            ?.paymentStatus
-                                                            ?.code ==
-                                                        'PAYITA') {
-                                                      if (value?.result
-                                                              ?.paymentGatewayDetail !=
+                                          if (value != null) {
+                                            if (value?.isSuccess) {
+                                              if (value?.result != null) {
+                                                if (value?.result?.payment !=
+                                                    null) {
+                                                  if (value
+                                                          ?.result
+                                                          ?.payment
+                                                          ?.paymentStatus
+                                                          ?.code ==
+                                                      'PAYITA') {
+                                                    if (value?.result
+                                                            ?.paymentGatewayDetail !=
+                                                        null) {
+                                                      if (value
+                                                              ?.result
+                                                              ?.paymentGatewayDetail
+                                                              ?.responseInfo !=
                                                           null) {
                                                         if (value
-                                                                ?.result
-                                                                ?.paymentGatewayDetail
-                                                                ?.responseInfo !=
-                                                            null) {
-                                                          if (value
-                                                                      ?.result
-                                                                      ?.paymentGatewayDetail
-                                                                      ?.responseInfo
-                                                                      ?.longurl !=
-                                                                  null &&
-                                                              value
-                                                                      ?.result
-                                                                      ?.paymentGatewayDetail
-                                                                      ?.responseInfo
-                                                                      ?.longurl !=
-                                                                  '') {
-                                                            Navigator
-                                                                .pushReplacement(
-                                                              Get.context,
-                                                              MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        PaymentGatwayPage(
-                                                                  redirectUrl: value
-                                                                      ?.result
-                                                                      ?.paymentGatewayDetail
-                                                                      ?.responseInfo
-                                                                      ?.longurl,
-                                                                  paymentId: value
-                                                                      ?.result
-                                                                      ?.payment
-                                                                      ?.id
-                                                                      ?.toString(),
-                                                                  isFromSubscribe:
-                                                                      true,
-                                                                  closePage:
-                                                                      (value) {
-                                                                    if (value ==
-                                                                        'success') {
-                                                                      //refresh();
-                                                                    } else {
-                                                                      Navigator.pop(
-                                                                          context);
-                                                                    }
-                                                                  },
-                                                                ),
+                                                                    ?.result
+                                                                    ?.paymentGatewayDetail
+                                                                    ?.responseInfo
+                                                                    ?.longurl !=
+                                                                null &&
+                                                            value
+                                                                    ?.result
+                                                                    ?.paymentGatewayDetail
+                                                                    ?.responseInfo
+                                                                    ?.longurl !=
+                                                                '') {
+                                                          Navigator
+                                                              .pushReplacement(
+                                                            Get.context,
+                                                            MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  PaymentGatwayPage(
+                                                                redirectUrl: value
+                                                                    ?.result
+                                                                    ?.paymentGatewayDetail
+                                                                    ?.responseInfo
+                                                                    ?.longurl,
+                                                                paymentId: value
+                                                                    ?.result
+                                                                    ?.payment
+                                                                    ?.id
+                                                                    ?.toString(),
+                                                                isFromSubscribe:
+                                                                    true,
+                                                                closePage:
+                                                                    (value) {
+                                                                  if (value ==
+                                                                      'success') {
+                                                                    Get.back();
+                                                                  } else {
+                                                                    Navigator.pop(
+                                                                        context);
+                                                                  }
+                                                                },
                                                               ),
-                                                            );
-                                                          }
-                                                        } else {
-                                                          Navigator.of(
-                                                                  _keyLoader
-                                                                      .currentContext,
-                                                                  rootNavigator:
-                                                                      true)
-                                                              .pop();
-                                                          FlutterToast()
-                                                            ..getToast(
-                                                                'Subscribe Failed',
-                                                                Colors.red);
+                                                            ),
+                                                          );
                                                         }
+                                                      } else {
+                                                        Navigator.of(
+                                                                _keyLoader
+                                                                    .currentContext,
+                                                                rootNavigator:
+                                                                    true)
+                                                            .pop();
+                                                        FlutterToast()
+                                                          ..getToast(
+                                                              'Subscribe Failed',
+                                                              Colors.red);
                                                       }
-                                                    } else {
-                                                      Navigator.of(
-                                                              _keyLoader
-                                                                  .currentContext,
-                                                              rootNavigator:
-                                                                  true)
-                                                          .pop();
-                                                      FlutterToast()
-                                                        ..getToast(
-                                                            'Subscribe Failed',
-                                                            Colors.red);
                                                     }
                                                   } else {
                                                     Navigator.of(
@@ -208,24 +192,27 @@ class CheckoutPageWidgets {
                                                           'Subscribe Failed',
                                                           Colors.red);
                                                   }
+                                                } else {
+                                                  Navigator.of(
+                                                          _keyLoader
+                                                              .currentContext,
+                                                          rootNavigator: true)
+                                                      .pop();
+                                                  FlutterToast()
+                                                    ..getToast(
+                                                        'Subscribe Failed',
+                                                        Colors.red);
                                                 }
-                                              } else {
-                                                Navigator.of(
-                                                        _keyLoader
-                                                            .currentContext,
-                                                        rootNavigator: true)
-                                                    .pop();
-                                                FlutterToast()
-                                                  ..getToast('Subscribe Failed',
-                                                      Colors.red);
                                               }
+                                            } else {
+                                              Navigator.of(
+                                                      _keyLoader.currentContext,
+                                                      rootNavigator: true)
+                                                  .pop();
+                                              FlutterToast()
+                                                ..getToast('Subscribe Failed',
+                                                    Colors.red);
                                             }
-                                          } else {
-                                            /* its must be a free paln
-                                                        hence you should not call the updatePayment 
-                                                       */
-                                            //TODO goto myplan page
-                                            Navigator.pop(Get.context);
                                           }
                                         });
                                       },

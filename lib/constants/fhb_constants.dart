@@ -406,7 +406,7 @@ const String STR_NOT_VERIFIED = 'Not Verified';
 const String STR_SUCCESS = 'success';
 const String STR_FAILED = 'failed';
 const String STR_DONE = 'Done';
-const String STR_REGIMENT = 'Go to Regiment';
+const String STR_REGIMENT = 'Go to Regimen';
 
 const String STR_LATEST_VALUE = 'Latest Value';
 

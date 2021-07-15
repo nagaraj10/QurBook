@@ -16,8 +16,10 @@ import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/UpdatePaymentViewModel.dart';
 import 'package:myfhb/telehealth/features/Payment/ResultPage.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
+import 'package:myfhb/widgets/checkout_page_provider.dart';
 import 'package:myfhb/widgets/result_page_new.dart';
 import 'package:myfhb/widgets/update_payment_response.dart';
+import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
@@ -41,7 +43,6 @@ class PaymentGatwayPage extends StatefulWidget {
 
 class _WebViewExampleState extends State<PaymentGatwayPage> {
   String PAYMENT_URL;
-  String paymentId;
   UpdatePaymentViewModel updatePaymentViewModel;
   bool isFromSubscribe = false;
 
@@ -57,7 +58,6 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
     mInitialTime = DateTime.now();
     updatePaymentViewModel = new UpdatePaymentViewModel();
     PAYMENT_URL = widget.redirectUrl;
-    paymentId = widget.paymentId;
     isFromSubscribe = widget.isFromSubscribe;
   }
 
@@ -109,14 +109,13 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
               if (finalUrl.contains(CHECK_URL)) {
                 String paymentOrderId = '';
                 String paymentRequestId = '';
-                String paymentId = '';
                 Uri uri = Uri.parse(finalUrl);
                 String paymentStatus = uri.queryParameters[PAYMENT_STATUS];
                 paymentOrderId = uri.queryParameters[PAYMENT_ID];
                 paymentRequestId = uri.queryParameters[PAYMENT_REQ_ID];
                 if (paymentStatus != null && paymentStatus == CREDIT) {
                   updatePaymentSubscribe(
-                          paymentId, paymentOrderId, paymentRequestId)
+                          widget.paymentId, paymentOrderId, paymentRequestId)
                       .then((value) {
                     if (value?.isSuccess == true &&
                         value?.result?.paymentStatus == PAYCREDIT) {
@@ -128,13 +127,11 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
                   });
                 } else {
                   updatePaymentSubscribe(
-                          paymentId, paymentOrderId, paymentRequestId)
+                          widget.paymentId, paymentOrderId, paymentRequestId)
                       .then((value) {
-                    if (value?.isSuccess == true) {
-                      gotoPaymentResultPage(false, '');
-                    } else {
-                      gotoPaymentResultPage(false, '');
-                    }
+                    gotoPaymentResultPage(false, '',
+                        cartUserId: value?.result?.cartUserId,
+                        isPaymentFails: true);
                   });
                 }
               }
@@ -166,6 +163,8 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
               ),
               FlatButton(
                 onPressed: () {
+                  Provider.of<CheckoutPageProvider>(context, listen: false)
+                      .loader(false);
                   if (!isFromSubscribe) {
                     widget.closePage(STR_FAILED);
                     Navigator.pop(context);
@@ -183,7 +182,8 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
         false;
   }
 
-  void gotoPaymentResultPage(bool status, String refNo) {
+  void gotoPaymentResultPage(bool status, String refNo,
+      {bool isPaymentFails, final String cartUserId}) {
     Navigator.push(
         context,
         MaterialPageRoute(
@@ -195,6 +195,8 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
               widget.closePage(value);
               Navigator.pop(context);
             },
+            cartUserId: cartUserId,
+            isPaymentFails: isPaymentFails,
           ),
         ));
   }
