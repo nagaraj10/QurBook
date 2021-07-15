@@ -1,25 +1,36 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
 import 'package:myfhb/plan_wizard/model/AddToCartModel.dart';
+import 'package:myfhb/plan_wizard/models/DietPlanModel.dart';
 import 'package:myfhb/plan_wizard/models/health_condition_response_model.dart';
 import 'package:myfhb/plan_wizard/services/PlanWizardService.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
+import 'package:myfhb/widgets/checkout_page_provider.dart';
+import 'package:myfhb/widgets/fetching_cart_items_model.dart';
+import 'package:provider/provider.dart';
 
 class PlanWizardViewModel extends ChangeNotifier {
   PlanWizardService planWizardService = new PlanWizardService();
   final PageController pageController = PageController();
   int currentPage = 0;
-  List<PlanListResult> carePlanList = [];
-  List<PlanListResult> dietPlanList = [];
-  List<PlanListResult> cartItemsList = [];
+  List<List<DietPlanResult>> dietPlanList = [];
   String currentPackageId = '';
   List<PlanListResult> planListResult = [];
-  List<PlanListResult> cartList = [];
   List<PlanListResult> planSearchList = [];
   List<PlanListResult> healthConditionsList = [];
+  Map<String, List<MenuItem>> healthConditions = {};
+  Map<String, List<MenuItem>> filteredHealthConditions = {};
+  bool isHealthSearch = false;
+
+  List<ProductList> cartList = [];
+
+  var selectedTag = '';
+  var providerId = '';
 
   void updateSingleSelection(String packageId) {
     if (packageId == currentPackageId) {
@@ -39,19 +50,36 @@ class PlanWizardViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<PlanListModel> getPlanList() async {
+  Future<PlanListModel> getCarePlanList() async {
     try {
       var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-      PlanListModel myPlanListModel = await planWizardService.getPlanList(userid);
+      PlanListModel myPlanListModel =
+          await planWizardService.getPlanList(userid);
       if (myPlanListModel.isSuccess) {
         planListResult = myPlanListModel.result;
+      } else {
+        planListResult = [];
+      }
+      return myPlanListModel;
+    } catch (e) {}
+  }
+
+  Future<DietPlanModel> getDietPlanList() async {
+    try {
+      var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      DietPlanModel myPlanListModel =
+          await planWizardService.getDietPlanList(userid);
+      if (myPlanListModel.isSuccess) {
+        dietPlanList = myPlanListModel.result;
+      } else {
+        dietPlanList = [];
       }
       return myPlanListModel;
     } catch (e) {}
   }
 
   Future<Map<String, List<MenuItem>>> getHealthConditions() async {
-    Map<String, List<MenuItem>> healthConditions = {};
+    healthConditions = {};
     try {
       var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
       HealthConditionResponseModel healthConditionResponseModel =
@@ -70,8 +98,31 @@ class PlanWizardViewModel extends ChangeNotifier {
       } else {
         healthConditions = {};
       }
+      notifyListeners();
       return healthConditions;
     } catch (e) {}
+  }
+
+  void getFilteredHealthConditions(
+    String filterText,
+  ) async {
+    if ((filterText ?? '')?.isNotEmpty ?? false) {
+      isHealthSearch = true;
+      filteredHealthConditions = {};
+      healthConditions?.forEach((categoryName, menuItemsList) {
+        menuItemsList?.forEach((menuItem) {
+          if (menuItem.menuitemtype != Menuitemtype.SEPERATOR &&
+              (menuItem?.title?.toLowerCase()?.trim() ?? '')
+                  .contains(filterText?.toLowerCase()?.trim())) {
+            filteredHealthConditions.putIfAbsent(categoryName, () => []);
+            filteredHealthConditions[categoryName ?? ''].add(menuItem);
+          }
+        });
+      });
+    } else {
+      isHealthSearch = false;
+    }
+    notifyListeners();
   }
 
   List<PlanListResult> filterPlanNameProvider(String title) {
@@ -118,12 +169,132 @@ class PlanWizardViewModel extends ChangeNotifier {
     return planListLocal;
   }
 
+  List<DietPlanResult> filterDietSorting(String filter) {
+    List<DietPlanResult> planListLocal = [];
+    List<DietPlanResult> planLisDefault = List.from(dietPlanList);
+    if (filter == popUpChoicePrice) {
+      if (planLisDefault != null && planLisDefault.length > 0) {
+        planLisDefault?.sort((a, b) => a.price.compareTo(b.price));
+        planListLocal = List.from(planLisDefault);
+      }
+    } else if (filter == popUpChoiceDura) {
+      if (planLisDefault != null && planLisDefault.length > 0) {
+        planLisDefault
+            ?.sort((a, b) => a.packageDuration.compareTo(b.packageDuration));
+        planListLocal = List.from(planLisDefault);
+      }
+    } else if (filter == popUpChoiceDefault) {
+      if (dietPlanList != null && dietPlanList.length > 0) {
+        planListLocal = List.from(dietPlanList);
+      }
+    } else {
+      planListLocal = List.from(dietPlanList);
+    }
+
+    return planListLocal;
+  }
+
+  List<DietPlanResult> filterPlanNameProviderDiet(String title) {
+    List<DietPlanResult> filterSearch = new List();
+    List<DietPlanResult> searchList = List.from(dietPlanList);
+
+    for (int i = 0; i < searchList.length; i++) {
+      if (searchList[i]?.title != null && searchList[i]?.title != '') {
+        if (searchList[i]
+                ?.title
+                .toLowerCase()
+                .trim()
+                .contains(title.toLowerCase().trim()) ||
+            searchList[i]
+                ?.providerName
+                .toLowerCase()
+                .trim()
+                .contains(title.toLowerCase().trim())) {
+          filterSearch.addAll(searchList);
+        }
+      }
+    }
+    return filterSearch;
+  }
+
   Future<AddToCartModel> addToCartItem(
-      {String packageId, String price, bool isRenew}) async {
+      {String packageId, String price, bool isRenew, String providerId}) async {
     try {
       AddToCartModel addToCartModel = await planWizardService.addToCartService(
           packageId: packageId, price: price, isRenew: isRenew);
+
+      if (addToCartModel.isSuccess) {
+        updateSingleSelection(packageId);
+        updateProviderId(providerId);
+        await fetchCartItem();
+        FlutterToast().getToast('Plan Added to Cart', Colors.green);
+      } else {
+        updateSingleSelection('');
+        updateProviderId('');
+        FlutterToast().getToast(
+            addToCartModel?.message != null
+                ? addToCartModel?.message
+                : 'Adding Failed! Try again',
+            Colors.green);
+      }
+
       return addToCartModel;
     } catch (e) {}
+  }
+
+  Future<void> removeCart({String packageId}) async {
+    try {
+      await Provider.of<CheckoutPageProvider>(Get.context, listen: false)
+          .removeCartItem(productId: packageId, needToast: false);
+      await fetchCartItem();
+      updateSingleSelection('');
+      updateProviderId('');
+    } catch (e) {}
+  }
+
+  void updateProviderId(String providerIdNew) {
+    providerId = providerIdNew;
+  }
+
+  Future<void> fetchCartItem() async {
+    FetchingCartItemsModel fetchingCartItemsModel =
+        await Provider.of<CheckoutPageProvider>(Get.context, listen: false)
+            .fetchCartItems();
+    if (fetchingCartItemsModel?.isSuccess ?? false) {
+      cartList = fetchingCartItemsModel?.result?.cart?.productList ?? [];
+    } else {
+      cartList = [];
+    }
+  }
+
+  bool checkItemInCart(String packageId,String tag) {
+    bool isItemInCart = false;
+    cartList?.forEach((element) {
+      if ('${element?.productDetail?.id}' == packageId) {
+        if(tag=='Care'){
+          currentPackageId = packageId;
+        }else{
+          // diet add
+        }
+        isItemInCart = true;
+      }
+    });
+
+    return isItemInCart;
+  }
+
+  bool checkAllItems(/*String tag*/) {
+    bool isCarePlanInCart = false;
+    planListResult?.forEach((planItem) {
+      cartList.forEach((cartItem) {
+        if ('${cartItem?.productDetail?.id??''}' == (planItem?.packageid??'')) {
+          isCarePlanInCart = true;
+          FlutterToast().getToast('Already a care plan available in cart', Colors.red);
+        }
+      });
+
+    });
+
+    return isCarePlanInCart;
   }
 }

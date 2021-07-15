@@ -21,6 +21,8 @@ class _HealthConditionPageState extends State<HealthConditionPage> {
   @override
   void initState() {
     super.initState();
+    Provider.of<PlanWizardViewModel>(context, listen: false)?.isHealthSearch =
+        false;
     healthConditions = Provider.of<PlanWizardViewModel>(context, listen: false)
         .getHealthConditions();
   }
@@ -28,7 +30,13 @@ class _HealthConditionPageState extends State<HealthConditionPage> {
   @override
   Widget build(BuildContext context) => Column(
         children: [
-          SearchWidget(onChanged: (value) {}, hintText: strSearchHealth),
+          SearchWidget(
+            hintText: strSearchHealth,
+            onChanged: (value) {
+              Provider.of<PlanWizardViewModel>(context, listen: false)
+                  .getFilteredHealthConditions(value);
+            },
+          ),
           Expanded(
             child: FutureBuilder<Map<String, List<MenuItem>>>(
                 future: healthConditions,
@@ -51,7 +59,18 @@ class _HealthConditionPageState extends State<HealthConditionPage> {
                   } else if (snapshot.hasError) {
                     return ErrorsWidget();
                   } else {
-                    var healthConditionsList = snapshot.data;
+                    var healthConditionsList =
+                        (Provider.of<PlanWizardViewModel>(context)
+                                    ?.isHealthSearch ??
+                                false)
+                            ? (Provider.of<PlanWizardViewModel>(context,
+                                        listen: false)
+                                    ?.filteredHealthConditions ??
+                                {})
+                            : (Provider.of<PlanWizardViewModel>(context,
+                                        listen: false)
+                                    ?.healthConditions ??
+                                {});
                     if ((healthConditionsList?.length ?? 0) > 0) {
                       return SingleChildScrollView(
                         child: Column(

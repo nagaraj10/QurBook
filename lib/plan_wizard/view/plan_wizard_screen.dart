@@ -11,13 +11,25 @@ import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
+import 'package:myfhb/widgets/checkout_page_provider.dart';
 import 'package:provider/provider.dart';
-
 import 'widgets/plan_navigation_widget.dart';
 
-class PlanWizardScreen extends StatelessWidget {
+class PlanWizardScreen extends StatefulWidget {
+  @override
+  _PlanWizardScreenState createState() => _PlanWizardScreenState();
+}
+
+class _PlanWizardScreenState extends State<PlanWizardScreen> {
   String feedbackCode="MissingCondition";
   String titleName="Missing condition";
+
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<PlanWizardViewModel>(context,listen: false).fetchCartItem();
+  }
+
   @override
   Widget build(BuildContext context) {
     var planWizardViewModel = Provider.of<PlanWizardViewModel>(context);
