@@ -110,7 +110,7 @@ class HomeWidget extends StatelessWidget {
                           onAddPressed: activePlanCount > 0
                               ? null
                               : () async {
-                                  await Get.toNamed(rt_Diseases);
+                                  await Get.toNamed(rt_PlanWizard);
                                   await landingViewModel.getQurPlanDashBoard();
                                 },
                         ),

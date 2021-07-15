@@ -69,6 +69,9 @@ const String strOtpShowText =
 
 //Strings used in SignInScreen
 const String strSignInText = 'Sign In';
+const String strReviewPay = 'Review & Pay';
+const String strRetryPay = 'Retry Payment';
+const String strFreePlan = 'Confirm Subscription';
 const String strForgotTxt = 'Forgot Password ?';
 const String strPassCantEmpty = 'Please Enter Valid Password';
 const String strSignUpTxt = 'SignUp';
@@ -165,6 +168,10 @@ const String alternateNumber = 'Alternate Number';
 //Strings used in ChangePassword
 const String strNewPassword = 'newPassword';
 const String strOldPassword = 'oldPassword';
+
+const String strCare = 'Care';
+const String strDiet = 'Diet';
+const String strMyPlan = 'MyPlan';
 
 //labels for country code picker page
 const String strinitialMobileLabel = '91';

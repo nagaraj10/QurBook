@@ -22,6 +22,7 @@ import 'package:intl/intl.dart';
 import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments.dart';
 import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
 import 'package:myfhb/add_providers/bloc/update_providers_bloc.dart';
+import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/authentication/model/logged_in_success.dart';
 import 'package:myfhb/authentication/view/login_screen.dart';
 import 'package:myfhb/bookmark_record/bloc/bookmarkRecordBloc.dart';
@@ -44,6 +45,7 @@ import 'package:myfhb/my_family/models/Sharedbyme.dart';
 import 'package:myfhb/my_providers/models/User.dart';
 import 'package:myfhb/myfhb_weview/myfhb_webview.dart';
 import 'package:myfhb/plan_dashboard/viewModel/subscribeViewModel.dart';
+import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:myfhb/refer_friend/view/invite_contacts_screen.dart';
 import 'package:myfhb/refer_friend/viewmodel/referafriend_vm.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
@@ -2653,6 +2655,8 @@ class CommonUtil {
       String content,
       String packageId,
       String isSubscribed,
+      bool IsExtendable,
+      String price,
       Function() refresh}) async {
     var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     showDialog<void>(
@@ -2719,11 +2723,24 @@ class CommonUtil {
                             ),
                           ),
                           onPressed: () async {
-                            Navigator.pop(context);
-                            _dialogForSubscribePayment(
+                            //Navigator.pop(context);
+                            /*_dialogForSubscribePayment(
                                 context, '', packageId, true, () {
                               refresh();
-                            });
+                            });*/
+                            if (IsExtendable) {
+                              await Provider.of<PlanWizardViewModel>(context,
+                                      listen: false)
+                                  ?.addToCartItem(
+                                      packageId: packageId,
+                                      price: price,
+                                      isRenew: true,
+                                      isFromAdd: strMyPlan);
+                            } else {
+                              FlutterToast().getToast(
+                                  'Renewal limit reached for this plan. Please try after few days',
+                                  Colors.black);
+                            }
                           },
                           borderSide: BorderSide(
                             color: Color(
@@ -2743,7 +2760,7 @@ class CommonUtil {
         });
   }
 
-  Widget customImage(String iconApi) {
+  Widget customImage(String iconApi, {Widget defaultWidget}) {
     print(iconApi);
     return ClipOval(
       child: Container(
@@ -2777,12 +2794,14 @@ class CommonUtil {
                             strokeWidth: 1.5,
                             backgroundColor:
                                 Color(new CommonUtil().getMyPrimaryColor())),
-                    errorWidget: (context, url, error) => ClipOval(
-                        child: CircleAvatar(
-                      backgroundImage: AssetImage(qurHealthLogo),
-                      radius: 32,
-                      backgroundColor: Colors.transparent,
-                    )),
+                    errorWidget: (context, url, error) =>
+                        defaultWidget ??
+                        ClipOval(
+                            child: CircleAvatar(
+                          backgroundImage: AssetImage(qurHealthLogo),
+                          radius: 32,
+                          backgroundColor: Colors.transparent,
+                        )),
                     imageBuilder: (context, imageProvider) => Container(
                       width: 80.0,
                       height: 80.0,
@@ -2810,12 +2829,14 @@ class CommonUtil {
                                 strokeWidth: 1.5,
                                 backgroundColor: Color(
                                     new CommonUtil().getMyPrimaryColor())),
-                        errorWidget: (context, url, error) => ClipOval(
-                            child: CircleAvatar(
-                          backgroundImage: AssetImage(qurHealthLogo),
-                          radius: 32,
-                          backgroundColor: Colors.transparent,
-                        )),
+                        errorWidget: (context, url, error) =>
+                            defaultWidget ??
+                            ClipOval(
+                                child: CircleAvatar(
+                              backgroundImage: AssetImage(qurHealthLogo),
+                              radius: 32,
+                              backgroundColor: Colors.transparent,
+                            )),
                         imageBuilder: (context, imageProvider) => Container(
                           width: 80.0,
                           height: 80.0,
@@ -2826,12 +2847,13 @@ class CommonUtil {
                           ),
                         ),
                       )
-                : ClipOval(
-                    child: CircleAvatar(
-                    backgroundImage: AssetImage(qurHealthLogo),
-                    radius: 32,
-                    backgroundColor: Colors.transparent,
-                  )),
+                : defaultWidget ??
+                    ClipOval(
+                        child: CircleAvatar(
+                      backgroundImage: AssetImage(qurHealthLogo),
+                      radius: 32,
+                      backgroundColor: Colors.transparent,
+                    )),
       ),
     );
   }

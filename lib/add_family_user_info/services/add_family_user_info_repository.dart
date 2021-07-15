@@ -8,6 +8,7 @@ import 'package:myfhb/add_family_user_info/models/update_relatiosnship_model.dar
 import 'package:myfhb/add_family_user_info/models/update_self_profile_model.dart';
 import 'package:myfhb/add_family_user_info/models/updated_add_family_relation_info.dart';
 import 'package:myfhb/add_family_user_info/models/verify_email_response.dart';
+import 'package:myfhb/add_new_plan/model/PlanCode.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
@@ -314,6 +315,15 @@ class AddFamilyUserInfoRepository {
         '${CommonConstants.strUserQuery}$userId${CommonConstants.strQueryString}${CommonConstants.strGetProfilePic}';
     var res = await _helper.uploadUserProfilePicToServer(responseQuery, image);
     CommonResponse response = CommonResponse.fromJson(res);
+    return response;
+  }
+
+  Future<PlanCode> getPlanCode() async {
+    String responseQuery = CommonConstants.strReferenceValue +
+        CommonConstants.strSlash +
+        CommonConstants.strDataCodes;
+    PlanCode response = await _helper.getPlanCode(responseQuery);
+
     return response;
   }
 }

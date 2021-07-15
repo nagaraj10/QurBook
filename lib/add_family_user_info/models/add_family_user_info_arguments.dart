@@ -19,8 +19,9 @@ class AddFamilyUserInfoArguments {
   String packageId;
   String isSubscribed;
   String providerId;
-  Function () refresh;
+  Function() refresh;
   bool feeZero;
+  bool isFromCartPage;
 
   AddFamilyUserInfoArguments(
       {this.addFamilyUserInfo,
@@ -38,5 +39,7 @@ class AddFamilyUserInfoArguments {
       this.packageId,
       this.isSubscribed,
       this.providerId,
-      this.refresh,this.feeZero});
+      this.refresh,
+      this.feeZero,
+      this.isFromCartPage});
 }

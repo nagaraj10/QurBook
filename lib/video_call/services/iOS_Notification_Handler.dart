@@ -121,15 +121,17 @@ class IosNotificationHandler {
             model.patientId != null &&
             model.patientName != null &&
             model.patientPicture != null) {
-          Get.to(Chat(
-            peerId: model.doctorId,
-            peerName: model.doctorName,
-            peerAvatar: model.doctorPicture,
-            patientId: model.patientId,
-            patientName: model.patientName,
-            patientPicture: model.patientPicture,
-            isFromVideoCall: false,
-          ));
+          Get.to(
+            Chat(
+              peerId: model.doctorId,
+              peerName: model.doctorName,
+              peerAvatar: model.doctorPicture,
+              patientId: model.patientId,
+              patientName: model.patientName,
+              patientPicture: model.patientPicture,
+              isFromVideoCall: false,
+            ),
+          );
         } else {
           Get.to(ChatHomeScreen());
         }
