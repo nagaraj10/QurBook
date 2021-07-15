@@ -25,18 +25,11 @@ class CheckoutPageProvider extends ChangeNotifier {
 
   bool isLoading = false;
 
-  bool isProfileValid = false;
-
 
   int get currentCartCount => _cartCount;
 
   void loader(bool currentIsLoading) {
     isLoading = currentIsLoading;
-    notifyListeners();
-  }
-
-  void updateProfileVaildationStatus(bool currentIsProfileValid) {
-    isProfileValid = currentIsProfileValid;
     notifyListeners();
   }
 

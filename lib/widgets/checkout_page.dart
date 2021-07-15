@@ -368,86 +368,19 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                           onTap: value?.isLoading
                                               ? null
                                               : () async {
-                                                  //! check for address to show disclaimar dialog
                                                   AuthenticationValidator()
                                                       .checkNetwork()
                                                       .then((intenet) async {
                                                     if (intenet != null &&
                                                         intenet) {
-                                                      if ((value
-                                                              ?.isProfileValid ??
-                                                          false)) {
-                                                        /* Provider.of<CheckoutPageProvider>(
-                                                                context,
-                                                                listen: false)
-                                                            .loader(true);
-
-                                                        var mCartTotal = value
-                                                                ?.fetchingCartItemsModel
-                                                                ?.result
-                                                                ?.totalCartAmount ??
-                                                            0;
-                                                        var body = {
-                                                          "cartId":
-                                                              "${value?.fetchingCartItemsModel?.result?.cart?.id}"
-                                                        };
-                                                        if (mCartTotal > 0) {
-                                                          CheckoutPageWidgets()
-                                                              .showPaymentConfirmationDialog(
-                                                                  body: body,
-                                                                  totalCartAmount:
-                                                                      mCartTotal);
-                                                        } else {
-                                                          ApiBaseHelper()
-                                                              .makePayment(body)
-                                                              .then((value) {
-                                                            if (value != null) {
-                                                              if (value
-                                                                  ?.isSuccess) {
-                                                                Get.off(
-                                                                  PaymentResultPage(
-                                                                    refNo: value
-                                                                        ?.result
-                                                                        ?.orderId,
-                                                                    status: value
-                                                                        ?.isSuccess,
-                                                                    isFreePlan:
-                                                                        true,
-                                                                  ),
-                                                                );
-                                                              } else {
-                                                                Provider.of<CheckoutPageProvider>(
-                                                                        context,
-                                                                        listen:
-                                                                            false)
-                                                                    .loader(
-                                                                        false);
-                                                                FlutterToast()
-                                                                  ..getToast(
-                                                                      'Subscribe Failed',
-                                                                      Colors
-                                                                          .red);
-                                                              }
-                                                            }
-                                                          });
-                                                        } */
+                                                      var result =
+                                                          await CheckoutPageWidgets()
+                                                              .profileValidationCheckOnCart(
+                                                                  context);
+                                                      if (result ?? false) {
                                                         planSubLogic(value);
-                                                      } else {
-                                                        var result =
-                                                            await CheckoutPageWidgets()
-                                                                .profileValidationCheckOnCart(
-                                                                    context);
-                                                        if (result) {
-                                                          planSubLogic(value);
-                                                        }
-
-                                                        FlutterToast().getToast(
-                                                            'value-- $result',
-                                                            Colors.green);
                                                       }
                                                     } else {
-                                                      //show alert for profile check
-
                                                       Provider.of<CheckoutPageProvider>(
                                                               context,
                                                               listen: false)

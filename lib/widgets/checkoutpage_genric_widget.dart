@@ -80,8 +80,8 @@ class CheckoutPageWidgets {
                                               color: Color(commonUtil
                                                   .getMyPrimaryColor()))),
                                       color: Colors.transparent,
-                                      textColor: Color(
-                                          commonUtil.getMyPrimaryColor()),
+                                      textColor:
+                                          Color(commonUtil.getMyPrimaryColor()),
                                       padding: EdgeInsets.all(8.0),
                                       onPressed: () {
                                         Provider.of<CheckoutPageProvider>(
@@ -107,8 +107,8 @@ class CheckoutPageWidgets {
                                               color: Color(commonUtil
                                                   .getMyPrimaryColor()))),
                                       color: Colors.transparent,
-                                      textColor: Color(
-                                          commonUtil.getMyPrimaryColor()),
+                                      textColor:
+                                          Color(commonUtil.getMyPrimaryColor()),
                                       padding: EdgeInsets.all(8.0),
                                       onPressed: () {
                                         Navigator.pop(context);
@@ -295,8 +295,7 @@ class CheckoutPageWidgets {
             if (myProfile.result.dateOfBirth != null &&
                 myProfile.result.dateOfBirth.isNotEmpty) {
               if (myProfile.result.additionalInfo != null) {
-                if (myProfile.result.userAddressCollection3 == null) {
-                  //! change this too !=
+                if (myProfile.result.userAddressCollection3 != null) {
                   if (myProfile.result.userAddressCollection3.length > 0) {
                     return await patientAddressCheck(
                         myProfile.result.userAddressCollection3[0], context,
@@ -435,7 +434,8 @@ class CheckoutPageWidgets {
       Function() refresh,
       String providerId}) async {
     var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    return await showDialog<void>(
+    var isAccepted = false;
+    await showDialog<void>(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
@@ -477,7 +477,7 @@ class CheckoutPageWidgets {
                           onPressed: () async {
                             // open profile page
                             Navigator.of(context).pop();
-                            return false;
+                            isAccepted = false;
                           },
                           borderSide: BorderSide(
                             color: Color(
@@ -515,6 +515,7 @@ class CheckoutPageWidgets {
                                     feeZero: feeZero,
                                     refresh: refresh,
                                     isFromCartPage: true));
+                            isAccepted = true;
                           },
                           borderSide: BorderSide(
                             color: Color(
@@ -532,6 +533,7 @@ class CheckoutPageWidgets {
             ]),
           );
         });
+    return isAccepted;
   }
 
   Future<dynamic> mDisclaimerAlertDialog(
