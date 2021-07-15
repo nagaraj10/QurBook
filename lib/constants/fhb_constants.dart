@@ -355,6 +355,7 @@ const String EXIT_APP_TO_EXIT = "Are you sure to exit app?";
 const String CANCEL = "CANCEL";
 const String YES = "YES";
 const String CHAT = "Chats";
+const String CAREPROVIDERS = "Care Providers";
 
 const String KEY_FAMILYMEMBERNEW = 'familymembernew';
 const String CONSULTING = 'CONSULTING';
@@ -507,6 +508,7 @@ const strNoVideos = 'No videos available';
 const strVideosAvailable = 'videos available';
 const strChatWithUs = 'Chat with us';
 const strChatAvailable = ' is available';
+const strCareProvidersAvailable = 'care providers available';
 const strChatNotAvailable = 'No care provider assigned';
 const strMyDashboard = 'Dashboard';
 const String strSheelaG = 'Sheela';
