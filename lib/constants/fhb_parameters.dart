@@ -359,11 +359,12 @@ const String PAYMENT_SUCCESS_PNG = 'assets/payment/success_tick.png';
 const String PAYMENT_FAILURE_PNG = 'assets/payment/failure.png';
 const String PROFILE_PH = 'assets/user/profile_pic_ph.png';
 const String PAYMENT_SUCCESS_MSG = 'Payment Successful';
-const String PAYMENT_FAILURE_MSG = 'Payment Failure';
+const String PAYMENT_FAILURE_MSG = 'Payment Failed';
 const String APPOINTMENT_CONFIRM = 'Your appointment is now confirmed';
 const String PLAN_CONFIRM = 'Your plan subscription is now confirmed';
 const String UNABLE_PROCESS = 'We unable to reach your process..';
-const String PAYMENT_FAILURE_CONTENT = 'Please note: If any amount is deducted, we will do an automatic refund. Your bank might take 7 to 8 days process it and reflect that in your account.';
+const String PAYMENT_FAILURE_CONTENT =
+    'Please note: If any amount is deducted, we will do an automatic refund. Your bank might take 7 to 8 days process it and reflect that in your account.';
 
 const String strSourceCode = 'sourceCode';
 const String strEntityCode = 'entityCode';

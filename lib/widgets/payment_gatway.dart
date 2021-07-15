@@ -122,7 +122,12 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
                       paymentOrderIdSub = value?.result?.paymentOrderId ?? '';
                       gotoPaymentResultPage(true, paymentOrderIdSub);
                     } else {
-                      gotoPaymentResultPage(false, '');
+                      gotoPaymentResultPage(
+                        false,
+                        value?.result?.paymentOrderId ?? '',
+                        cartUserId: value?.result?.cartUserId,
+                        isPaymentFails: true,
+                      );
                     }
                   });
                 } else {
