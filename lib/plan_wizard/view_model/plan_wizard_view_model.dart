@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
@@ -178,52 +179,61 @@ class PlanWizardViewModel extends ChangeNotifier {
     return planListLocal;
   }
 
-  List<DietPlanResult> filterDietSorting(String filter) {
-    List<DietPlanResult> planListLocal = [];
-    List<DietPlanResult> planLisDefault = List.from(dietPlanList);
-    if (filter == popUpChoicePrice) {
-      if (planLisDefault != null && planLisDefault.length > 0) {
-        planLisDefault?.sort((a, b) => a.price.compareTo(b.price));
-        planListLocal = List.from(planLisDefault);
-      }
-    } else if (filter == popUpChoiceDura) {
-      if (planLisDefault != null && planLisDefault.length > 0) {
-        planLisDefault
-            ?.sort((a, b) => a.packageDuration.compareTo(b.packageDuration));
-        planListLocal = List.from(planLisDefault);
-      }
-    } else if (filter == popUpChoiceDefault) {
-      if (dietPlanList != null && dietPlanList.length > 0) {
+  List<List<DietPlanResult>> filterDietSorting(String filter) {
+    List<List<DietPlanResult>> planListAll = [];
+    List<List<DietPlanResult>> planListDiet = List.from(dietPlanList);
+
+    planListDiet?.forEach((planListDefault) {
+      List<DietPlanResult> planListLocal = [];
+      if (filter == popUpChoicePrice) {
+        if (planListDefault != null && planListDefault.length > 0) {
+          planListDefault?.sort((a, b) => b.price.compareTo(a.price));
+          planListLocal = List.from(planListDefault);
+        }
+      } else if (filter == popUpChoiceDura) {
+        if (planListDefault != null && planListDefault.length > 0) {
+          planListDefault
+              ?.sort((a, b) => a.packageDuration.compareTo(b.packageDuration));
+          planListLocal = List.from(planListDefault);
+        }
+      } else if (filter == popUpChoiceDefault) {
+        if (dietPlanList != null && dietPlanList.length > 0) {
+          planListLocal = List.from(dietPlanList);
+        }
+      } else {
         planListLocal = List.from(dietPlanList);
       }
-    } else {
-      planListLocal = List.from(dietPlanList);
-    }
 
-    return planListLocal;
+      planListAll.add(planListLocal);
+    });
+
+    return planListAll;
   }
 
-  List<DietPlanResult> filterPlanNameProviderDiet(String title) {
-    List<DietPlanResult> filterSearch = new List();
-    List<DietPlanResult> searchList = List.from(dietPlanList);
-
-    for (int i = 0; i < searchList.length; i++) {
-      if (searchList[i]?.title != null && searchList[i]?.title != '') {
-        if (searchList[i]
-                ?.title
-                .toLowerCase()
-                .trim()
-                .contains(title.toLowerCase().trim()) ||
-            searchList[i]
-                ?.providerName
-                .toLowerCase()
-                .trim()
-                .contains(title.toLowerCase().trim())) {
-          filterSearch.addAll(searchList);
+  List<List<DietPlanResult>> filterPlanNameProviderDiet(String title) {
+    List<List<DietPlanResult>> filterSearchAll = [];
+    List<List<DietPlanResult>> searchListAll = List.from(dietPlanList);
+    searchListAll.forEach((searchList) {
+      List<DietPlanResult> filterSearch = [];
+      for (int i = 0; i < searchList.length; i++) {
+        if (searchList[i]?.title != null && searchList[i]?.title != '') {
+          if (searchList[i]
+                  ?.title
+                  .toLowerCase()
+                  .trim()
+                  .contains(title.toLowerCase().trim()) ||
+              searchList[i]
+                  ?.providerName
+                  .toLowerCase()
+                  .trim()
+                  .contains(title.toLowerCase().trim())) {
+            filterSearch.add(searchList[i]);
+          }
         }
       }
-    }
-    return filterSearch;
+      filterSearchAll.add(filterSearch);
+    });
+    return filterSearchAll;
   }
 
   Future<AddToCartModel> addToCartItem(
@@ -231,24 +241,24 @@ class PlanWizardViewModel extends ChangeNotifier {
       String price,
       bool isRenew,
       String providerId,
-      bool isFromDiet = false}) async {
+      String isFromAdd}) async {
     try {
       AddToCartModel addToCartModel = await planWizardService.addToCartService(
           packageId: packageId, price: price, isRenew: isRenew);
 
       if (addToCartModel.isSuccess) {
-        if (isFromDiet) {
+        if (isFromAdd == strDiet) {
           updateSingleSelectionDiet(packageId);
-        } else {
+        } else if (isFromAdd == strCare) {
           updateSingleSelection(packageId);
           updateProviderId(providerId);
         }
         await fetchCartItem();
         FlutterToast().getToast('Added to Cart', Colors.green);
       } else {
-        if (isFromDiet) {
+        if (isFromAdd == strDiet) {
           updateSingleSelectionDiet('');
-        } else {
+        } else if (isFromAdd == strCare) {
           updateSingleSelection('');
           updateProviderId('');
         }
@@ -293,7 +303,7 @@ class PlanWizardViewModel extends ChangeNotifier {
     }
   }
 
-  bool checkItemInCart(String packageId, String tag,{String providerId}) {
+  bool checkItemInCart(String packageId, String tag, {String providerId}) {
     bool isItemInCart = false;
 
     cartList?.forEach((element) {

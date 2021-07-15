@@ -29,7 +29,7 @@ class _DietPlanPageState extends State<DietPlanPage> {
 
   bool isSearch = false;
 
-  List<DietPlanResult> planSearchList = List();
+  List<List<DietPlanResult>> planSearchList = List();
 
   String _selectedView = popUpChoiceDefault;
 
@@ -144,8 +144,11 @@ class _DietPlanPageState extends State<DietPlanPage> {
           if (snapshot?.hasData &&
               snapshot?.data?.result != null &&
               snapshot?.data?.result?.length > 0) {
-            dietPlanListLength = snapshot?.data?.result?.length ?? 0;
-            return carePlanList(snapshot?.data?.result ?? []);
+            dietPlanListLength = isSearch
+                ? planSearchList.length
+                : snapshot?.data?.result?.length ?? 0;
+            return carePlanList(
+                isSearch ? planSearchList : snapshot?.data?.result ?? []);
           } else {
             return SafeArea(
               child: SizedBox(
@@ -165,7 +168,8 @@ class _DietPlanPageState extends State<DietPlanPage> {
   Widget carePlanList(List<List<DietPlanResult>> planList) {
     return (planList != null && planList.length > 0)
         ? SingleChildScrollView(
-            child: Padding(padding: EdgeInsets.only(bottom: 50.0.h),
+            child: Padding(
+              padding: EdgeInsets.only(bottom: 50.0.h),
               child: Column(
                 children: getDiePLansWidget(planList),
               ),

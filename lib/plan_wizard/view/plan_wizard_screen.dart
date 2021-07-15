@@ -11,7 +11,6 @@ import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'package:myfhb/widgets/checkout_page_provider.dart';
 import 'package:provider/provider.dart';
 import 'widgets/plan_navigation_widget.dart';
 
@@ -112,7 +111,7 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
                           ),
                         ),
                       ),
-                      RaisedButton(
+                      OutlineButton(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(
                             10.0.sp,
@@ -125,8 +124,11 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
                               toast.getToast("Successful", Colors.green);
                             }
                           });
+
                         },
+                        borderSide: BorderSide(color: Colors.white),
                         color: Colors.white,
+                        textColor: Colors.white,
                         child: Text(
                           _getBottomButtonText(planWizardViewModel.currentPage),
                         ),

@@ -153,6 +153,7 @@ const String qr_myconnection = 'myconnection/';
 const String qr_id = '?id=';
 const String qr_user = 'user/';
 const String qr_section = '?section=';
+const String qr_myOrders = 'my-orders';
 
 const String qr_doctor = 'doctor/';
 const String qr_SearchText = 'searchText=';
@@ -245,23 +246,17 @@ const String regimentImagePath = 'https://qurplan.com/assets/images/';
 
 const String qr_health_conditions = 'Action=GetMenu';
 
-const String getMenuCarePlans =
-    'Action=GetMenuTaggedPackages&tags=';
+const String getMenuCarePlans = 'Action=GetMenuTaggedPackages&tags=';
 
-const String excludeDiet =
-    '&extags=diet';
+const String excludeDiet = '&extags=diet';
 
-const String getMenuDietPlans =
-    'Action=GetMenuTaggedPackages2&tags=';
+const String getMenuDietPlans = 'Action=GetMenuTaggedPackages2&tags=';
 
-const String diet =
-    ',diet';
+const String diet = ',diet';
 
-const String prid =
-    '&prid=';
+const String prid = '&prid=';
 
-const String exact =
-    '&exact=1';
+const String exact = '&exact=1';
 
 const String qr_list = 'list/';
 const String qr_doctorlist = 'doctorsList?';

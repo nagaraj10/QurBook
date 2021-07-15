@@ -8,10 +8,12 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/constants/responseModel.dart';
+import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:myfhb/telehealth/features/chat/view/pdfiosViewer.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:path/path.dart';
@@ -23,6 +25,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:myfhb/plan_dashboard/model/MetaDataForURL.dart';
 import 'dart:developer' as dev;
+
+import 'package:provider/provider.dart';
 
 class MyPlanDetailView extends StatefulWidget {
   final String title;
@@ -37,6 +41,8 @@ class MyPlanDetailView extends StatefulWidget {
   final String hosIcon;
   final String iconApi;
   final String catIcon;
+  final bool isRenew;
+  final String isFrom;
   final MetaDataForURL metaDataForURL;
 
   MyPlanDetailView({
@@ -53,6 +59,8 @@ class MyPlanDetailView extends StatefulWidget {
     @required this.hosIcon,
     @required this.iconApi,
     @required this.catIcon,
+    @required this.isRenew,
+    @required this.isFrom,
     @required this.metaDataForURL,
   }) : super(key: key);
 
@@ -75,6 +83,8 @@ class PlanDetail extends State<MyPlanDetailView> {
   String hosIcon = '';
   String iconApi = '';
   String catIcon = '';
+  bool isRenew = false;
+  String isFrom = '';
   InAppWebViewController webView;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -97,6 +107,8 @@ class PlanDetail extends State<MyPlanDetailView> {
     hosIcon = widget.hosIcon;
     iconApi = widget.iconApi;
     catIcon = widget.catIcon;
+    isRenew = widget.isRenew;
+    isFrom = widget.isFrom;
   }
 
   @override
@@ -480,24 +492,26 @@ class PlanDetail extends State<MyPlanDetailView> {
                   OutlineButton(
                     //hoverColor: Color(getMyPrimaryColor()),
                     child: Text(
-                      issubscription == '0' ? strSubscribe : strSubscribed,
+                      issubscription == '0' ? strAddToCart : strSubscribed,
                       style: TextStyle(
                         color: getTextColor(isDisable, issubscription),
                         fontSize: 13.sp,
                       ),
                     ),
-                    onPressed: isDisable
+                    onPressed: /*isDisable
                         ? null
-                        : () async {
+                        :*/ () async {
                             if (issubscription == '0') {
-                              CommonUtil().profileValidationCheck(contxt,
+                              await Provider.of<PlanWizardViewModel>(context,
+                                  listen: false)
+                                  ?.addToCartItem(
                                   packageId: packageId,
-                                  isSubscribed: issubscription,
-                                  isFrom: strIsFromSubscibe,
-                                  feeZero: price ==
-                                      '' ||price == '0',
-                                  providerId: providerId, refresh: () {
-                                Navigator.of(context).pop();
+                                  price: price,
+                                  isRenew: isRenew,
+                                  isFromAdd: isFrom).then((value) {
+                                    if(value.isSuccess){
+                                      Navigator.pop(context);
+                                    }
                               });
                             }
                             /*else {
@@ -577,14 +591,14 @@ class PlanDetail extends State<MyPlanDetailView> {
   }
 
   Color getTextColor(bool disable, String isSubscribe) {
-    if (isDisable) {
+    /*if (isDisable) {
       return Colors.grey;
-    } else {
+    } else {*/
       if (isSubscribe == '0') {
         return Color(CommonUtil().getMyPrimaryColor());
       } else {
         return Colors.grey;
       }
-    }
+    //}
   }
 }

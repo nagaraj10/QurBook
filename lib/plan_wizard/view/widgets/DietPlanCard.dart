@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
@@ -42,6 +43,7 @@ class DietPlanCard extends StatelessWidget {
                     iconApi: planList?.metadata?.icon,
                     catIcon: planList?.catmetadata?.icon,
                     metaDataForURL: planList?.metadata,
+                    isFrom: strDiet,
                   )),
         );
       },
@@ -164,7 +166,7 @@ class DietPlanCard extends StatelessWidget {
                       RoundedCheckBox(
                           isSelected: Provider.of<PlanWizardViewModel>(context)
                                   .checkItemInCart(
-                                      planList.packageid, 'Diet') ||
+                                      planList.packageid, strDiet) ||
                               Provider.of<PlanWizardViewModel>(context)
                                       .currentPackageIdDiet ==
                                   planList.packageid,
@@ -172,7 +174,7 @@ class DietPlanCard extends StatelessWidget {
                             var isSelected = Provider.of<PlanWizardViewModel>(
                                     context,
                                     listen: false)
-                                .checkItemInCart(planList.packageid, 'Diet');
+                                .checkItemInCart(planList.packageid, strDiet);
                             if (isSelected) {
                               await Provider.of<PlanWizardViewModel>(context,
                                       listen: false)
@@ -201,7 +203,7 @@ class DietPlanCard extends StatelessWidget {
                                             ? true
                                             : false,
                                         providerId: planList.providerid,
-                                        isFromDiet: true);
+                                        isFromAdd: strDiet);
                               //}
                             }
                           }),

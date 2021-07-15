@@ -527,7 +527,7 @@ const String strDontCondition = 'Don\'t find your condition?';
 const String strDontPlan = 'Don\'t find your plan?';
 const String strDontDietPlan = 'Don\'t find your diet plan?';
 const String strSearchHealth = 'Search health condition';
-const String strPlanHospitalDiet = 'Search Plan or Hospital or Doctor';
+const String strPlanHospitalDiet = 'Search Plan/Hospital';
 const String strSearchDietPlan = 'Search Diet Plan';
 const String strLetsAdd = 'Let\'s add it';
 const String strTellToUs = 'Tell to us';
@@ -536,6 +536,7 @@ const String strNoHealthConditions = 'No Health Conditions Available';
 
 const strUploading = 'Uploading...';
 const strSubscribe = 'Subscribe';
+const strAddToCart = 'Add to Cart';
 const strUnSubscribe = 'UnSubscribe';
 const strSubscribed = 'Subscribed';
 const strSelectedPlan = 'Selected Plan - ';
