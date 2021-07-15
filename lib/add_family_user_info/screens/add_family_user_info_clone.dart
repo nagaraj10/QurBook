@@ -49,6 +49,7 @@ import 'package:myfhb/my_family/models/FamilyMembersRes.dart' as contactObj;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
+import 'package:myfhb/widgets/checkoutpage_genric_widget.dart';
 
 class AddFamilyUserInfoScreen extends StatefulWidget {
   AddFamilyUserInfoArguments arguments;
@@ -202,7 +203,24 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   }
 
   void checkCSIRPackageVaildation() async {
-    if (widget.arguments.isFromCSIR) {
+    if(widget?.arguments?.isFromCartPage){
+      MyProfileModel myProfile = await CommonUtil().fetchUserProfileInfo();
+      if (myProfile?.result?.userAddressCollection3?.isNotEmpty) {
+        final callback = checkAddressValidation(
+            myProfile?.result?.userAddressCollection3[0]);
+        if (callback) {
+          CheckoutPageWidgets().mDisclaimerAlertDialog(
+            context: Get.context,
+            packageId: widget.arguments.packageId,
+            isSubscribed: widget.arguments.isSubscribed,
+            providerId: widget.arguments.providerId,
+            feeZero: widget.arguments.feeZero,
+            refresh: widget.arguments.refresh,
+          );
+        } else {}
+      }
+    }
+    else if (widget.arguments.isFromCSIR) {
       MyProfileModel myProfile = await CommonUtil().fetchUserProfileInfo();
       if (myProfile?.result?.userAddressCollection3?.isNotEmpty) {
         final callback = checkAddressValidation(

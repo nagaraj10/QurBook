@@ -5,12 +5,15 @@ import 'dart:wasm';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/authentication/view/authentication_validator.dart';
 import 'package:myfhb/colors/fhb_colors.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/landing/view/landing_arguments.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
@@ -27,6 +30,8 @@ import 'package:get/get.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 class CheckoutPage extends StatefulWidget {
   final CartType cartType;
@@ -39,6 +44,7 @@ class CheckoutPage extends StatefulWidget {
 
 class _CheckoutPageState extends State<CheckoutPage> {
   ScrollController _controller = new ScrollController();
+  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
 
   @override
   void initState() {
@@ -184,7 +190,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                           Row(
                                             children: [
                                               Text(
-                                                'Confirm Order',
+                                                'Confirm Order'.toUpperCase(),
                                                 style: TextStyle(
                                                     color: Colors.black,
                                                     fontWeight: FontWeight.bold,
@@ -198,7 +204,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                             listen: false)
                                                         .clearCartItem();
                                                   },
-                                                  child: Text('Clear cart'))
+                                                  child: Text(
+                                                    'Clear cart',
+                                                    style: TextStyle(
+                                                        color: Colors
+                                                            .redAccent[700]),
+                                                  ))
                                             ],
                                           ),
                                           Divider(),
@@ -244,7 +255,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            'PRICE DETAILS',
+                                            'PRICE DETAILS'.toUpperCase(),
                                             style: TextStyle(
                                                 color: Colors.black,
                                                 fontWeight: FontWeight.bold,
@@ -257,7 +268,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                   'Price \(${value?.fetchingCartItemsModel?.result?.productsCount ?? 0} items\)'),
                                               Spacer(),
                                               Text(
-                                                  '\$${value?.fetchingCartItemsModel?.result?.totalCartAmount ?? 0}'),
+                                                  'INR ${value?.fetchingCartItemsModel?.result?.totalCartAmount ?? 0}'),
                                             ],
                                           ),
                                           DottedLine(
@@ -274,7 +285,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                               ),
                                               Spacer(),
                                               Text(
-                                                '\$${value?.fetchingCartItemsModel?.result?.totalCartAmount ?? 0}',
+                                                'INR ${value?.fetchingCartItemsModel?.result?.totalCartAmount ?? 0}',
                                                 style: TextStyle(
                                                     fontSize: 14,
                                                     fontWeight:
@@ -319,7 +330,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          '\$${value?.fetchingCartItemsModel?.result?.totalCartAmount ?? 0}',
+                                          'INR ${value?.fetchingCartItemsModel?.result?.totalCartAmount ?? 0}',
                                           style: TextStyle(
                                               color: Colors.black,
                                               fontWeight: FontWeight.bold,
@@ -352,68 +363,83 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                         InkWell(
                                           onTap: value?.isLoading
                                               ? null
-                                              : () {
-                                                  Provider.of<CheckoutPageProvider>(
-                                                          context,
-                                                          listen: false)
-                                                      .loader(true);
+                                              : () async {
+                                                  //! check for address to show disclaimar dialog
                                                   AuthenticationValidator()
                                                       .checkNetwork()
-                                                      .then((intenet) {
+                                                      .then((intenet) async {
                                                     if (intenet != null &&
                                                         intenet) {
-                                                      //TODO procced to pay
-                                                      // TODO check profile validation and all
+                                                      if ((value
+                                                              ?.isProfileValid ??
+                                                          false)) {
+                                                        Provider.of<CheckoutPageProvider>(
+                                                                context,
+                                                                listen: false)
+                                                            .loader(true);
 
-                                                      var mCartTotal = value
-                                                              ?.fetchingCartItemsModel
-                                                              ?.result
-                                                              ?.totalCartAmount ??
-                                                          0;
-                                                      var body = {
-                                                        "cartId":
-                                                            "${value?.fetchingCartItemsModel?.result?.cart?.id}"
-                                                      };
-                                                      if (mCartTotal > 0) {
-                                                        CheckoutPageWidgets()
-                                                            .showPaymentConfirmationDialog(
-                                                                body: body,
-                                                                totalCartAmount:
-                                                                    mCartTotal);
-                                                      } else {
-                                                        ApiBaseHelper()
-                                                            .makePayment(body)
-                                                            .then((value) {
-                                                          if (value != null) {
-                                                            if (value
-                                                                ?.isSuccess) {
-                                                              Get.off(
-                                                                PaymentResultPage(
-                                                                  refNo: value
-                                                                      ?.result
-                                                                      ?.orderId,
-                                                                  status: value
-                                                                      ?.isSuccess,
-                                                                  isFreePlan:
-                                                                      true,
-                                                                ),
-                                                              );
-                                                            } else {
-                                                              Provider.of<CheckoutPageProvider>(
-                                                                      context,
-                                                                      listen:
-                                                                          false)
-                                                                  .loader(
-                                                                      false);
-                                                              FlutterToast()
-                                                                ..getToast(
-                                                                    'Subscribe Failed',
-                                                                    Colors.red);
+                                                        var mCartTotal = value
+                                                                ?.fetchingCartItemsModel
+                                                                ?.result
+                                                                ?.totalCartAmount ??
+                                                            0;
+                                                        var body = {
+                                                          "cartId":
+                                                              "${value?.fetchingCartItemsModel?.result?.cart?.id}"
+                                                        };
+                                                        if (mCartTotal > 0) {
+                                                          CheckoutPageWidgets()
+                                                              .showPaymentConfirmationDialog(
+                                                                  body: body,
+                                                                  totalCartAmount:
+                                                                      mCartTotal);
+                                                        } else {
+                                                          ApiBaseHelper()
+                                                              .makePayment(body)
+                                                              .then((value) {
+                                                            if (value != null) {
+                                                              if (value
+                                                                  ?.isSuccess) {
+                                                                Get.off(
+                                                                  PaymentResultPage(
+                                                                    refNo: value
+                                                                        ?.result
+                                                                        ?.orderId,
+                                                                    status: value
+                                                                        ?.isSuccess,
+                                                                    isFreePlan:
+                                                                        true,
+                                                                  ),
+                                                                );
+                                                              } else {
+                                                                Provider.of<CheckoutPageProvider>(
+                                                                        context,
+                                                                        listen:
+                                                                            false)
+                                                                    .loader(
+                                                                        false);
+                                                                FlutterToast()
+                                                                  ..getToast(
+                                                                      'Subscribe Failed',
+                                                                      Colors
+                                                                          .red);
+                                                              }
                                                             }
-                                                          }
-                                                        });
+                                                          });
+                                                        }
+                                                      } else {
+                                                        var result =
+                                                            await CheckoutPageWidgets()
+                                                                .profileValidationCheckOnCart(
+                                                                    context);
+
+                                                        FlutterToast().getToast(
+                                                            'value-- $result',
+                                                            Colors.green);
                                                       }
                                                     } else {
+                                                      //show alert for profile check
+
                                                       Provider.of<CheckoutPageProvider>(
                                                               context,
                                                               listen: false)
@@ -430,8 +456,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                             child: Container(
                                               height: 50,
                                               padding: EdgeInsets.symmetric(
-                                                  vertical: 15.0.sp,
-                                                  horizontal: 15.0.sp),
+                                                  vertical: 5.0.sp,
+                                                  horizontal: 5.0.sp),
                                               alignment: Alignment.center,
                                               decoration: BoxDecoration(
                                                 borderRadius: BorderRadius.all(
@@ -522,7 +548,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       '${item?.productDetail?.planName}',
                       style: TextStyle(
                           color: Colors.black54,
-                          fontWeight: FontWeight.bold,
+                          // fontWeight: FontWeight.bold,
                           fontSize: 13),
                     ),
                     //duration
@@ -530,7 +556,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       'Duration-${item?.productDetail?.packageDuration} days',
                       style: TextStyle(
                           color: Colors.black38,
-                          fontWeight: FontWeight.bold,
+                          // fontWeight: FontWeight.bold,
                           fontSize: 9),
                     ),
                   ],
@@ -544,9 +570,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     IconButton(
-                      icon: Icon(
-                        Icons.delete_outline,
-                        color: Colors.redAccent[700],
+                      // icon: Icon(
+                      //   Icons.delete_outline,
+                      //   color: Colors.redAccent[700],
+                      // ),
+                      icon: SvgPicture.asset(
+                        ic_cart_delete,
+                        width: 20.0.sp,
+                        height: 20.0.sp,
                       ),
                       onPressed: () {
                         Provider.of<CheckoutPageProvider>(context,
@@ -557,7 +588,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     ),
                     Spacer(),
                     Text(
-                      '\$${item?.productDetail?.planSubscriptionFee}',
+                      'INR ${item?.productDetail?.planSubscriptionFee}',
                       style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.w500,

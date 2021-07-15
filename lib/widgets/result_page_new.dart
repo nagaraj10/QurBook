@@ -121,11 +121,9 @@ class _ResultPage extends State<PaymentResultPage> {
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold))
                           : paidPlanContent(),
-                      status
-                          ? Text(
-                              widget.refNo != null
-                                  ? 'Ref.no: ' + widget.refNo
-                                  : '',
+                      //status
+                      ((widget.refNo ?? '').isNotEmpty)
+                          ? Text('Ref.no: ' + widget.refNo,
                               style: TextStyle(
                                   fontSize: 16.0.sp,
                                   color: Colors.white,

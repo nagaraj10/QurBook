@@ -129,9 +129,12 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
                   updatePaymentSubscribe(
                           widget.paymentId, paymentOrderId, paymentRequestId)
                       .then((value) {
-                    gotoPaymentResultPage(false, '',
-                        cartUserId: value?.result?.cartUserId,
-                        isPaymentFails: true);
+                    gotoPaymentResultPage(
+                      false,
+                      value?.result?.paymentOrderId ?? '',
+                      cartUserId: value?.result?.cartUserId,
+                      isPaymentFails: true,
+                    );
                   });
                 }
               }
