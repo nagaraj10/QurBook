@@ -62,7 +62,7 @@ class AddNewPlan {
 
 
               if (!planContent.text.isEmpty) {
-                onPostAddPlan(context);
+                onPostAddPlan(context,onRefresh: refresh);
               } else {
                 validationMsg =
                     "Please Enter " + feedBackType.replaceAll("Missing", "");

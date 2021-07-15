@@ -121,7 +121,10 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
                           new AddNewPlan().addNewPlan(context, feedbackCode,titleName, (bool) {
                             FlutterToast toast = new FlutterToast();
                             if(bool) {
-                              toast.getToast("Successful", Colors.green);
+                              toast.getToast("We've received your request and get back to you soon", Colors.green);
+                            }else{
+                              toast.getToast("Please try again ", Colors.red);
+
                             }
                           });
 
