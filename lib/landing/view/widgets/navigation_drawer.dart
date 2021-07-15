@@ -199,9 +199,8 @@ class NavigationDrawer extends StatelessWidget {
                           height: 24.sp,
                         ),
                         onPressed: () {
-                          //CommonUtil().accessContactsDialog();
+                          CommonUtil().accessContactsDialog();
                           Navigator.pop(context);
-                          Get.to(CheckoutPage());
                         },
                       ),
                       DrawerTile(
