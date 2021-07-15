@@ -40,7 +40,6 @@ class _CarePlanPageState extends State<CarePlanPage> {
 
   @override
   Widget build(BuildContext context) {
-
     planListProvider = Provider.of<PlanWizardViewModel>(context);
 
     return Scaffold(
@@ -178,7 +177,6 @@ class _CarePlanPageState extends State<CarePlanPage> {
   }
 
   Future<bool> _alertForUncheckPlan() {
-
     return showDialog(
           context: context,
           builder: (context) => AlertDialog(

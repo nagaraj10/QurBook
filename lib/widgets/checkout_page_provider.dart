@@ -63,12 +63,7 @@ class CheckoutPageProvider extends ChangeNotifier {
       }
 
       setCartType(CartType.DEFAULT_CART);
-      await Provider.of<PlanWizardViewModel>(Get.context, listen: false)
-          ?.fetchCartItem();
-      Provider.of<PlanWizardViewModel>(Get.context, listen: false)
-          ?.updateSingleSelection('');
-      Provider.of<PlanWizardViewModel>(Get.context, listen: false)
-          ?.updateProviderId('');
+      await clearAllInCareDiet();
     } else {
       //failed to remove from cart
       if (needToast) {
@@ -77,8 +72,8 @@ class CheckoutPageProvider extends ChangeNotifier {
     }
   }
 
-  void clearCartItem() {
-    helper.clearCartItems().then((value) async {
+  Future<void> clearCartItem() async {
+    var value = await helper.clearCartItems();
       if (value.isSuccess) {
         //item removed from cart
         FlutterToast().getToast(value.message, Colors.green);
@@ -88,7 +83,7 @@ class CheckoutPageProvider extends ChangeNotifier {
         //failed to remove from cart
         FlutterToast().getToast(value.message, Colors.red);
       }
-    });
+    await clearAllInCareDiet();
   }
 
   void changeCartStatus(CartStatus currentCartStatus,
@@ -97,5 +92,16 @@ class CheckoutPageProvider extends ChangeNotifier {
     if (isNeedRelod) {
       notifyListeners();
     }
+  }
+
+  Future<void> clearAllInCareDiet() async {
+    await Provider.of<PlanWizardViewModel>(Get.context, listen: false)
+        ?.fetchCartItem();
+    Provider.of<PlanWizardViewModel>(Get.context, listen: false)
+        ?.updateSingleSelection('');
+    Provider.of<PlanWizardViewModel>(Get.context, listen: false)
+        ?.updateSingleSelectionDiet('');
+    Provider.of<PlanWizardViewModel>(Get.context, listen: false)
+        ?.updateProviderId('');
   }
 }

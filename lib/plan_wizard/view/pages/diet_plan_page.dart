@@ -35,6 +35,10 @@ class _DietPlanPageState extends State<DietPlanPage> {
 
   List<String> listCategories = ['Recommended Plans', 'All Plans'];
 
+  int dietPlanListLength = 0;
+
+  PlanWizardViewModel planListProvider;
+
   @override
   void initState() {
     planListModel = planWizardViewModel.getDietPlanList();
@@ -42,6 +46,8 @@ class _DietPlanPageState extends State<DietPlanPage> {
 
   @override
   Widget build(BuildContext context) {
+    planListProvider = Provider.of<PlanWizardViewModel>(context);
+
     return Scaffold(
         body: Column(
           children: [
@@ -78,10 +84,8 @@ class _DietPlanPageState extends State<DietPlanPage> {
         floatingActionButton: FloatingActionButton(
           backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
           onPressed: () {
-            if ((Provider.of<PlanWizardViewModel>(context, listen: false)
-                        ?.currentPackageId ??
-                    '')
-                .isEmpty) {
+            if (dietPlanListLength > 0 &&
+                (planListProvider?.currentPackageIdDiet ?? '').isEmpty) {
               _alertForUncheckPlan();
             } else {
               Get.to(CheckoutPage());
@@ -101,7 +105,8 @@ class _DietPlanPageState extends State<DietPlanPage> {
       planSearchList =
           await planWizardViewModel.filterDietSorting(popUpChoicePrice);
     } else if (filterBy == popUpChoiceDura) {
-      planSearchList = await planWizardViewModel.filterDietSorting(popUpChoiceDura);
+      planSearchList =
+          await planWizardViewModel.filterDietSorting(popUpChoiceDura);
     } else if (filterBy == popUpChoiceDefault) {
       planSearchList =
           await planWizardViewModel.filterDietSorting(popUpChoiceDefault);
@@ -139,7 +144,8 @@ class _DietPlanPageState extends State<DietPlanPage> {
           if (snapshot?.hasData &&
               snapshot?.data?.result != null &&
               snapshot?.data?.result?.length > 0) {
-            return carePlanList(snapshot?.data?.result??[]);
+            dietPlanListLength = snapshot?.data?.result?.length ?? 0;
+            return carePlanList(snapshot?.data?.result ?? []);
           } else {
             return SafeArea(
               child: SizedBox(
@@ -159,8 +165,10 @@ class _DietPlanPageState extends State<DietPlanPage> {
   Widget carePlanList(List<List<DietPlanResult>> planList) {
     return (planList != null && planList.length > 0)
         ? SingleChildScrollView(
-            child: Column(
-              children: getDiePLansWidget(planList),
+            child: Padding(padding: EdgeInsets.only(bottom: 50.0.h),
+              child: Column(
+                children: getDiePLansWidget(planList),
+              ),
             ),
           )
         : SafeArea(

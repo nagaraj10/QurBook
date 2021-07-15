@@ -21,7 +21,6 @@ class DietPlanCard extends StatelessWidget {
 
   PlanWizardViewModel planWizardViewModel = new PlanWizardViewModel();
 
-
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -30,22 +29,20 @@ class DietPlanCard extends StatelessWidget {
           context,
           MaterialPageRoute(
               builder: (context) => MyPlanDetailView(
-                title: planList?.title,
-                providerName: planList?.providerName,
-                description: planList?.description,
-                issubscription: planList?.isSubscribed,
-                packageId: planList?.packageid,
-                price: planList?.price,
-                packageDuration:
-                planList?.packageDuration,
-                providerId: planList?.plinkid,
-                isDisable: false,
-                hosIcon:
-                planList?.providermetadata?.icon,
-                iconApi: planList?.metadata?.icon,
-                catIcon: planList?.catmetadata?.icon,
-                metaDataForURL: planList?.metadata,
-              )),
+                    title: planList?.title,
+                    providerName: planList?.providerName,
+                    description: planList?.description,
+                    issubscription: planList?.isSubscribed,
+                    packageId: planList?.packageid,
+                    price: planList?.price,
+                    packageDuration: planList?.packageDuration,
+                    providerId: planList?.plinkid,
+                    isDisable: false,
+                    hosIcon: planList?.providermetadata?.icon,
+                    iconApi: planList?.metadata?.icon,
+                    catIcon: planList?.catmetadata?.icon,
+                    metaDataForURL: planList?.metadata,
+                  )),
         );
       },
       child: Container(
@@ -120,14 +117,14 @@ class DietPlanCard extends StatelessWidget {
                                 ),
                                 planList.packageDuration != null
                                     ? Text(
-                                  planList.packageDuration + ' days',
-                                  maxLines: 1,
-                                  style: TextStyle(
-                                      fontSize: 12.0.sp,
-                                      fontWeight: FontWeight.w600,
-                                      color: Color(new CommonUtil()
-                                          .getMyPrimaryColor())),
-                                )
+                                        planList.packageDuration + ' days',
+                                        maxLines: 1,
+                                        style: TextStyle(
+                                            fontSize: 12.0.sp,
+                                            fontWeight: FontWeight.w600,
+                                            color: Color(new CommonUtil()
+                                                .getMyPrimaryColor())),
+                                      )
                                     : Container(),
                                 SizedBox(width: 20.w),
                                 Text(
@@ -139,21 +136,21 @@ class DietPlanCard extends StatelessWidget {
                                 ),
                                 planList.price != null
                                     ? Visibility(
-                                  visible: planList.price.isNotEmpty &&
-                                      planList.price != '0',
-                                  child: TextWidget(
-                                      text: INR + planList.price,
-                                      fontsize: 12.0.sp,
-                                      fontWeight: FontWeight.w500,
-                                      colors: Color(new CommonUtil()
-                                          .getMyPrimaryColor())),
-                                  replacement: TextWidget(
-                                      text: FREE,
-                                      fontsize: 12.0.sp,
-                                      fontWeight: FontWeight.w500,
-                                      colors: Color(new CommonUtil()
-                                          .getMyPrimaryColor())),
-                                )
+                                        visible: planList.price.isNotEmpty &&
+                                            planList.price != '0',
+                                        child: TextWidget(
+                                            text: INR + planList.price,
+                                            fontsize: 12.0.sp,
+                                            fontWeight: FontWeight.w500,
+                                            colors: Color(new CommonUtil()
+                                                .getMyPrimaryColor())),
+                                        replacement: TextWidget(
+                                            text: FREE,
+                                            fontsize: 12.0.sp,
+                                            fontWeight: FontWeight.w500,
+                                            colors: Color(new CommonUtil()
+                                                .getMyPrimaryColor())),
+                                      )
                                     : Container(),
                               ],
                             ),
@@ -166,37 +163,46 @@ class DietPlanCard extends StatelessWidget {
                     children: [
                       RoundedCheckBox(
                           isSelected: Provider.of<PlanWizardViewModel>(context)
-                              .currentPackageId ==
-                              planList.packageid,
-                          onTap: () {
-                            Provider.of<PlanWizardViewModel>(context,
-                                listen: false)
-                                .updateSingleSelection(planList.packageid);
-                            if (Provider.of<PlanWizardViewModel>(context,
-                                listen: false)
-                                .currentPackageId ==
-                                planList.packageid) {
-                              planWizardViewModel
-                                  .addToCartItem(
-                                  packageId: planList.packageid,
-                                  price: planList.price,
-                                  isRenew: planList.isexpired == '1'
-                                      ? true
-                                      : false)
-                                  .then((value) {
-                                if (value?.isSuccess) {
-                                  FlutterToast().getToast(
-                                      'Plan Added to Cart', Colors.green);
-                                } else {
-                                  FlutterToast().getToast(
-                                      value?.message != null
-                                          ? value?.message
-                                          : 'Adding Failed! Try again',
-                                      Colors.green);
-                                }
-                              });
+                                  .checkItemInCart(
+                                      planList.packageid, 'Diet') ||
+                              Provider.of<PlanWizardViewModel>(context)
+                                      .currentPackageIdDiet ==
+                                  planList.packageid,
+                          onTap: () async {
+                            var isSelected = Provider.of<PlanWizardViewModel>(
+                                    context,
+                                    listen: false)
+                                .checkItemInCart(planList.packageid, 'Diet');
+                            if (isSelected) {
+                              await Provider.of<PlanWizardViewModel>(context,
+                                      listen: false)
+                                  ?.removeCart(
+                                      packageId: planList.packageid,
+                                      isFromDiet: true);
                             } else {
-                              print('removeItem'); //Mohan delete api
+                              if(Provider.of<PlanWizardViewModel>(context,listen: false)
+                                  ?.currentPackageIdDiet!=''){
+                                await Provider.of<PlanWizardViewModel>(context,
+                                    listen: false)
+                                    ?.removeCart(
+                                    packageId: Provider.of<PlanWizardViewModel>(context,listen: false)
+                                        ?.currentPackageIdDiet,
+                                    isFromDiet: true);
+                              }
+                             /* if (!Provider.of<PlanWizardViewModel>(context,
+                                      listen: false)
+                                  .checkAllItemsDiet()) {*/
+                                await Provider.of<PlanWizardViewModel>(context,
+                                        listen: false)
+                                    ?.addToCartItem(
+                                        packageId: planList.packageid,
+                                        price: planList.price,
+                                        isRenew: planList.isexpired == '1'
+                                            ? true
+                                            : false,
+                                        providerId: planList.providerid,
+                                        isFromDiet: true);
+                              //}
                             }
                           }),
                       SizedBox(width: 5.w),

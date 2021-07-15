@@ -164,7 +164,7 @@ class CarePlanCard extends StatelessWidget {
                       RoundedCheckBox(
                           isSelected: Provider.of<PlanWizardViewModel>(context)
                                   .checkItemInCart(
-                                      planList.packageid, 'Care') ||
+                                      planList.packageid, 'Care',providerId: planList.providerid) ||
                               Provider.of<PlanWizardViewModel>(context)
                                       .currentPackageId ==
                                   planList.packageid,
@@ -172,15 +172,24 @@ class CarePlanCard extends StatelessWidget {
                             var isSelected = Provider.of<PlanWizardViewModel>(
                                     context,
                                     listen: false)
-                                .checkItemInCart(planList.packageid, 'Care');
+                                .checkItemInCart(planList.packageid, 'Care',providerId: planList.providerid);
                             if (isSelected) {
                               await Provider.of<PlanWizardViewModel>(context,
                                       listen: false)
                                   ?.removeCart(packageId: planList.packageid);
                             } else {
-                              if (!Provider.of<PlanWizardViewModel>(context,
+
+                              if(Provider.of<PlanWizardViewModel>(context,listen: false)
+                                  ?.currentPackageId!=''){
+                                await Provider.of<PlanWizardViewModel>(context,
+                                    listen: false)
+                                    ?.removeCart(packageId: Provider.of<PlanWizardViewModel>(context,listen: false)
+                                    ?.currentPackageId);
+                              }
+
+                              /*if (!Provider.of<PlanWizardViewModel>(context,
                                       listen: false)
-                                  .checkAllItems()) {
+                                  .checkAllItems()) {*/
                                 await Provider.of<PlanWizardViewModel>(context,
                                         listen: false)
                                     ?.addToCartItem(
@@ -190,7 +199,7 @@ class CarePlanCard extends StatelessWidget {
                                             ? true
                                             : false,
                                         providerId: planList.providerid);
-                              }
+                             // }
                             }
                           }),
                       SizedBox(width: 5.w),

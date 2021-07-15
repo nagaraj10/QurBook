@@ -9,8 +9,10 @@ import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/authentication/view/authentication_validator.dart';
+import 'package:myfhb/colors/fhb_colors.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/landing/view/landing_arguments.dart';
+import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/widgets/checkout_page_provider.dart';
@@ -78,7 +80,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     return WillPopScope(
       onWillPop: () => onBackPressed(context),
       child: Scaffold(
-        backgroundColor: Colors.blueGrey[100],
+        backgroundColor: const Color(bgColorContainer),
         appBar: AppBar(
           title: Text(
             'My Cart',
@@ -139,11 +141,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             ),
                             FlatButton(
                               onPressed: () {
-                                //TODO navigate to search wizard screen.
+                                Provider.of<PlanWizardViewModel>(context,listen: false)?.changeCurrentPage(0);
                                 Navigator.of(context).pop();
                               },
                               child: Text(
-                                'choose plan',
+                                'Choose Plan',
                                 style: TextStyle(
                                   fontSize: 15,
                                   color: Color(

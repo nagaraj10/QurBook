@@ -31,9 +31,6 @@ class PlanDietListView extends StatelessWidget {
             title: title,
           ),
           ListView.builder(
-            padding: EdgeInsets.only(
-              bottom: 50.0.h,
-            ),
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             itemCount: planList?.length ?? 0,
