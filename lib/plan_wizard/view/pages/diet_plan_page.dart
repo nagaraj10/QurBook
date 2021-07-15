@@ -8,6 +8,7 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
 import 'package:myfhb/plan_wizard/models/DietPlanModel.dart';
 import 'package:myfhb/plan_wizard/view/widgets/PlansDietListView.dart';
+import 'package:myfhb/plan_wizard/view/widgets/next_button.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
@@ -41,6 +42,10 @@ class _DietPlanPageState extends State<DietPlanPage> {
 
   @override
   void initState() {
+
+    Provider.of<PlanWizardViewModel>(context, listen: false).currentPackageIdDiet =
+    '';
+
     planListModel = planWizardViewModel.getDietPlanList();
   }
 
@@ -81,8 +86,7 @@ class _DietPlanPageState extends State<DietPlanPage> {
             ),
           ],
         ),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
+        floatingActionButton: NextButton(
           onPressed: () {
             if (dietPlanListLength > 0 &&
                 (planListProvider?.currentPackageIdDiet ?? '').isEmpty) {
@@ -91,11 +95,6 @@ class _DietPlanPageState extends State<DietPlanPage> {
               Get.to(CheckoutPage());
             }
           },
-          child: Icon(
-            Icons.navigate_next,
-            color: Colors.white,
-            size: 26.0.sp,
-          ),
         ));
   }
 
@@ -226,7 +225,7 @@ class _DietPlanPageState extends State<DietPlanPage> {
   Widget popMenuItem() {
     return PopupMenuButton(
       icon: Icon(
-        Icons.filter_alt_sharp,
+        Icons.sort,
       ),
       onSelected: (value) => setState(() {
         FocusManager.instance.primaryFocus.unfocus();

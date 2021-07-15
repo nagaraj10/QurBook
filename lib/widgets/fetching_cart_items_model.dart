@@ -89,12 +89,13 @@ class Cart {
 
 class ProductList {
   ProductDetail productDetail;
+  AdditionalInfo additionalInfo;
   bool isActive;
   String createdOn;
   String lastModifiedOn;
 
   ProductList(
-      {this.productDetail, this.isActive, this.createdOn, this.lastModifiedOn});
+      {this.productDetail, this.isActive, this.createdOn, this.lastModifiedOn,this.additionalInfo});
 
   ProductList.fromJson(Map<String, dynamic> json) {
     productDetail = json['productDetail'] != null
@@ -103,7 +104,11 @@ class ProductList {
     isActive = json['isActive'];
     createdOn = json['createdOn'];
     lastModifiedOn = json['lastModifiedOn'];
+    additionalInfo = json['additionalInfo'] != null
+        ? new AdditionalInfo.fromJson(json['additionalInfo'])
+        : null;
   }
+
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -113,6 +118,9 @@ class ProductList {
     data['isActive'] = this.isActive;
     data['createdOn'] = this.createdOn;
     data['lastModifiedOn'] = this.lastModifiedOn;
+    if (this.additionalInfo != null) {
+      data['additionalInfo'] = this.additionalInfo.toJson();
+    }
     return data;
   }
 }
@@ -181,6 +189,25 @@ class ErrorData {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['productsCount'] = this.productsCount;
+    return data;
+  }
+}
+
+class AdditionalInfo {
+  bool isRenewal;
+  String tag;
+
+  AdditionalInfo({this.isRenewal, this.tag});
+
+  AdditionalInfo.fromJson(Map<String, dynamic> json) {
+    isRenewal = json['isRenewal'];
+    tag = json['tag'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['isRenewal'] = this.isRenewal;
+    data['tag'] = this.tag;
     return data;
   }
 }

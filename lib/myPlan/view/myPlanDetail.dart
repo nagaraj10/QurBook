@@ -24,20 +24,23 @@ class MyPlanDetail extends StatefulWidget {
   final String providerIcon;
   final String descriptionURL;
   final String price;
+  final String isExtendable;
 
-  MyPlanDetail({Key key,
-    @required this.title,
-    @required this.providerName,
-    @required this.docName,
-    @required this.startDate,
-    @required this.endDate,
-    @required this.packageId,
-    @required this.isExpired,
-    @required this.icon,
-    @required this.catIcon,
-    @required this.providerIcon,
-    @required this.descriptionURL,
-    @required this.price})
+  MyPlanDetail(
+      {Key key,
+      @required this.title,
+      @required this.providerName,
+      @required this.docName,
+      @required this.startDate,
+      @required this.endDate,
+      @required this.packageId,
+      @required this.isExpired,
+      @required this.icon,
+      @required this.catIcon,
+      @required this.providerIcon,
+      @required this.descriptionURL,
+      @required this.price,
+      @required this.isExtendable})
       : super(key: key);
 
   @override
@@ -61,6 +64,7 @@ class PlanDetail extends State<MyPlanDetail> {
   String providerIcon = '';
   String descriptionURL = '';
   String price = '';
+  String isExtendable = '';
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   InAppWebViewController webView;
@@ -84,6 +88,7 @@ class PlanDetail extends State<MyPlanDetail> {
     providerIcon = widget.providerIcon;
     descriptionURL = widget.descriptionURL;
     price = widget.price;
+    isExtendable = widget.isExtendable;
   }
 
   @override
@@ -112,265 +117,263 @@ class PlanDetail extends State<MyPlanDetail> {
 
   Widget getMainWidget() {
     return Builder(
-      builder: (contxt) =>
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-            height: 1.sh - AppBar().preferredSize.height,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  constraints: BoxConstraints(
-                    maxHeight: 0.25.sh,
-                  ),
-                  child: SingleChildScrollView(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          flex: 1,
-                          child: CircleAvatar(
-                              backgroundColor: Colors.grey[200],
-                              radius: 26,
-                              child: CommonUtil().customImage(getImage())),
-                        ),
-                        Expanded(
-                          flex: 3,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                title != null && title != ''
-                                    ? toBeginningOfSentenceCase(title.trim())
-                                    : '-',
-                                style: TextStyle(
-                                    fontSize: 20.sp,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                              Text(
-                                providerName != null && providerName != ''
-                                    ? toBeginningOfSentenceCase(providerName)
-                                    : '-',
-                                style: TextStyle(
-                                    fontSize: 16.sp, color: Colors.grey[600]),
-                              ),
-                              SizedBox(
-                                height: 3.h,
-                              ),
-                              Text(
-                                  docName != null && docName != ''
-                                      ? toBeginningOfSentenceCase(docName)
-                                      : '-',
-                                  style: TextStyle(fontSize: 16.sp)),
-                              SizedBox(
-                                height: 3.h,
-                              ),
-                              Row(
-                                children: [
-                                  Text("Start Date: ",
-                                      style: TextStyle(fontSize: 9)),
-                                  Text(
-                                      startDate != null && startDate != ''
-                                          ? new CommonUtil()
-                                          .dateFormatConversion(startDate)
-                                          : '-',
-                                      style: TextStyle(
-                                          fontSize: 9,
-                                          fontWeight: FontWeight.bold)),
-                                  SizedBox(width: 5),
-                                  Text("End Date: ",
-                                      style: TextStyle(fontSize: 9)),
-                                  Text(
-                                      endDate != null && endDate != ''
-                                          ? new CommonUtil()
-                                          .dateFormatConversion(endDate)
-                                          : '-',
-                                      style: TextStyle(
-                                          fontSize: 9,
-                                          fontWeight: FontWeight.bold)),
-                                ],
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
+      builder: (contxt) => Container(
+        margin: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+        height: 1.sh - AppBar().preferredSize.height,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              constraints: BoxConstraints(
+                maxHeight: 0.25.sh,
+              ),
+              child: SingleChildScrollView(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: CircleAvatar(
+                          backgroundColor: Colors.grey[200],
+                          radius: 26,
+                          child: CommonUtil().customImage(getImage())),
                     ),
-                  ),
-                ),
-                descriptionURL != null
-                    ? Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      OutlineButton.icon(
-                        icon: ImageIcon(
-                          AssetImage(planDownload),
-                          color: Color(CommonUtil().getMyPrimaryColor()),
-                        ),
-                        label: Text(
-                          'Download Plan',
-                          style: TextStyle(
-                            fontSize: 14.0.sp,
-                            fontWeight: FontWeight.w500,
-                            decoration: TextDecoration.underline,
-                            color: Color(CommonUtil().getMyPrimaryColor()),
-                          ),
-                        ),
-                        onPressed: () async {
-                          final common = CommonUtil();
-                          final updatedData =
-                          common.getFileNameAndUrl(descriptionURL);
-                          if (updatedData.isEmpty) {
-                            common.showStatusToUser(
-                                ResultFromResponse(false,
-                                    'incorrect url, Failed to download'),
-                                _scaffoldKey);
-                          } else {
-                            if (Platform.isIOS) {
-                              downloadFileForIos(updatedData);
-                            } else {
-                              common.downloader(updatedData.first);
-                            }
-                          }
-                        },
-                        borderSide: BorderSide(
-                          color: Color(
-                            CommonUtil().getMyPrimaryColor(),
-                          ),
-                          style: BorderStyle.solid,
-                          width: 1,
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-                    : Container(),
-                Expanded(
-                  child: descriptionURL != null && descriptionURL != ''
-                      ? Container(
-                    padding:
-                    EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                    height: 0.65.sh,
-                    child: InAppWebView(
-                        initialUrl: "${descriptionURL}",
-                        initialHeaders: {},
-                        initialOptions: InAppWebViewGroupOptions(
-                          crossPlatform: InAppWebViewOptions(
-                              debuggingEnabled: true,
-                              useOnDownloadStart: true),
-                        ),
-                        onWebViewCreated: (controller) {
-                          webView = controller;
-                        },
-                        onLoadStart: (InAppWebViewController controller,
-                            String url) {},
-                        onLoadStop: (InAppWebViewController controller,
-                            String url) {},
-                        onDownloadStart: (controller, url) async {
-                          final common = CommonUtil();
-                          final updatedData = common.getFileNameAndUrl(url);
-                          if (updatedData.isEmpty) {
-                            common.showStatusToUser(
-                                ResultFromResponse(false,
-                                    'incorrect url, Failed to download'),
-                                _scaffoldKey);
-                          } else {
-                            if (Platform.isIOS) {
-                              downloadFileForIos(updatedData);
-                            } else {
-                              common.downloader(updatedData.first);
-                            }
-                          }
-                        }),
-                    //),
-                  )
-                      : Column(
-                    children: [
-                      SizedBox(height: 20.h),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
+                    Expanded(
+                      flex: 3,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                            decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey[400])),
-                            height: 0.62.sh,
-                            width: 0.45.sh,
-                            child: Center(child: Text(strEmptyWebView)),
-                            //),
+                          Text(
+                            title != null && title != ''
+                                ? toBeginningOfSentenceCase(title.trim())
+                                : '-',
+                            style: TextStyle(
+                                fontSize: 20.sp, fontWeight: FontWeight.w500),
+                          ),
+                          Text(
+                            providerName != null && providerName != ''
+                                ? toBeginningOfSentenceCase(providerName)
+                                : '-',
+                            style: TextStyle(
+                                fontSize: 16.sp, color: Colors.grey[600]),
+                          ),
+                          SizedBox(
+                            height: 3.h,
+                          ),
+                          Text(
+                              docName != null && docName != ''
+                                  ? toBeginningOfSentenceCase(docName)
+                                  : '-',
+                              style: TextStyle(fontSize: 16.sp)),
+                          SizedBox(
+                            height: 3.h,
+                          ),
+                          Row(
+                            children: [
+                              Text("Start Date: ",
+                                  style: TextStyle(fontSize: 9)),
+                              Text(
+                                  startDate != null && startDate != ''
+                                      ? new CommonUtil()
+                                          .dateFormatConversion(startDate)
+                                      : '-',
+                                  style: TextStyle(
+                                      fontSize: 9,
+                                      fontWeight: FontWeight.bold)),
+                              SizedBox(width: 5),
+                              Text("End Date: ", style: TextStyle(fontSize: 9)),
+                              Text(
+                                  endDate != null && endDate != ''
+                                      ? new CommonUtil()
+                                          .dateFormatConversion(endDate)
+                                      : '-',
+                                  style: TextStyle(
+                                      fontSize: 9,
+                                      fontWeight: FontWeight.bold)),
+                            ],
                           ),
                         ],
                       ),
-                    ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+            descriptionURL != null
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        OutlineButton.icon(
+                          icon: ImageIcon(
+                            AssetImage(planDownload),
+                            color: Color(CommonUtil().getMyPrimaryColor()),
+                          ),
+                          label: Text(
+                            'Download Plan',
+                            style: TextStyle(
+                              fontSize: 14.0.sp,
+                              fontWeight: FontWeight.w500,
+                              decoration: TextDecoration.underline,
+                              color: Color(CommonUtil().getMyPrimaryColor()),
+                            ),
+                          ),
+                          onPressed: () async {
+                            final common = CommonUtil();
+                            final updatedData =
+                                common.getFileNameAndUrl(descriptionURL);
+                            if (updatedData.isEmpty) {
+                              common.showStatusToUser(
+                                  ResultFromResponse(false,
+                                      'incorrect url, Failed to download'),
+                                  _scaffoldKey);
+                            } else {
+                              if (Platform.isIOS) {
+                                downloadFileForIos(updatedData);
+                              } else {
+                                common.downloader(updatedData.first);
+                              }
+                            }
+                          },
+                          borderSide: BorderSide(
+                            color: Color(
+                              CommonUtil().getMyPrimaryColor(),
+                            ),
+                            style: BorderStyle.solid,
+                            width: 1,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : Container(),
+            Expanded(
+              child: descriptionURL != null && descriptionURL != ''
+                  ? Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                      height: 0.65.sh,
+                      child: InAppWebView(
+                          initialUrl: "${descriptionURL}",
+                          initialHeaders: {},
+                          initialOptions: InAppWebViewGroupOptions(
+                            crossPlatform: InAppWebViewOptions(
+                                debuggingEnabled: true,
+                                useOnDownloadStart: true),
+                          ),
+                          onWebViewCreated: (controller) {
+                            webView = controller;
+                          },
+                          onLoadStart: (InAppWebViewController controller,
+                              String url) {},
+                          onLoadStop: (InAppWebViewController controller,
+                              String url) {},
+                          onDownloadStart: (controller, url) async {
+                            final common = CommonUtil();
+                            final updatedData = common.getFileNameAndUrl(url);
+                            if (updatedData.isEmpty) {
+                              common.showStatusToUser(
+                                  ResultFromResponse(false,
+                                      'incorrect url, Failed to download'),
+                                  _scaffoldKey);
+                            } else {
+                              if (Platform.isIOS) {
+                                downloadFileForIos(updatedData);
+                              } else {
+                                common.downloader(updatedData.first);
+                              }
+                            }
+                          }),
+                      //),
+                    )
+                  : Column(
+                      children: [
+                        SizedBox(height: 20.h),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey[400])),
+                              height: 0.62.sh,
+                              width: 0.45.sh,
+                              child: Center(child: Text(strEmptyWebView)),
+                              //),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                OutlineButton(
+                  child: Text(
+                    isExpired == '1' ? strIsRenew : strUnSubscribe,
+                    style: TextStyle(
+                      color: isExpired == '1'
+                          ? Color(new CommonUtil().getMyPrimaryColor())
+                          : Colors.red,
+                      fontSize: 13.sp,
+                    ),
+                  ),
+                  onPressed: () async {
+                    if (isExpired == '1') {
+                      CommonUtil().renewAlertDialog(context,
+                          packageId: packageId,
+                          price: price,
+                          IsExtendable: isExtendable == '1' ? false : true);
+                    } else {
+                      CommonUtil().unSubcribeAlertDialog(
+                        context,
+                        packageId: packageId,
+                        fromDetail: true,
+                      );
+                    }
+                  },
+                  borderSide: BorderSide(
+                    color: isExpired == '1'
+                        ? Color(new CommonUtil().getMyPrimaryColor())
+                        : Colors.red,
+                    style: BorderStyle.solid,
+                    width: 1,
                   ),
                 ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    OutlineButton(
-                      child: Text(
-                        isExpired == '1' ? strIsRenew : strUnSubscribe,
-                        style: TextStyle(
-                          color: isExpired == '1'
-                              ? Color(new CommonUtil().getMyPrimaryColor())
-                              : Colors.red,
-                          fontSize: 13.sp,
-                        ),
-                      ),
-                      onPressed: () async {
-                        if (isExpired == '1') {
-                          CommonUtil()
-                              .renewAlertDialog(
-                              context, packageId: packageId, price:price);
-                        } else {
-                          CommonUtil().unSubcribeAlertDialog(
-                            context,
-                            packageId: packageId,
-                            fromDetail: true,
-                          );
-                        }
-                      },
-                      borderSide: BorderSide(
-                        color: isExpired == '1'
-                            ? Color(new CommonUtil().getMyPrimaryColor())
-                            : Colors.red,
-                        style: BorderStyle.solid,
-                        width: 1,
-                      ),
+                SizedBox(
+                  width: 10,
+                ),
+                OutlineButton(
+                  //hoverColor: Color(getMyPrimaryColor()),
+                  child: Text(
+                    'cancel'.toUpperCase(),
+                    style: TextStyle(
+                      color: Color(CommonUtil().getMyPrimaryColor()),
+                      fontSize: 13.sp,
                     ),
-                    SizedBox(
-                      width: 10,
+                  ),
+                  onPressed: () async {
+                    Navigator.of(context).pop();
+                  },
+                  borderSide: BorderSide(
+                    color: Color(
+                      CommonUtil().getMyPrimaryColor(),
                     ),
-                    OutlineButton(
-                      //hoverColor: Color(getMyPrimaryColor()),
-                      child: Text(
-                        'cancel'.toUpperCase(),
-                        style: TextStyle(
-                          color: Color(CommonUtil().getMyPrimaryColor()),
-                          fontSize: 13.sp,
-                        ),
-                      ),
-                      onPressed: () async {
-                        Navigator.of(context).pop();
-                      },
-                      borderSide: BorderSide(
-                        color: Color(
-                          CommonUtil().getMyPrimaryColor(),
-                        ),
-                        style: BorderStyle.solid,
-                        width: 1,
-                      ),
-                    ),
-                  ],
+                    style: BorderStyle.solid,
+                    width: 1,
+                  ),
                 ),
               ],
             ),
-          ),
+          ],
+        ),
+      ),
     );
   }
 

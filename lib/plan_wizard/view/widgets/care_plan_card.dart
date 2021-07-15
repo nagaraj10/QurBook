@@ -165,33 +165,54 @@ class CarePlanCard extends StatelessWidget {
                     children: [
                       RoundedCheckBox(
                           isSelected: Provider.of<PlanWizardViewModel>(context)
-                                  .checkItemInCart(
-                                      planList.packageid, strCare,providerId: planList.providerid) ||
+                                  .checkItemInCart(planList.packageid, strCare,
+                                      providerId: planList.providerid) ||
                               Provider.of<PlanWizardViewModel>(context)
                                       .currentPackageId ==
                                   planList.packageid,
                           onTap: () async {
-                            var isSelected = Provider.of<PlanWizardViewModel>(
-                                    context,
-                                    listen: false)
-                                .checkItemInCart(planList.packageid, strCare,providerId: planList.providerid);
-                            if (isSelected) {
-                              await Provider.of<PlanWizardViewModel>(context,
+                            if (planList.isExtendable == '0') {
+                              var isSelected = Provider.of<PlanWizardViewModel>(
+                                      context,
                                       listen: false)
-                                  ?.removeCart(packageId: planList.packageid);
-                            } else {
-
-                              if(Provider.of<PlanWizardViewModel>(context,listen: false)
-                                  ?.currentPackageId!=''){
+                                  .checkItemInCart(planList.packageid, strCare,
+                                      providerId: planList.providerid);
+                              if (isSelected) {
                                 await Provider.of<PlanWizardViewModel>(context,
-                                    listen: false)
-                                    ?.removeCart(packageId: Provider.of<PlanWizardViewModel>(context,listen: false)
-                                    ?.currentPackageId);
-                              }
+                                        listen: false)
+                                    ?.removeCart(packageId: planList.packageid);
+                              } else {
+                                if (Provider.of<PlanWizardViewModel>(context,
+                                            listen: false)
+                                        ?.currentPackageId !=
+                                    '') {
+                                  await Provider.of<PlanWizardViewModel>(
+                                          context,
+                                          listen: false)
+                                      ?.removeCart(
+                                          packageId:
+                                              Provider.of<PlanWizardViewModel>(
+                                                      context,
+                                                      listen: false)
+                                                  ?.currentPackageId);
+                                }
 
-                              /*if (!Provider.of<PlanWizardViewModel>(context,
-                                      listen: false)
-                                  .checkAllItems()) {*/
+                                bool isItemInCart =
+                                    Provider.of<PlanWizardViewModel>(context,
+                                            listen: false)
+                                        .checkAllItems();
+                                if (isItemInCart) {
+                                  await Provider.of<PlanWizardViewModel>(
+                                          context,
+                                          listen: false)
+                                      ?.removeCart(
+                                          packageId:
+                                              Provider.of<PlanWizardViewModel>(
+                                                      context,
+                                                      listen: false)
+                                                  ?.currentCartPackageId);
+                                }
+
                                 await Provider.of<PlanWizardViewModel>(context,
                                         listen: false)
                                     ?.addToCartItem(
@@ -200,8 +221,13 @@ class CarePlanCard extends StatelessWidget {
                                         isRenew: planList.isexpired == '1'
                                             ? true
                                             : false,
-                                        providerId: planList.providerid,isFromAdd: strCare);
-                             // }
+                                        providerId: planList.providerid,
+                                        isFromAdd: strCare);
+                              }
+                            } else {
+                              FlutterToast().getToast(
+                                  'Renewal limit reached for this plan. Please try after few days',
+                                  Colors.black);
                             }
                           }),
                       SizedBox(width: 5.w),

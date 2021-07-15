@@ -42,6 +42,7 @@ class _MyPlanState extends State<MyPlanList> {
   final GlobalKey _PlanCardKey = GlobalKey();
   bool isFirst;
   BuildContext _myContext;
+
   @override
   void initState() {
     super.initState();
@@ -279,6 +280,7 @@ class _MyPlanState extends State<MyPlanList> {
                     providerIcon: planList[i]?.providermetadata?.icon,
                     descriptionURL: planList[i]?.metadata?.descriptionURL,
                     price: planList[i]?.price,
+                    isExtendable: planList[i]?.isExtendable,
                   )),
         ).then((value) {
           if (value == 'refreshUI') {
@@ -407,9 +409,12 @@ class _MyPlanState extends State<MyPlanList> {
                                 onPressed: () async {
                                   if (planList[i].isexpired == '1') {
                                     CommonUtil().renewAlertDialog(context,
-                                        packageId: planList[i].packageid,
-                                        price: planList[i].price,
-                                        refresh: () {
+                                        packageId: planList[i]?.packageid,
+                                        price: planList[i]?.price,
+                                        IsExtendable:
+                                            planList[i]?.isExtendable == '1'
+                                                ? false
+                                                : true, refresh: () {
                                       setState(() {});
                                     });
                                   } else {
