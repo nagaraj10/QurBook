@@ -25,10 +25,18 @@ class CheckoutPageProvider extends ChangeNotifier {
 
   bool isLoading = false;
 
+  bool isProfileValid = false;
+
+
   int get currentCartCount => _cartCount;
 
   void loader(bool currentIsLoading) {
     isLoading = currentIsLoading;
+    notifyListeners();
+  }
+
+  void updateProfileVaildationStatus(bool currentIsProfileValid) {
+    isProfileValid = currentIsProfileValid;
     notifyListeners();
   }
 
@@ -74,15 +82,15 @@ class CheckoutPageProvider extends ChangeNotifier {
 
   Future<void> clearCartItem() async {
     var value = await helper.clearCartItems();
-      if (value.isSuccess) {
-        //item removed from cart
-        FlutterToast().getToast(value.message, Colors.green);
-        await fetchCartItems();
-        setCartType(CartType.DEFAULT_CART);
-      } else {
-        //failed to remove from cart
-        FlutterToast().getToast(value.message, Colors.red);
-      }
+    if (value.isSuccess) {
+      //item removed from cart
+      FlutterToast().getToast(value.message, Colors.green);
+      await fetchCartItems();
+      setCartType(CartType.DEFAULT_CART);
+    } else {
+      //failed to remove from cart
+      FlutterToast().getToast(value.message, Colors.red);
+    }
     await clearAllInCareDiet();
   }
 

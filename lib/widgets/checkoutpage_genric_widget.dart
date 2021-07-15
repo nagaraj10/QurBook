@@ -4,20 +4,31 @@ import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
+import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments.dart';
+import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
+import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/plan_dashboard/model/CreateSubscribeModel.dart';
+import 'package:myfhb/src/model/user/MyProfileModel.dart';
+import 'package:myfhb/src/model/user/UserAddressCollection.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/telehealth/features/Payment/PaymentPage.dart';
+import 'package:myfhb/widgets/checkout_page_provider.dart';
 import 'package:myfhb/widgets/payment_gatway.dart';
 import 'package:myfhb/widgets/result_page_new.dart';
+import 'package:provider/provider.dart';
+import 'package:myfhb/constants/router_variable.dart' as router;
 
 class CheckoutPageWidgets {
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+  MyProfileModel myProfile;
+  AddFamilyUserInfoRepository addFamilyUserInfoRepository =
+      AddFamilyUserInfoRepository();
   Future<dynamic> showPaymentConfirmationDialog(
       {dynamic body, dynamic totalCartAmount, Function(String) closePage}) {
     return showDialog(
@@ -72,6 +83,10 @@ class CheckoutPageWidgets {
                                           new CommonUtil().getMyPrimaryColor()),
                                       padding: EdgeInsets.all(8.0),
                                       onPressed: () {
+                                        Provider.of<CheckoutPageProvider>(
+                                                context,
+                                                listen: false)
+                                            .loader(false);
                                         Navigator.pop(context);
                                       },
                                       child: TextWidget(
@@ -235,5 +250,406 @@ class CheckoutPageWidgets {
             ),
           );
         });
+  }
+
+  Future<bool> profileValidationCheckOnCart(BuildContext context,
+      {String packageId,
+      String isSubscribed,
+      String providerId,
+      String isFrom,
+      bool feeZero,
+      Function() refresh}) async {
+    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
+    await addFamilyUserInfoRepository.getMyProfileInfoNew(userId).then((value) {
+      Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+      myProfile = value;
+    });
+
+    if (myProfile != null) {
+      await addressValidation(context,
+          packageId: packageId,
+          isSubscribed: isSubscribed,
+          providerId: providerId,
+          isFrom: isFrom,
+          feeZero: feeZero,
+          refresh: refresh);
+    } else {
+      FlutterToast().getToast(noGender, Colors.red);
+    }
+  }
+
+  Future<bool> addressValidation(BuildContext context,
+      {String packageId,
+      String isSubscribed,
+      String providerId,
+      String isFrom,
+      bool feeZero,
+      Function() refresh}) async {
+    if (myProfile != null) {
+      if (myProfile.isSuccess) {
+        if (myProfile.result != null) {
+          if (myProfile.result.gender != null &&
+              myProfile.result.gender.isNotEmpty) {
+            if (myProfile.result.dateOfBirth != null &&
+                myProfile.result.dateOfBirth.isNotEmpty) {
+              if (myProfile.result.additionalInfo != null) {
+                if (myProfile.result.userAddressCollection3 != null) {
+                  //! change this too !=
+                  if (myProfile.result.userAddressCollection3.length > 0) {
+                    return await patientAddressCheck(
+                        myProfile.result.userAddressCollection3[0], context,
+                        packageId: packageId,
+                        isSubscribed: isSubscribed,
+                        providerId: providerId,
+                        feeZero: feeZero,
+                        refresh: refresh);
+                  } else {
+                    return await mCustomAlertDialog(context,
+                        content: CommonUtil().CONTENT_PROFILE_CHECK,
+                        packageId: packageId,
+                        isSubscribed: isSubscribed,
+                        providerId: providerId,
+                        feeZero: feeZero,
+                        refresh: refresh);
+                  }
+                } else {
+                  return await mCustomAlertDialog(context,
+                      content: CommonUtil().CONTENT_PROFILE_CHECK,
+                      packageId: packageId,
+                      isSubscribed: isSubscribed,
+                      providerId: providerId,
+                      feeZero: feeZero,
+                      refresh: refresh);
+                }
+              } else {
+                return await mCustomAlertDialog(context,
+                    content: CommonUtil().CONTENT_PROFILE_CHECK,
+                    packageId: packageId,
+                    providerId: providerId,
+                    isSubscribed: isSubscribed,
+                    feeZero: feeZero,
+                    refresh: refresh);
+              }
+            } else {
+              return await mCustomAlertDialog(context,
+                  content: CommonUtil().CONTENT_PROFILE_CHECK,
+                  packageId: packageId,
+                  providerId: providerId,
+                  isSubscribed: isSubscribed,
+                  feeZero: feeZero,
+                  refresh: refresh);
+            }
+          } else {
+            return await mCustomAlertDialog(context,
+                content: CommonUtil().CONTENT_PROFILE_CHECK,
+                packageId: packageId,
+                providerId: providerId,
+                isSubscribed: isSubscribed,
+                feeZero: feeZero,
+                refresh: refresh);
+          }
+        } else {
+          return await mCustomAlertDialog(context,
+              content: CommonUtil().CONTENT_PROFILE_CHECK,
+              packageId: packageId,
+              providerId: providerId,
+              isSubscribed: isSubscribed,
+              feeZero: feeZero,
+              refresh: refresh);
+        }
+      } else {
+        return await mCustomAlertDialog(context,
+            content: CommonUtil().CONTENT_PROFILE_CHECK,
+            packageId: packageId,
+            providerId: providerId,
+            isSubscribed: isSubscribed,
+            feeZero: feeZero,
+            refresh: refresh);
+      }
+    } else {
+      return await mCustomAlertDialog(context,
+          content: CommonUtil().CONTENT_PROFILE_CHECK,
+          packageId: packageId,
+          providerId: providerId,
+          isSubscribed: isSubscribed,
+          feeZero: feeZero,
+          refresh: refresh);
+    }
+  }
+
+  Future<bool> patientAddressCheck(
+      UserAddressCollection3 userAddressCollection, BuildContext context,
+      {String packageId,
+      String isSubscribed,
+      String providerId,
+      bool feeZero,
+      Function() refresh}) async {
+    String address1 = userAddressCollection.addressLine1 != null
+        ? userAddressCollection.addressLine1
+        : '';
+    if (userAddressCollection.city != null) {
+      String city = userAddressCollection.city.name != null
+          ? userAddressCollection.city.name
+          : '';
+      String state = userAddressCollection.state.name != null
+          ? userAddressCollection.state.name
+          : '';
+
+      if (address1 != '' && city != '' && state != '') {
+        //check if its subcribed we need not to show disclimer alert
+        return await mDisclaimerAlertDialog(
+            packageId: packageId,
+            isSubscribed: isSubscribed,
+            providerId: providerId,
+            refresh: refresh,
+            feeZero: feeZero,
+            context: context);
+      } else {
+        return mCustomAlertDialog(context,
+            content: CommonUtil().CONTENT_PROFILE_CHECK,
+            packageId: packageId,
+            isSubscribed: isSubscribed,
+            providerId: providerId,
+            feeZero: feeZero,
+            refresh: refresh);
+      }
+    } else {
+      return mCustomAlertDialog(context,
+          content: CommonUtil().CONTENT_PROFILE_CHECK,
+          packageId: packageId,
+          isSubscribed: isSubscribed,
+          providerId: providerId,
+          feeZero: feeZero,
+          refresh: refresh);
+    }
+  }
+
+  Future<dynamic> mCustomAlertDialog(BuildContext context,
+      {String title,
+      String content,
+      String packageId,
+      String isSubscribed,
+      bool feeZero,
+      Function() refresh,
+      String providerId}) async {
+    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    await showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return new WillPopScope(
+            onWillPop: () async => false,
+            child: SimpleDialog(children: <Widget>[
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 20),
+                child: Center(
+                  child: Column(children: [
+                    //CircularProgressIndicator(),
+                    SizedBox(
+                      height: 10.0.h,
+                    ),
+                    Text(
+                      content,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16.0.sp,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5.0.h,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        OutlineButton(
+                          child: Text(
+                            'cancel'.toUpperCase(),
+                            style: TextStyle(
+                              color: Color(
+                                CommonUtil().getMyPrimaryColor(),
+                              ),
+                              fontSize: 10,
+                            ),
+                          ),
+                          onPressed: () async {
+                            // open profile page
+                            Navigator.of(context).pop();
+                            return false;
+                          },
+                          borderSide: BorderSide(
+                            color: Color(
+                              CommonUtil().getMyPrimaryColor(),
+                            ),
+                            style: BorderStyle.solid,
+                            width: 1,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10.0.h,
+                        ),
+                        OutlineButton(
+                          //hoverColor: Color(getMyPrimaryColor()),
+                          child: Text(
+                            'complete profile'.toUpperCase(),
+                            style: TextStyle(
+                              color: Color(CommonUtil().getMyPrimaryColor()),
+                              fontSize: 10,
+                            ),
+                          ),
+                          onPressed: () async {
+                            // open profile page
+                            Navigator.of(context).pop();
+                            MyProfileModel myProfile =
+                                await CommonUtil().fetchUserProfileInfo();
+                            Get.toNamed(router.rt_AddFamilyUserInfo,
+                                arguments: AddFamilyUserInfoArguments(
+                                    myProfileResult: myProfile?.result,
+                                    fromClass: CommonConstants.user_update,
+                                    isFromCSIR: false,
+                                    packageId: packageId,
+                                    providerId: providerId,
+                                    isSubscribed: isSubscribed,
+                                    feeZero: feeZero,
+                                    refresh: refresh,
+                                    isFromCartPage: true));
+                          },
+                          borderSide: BorderSide(
+                            color: Color(
+                              CommonUtil().getMyPrimaryColor(),
+                            ),
+                            style: BorderStyle.solid,
+                            width: 1,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ]),
+                ),
+              ),
+            ]),
+          );
+        });
+  }
+
+  Future<dynamic> mDisclaimerAlertDialog(
+      {BuildContext context,
+      String title,
+      String content,
+      String packageId,
+      String isSubscribed,
+      String providerId,
+      bool feeZero,
+      Function() refresh}) async {
+    await Get.dialog(
+      AlertDialog(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Spacer(),
+            Text(
+              'Disclaimer',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 20.0.sp,
+              ),
+            ),
+            Expanded(
+              child: IconButton(
+                  icon: Icon(Icons.close_rounded),
+                  onPressed: () {
+                    Get.back();
+                  }),
+            ),
+          ],
+        ),
+        content: SingleChildScrollView(
+          child: Column(
+              //mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  //color: Colors.blue,
+                  margin: EdgeInsets.symmetric(horizontal: 1),
+                  width: double.infinity,
+                  child: Column(children: [
+                    Text(
+                      CommonUtil().CONTENT_DISCALIMER,
+                      style: const TextStyle(
+                          fontSize: 15, fontWeight: FontWeight.w300),
+                    ),
+                  ]),
+                ),
+              ]),
+        ),
+        actions: [
+          SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                OutlineButton(
+                  //hoverColor: Color(getMyPrimaryColor()),
+                  child: Text(
+                    'accept'.toUpperCase(),
+                    style: TextStyle(
+                      color: Color(CommonUtil().getMyPrimaryColor()),
+                      fontSize: 13,
+                    ),
+                  ),
+                  onPressed: () async {
+                    // CommonUtil.showLoadingDialog(
+                    //     context, _keyLoader, variable.Please_Wait);
+                    // String userId =
+                    //     PreferenceUtil.getStringValue(Constants.KEY_USERID);
+                    Get.back();
+                    Provider.of<CheckoutPageProvider>(context, listen: false)
+                        .updateProfileVaildationStatus(true);
+
+                    return true;
+                  },
+                  borderSide: BorderSide(
+                    color: Color(
+                      CommonUtil().getMyPrimaryColor(),
+                    ),
+                    style: BorderStyle.solid,
+                    width: 1,
+                  ),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                OutlineButton(
+                  child: Text(
+                    'Reject'.toUpperCase(),
+                    style: TextStyle(
+                      color: Color(
+                        CommonUtil().getMyPrimaryColor(),
+                      ),
+                      fontSize: 13,
+                    ),
+                  ),
+                  onPressed: () async {
+                    Get.back();
+                    return false;
+                  },
+                  borderSide: BorderSide(
+                    color: Color(
+                      CommonUtil().getMyPrimaryColor(),
+                    ),
+                    style: BorderStyle.solid,
+                    width: 1,
+                  ),
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
+      barrierDismissible: false,
+    );
   }
 }

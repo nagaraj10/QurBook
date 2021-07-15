@@ -249,6 +249,7 @@ const String VerifyEmail = 'Tap to verify Email address';
 const String otp_assets = 'assets/icons/otp_icon.png';
 const String planDownload = 'assets/icons/planDownload.png';
 const String sendIcon = 'assets/send.svg';
+const String ic_cart_delete = 'assets/icons/cart_delete_red.svg';
 
 const String enterFirstName = 'Enter First Name';
 const String enterLastName = 'Enter Last Name';
