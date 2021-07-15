@@ -33,6 +33,8 @@ import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 
+import 'CartIconWithBadge.dart';
+
 class CheckoutPage extends StatefulWidget {
   final CartType cartType;
   final String cartUserId;
@@ -92,7 +94,15 @@ class _CheckoutPageState extends State<CheckoutPage> {
             'My Cart',
           ),
           backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-          actions: [ShoppingCartWidget()],
+          actions: [Center(
+            child: Container(
+              margin: EdgeInsets.only(
+                  right: 10.0.sp
+              ),
+              // or ClipRRect if you need to clip the content
+                child: CartIconWithBadge(color: Colors.white,size: 35.sp),
+            ),
+          ),],
           leading: IconWidget(
             icon: Icons.arrow_back_ios,
             colors: Colors.white,

@@ -171,29 +171,51 @@ class DietPlanCard extends StatelessWidget {
                                       .currentPackageIdDiet ==
                                   planList.packageid,
                           onTap: () async {
-                            var isSelected = Provider.of<PlanWizardViewModel>(
-                                    context,
-                                    listen: false)
-                                .checkItemInCart(planList.packageid, strDiet);
-                            if (isSelected) {
-                              await Provider.of<PlanWizardViewModel>(context,
+                            if (planList.isExtendable == '0') {
+                              var isSelected = Provider.of<PlanWizardViewModel>(
+                                      context,
                                       listen: false)
-                                  ?.removeCart(
-                                      packageId: planList.packageid,
-                                      isFromDiet: true);
-                            } else {
-                              if(Provider.of<PlanWizardViewModel>(context,listen: false)
-                                  ?.currentPackageIdDiet!=''){
+                                  .checkItemInCart(planList.packageid, strDiet);
+                              if (isSelected) {
                                 await Provider.of<PlanWizardViewModel>(context,
-                                    listen: false)
+                                        listen: false)
                                     ?.removeCart(
-                                    packageId: Provider.of<PlanWizardViewModel>(context,listen: false)
-                                        ?.currentPackageIdDiet,
-                                    isFromDiet: true);
-                              }
-                             /* if (!Provider.of<PlanWizardViewModel>(context,
-                                      listen: false)
-                                  .checkAllItemsDiet()) {*/
+                                        packageId: planList.packageid,
+                                        isFromDiet: true);
+                              } else {
+                                if (Provider.of<PlanWizardViewModel>(context,
+                                            listen: false)
+                                        ?.currentPackageIdDiet !=
+                                    '') {
+                                  await Provider.of<PlanWizardViewModel>(
+                                          context,
+                                          listen: false)
+                                      ?.removeCart(
+                                          packageId:
+                                              Provider.of<PlanWizardViewModel>(
+                                                      context,
+                                                      listen: false)
+                                                  ?.currentPackageIdDiet,
+                                          isFromDiet: true);
+                                }
+
+                                bool isItemInCart =
+                                    Provider.of<PlanWizardViewModel>(context,
+                                            listen: false)
+                                        .checkAllItemsDiet();
+                                if (isItemInCart) {
+                                  await Provider.of<PlanWizardViewModel>(
+                                          context,
+                                          listen: false)
+                                      ?.removeCart(
+                                          packageId:
+                                              Provider.of<PlanWizardViewModel>(
+                                                      context,
+                                                      listen: false)
+                                                  ?.currentCartDietPackageId,
+                                          isFromDiet: true);
+                                }
+
                                 await Provider.of<PlanWizardViewModel>(context,
                                         listen: false)
                                     ?.addToCartItem(
@@ -203,8 +225,13 @@ class DietPlanCard extends StatelessWidget {
                                             ? true
                                             : false,
                                         providerId: planList.providerid,
-                                        isFromAdd: strDiet);
-                              //}
+                                        isFromAdd: strDiet,
+                                        isFromDiet: true);
+                              }
+                            } else {
+                              FlutterToast().getToast(
+                                  'Renewal limit reached for this plan. Please try after few days',
+                                  Colors.black);
                             }
                           }),
                       SizedBox(width: 5.w),

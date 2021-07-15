@@ -2656,6 +2656,7 @@ class CommonUtil {
       String content,
       String packageId,
       String isSubscribed,
+      bool IsExtendable,
       String price,
       Function() refresh}) async {
     var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
@@ -2723,18 +2724,24 @@ class CommonUtil {
                             ),
                           ),
                           onPressed: () async {
-                            Navigator.pop(context);
+                            //Navigator.pop(context);
                             /*_dialogForSubscribePayment(
                                 context, '', packageId, true, () {
                               refresh();
                             });*/
-                            await Provider.of<PlanWizardViewModel>(context,
-                                    listen: false)
-                                ?.addToCartItem(
-                                    packageId: packageId,
-                                    price: price,
-                                    isRenew: true,
-                                    isFromAdd: strMyPlan);
+                            if (IsExtendable) {
+                              await Provider.of<PlanWizardViewModel>(context,
+                                      listen: false)
+                                  ?.addToCartItem(
+                                      packageId: packageId,
+                                      price: price,
+                                      isRenew: true,
+                                      isFromAdd: strMyPlan);
+                            } else {
+                              FlutterToast().getToast(
+                                  'Renewal limit reached for this plan. Please try after few days',
+                                  Colors.black);
+                            }
                           },
                           borderSide: BorderSide(
                             color: Color(

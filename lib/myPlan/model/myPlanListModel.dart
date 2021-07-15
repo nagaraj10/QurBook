@@ -46,6 +46,7 @@ class MyPlanListResult {
   String duration;
   String enddate;
   String isexpired;
+  String isExtendable;
   MetaDataForURL metadata;
   MetaDataForURL catmetadata;
   ProviderMetaModel providermetadata;
@@ -67,6 +68,7 @@ class MyPlanListResult {
       this.enddate,
       this.isexpired,
       this.metadata,
+      this.isExtendable,
       this.catmetadata,this.providermetadata});
 
   factory MyPlanListResult.fromJson(Map<String, dynamic> json) {
@@ -86,6 +88,7 @@ class MyPlanListResult {
         duration: json['duration'],
         enddate: json['enddate'],
         isexpired: json['isexpired'],
+        isExtendable: json['IsExtendable'],
         metadata:
             json['metadata'] != null && json['metadata'].toString().isNotEmpty
                 ? MetaDataForURL.fromJson(jsonDecode(json["metadata"] ?? '{}'))
@@ -120,6 +123,7 @@ class MyPlanListResult {
     data['metadata'] = this.metadata;
     data['catmetadata'] = this.catmetadata;
     data['providermetadata'] = this.providermetadata;
+    data['IsExtendable'] = this.isExtendable;
     return data;
   }
 }

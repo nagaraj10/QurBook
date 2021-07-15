@@ -32,6 +32,10 @@ class PlanWizardViewModel extends ChangeNotifier {
   var selectedTag = '';
   var providerId = '';
 
+  var currentCartPackageId='';
+  var currentCartDietPackageId='';
+
+
   void updateSingleSelection(String packageId) {
     if (packageId == currentPackageId) {
       currentPackageId = '';
@@ -243,10 +247,14 @@ class PlanWizardViewModel extends ChangeNotifier {
       String price,
       bool isRenew,
       String providerId,
-      String isFromAdd}) async {
+      String isFromAdd,
+      bool isFromDiet = false}) async {
     try {
       AddToCartModel addToCartModel = await planWizardService.addToCartService(
-          packageId: packageId, price: price, isRenew: isRenew);
+          packageId: packageId,
+          price: price,
+          isRenew: isRenew,
+          tag: isFromDiet ? selectedTag + ',' + strDiet : selectedTag);
 
       if (addToCartModel.isSuccess) {
         if (isFromAdd == strDiet) {
@@ -310,7 +318,7 @@ class PlanWizardViewModel extends ChangeNotifier {
 
     cartList?.forEach((element) {
       if ('${element?.productDetail?.id}' == packageId) {
-        if (tag == 'Care') {
+        if (tag == strCare) {
           currentPackageId = packageId;
           updateProviderId(providerId);
         } else {
@@ -324,34 +332,41 @@ class PlanWizardViewModel extends ChangeNotifier {
     return isItemInCart;
   }
 
-  /*bool checkAllItems() {
+  bool checkAllItems() {
     bool isCarePlanInCart = false;
-    planListResult?.forEach((planItem) {
-      cartList.forEach((cartItem) {
-        if ('${cartItem?.productDetail?.id ?? ''}' ==
-            (planItem?.packageid ?? '')) {
-          isCarePlanInCart = true;
-          FlutterToast()
-              .getToast('Already a care plan available in cart', Colors.red);
-        }
-      });
+    cartList.forEach((cartItem) {
+      if ('${cartItem?.additionalInfo?.tag ?? ''}' == (selectedTag ?? '')) {
+        isCarePlanInCart = true;
+        currentCartPackageId = '${cartItem?.productDetail?.id}';
+        /*FlutterToast().getToast(
+            'Only one care plan can be added for a health condition',
+            Colors.red);*/
+      }
     });
 
+    if(!isCarePlanInCart){
+      currentCartPackageId ='';
+    }
+
     return isCarePlanInCart;
-  }*/
+  }
 
   bool checkAllItemsDiet() {
     bool isCarePlanInCart = false;
-    dietPlanList?.forEach((planItem) {
-      for (int i = 0; i < cartList.length; i++) {
-        if ('${cartList[i]?.productDetail?.id ?? ''}' ==
-            (planItem[i]?.packageid ?? '')) {
-          isCarePlanInCart = true;
-          FlutterToast()
-              .getToast('Already a diet plan available in cart', Colors.red);
-        }
+    cartList.forEach((cartItem) {
+      if ('${cartItem?.additionalInfo?.tag ?? ''}' ==
+          (selectedTag ?? '') + ',' + strDiet) {
+        isCarePlanInCart = true;
+        currentCartDietPackageId = '${cartItem?.productDetail?.id}';
+        /*FlutterToast().getToast(
+            'Only one diet plan can be added for a health condition',
+            Colors.red);*/
       }
     });
+
+    if(!isCarePlanInCart){
+      currentCartDietPackageId ='';
+    }
 
     return isCarePlanInCart;
   }

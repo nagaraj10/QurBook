@@ -6,6 +6,7 @@ import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
 import 'package:myfhb/plan_wizard/view/widgets/care_plan_card.dart';
+import 'package:myfhb/plan_wizard/view/widgets/next_button.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
@@ -34,14 +35,17 @@ class _CarePlanPageState extends State<CarePlanPage> {
 
   @override
   void initState() {
+    Provider.of<PlanWizardViewModel>(context, listen: false).currentPackageId =
+        '';
+
     planListModel = Provider.of<PlanWizardViewModel>(context, listen: false)
         .getCarePlanList();
+
   }
 
   @override
   Widget build(BuildContext context) {
     planListProvider = Provider.of<PlanWizardViewModel>(context);
-
     return Scaffold(
         body: Column(
           children: [
@@ -75,8 +79,7 @@ class _CarePlanPageState extends State<CarePlanPage> {
             ),
           ],
         ),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
+        floatingActionButton: NextButton(
           onPressed: () {
             if (carePlanListLength > 0 &&
                 (planListProvider?.currentPackageId ?? '').isEmpty) {
@@ -85,11 +88,6 @@ class _CarePlanPageState extends State<CarePlanPage> {
               planListProvider.changeCurrentPage(2);
             }
           },
-          child: Icon(
-            Icons.navigate_next,
-            color: Colors.white,
-            size: 26.0.sp,
-          ),
         ));
   }
 
@@ -205,7 +203,7 @@ class _CarePlanPageState extends State<CarePlanPage> {
   Widget popMenuItem() {
     return PopupMenuButton(
       icon: Icon(
-        Icons.filter_alt_sharp,
+        Icons.sort,
       ),
       onSelected: (value) => setState(() {
         FocusManager.instance.primaryFocus.unfocus();

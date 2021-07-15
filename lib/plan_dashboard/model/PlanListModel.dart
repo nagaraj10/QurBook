@@ -57,6 +57,7 @@ class PlanListResult {
   MetaDataForURL catmetadata;
   MetaDataForHospitalLogo providerMetadata;
   bool isSelected;
+  String isExtendable;
 
   PlanListResult(
       {this.packageid,
@@ -85,7 +86,7 @@ class PlanListResult {
       this.providerMetadata,
       this.providerDesc,
       this.isexpired,
-      this.isSelected=false});
+      this.isSelected=false,this.isExtendable});
 
   factory PlanListResult.fromJson(Map<String, dynamic> json) {
     return PlanListResult(
@@ -112,6 +113,7 @@ class PlanListResult {
         isSubscribed: json['IsSubscribed'],
         startDate: json['startdate'],
         isexpired: json['isexpired'],
+        isExtendable: json['IsExtendable'],
         metadata:
             json['metadata'] != null && json['metadata'].toString().isNotEmpty
                 ? MetaDataForURL.fromJson(jsonDecode(json["metadata"] ?? '{}'))
@@ -155,6 +157,7 @@ class PlanListResult {
     data['metadata'] = this.metadata;
     data['catmetadata'] = this.catmetadata;
     data['providermetadata'] = this.providerMetadata;
+    data['IsExtendable'] = this.isExtendable;
     return data;
   }
 }

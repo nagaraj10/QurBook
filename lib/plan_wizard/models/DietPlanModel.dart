@@ -63,6 +63,7 @@ class DietPlanResult {
     this.enddate,
     this.isexpired,
     this.matchcount,
+    this.isExtendable,
   });
 
   final String packageid;
@@ -94,6 +95,7 @@ class DietPlanResult {
   final dynamic userpackageduration;
   final dynamic enddate;
   final String isexpired;
+  final String isExtendable;
   final int matchcount;
 
   factory DietPlanResult.fromJson(Map<String, dynamic> json) => DietPlanResult(
@@ -137,6 +139,7 @@ class DietPlanResult {
     enddate: json["enddate"],
     isexpired: json["isexpired"],
     matchcount: json["matchcount"],
+    isExtendable: json["IsExtendable"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -170,5 +173,6 @@ class DietPlanResult {
     "enddate": enddate,
     "isexpired": isexpired,
     "matchcount": matchcount,
+    "IsExtendable": isExtendable,
   };
 }
