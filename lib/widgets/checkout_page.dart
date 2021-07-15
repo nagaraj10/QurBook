@@ -141,8 +141,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             ),
                             FlatButton(
                               onPressed: () {
-                                Provider.of<PlanWizardViewModel>(context,listen: false)?.changeCurrentPage(0);
                                 Navigator.of(context).pop();
+                                Provider.of<PlanWizardViewModel>(context,listen: false)?.changeCurrentPage(0);
                               },
                               child: Text(
                                 'Choose Plan',
