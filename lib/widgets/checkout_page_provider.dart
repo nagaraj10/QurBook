@@ -42,7 +42,7 @@ class CheckoutPageProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> fetchCartItems(
+  Future<FetchingCartItemsModel> fetchCartItems(
       {bool isNeedRelod = true, String cartUserId}) async {
     changeCartStatus(CartStatus.LOADING, isNeedRelod: isNeedRelod);
     fetchingCartItemsModel =

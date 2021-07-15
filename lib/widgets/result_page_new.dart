@@ -47,7 +47,7 @@ class _ResultPage extends State<PaymentResultPage> {
   @override
   void initState() {
     mInitialTime = DateTime.now();
-    status = widget.status;
+    status = widget.status ?? false;
     //isFromSubscribe = widget.isFromSubscribe;
     super.initState();
   }
@@ -150,7 +150,7 @@ class _ResultPage extends State<PaymentResultPage> {
                                 arguments:
                                     UserAccountsArguments(selectedIndex: 3));
                           } else {
-                            if (widget?.isFreePlan) {
+                            if (widget?.isFreePlan ?? false) {
                               Get.back();
                             } else {
                               Get.offAllNamed(router.rt_Landing);
@@ -197,7 +197,7 @@ class _ResultPage extends State<PaymentResultPage> {
                               ),
                             )
                           : SizedBox.shrink(),
-                      (widget?.isPaymentFails &&
+                      ((widget?.isPaymentFails ?? false) &&
                               ((widget?.cartUserId ?? '').isNotEmpty))
                           ? FlatButton(
                               shape: RoundedRectangleBorder(
