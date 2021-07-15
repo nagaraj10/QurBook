@@ -8,12 +8,14 @@ class OrderModel {
   String feePaid;
   List<String> plans;
   String paymentReferenceId;
+  String paymentStatus;
   OrderModel({
     this.orderId,
     this.date,
     this.feePaid,
     this.plans,
     this.paymentReferenceId,
+    this.paymentStatus,
   });
 
   Map<String, dynamic> toMap() {
@@ -38,6 +40,7 @@ class OrderModel {
       plans: List<String>.from(map['plans'] ?? [])
         ..removeWhere((element) => element == null),
       paymentReferenceId: map['paymentReferenceId'] ?? '',
+      paymentStatus: map['paymentStatus'] ?? '',
     );
   }
 
@@ -48,7 +51,7 @@ class OrderModel {
 
   @override
   String toString() {
-    return 'OrderModel(orderId: $orderId, date: $date, feePaid: $feePaid, plans: $plans, paymentReferenceId: $paymentReferenceId,)';
+    return 'OrderModel(orderId: $orderId, date: $date, feePaid: $feePaid, plans: $plans, paymentReferenceId: $paymentReferenceId,paymentStatus:$paymentStatus)';
   }
 
   @override
