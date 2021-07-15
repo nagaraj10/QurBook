@@ -46,25 +46,49 @@ class OrderTile extends StatelessWidget {
             const SizedBox(
               height: 4,
             ),
-            order.feePaid != null
-                ? Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        'Paid  ',
-                        style: Theme.of(context).textTheme.subtitle1,
-                      ),
-                      Text(
-                        'INR ${double.parse(order.feePaid).toInt()}',
-                        style: Theme.of(context).textTheme.subtitle1.copyWith(
-                              color: Color(
-                                CommonUtil().getMyPrimaryColor(),
-                              ),
-                            ),
-                      ),
-                    ],
-                  )
-                : Container(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                (order.feePaid != null && order.feePaid.isNotEmpty)
+                    ? Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Paid  ',
+                            style: Theme.of(context).textTheme.subtitle1,
+                          ),
+                          Text(
+                            'INR ${double.parse(order.feePaid).toInt()}',
+                            style:
+                                Theme.of(context).textTheme.subtitle1.copyWith(
+                                      color: Color(
+                                        CommonUtil().getMyPrimaryColor(),
+                                      ),
+                                    ),
+                          ),
+                        ],
+                      )
+                    : Container(),
+                (order.paymentStatus != null && order.paymentStatus.isNotEmpty)
+                    ? Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // Text(
+                          //   'Payment status : ',
+                          //   style: Theme.of(context).textTheme.bodyText2,
+                          // ),
+                          Text(
+                            order.paymentStatus,
+                            style:
+                                Theme.of(context).textTheme.bodyText2.copyWith(
+                                      color: getColor(order.paymentStatus),
+                                    ),
+                          ),
+                        ],
+                      )
+                    : Container(),
+              ],
+            ),
             const SizedBox(
               height: 4,
             ),
@@ -75,6 +99,25 @@ class OrderTile extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Color getColor(String status) {
+    switch (status) {
+      case 'Payment Initiated':
+      case 'Payment Pending':
+        return Colors.yellow;
+        break;
+      case 'Payment Success':
+        return Colors.green;
+        break;
+      case 'Payment Failed':
+      case 'Payment Link Disabled':
+        return Colors.red;
+        break;
+      default:
+        return Colors.yellow;
+        break;
+    }
   }
 
   List<Widget> getPlans(BuildContext context) {
