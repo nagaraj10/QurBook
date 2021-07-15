@@ -250,6 +250,7 @@ const String otp_assets = 'assets/icons/otp_icon.png';
 const String planDownload = 'assets/icons/planDownload.png';
 const String sendIcon = 'assets/send.svg';
 const String ic_cart_delete = 'assets/icons/cart_delete_red.svg';
+const String ic_empty_cart = 'assets/icons/empty_cart.svg';
 
 const String enterFirstName = 'Enter First Name';
 const String enterLastName = 'Enter Last Name';

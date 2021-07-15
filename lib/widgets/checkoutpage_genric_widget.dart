@@ -29,6 +29,7 @@ class CheckoutPageWidgets {
   MyProfileModel myProfile;
   AddFamilyUserInfoRepository addFamilyUserInfoRepository =
       AddFamilyUserInfoRepository();
+  CommonUtil commonUtil = CommonUtil();
   Future<dynamic> showPaymentConfirmationDialog(
       {dynamic body, dynamic totalCartAmount, Function(String) closePage}) {
     return showDialog(
@@ -76,11 +77,11 @@ class CheckoutPageWidgets {
                                           borderRadius:
                                               BorderRadius.circular(12.0),
                                           side: BorderSide(
-                                              color: Color(new CommonUtil()
+                                              color: Color(commonUtil
                                                   .getMyPrimaryColor()))),
                                       color: Colors.transparent,
                                       textColor: Color(
-                                          new CommonUtil().getMyPrimaryColor()),
+                                          commonUtil.getMyPrimaryColor()),
                                       padding: EdgeInsets.all(8.0),
                                       onPressed: () {
                                         Provider.of<CheckoutPageProvider>(
@@ -103,11 +104,11 @@ class CheckoutPageWidgets {
                                           borderRadius:
                                               BorderRadius.circular(12.0),
                                           side: BorderSide(
-                                              color: Color(new CommonUtil()
+                                              color: Color(commonUtil
                                                   .getMyPrimaryColor()))),
                                       color: Colors.transparent,
                                       textColor: Color(
-                                          new CommonUtil().getMyPrimaryColor()),
+                                          commonUtil.getMyPrimaryColor()),
                                       padding: EdgeInsets.all(8.0),
                                       onPressed: () {
                                         Navigator.pop(context);
@@ -267,7 +268,7 @@ class CheckoutPageWidgets {
     });
 
     if (myProfile != null) {
-      await addressValidation(context,
+      return await addressValidation(context,
           packageId: packageId,
           isSubscribed: isSubscribed,
           providerId: providerId,
@@ -294,7 +295,7 @@ class CheckoutPageWidgets {
             if (myProfile.result.dateOfBirth != null &&
                 myProfile.result.dateOfBirth.isNotEmpty) {
               if (myProfile.result.additionalInfo != null) {
-                if (myProfile.result.userAddressCollection3 != null) {
+                if (myProfile.result.userAddressCollection3 == null) {
                   //! change this too !=
                   if (myProfile.result.userAddressCollection3.length > 0) {
                     return await patientAddressCheck(
@@ -306,7 +307,7 @@ class CheckoutPageWidgets {
                         refresh: refresh);
                   } else {
                     return await mCustomAlertDialog(context,
-                        content: CommonUtil().CONTENT_PROFILE_CHECK,
+                        content: commonUtil.CONTENT_PROFILE_CHECK,
                         packageId: packageId,
                         isSubscribed: isSubscribed,
                         providerId: providerId,
@@ -315,7 +316,7 @@ class CheckoutPageWidgets {
                   }
                 } else {
                   return await mCustomAlertDialog(context,
-                      content: CommonUtil().CONTENT_PROFILE_CHECK,
+                      content: commonUtil.CONTENT_PROFILE_CHECK,
                       packageId: packageId,
                       isSubscribed: isSubscribed,
                       providerId: providerId,
@@ -324,7 +325,7 @@ class CheckoutPageWidgets {
                 }
               } else {
                 return await mCustomAlertDialog(context,
-                    content: CommonUtil().CONTENT_PROFILE_CHECK,
+                    content: commonUtil.CONTENT_PROFILE_CHECK,
                     packageId: packageId,
                     providerId: providerId,
                     isSubscribed: isSubscribed,
@@ -333,7 +334,7 @@ class CheckoutPageWidgets {
               }
             } else {
               return await mCustomAlertDialog(context,
-                  content: CommonUtil().CONTENT_PROFILE_CHECK,
+                  content: commonUtil.CONTENT_PROFILE_CHECK,
                   packageId: packageId,
                   providerId: providerId,
                   isSubscribed: isSubscribed,
@@ -342,7 +343,7 @@ class CheckoutPageWidgets {
             }
           } else {
             return await mCustomAlertDialog(context,
-                content: CommonUtil().CONTENT_PROFILE_CHECK,
+                content: commonUtil.CONTENT_PROFILE_CHECK,
                 packageId: packageId,
                 providerId: providerId,
                 isSubscribed: isSubscribed,
@@ -351,7 +352,7 @@ class CheckoutPageWidgets {
           }
         } else {
           return await mCustomAlertDialog(context,
-              content: CommonUtil().CONTENT_PROFILE_CHECK,
+              content: commonUtil.CONTENT_PROFILE_CHECK,
               packageId: packageId,
               providerId: providerId,
               isSubscribed: isSubscribed,
@@ -360,7 +361,7 @@ class CheckoutPageWidgets {
         }
       } else {
         return await mCustomAlertDialog(context,
-            content: CommonUtil().CONTENT_PROFILE_CHECK,
+            content: commonUtil.CONTENT_PROFILE_CHECK,
             packageId: packageId,
             providerId: providerId,
             isSubscribed: isSubscribed,
@@ -369,7 +370,7 @@ class CheckoutPageWidgets {
       }
     } else {
       return await mCustomAlertDialog(context,
-          content: CommonUtil().CONTENT_PROFILE_CHECK,
+          content: commonUtil.CONTENT_PROFILE_CHECK,
           packageId: packageId,
           providerId: providerId,
           isSubscribed: isSubscribed,
@@ -407,7 +408,7 @@ class CheckoutPageWidgets {
             context: context);
       } else {
         return mCustomAlertDialog(context,
-            content: CommonUtil().CONTENT_PROFILE_CHECK,
+            content: commonUtil.CONTENT_PROFILE_CHECK,
             packageId: packageId,
             isSubscribed: isSubscribed,
             providerId: providerId,
@@ -416,7 +417,7 @@ class CheckoutPageWidgets {
       }
     } else {
       return mCustomAlertDialog(context,
-          content: CommonUtil().CONTENT_PROFILE_CHECK,
+          content: commonUtil.CONTENT_PROFILE_CHECK,
           packageId: packageId,
           isSubscribed: isSubscribed,
           providerId: providerId,
@@ -434,7 +435,7 @@ class CheckoutPageWidgets {
       Function() refresh,
       String providerId}) async {
     var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    await showDialog<void>(
+    return await showDialog<void>(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
@@ -468,7 +469,7 @@ class CheckoutPageWidgets {
                             'cancel'.toUpperCase(),
                             style: TextStyle(
                               color: Color(
-                                CommonUtil().getMyPrimaryColor(),
+                                commonUtil.getMyPrimaryColor(),
                               ),
                               fontSize: 10,
                             ),
@@ -480,7 +481,7 @@ class CheckoutPageWidgets {
                           },
                           borderSide: BorderSide(
                             color: Color(
-                              CommonUtil().getMyPrimaryColor(),
+                              commonUtil.getMyPrimaryColor(),
                             ),
                             style: BorderStyle.solid,
                             width: 1,
@@ -494,7 +495,7 @@ class CheckoutPageWidgets {
                           child: Text(
                             'complete profile'.toUpperCase(),
                             style: TextStyle(
-                              color: Color(CommonUtil().getMyPrimaryColor()),
+                              color: Color(commonUtil.getMyPrimaryColor()),
                               fontSize: 10,
                             ),
                           ),
@@ -502,7 +503,7 @@ class CheckoutPageWidgets {
                             // open profile page
                             Navigator.of(context).pop();
                             MyProfileModel myProfile =
-                                await CommonUtil().fetchUserProfileInfo();
+                                await commonUtil.fetchUserProfileInfo();
                             Get.toNamed(router.rt_AddFamilyUserInfo,
                                 arguments: AddFamilyUserInfoArguments(
                                     myProfileResult: myProfile?.result,
@@ -517,7 +518,7 @@ class CheckoutPageWidgets {
                           },
                           borderSide: BorderSide(
                             color: Color(
-                              CommonUtil().getMyPrimaryColor(),
+                              commonUtil.getMyPrimaryColor(),
                             ),
                             style: BorderStyle.solid,
                             width: 1,
@@ -542,6 +543,7 @@ class CheckoutPageWidgets {
       String providerId,
       bool feeZero,
       Function() refresh}) async {
+    bool isAccpted = false;
     await Get.dialog(
       AlertDialog(
         title: Row(
@@ -576,7 +578,7 @@ class CheckoutPageWidgets {
                   width: double.infinity,
                   child: Column(children: [
                     Text(
-                      CommonUtil().CONTENT_DISCALIMER,
+                      commonUtil.CONTENT_DISCALIMER,
                       style: const TextStyle(
                           fontSize: 15, fontWeight: FontWeight.w300),
                     ),
@@ -596,7 +598,7 @@ class CheckoutPageWidgets {
                   child: Text(
                     'accept'.toUpperCase(),
                     style: TextStyle(
-                      color: Color(CommonUtil().getMyPrimaryColor()),
+                      color: Color(commonUtil.getMyPrimaryColor()),
                       fontSize: 13,
                     ),
                   ),
@@ -606,14 +608,14 @@ class CheckoutPageWidgets {
                     // String userId =
                     //     PreferenceUtil.getStringValue(Constants.KEY_USERID);
                     Get.back();
-                    Provider.of<CheckoutPageProvider>(context, listen: false)
-                        .updateProfileVaildationStatus(true);
+                    // Provider.of<CheckoutPageProvider>(context, listen: false)
+                    //     .updateProfileVaildationStatus(true);
 
-                    return true;
+                    isAccpted = true;
                   },
                   borderSide: BorderSide(
                     color: Color(
-                      CommonUtil().getMyPrimaryColor(),
+                      commonUtil.getMyPrimaryColor(),
                     ),
                     style: BorderStyle.solid,
                     width: 1,
@@ -627,18 +629,18 @@ class CheckoutPageWidgets {
                     'Reject'.toUpperCase(),
                     style: TextStyle(
                       color: Color(
-                        CommonUtil().getMyPrimaryColor(),
+                        commonUtil.getMyPrimaryColor(),
                       ),
                       fontSize: 13,
                     ),
                   ),
                   onPressed: () async {
                     Get.back();
-                    return false;
+                    isAccpted = false;
                   },
                   borderSide: BorderSide(
                     color: Color(
-                      CommonUtil().getMyPrimaryColor(),
+                      commonUtil.getMyPrimaryColor(),
                     ),
                     style: BorderStyle.solid,
                     width: 1,
@@ -651,5 +653,6 @@ class CheckoutPageWidgets {
       ),
       barrierDismissible: false,
     );
+    return isAccpted;
   }
 }

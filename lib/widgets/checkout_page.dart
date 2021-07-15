@@ -133,9 +133,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(
-                              Icons.grass_rounded,
-                              size: 70,
+                            SvgPicture.asset(
+                              ic_empty_cart,
+                              width: 70.0.sp,
+                              height: 70.0.sp,
                             ),
                             Text(
                               'Your cart is empty',
@@ -147,8 +148,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             ),
                             FlatButton(
                               onPressed: () {
+                                Provider.of<PlanWizardViewModel>(context,
+                                        listen: false)
+                                    ?.changeCurrentPage(0);
                                 Navigator.of(context).pop();
-                                Provider.of<PlanWizardViewModel>(context,listen: false)?.changeCurrentPage(0);
                               },
                               child: Text(
                                 'Choose Plan',
@@ -340,7 +343,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                           onTap: () {
                                             Timer(Duration(milliseconds: 1000),
                                                 () {
-                                              if (_controller?.hasClients) {
+                                              if (_controller?.hasClients ??
+                                                  false) {
                                                 _controller.jumpTo(_controller
                                                     .position.maxScrollExtent);
                                               }
@@ -373,7 +377,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                       if ((value
                                                               ?.isProfileValid ??
                                                           false)) {
-                                                        Provider.of<CheckoutPageProvider>(
+                                                        /* Provider.of<CheckoutPageProvider>(
                                                                 context,
                                                                 listen: false)
                                                             .loader(true);
@@ -426,12 +430,16 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                               }
                                                             }
                                                           });
-                                                        }
+                                                        } */
+                                                        planSubLogic(value);
                                                       } else {
                                                         var result =
                                                             await CheckoutPageWidgets()
                                                                 .profileValidationCheckOnCart(
                                                                     context);
+                                                        if (result) {
+                                                          planSubLogic(value);
+                                                        }
 
                                                         FlutterToast().getToast(
                                                             'value-- $result',
@@ -529,6 +537,36 @@ class _CheckoutPageState extends State<CheckoutPage> {
         ),
       ),
     );
+  }
+
+  void planSubLogic(CheckoutPageProvider value) {
+    Provider.of<CheckoutPageProvider>(context, listen: false).loader(true);
+
+    var mCartTotal =
+        value?.fetchingCartItemsModel?.result?.totalCartAmount ?? 0;
+    var body = {"cartId": "${value?.fetchingCartItemsModel?.result?.cart?.id}"};
+    if (mCartTotal > 0) {
+      CheckoutPageWidgets().showPaymentConfirmationDialog(
+          body: body, totalCartAmount: mCartTotal);
+    } else {
+      ApiBaseHelper().makePayment(body).then((value) {
+        if (value != null) {
+          if (value?.isSuccess) {
+            Get.off(
+              PaymentResultPage(
+                refNo: value?.result?.orderId,
+                status: value?.isSuccess,
+                isFreePlan: true,
+              ),
+            );
+          } else {
+            Provider.of<CheckoutPageProvider>(context, listen: false)
+                .loader(false);
+            FlutterToast()..getToast('Subscribe Failed', Colors.red);
+          }
+        }
+      });
+    }
   }
 
   Widget _cartItem(BuildContext context, ProductList item) {

@@ -54,8 +54,10 @@ class PlanWizardViewModel extends ChangeNotifier {
 
   void changeCurrentPage(int newPage) {
     FocusManager.instance.primaryFocus.unfocus();
-    pageController.animateToPage(newPage,
-        duration: Duration(milliseconds: 100), curve: Curves.easeIn);
+    if (pageController?.hasClients) {
+      pageController.animateToPage(newPage,
+          duration: Duration(milliseconds: 100), curve: Curves.easeIn);
+    }
     currentPage = newPage;
     notifyListeners();
   }
