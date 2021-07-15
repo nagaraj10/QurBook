@@ -259,6 +259,7 @@ class _MyPlanState extends State<PlanList> {
                     iconApi: planList[i]?.metadata?.icon,
                     catIcon: catIcon,
                     metaDataForURL: planList[i]?.metadata,
+                    isRenew: planList[i]?.isexpired == '1' ? true : false,
                   )),
         ).then((value) {
           if (value == 'refreshUI') {

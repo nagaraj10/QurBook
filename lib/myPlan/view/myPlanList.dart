@@ -278,6 +278,7 @@ class _MyPlanState extends State<MyPlanList> {
                     catIcon: planList[i]?.catmetadata?.icon,
                     providerIcon: planList[i]?.providermetadata?.icon,
                     descriptionURL: planList[i]?.metadata?.descriptionURL,
+                    price: planList[i]?.price,
                   )),
         ).then((value) {
           if (value == 'refreshUI') {
@@ -407,6 +408,7 @@ class _MyPlanState extends State<MyPlanList> {
                                   if (planList[i].isexpired == '1') {
                                     CommonUtil().renewAlertDialog(context,
                                         packageId: planList[i].packageid,
+                                        price: planList[i].price,
                                         refresh: () {
                                       setState(() {});
                                     });

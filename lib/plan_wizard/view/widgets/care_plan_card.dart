@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
@@ -42,6 +43,7 @@ class CarePlanCard extends StatelessWidget {
                     iconApi: planList?.metadata?.icon,
                     catIcon: planList?.catmetadata?.icon,
                     metaDataForURL: planList?.metadata,
+                    isFrom: strCare,
                   )),
         );
       },
@@ -164,7 +166,7 @@ class CarePlanCard extends StatelessWidget {
                       RoundedCheckBox(
                           isSelected: Provider.of<PlanWizardViewModel>(context)
                                   .checkItemInCart(
-                                      planList.packageid, 'Care',providerId: planList.providerid) ||
+                                      planList.packageid, strCare,providerId: planList.providerid) ||
                               Provider.of<PlanWizardViewModel>(context)
                                       .currentPackageId ==
                                   planList.packageid,
@@ -172,7 +174,7 @@ class CarePlanCard extends StatelessWidget {
                             var isSelected = Provider.of<PlanWizardViewModel>(
                                     context,
                                     listen: false)
-                                .checkItemInCart(planList.packageid, 'Care',providerId: planList.providerid);
+                                .checkItemInCart(planList.packageid, strCare,providerId: planList.providerid);
                             if (isSelected) {
                               await Provider.of<PlanWizardViewModel>(context,
                                       listen: false)
@@ -198,7 +200,7 @@ class CarePlanCard extends StatelessWidget {
                                         isRenew: planList.isexpired == '1'
                                             ? true
                                             : false,
-                                        providerId: planList.providerid);
+                                        providerId: planList.providerid,isFromAdd: strCare);
                              // }
                             }
                           }),

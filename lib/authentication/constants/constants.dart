@@ -169,6 +169,10 @@ const String alternateNumber = 'Alternate Number';
 const String strNewPassword = 'newPassword';
 const String strOldPassword = 'oldPassword';
 
+const String strCare = 'Care';
+const String strDiet = 'Diet';
+const String strMyPlan = 'MyPlan';
+
 //labels for country code picker page
 const String strinitialMobileLabel = '91';
 const String strPlusSymbol = '+';

@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
@@ -240,24 +241,24 @@ class PlanWizardViewModel extends ChangeNotifier {
       String price,
       bool isRenew,
       String providerId,
-      bool isFromDiet = false}) async {
+      String isFromAdd}) async {
     try {
       AddToCartModel addToCartModel = await planWizardService.addToCartService(
           packageId: packageId, price: price, isRenew: isRenew);
 
       if (addToCartModel.isSuccess) {
-        if (isFromDiet) {
+        if (isFromAdd == strDiet) {
           updateSingleSelectionDiet(packageId);
-        } else {
+        } else if (isFromAdd == strCare) {
           updateSingleSelection(packageId);
           updateProviderId(providerId);
         }
         await fetchCartItem();
         FlutterToast().getToast('Added to Cart', Colors.green);
       } else {
-        if (isFromDiet) {
+        if (isFromAdd == strDiet) {
           updateSingleSelectionDiet('');
-        } else {
+        } else if (isFromAdd == strCare) {
           updateSingleSelection('');
           updateProviderId('');
         }
