@@ -28,8 +28,8 @@ import 'package:myfhb/authentication/view/login_screen.dart';
 import 'package:myfhb/bookmark_record/bloc/bookmarkRecordBloc.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/responseModel.dart';
@@ -48,7 +48,6 @@ import 'package:myfhb/plan_dashboard/viewModel/subscribeViewModel.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:myfhb/refer_friend/view/invite_contacts_screen.dart';
 import 'package:myfhb/refer_friend/viewmodel/referafriend_vm.dart';
-import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
 import 'package:myfhb/src/blocs/Media/MediaTypeBlock.dart';
@@ -1240,7 +1239,7 @@ class CommonUtil {
       }
     } else {
       if (isAck) {
-        newFormat = DateFormat("hh:mm a");
+        newFormat = DateFormat("MMM d, yyyy hh:mm a");
       } else if (isLanding) {
         newFormat = DateFormat("MMM d, HH:mm");
       } else {

@@ -83,7 +83,7 @@ const String enterFirstName = 'Enter First Name';
 const String enterLastName = 'Enter Last Name';
 const String selectGender = 'Select Gender';
 const String selectDOB = 'Select DOB';
-const String selectYOB = 'Select year of birth';
+const String selectYOB = 'Enter year of birth';
 const String selectRHType = 'Select Rh type';
 const String selectBloodGroup = 'Select Blood group';
 
@@ -294,6 +294,7 @@ const String strPrivacy = 'Privacy policy';
 const String strRateus = 'Rate us';
 const String strMaya = 'Sheela';
 const String strMAYA = 'SHEELA';
+const String strMsgFromProvider = 'Message from provider';
 
 const String strColorPalete = 'Color palette';
 

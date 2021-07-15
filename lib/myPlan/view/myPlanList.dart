@@ -174,6 +174,10 @@ class _MyPlanState extends State<MyPlanList> {
                     context,
                     listen: false,
                   ).regimentMode = RegimentMode.Schedule;
+                  Provider.of<RegimentViewModel>(
+                    context,
+                    listen: false,
+                  ).regimentFilter = RegimentFilter.Scheduled;
                   Get.toNamed(rt_Regimen);
                 },
                 child: TextWidget(

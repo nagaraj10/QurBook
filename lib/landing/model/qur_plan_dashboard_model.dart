@@ -29,6 +29,7 @@ class DashboardModel {
     this.providers,
     this.helperVideos,
     this.careGiverInfo,
+    this.careGiverList,
   });
 
   final ActivePlans activePlans;
@@ -39,6 +40,7 @@ class DashboardModel {
   final Providers providers;
   final List<HelperVideo> helperVideos;
   final CareGiverInfo careGiverInfo;
+  final List<CareGiverInfo> careGiverList;
 
   factory DashboardModel.fromJson(Map<String, dynamic> json) => DashboardModel(
         activePlans: ActivePlans.fromJson(json['activePlans'] ?? {}),
@@ -53,6 +55,10 @@ class DashboardModel {
                 json['helperVideos']?.map((x) => HelperVideo.fromJson(x ?? {})))
             : null,
         careGiverInfo: CareGiverInfo.fromJson(json['careGiverInfo'] ?? {}),
+        careGiverList: json["careGiverList"] != null
+            ? List<CareGiverInfo>.from(json["careGiverList"]
+                ?.map((x) => CareGiverInfo.fromJson(x ?? {})))
+            : null,
       );
 
   Map<String, dynamic> toJson() => {
@@ -234,7 +240,7 @@ class CareGiverInfo {
   final String profilePic;
 
   factory CareGiverInfo.fromJson(Map<String, dynamic> json) => CareGiverInfo(
-        doctorId: json['doctorId'],
+        doctorId: json['doctorId'] ?? json['id'],
         firstName: json['firstName'],
         lastName: json['lastName'],
         profilePic: json['profilePic'],

@@ -357,6 +357,7 @@ const String EXIT_APP_TO_EXIT = "Are you sure to exit app?";
 const String CANCEL = "CANCEL";
 const String YES = "YES";
 const String CHAT = "Chats";
+const String CAREPROVIDERS = "Care Providers";
 
 const String KEY_FAMILYMEMBERNEW = 'familymembernew';
 const String CONSULTING = 'CONSULTING';
@@ -471,8 +472,9 @@ const String planActivities = 'Plan Activities';
 const String planSymptoms = 'Plan Symptoms';
 const String undo = 'Undo';
 const String filter = 'Filter';
-const String allActivities = 'All Activities';
-const String missedActivities = 'Missed Activities';
+const String scheduledActivities = 'Scheduled';
+const String asNeededActivities = 'As Needed';
+const String missedActivities = 'Missed';
 
 const strJpgDot = '.jpg';
 const strJpegDot = '.jpeg';
@@ -509,6 +511,7 @@ const strNoVideos = 'No videos available';
 const strVideosAvailable = 'videos available';
 const strChatWithUs = 'Chat with us';
 const strChatAvailable = ' is available';
+const strCareProvidersAvailable = 'care providers available';
 const strChatNotAvailable = 'No care provider assigned';
 const strMyDashboard = 'Dashboard';
 const String strSheelaG = 'Sheela';

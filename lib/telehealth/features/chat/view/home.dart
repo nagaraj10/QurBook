@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:myfhb/landing/model/qur_plan_dashboard_model.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -31,10 +32,12 @@ class ChatHomeScreen extends StatefulWidget {
     Key key,
     this.isHome = false,
     this.onBackPressed,
+    this.careGiversList,
   }) : super(key: key);
 
   final bool isHome;
   final Function onBackPressed;
+  final List<CareGiverInfo> careGiversList;
 
   @override
   State createState() => HomeScreenState();
@@ -270,7 +273,9 @@ class HomeScreenState extends State<ChatHomeScreen> {
               elevation: 0.0,
               backgroundColor: Colors.transparent,
               title: Text(
-                CHAT,
+                (widget?.careGiversList?.length ?? 0) > 0
+                    ? CAREPROVIDERS
+                    : CHAT,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16.0.sp,
@@ -309,17 +314,38 @@ class HomeScreenState extends State<ChatHomeScreen> {
   }
 
   Widget getChatList() {
+    Stream<QuerySnapshot> stream;
+
+    var careGiverIds = [];
+
+    if ((widget.careGiversList?.length ?? 0) > 0) {
+      widget.careGiversList?.forEach((careGiver) {
+        careGiverIds.add(careGiver.doctorId);
+      });
+      stream = Firestore.instance
+          .collection(STR_CHAT_LIST)
+          .document(patientId)
+          .collection(STR_USER_LIST)
+          .where(
+            'id',
+            whereIn: careGiverIds,
+          )
+          .orderBy(STR_CREATED_AT, descending: true)
+          .snapshots();
+    } else {
+      stream = Firestore.instance
+          .collection(STR_CHAT_LIST)
+          .document(patientId)
+          .collection(STR_USER_LIST)
+          .orderBy(STR_CREATED_AT, descending: true)
+          .snapshots();
+    }
     return Stack(
       children: <Widget>[
         // List
         Container(
-          child: StreamBuilder(
-            stream: Firestore.instance
-                .collection(STR_CHAT_LIST)
-                .document(patientId)
-                .collection(STR_USER_LIST)
-                .orderBy(STR_CREATED_AT, descending: true)
-                .snapshots(),
+          child: StreamBuilder<QuerySnapshot>(
+            stream: stream,
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return Center(

@@ -242,7 +242,7 @@ class HealthReportListForUserRepository {
     if (userIdFromBloc != null) {
       userId = userIdFromBloc;
     } else {
-      userId = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+      userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     }
 
     final response = await _helper.getDeviceSelection(query.qr_user_profile +

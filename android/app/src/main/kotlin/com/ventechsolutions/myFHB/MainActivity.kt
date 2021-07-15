@@ -403,7 +403,7 @@ class MainActivity : FlutterActivity() {
             } else {
                 sharedValue = "$sharedValue&${providerReqId}&${"rejected"}"
             }
-        } else if (data != null && data == "DoctorPatientAssociation") {
+        } else if (data != null && ((data == "DoctorPatientAssociation") || (data == "QurplanCargiverPatientAssociation"))) {
             sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${"$doctorID|$docName|$docPic|$patId|$patName|$patPic|$message"}"
         } else if (data != null && data == "MissingActivitiesReminder") {
             sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${EVEId}"

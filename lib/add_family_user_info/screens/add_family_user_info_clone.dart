@@ -2454,7 +2454,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       strErrorMsg = "Year cannot be less than 1800";
     } else if (year > currentYear) {
       condition = true;
-      strErrorMsg = "Year cannot be greater than curent year";
+      strErrorMsg = "Year cannot be greater than current year";
     } else {
       condition = false;
     }

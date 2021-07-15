@@ -412,7 +412,10 @@ class FollowupIn {
   FollowupIn({this.days});
 
   FollowupIn.fromJson(Map<String, dynamic> json) {
-    days = json['days'].cast<int>();
+    if(json.containsKey('days'))
+      if (json['days'] != null) {
+        days = json['days'].cast<int>();
+      }
   }
 
   Map<String, dynamic> toJson() {
