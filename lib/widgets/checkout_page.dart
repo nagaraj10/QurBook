@@ -164,7 +164,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
                               Provider.of<PlanWizardViewModel>(context,
                                       listen: false)
                                   ?.changeCurrentPage(0);
-                              Navigator.of(context).pop();
+                              if (Provider.of<PlanWizardViewModel>(context,
+                                          listen: false)
+                                      ?.isPlanWizardActive ??
+                                  false) {
+                                Get.back();
+                              } else {
+                                Get.offAndToNamed(router.rt_PlanWizard);
+                              }
                             },
                             child: Text(
                               'Choose Plan',
@@ -218,7 +225,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                   Provider.of<CheckoutPageProvider>(
                                                           context,
                                                           listen: false)
-                                                      .clearCartItem(isNeedRelod: true);
+                                                      .clearCartItem(
+                                                          isNeedRelod: true);
                                                 },
                                                 child: Text(
                                                   'Clear cart',
@@ -393,7 +401,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                     Provider.of<CheckoutPageProvider>(
                                                             context,
                                                             listen: false)
-                                                        .loader(false,isNeedRelod: true);
+                                                        .loader(false,
+                                                            isNeedRelod: true);
                                                     FlutterToast().getToast(
                                                         strNetworkIssue,
                                                         Colors.red);
@@ -501,7 +510,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
             );
           } else {
             Provider.of<CheckoutPageProvider>(context, listen: false)
-                .loader(false,isNeedRelod: true);
+                .loader(false, isNeedRelod: true);
             FlutterToast()..getToast('Subscribe Failed', Colors.red);
           }
         }
@@ -561,7 +570,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         Provider.of<CheckoutPageProvider>(context,
                                 listen: false)
                             .removeCartItem(
-                                productId: '${item?.productDetail?.id}',isNeedRelod: true);
+                                productId: '${item?.productDetail?.id}',
+                                isNeedRelod: true);
                       },
                     ),
                     Spacer(),
