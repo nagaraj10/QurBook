@@ -50,7 +50,7 @@ class _DietPlanPageState extends State<DietPlanPage> {
     planListModel = planWizardViewModel.getDietPlanList();
   }
 
-    @override
+  @override
   Widget build(BuildContext context) {
     planListProvider = Provider.of<PlanWizardViewModel>(context);
 
@@ -95,7 +95,13 @@ class _DietPlanPageState extends State<DietPlanPage> {
                   inactiveTrackColor: Colors.grey[400],
                 ),
                 SizedBox(width: 2.w),
-                Text('VEG ONLY',style: TextStyle(fontWeight: FontWeight.w600,color: Colors.blueGrey,fontSize: 16.sp),),
+                Text(
+                  'VEG ONLY',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: Colors.blueGrey,
+                      fontSize: 16.sp),
+                ),
                 SizedBox(width: 15.w),
               ],
             ),
@@ -158,12 +164,19 @@ class _DietPlanPageState extends State<DietPlanPage> {
         } else if (snapshot.hasError) {
           return ErrorsWidget();
         } else {
-          if (snapshot?.hasData &&
-              snapshot?.data?.result != null &&
-              snapshot?.data?.result?.length > 0) {
-            dietPlanListLength = isSearch
-                ? planSearchList.length
-                : snapshot?.data?.result?.length ?? 0;
+          int totalListCount = 0;
+          totalListCount = (snapshot?.data?.result?.length ?? 0) > 0
+              ? snapshot?.data?.result?.length
+              : 0;
+          if (totalListCount > 0) {
+            totalListCount = 0;
+            snapshot?.data?.result?.forEach((element) {
+              totalListCount += element?.length ?? 0;
+            });
+          }
+          if (totalListCount > 0) {
+            dietPlanListLength =
+                isSearch ? planSearchList.length : totalListCount ?? 0;
             return carePlanList(
                 isSearch ? planSearchList : snapshot?.data?.result ?? []);
           } else {
@@ -297,13 +310,11 @@ class _DietPlanPageState extends State<DietPlanPage> {
         isSwitched = true;
         planListModel = planWizardViewModel.getDietPlanList(isVeg: true);
       });
-    }
-    else {
+    } else {
       setState(() {
         isSwitched = false;
         planListModel = planWizardViewModel.getDietPlanList();
       });
     }
   }
-
 }

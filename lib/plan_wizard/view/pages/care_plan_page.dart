@@ -132,8 +132,8 @@ class _CarePlanPageState extends State<CarePlanPage> {
           if (snapshot?.hasData &&
               snapshot?.data?.result != null &&
               snapshot?.data?.result?.length > 0) {
-            carePlanListLength = snapshot?.data?.result?.length ?? 0;
-            return carePlanList(snapshot?.data?.result);
+            carePlanListLength = isSearch ?planSearchList.length:snapshot?.data?.result?.length ?? 0;
+            return carePlanList(isSearch?planSearchList:snapshot?.data?.result);
           } else {
             return SafeArea(
               child: SizedBox(
