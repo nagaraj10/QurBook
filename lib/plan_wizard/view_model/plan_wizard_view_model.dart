@@ -80,11 +80,11 @@ class PlanWizardViewModel extends ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<DietPlanModel> getDietPlanList() async {
+  Future<DietPlanModel> getDietPlanList({bool isVeg=false}) async {
     try {
       var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
       DietPlanModel myPlanListModel =
-          await planWizardService.getDietPlanList(userid);
+          await planWizardService.getDietPlanList(patientId: userid,isVeg: isVeg);
       if (myPlanListModel.isSuccess) {
         dietPlanList = myPlanListModel.result;
       } else {

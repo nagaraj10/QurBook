@@ -40,16 +40,17 @@ class _DietPlanPageState extends State<DietPlanPage> {
 
   PlanWizardViewModel planListProvider;
 
+  bool isSwitched = false;
+
   @override
   void initState() {
-
-    Provider.of<PlanWizardViewModel>(context, listen: false).currentPackageIdDiet =
-    '';
+    Provider.of<PlanWizardViewModel>(context, listen: false)
+        .currentPackageIdDiet = '';
 
     planListModel = planWizardViewModel.getDietPlanList();
   }
 
-  @override
+    @override
   Widget build(BuildContext context) {
     planListProvider = Provider.of<PlanWizardViewModel>(context);
 
@@ -79,6 +80,23 @@ class _DietPlanPageState extends State<DietPlanPage> {
                   child: popMenuItem(),
                 ),
                 SizedBox(width: 20.w)
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Switch(
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  onChanged: toggleSwitch,
+                  value: isSwitched,
+                  activeColor: Colors.blue,
+                  /*activeTrackColor: Colors.grey,*/
+                  inactiveThumbColor: Colors.grey,
+                  inactiveTrackColor: Colors.grey[400],
+                ),
+                SizedBox(width: 2.w),
+                Text('VEG ONLY',style: TextStyle(fontWeight: FontWeight.w600,color: Colors.blueGrey,fontSize: 16.sp),),
+                SizedBox(width: 15.w),
               ],
             ),
             Expanded(
@@ -272,4 +290,20 @@ class _DietPlanPageState extends State<DietPlanPage> {
       ],
     );
   }
+
+  void toggleSwitch(bool value) {
+    if (isSwitched == false) {
+      setState(() {
+        isSwitched = true;
+        planListModel = planWizardViewModel.getDietPlanList(isVeg: true);
+      });
+    }
+    else {
+      setState(() {
+        isSwitched = false;
+        planListModel = planWizardViewModel.getDietPlanList();
+      });
+    }
+  }
+
 }
