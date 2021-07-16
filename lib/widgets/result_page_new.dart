@@ -140,7 +140,7 @@ class _ResultPage extends State<PaymentResultPage> {
                         onPressed: () {
                           Provider.of<CheckoutPageProvider>(context,
                                   listen: false)
-                              .loader(false);
+                              .loader(false,isNeedRelod: true);
 
                           if (status) {
                             //widget.closePage(STR_SUCCESS);
@@ -175,7 +175,7 @@ class _ResultPage extends State<PaymentResultPage> {
                               onPressed: () async {
                                 Provider.of<CheckoutPageProvider>(context,
                                         listen: false)
-                                    .loader(false);
+                                    .loader(false,isNeedRelod: true);
                                 Provider.of<RegimentViewModel>(
                                   Get.context,
                                   listen: false,
@@ -208,10 +208,10 @@ class _ResultPage extends State<PaymentResultPage> {
                               onPressed: () {
                                 Provider.of<CheckoutPageProvider>(context,
                                         listen: false)
-                                    .loader(false);
+                                    .loader(false,isNeedRelod: true);
 
                                 Get.offAll(CheckoutPage(
-                                  cartType: CartType.RETRY_CART,
+                                  //cartType: CartType.RETRY_CART,
                                   cartUserId: widget?.cartUserId,
                                 ));
                               },

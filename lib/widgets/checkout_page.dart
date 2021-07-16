@@ -36,9 +36,10 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'CartIconWithBadge.dart';
 
 class CheckoutPage extends StatefulWidget {
-  final CartType cartType;
+  //final CartType cartType;
   final String cartUserId;
-  CheckoutPage({this.cartType = CartType.DEFAULT_CART, this.cartUserId});
+  //CheckoutPage({this.cartType = CartType.DEFAULT_CART, this.cartUserId});
+  CheckoutPage({this.cartUserId});
 
   @override
   _CheckoutPageState createState() => _CheckoutPageState();
@@ -51,17 +52,19 @@ class _CheckoutPageState extends State<CheckoutPage> {
   @override
   void initState() {
     super.initState();
-    Provider.of<CheckoutPageProvider>(context, listen: false).cartType =
-        widget?.cartType;
+    // Provider.of<CheckoutPageProvider>(context, listen: false).cartType =
+    //     widget?.cartType;
     Provider.of<CheckoutPageProvider>(context, listen: false)
         .fetchCartItems(isNeedRelod: true, cartUserId: widget?.cartUserId);
-    Provider.of<CheckoutPageProvider>(context, listen: false).loader(false);
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //   Provider.of<CheckoutPageProvider>(context, listen: false)
+    //       .loader(false, isNeedRelod: false);
+    // });
   }
 
   @override
   void dispose() {
     _controller.dispose();
-    Provider.of<CheckoutPageProvider>(context, listen: false).dispose();
     super.dispose();
   }
 
@@ -94,15 +97,15 @@ class _CheckoutPageState extends State<CheckoutPage> {
             'My Cart',
           ),
           backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-          actions: [Center(
-            child: Container(
-              margin: EdgeInsets.only(
-                  right: 10.0.sp
+          actions: [
+            Center(
+              child: Container(
+                margin: EdgeInsets.only(right: 10.0.sp),
+                // or ClipRRect if you need to clip the content
+                child: CartIconWithBadge(color: Colors.white, size: 35.sp),
               ),
-              // or ClipRRect if you need to clip the content
-                child: CartIconWithBadge(color: Colors.white,size: 35.sp),
             ),
-          ),],
+          ],
           leading: IconWidget(
             icon: Icons.arrow_back_ios,
             colors: Colors.white,
@@ -129,352 +132,346 @@ class _CheckoutPageState extends State<CheckoutPage> {
               );
             } else {
               //LoaderClass.hideLoadingDialog(context);
-              if (value.cartType == CartType.DEFAULT_CART ||
-                  value.cartType == CartType.RETRY_CART) {
-                //default cart with items
-                var cartCount =
-                    value?.fetchingCartItemsModel?.result?.productsCount ?? 0;
-                value?.updateCartCount(cartCount);
-                return (!(value?.fetchingCartItemsModel?.isSuccess ?? false) ||
-                        cartCount == 0)
-                    ? Container(
-                        alignment: Alignment.center,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SvgPicture.asset(
-                              ic_empty_cart,
-                              width: 70.0.sp,
-                              height: 70.0.sp,
-                            ),
-                            Text(
-                              'Your cart is empty',
-                              style: TextStyle(fontSize: 15),
-                            ),
-                            Text(
-                              'Looks like you haven\'t added any plan to the cart yet.',
-                              style: TextStyle(fontSize: 10),
-                            ),
-                            FlatButton(
-                              onPressed: () {
-                                Provider.of<PlanWizardViewModel>(context,
-                                        listen: false)
-                                    ?.changeCurrentPage(0);
-                                Navigator.of(context).pop();
-                              },
-                              child: Text(
-                                'Choose Plan',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  color: Color(
-                                    CommonUtil().getMyPrimaryColor(),
-                                  ),
+              // if (value.cartType == CartType.DEFAULT_CART ||
+              //     value.cartType == CartType.RETRY_CART) {
+              //default cart with items
+              var cartCount =
+                  value?.fetchingCartItemsModel?.result?.productsCount ?? 0;
+              //value?.updateCartCount(cartCount,isNeedRelod: true);
+              return (!(value?.fetchingCartItemsModel?.isSuccess ?? false) ||
+                      cartCount == 0)
+                  ? Container(
+                      alignment: Alignment.center,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset(
+                            ic_empty_cart,
+                            width: 70.0.sp,
+                            height: 70.0.sp,
+                          ),
+                          Text(
+                            'Your cart is empty',
+                            style: TextStyle(fontSize: 15),
+                          ),
+                          Text(
+                            'Looks like you haven\'t added any plan to the cart yet.',
+                            style: TextStyle(fontSize: 10),
+                          ),
+                          FlatButton(
+                            onPressed: () {
+                              Provider.of<PlanWizardViewModel>(context,
+                                      listen: false)
+                                  ?.changeCurrentPage(0);
+                              Navigator.of(context).pop();
+                            },
+                            child: Text(
+                              'Choose Plan',
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: Color(
+                                  CommonUtil().getMyPrimaryColor(),
                                 ),
                               ),
                             ),
-                          ],
-                        ),
-                      )
-                    : Stack(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
-                            child: SingleChildScrollView(
-                              controller: _controller,
-                              physics: ScrollPhysics(),
-                              child: Column(
-                                children: [
-                                  Card(
-                                    elevation: 10,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(10),
-                                      ),
+                          ),
+                        ],
+                      ),
+                    )
+                  : Stack(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: SingleChildScrollView(
+                            controller: _controller,
+                            physics: ScrollPhysics(),
+                            child: Column(
+                              children: [
+                                Card(
+                                  elevation: 10,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10),
                                     ),
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 10, vertical: 10),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Text(
-                                                'Confirm Order'.toUpperCase(),
-                                                style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 17),
-                                              ),
-                                              Spacer(),
-                                              FlatButton(
-                                                  onPressed: () {
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 10),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                              'Confirm Order'.toUpperCase(),
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 17),
+                                            ),
+                                            Spacer(),
+                                            FlatButton(
+                                                onPressed: () {
+                                                  Provider.of<CheckoutPageProvider>(
+                                                          context,
+                                                          listen: false)
+                                                      .clearCartItem(isNeedRelod: true);
+                                                },
+                                                child: Text(
+                                                  'Clear cart',
+                                                  style: TextStyle(
+                                                      color: Colors
+                                                          .redAccent[700]),
+                                                ))
+                                          ],
+                                        ),
+                                        Divider(),
+                                        ListView.builder(
+                                          physics:
+                                              NeverScrollableScrollPhysics(),
+                                          itemCount: value
+                                                  ?.fetchingCartItemsModel
+                                                  ?.result
+                                                  ?.productsCount ??
+                                              0,
+                                          shrinkWrap: true,
+                                          itemBuilder: (context, index) {
+                                            return _cartItem(
+                                                context,
+                                                value
+                                                    ?.fetchingCartItemsModel
+                                                    ?.result
+                                                    ?.cart
+                                                    ?.productList[index]);
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                // SizedBox(
+                                //   height: 10,
+                                // ),
+                                Card(
+                                  elevation: 10,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10),
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 10),
+                                    child: Column(
+                                      //mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'PRICE DETAILS'.toUpperCase(),
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 17),
+                                        ),
+                                        Divider(),
+                                        Row(
+                                          children: [
+                                            Text(
+                                                'Price \(${value?.fetchingCartItemsModel?.result?.productsCount ?? 0} items\)'),
+                                            Spacer(),
+                                            Text(
+                                                'INR ${value?.fetchingCartItemsModel?.result?.totalCartAmount ?? 0}'),
+                                          ],
+                                        ),
+                                        DottedLine(
+                                            height: 1, color: Colors.grey[400]),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              'Total Amount',
+                                              style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                            Spacer(),
+                                            Text(
+                                              'INR ${value?.fetchingCartItemsModel?.result?.totalCartAmount ?? 0}',
+                                              style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                          ],
+                                        ),
+                                        Divider(),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 100,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Card(
+                            margin: EdgeInsets.zero,
+                            elevation: 10,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(20),
+                                topRight: Radius.circular(20),
+                              ),
+                            ),
+                            child: Container(
+                              margin: EdgeInsets.symmetric(
+                                horizontal: 10,
+                              ),
+                              height: 100,
+                              child: Row(
+                                children: [
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'INR ${value?.fetchingCartItemsModel?.result?.totalCartAmount ?? 0}',
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20),
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          Timer(Duration(milliseconds: 1000),
+                                              () {
+                                            if (_controller?.hasClients ??
+                                                false) {
+                                              _controller.jumpTo(_controller
+                                                  .position.maxScrollExtent);
+                                            }
+                                          });
+                                        },
+                                        child: Text(
+                                          'View price details',
+                                          style: TextStyle(
+                                              color: Color(CommonUtil()
+                                                  .getMyPrimaryColor()),
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 12),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Spacer(),
+                                  Row(
+                                    children: [
+                                      InkWell(
+                                        onTap: value?.isLoading
+                                            ? null
+                                            : () async {
+                                                AuthenticationValidator()
+                                                    .checkNetwork()
+                                                    .then((intenet) async {
+                                                  if (intenet != null &&
+                                                      intenet) {
+                                                    var result =
+                                                        await CheckoutPageWidgets()
+                                                            .profileValidationCheckOnCart(
+                                                                context);
+                                                    if (result ?? false) {
+                                                      planSubLogic(value);
+                                                    }
+                                                  } else {
                                                     Provider.of<CheckoutPageProvider>(
                                                             context,
                                                             listen: false)
-                                                        .clearCartItem();
-                                                  },
-                                                  child: Text(
-                                                    'Clear cart',
+                                                        .loader(false,isNeedRelod: true);
+                                                    FlutterToast().getToast(
+                                                        strNetworkIssue,
+                                                        Colors.red);
+                                                  }
+                                                });
+                                              },
+                                        child: ConstrainedBox(
+                                          constraints:
+                                              BoxConstraints(minWidth: 200),
+                                          child: Container(
+                                            height: 50,
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 5.0.sp,
+                                                horizontal: 5.0.sp),
+                                            alignment: Alignment.center,
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(5)),
+                                              boxShadow: <BoxShadow>[
+                                                BoxShadow(
+                                                    color: Colors.grey.shade200,
+                                                    offset: Offset(2, 4),
+                                                    blurRadius: 5,
+                                                    spreadRadius: 2)
+                                              ],
+                                              gradient: LinearGradient(
+                                                begin: Alignment.centerLeft,
+                                                end: Alignment.centerRight,
+                                                colors: [
+                                                  Color(new CommonUtil()
+                                                      .getMyPrimaryColor()),
+                                                  Color(new CommonUtil()
+                                                      .getMyGredientColor())
+                                                ],
+                                              ),
+                                            ),
+                                            child: value?.isLoading
+                                                ? SizedBox(
+                                                    width: 20,
+                                                    height: 20,
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                      strokeWidth: 3,
+                                                    ))
+                                                : Text(
+                                                    value.cartType ==
+                                                            CartType.RETRY_CART
+                                                        ? strRetryPay
+                                                        : (value?.fetchingCartItemsModel?.result
+                                                                        ?.totalCartAmount ??
+                                                                    0) >
+                                                                0
+                                                            ? strReviewPay
+                                                            : strFreePlan,
                                                     style: TextStyle(
-                                                        color: Colors
-                                                            .redAccent[700]),
-                                                  ))
-                                            ],
+                                                        fontSize: 16.0.sp,
+                                                        color: Colors.white),
+                                                  ),
                                           ),
-                                          Divider(),
-                                          ListView.builder(
-                                            physics:
-                                                NeverScrollableScrollPhysics(),
-                                            itemCount: value
-                                                    ?.fetchingCartItemsModel
-                                                    ?.result
-                                                    ?.productsCount ??
-                                                0,
-                                            shrinkWrap: true,
-                                            itemBuilder: (context, index) {
-                                              return _cartItem(
-                                                  context,
-                                                  value
-                                                      ?.fetchingCartItemsModel
-                                                      ?.result
-                                                      ?.cart
-                                                      ?.productList[index]);
-                                            },
-                                          ),
-                                        ],
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                  // SizedBox(
-                                  //   height: 10,
-                                  // ),
-                                  Card(
-                                    elevation: 10,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(10),
-                                      ),
-                                    ),
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 10, vertical: 10),
-                                      child: Column(
-                                        //mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            'PRICE DETAILS'.toUpperCase(),
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 17),
-                                          ),
-                                          Divider(),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                  'Price \(${value?.fetchingCartItemsModel?.result?.productsCount ?? 0} items\)'),
-                                              Spacer(),
-                                              Text(
-                                                  'INR ${value?.fetchingCartItemsModel?.result?.totalCartAmount ?? 0}'),
-                                            ],
-                                          ),
-                                          DottedLine(
-                                              height: 1,
-                                              color: Colors.grey[400]),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                'Total Amount',
-                                                style: TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.w500),
-                                              ),
-                                              Spacer(),
-                                              Text(
-                                                'INR ${value?.fetchingCartItemsModel?.result?.totalCartAmount ?? 0}',
-                                                style: TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.w500),
-                                              ),
-                                            ],
-                                          ),
-                                          Divider(),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 100,
+                                    ],
                                   ),
                                 ],
                               ),
                             ),
                           ),
-                          Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Card(
-                              margin: EdgeInsets.zero,
-                              elevation: 10,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(20),
-                                  topRight: Radius.circular(20),
-                                ),
-                              ),
-                              child: Container(
-                                margin: EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                ),
-                                height: 100,
-                                child: Row(
-                                  children: [
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'INR ${value?.fetchingCartItemsModel?.result?.totalCartAmount ?? 0}',
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 20),
-                                        ),
-                                        InkWell(
-                                          onTap: () {
-                                            Timer(Duration(milliseconds: 1000),
-                                                () {
-                                              if (_controller?.hasClients ??
-                                                  false) {
-                                                _controller.jumpTo(_controller
-                                                    .position.maxScrollExtent);
-                                              }
-                                            });
-                                          },
-                                          child: Text(
-                                            'View price details',
-                                            style: TextStyle(
-                                                color: Color(CommonUtil()
-                                                    .getMyPrimaryColor()),
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 12),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Spacer(),
-                                    Row(
-                                      children: [
-                                        InkWell(
-                                          onTap: value?.isLoading
-                                              ? null
-                                              : () async {
-                                                  AuthenticationValidator()
-                                                      .checkNetwork()
-                                                      .then((intenet) async {
-                                                    if (intenet != null &&
-                                                        intenet) {
-                                                      var result =
-                                                          await CheckoutPageWidgets()
-                                                              .profileValidationCheckOnCart(
-                                                                  context);
-                                                      if (result ?? false) {
-                                                        planSubLogic(value);
-                                                      }
-                                                    } else {
-                                                      Provider.of<CheckoutPageProvider>(
-                                                              context,
-                                                              listen: false)
-                                                          .loader(false);
-                                                      FlutterToast().getToast(
-                                                          strNetworkIssue,
-                                                          Colors.red);
-                                                    }
-                                                  });
-                                                },
-                                          child: ConstrainedBox(
-                                            constraints:
-                                                BoxConstraints(minWidth: 200),
-                                            child: Container(
-                                              height: 50,
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: 5.0.sp,
-                                                  horizontal: 5.0.sp),
-                                              alignment: Alignment.center,
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(5)),
-                                                boxShadow: <BoxShadow>[
-                                                  BoxShadow(
-                                                      color:
-                                                          Colors.grey.shade200,
-                                                      offset: Offset(2, 4),
-                                                      blurRadius: 5,
-                                                      spreadRadius: 2)
-                                                ],
-                                                gradient: LinearGradient(
-                                                  begin: Alignment.centerLeft,
-                                                  end: Alignment.centerRight,
-                                                  colors: [
-                                                    Color(new CommonUtil()
-                                                        .getMyPrimaryColor()),
-                                                    Color(new CommonUtil()
-                                                        .getMyGredientColor())
-                                                  ],
-                                                ),
-                                              ),
-                                              child: value?.isLoading
-                                                  ? SizedBox(
-                                                      width: 20,
-                                                      height: 20,
-                                                      child:
-                                                          CircularProgressIndicator(
-                                                        strokeWidth: 3,
-                                                      ))
-                                                  : Text(
-                                                      value.cartType ==
-                                                              CartType
-                                                                  .RETRY_CART
-                                                          ? strRetryPay
-                                                          : (value?.fetchingCartItemsModel?.result
-                                                                          ?.totalCartAmount ??
-                                                                      0) >
-                                                                  0
-                                                              ? strReviewPay
-                                                              : strFreePlan,
-                                                      style: TextStyle(
-                                                          fontSize: 16.0.sp,
-                                                          color: Colors.white),
-                                                    ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          )
-                        ],
-                      );
-              } else if (value.cartType == CartType.PAYMENT_SUCC_CART) {
-                // payment success cart
-              } else if (value.cartType == CartType.PAYMENT_FAIL_CART) {
-                // payment failure cart
-              } else if (value.cartType == CartType.SUBSCRIBTION_SUMMARY) {
-                // subscribtion cart
+                        )
+                      ],
+                    );
+              // } else if (value.cartType == CartType.PAYMENT_SUCC_CART) {
+              //   // payment success cart
+              // } else if (value.cartType == CartType.PAYMENT_FAIL_CART) {
+              //   // payment failure cart
+              // } else if (value.cartType == CartType.SUBSCRIBTION_SUMMARY) {
+              //   // subscribtion cart
 
-              }
+              // }
             }
           },
         ),
@@ -504,7 +501,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
             );
           } else {
             Provider.of<CheckoutPageProvider>(context, listen: false)
-                .loader(false);
+                .loader(false,isNeedRelod: true);
             FlutterToast()..getToast('Subscribe Failed', Colors.red);
           }
         }
@@ -564,7 +561,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         Provider.of<CheckoutPageProvider>(context,
                                 listen: false)
                             .removeCartItem(
-                                productId: '${item?.productDetail?.id}');
+                                productId: '${item?.productDetail?.id}',isNeedRelod: true);
                       },
                     ),
                     Spacer(),

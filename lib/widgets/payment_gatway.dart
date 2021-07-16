@@ -172,7 +172,7 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
               FlatButton(
                 onPressed: () {
                   Provider.of<CheckoutPageProvider>(context, listen: false)
-                      .loader(false);
+                      .loader(false,isNeedRelod: true);
                   if (!isFromSubscribe) {
                     widget.closePage(STR_FAILED);
                     Navigator.pop(context);

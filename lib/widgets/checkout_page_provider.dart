@@ -25,45 +25,52 @@ class CheckoutPageProvider extends ChangeNotifier {
 
   bool isLoading = false;
 
-
   int get currentCartCount => _cartCount;
 
-  void loader(bool currentIsLoading) {
+  void loader(bool currentIsLoading, {bool isNeedRelod = false}) {
     isLoading = currentIsLoading;
-    notifyListeners();
+    if (isNeedRelod) {
+      notifyListeners();
+    }
   }
 
-  void updateCartCount(int currentCount) {
+  void updateCartCount(int currentCount, {bool isNeedRelod = true}) {
     _cartCount = currentCount;
-    notifyListeners();
+    // if (isNeedRelod) {
+      notifyListeners();
+    // }
   }
 
   void setCartType(CartType currentCartType) {
     cartType = currentCartType;
-    notifyListeners();
   }
 
   Future<FetchingCartItemsModel> fetchCartItems(
-      {bool isNeedRelod = true, String cartUserId}) async {
-    changeCartStatus(CartStatus.LOADING, isNeedRelod: isNeedRelod);
+      {bool isNeedRelod = false, String cartUserId}) async {
+    changeCartStatus(CartStatus.LOADING, isNeedRelod: false);
     fetchingCartItemsModel =
         await helper.fetchCartItems(cartUserId: cartUserId);
     changeCartStatus(CartStatus.LOADED, isNeedRelod: isNeedRelod);
-    updateCartCount(fetchingCartItemsModel?.result?.productsCount ?? 0);
+
+    updateCartCount(fetchingCartItemsModel?.result?.productsCount ?? 0,
+        isNeedRelod: isNeedRelod);
     return fetchingCartItemsModel;
   }
 
-  Future<void> removeCartItem({String productId, bool needToast = true}) async {
+  Future<void> removeCartItem(
+      {String productId,
+      bool needToast = true,
+      bool isNeedRelod = false}) async {
     var body = {'productId': productId};
     var value = await helper.removeCartItems(body);
     if (value.isSuccess) {
       //item removed from cart
       if (needToast) {
         FlutterToast().getToast(value.message, Colors.green);
-        await fetchCartItems();
+        await fetchCartItems(isNeedRelod: isNeedRelod);
       }
 
-      setCartType(CartType.DEFAULT_CART);
+      //setCartType(CartType.DEFAULT_CART);
       await clearAllInCareDiet();
     } else {
       //failed to remove from cart
@@ -73,13 +80,13 @@ class CheckoutPageProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> clearCartItem() async {
+  Future<void> clearCartItem({bool isNeedRelod = false}) async {
     var value = await helper.clearCartItems();
     if (value.isSuccess) {
       //item removed from cart
       FlutterToast().getToast(value.message, Colors.green);
-      await fetchCartItems();
-      setCartType(CartType.DEFAULT_CART);
+      await fetchCartItems(isNeedRelod: isNeedRelod);
+      //setCartType(CartType.DEFAULT_CART);
     } else {
       //failed to remove from cart
       FlutterToast().getToast(value.message, Colors.red);
@@ -88,7 +95,7 @@ class CheckoutPageProvider extends ChangeNotifier {
   }
 
   void changeCartStatus(CartStatus currentCartStatus,
-      {bool isNeedRelod = true}) async {
+      {bool isNeedRelod = false}) async {
     cartStatus = currentCartStatus;
     if (isNeedRelod) {
       notifyListeners();
