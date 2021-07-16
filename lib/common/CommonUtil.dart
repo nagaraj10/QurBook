@@ -2999,7 +2999,7 @@ class CommonUtil {
   }
 
   navigateInviteContact() {
-    Navigator.pop(Get.context);
+    //Navigator.pop(Get.context);
     Navigator.push(
       Get.context,
       MaterialPageRoute(

@@ -87,7 +87,7 @@ class CheckoutPageWidgets {
                                         Provider.of<CheckoutPageProvider>(
                                                 context,
                                                 listen: false)
-                                            .loader(false);
+                                            .loader(false, isNeedRelod: true);
                                         Navigator.pop(context);
                                       },
                                       child: TextWidget(

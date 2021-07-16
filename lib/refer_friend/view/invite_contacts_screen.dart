@@ -8,6 +8,8 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/constants/router_variable.dart';
+import 'package:myfhb/landing/view/landing_arguments.dart';
 import 'package:myfhb/refer_friend/viewmodel/referafriend_vm.dart';
 import 'package:myfhb/refer_friend/model/referafriendrequest.dart';
 import 'package:myfhb/refer_friend/model/referafriendresponse.dart';
@@ -38,6 +40,19 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
   }
 
   FlutterToast toast = new FlutterToast();
+
+  onBackPressed(BuildContext context) {
+    if (Navigator.canPop(context)) {
+      Get.back();
+    } else {
+      Get.offAllNamed(
+        rt_Landing,
+        arguments: LandingArguments(
+          needFreshLoad: false,
+        ),
+      );
+    }
+  }
 
   Future<void> refreshContacts() async {
     var contacts = (await ContactsService.getContacts()).toList();
@@ -79,9 +94,7 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
             icon: Icons.arrow_back_ios,
             colors: Colors.white,
             size: 20.0.sp,
-            onTap: () {
-              Navigator.pop(context);
-            },
+            onTap: () => onBackPressed(context),
           ),
           actions: [
             selectedList.length != 0
