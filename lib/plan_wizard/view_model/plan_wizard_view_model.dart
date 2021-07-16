@@ -32,9 +32,9 @@ class PlanWizardViewModel extends ChangeNotifier {
   var selectedTag = '';
   var providerId = '';
 
-  var currentCartPackageId='';
-  var currentCartDietPackageId='';
-
+  var currentCartPackageId = '';
+  var currentCartDietPackageId = '';
+  bool isPlanWizardActive = false;
 
   void updateSingleSelection(String packageId) {
     if (packageId == currentPackageId) {
@@ -80,11 +80,11 @@ class PlanWizardViewModel extends ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<DietPlanModel> getDietPlanList({bool isVeg=false}) async {
+  Future<DietPlanModel> getDietPlanList({bool isVeg = false}) async {
     try {
       var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-      DietPlanModel myPlanListModel =
-          await planWizardService.getDietPlanList(patientId: userid,isVeg: isVeg);
+      DietPlanModel myPlanListModel = await planWizardService.getDietPlanList(
+          patientId: userid, isVeg: isVeg);
       if (myPlanListModel.isSuccess) {
         dietPlanList = myPlanListModel.result;
       } else {
@@ -344,8 +344,8 @@ class PlanWizardViewModel extends ChangeNotifier {
       }
     });
 
-    if(!isCarePlanInCart){
-      currentCartPackageId ='';
+    if (!isCarePlanInCart) {
+      currentCartPackageId = '';
     }
 
     return isCarePlanInCart;
@@ -364,8 +364,8 @@ class PlanWizardViewModel extends ChangeNotifier {
       }
     });
 
-    if(!isCarePlanInCart){
-      currentCartDietPackageId ='';
+    if (!isCarePlanInCart) {
+      currentCartDietPackageId = '';
     }
 
     return isCarePlanInCart;

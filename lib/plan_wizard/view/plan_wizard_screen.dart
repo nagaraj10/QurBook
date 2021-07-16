@@ -20,13 +20,22 @@ class PlanWizardScreen extends StatefulWidget {
 }
 
 class _PlanWizardScreenState extends State<PlanWizardScreen> {
-  String feedbackCode="MissingCondition";
-  String titleName="Missing condition";
+  String feedbackCode = "MissingCondition";
+  String titleName = "Missing condition";
 
   @override
   void initState() {
     super.initState();
-    Provider.of<PlanWizardViewModel>(context,listen: false).fetchCartItem();
+    Provider.of<PlanWizardViewModel>(context, listen: false)?.fetchCartItem();
+    Provider.of<PlanWizardViewModel>(context, listen: false)
+        ?.isPlanWizardActive = true;
+  }
+
+  @override
+  void deactivate() {
+    Provider.of<PlanWizardViewModel>(context, listen: false)
+        ?.isPlanWizardActive = false;
+    super.dispose();
   }
 
   @override
@@ -118,16 +127,17 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
                           ),
                         ),
                         onPressed: () {
-                          new AddNewPlan().addNewPlan(context, feedbackCode,titleName, (bool) {
+                          new AddNewPlan().addNewPlan(
+                              context, feedbackCode, titleName, (bool) {
                             FlutterToast toast = new FlutterToast();
-                            if(bool) {
-                              toast.getToast("We've received your request and get back to you soon", Colors.green);
-                            }else{
+                            if (bool) {
+                              toast.getToast(
+                                  "We've received your request and get back to you soon",
+                                  Colors.green);
+                            } else {
                               toast.getToast("Please try again ", Colors.red);
-
                             }
                           });
-
                         },
                         borderSide: BorderSide(color: Colors.white),
                         color: Colors.white,
@@ -164,20 +174,20 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
   String _getBottomButtonText(int currentPage) {
     switch (currentPage) {
       case 0:
-        feedbackCode="MissingCondition";
-        titleName="Missing condition";
+        feedbackCode = "MissingCondition";
+        titleName = "Missing condition";
         return strLetsAdd;
         break;
       case 1:
-        feedbackCode="MissingCarePlan";
-        titleName="Missing care plan";
+        feedbackCode = "MissingCarePlan";
+        titleName = "Missing care plan";
 
         return strTellToUs;
         break;
       case 2:
-        titleName="Missing diet plan";
+        titleName = "Missing diet plan";
 
-        feedbackCode="MissingDietPlan";
+        feedbackCode = "MissingDietPlan";
         return strTellToUs;
         break;
     }
