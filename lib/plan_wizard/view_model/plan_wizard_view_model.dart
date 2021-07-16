@@ -193,7 +193,7 @@ class PlanWizardViewModel extends ChangeNotifier {
       List<DietPlanResult> planListLocal = [];
       if (filter == popUpChoicePrice) {
         if (planListDefault != null && planListDefault.length > 0) {
-          planListDefault?.sort((a, b) => b.price.compareTo(a.price));
+          planListDefault?.sort((a, b) => a.price.compareTo(b.price));
           planListLocal = List.from(planListDefault);
         }
       } else if (filter == popUpChoiceDura) {
