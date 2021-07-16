@@ -254,6 +254,8 @@ const String getMenuDietPlans = 'Action=GetMenuTaggedPackages2&tags=';
 
 const String diet = ',diet';
 
+const String veg = ',veg';
+
 const String prid = '&prid=';
 
 const String exact = '&exact=1';

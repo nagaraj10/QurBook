@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
 import 'package:myfhb/plan_dashboard/view/planDetailsView.dart';
 import 'package:myfhb/plan_wizard/models/DietPlanModel.dart';
@@ -44,6 +45,8 @@ class DietPlanCard extends StatelessWidget {
                     catIcon: planList?.catmetadata?.icon,
                     metaDataForURL: planList?.metadata,
                     isFrom: strDiet,
+                    isExtendable: planList?.isExtendable == '0'? true : false,
+                    isRenew: planList?.isexpired == '1' ? true : false,
                   )),
         );
       },
@@ -229,9 +232,8 @@ class DietPlanCard extends StatelessWidget {
                                         isFromDiet: true);
                               }
                             } else {
-                              FlutterToast().getToast(
-                                  'Renewal limit reached for this plan. Please try after few days',
-                                  Colors.black);
+                              FlutterToast()
+                                  .getToast(renewalLimit, Colors.black);
                             }
                           }),
                       SizedBox(width: 5.w),

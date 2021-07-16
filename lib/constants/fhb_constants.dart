@@ -540,9 +540,10 @@ const String strNoHealthConditions = 'No Health Conditions Available';
 
 const strUploading = 'Uploading...';
 const strSubscribe = 'Subscribe';
-const strAddToCart = 'Add to Cart';
+const strAddToCart = 'ADD TO CART';
+const strRemoveFromCart = 'REMOVE FROM CART';
 const strUnSubscribe = 'UnSubscribe';
-const strSubscribed = 'Subscribed';
+const strSubscribed = 'SUBSCRIBED';
 const strSelectedPlan = 'Selected Plan - ';
 const strSelectedPlans = 'Selected Plan(s) - ';
 const strSelectPlan = 'Select a Plan';

@@ -622,7 +622,7 @@ const String strNoDataAvailable = 'Unable To load';
 const String strHealthOrganizationName = 'healthOrganizationName';
 
 const String EMAIL_REGEXP =
-    //r"^[a-zA-Z0-9.a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
+//r"^[a-zA-Z0-9.a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
     r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{​​​​​|}​​​​​~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
 
 const String c_chat_with_whatsapp = 'Chat with Us';
@@ -633,6 +633,9 @@ const String icon_whatsapp = 'assets/icons/ic_whatsapp.png';
 const String strAdd = 'Add';
 const String strSync = 'Syncing...';
 const String vitalsSummary = 'Vitals Summary';
+
+const String renewalLimit =
+    'Renewal limit reached for this plan. Please try after few days';
 
 //Reminders
 //

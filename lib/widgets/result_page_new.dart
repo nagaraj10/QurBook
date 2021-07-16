@@ -25,6 +25,7 @@ class PaymentResultPage extends StatefulWidget {
   final bool isPaymentFails;
   final String cartUserId;
 
+
   PaymentResultPage({
     Key key,
     @required this.status,
@@ -144,9 +145,7 @@ class _ResultPage extends State<PaymentResultPage> {
 
                           if (status) {
                             //widget.closePage(STR_SUCCESS);
-                            Get.offAllNamed(router.rt_UserAccounts,
-                                arguments:
-                                    UserAccountsArguments(selectedIndex: 3));
+                            Get.offAllNamed(router.rt_MyPlans);
                           } else {
                             if (widget?.isFreePlan ?? false) {
                               Get.back();
@@ -184,7 +183,7 @@ class _ResultPage extends State<PaymentResultPage> {
                                   Get.context,
                                   listen: false,
                                 ).regimentFilter = RegimentFilter
-                                    .All; //TODO change with Schedule
+                                    .Scheduled;
                                 await Get.offAllNamed(router.rt_Regimen);
                               },
                               child: Text(

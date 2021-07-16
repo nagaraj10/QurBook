@@ -80,11 +80,11 @@ class PlanWizardViewModel extends ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<DietPlanModel> getDietPlanList() async {
+  Future<DietPlanModel> getDietPlanList({bool isVeg=false}) async {
     try {
       var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
       DietPlanModel myPlanListModel =
-          await planWizardService.getDietPlanList(userid);
+          await planWizardService.getDietPlanList(patientId: userid,isVeg: isVeg);
       if (myPlanListModel.isSuccess) {
         dietPlanList = myPlanListModel.result;
       } else {
@@ -193,7 +193,7 @@ class PlanWizardViewModel extends ChangeNotifier {
       List<DietPlanResult> planListLocal = [];
       if (filter == popUpChoicePrice) {
         if (planListDefault != null && planListDefault.length > 0) {
-          planListDefault?.sort((a, b) => b.price.compareTo(a.price));
+          planListDefault?.sort((a, b) => a.price.compareTo(b.price));
           planListLocal = List.from(planListDefault);
         }
       } else if (filter == popUpChoiceDura) {
