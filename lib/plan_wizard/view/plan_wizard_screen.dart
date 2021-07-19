@@ -26,6 +26,7 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
   @override
   void initState() {
     super.initState();
+    Provider.of<PlanWizardViewModel>(context, listen: false)?.currentPage = 0;
     Provider.of<PlanWizardViewModel>(context, listen: false)?.fetchCartItem();
     Provider.of<PlanWizardViewModel>(context, listen: false)
         ?.isPlanWizardActive = true;
