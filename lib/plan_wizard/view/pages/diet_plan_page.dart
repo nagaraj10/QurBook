@@ -89,10 +89,8 @@ class _DietPlanPageState extends State<DietPlanPage> {
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   onChanged: toggleSwitch,
                   value: isSwitched,
-                  activeColor: Colors.blue,
-                  /*activeTrackColor: Colors.grey,*/
-                  inactiveThumbColor: Colors.grey,
-                  inactiveTrackColor: Colors.grey[400],
+                  activeColor:
+                  Color(new CommonUtil().getMyPrimaryColor()),
                 ),
                 SizedBox(width: 2.w),
                 Text(
