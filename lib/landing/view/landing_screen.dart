@@ -122,6 +122,32 @@ class _LandingScreenState extends State<LandingScreen> {
     }
   }
 
+  Future<bool> _onBackPressed() {
+    return showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              content: Text('Do you want to exit for now?'),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('CANCEL'),
+                  onPressed: () {
+                    Navigator.of(context).pop(false);
+                  },
+                ),
+                FlatButton(
+                  child: Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop(true);
+                  },
+                )
+              ],
+            );
+          },
+        ) ??
+        false;
+  }
+
   @override
   Widget build(BuildContext context) {
     landingViewModel = Provider.of<LandingViewModel>(context);
@@ -140,103 +166,107 @@ class _LandingScreenState extends State<LandingScreen> {
         return Scaffold(
           key: _scaffoldKey,
           backgroundColor: const Color(bgColorContainer),
-          body: Stack(
-            fit: StackFit.expand,
-            children: [
-              Column(
-                children: [
-                  Visibility(
-                    visible: !landingViewModel.isSearchVisible,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.centerLeft,
-                          end: Alignment.centerRight,
-                          colors: <Color>[
-                            Color(CommonUtil().getMyPrimaryColor()),
-                            Color(CommonUtil().getMyGredientColor()),
-                          ],
-                          stops: [0.3, 1.0],
+          body: WillPopScope(
+            onWillPop: _onBackPressed,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                Column(
+                  children: [
+                    Visibility(
+                      visible: !landingViewModel.isSearchVisible,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                            colors: <Color>[
+                              Color(CommonUtil().getMyPrimaryColor()),
+                              Color(CommonUtil().getMyGredientColor()),
+                            ],
+                            stops: [0.3, 1.0],
+                          ),
+                          // color: Colors.white,
                         ),
-                        // color: Colors.white,
-                      ),
-                      child: SafeArea(
-                        child: Row(
-                          children: <Widget>[
-                            Material(
-                              color: Colors.transparent,
-                              child: IconButton(
-                                icon: const Icon(
-                                  Icons.menu_rounded,
-                                ),
-                                color: Colors.white,
-                                iconSize: 24.0.sp,
-                                onPressed: () {
-                                  _scaffoldKey.currentState.openDrawer();
-                                },
-                              ),
-                            ),
-                            Expanded(
-                              child: getAppBarTitle(),
-                            ),
-                            Visibility(
-                              visible: landingViewModel.currentTabIndex == 4,
-                              child: Padding(
-                                padding: EdgeInsets.only(
-                                  right: 5.0.w,
-                                ),
-                                child: IconWidget(
-                                  icon: Icons.search,
-                                  colors: Colors.white,
-                                  size: 30.0.sp,
-                                  onTap: () {
-                                    landingViewModel?.changeSearchBar(
-                                      isEnabled: true,
-                                    );
+                        child: SafeArea(
+                          child: Row(
+                            children: <Widget>[
+                              Material(
+                                color: Colors.transparent,
+                                child: IconButton(
+                                  icon: const Icon(
+                                    Icons.menu_rounded,
+                                  ),
+                                  color: Colors.white,
+                                  iconSize: 24.0.sp,
+                                  onPressed: () {
+                                    _scaffoldKey.currentState.openDrawer();
                                   },
                                 ),
                               ),
-                            ),
-                            Center(
-                              child: CommonUtil().getNotificationIcon(
-                                context,
-                                color: Colors.white,
+                              Expanded(
+                                child: getAppBarTitle(),
                               ),
-                            ),
-                            SwitchProfile().buildActions(
-                              context,
-                              _key,
-                              () {
-                                profileData = getMyProfile();
-                                landingViewModel.getQurPlanDashBoard(
-                                    needNotify: true);
-                                setState(() {});
-                                (context as Element).markNeedsBuild();
-                              },
-                              true,
-                            ),
-                          ],
+                              Visibility(
+                                visible: landingViewModel.currentTabIndex == 4,
+                                child: Padding(
+                                  padding: EdgeInsets.only(
+                                    right: 5.0.w,
+                                  ),
+                                  child: IconWidget(
+                                    icon: Icons.search,
+                                    colors: Colors.white,
+                                    size: 30.0.sp,
+                                    onTap: () {
+                                      landingViewModel?.changeSearchBar(
+                                        isEnabled: true,
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                              Center(
+                                child: CommonUtil().getNotificationIcon(
+                                  context,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              SwitchProfile().buildActions(
+                                context,
+                                _key,
+                                () {
+                                  profileData = getMyProfile();
+                                  landingViewModel.getQurPlanDashBoard(
+                                      needNotify: true);
+                                  setState(() {});
+                                  (context as Element).markNeedsBuild();
+                                },
+                                true,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: (snapshot.connectionState == ConnectionState.waiting)
-                        ? Center(
-                            child: CircularProgressIndicator(
-                              backgroundColor:
-                                  Color(CommonUtil().getMyPrimaryColor()),
-                            ),
-                          )
-                        : (snapshot.hasError)
-                            ? Center(
-                                child: ErrorsWidget(),
-                              )
-                            : getCurrentTab(),
-                  ),
-                ],
-              ),
-            ],
+                    Expanded(
+                      child:
+                          (snapshot.connectionState == ConnectionState.waiting)
+                              ? Center(
+                                  child: CircularProgressIndicator(
+                                    backgroundColor:
+                                        Color(CommonUtil().getMyPrimaryColor()),
+                                  ),
+                                )
+                              : (snapshot.hasError)
+                                  ? Center(
+                                      child: ErrorsWidget(),
+                                    )
+                                  : getCurrentTab(),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
           drawer: NavigationDrawer(
             myProfile: myProfile,
