@@ -165,13 +165,20 @@ class PlanWizardViewModel extends ChangeNotifier {
     List<PlanListResult> planLisDefault = List.from(planListResult);
     if (filter == popUpChoicePrice) {
       if (planLisDefault != null && planLisDefault.length > 0) {
-        planLisDefault?.sort((a, b) => a.price.compareTo(b.price));
-        planListLocal = List.from(planLisDefault);
+        planLisDefault?.sort((a, b) {
+          var priceA = double.tryParse(a?.price ?? 0) ?? 0;
+          var priceB = double.tryParse(b?.price ?? 0) ?? 0;
+          return priceA?.compareTo(priceB ?? 0);
+        });
       }
+      planListLocal = List.from(planLisDefault);
     } else if (filter == popUpChoiceDura) {
       if (planLisDefault != null && planLisDefault.length > 0) {
-        planLisDefault
-            ?.sort((a, b) => a.packageDuration.compareTo(b.packageDuration));
+        planLisDefault?.sort((a, b) {
+          var duraA = double.tryParse(a?.packageDuration ?? 0) ?? 0;
+          var duraB = double.tryParse(b?.packageDuration ?? 0) ?? 0;
+          return duraA?.compareTo(duraB ?? 0);
+        });
         planListLocal = List.from(planLisDefault);
       }
     } else if (filter == popUpChoiceDefault) {
@@ -193,21 +200,32 @@ class PlanWizardViewModel extends ChangeNotifier {
       List<DietPlanResult> planListLocal = [];
       if (filter == popUpChoicePrice) {
         if (planListDefault != null && planListDefault.length > 0) {
-          planListDefault?.sort((a, b) => a.price.compareTo(b.price));
+          planListDefault?.sort((a, b) {
+            var priceA = double.tryParse(a?.price ?? 0) ?? 0;
+            var priceB = double.tryParse(b?.price ?? 0) ?? 0;
+            return priceA?.compareTo(priceB ?? 0);
+          });
+
           planListLocal = List.from(planListDefault);
         }
       } else if (filter == popUpChoiceDura) {
         if (planListDefault != null && planListDefault.length > 0) {
-          planListDefault
-              ?.sort((a, b) => a.packageDuration.compareTo(b.packageDuration));
+          planListDefault?.sort((a, b) {
+            var duraA = double.tryParse(a?.packageDuration ?? 0) ?? 0;
+            var duraB = double.tryParse(b?.packageDuration ?? 0) ?? 0;
+            return duraA?.compareTo(duraB ?? 0);
+          });
+
           planListLocal = List.from(planListDefault);
         }
       } else if (filter == popUpChoiceDefault) {
         if (dietPlanList != null && dietPlanList.length > 0) {
-          planListLocal = List.from(dietPlanList);
+          planListAll = List.from(dietPlanList);
+          return planListAll;
         }
       } else {
-        planListLocal = List.from(dietPlanList);
+        planListAll = List.from(dietPlanList);
+        return planListAll;
       }
 
       planListAll.add(planListLocal);
