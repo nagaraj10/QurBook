@@ -105,17 +105,17 @@ class OrderTile extends StatelessWidget {
     switch (status) {
       case 'Payment Initiated':
       case 'Payment Pending':
-        return Colors.yellow;
+      case 'Payment Link Disabled':
+        return Colors.orange;
         break;
       case 'Payment Success':
         return Colors.green;
         break;
       case 'Payment Failed':
-      case 'Payment Link Disabled':
         return Colors.red;
         break;
       default:
-        return Colors.yellow;
+        return Colors.orange;
         break;
     }
   }
