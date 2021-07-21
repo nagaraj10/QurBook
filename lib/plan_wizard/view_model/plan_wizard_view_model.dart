@@ -307,6 +307,7 @@ class PlanWizardViewModel extends ChangeNotifier {
       await Provider.of<CheckoutPageProvider>(Get.context, listen: false)
           .removeCartItem(productId: packageId, needToast: false);
       await fetchCartItem();
+      FlutterToast().getToast('Removed from Cart', Colors.green);
       if (isFromDiet) {
         updateSingleSelectionDiet('');
       } else {
