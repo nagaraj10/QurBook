@@ -298,14 +298,19 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                         DottedLine(
                                             height: 1, color: Colors.grey[400]),
                                         Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
                                           children: [
                                             Text(
                                               'Total Amount',
                                               style: TextStyle(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w500),
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500,
+                                              ),
                                             ),
-                                            Spacer(),
+                                            SizedBox(
+                                              width: 20.0.w,
+                                            ),
                                             Text(
                                               'INR ${value?.fetchingCartItemsModel?.result?.totalCartAmount ?? 0}',
                                               style: TextStyle(
@@ -356,26 +361,26 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                             fontWeight: FontWeight.bold,
                                             fontSize: 20),
                                       ),
-                                      InkWell(
-                                        onTap: () {
-                                          Timer(Duration(milliseconds: 1000),
-                                              () {
-                                            if (_controller?.hasClients ??
-                                                false) {
-                                              _controller.jumpTo(_controller
-                                                  .position.maxScrollExtent);
-                                            }
-                                          });
-                                        },
-                                        child: Text(
-                                          'View price details',
-                                          style: TextStyle(
-                                              color: Color(CommonUtil()
-                                                  .getMyPrimaryColor()),
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 12),
-                                        ),
-                                      ),
+                                      // InkWell(
+                                      //   onTap: () {
+                                      //     Timer(Duration(milliseconds: 1000),
+                                      //         () {
+                                      //       if (_controller?.hasClients ??
+                                      //           false) {
+                                      //         _controller.jumpTo(_controller
+                                      //             .position.maxScrollExtent);
+                                      //       }
+                                      //     });
+                                      //   },
+                                      //   child: Text(
+                                      //     'View price details',
+                                      //     style: TextStyle(
+                                      //         color: Color(CommonUtil()
+                                      //             .getMyPrimaryColor()),
+                                      //         fontWeight: FontWeight.bold,
+                                      //         fontSize: 12),
+                                      //   ),
+                                      // ),
                                     ],
                                   ),
                                   Spacer(),

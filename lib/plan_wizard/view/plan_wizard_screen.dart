@@ -7,6 +7,7 @@ import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/plan_wizard/view/pages/care_plan_page.dart';
 import 'package:myfhb/plan_wizard/view/pages/diet_plan_page.dart';
 import 'package:myfhb/plan_wizard/view/pages/health_condition_page.dart';
+import 'package:myfhb/plan_wizard/view/widgets/plan_header.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
@@ -21,7 +22,8 @@ class PlanWizardScreen extends StatefulWidget {
 
 class _PlanWizardScreenState extends State<PlanWizardScreen> {
   String feedbackCode = "MissingCondition";
-  String titleName = "Missing condition";
+  String titleName = "Missing Health Condition";
+  String hintText = "Missing condition";
 
   @override
   void initState() {
@@ -129,7 +131,8 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
                         ),
                         onPressed: () {
                           new AddNewPlan().addNewPlan(
-                              context, feedbackCode, titleName, (bool) {
+                              context, feedbackCode, titleName, hintText,
+                              (bool) {
                             FlutterToast toast = new FlutterToast();
                             if (bool) {
                               toast.getToast(
@@ -176,19 +179,20 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
     switch (currentPage) {
       case 0:
         feedbackCode = "MissingCondition";
-        titleName = "Missing condition";
-        return strLetsAdd;
+        titleName = "Missing Health Condition";
+        hintText = strHintHealth;
+        return strTellToUs;
         break;
       case 1:
         feedbackCode = "MissingCarePlan";
-        titleName = "Missing care plan";
-
+        titleName = "Missing Care Plan";
+        hintText = strHintCarePlan;
         return strTellToUs;
         break;
       case 2:
-        titleName = "Missing diet plan";
-
         feedbackCode = "MissingDietPlan";
+        titleName = "Missing Diet Plan";
+        hintText = strHintDietPlan;
         return strTellToUs;
         break;
     }
