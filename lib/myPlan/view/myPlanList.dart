@@ -53,6 +53,7 @@ class _MyPlanState extends State<MyPlanList> {
         listen: false,
       ).updateTabIndex(currentIndex: 3);
     }
+    Provider.of<PlanWizardViewModel>(context, listen: false)?.fetchCartItem();
     PreferenceUtil.init();
 
     isFirst = PreferenceUtil.isKeyValid(Constants.KEY_SHOWCASE_MyPlan);
