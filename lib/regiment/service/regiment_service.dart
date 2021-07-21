@@ -14,7 +14,7 @@ import 'package:myfhb/src/resources/network/api_services.dart';
 
 class RegimentService {
   static Future<RegimentResponseModel> getRegimentData(
-      {String dateSelected}) async {
+      {String dateSelected, bool isSymptoms=false}) async {
     final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var urlForRegiment = Constants.BASE_URL + variable.regiment;
     try {

@@ -39,7 +39,7 @@ class _OrdersViewState extends State<OrdersView> {
           'My Orders',
         ),
       ),
-      body: obx(
+      body: Obx(
         () {
           return controller.isLoading.value
               ? Center(

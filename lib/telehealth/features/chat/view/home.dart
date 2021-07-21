@@ -324,9 +324,9 @@ class HomeScreenState extends State<ChatHomeScreen> {
       widget.careGiversList?.forEach((careGiver) {
         careGiverIds.add(careGiver.doctorId);
       });
-      stream = Firestore.instance
+      stream = FirebaseFirestore.instance
           .collection(STR_CHAT_LIST)
-          .document(patientId)
+          .doc(patientId)
           .collection(STR_USER_LIST)
           .where(
             'id',
@@ -335,9 +335,9 @@ class HomeScreenState extends State<ChatHomeScreen> {
           .orderBy(STR_CREATED_AT, descending: true)
           .snapshots();
     } else {
-      stream = Firestore.instance
+      stream = FirebaseFirestore.instance
           .collection(STR_CHAT_LIST)
-          .document(patientId)
+          .doc(patientId)
           .collection(STR_USER_LIST)
           .orderBy(STR_CREATED_AT, descending: true)
           .snapshots();
@@ -347,12 +347,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
         // List
         Container(
           child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-            stream: FirebaseFirestore.instance
-                .collection(STR_CHAT_LIST)
-                .doc(patientId)
-                .collection(STR_USER_LIST)
-                .orderBy(STR_CREATED_AT, descending: true)
-                .snapshots(),
+            stream: stream,
             builder: (context,
                 AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
               if (!snapshot.hasData) {

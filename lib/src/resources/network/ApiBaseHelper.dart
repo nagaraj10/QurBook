@@ -6,7 +6,12 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' as gett;
 import 'package:http/http.dart' as http;
+import 'package:myfhb/add_new_plan/model/PlanCode.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
+import 'package:myfhb/widgets/cart_genric_response.dart';
+import 'package:myfhb/widgets/fetching_cart_items_model.dart';
+import 'package:myfhb/widgets/make_payment_response.dart';
+import 'package:myfhb/widgets/update_payment_response.dart';
 import '../../../add_family_user_info/models/address_type_list.dart';
 import '../../../authentication/constants/constants.dart';
 import '../../../authentication/view/login_screen.dart';
@@ -1448,7 +1453,7 @@ class ApiBaseHelper {
   Future<dynamic> getHealthConditions(String url, String jsonString) async {
     var responseJson;
     try {
-      final response = await http.post(_baseUrl + url,
+      final response = await ApiServices.post(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersTimeSlot(),
           body: jsonString);
       responseJson = _returnResponse(response);
@@ -1602,7 +1607,7 @@ class ApiBaseHelper {
   Future<dynamic> addToCartHelper(String url, String jsonString) async {
     var responseJson;
     try {
-      final response = await http.post(_baseUrl + url,
+      final response = await ApiServices.post(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersTimeSlot(),
           body: jsonString);
       responseJson = _returnResponse(response);
@@ -1651,7 +1656,7 @@ class ApiBaseHelper {
         jsobBodyMap['userId'] = ((cartUserId ?? '').isNotEmpty) ? cartUserId : userID;
         jsobBodyMap['createdBy'] = createBy;
         try {
-          final response = await http.post(
+          final response = await ApiServices.post(
               _baseUrl + "cart/getAllItems?isCount=false",
               body: json.encode(jsobBodyMap),
               headers: await headerRequest.getRequestHeadersAuthContent());
@@ -1679,7 +1684,7 @@ class ApiBaseHelper {
         jsobBodyMap['userId'] = userID;
         jsobBodyMap['createdBy'] = createBy;
         try {
-          final response = await http.post(_baseUrl + "cart/clear",
+          final response = await ApiServices.post(_baseUrl + "cart/clear",
               body: json.encode(jsobBodyMap),
               headers: await headerRequest.getRequestHeadersAuthContent());
           //responseJson = _returnResponse(response);
@@ -1705,7 +1710,7 @@ class ApiBaseHelper {
         body['userId'] = userID;
         body['createdBy'] = createBy;
         try {
-          final response = await http.post(_baseUrl + "cart/remove-product",
+          final response = await ApiServices.post(_baseUrl + "cart/remove-product",
               body: json.encode(body),
               headers: await headerRequest.getRequestHeadersAuthContent());
           //responseJson = _returnResponse(response);
@@ -1728,7 +1733,7 @@ class ApiBaseHelper {
       MakePaymentResponse responseJson;
 
       try {
-        final response = await http.post(
+        final response = await ApiServices.post(
             _baseUrl + "payment/plan-subscription-create-payment",
             body: json.encode(body),
             headers: await headerRequest.getRequestHeadersAuthContent());
@@ -1745,7 +1750,7 @@ class ApiBaseHelper {
   Future<dynamic> addNewPlan(String jsonData) async {
     var responseJson;
     try {
-      final response = await http.post(_baseUrl + "user/feedback",
+      final response = await ApiServices.post(_baseUrl + "user/feedback",
           body: jsonData,
           headers: await headerRequest.getRequestHeadersTimeSlot());
       responseJson = _returnResponse(response);
@@ -1756,7 +1761,7 @@ class ApiBaseHelper {
   }
 
   Future<PlanCode> getPlanCode(String responseQuery) async {
-    final response = await http.post(_baseUrl + responseQuery,
+    final response = await ApiServices.post(_baseUrl + responseQuery,
         headers: await headerRequest.getRequestHeadersAuthContent(),
         body: '["FEEDBKTYP"]');
 
@@ -1779,7 +1784,7 @@ class ApiBaseHelper {
 
       //if (userID != null && userID != "" && ((createBy ?? '').isNotEmpty)) {
         try {
-          final response = await http.post(
+          final response = await ApiServices.post(
               _baseUrl + "payment/plan-subscription-update-payment-status",
               body: json.encode(body),
               headers: await headerRequest.getRequestHeadersAuthContent());

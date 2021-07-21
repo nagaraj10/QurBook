@@ -8,6 +8,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/constants/variable_constant.dart';
 import '../../common/CommonUtil.dart';
 import '../../constants/fhb_constants.dart';
 import '../../constants/fhb_parameters.dart';
@@ -21,6 +22,8 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
 import '../model/MetaDataForURL.dart';
+import '../../authentication/constants/constants.dart';
+import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 
 import 'package:provider/provider.dart';
 
@@ -488,15 +491,6 @@ class PlanDetail extends State<MyPlanDetailView> {
                 children: [
                   OutlineButton(
                     //hoverColor: Color(getMyPrimaryColor()),
-                    child: Text(
-                      isFrom == strCare
-                          ? getAddCartText()
-                          : getAddCartTextDiet(),
-                      style: TextStyle(
-                        color: getTextColor(isDisable, issubscription),
-                        fontSize: 13.sp,
-                      ),
-                    ),
                     onPressed:
                         /*isDisable
                         ? null
@@ -642,12 +636,21 @@ class PlanDetail extends State<MyPlanDetailView> {
                     ),
                     //hoverColor: Color(getMyPrimaryColor()),
                     child: Text(
-                      issubscription == '0' ? strSubscribe : strSubscribed,
+                      isFrom == strCare
+                          ? getAddCartText()
+                          : getAddCartTextDiet(),
                       style: TextStyle(
                         color: getTextColor(isDisable, issubscription),
                         fontSize: 13.sp,
                       ),
                     ),
+                    // child: Text(
+                    //   issubscription == '0' ? strSubscribe : strSubscribed,
+                    //   style: TextStyle(
+                    //     color: getTextColor(isDisable, issubscription),
+                    //     fontSize: 13.sp,
+                    //   ),
+                    // ),
                   ),
                   SizedBox(
                     width: 10,

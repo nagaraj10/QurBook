@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
+import 'package:myfhb/widgets/CartIconWithBadge.dart';
+import 'package:myfhb/widgets/checkout_page.dart';
 import '../../common/CommonUtil.dart';
 import '../../constants/fhb_constants.dart';
 import '../../constants/router_variable.dart';
