@@ -12,28 +12,28 @@ class DoctorsSearchListResponse {
     message = json['message'];
     if (json.containsKey('result')) {
       if (json['result'] != null) {
-        result = new List<DoctorsListResult>();
+        result = List<DoctorsListResult>();
         json['result'].forEach((v) {
-          result.add(new DoctorsListResult.fromJson(v));
+          result.add(DoctorsListResult.fromJson(v));
         });
       }
     }
     if (json.containsKey('diagnostics')) {
       diagnostics = json['diagnostics'] != null
-          ? new Diagnostics.fromJson(json['diagnostics'])
+          ? Diagnostics.fromJson(json['diagnostics'])
           : null;
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['isSuccess'] = this.isSuccess;
-    data['message'] = this.message;
-    if (this.result != null) {
-      data['result'] = this.result.map((v) => v.toJson()).toList();
+    final data = <String, dynamic>{};
+    data['isSuccess'] = isSuccess;
+    data['message'] = message;
+    if (result != null) {
+      data['result'] = result.map((v) => v.toJson()).toList();
     }
-    if (this.diagnostics != null) {
-      data['diagnostics'] = this.diagnostics.toJson();
+    if (diagnostics != null) {
+      data['diagnostics'] = diagnostics.toJson();
     }
 
     return data;
@@ -93,22 +93,22 @@ class DoctorsListResult {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['doctorId'] = this.doctorId;
-    data['userId'] = this.userId;
-    data['name'] = this.name;
-    data['firstName'] = this.firstName;
-    data['lastName'] = this.lastName;
-    data['specialization'] = this.specialization;
-    data['city'] = this.city;
-    data['state'] = this.state;
-    data['doctorReferenceId'] = this.doctorReferenceId;
-    data['addressLine1'] = this.addressLine1;
-    data['specialty'] = this.specialty;
-    data['addressLine2'] = this.addressLine2;
-    data['profilePicThumbnailUrl'] = this.profilePicThumbnailUrl;
-    data['isTelehealthEnabled'] = this.isTelehealthEnabled;
-    data['isMciVerified'] = this.isMciVerified;
+    final data = Map<String, dynamic>();
+    data['doctorId'] = doctorId;
+    data['userId'] = userId;
+    data['name'] = name;
+    data['firstName'] = firstName;
+    data['lastName'] = lastName;
+    data['specialization'] = specialization;
+    data['city'] = city;
+    data['state'] = state;
+    data['doctorReferenceId'] = doctorReferenceId;
+    data['addressLine1'] = addressLine1;
+    data['specialty'] = specialty;
+    data['addressLine2'] = addressLine2;
+    data['profilePicThumbnailUrl'] = profilePicThumbnailUrl;
+    data['isTelehealthEnabled'] = isTelehealthEnabled;
+    data['isMciVerified'] = isMciVerified;
     return data;
   }
 }
@@ -121,17 +121,17 @@ class Diagnostics {
 
   Diagnostics.fromJson(Map<String, dynamic> json) {
     errorData = json['errorData'] != null
-        ? new DoctorsListResult.fromJson(json['errorData'])
+        ? DoctorsListResult.fromJson(json['errorData'])
         : null;
     includeErrorDataInResponse = json['includeErrorDataInResponse'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.errorData != null) {
-      data['errorData'] = this.errorData.toJson();
+    final data = <String, dynamic>{};
+    if (errorData != null) {
+      data['errorData'] = errorData.toJson();
     }
-    data['includeErrorDataInResponse'] = this.includeErrorDataInResponse;
+    data['includeErrorDataInResponse'] = includeErrorDataInResponse;
     return data;
   }
 }

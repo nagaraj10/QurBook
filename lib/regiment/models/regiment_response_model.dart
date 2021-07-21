@@ -3,7 +3,7 @@
 //     final regimentModel = regimentModelFromJson(jsonString);
 
 import 'dart:convert';
-import 'package:myfhb/regiment/models/regiment_data_model.dart';
+import 'regiment_data_model.dart';
 
 List<RegimentDataModel> regimentModelFromJson(String str) =>
     List<RegimentDataModel>.from(
@@ -25,14 +25,14 @@ class RegimentResponseModel {
 
   factory RegimentResponseModel.fromJson(Map<String, dynamic> json) =>
       RegimentResponseModel(
-        isSuccess: json["isSuccess"],
+        isSuccess: json['isSuccess'],
         regimentsList: List<RegimentDataModel>.from(
-            json["result"].map((x) => RegimentDataModel.fromJson(x))),
+            json['result'].map((x) => RegimentDataModel.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
-        "isSuccess": isSuccess,
-        "result":
+        'isSuccess': isSuccess,
+        'result':
             List<RegimentDataModel>.from(regimentsList.map((x) => x.toJson())),
       };
 }

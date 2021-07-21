@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:myfhb/add_family_user_info/models/address_result.dart';
-import 'package:myfhb/add_family_user_info/viewmodel/doctor_personal_viewmodel.dart';
-import 'package:myfhb/common/errors_widget.dart';
+import '../models/address_result.dart';
+import '../viewmodel/doctor_personal_viewmodel.dart';
+import '../../common/errors_widget.dart';
 
 class AddressTypeWidget extends StatefulWidget {
   AddressResult addressResult;
@@ -22,25 +22,25 @@ class AddressTypeWidgetState extends State<AddressTypeWidget> {
   @override
   void initState() {
     super.initState();
-    doctorPersonalViewModel = new DoctorPersonalViewModel();
-    if (widget.addressList != null && widget.addressList.length > 0) {
+    doctorPersonalViewModel = DoctorPersonalViewModel();
+    if (widget.addressList != null && widget.addressList.isNotEmpty) {
       addressResultList = widget.addressList;
     }
-    this.getAddressTypes();
+    getAddressTypes();
   }
 
   @override
   Widget build(BuildContext context) {
-    return (widget.addressList != null && widget.addressList.length > 0)
+    return (widget.addressList != null && widget.addressList.isNotEmpty)
         ? getDropDownAddress()
         : checkIfAddressLength();
   }
 
   Widget getDropDownAddress() {
-    AddressResult itemSelected = widget.addressResult.id != null
+    var itemSelected = widget.addressResult.id != null
         ? widget.addressResult
         : addressResultList[0];
-    for (AddressResult res in addressResultList) {
+    for (final res in addressResultList) {
       if (res.id == widget.addressResult.id) {
         itemSelected = res;
       }
@@ -51,8 +51,8 @@ class AddressTypeWidgetState extends State<AddressTypeWidget> {
         value: itemSelected,
         isExpanded: true,
         items: addressResultList.map((item) {
-          return new DropdownMenuItem(
-            child: new Text(item.name),
+          return DropdownMenuItem(
+            child: Text(item.name),
             value: item,
           );
         }).toList(),
@@ -70,12 +70,12 @@ class AddressTypeWidgetState extends State<AddressTypeWidget> {
   }
 
   Widget checkIfAddressLength() {
-    return new FutureBuilder<List<AddressResult>>(
+    return FutureBuilder<List<AddressResult>>(
       future: getAddressTypes(),
-      builder: (BuildContext context, snapshot) {
+      builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return new Scaffold(
-            body: Center(child: new CircularProgressIndicator()),
+          return Scaffold(
+            body: Center(child: CircularProgressIndicator()),
           );
         } else if (snapshot.hasError) {
           return ErrorsWidget();
@@ -91,7 +91,7 @@ class AddressTypeWidgetState extends State<AddressTypeWidget> {
   }
 
   Future<List<AddressResult>> getAddressTypes() async {
-    var response = await doctorPersonalViewModel.getAddressTypeList();
+    final response = await doctorPersonalViewModel.getAddressTypeList();
     addressResultList = response;
 
     if (widget.addressResult != null) {

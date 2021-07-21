@@ -1,15 +1,15 @@
 import 'dart:async';
-import 'package:myfhb/src/model/Authentication/OTPEmailResponse.dart';
-import 'package:myfhb/src/model/Authentication/OTPResponse.dart';
-import 'package:myfhb/src/resources/network/ApiResponse.dart';
-import 'package:myfhb/src/resources/repository/AuthenticationRepository.dart';
-import 'package:myfhb/src/utils/Validators.dart';
+import '../../model/Authentication/OTPEmailResponse.dart';
+import '../../model/Authentication/OTPResponse.dart';
+import '../../resources/network/ApiResponse.dart';
+import '../../resources/repository/AuthenticationRepository.dart';
+import '../../utils/Validators.dart';
 import 'package:rxdart/rxdart.dart';
 import 'dart:convert' as convert;
 import '../../../common/CommonConstants.dart';
 
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
+import '../../../constants/fhb_parameters.dart' as parameters;
+import '../../../constants/variable_constant.dart' as variable;
 
 
 class OTPVerifyBloc with Validators implements BaseBloc {
@@ -47,7 +47,7 @@ class OTPVerifyBloc with Validators implements BaseBloc {
 
   Future<OTPResponse> verifyOtp(String enteredMobNumber,
       String selectedCountryCode, String otp, bool isFromSignIn) async {
-    var verifyOTP = {};
+    final verifyOTP = {};
     //verifyOTP['sourceName'] = CommonConstants.strTrident;
     verifyOTP[parameters.strCountryCode] = '+' + selectedCountryCode;
     verifyOTP[parameters.strPhoneNumber] = enteredMobNumber;
@@ -55,12 +55,13 @@ class OTPVerifyBloc with Validators implements BaseBloc {
       verifyOTP[parameters.strSourceId] = parameters.strSrcIdVal;
     verifyOTP[parameters.strEntityId] =parameters.strEntityIdVal;
     verifyOTP[parameters.strRoleId] = parameters.strRoleIdVal;
-    if (isFromSignIn)
+    if (isFromSignIn) {
       verifyOTP[parameters.strOperation] = CommonConstants.strOperationSignIN;
-    else
+    } else {
       verifyOTP[parameters.strOperation] = CommonConstants.strOperationSignUp;
+    }
 
-    var jsonString = convert.jsonEncode(verifyOTP);
+    final jsonString = convert.jsonEncode(verifyOTP);
 
     otpSink.add(ApiResponse.loading(variable.strVerifyOtp));
     OTPResponse otpResponse;
@@ -74,19 +75,20 @@ class OTPVerifyBloc with Validators implements BaseBloc {
 
   Future<OTPResponse> generateOTP(String enteredMobNumber,
       String selectedCountryCode, bool isFromSignIn) async {
-    var verifyOTP = {};
+    final verifyOTP = {};
     //verifyOTP['sourceName'] = CommonConstants.strTrident;
     verifyOTP[parameters.strCountryCode] = '+' + selectedCountryCode;
     verifyOTP[parameters.strPhoneNumber] = enteredMobNumber;
      verifyOTP[parameters.strSourceId] = parameters.strSrcIdVal;
     verifyOTP[parameters.strEntityId] =parameters.strEntityIdVal;
     verifyOTP[parameters.strRoleId] = parameters.strRoleIdVal;
-    if (isFromSignIn)
+    if (isFromSignIn) {
       verifyOTP[parameters.strOperation] = CommonConstants.strOperationSignIN;
-    else
+    } else {
       verifyOTP[parameters.strOperation] = CommonConstants.strOperationSignUp;
+    }
 
-    var jsonString = convert.jsonEncode(verifyOTP);
+    final jsonString = convert.jsonEncode(verifyOTP);
 
     otpSink.add(ApiResponse.loading(variable.strGeneratingOtp));
     OTPResponse otpResponse;
@@ -98,10 +100,10 @@ class OTPVerifyBloc with Validators implements BaseBloc {
   }
 
   Future<OTPEmailResponse> verifyOTPFromEmail(String otp) async {
-    var verifyEmailOTP = {};
+    final verifyEmailOTP = {};
     verifyEmailOTP[parameters.strverification] = otp;
 
-    var jsonString = convert.jsonEncode(verifyEmailOTP);
+    final jsonString = convert.jsonEncode(verifyEmailOTP);
 
     otpFromEmailSink.add(ApiResponse.loading(variable.strVerifyOtp));
     OTPEmailResponse otpEmailResponse;

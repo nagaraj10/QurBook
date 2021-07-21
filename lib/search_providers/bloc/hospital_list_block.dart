@@ -1,11 +1,11 @@
 import 'dart:async';
 
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/search_providers/models/hospital_list_response.dart';
-import 'package:myfhb/search_providers/models/hospital_list_response_new.dart';
-import 'package:myfhb/search_providers/services/hospital_list_repository.dart';
-import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
-import 'package:myfhb/src/resources/network/ApiResponse.dart';
+import '../../constants/variable_constant.dart' as variable;
+import '../models/hospital_list_response.dart';
+import '../models/hospital_list_response_new.dart';
+import '../services/hospital_list_repository.dart';
+import '../../src/blocs/Authentication/LoginBloc.dart';
+import '../../src/resources/network/ApiResponse.dart';
 
 class HospitalListBlock implements BaseBloc {
   HospitalListRepository _hospitalListRepository;
@@ -35,13 +35,13 @@ class HospitalListBlock implements BaseBloc {
     _hospitalListNewController =
         StreamController<ApiResponse<HospitalsSearchListResponse>>();
 
-    _hospitalListRepository = new HospitalListRepository();
+    _hospitalListRepository = HospitalListRepository();
   }
 
   getHospitalList(String param) async {
     hospitalListSink.add(ApiResponse.loading(variable.strGetHospitalList));
     try {
-      HospitalListResponse hospitalListResponse =
+      var hospitalListResponse =
           await _hospitalListRepository.getHospitalFromSearch(param);
       hospitalListSink.add(ApiResponse.completed(hospitalListResponse));
     } catch (e) {
@@ -52,7 +52,7 @@ class HospitalListBlock implements BaseBloc {
   getHospitalListNew(String param) async {
     hospitalListNewSink.add(ApiResponse.loading(variable.strGetHospitalList));
     try {
-      HospitalsSearchListResponse hospitalListResponse =
+      var hospitalListResponse =
           await _hospitalListRepository.getHospitalFromSearchNew(param);
       hospitalListNewSink.add(ApiResponse.completed(hospitalListResponse));
     } catch (e) {
@@ -78,8 +78,8 @@ class HospitalListBlock implements BaseBloc {
   getExistingHospitalListNew(String hospitalId) async {
     hospitalListNewSink.add(ApiResponse.loading(variable.strGetHospitalList));
     try {
-      HospitalsSearchListResponse hospitalListResponse =
-          await _hospitalListRepository.getExistingHospitalFromSearchNew(hospitalId);
+      final hospitalListResponse = await _hospitalListRepository
+          .getExistingHospitalFromSearchNew(hospitalId);
       hospitalListNewSink.add(ApiResponse.completed(hospitalListResponse));
     } catch (e) {
       hospitalListNewSink.add(ApiResponse.error(e.toString()));

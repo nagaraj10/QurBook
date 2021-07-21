@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:agora_rtc_engine/agora_rtc_engine.dart';
+import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
@@ -16,11 +17,11 @@ import 'package:myfhb/video_call/pages/localpreview.dart';
 import 'package:myfhb/video_call/pages/prescription_module.dart';
 import 'package:myfhb/video_call/utils/callstatus.dart';
 import 'package:myfhb/video_call/utils/hideprovider.dart';
+import 'package:myfhb/video_call/utils/rtc_engine.dart';
+import 'package:myfhb/video_call/utils/settings.dart';
 import 'package:provider/provider.dart';
 
-class CallMain extends StatelessWidget {
-  BuildContext globalContext;
-
+class CallMain extends StatefulWidget {
   /// non-modifiable channel name of the page
   String channelName;
 
@@ -38,9 +39,7 @@ class CallMain extends StatelessWidget {
 
   ///check call is made from NS
   bool isAppExists;
-  bool _isFirstTime = true;
-  bool _isMute = false;
-  bool _isVideoHide = false;
+
   CallMain(
       {this.channelName,
       this.role,
@@ -52,6 +51,42 @@ class CallMain extends StatelessWidget {
       this.patientId,
       this.patientName,
       this.patientPicUrl});
+
+  @override
+  _CallMainState createState() => _CallMainState();
+}
+
+class _CallMainState extends State<CallMain> {
+  BuildContext globalContext;
+
+  RtcEngine rtcEngine;
+
+  bool _isFirstTime = true;
+
+  bool _isMute = false;
+
+  bool _isVideoHide = false;
+
+  @override
+  void initState() {
+    Provider.of<RTCEngineProvider>(context, listen: false)?.isVideoPaused =
+        false;
+    createRtcEngine();
+    super.initState();
+  }
+
+  createRtcEngine() async {
+    rtcEngine = await RtcEngine.create(APP_ID);
+  }
+
+  @override
+  void dispose() {
+    rtcEngine.leaveChannel();
+    rtcEngine.destroy();
+    Provider.of<RTCEngineProvider>(context, listen: false)?.isVideoPaused =
+        false;
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,60 +107,69 @@ class CallMain extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Colors.black,
         body: Center(
-          child: Stack(
-            children: <Widget>[
-              CallPage(
-                role: role,
-                channelName: channelName,
-                arguments: arguments,
-                isAppExists: isAppExists,
-              ),
-              /* InkWell(
-                onTap: () {
-                  if (hideStatus.isControlStatus) {
-                    hideStatus.hideMe();
-                  } else {
-                    hideStatus.showMe();
-                    Future.delayed(Duration(seconds: 10), () {
-                      hideStatus.hideMe();
-                    });
-                  }
-                },
-                child: Container(),
-              ), */
-              LocalPreview(),
-              CustomAppBar(Platform.isIOS ? arguments.userName : doctorName),
-              Consumer<HideProvider>(
-                builder: (context, status, child) {
-                  return Visibility(
-                    visible: status.isControlStatus,
-                    child: Align(
-                        alignment: Alignment.bottomLeft,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            MyControllers(callStatus, role, isAppExists,
-                                Platform.isIOS ? arguments.doctorId : doctorId,
-                                (isMute, isVideoHide) {
-                              _isMute = isMute;
-                              _isVideoHide = isVideoHide;
-                            }, _isMute, _isVideoHide, doctorName, doctorPic,
-                                patientId, patientName, patientPicUrl),
-                            SizedBox(
-                              height: 20.0.h,
-                            ),
-                          ],
-                        )),
-                  );
-                },
-              ),
-              SizedBoxWidget(
-                height: 20.0.h,
-              ),
-              PrescriptionModule(),
-            ],
-          ),
+          child: FutureBuilder(
+              future: Future.delayed(Duration(seconds: 1)),
+              builder: (context, snapshot) => snapshot.connectionState ==
+                      ConnectionState.done
+                  ? Stack(
+                      children: <Widget>[
+                        CallPage(
+                          rtcEngine: rtcEngine,
+                          role: widget.role,
+                          channelName: widget.channelName,
+                          arguments: widget.arguments,
+                          isAppExists: widget.isAppExists,
+                        ),
+                        LocalPreview(
+                          rtcEngine: rtcEngine,
+                        ),
+                        CustomAppBar(Platform.isIOS
+                            ? widget.arguments.userName
+                            : widget.doctorName),
+                        Consumer<HideProvider>(
+                          builder: (context, status, child) => Visibility(
+                            visible: status.isControlStatus,
+                            child: Align(
+                                alignment: Alignment.bottomLeft,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    MyControllers(
+                                        rtcEngine,
+                                        callStatus,
+                                        widget.role,
+                                        widget.isAppExists,
+                                        Platform.isIOS
+                                            ? widget.arguments.doctorId
+                                            : widget.doctorId,
+                                        (isMute, isVideoHide) {
+                                      _isMute = isMute;
+                                      _isVideoHide = isVideoHide;
+                                    },
+                                        _isMute,
+                                        _isVideoHide,
+                                        widget.doctorName,
+                                        widget.doctorPic,
+                                        widget.patientId,
+                                        widget.patientName,
+                                        widget.patientPicUrl),
+                                    SizedBox(
+                                      height: 20.0.h,
+                                    ),
+                                  ],
+                                )),
+                          ),
+                        ),
+                        SizedBoxWidget(
+                          height: 20.0.h,
+                        ),
+                        PrescriptionModule(),
+                      ],
+                    )
+                  : CircularProgressIndicator(
+                      backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                    )),
         ),
       ),
     );
@@ -172,7 +216,7 @@ class CallMain extends StatelessWidget {
                           if (Platform.isIOS) {
                             Navigator.of(context);
                           } else {
-                            if (isAppExists) {
+                            if (widget.isAppExists) {
                               Navigator.of(context).pop(true);
                               Navigator.pop(context);
                             } else {

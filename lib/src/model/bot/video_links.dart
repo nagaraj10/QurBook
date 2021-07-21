@@ -12,10 +12,10 @@ class VideoLinks {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['title'] = this.title;
-    data['thumbnail'] = this.thumbnail;
-    data['url'] = this.url;
+    final data = <String, dynamic>{};
+    data['title'] = title;
+    data['thumbnail'] = thumbnail;
+    data['url'] = url;
     return data;
   }
 }

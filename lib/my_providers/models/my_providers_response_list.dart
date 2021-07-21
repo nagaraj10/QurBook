@@ -1,8 +1,8 @@
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/my_providers/models/DoctorModel.dart';
-import 'package:myfhb/my_providers/models/HospitalModel.dart';
-import 'package:myfhb/my_providers/models/LaborartoryModel.dart';
-import 'package:myfhb/my_providers/models/ProfilePic.dart';
+import '../../constants/fhb_parameters.dart' as parameters;
+import 'DoctorModel.dart';
+import 'HospitalModel.dart';
+import 'LaborartoryModel.dart';
+import 'ProfilePic.dart';
 
 class MyProvidersResponseList {
   int status;
@@ -18,17 +18,17 @@ class MyProvidersResponseList {
     success = json[parameters.strSuccess];
     message = json[parameters.strMessage];
     response = json[parameters.strResponse] != null
-        ? new Response.fromJson(json[parameters.strResponse])
+        ? Response.fromJson(json[parameters.strResponse])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[parameters.strStatus] = this.status;
-    data[parameters.strSuccess] = this.success;
-    data[parameters.strMessage] = this.message;
-    if (this.response != null) {
-      data[parameters.strResponse] = this.response.toJson();
+    final data = Map<String, dynamic>();
+    data[parameters.strStatus] = status;
+    data[parameters.strSuccess] = success;
+    data[parameters.strMessage] = message;
+    if (response != null) {
+      data[parameters.strResponse] = response.toJson();
     }
     return data;
   }
@@ -41,12 +41,12 @@ class Response {
 
   Response.fromJson(Map<String, dynamic> json) {
     data = json[parameters.strData] != null
-        ? new MyProvidersData.fromJson(json[parameters.strData])
+        ? MyProvidersData.fromJson(json[parameters.strData])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final data = Map<String, dynamic>();
     if (this.data != null) {
       data[parameters.strData] = this.data.toJson();
     }
@@ -63,28 +63,28 @@ class MyProvidersData {
       {this.doctorsModel, this.laboratoryModel, this.hospitalsModel});
 
   MyProvidersData.fromJson(Map<String, dynamic> json) {
-    Map<String, dynamic> medicalJson = json[parameters.strmedicalPreferences];
+    final Map<String, dynamic> medicalJson = json[parameters.strmedicalPreferences];
 
     if (medicalJson != null) {
-      Map<String, dynamic> preferencesJson = medicalJson[parameters.strpreferences];
+      final Map<String, dynamic> preferencesJson = medicalJson[parameters.strpreferences];
 
       if (preferencesJson != null) {
         if (preferencesJson[parameters.strdoctorIds] != null) {
-          doctorsModel = new List<DoctorsModel>();
+          doctorsModel = List<DoctorsModel>();
           preferencesJson[parameters.strdoctorIds].forEach((v) {
-            doctorsModel.add(new DoctorsModel.fromJson(v));
+            doctorsModel.add(DoctorsModel.fromJson(v));
           });
         }
         if (preferencesJson[parameters.strlaboratoryIds] != null) {
-          laboratoryModel = new List<LaboratoryModel>();
+          laboratoryModel = <LaboratoryModel>[];
           preferencesJson[parameters.strlaboratoryIds].forEach((v) {
-            laboratoryModel.add(new LaboratoryModel.fromJson(v));
+            laboratoryModel.add(LaboratoryModel.fromJson(v));
           });
         }
         if (preferencesJson[parameters.strhospitalIds] != null) {
-          hospitalsModel = new List<HospitalsModel>();
+          hospitalsModel = <HospitalsModel>[];
           preferencesJson[parameters.strhospitalIds].forEach((v) {
-            hospitalsModel.add(new HospitalsModel.fromJson(v));
+            hospitalsModel.add(HospitalsModel.fromJson(v));
           });
         }
       }
@@ -92,16 +92,16 @@ class MyProvidersData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.doctorsModel != null) {
-      data[parameters.strdoctorIds] = this.doctorsModel.map((v) => v.toJson()).toList();
+    final data = Map<String, dynamic>();
+    if (doctorsModel != null) {
+      data[parameters.strdoctorIds] = doctorsModel.map((v) => v.toJson()).toList();
     }
-    if (this.laboratoryModel != null) {
+    if (laboratoryModel != null) {
       data[parameters.strlaboratoryIds] =
-          this.laboratoryModel.map((v) => v.toJson()).toList();
+          laboratoryModel.map((v) => v.toJson()).toList();
     }
-    if (this.hospitalsModel != null) {
-      data[parameters.strhospitalIds] = this.hospitalsModel.map((v) => v.toJson()).toList();
+    if (hospitalsModel != null) {
+      data[parameters.strhospitalIds] = hospitalsModel.map((v) => v.toJson()).toList();
     }
     return data;
   }

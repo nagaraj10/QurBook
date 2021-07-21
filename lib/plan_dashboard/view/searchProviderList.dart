@@ -2,19 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
-import 'package:myfhb/plan_dashboard/view/categoryList.dart';
-import 'package:myfhb/plan_dashboard/viewModel/planViewModel.dart';
-import 'package:myfhb/plan_dashboard/viewModel/subscribeViewModel.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
+import '../../common/CommonUtil.dart';
+import '../../common/PreferenceUtil.dart';
+import '../../constants/fhb_constants.dart';
+import '../../constants/fhb_constants.dart' as Constants;
+import '../../constants/variable_constant.dart' as variable;
+import '../model/PlanListModel.dart';
+import 'categoryList.dart';
+import '../viewModel/planViewModel.dart';
+import '../viewModel/subscribeViewModel.dart';
+import '../../regiment/view_model/regiment_view_model.dart';
+import '../../src/utils/colors_utils.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
+import '../../telehealth/features/SearchWidget/view/SearchWidget.dart';
+import '../../widgets/GradientAppBar.dart';
+import 'package:provider/provider.dart';
 import 'package:showcaseview/showcaseview.dart';
 
 class SearchProviderList extends StatefulWidget {
@@ -25,16 +27,16 @@ class SearchProviderList extends StatefulWidget {
 
   final List<PlanListResult> planListResult;
 
-  SearchProviderList(this.diseases, this.planListResult);
+  const SearchProviderList(this.diseases, this.planListResult);
 }
 
 class _SearchProviderList extends State<SearchProviderList> {
   PlanListModel myPlanListModel;
-  PlanViewModel myPlanViewModel = new PlanViewModel();
+  PlanViewModel myPlanViewModel = PlanViewModel();
   bool isSearch = false;
-  List<PlanListResult> myPLanListResult = List();
-  SubscribeViewModel subscribeViewModel = new SubscribeViewModel();
-  FlutterToast toast = new FlutterToast();
+  List<PlanListResult> myPLanListResult = [];
+  SubscribeViewModel subscribeViewModel = SubscribeViewModel();
+  FlutterToast toast = FlutterToast();
 
   String diseases = '';
   String hosIcon = '';
@@ -63,7 +65,7 @@ class _SearchProviderList extends State<SearchProviderList> {
     planListResult = widget.planListResult;
     PreferenceUtil.init();
 
-    var isFirst = PreferenceUtil.isKeyValid(Constants.KEY_SHOWCASE_Plan);
+    final isFirst = PreferenceUtil.isKeyValid(Constants.KEY_SHOWCASE_Plan);
     try {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Future.delayed(
@@ -91,16 +93,16 @@ class _SearchProviderList extends State<SearchProviderList> {
           appBar: AppBar(
             flexibleSpace: GradientAppBar(),
             leading: GestureDetector(
-              onTap: () => Get.back(),
+              onTap: Get.back,
               child: Icon(
                 Icons.arrow_back_ios, // add custom icons also
-                size: 24.0,
+                size: 24,
               ),
             ),
             title: Text(
               searchHospitals,
               style: TextStyle(
-                fontSize: 18.0,
+                fontSize: 18,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -136,7 +138,7 @@ class _SearchProviderList extends State<SearchProviderList> {
     myPLanListResult.clear();
     if (title != null) {
       myPLanListResult =
-          await myPlanViewModel.getFilterForProvider(title, planListOld);
+          myPlanViewModel.getFilterForProvider(title, planListOld);
     }
     setState(() {});
   }
@@ -159,11 +161,11 @@ class _SearchProviderList extends State<SearchProviderList> {
       });
     }*/
 
-    if (planList != null && planList.length > 0) {
+    if (planList != null && planList.isNotEmpty) {
       planList.where((element1) {
         return (element1?.metadata?.diseases ?? '') == diseases;
       }).forEach((element) {
-        bool keysUniq = true;
+        var keysUniq = true;
         planListUniq.forEach((catElement) {
           if (catElement?.plinkid == element.plinkid) {
             keysUniq = false;
@@ -175,13 +177,13 @@ class _SearchProviderList extends State<SearchProviderList> {
       });
     }
 
-    return (planListUniq != null && planListUniq.length > 0)
+    return (planListUniq != null && planListUniq.isNotEmpty)
         ? ListView.builder(
             shrinkWrap: true,
             padding: EdgeInsets.only(
               bottom: 8.0.h,
             ),
-            itemBuilder: (BuildContext ctx, int i) => planListItem(
+            itemBuilder: (ctx, i) => planListItem(
                 ctx, i, isSearch ? myPLanListResult : planListUniq),
             itemCount: isSearch ? myPLanListResult.length : planListUniq.length,
           )
@@ -254,7 +256,7 @@ class _SearchProviderList extends State<SearchProviderList> {
         });
       },
       child: Container(
-          padding: EdgeInsets.all(8.0),
+          padding: EdgeInsets.all(8),
           margin: EdgeInsets.only(left: 12, right: 12, top: 8),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -263,16 +265,15 @@ class _SearchProviderList extends State<SearchProviderList> {
               BoxShadow(
                 color: const Color(0xFFe3e2e2),
                 blurRadius: 16, // has the effect of softening the shadow
-                spreadRadius: 5.0, // has the effect of extending the shadow
+                spreadRadius: 5, // has the effect of extending the shadow
                 offset: Offset(
-                  0.0, // horizontal, move right 10
-                  0.0, // vertical, move down 10
+                  0, // horizontal, move right 10
+                  0, // vertical, move down 10
                 ),
               )
             ],
           ),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Row(
                 children: [
@@ -319,19 +320,20 @@ class _SearchProviderList extends State<SearchProviderList> {
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
                         ),
-                        planList[i].providerName != null &&
-                                planList[i].providerName != '' &&
-                                planList[i].providerName == strQurhealth
-                            ? Text(
-                                strCovidFree,
-                                style: TextStyle(
-                                  fontSize: 15.0.sp,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.red,
-                                ),
-                                textAlign: TextAlign.start,
-                              )
-                            : SizedBox.shrink()
+                        if (planList[i].providerName != null &&
+                            planList[i].providerName != '' &&
+                            planList[i].providerName == strQurhealth)
+                          Text(
+                            strCovidFree,
+                            style: TextStyle(
+                              fontSize: 15.0.sp,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.red,
+                            ),
+                            textAlign: TextAlign.start,
+                          )
+                        else
+                          SizedBox.shrink()
                       ],
                     ),
                   ),

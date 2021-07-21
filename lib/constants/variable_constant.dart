@@ -473,10 +473,10 @@ const String strEnterMobileNum = 'Enter MobileNumber';
 const String strEnterFirstname = 'Enter First Name';
 const String strEnterLastName = 'Enter LastName';
 
-const voice_platform = const MethodChannel('flutter.native/voiceIntent');
-const version_platform = const MethodChannel('flutter.native/versioncode');
-const tts_platform = const MethodChannel('flutter.native/textToSpeech');
-const security = const MethodChannel('flutter.native/security');
+const voice_platform = MethodChannel('flutter.native/voiceIntent');
+const version_platform = MethodChannel('flutter.native/versioncode');
+const tts_platform = MethodChannel('flutter.native/textToSpeech');
+const security = MethodChannel('flutter.native/security');
 const String strWaitLoading = 'wait! Its loading';
 
 const String _wordsFromMaya = 'waiting for maya to speak';
@@ -515,7 +515,7 @@ const String strBefore = 'Before';
 const String strNo = 'No';
 
 const String strdflit = 'assets/device_detection.tflite';
-const String file_device = "assets/devicelabels.txt";
+const String file_device = 'assets/devicelabels.txt';
 const String strOthers = 'Others';
 const String strDeviceFound = 'We find the device is';
 const String strChoose = 'Choose';
@@ -540,10 +540,10 @@ const String strAllowDevice = 'Allow device recognition';
 const String strScanAuto = 'scans and auto-detects devices';
 
 //for healthKit and googleFit activation and sync
-const String strGoogleFit = "Google Fit";
-const String strAllowGoogle = "Allow app to recieve data from google Fit";
-const String strHealthKit = "Apple Health";
-const String strAllowHealth = "Allow app to recieve data from Apple Health";
+const String strGoogleFit = 'Google Fit';
+const String strAllowGoogle = 'Allow app to recieve data from google Fit';
+const String strHealthKit = 'Apple Health';
+const String strAllowHealth = 'Allow app to recieve data from Apple Health';
 const String strAddDevice = 'Tap to add device widgets to your home screen';
 
 //for homescreen and dashboard
@@ -607,9 +607,9 @@ const String strRs = 'Rs';
 
 //webcognito
 const source = 'myFHB';
-const sourceCode = "e13019a4-1446-441b-8af1-72c40c725548";
-const entityCode = "28858877-4710-4dd3-899f-0efe0e9255db";
-const roleCode = "285bbe41-3030-4b0e-b914-00e404a77032";
+const sourceCode = 'e13019a4-1446-441b-8af1-72c40c725548';
+const entityCode = '28858877-4710-4dd3-899f-0efe0e9255db';
+const roleCode = '285bbe41-3030-4b0e-b914-00e404a77032';
 const redirecturl = 'http://localhost:4200/callback?code=';
 const String strNoDoctordata = 'No Doctor List Available';
 const String strNoHospitaldata = 'No Hospital List Available';
@@ -652,12 +652,12 @@ var reminderMethodChannelAndroid = const MethodChannel('android/notification');
 
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {
-  final parts = token.split('.');
+  var parts = token.split('.');
   if (parts.length != 3) {
     throw Exception('invalid token');
   }
-  final payload = _decodeBase64(parts[1]);
-  final payloadMap = json.decode(payload);
+  var payload = _decodeBase64(parts[1]);
+  var payloadMap = json.decode(payload);
   if (payloadMap is! Map<String, dynamic>) {
     throw Exception('invalid payload');
   }
@@ -665,8 +665,8 @@ Map<String, dynamic> parseJwtPayLoad(String token) {
 }
 
 Map<String, dynamic> parseSignUpJwtPayLoad(String token) {
-  final payload = _decodeBase64(token);
-  final payloadMap = json.decode(payload);
+  var payload = _decodeBase64(token);
+  var payloadMap = json.decode(payload);
   if (payloadMap is! Map<String, dynamic>) {
     throw Exception('invalid payload');
   }
@@ -674,12 +674,12 @@ Map<String, dynamic> parseSignUpJwtPayLoad(String token) {
 }
 
 Map<String, dynamic> parseJwtHeader(String token) {
-  final parts = token.split('.');
+  var parts = token.split('.');
   if (parts.length != 3) {
     throw Exception('invalid token');
   }
-  final payload = _decodeBase64(parts[0]);
-  final payloadMap = json.decode(payload);
+  var payload = _decodeBase64(parts[0]);
+  var payloadMap = json.decode(payload);
   if (payloadMap is! Map<String, dynamic>) {
     throw Exception('invalid payload');
   }
@@ -687,7 +687,7 @@ Map<String, dynamic> parseJwtHeader(String token) {
 }
 
 String _decodeBase64(String str) {
-  String output = str.replaceAll('-', '+').replaceAll('_', '/');
+  var output = str.replaceAll('-', '+').replaceAll('_', '/');
   switch (output.length % 4) {
     case 0:
       break;

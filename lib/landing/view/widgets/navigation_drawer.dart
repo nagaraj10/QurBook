@@ -3,22 +3,20 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/Orders/View/OrdersView.dart';
-import 'package:myfhb/colors/fhb_colors.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/FHBBasicWidget.dart';
-import 'package:myfhb/more_menu/screens/more_menu_screen.dart';
-import 'package:myfhb/src/model/user/MyProfileModel.dart';
-import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/landing/view/widgets/drawer_tile.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/authentication/constants/constants.dart';
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:myfhb/widgets/checkout_page.dart';
+import '../../../colors/fhb_colors.dart';
+import '../../../common/CommonUtil.dart';
+import '../../../common/FHBBasicWidget.dart';
+import '../../../more_menu/screens/more_menu_screen.dart';
+import '../../../src/model/user/MyProfileModel.dart';
+import '../../../src/model/user/user_accounts_arguments.dart';
+import '../../../src/utils/screenutils/size_extensions.dart';
+import 'drawer_tile.dart';
+import '../../../constants/variable_constant.dart' as variable;
+import '../../../authentication/constants/constants.dart';
+import '../../../constants/router_variable.dart' as router;
 
 class NavigationDrawer extends StatelessWidget {
-  NavigationDrawer({
+  const NavigationDrawer({
     @required this.myProfile,
     @required this.moveToLoginPage,
     @required this.refresh,
@@ -50,7 +48,6 @@ class NavigationDrawer extends StatelessWidget {
                           bottom: 20.0.h,
                         ),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             AssetImageWidget(
                               icon: myFHB_logo,
@@ -210,8 +207,8 @@ class NavigationDrawer extends StatelessWidget {
                           color: Colors.black54,
                         ),
                         onPressed: () {
-                          new FHBBasicWidget().exitApp(context, () {
-                            new CommonUtil().logout(moveToLoginPage);
+                          FHBBasicWidget().exitApp(context, () {
+                            CommonUtil().logout(moveToLoginPage);
                           });
                         },
                       ),
@@ -225,14 +222,14 @@ class NavigationDrawer extends StatelessWidget {
       );
 
   Widget getNameWidget() {
-    final name = toBeginningOfSentenceCase((myProfile?.result?.name != null &&
+    var name = toBeginningOfSentenceCase((myProfile?.result?.name != null &&
             myProfile?.result?.name != '')
         ? myProfile?.result?.name?.capitalizeFirstofEach
         : myProfile?.result?.firstName != null &&
                 myProfile?.result?.lastName != null
             ? ('${myProfile?.result?.firstName?.capitalizeFirstofEach ?? ''} ${myProfile?.result?.lastName?.capitalizeFirstofEach}')
             : '');
-    var phoneNumber =
+    final phoneNumber =
         (myProfile?.result?.userContactCollection3?.length ?? 0) > 0
             ? myProfile?.result?.userContactCollection3[0].phoneNumber
             : '';

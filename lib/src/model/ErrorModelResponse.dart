@@ -6,7 +6,7 @@ class ErrorModelResponse {
   ErrorModelResponse({this.status, this.success, this.message});
 
   ErrorModelResponse.fromJson(Map<String, dynamic> json) {
-    if (json.containsKey("isSuccess")) {
+    if (json.containsKey('isSuccess')) {
       success = json['isSuccess'];
     } else {
       success = json['success'];
@@ -16,14 +16,14 @@ class ErrorModelResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (data.containsKey("isSuccess")) {
-      data['isSuccess'] = this.success;
+    final data = <String, dynamic>{};
+    if (data.containsKey('isSuccess')) {
+      data['isSuccess'] = success;
     } else {
-      data['success'] = this.success;
+      data['success'] = success;
     }
-    data['status'] = this.status;
-    data['message'] = this.message;
+    data['status'] = status;
+    data['message'] = message;
 
     return data;
   }

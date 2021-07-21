@@ -20,7 +20,6 @@ class ImageSlider extends StatefulWidget {
 }
 
 class _ImageSliderState extends State<ImageSlider> {
-  CarouselSlider carouselSlider;
   int _current = 0;
   int index = 0;
   int length = 0;
@@ -47,15 +46,6 @@ class _ImageSliderState extends State<ImageSlider> {
     );
   }
 
-  goToPrevious() {
-    carouselSlider.previousPage(
-        duration: Duration(milliseconds: 300), curve: Curves.ease);
-  }
-
-  goToNext() {
-    carouselSlider.nextPage(
-        duration: Duration(milliseconds: 300), curve: Curves.decelerate);
-  }
 
   showPhotoView(List<HealthRecordCollection> imageList) {
     return Container(

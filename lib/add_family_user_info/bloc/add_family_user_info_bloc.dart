@@ -1,30 +1,30 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:myfhb/add_family_user_info/models/update_add_family_info.dart';
-import 'package:myfhb/add_family_user_info/models/update_relatiosnship_model.dart';
-import 'package:myfhb/add_family_user_info/models/update_self_profile_model.dart';
-import 'package:myfhb/add_family_user_info/models/updated_add_family_relation_info.dart';
-import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/my_family/models/relationship_response_list.dart';
-import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
-import 'package:myfhb/src/model/CreateDeviceSelectionModel.dart';
-import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
-import 'package:myfhb/src/model/UpdatedDeviceModel.dart';
-import 'package:myfhb/src/model/user/City.dart';
-import 'package:myfhb/src/model/user/MyProfileModel.dart';
-import 'package:myfhb/src/model/user/State.dart';
-import 'package:myfhb/src/model/user/city_list_model.dart';
-import 'package:myfhb/src/model/user/state_list_model.dart';
-import 'package:myfhb/src/resources/network/ApiResponse.dart';
-import 'package:myfhb/add_family_user_info/models/verify_email_response.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import '../models/update_add_family_info.dart';
+import '../models/update_relatiosnship_model.dart';
+import '../models/update_self_profile_model.dart';
+import '../models/updated_add_family_relation_info.dart';
+import '../services/add_family_user_info_repository.dart';
+import '../../common/CommonUtil.dart';
+import '../../common/PreferenceUtil.dart';
+import '../../constants/fhb_constants.dart';
+import '../../my_family/models/relationship_response_list.dart';
+import '../../src/blocs/Authentication/LoginBloc.dart';
+import '../../src/model/CreateDeviceSelectionModel.dart';
+import '../../src/model/GetDeviceSelectionModel.dart';
+import '../../src/model/UpdatedDeviceModel.dart';
+import '../../src/model/user/City.dart';
+import '../../src/model/user/MyProfileModel.dart';
+import '../../src/model/user/State.dart';
+import '../../src/model/user/city_list_model.dart';
+import '../../src/model/user/state_list_model.dart';
+import '../../src/resources/network/ApiResponse.dart';
+import '../models/verify_email_response.dart';
+import '../../constants/variable_constant.dart' as variable;
+import '../../src/resources/repository/health/HealthReportListForUserRepository.dart';
+import '../../constants/fhb_constants.dart';
+import '../../constants/fhb_constants.dart' as Constants;
 
 class AddFamilyUserInfoBloc extends BaseBloc {
   AddFamilyUserInfoRepository addFamilyUserInfoRepository;
@@ -242,13 +242,13 @@ class AddFamilyUserInfoBloc extends BaseBloc {
               ? 'en-IN'
               : preferredLanguage;
 
-      String currentLanguage = '';
-      if (preferredLanguage != "undef") {
-        currentLanguage = preferredLanguage.split("-").first;
+      var currentLanguage = '';
+      if (preferredLanguage != 'undef') {
+        currentLanguage = preferredLanguage.split('-').first;
       } else {
         currentLanguage = 'en';
       }
-      PreferenceUtil.saveString(
+      await PreferenceUtil.saveString(
           SHEELA_LANG, CommonUtil.langaugeCodes[currentLanguage] ?? 'en-IN');
       preferred_language = currentLanguage;
 
@@ -314,7 +314,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
   }
 
   Future<void> getDeviceSelectionValues() async {
-    HealthReportListForUserRepository healthReportListForUserRepository =
+    final healthReportListForUserRepository =
         HealthReportListForUserRepository();
     GetDeviceSelectionModel selectionResult;
     await healthReportListForUserRepository
@@ -471,7 +471,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
 
   Future<UpdateDeviceModel> updateDeviceSelectionModel(
       {String preferredLanguage}) async {
-    HealthReportListForUserRepository healthReportListForUserRepository =
+    var healthReportListForUserRepository =
         HealthReportListForUserRepository();
     await healthReportListForUserRepository
         .updateDeviceModel(

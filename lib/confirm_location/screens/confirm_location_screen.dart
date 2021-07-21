@@ -1,18 +1,18 @@
 import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
-import 'package:myfhb/common/CommonUtil.dart';
+import '../../common/CommonUtil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:myfhb/add_providers/models/add_providers_arguments.dart';
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/confirm_location/models/confirm_location_arguments.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/router_variable.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import '../../add_providers/models/add_providers_arguments.dart';
+import '../../common/CommonConstants.dart';
+import '../models/confirm_location_arguments.dart';
+import '../../constants/fhb_constants.dart';
+import '../../constants/router_variable.dart';
+import '../../src/utils/colors_utils.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
 
 class ConfirmLocationScreen extends StatefulWidget {
   ConfirmLocationArguments arguments;
@@ -30,7 +30,7 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
   FocusNode searchFocus = FocusNode();
 
   GoogleMapController googleMapControll;
-  List<Marker> _markers = [];
+  final List<Marker> _markers = [];
   static const double _lat = 12.861693;
   static const double _lang = 80.227242;
   static const double _zoom = 14.4746;
@@ -78,7 +78,6 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
     return Scaffold(
         body: Stack(children: <Widget>[
       GoogleMap(
-        scrollGesturesEnabled: true,
         mapType: MapType.normal,
         initialCameraPosition: kGooglePlex,
         onCameraMove: _onCameraMove,
@@ -96,7 +95,6 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
                   width: 1.0.w,
                 )),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 SizedBox(width: 10.0.w),
                 InkWell(
@@ -142,24 +140,23 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
   Widget _ShowSearchTextField() {
     return Container(
       width: 1.sw - 70,
-      padding: const EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 0.0),
-      child: new TextField(
+      padding: const EdgeInsets.fromLTRB(5, 5, 5, 0),
+      child: TextField(
         cursorColor: Color(CommonUtil().getMyPrimaryColor()),
         controller: searchController,
-        maxLines: 1,
         keyboardType: TextInputType.text,
         focusNode: searchFocus,
         textInputAction: TextInputAction.done,
         onSubmitted: (term) {
           searchFocus.unfocus();
         },
-        style: new TextStyle(
+        style: TextStyle(
             fontWeight: FontWeight.w400,
             fontSize: 15.0.sp,
             color: ColorUtils.blackcolor),
         decoration: InputDecoration(
             suffixIcon: IconButton(
-              onPressed: () => searchController.clear(),
+              onPressed: searchController.clear,
               icon: Icon(Icons.clear, color: ColorUtils.lightgraycolor),
             ),
             hintText: CommonConstants.searchPlaces,
@@ -172,20 +169,20 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
               color: ColorUtils.greycolor1,
               fontWeight: FontWeight.w400,
             ),
-            border: new UnderlineInputBorder(borderSide: BorderSide.none)),
+            border: UnderlineInputBorder(borderSide: BorderSide.none)),
       ),
     );
   }
 
   Widget _showConfirmLocationButton() {
-    final GestureDetector addButtonWithGesture = new GestureDetector(
+    final addButtonWithGesture = GestureDetector(
       onTap: confirmBtnTapped,
-      child: new Container(
+      child: Container(
         width: 200.0.w,
         height: 40.0.h,
-        decoration: new BoxDecoration(
+        decoration: BoxDecoration(
           color: Color(CommonUtil().getMyPrimaryColor()),
-          borderRadius: new BorderRadius.all(Radius.circular(25.0)),
+          borderRadius: BorderRadius.all(Radius.circular(25)),
           boxShadow: <BoxShadow>[
             BoxShadow(
               color: Color.fromARGB(15, 0, 0, 0),
@@ -194,10 +191,10 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
             ),
           ],
         ),
-        child: new Center(
-          child: new Text(
+        child: Center(
+          child: Text(
             CommonConstants.confirm_location,
-            style: new TextStyle(
+            style: TextStyle(
               color: Colors.white,
               fontSize: 16.0.sp,
               fontWeight: FontWeight.w500,
@@ -207,14 +204,14 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
       ),
     );
 
-    return new Padding(
-        padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 30.0),
+    return Padding(
+        padding: EdgeInsets.only(left: 20, right: 20, top: 30),
         child: addButtonWithGesture);
   }
 
   void confirmBtnTapped() {
-    Navigator.popUntil(context, (Route<dynamic> route) {
-      bool shouldPop = false;
+    Navigator.popUntil(context, (route) {
+      var shouldPop = false;
       if (route.settings.name == rt_AddProvider) {
         (route.settings.arguments as AddProvidersArguments).placeDetail =
             widget.arguments.placeDetail;
@@ -229,9 +226,8 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
   }
 
   Future addMarker() async {
-    final Uint8List markerIcon =
-        await getBytesFromAsset(ImageUrlUtils.markerImg, 50);
-    BitmapDescriptor descriptor = BitmapDescriptor.fromBytes(markerIcon);
+    final markerIcon = await getBytesFromAsset(ImageUrlUtils.markerImg, 50);
+    final descriptor = BitmapDescriptor.fromBytes(markerIcon);
 
     _markers.clear();
 
@@ -245,7 +241,7 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
             snippet: widget.arguments.placeDetail.formattedAddress,
           ),
           icon: descriptor,
-          onDragEnd: ((value) {
+          onDragEnd: (value) {
             if (googleMapControll != null) {
               getAddressesFromCoordinates(value.latitude, value.longitude);
 
@@ -253,25 +249,25 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
 
               googleMapControll.animateCamera(CameraUpdate.newCameraPosition(
                   CameraPosition(
-                      target: center, zoom: 12.0, bearing: 45.0, tilt: 45.0)));
+                      target: center, zoom: 12, bearing: 45, tilt: 45)));
             }
-          })));
+          }));
     });
   }
 
   Future<Uint8List> getBytesFromAsset(String path, int width) async {
-    ByteData data = await rootBundle.load(path);
-    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
+    var data = await rootBundle.load(path);
+    var codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
         targetWidth: width);
-    ui.FrameInfo fi = await codec.getNextFrame();
+    var fi = await codec.getNextFrame();
     return (await fi.image.toByteData(format: ui.ImageByteFormat.png))
         .buffer
         .asUint8List();
   }
 
   getAddressesFromCoordinates(double lat, double long) async {
-    final coordinates = new Coordinates(lat, long);
-    var addresses =
+    var coordinates = Coordinates(lat, long);
+    final addresses =
         await Geocoder.local.findAddressesFromCoordinates(coordinates);
     address = addresses.first;
     searchController.text = address.addressLine;

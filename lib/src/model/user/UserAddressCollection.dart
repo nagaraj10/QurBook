@@ -1,5 +1,5 @@
-import 'package:myfhb/src/model/user/City.dart';
-import 'package:myfhb/src/model/user/State.dart';
+import 'City.dart';
+import 'State.dart';
 
 import 'AddressTypeModel.dart';
 
@@ -44,31 +44,31 @@ class UserAddressCollection3 {
     lastModifiedOn = json['lastModifiedOn'];
     createdBy = json['createdBy'];
     addressType = json['addressType'] != null
-        ? new AddressType.fromJson(json['addressType'])
+        ? AddressType.fromJson(json['addressType'])
         : null;
-    city = json['city'] != null ? new City.fromJson(json['city']) : null;
-    state = json['state'] != null ? new State.fromJson(json['state']) : null;
+    city = json['city'] != null ? City.fromJson(json['city']) : null;
+    state = json['state'] != null ? State.fromJson(json['state']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['addressLine1'] = this.addressLine1;
-    data['addressLine2'] = this.addressLine2;
-    data['pincode'] = this.pincode;
-    data['isPrimary'] = this.isPrimary;
-    data['isActive'] = this.isActive;
-    data['createdOn'] = this.createdOn;
-    data['createdBy'] = this.createdBy;
-    data['lastModifiedOn'] = this.lastModifiedOn;
-    if (this.addressType != null) {
-      data['addressType'] = this.addressType.toJson();
+    final data = Map<String, dynamic>();
+    data['id'] = id;
+    data['addressLine1'] = addressLine1;
+    data['addressLine2'] = addressLine2;
+    data['pincode'] = pincode;
+    data['isPrimary'] = isPrimary;
+    data['isActive'] = isActive;
+    data['createdOn'] = createdOn;
+    data['createdBy'] = createdBy;
+    data['lastModifiedOn'] = lastModifiedOn;
+    if (addressType != null) {
+      data['addressType'] = addressType.toJson();
     }
-    if (this.city != null) {
-      data['city'] = this.city.toJson();
+    if (city != null) {
+      data['city'] = city.toJson();
     }
-    if (this.state != null) {
-      data['state'] = this.state.toJson();
+    if (state != null) {
+      data['state'] = state.toJson();
     }
     return data;
   }

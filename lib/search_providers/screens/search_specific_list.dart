@@ -4,27 +4,27 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_country_picker/flutter_country_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/add_providers/models/add_providers_arguments.dart';
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/FHBBasicWidget.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/search_providers/bloc/labs_list_block.dart';
-import 'package:myfhb/search_providers/models/doctor_list_response_new.dart';
-import 'package:myfhb/search_providers/models/hospital_list_response_new.dart';
-import 'package:myfhb/search_providers/models/labs_list_response_new.dart';
-import 'package:myfhb/search_providers/models/search_arguments.dart';
-import 'package:myfhb/search_providers/services/doctors_list_repository.dart';
-import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
-import 'package:myfhb/src/resources/network/ApiResponse.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import '../../add_providers/models/add_providers_arguments.dart';
+import '../../colors/fhb_colors.dart' as fhbColors;
+import '../../common/CommonConstants.dart';
+import '../../common/CommonUtil.dart';
+import '../../common/FHBBasicWidget.dart';
+import '../../common/PreferenceUtil.dart';
+import '../../constants/fhb_constants.dart' as Constants;
+import '../../constants/fhb_constants.dart';
+import '../../constants/router_variable.dart' as router;
+import '../../constants/variable_constant.dart' as variable;
+import '../bloc/labs_list_block.dart';
+import '../models/doctor_list_response_new.dart';
+import '../models/hospital_list_response_new.dart';
+import '../models/labs_list_response_new.dart';
+import '../models/search_arguments.dart';
+import '../services/doctors_list_repository.dart';
+import '../../src/blocs/health/HealthReportListForUserBlock.dart';
+import '../../src/resources/network/ApiResponse.dart';
+import '../../src/utils/colors_utils.dart';
+import '../../widgets/GradientAppBar.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
 
 import '../bloc/doctors_list_block.dart';
 import '../bloc/hospital_list_block.dart';
@@ -55,11 +55,11 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
   LabsListBlock _labsListBlock;
 
-  TextEditingController _textFieldController =
-      new TextEditingController(text: '');
+  final TextEditingController _textFieldController =
+      TextEditingController(text: '');
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      new GlobalKey<RefreshIndicatorState>();
+      GlobalKey<RefreshIndicatorState>();
   String value;
 
   final mobileNoController = TextEditingController();
@@ -80,30 +80,27 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   final hospitalNameController = TextEditingController();
   FocusNode hospitalNameFocus = FocusNode();
 
-  DoctorsListRepository doctorsListRepository = new DoctorsListRepository();
+  DoctorsListRepository doctorsListRepository = DoctorsListRepository();
 
   var _selected = Country.IN;
-  FHBBasicWidget fhbBasicWidget = new FHBBasicWidget();
+  FHBBasicWidget fhbBasicWidget = FHBBasicWidget();
 
   @override
   void initState() {
     mInitialTime = DateTime.now();
     super.initState();
 
-    _doctorsListBlock = new DoctorsListBlock();
-    _hospitalListBlock = new HospitalListBlock();
-    _labsListBlock = new LabsListBlock();
+    _doctorsListBlock = DoctorsListBlock();
+    _hospitalListBlock = HospitalListBlock();
+    _labsListBlock = LabsListBlock();
 
-    _healthReportListForUserBlock = new HealthReportListForUserBlock();
+    _healthReportListForUserBlock = HealthReportListForUserBlock();
 
     value = _textFieldController.text.toString();
 
     if (value != '') {
       _doctorsListBlock.getDoctorsListNew(
-          _textFieldController.text.toString() == null
-              ? ''
-              : _textFieldController.text.toString(),
-          widget.isSkipUnknown);
+          _textFieldController.text.toString() ?? '', widget.isSkipUnknown);
     } else {
       if (widget.arguments.searchWord == CommonConstants.doctors) {
         _doctorsListBlock.getExistingDoctorList('40');
@@ -150,7 +147,22 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       // until the controller has finished initializing.
       body: Column(
         children: <Widget>[
-          new Container(
+          Container(
+            //margin: EdgeInsets.all(5),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: <Color>[
+                    Color(CommonUtil().getMyPrimaryColor()),
+                    Color(CommonUtil().getMyGredientColor())
+                  ],
+                  stops: [
+                    0.3,
+                    1
+                  ]),
+            ),
+            padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
             //margin: EdgeInsets.all(5),
             child: Container(
               margin: EdgeInsets.only(left: 10, right: 10, bottom: 5),
@@ -198,22 +210,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                 ),
               ),
             ),
-            decoration: new BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: <Color>[
-                    Color(new CommonUtil().getMyPrimaryColor()),
-                    Color(new CommonUtil().getMyGredientColor())
-                  ],
-                  stops: [
-                    0.3,
-                    1
-                  ]),
-            ),
-            padding: new EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
           ),
-          new Expanded(
+          Expanded(
               child: value == ''
                   ?
                   //getEmptyCard()
@@ -240,8 +238,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   Widget getResponseFromApiWidgetForDoctors() {
     return StreamBuilder<ApiResponse<DoctorsSearchListResponse>>(
       stream: _doctorsListBlock.doctorsNewStream,
-      builder: (context,
-          AsyncSnapshot<ApiResponse<DoctorsSearchListResponse>> snapshot) {
+      builder: (context, snapshot) {
         if (!snapshot.hasData) return Container();
 
         switch (snapshot.data.status) {
@@ -250,7 +247,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             return Center(
                 child: SizedBox(
               child: CircularProgressIndicator(
-                backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
+                backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
               ),
               width: 30.0.h,
               height: 30.0.h,
@@ -270,8 +267,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             return (snapshot.data.data.isSuccess == false &&
                     widget.isSkipUnknown == true)
                 ? Container(
-                    child: getAllDatasInDoctorsListScrap(snapshot.data.data),
                     margin: EdgeInsets.all(5),
+                    child: getAllDatasInDoctorsListScrap(snapshot.data.data),
                   )
                 : (snapshot.data.data.result == null)
                     ? Container(
@@ -280,7 +277,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                         ),
                       )
                     //getEmptyCard()
-                    : snapshot.data.data.result.length == 0
+                    : snapshot.data.data.result.isEmpty
                         ? Container(
                             child: Center(
                               child: Text(variable.strNodata),
@@ -288,9 +285,9 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                           )
                         //getEmptyCard()
                         : Container(
+                            margin: EdgeInsets.all(5),
                             child: getAllDatasInDoctorsList(
                                 snapshot.data.data.result),
-                            margin: EdgeInsets.all(5),
                           );
             break;
         }
@@ -301,8 +298,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   Widget getResponseFromApiWidgetForHospital() {
     return StreamBuilder<ApiResponse<HospitalsSearchListResponse>>(
       stream: _hospitalListBlock.hospitalNewStream,
-      builder: (context,
-          AsyncSnapshot<ApiResponse<HospitalsSearchListResponse>> snapshot) {
+      builder: (context, snapshot) {
         if (!snapshot.hasData) return Container();
 
         switch (snapshot.data.status) {
@@ -310,9 +306,9 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             rebuildBlockObject();
             return Center(
                 child: SizedBox(
-              child: CircularProgressIndicator(),
               width: 30.0.h,
               height: 30.0.h,
+              child: CircularProgressIndicator(),
             ));
 
             break;
@@ -334,7 +330,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                     ),
                   )
                 //getEmptyCard()
-                : snapshot.data.data.result.length == 0
+                : snapshot.data.data.result.isEmpty
                     ? Container(
                         child: Center(
                           child: Text(variable.strNodata),
@@ -355,8 +351,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   Widget getResponseFromApiWidgetForLabs() {
     return StreamBuilder<ApiResponse<LabsSearchListResponse>>(
       stream: _labsListBlock.labNewStream,
-      builder: (context,
-          AsyncSnapshot<ApiResponse<LabsSearchListResponse>> snapshot) {
+      builder: (context, snapshot) {
         if (!snapshot.hasData) return Container();
 
         switch (snapshot.data.status) {
@@ -364,9 +359,9 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             rebuildBlockObject();
             return Center(
                 child: SizedBox(
-              child: CircularProgressIndicator(),
               width: 30.0.h,
               height: 30.0.h,
+              child: CircularProgressIndicator(),
             ));
 
             break;
@@ -387,7 +382,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                     ),
                   )
                 //getEmptyCard()
-                : snapshot.data.data.result.length == 0
+                : snapshot.data.data.result.isEmpty
                     ? Container(
                         child: Center(
                           child: Text(variable.strNodata),
@@ -395,8 +390,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                       )
                     //getEmptyCard()
                     : Container(
-                        child: getAllDatasInLabsList(snapshot.data.data.result),
                         margin: EdgeInsets.all(5),
+                        child: getAllDatasInLabsList(snapshot.data.data.result),
                       );
 
             break;
@@ -410,21 +405,21 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
   void rebuildBlockObject() {
     _doctorsListBlock = null;
-    _doctorsListBlock = new DoctorsListBlock();
+    _doctorsListBlock = DoctorsListBlock();
 
     _hospitalListBlock = null;
-    _hospitalListBlock = new HospitalListBlock();
+    _hospitalListBlock = HospitalListBlock();
 
     _labsListBlock = null;
-    _labsListBlock = new LabsListBlock();
+    _labsListBlock = LabsListBlock();
   }
 
   Widget getEmptyCard(Diagnostics diagnostics) {
     return !widget.toPreviousScreen
         ? Center(
-            child: new Text(
+            child: Text(
               'No Records Found ',
-              style: new TextStyle(
+              style: TextStyle(
                 color: ColorUtils.blackcolor,
                 fontSize: 15.0.sp,
                 fontWeight: FontWeight.w500,
@@ -432,12 +427,12 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             ),
           )
         : Center(
-            child: new Column(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                new Text(
+                Text(
                   'No Records Found ',
-                  style: new TextStyle(
+                  style: TextStyle(
                     color: ColorUtils.blackcolor,
                     fontSize: 15.0.sp,
                     fontWeight: FontWeight.w500,
@@ -462,12 +457,12 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   }
 
   Future<void> _refresh() async {
-    _refreshIndicatorKey.currentState?.show(atTop: false);
+    await _refreshIndicatorKey.currentState?.show(atTop: false);
     await Future.delayed(Duration(milliseconds: 300));
   }
 
   Widget _showAddButton(Diagnostics diagnostics) {
-    final GestureDetector loginButtonWithGesture = new GestureDetector(
+    final loginButtonWithGesture = GestureDetector(
       onTap: () {
         if (widget.toPreviousScreen) {
           widget.arguments.searchWord == CommonConstants.doctors
@@ -477,12 +472,12 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                   : passLaboratoryValue(null, context);
         }
       },
-      child: new Container(
+      child: Container(
         width: 100.0.w,
         height: 40.0.h,
-        decoration: new BoxDecoration(
+        decoration: BoxDecoration(
           color: Color(CommonUtil().getMyPrimaryColor()),
-          borderRadius: new BorderRadius.all(Radius.circular(25.0)),
+          borderRadius: BorderRadius.all(Radius.circular(25)),
           boxShadow: <BoxShadow>[
             BoxShadow(
               color: Color.fromARGB(15, 0, 0, 0),
@@ -491,10 +486,10 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             ),
           ],
         ),
-        child: new Center(
-          child: new Text(
+        child: Center(
+          child: Text(
             'Click Here',
-            style: new TextStyle(
+            style: TextStyle(
               color: Colors.white,
               fontSize: 16.0.sp,
               fontWeight: FontWeight.w500,
@@ -504,8 +499,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       ),
     );
 
-    return new Padding(
-        padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 30.0),
+    return Padding(
+        padding: EdgeInsets.only(left: 20, right: 20, top: 30),
         child: loginButtonWithGesture);
   }
 
@@ -535,10 +530,10 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                 itemCount: data.length,
               ))
           : Container(
+              color: Color(fhbColors.bgColorContainer),
               child: Center(
                 child: Text(variable.strNodata),
               ),
-              color: Color(fhbColors.bgColorContainer),
             ),
     );
   }
@@ -551,8 +546,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               widget.isSkipUnknown == true &&
               data?.diagnostics?.errorData != null)
           ? Container(
-              child: getEmptyCard(data.diagnostics),
               color: Color(fhbColors.bgColorContainer),
+              child: getEmptyCard(data.diagnostics),
             )
           : data.result != null
               ? Container(
@@ -579,10 +574,10 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                     itemCount: data.result.length,
                   ))
               : Container(
+                  color: Color(fhbColors.bgColorContainer),
                   child: Center(
                     child: Text(variable.strNodata),
                   ),
-                  color: Color(fhbColors.bgColorContainer),
                 ),
     );
   }
@@ -601,9 +596,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                   child: getCardToDisplaySearchList(
                       data[i].healthOrganizationName,
                       data[i].addressLine1,
-                      data[i].healthOrganizationId != null
-                          ? data[i].healthOrganizationId
-                          : data[i].healthOrganizationReferenceId,
+                      data[i].healthOrganizationId ??
+                          data[i].healthOrganizationReferenceId,
                       null,
                       DoctorsListResult(),
                       data[i],
@@ -613,10 +607,10 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                 itemCount: data.length,
               ))
           : Container(
+              color: Color(fhbColors.bgColorContainer),
               child: Center(
                 child: Text(variable.strNodata),
               ),
-              color: Color(fhbColors.bgColorContainer),
             ),
     );
   }
@@ -635,9 +629,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                   child: getCardToDisplaySearchList(
                       data[i].healthOrganizationName,
                       data[i].addressLine1,
-                      data[i].healthOrganizationId != null
-                          ? data[i].healthOrganizationId
-                          : data[i].healthOrganizationReferenceId,
+                      data[i].healthOrganizationId ??
+                          data[i].healthOrganizationReferenceId,
                       '',
                       DoctorsListResult(),
                       HospitalsListResult(),
@@ -646,10 +639,10 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                 itemCount: data.length,
               ))
           : Container(
+              color: Color(fhbColors.bgColorContainer),
               child: Center(
                 child: Text(variable.strNodata),
               ),
-              color: Color(fhbColors.bgColorContainer),
             ),
     );
   }
@@ -665,10 +658,9 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       {String cityAndState}) {
     return GestureDetector(
         child: Padding(
-            padding:
-                new EdgeInsets.only(top: 0, bottom: 4, left: 10, right: 10),
+            padding: EdgeInsets.only(bottom: 4, left: 10, right: 10),
             child: Container(
-                padding: EdgeInsets.only(bottom: 2.0),
+                padding: EdgeInsets.only(bottom: 2),
                 margin: EdgeInsets.all(0),
                 decoration: BoxDecoration(
                     color: Colors.white,
@@ -774,8 +766,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         widget.arguments.searchWord == CommonConstants.doctors
             ? (data.specialty != null && data.specialty != '')
                 ? Text(
-                    toBeginningOfSentenceCase(
-                        data.specialty != null ? data.specialty : ''),
+                    toBeginningOfSentenceCase(data.specialty ?? ''),
                     style: TextStyle(
                         fontSize: 15.0.sp,
                         fontWeight: FontWeight.w400,
@@ -792,7 +783,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   getDoctorProfileImageWidget(String id) {
     return FutureBuilder(
       future: _healthReportListForUserBlock.getProfilePic(id),
-      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+      builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Image.memory(
             snapshot.data,
@@ -815,8 +806,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     if (logo == null || logo == '') {
       return Container();
     } else {
-      return Image.network(logo, errorBuilder:
-          (BuildContext context, Object exception, StackTrace stackTrace) {
+      return Image.network(logo,
+          errorBuilder: (context, exception, stackTrace) {
         return Container(
           height: 50.0.h,
           width: 50.0.h,
@@ -837,7 +828,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         myProfile.firstName[0].toUpperCase() +
             myProfile.lastName[0].toUpperCase(),
         style: TextStyle(
-          color: Color(new CommonUtil().getMyPrimaryColor()),
+          color: Color(CommonUtil().getMyPrimaryColor()),
           fontSize: 16.0.sp,
           fontWeight: FontWeight.w400,
         ),
@@ -846,7 +837,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       return Text(
         myProfile.firstName[0].toUpperCase(),
         style: TextStyle(
-          color: Color(new CommonUtil().getMyPrimaryColor()),
+          color: Color(CommonUtil().getMyPrimaryColor()),
           fontSize: 16.0.sp,
           fontWeight: FontWeight.w400,
         ),
@@ -855,7 +846,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       return Text(
         '',
         style: TextStyle(
-          color: Color(new CommonUtil().getMyPrimaryColor()),
+          color: Color(CommonUtil().getMyPrimaryColor()),
           fontSize: 16.0.sp,
           fontWeight: FontWeight.w200,
         ),
@@ -952,26 +943,27 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     }
   }
 
-  passDoctorsValueSample(dynamic results, BuildContext context) {
-    DoctorsListResult jsonDecodeForDoctor = results[Constants.keyDoctor];
+  passDoctorsValueSample(results, BuildContext context) {
+    final DoctorsListResult jsonDecodeForDoctor = results[Constants.keyDoctor];
 
     passDoctorsValue(jsonDecodeForDoctor, context);
   }
 
-  passHospitalValueSample(dynamic results, BuildContext context) {
-    HospitalsListResult jsonDecodeForDoctor = results[Constants.keyHospital];
+  passHospitalValueSample(results, BuildContext context) {
+    final HospitalsListResult jsonDecodeForDoctor =
+        results[Constants.keyHospital];
 
     passHospitalValue(jsonDecodeForDoctor, context);
   }
 
-  passLaboratoryValueSample(dynamic results, BuildContext context) {
-    LabListResult jsonDecodeForDoctor = results[Constants.keyLab];
+  passLaboratoryValueSample(results, BuildContext context) {
+    final LabListResult jsonDecodeForDoctor = results[Constants.keyLab];
 
     passLaboratoryValue(jsonDecodeForDoctor, context);
   }
 
   String getDoctorsAddress(DoctorsListResult data) {
-    String address = '';
+    var address = '';
     if (data.addressLine1 != '' && data.addressLine1 != null) {
       address = toBeginningOfSentenceCase(data.addressLine1);
     }
@@ -988,7 +980,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   }
 
   String getHospitalCityAndState(HospitalsListResult data) {
-    String city = '';
+    var city = '';
 
     if (data.cityName != '' && data.cityName != null) {
       city = toBeginningOfSentenceCase(data.cityName);
@@ -1009,7 +1001,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
     return showDialog<void>(
       context: context,
-      builder: (BuildContext context) {
+      builder: (context) {
         return StatefulBuilder(builder: (context, setState) {
           return AlertDialog(
             shape:
@@ -1019,7 +1011,6 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                 height: 1.sh / 1.5,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Expanded(
                       child: SingleChildScrollView(
@@ -1065,18 +1056,13 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                                   dialingCodeTextStyle: TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.w500),
-                                  dense: false,
                                   showFlag: false,
                                   //displays flag, true by default
                                   showDialingCode: true,
                                   //displays dialing code, false by default
                                   showName: false,
-                                  //displays country name, true by default
-                                  showCurrency: false,
-                                  //eg. 'British pound'
-                                  showCurrencyISO: false,
                                   //eg. 'GBP'
-                                  onChanged: (Country country) {
+                                  onChanged: (country) {
                                     setState(() {
                                       _selected = country;
                                     });
@@ -1134,14 +1120,13 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         child: TextField(
       cursorColor: Color(CommonUtil().getMyPrimaryColor()),
       controller: firstNameController,
-      maxLines: 1,
       keyboardType: TextInputType.text,
       focusNode: firstNameFocus,
       textInputAction: TextInputAction.done,
       onSubmitted: (term) {
         FocusScope.of(context).requestFocus(firstNameFocus);
       },
-      style: new TextStyle(
+      style: TextStyle(
           fontWeight: FontWeight.w500,
           fontSize: 16.0.sp,
           color: ColorUtils.blackcolor),
@@ -1157,7 +1142,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           color: ColorUtils.myFamilyGreyColor,
           fontWeight: FontWeight.w400,
         ),
-        border: new UnderlineInputBorder(
+        border: UnderlineInputBorder(
             borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
       ),
     ));
@@ -1168,14 +1153,13 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         child: TextField(
       cursorColor: Color(CommonUtil().getMyPrimaryColor()),
       controller: lastNameController,
-      maxLines: 1,
       keyboardType: TextInputType.text,
       focusNode: lastNameFocus,
       textInputAction: TextInputAction.done,
       onSubmitted: (term) {
         lastNameFocus.unfocus();
       },
-      style: new TextStyle(
+      style: TextStyle(
           fontWeight: FontWeight.w500,
           fontSize: 16.0.sp,
           color: ColorUtils.blackcolor),
@@ -1191,7 +1175,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           color: ColorUtils.myFamilyGreyColor,
           fontWeight: FontWeight.w400,
         ),
-        border: new UnderlineInputBorder(
+        border: UnderlineInputBorder(
             borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
       ),
     ));
@@ -1199,10 +1183,9 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
   Widget _ShowMobileNoTextField() {
     return Expanded(
-      child: new TextField(
+      child: TextField(
           cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: mobileNoController,
-          maxLines: 1,
           enabled: true,
           keyboardType: TextInputType.text,
           focusNode: mobileNoFocus,
@@ -1210,7 +1193,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           onSubmitted: (term) {
             mobileNoFocus.unfocus();
           },
-          style: new TextStyle(
+          style: TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 16.0.sp,
               color: ColorUtils.blackcolor),
@@ -1225,7 +1208,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
-            border: new UnderlineInputBorder(
+            border: UnderlineInputBorder(
                 borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
           )),
     );
@@ -1236,14 +1219,13 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         child: TextField(
       cursorColor: Color(CommonUtil().getMyPrimaryColor()),
       controller: specializationController,
-      maxLines: 1,
       keyboardType: TextInputType.text,
       focusNode: specializationFocus,
       textInputAction: TextInputAction.done,
       onSubmitted: (term) {
         FocusScope.of(context).requestFocus(lastNameFocus);
       },
-      style: new TextStyle(
+      style: TextStyle(
           fontWeight: FontWeight.w500,
           fontSize: 16.0.sp,
           color: ColorUtils.blackcolor),
@@ -1259,7 +1241,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           color: ColorUtils.myFamilyGreyColor,
           fontWeight: FontWeight.w400,
         ),
-        border: new UnderlineInputBorder(
+        border: UnderlineInputBorder(
             borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
       ),
     ));
@@ -1270,14 +1252,13 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         child: TextField(
       cursorColor: Color(CommonUtil().getMyPrimaryColor()),
       controller: hospitalNameController,
-      maxLines: 1,
       keyboardType: TextInputType.text,
       focusNode: hospitalNameFocus,
       textInputAction: TextInputAction.done,
       onSubmitted: (term) {
         FocusScope.of(context).requestFocus(specializationFocus);
       },
-      style: new TextStyle(
+      style: TextStyle(
           fontWeight: FontWeight.w500,
           fontSize: 16.0.sp,
           color: ColorUtils.blackcolor),
@@ -1293,21 +1274,21 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           color: ColorUtils.myFamilyGreyColor,
           fontWeight: FontWeight.w400,
         ),
-        border: new UnderlineInputBorder(
+        border: UnderlineInputBorder(
             borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
       ),
     ));
   }
 
   _showAddDoctorButton() {
-    final GestureDetector addButtonWithGesture = new GestureDetector(
+    final addButtonWithGesture = GestureDetector(
       onTap: _addDoctorToList,
-      child: new Container(
+      child: Container(
         width: 130.0.w,
         height: 40.0.h,
-        decoration: new BoxDecoration(
-          color: Color(new CommonUtil().getMyPrimaryColor()),
-          borderRadius: new BorderRadius.all(Radius.circular(2.0)),
+        decoration: BoxDecoration(
+          color: Color(CommonUtil().getMyPrimaryColor()),
+          borderRadius: BorderRadius.all(Radius.circular(2)),
           boxShadow: <BoxShadow>[
             BoxShadow(
               color: Color.fromARGB(15, 0, 0, 0),
@@ -1316,10 +1297,10 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             ),
           ],
         ),
-        child: new Center(
-          child: new Text(
+        child: Center(
+          child: Text(
             'Add Doctor',
-            style: new TextStyle(
+            style: TextStyle(
               color: Colors.white,
               fontSize: 16.0.sp,
               fontWeight: FontWeight.w400,
@@ -1329,15 +1310,15 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       ),
     );
 
-    return new Padding(
-        padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 30.0),
+    return Padding(
+        padding: EdgeInsets.only(left: 20, right: 20, top: 30),
         child: addButtonWithGesture);
   }
 
   void _addDoctorToList() {
-    var addDoctorData = {};
-    var doctorReferenced = {};
-    var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    final addDoctorData = {};
+    final doctorReferenced = {};
+    final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     if (firstNameController.text.trim() != '') {
       addDoctorData['firstName'] =
@@ -1355,7 +1336,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             ? null
             : mobileNoController.text;
       } else {
-        String phoneNumber = '+' +
+        final phoneNumber = '+' +
             _selected.dialingCode.toString() +
             '' +
             mobileNoController.text;
@@ -1374,7 +1355,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
       doctorReferenced['id'] = userid;
       addDoctorData['referredPatient'] = doctorReferenced;
-      var params = json.encode(addDoctorData);
+      final params = json.encode(addDoctorData);
       print(params.toString());
 
       doctorsListRepository.addDoctorFromProvider(params).then((value) {
@@ -1384,10 +1365,11 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     } else {
       showDialog(
           context: context,
-          child: new AlertDialog(
-            title: new Text(variable.strAPP_NAME),
-            content: new Text('Enter First Name'),
-          ));
+          builder: (context) => AlertDialog(
+                title: Text(variable.strAPP_NAME),
+                content: Text('Enter First Name'),
+              ));
     }
   }
+
 }

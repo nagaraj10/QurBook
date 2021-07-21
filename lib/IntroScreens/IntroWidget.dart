@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/constants/variable_constant.dart';
+import '../common/CommonUtil.dart';
+import '../constants/variable_constant.dart';
 
 class IntroWidget extends StatelessWidget {
   String imageForScreen;

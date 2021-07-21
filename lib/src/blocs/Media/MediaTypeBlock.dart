@@ -1,14 +1,14 @@
 import 'dart:async';
 
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
-import 'package:myfhb/src/model/Media/MediaTypeResponse.dart';
-import 'package:myfhb/src/model/Media/media_data_list.dart';
-import 'package:myfhb/src/resources/network/ApiResponse.dart';
-import 'package:myfhb/src/resources/repository/Media/MediaTypeRepository.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/constants/fhb_query.dart' as query;
+import '../../../common/PreferenceUtil.dart';
+import '../Authentication/LoginBloc.dart';
+import '../../model/Media/MediaTypeResponse.dart';
+import '../../model/Media/media_data_list.dart';
+import '../../resources/network/ApiResponse.dart';
+import '../../resources/repository/Media/MediaTypeRepository.dart';
+import '../../../constants/fhb_constants.dart' as Constants;
+import '../../../constants/variable_constant.dart' as variable;
+import '../../../constants/fhb_query.dart' as query;
 
 class MediaTypeBlock implements BaseBloc {
   MediaTypeRepository _mediaTypeRepository;
@@ -41,7 +41,7 @@ class MediaTypeBlock implements BaseBloc {
   getMediTypes() async {
     mediaTypeSink.add(ApiResponse.loading(variable.strgetMediaTypes));
     try {
-      MediaTypesResponse mediaTypesResponse =
+      var mediaTypesResponse =
           await _mediaTypeRepository.getMediaType();
 
       PreferenceUtil.init();
@@ -59,7 +59,7 @@ class MediaTypeBlock implements BaseBloc {
       mediaTypesResponse = await _mediaTypeRepository.getMediaTypes();
 
       PreferenceUtil.init();
-      PreferenceUtil.saveMediaType(
+      await PreferenceUtil.saveMediaType(
           Constants.KEY_METADATA, mediaTypesResponse.result);
       mediaTypeSinks.add(ApiResponse.completed(mediaTypesResponse));
     } catch (e) {

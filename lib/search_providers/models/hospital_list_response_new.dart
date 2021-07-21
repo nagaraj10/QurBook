@@ -7,18 +7,18 @@ class HospitalsSearchListResponse {
   HospitalsSearchListResponse.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['result'] != null) {
-      result = new List<HospitalsListResult>();
+      result = List<HospitalsListResult>();
       json['result'].forEach((v) {
-        result.add(new HospitalsListResult.fromJson(v));
+        result.add(HospitalsListResult.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['isSuccess'] = this.isSuccess;
-    if (this.result != null) {
-      data['result'] = this.result.map((v) => v.toJson()).toList();
+    final data = <String, dynamic>{};
+    data['isSuccess'] = isSuccess;
+    if (result != null) {
+      data['result'] = result.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -71,20 +71,20 @@ class HospitalsListResult {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['healthOrganizationReferenceId'] = this.healthOrganizationReferenceId;
-    data['healthOrganizationName'] = this.healthOrganizationName;
-    data['addressLine1'] = this.addressLine1;
-    data['addressLine2'] = this.addressLine2;
-    data['cityName'] = this.cityName;
-    data['stateName'] = this.stateName;
-    data['pincode'] = this.pincode;
-    data['healthOrganizationId'] = this.healthOrganizationId;
-    data['healthOrganizationTypeId'] = this.healthOrganizationTypeId;
-    data['healthOrganizationTypeName'] = this.healthOrganizationTypeName;
-    data['phoneNumber'] = this.phoneNumber;
-    data['phoneNumberTypeId'] = this.phoneNumberTypeId;
-    data['phoneNumberTypeName'] = this.phoneNumberTypeName;
+    final data = Map<String, dynamic>();
+    data['healthOrganizationReferenceId'] = healthOrganizationReferenceId;
+    data['healthOrganizationName'] = healthOrganizationName;
+    data['addressLine1'] = addressLine1;
+    data['addressLine2'] = addressLine2;
+    data['cityName'] = cityName;
+    data['stateName'] = stateName;
+    data['pincode'] = pincode;
+    data['healthOrganizationId'] = healthOrganizationId;
+    data['healthOrganizationTypeId'] = healthOrganizationTypeId;
+    data['healthOrganizationTypeName'] = healthOrganizationTypeName;
+    data['phoneNumber'] = phoneNumber;
+    data['phoneNumberTypeId'] = phoneNumberTypeId;
+    data['phoneNumberTypeName'] = phoneNumberTypeName;
     return data;
   }
 }

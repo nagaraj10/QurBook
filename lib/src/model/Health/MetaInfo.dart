@@ -1,10 +1,10 @@
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/src/model/Health/CategoryInfo.dart';
-import 'package:myfhb/src/model/Health/DeviceReadings.dart';
-import 'package:myfhb/src/model/Health/Doctor.dart';
-import 'package:myfhb/src/model/Health/Hospital.dart';
-import 'package:myfhb/src/model/Health/Laboratory.dart';
-import 'package:myfhb/src/model/Health/MediaTypeInfo.dart';
+import '../../../constants/fhb_parameters.dart' as parameters;
+import 'CategoryInfo.dart';
+import 'DeviceReadings.dart';
+import 'Doctor.dart';
+import 'Hospital.dart';
+import 'Laboratory.dart';
+import 'MediaTypeInfo.dart';
 
 class MetaInfo {
   CategoryInfo categoryInfo;
@@ -42,71 +42,71 @@ class MetaInfo {
 
   MetaInfo.fromJson(Map<String, dynamic> json) {
     categoryInfo = json[parameters.strcategoryInfo] != null
-        ? new CategoryInfo.fromJson(json[parameters.strcategoryInfo])
+        ? CategoryInfo.fromJson(json[parameters.strcategoryInfo])
         : null;
     dateOfVisit = json[parameters.strdateOfVisit];
     try{
     if (json[parameters.strdeviceReadings] != null) {
-      deviceReadings = new List<DeviceReadings>();
+      deviceReadings = <DeviceReadings>[];
       json[parameters.strdeviceReadings].forEach((v) {
-        deviceReadings.add(new DeviceReadings.fromJson(v));
+        deviceReadings.add(DeviceReadings.fromJson(v));
       });
     }
      }catch(e){
 
     }
     doctor =
-        json[parameters.strdoctor] != null ? new Doctor.fromJson(json[parameters.strdoctor]) : null;
+        json[parameters.strdoctor] != null ? Doctor.fromJson(json[parameters.strdoctor]) : null;
     fileName = json[parameters.strfileName];
-    hasVoiceNotes = json[parameters.strhasVoiceNotes]!=null?json[parameters.strhasVoiceNotes]:false;
-    isDraft = json[parameters.strisDraft]!=null?json[parameters.strisDraft]:false;
+    hasVoiceNotes = json[parameters.strhasVoiceNotes] ?? false;
+    isDraft = json[parameters.strisDraft] ?? false;
     mediaTypeInfo = json[parameters.strmediaTypeInfo] != null
-        ? new MediaTypeInfo.fromJson(json[parameters.strmediaTypeInfo])
+        ? MediaTypeInfo.fromJson(json[parameters.strmediaTypeInfo])
         : null;
     memoText = json[parameters.strmemoText];
     memoTextRaw = json[parameters.strmemoTextRaw];
     sourceName = json[parameters.strsourceName];
     laboratory = json[parameters.strlaboratory] != null
-        ? new Laboratory.fromJson(json[parameters.strlaboratory])
+        ? Laboratory.fromJson(json[parameters.strlaboratory])
         : null;
     hospital = json[parameters.strhospital] != null
-        ? new Hospital.fromJson(json[parameters.strhospital])
+        ? Hospital.fromJson(json[parameters.strhospital])
         : null;
     dateOfExpiry = json[parameters.strdateOfExpiry];
-    idType = json[parameters.stridType] != null ? json[parameters.stridType] : "";
+    idType = json[parameters.stridType] != null ? json[parameters.stridType] : '';
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.categoryInfo != null) {
-      data[parameters.strcategoryInfo] = this.categoryInfo.toJson();
+    final data = Map<String, dynamic>();
+    if (categoryInfo != null) {
+      data[parameters.strcategoryInfo] = categoryInfo.toJson();
     }
-    data[parameters.strdateOfVisit] = this.dateOfVisit;
-    if (this.deviceReadings != null) {
+    data[parameters.strdateOfVisit] = dateOfVisit;
+    if (deviceReadings != null) {
       data[parameters.strdeviceReadings] =
-          this.deviceReadings.map((v) => v.toJson()).toList();
+          deviceReadings.map((v) => v.toJson()).toList();
     }
-    if (this.doctor != null) {
-      data[parameters.strdoctor] = this.doctor.toJson();
+    if (doctor != null) {
+      data[parameters.strdoctor] = doctor.toJson();
     }
-    data[parameters.strfileName] = this.fileName;
-    data[parameters.strhasVoiceNotes] = this.hasVoiceNotes;
-    data[parameters.strisDraft] = this.isDraft;
-    if (this.mediaTypeInfo != null) {
-      data[parameters.strmediaTypeInfo] = this.mediaTypeInfo.toJson();
+    data[parameters.strfileName] = fileName;
+    data[parameters.strhasVoiceNotes] = hasVoiceNotes;
+    data[parameters.strisDraft] = isDraft;
+    if (mediaTypeInfo != null) {
+      data[parameters.strmediaTypeInfo] = mediaTypeInfo.toJson();
     }
-    data[parameters.strmemoText] = this.memoText;
-    data[parameters.strmemoTextRaw] = this.memoTextRaw;
-    data[parameters.strsourceName] = this.sourceName;
-    if (this.laboratory != null) {
-      data[parameters.strlaboratory] = this.laboratory.toJson();
+    data[parameters.strmemoText] = memoText;
+    data[parameters.strmemoTextRaw] = memoTextRaw;
+    data[parameters.strsourceName] = sourceName;
+    if (laboratory != null) {
+      data[parameters.strlaboratory] = laboratory.toJson();
     }
-    if (this.hospital != null) {
-      data[parameters.strhospital] = this.hospital.toJson();
+    if (hospital != null) {
+      data[parameters.strhospital] = hospital.toJson();
     }
-    data[parameters.strdateOfExpiry] = this.dateOfExpiry;
-    if (this.idType != null) {
-      data[parameters.stridType] = this.idType;
+    data[parameters.strdateOfExpiry] = dateOfExpiry;
+    if (idType != null) {
+      data[parameters.stridType] = idType;
     }
     return data;
   }

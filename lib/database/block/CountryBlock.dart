@@ -1,11 +1,11 @@
-import 'package:myfhb/database/model/CountryMetrics.dart';
-import 'package:myfhb/database/services/database_helper.dart';
+import '../model/CountryMetrics.dart';
+import '../services/database_helper.dart';
 
 class CountryBlock {
-  var db = new DatabaseHelper();
+  var db = DatabaseHelper();
   CountryBlock();
   delete(CountryMetrics countryMetrics) {
-    var db = new DatabaseHelper();
+    final db = DatabaseHelper();
     db.deleteCountryMetrics(countryMetrics);
   }
 

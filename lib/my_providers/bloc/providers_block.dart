@@ -1,14 +1,14 @@
 import 'dart:async';
 
-import 'package:myfhb/my_providers/models/Doctors.dart';
-import 'package:myfhb/my_providers/models/GetDoctorsByIdModel.dart';
-import 'package:myfhb/my_providers/models/Hospitals.dart';
-import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
-import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
-import 'package:myfhb/my_providers/services/providers_repository.dart';
-import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
-import 'package:myfhb/src/resources/network/ApiResponse.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
+import '../models/Doctors.dart';
+import '../models/GetDoctorsByIdModel.dart';
+import '../models/Hospitals.dart';
+import '../models/MyProviderResponseNew.dart';
+import '../models/my_providers_response_list.dart';
+import '../services/providers_repository.dart';
+import '../../src/blocs/Authentication/LoginBloc.dart';
+import '../../src/resources/network/ApiResponse.dart';
+import '../../constants/variable_constant.dart' as variable;
 
 class ProvidersBloc implements BaseBloc {
   ProvidersListRepository _providersListRepository;
@@ -19,9 +19,9 @@ class ProvidersBloc implements BaseBloc {
   Stream<ApiResponse<MyProvidersResponse>> get providersListStream =>
       _providersListControlller.stream;
 
-  List<Doctors> doctors = new List();
-  List<Hospitals> hospitals = new List();
-  List<Hospitals> labs = new List();
+  List<Doctors> doctors = [];
+  List<Hospitals> hospitals = List();
+  List<Hospitals> labs = [];
 
   @override
   void dispose() {
@@ -106,22 +106,22 @@ class ProvidersBloc implements BaseBloc {
   }
 
   List<Doctors> getFilterDoctorListNew(String doctorName) {
-    List<Doctors> filterDoctorData = new List();
-    for (Doctors doctorData in doctors) {
+    final filterDoctorData = List<Doctors>();
+    for (final doctorData in doctors) {
       if (doctorData.user.name != null && doctorData.user.name != '') {
-        String speciality = doctorData.doctorProfessionalDetailCollection !=
+        var speciality = doctorData.doctorProfessionalDetailCollection !=
                 null
-            ? doctorData.doctorProfessionalDetailCollection.length > 0
+            ? doctorData.doctorProfessionalDetailCollection.isNotEmpty
                 ? doctorData.doctorProfessionalDetailCollection[0].specialty !=
                         null
                     ? doctorData
                         .doctorProfessionalDetailCollection[0].specialty.name
                     : ''
                 : ''
-            : "";
-        String address = doctorData.user != null
+            : '';
+        final address = doctorData.user != null
             ? doctorData.user.userAddressCollection3 != null
-                ? doctorData.user.userAddressCollection3.length > 0
+                ? doctorData.user.userAddressCollection3.isNotEmpty
                     ? doctorData.user.userAddressCollection3[0].city != null
                         ? doctorData.user.userAddressCollection3[0].city.name
                         : ''

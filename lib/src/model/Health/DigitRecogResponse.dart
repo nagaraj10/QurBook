@@ -9,15 +9,15 @@ class DigitRecogResponse {
     isSuccess = json['isSuccess'];
     message = json['message'];
     result =
-    json['result'] != null ? new Result.fromJson(json['result']) : null;
+    json['result'] != null ? Result.fromJson(json['result']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['isSuccess'] = this.isSuccess;
-    data['message'] = this.message;
-    if (this.result != null) {
-      data['result'] = this.result.toJson();
+    final data = <String, dynamic>{};
+    data['isSuccess'] = isSuccess;
+    data['message'] = message;
+    if (result != null) {
+      data['result'] = result.toJson();
     }
     return data;
   }
@@ -35,19 +35,19 @@ class Result {
 
   Result.fromJson(Map<String, dynamic> json) {
     deviceMeasurementsHead = json['deviceMeasurements'] != null
-        ? new DeviceMeasurementsHead.fromJson(json['deviceMeasurements'])
+        ? DeviceMeasurementsHead.fromJson(json['deviceMeasurements'])
         : null;
     healthRecordDocumentId = json['healthRecordDocumentId'];
     healthRecordMetaId = json['healthRecordMetaId'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.deviceMeasurementsHead != null) {
-      data['deviceMeasurements'] = this.deviceMeasurementsHead.toJson();
+    final data = Map<String, dynamic>();
+    if (deviceMeasurementsHead != null) {
+      data['deviceMeasurements'] = deviceMeasurementsHead.toJson();
     }
-    data['healthRecordDocumentId'] = this.healthRecordDocumentId;
-    data['healthRecordMetaId'] = this.healthRecordMetaId;
+    data['healthRecordDocumentId'] = healthRecordDocumentId;
+    data['healthRecordMetaId'] = healthRecordMetaId;
     return data;
   }
 }
@@ -61,19 +61,19 @@ class DeviceMeasurementsHead {
   DeviceMeasurementsHead.fromJson(Map<String, dynamic> json) {
     deviceClass = json['deviceClass'];
     if (json['deviceMeasurements'] != null) {
-      deviceMeasurements = new List<DeviceMeasurements>();
+      deviceMeasurements = <DeviceMeasurements>[];
       json['deviceMeasurements'].forEach((v) {
-        deviceMeasurements.add(new DeviceMeasurements.fromJson(v));
+        deviceMeasurements.add(DeviceMeasurements.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['deviceClass'] = this.deviceClass;
-    if (this.deviceMeasurements != null) {
+    final data = <String, dynamic>{};
+    data['deviceClass'] = deviceClass;
+    if (deviceMeasurements != null) {
       data['deviceMeasurements'] =
-          this.deviceMeasurements.map((v) => v.toJson()).toList();
+          deviceMeasurements.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -90,7 +90,7 @@ class DeviceMeasurements {
 
   DeviceMeasurements.fromJson(Map<String, dynamic> json) {
     coordinates = json['coordinates'] != null
-        ? new Coordinates.fromJson(json['coordinates'])
+        ? Coordinates.fromJson(json['coordinates'])
         : null;
     parameter = json['parameter'];
     unit = json['unit'];
@@ -98,13 +98,13 @@ class DeviceMeasurements {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.coordinates != null) {
-      data['coordinates'] = this.coordinates.toJson();
+    final data = <String, dynamic>{};
+    if (coordinates != null) {
+      data['coordinates'] = coordinates.toJson();
     }
-    data['parameter'] = this.parameter;
-    data['unit'] = this.unit;
-    data['values'] = this.values;
+    data['parameter'] = parameter;
+    data['unit'] = unit;
+    data['values'] = values;
     return data;
   }
 }
@@ -125,11 +125,11 @@ class Coordinates {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['height'] = this.height;
-    data['width'] = this.width;
-    data['x'] = this.x;
-    data['y'] = this.y;
+    final data = Map<String, dynamic>();
+    data['height'] = height;
+    data['width'] = width;
+    data['x'] = x;
+    data['y'] = y;
     return data;
   }
 }

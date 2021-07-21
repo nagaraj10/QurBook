@@ -1,7 +1,7 @@
 library fhb_constants;
 
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:myfhb/common/CommonUtil.dart';
+import '../common/CommonUtil.dart';
 
 String BASE_URL = CommonUtil.BASE_URL_FROM_RES;
 
@@ -278,10 +278,10 @@ const String preferred_descrip =
     'We allow only one preferred provider for a user. To remove your preference, please set another Provider as Preferred.';
 
 //ICONS LINK
-const String NOTES_ICON_LINK = "assets/icons/notes.png";
-const String RECORDS_ICON_LINK = "assets/navicons/my_records.png";
-const String VOICE_ICON_LINK = "assets/icons/voice-notes.png";
-const String DEVICE_ICON_LINK = "assets/navicons/reading.png";
+const String NOTES_ICON_LINK = 'assets/icons/notes.png';
+const String RECORDS_ICON_LINK = 'assets/navicons/my_records.png';
+const String VOICE_ICON_LINK = 'assets/icons/voice-notes.png';
+const String DEVICE_ICON_LINK = 'assets/navicons/reading.png';
 
 const String AddAppointment = 'Add Appointment';
 const String HospitalName = 'Hospital Name';
@@ -330,16 +330,16 @@ const String KEY_EMAIL = 'email';
 //For Google Fit Integration
 const String asgurduserID = '49cdc4be-afd9-419e-b3f9-1bd35207c74f';
 
-const String activateGF = "activateGF"; // activate googleFit
-const String activateHK = "activateHK"; // activate appleHealth
-const String isFirstTym = "FirsTym";
+const String activateGF = 'activateGF'; // activate googleFit
+const String activateHK = 'activateHK'; // activate appleHealth
+const String isFirstTym = 'FirsTym';
 const String isHealthFirstTime =
-    "HealthFirstTime"; // Activating HealthKit For First Time
-const String bpMon = "bpMon";
-const String glMon = "GLMon";
-const String oxyMon = "OxyMon";
-const String thMon = "THMon";
-const String wsMon = "WSMon";
+    'HealthFirstTime'; // Activating HealthKit For First Time
+const String bpMon = 'bpMon';
+const String glMon = 'GLMon';
+const String oxyMon = 'OxyMon';
+const String thMon = 'THMon';
+const String wsMon = 'WSMon';
 
 //// Check Internet connectivity
 const String failed_wifi = "Failed to get Wifi Name";
@@ -583,7 +583,7 @@ const String STR_NO = 'no';
 FirebaseAnalytics _firebaseAnalytics = FirebaseAnalytics();
 var mInitialTime;
 
-Future<void> fbaLog({String eveName, dynamic eveParams}) async {
+Future<void> fbaLog({String eveName, eveParams}) async {
   try {
     await _firebaseAnalytics.logEvent(
         name: eveName ?? 'qurbook_ns_event',

@@ -1,5 +1,5 @@
-import 'package:myfhb/record_detail/model/MediaMetaInfo.dart';
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'MediaMetaInfo.dart';
+import '../../constants/fhb_parameters.dart' as parameters;
 
 class UpdateMediaResponseData {
   MediaMetaInfo mediaMetaInfo;
@@ -8,14 +8,14 @@ class UpdateMediaResponseData {
 
   UpdateMediaResponseData.fromJson(Map<String, dynamic> json) {
     mediaMetaInfo = json[parameters.strmediaMetaInfo] != null
-        ? new MediaMetaInfo.fromJson(json[parameters.strmediaMetaInfo])
+        ? MediaMetaInfo.fromJson(json[parameters.strmediaMetaInfo])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.mediaMetaInfo != null) {
-      data[parameters.strmediaMetaInfo] = this.mediaMetaInfo.toJson();
+    final data = Map<String, dynamic>();
+    if (mediaMetaInfo != null) {
+      data[parameters.strmediaMetaInfo] = mediaMetaInfo.toJson();
     }
     return data;
   }

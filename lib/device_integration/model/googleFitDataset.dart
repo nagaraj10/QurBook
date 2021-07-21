@@ -1,5 +1,5 @@
-import 'package:myfhb/device_integration/model/googleFitPoint.dart';
-import 'package:myfhb/constants/fhb_parameters.dart';
+import 'googleFitPoint.dart';
+import '../../constants/fhb_parameters.dart';
 
 class Dataset {
   Dataset({

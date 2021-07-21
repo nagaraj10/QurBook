@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import '../../../constants/fhb_constants.dart';
+import '../../../src/utils/screenutils/size_extensions.dart';
 
 class LandingCard extends StatelessWidget {
   const LandingCard({
@@ -44,7 +44,7 @@ class LandingCard extends StatelessWidget {
               topRight: Radius.circular(20.0.sp),
             ),
           ),
-          elevation: 5.0,
+          elevation: 5,
           color: Colors.white,
           shadowColor: Colors.black54,
           child: Stack(
@@ -65,12 +65,11 @@ class LandingCard extends StatelessWidget {
                     20.0.sp,
                   ),
                   child: Column(
-                    mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        '${title ?? ''}',
+                        title ?? '',
                         style: TextStyle(
                           fontSize: 18.0.sp,
                           color: color,
@@ -117,7 +116,6 @@ class LandingCard extends StatelessWidget {
                       Visibility(
                         visible: isEnabled && (eventName ?? '').isNotEmpty,
                         child: InkWell(
-                          onTap: null,
                           child: Text(
                             (eventName ?? '').isNotEmpty
                                 ? toBeginningOfSentenceCase(
@@ -188,9 +186,9 @@ class LandingCard extends StatelessWidget {
                               width: 30.0.sp,
                               child: FloatingActionButton(
                                 onPressed: onAddPressed ?? () {},
-                                elevation: 2.0,
+                                elevation: 2,
                                 backgroundColor: color,
-                                heroTag: '$title',
+                                heroTag: title,
                                 child: Icon(
                                   Icons.add,
                                   color: Colors.white,

@@ -1,35 +1,32 @@
 import 'dart:convert';
 
-import 'package:http/http.dart' as http;
-import 'package:myfhb/add_address/models/place.dart';
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/src/resources/network/api_services.dart';
+import '../models/place.dart';
+import '../../common/CommonConstants.dart';
+import '../../common/CommonUtil.dart';
 
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/webservice_call.dart';
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-
-
-
+import '../../constants/fhb_constants.dart' as Constants;
+import '../../constants/webservice_call.dart';
+import '../../constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/src/resources/network/api_services.dart';
 
 class GoogleMapServices {
   final String sessionToken;
 
   GoogleMapServices({this.sessionToken});
 
-
   Future<List<Place>> getSuggestions(String query) async {
-    
-  WebserviceCall webserviceCall=new WebserviceCall();
+    final webserviceCall = WebserviceCall();
 
-    final http.Response response = await http.get(webserviceCall.getQueryForSuggestion(sessionToken,query));
-    final responseData = json.decode(response.body);
-    final predictions = responseData[parameters.strpredictions];
+    final response = await ApiServices.get(
+        webserviceCall.getQueryForSuggestion(sessionToken, query));
+    var responseData = json.decode(response.body);
+    var predictions = responseData[parameters.strpredictions];
 
-    List<Place> suggestions = [];
+    var suggestions = <Place>[];
 
-    for (int i = 0; i < predictions.length; i++) {
-      final place = Place.fromJson(predictions[i]);
+    for (var i = 0; i < predictions.length; i++) {
+      var place = Place.fromJson(predictions[i]);
       suggestions.add(place);
     }
 
@@ -37,25 +34,26 @@ class GoogleMapServices {
   }
 
   Future<PlaceDetail> getPlaceDetail(String placeId, String token) async {
-      WebserviceCall webserviceCall=new WebserviceCall();
+    final webserviceCall = WebserviceCall();
 
+    final response = await ApiServices.get(
+        webserviceCall.getQueryForPlaceDetail(placeId, token));
+    var responseData = json.decode(response.body);
+    var result = responseData[parameters.dataResult];
 
-    final http.Response response = await http.get(webserviceCall.getQueryForPlaceDetail( placeId,  token));
-    final responseData = json.decode(response.body);
-    final result = responseData[parameters.dataResult];
-
-    final PlaceDetail placeDetail = PlaceDetail.fromJson(result);
+    final placeDetail = PlaceDetail.fromJson(result);
 
     return placeDetail;
   }
 
   static Future<String> getAddrFromLocation(double lat, double lng) async {
-     WebserviceCall webserviceCall=new WebserviceCall();
+    final webserviceCall = WebserviceCall();
 
-
-    final http.Response response = await http.get(webserviceCall.queryAddrFromLocation(lat,lng));
-    final responseData = json.decode(response.body);
-    final formattedAddr = responseData[parameters.strresults][0][parameters.strformatted_address];
+    final response =
+        await ApiServices.get(webserviceCall.queryAddrFromLocation(lat, lng));
+    var responseData = json.decode(response.body);
+    var formattedAddr =
+        responseData[parameters.strresults][0][parameters.strformatted_address];
 
     return formattedAddr;
   }

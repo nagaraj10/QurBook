@@ -53,7 +53,7 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
   double sliderCurrentPosition = 0.0;
   double maxDuration = 1.0;
   t_MEDIA _media = t_MEDIA.FILE;
-  t_CODEC _codec = t_CODEC.CODEC_AAC;
+  Codec _codec = Codec.aacADTS;
 
   FlutterToast toast = new FlutterToast();
 
@@ -65,9 +65,9 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
     mInitialTime = DateTime.now();
     super.initState();
     flutterSound = new FlutterSound();
-    flutterSound.setSubscriptionDuration(0.01);
-    flutterSound.setDbPeakLevelUpdate(0.8);
-    flutterSound.setDbLevelEnabled(true);
+    // flutterSound.setSubscriptionDuration(0.01);
+    // flutterSound.setDbPeakLevelUpdate(0.8);
+    // flutterSound.setDbLevelEnabled(true);
     initializeDateFormatting();
   }
 
@@ -93,38 +93,40 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
       //   numChannels: 1,
       //   androidAudioSource: AndroidAudioSource.MIC,
       // );
-      String path = await flutterSound.startRecorder(
-        codec: _codec,
-      );
+      //TODO: Check for audio
+      // String path = await flutterSound.startRecorder(
+      //   codec: _codec,
+      // );
+      //
+      // _recorderSubscription = flutterSound.onRecorderStateChanged.listen((e) {
+      //   DateTime date = new DateTime.fromMillisecondsSinceEpoch(
+      //       e.currentPosition.toInt(),
+      //       isUtc: true);
+      //   String txt =
+      //       DateFormat(variable.strDatems, variable.strenUs).format(date);
+      //
+      //   this.setState(() {
+      //     this._recorderTxt = txt.substring(0, 5);
+      //   });
+      //
+      //   if (e.currentPosition.toInt() >= 180000) {
+      //     stopRecorder();
+      //     toast.getToast('Maximum duration to record is 3 min', Colors.red);
+      //     this.setState(() {});
+      //   }
+      // });
+      // _dbPeakSubscription =
+      //     flutterSound.onRecorderDbPeakChanged.listen((value) {
+      //   setState(() {
+      //     this._dbLevel = value;
+      //   });
+      // });
+      //TODO: Check for audio
 
-      _recorderSubscription = flutterSound.onRecorderStateChanged.listen((e) {
-        DateTime date = new DateTime.fromMillisecondsSinceEpoch(
-            e.currentPosition.toInt(),
-            isUtc: true);
-        String txt =
-            DateFormat(variable.strDatems, variable.strenUs).format(date);
-
-        this.setState(() {
-          this._recorderTxt = txt.substring(0, 5);
-        });
-
-        if (e.currentPosition.toInt() >= 180000) {
-          stopRecorder();
-          toast.getToast('Maximum duration to record is 3 min', Colors.red);
-          this.setState(() {});
-        }
-      });
-      _dbPeakSubscription =
-          flutterSound.onRecorderDbPeakChanged.listen((value) {
-        setState(() {
-          this._dbLevel = value;
-        });
-      });
-
-      this.setState(() {
-        this._isRecording = true;
-        this._path[_codec.index] = path;
-      });
+      // this.setState(() {
+      //   this._isRecording = true;
+      //   this._path[_codec.index] = path;
+      // });
     } catch (err) {
       setState(() {
         this._isRecording = false;
@@ -135,7 +137,8 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
   void stopRecorder() async {
     String result;
     try {
-      result = await flutterSound.stopRecorder();
+      // result = await flutterSound.stopRecorder();
+      //TODO: Check for audio
 
       if (_recorderSubscription != null) {
         _recorderSubscription.cancel();
@@ -184,7 +187,6 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
     return await File(path).exists();
   }
 
-  // In this simple example, we just load a file in memory.This is stupid but just for demonstation  of startPlayerFromBuffer()
   Future<Uint8List> makeBuffer(String path) async {
     try {
       if (!await fileExists(path)) return null;
@@ -206,53 +208,57 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
             (await rootBundle.load(variable.assetSample[_codec.index]))
                 .buffer
                 .asUint8List();
-        path = await flutterSound.startPlayerFromBuffer(
-          buffer,
-          codec: _codec,
-        );
+        // path = await flutterSound.startPlayerFromBuffer(
+        //   buffer,
+        //   codec: _codec,
+        // );
+        //TODO: Check for audio
       } else if (_media == t_MEDIA.FILE) {
         // Do we want to play from buffer or from file ?
-        if (await fileExists(_path[_codec.index]))
-          path = await flutterSound
-              .startPlayer(this._path[_codec.index]); // From file
+        if (await fileExists(_path[_codec.index])) {}
+        //TODO: Check for audio
+        // path = await flutterSound
+        //     .startPlayer(this._path[_codec.index]); // From file
       } else if (_media == t_MEDIA.BUFFER) {
         // Do we want to play from buffer or from file ?
         if (await fileExists(_path[_codec.index])) {
           Uint8List buffer = await makeBuffer(this._path[_codec.index]);
-          if (buffer != null)
-            path = await flutterSound.startPlayerFromBuffer(
-              buffer,
-              codec: _codec,
-            ); // From buffer
+          // if (buffer != null)
+          // path = await flutterSound.thePlayer.startPlayerFromBuffer(
+          //   buffer,
+          //   codec: _codec,
+          // ); // From buffer
+          //TODO: Check for audio
         }
       }
       if (path == null) {
         return;
       }
-      await flutterSound.setVolume(1.0);
+      await flutterSound.thePlayer.setVolume(1.0);
 
-      _playerSubscription = flutterSound.onPlayerStateChanged.listen((e) {
-        if (e != null) {
-          sliderCurrentPosition = e.currentPosition;
-          maxDuration = e.duration;
-
-          DateTime date = new DateTime.fromMillisecondsSinceEpoch(
-              e.currentPosition.toInt(),
-              isUtc: true);
-          String txt =
-              DateFormat(variable.strDatems, variable.strenUs).format(date);
-          this.setState(() {
-            this._playerTxt = txt.substring(0, 5);
-          });
-        }
-      });
+      // _playerSubscription = flutterSound.onPlayerStateChanged.listen((e) {
+      //   if (e != null) {
+      //     sliderCurrentPosition = e.currentPosition;
+      //     maxDuration = e.duration;
+      //
+      //     DateTime date = new DateTime.fromMillisecondsSinceEpoch(
+      //         e.currentPosition.toInt(),
+      //         isUtc: true);
+      //     String txt =
+      //         DateFormat(variable.strDatems, variable.strenUs).format(date);
+      //     this.setState(() {
+      //       this._playerTxt = txt.substring(0, 5);
+      //     });
+      //   }
+      // });
+      //TODO: Check for audio
     } catch (err) {}
     setState(() {});
   }
 
   void stopPlayer() async {
     try {
-      String result = await flutterSound.stopPlayer();
+      await flutterSound.thePlayer.stopPlayer();
       if (_playerSubscription != null) {
         _playerSubscription.cancel();
         _playerSubscription = null;
@@ -265,31 +271,34 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
   }
 
   void pausePlayer() async {
-    String result;
     try {
-      if (flutterSound.audioState == t_AUDIO_STATE.IS_PAUSED) {
-        result = await flutterSound.resumePlayer();
+      if (flutterSound.thePlayer.playerState == PlayerState.isPaused) {
+        await flutterSound.thePlayer.resumePlayer();
       } else {
-        result = await flutterSound.pausePlayer();
+        await flutterSound.thePlayer.pausePlayer();
       }
     } catch (err) {}
     setState(() {});
   }
 
   void seekToPlayer(int milliSecs) async {
-    String result = await flutterSound.seekToPlayer(milliSecs);
+    await flutterSound.thePlayer.seekToPlayer(
+      Duration(
+        milliseconds: milliSecs,
+      ),
+    );
   }
 
   onPausePlayerPressed() {
-    return flutterSound.audioState == t_AUDIO_STATE.IS_PLAYING ||
-            flutterSound.audioState == t_AUDIO_STATE.IS_PAUSED
+    return flutterSound.thePlayer.playerState == PlayerState.isPlaying ||
+            flutterSound.thePlayer.playerState == PlayerState.isPaused
         ? pausePlayer
         : null;
   }
 
   onStopPlayerPressed() {
-    return flutterSound.audioState == t_AUDIO_STATE.IS_PLAYING ||
-            flutterSound.audioState == t_AUDIO_STATE.IS_PAUSED
+    return flutterSound.thePlayer.playerState == PlayerState.isPlaying ||
+            flutterSound.thePlayer.playerState == PlayerState.isPaused
         ? stopPlayer
         : null;
   }
@@ -298,17 +307,18 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
     if (_media == t_MEDIA.FILE || _media == t_MEDIA.BUFFER) {
       if (_path[_codec.index] == null) return null;
     }
-    return flutterSound.audioState == t_AUDIO_STATE.IS_STOPPED
+    return flutterSound.thePlayer.playerState == PlayerState.isStopped
         ? startPlayer
         : null;
   }
 
   onStartRecorderPressed() {
     if (_media == t_MEDIA.ASSET || _media == t_MEDIA.BUFFER) return null;
-    if (flutterSound.audioState == t_AUDIO_STATE.IS_RECORDING)
-      return stopRecorder;
+    // if (flutterSound.thePlayer.playerState == PlayerState.IS_RECORDING)
+    //   return stopRecorder;
+    //TODO: Check for audio
 
-    return flutterSound.audioState == t_AUDIO_STATE.IS_STOPPED
+    return flutterSound.thePlayer.playerState == PlayerState.isStopped
         ? startRecorder
         : null;
   }
@@ -320,7 +330,7 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
         color: Colors.white54,
         size: 24.0.sp,
       );
-    return flutterSound.audioState == t_AUDIO_STATE.IS_STOPPED
+    return flutterSound.thePlayer.playerState == PlayerState.isStopped
         ? Text(
             variable.strStartrecord,
             style: TextStyle(color: Colors.white),
@@ -328,7 +338,7 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
         : Text(variable.strStopRecord, style: TextStyle(color: Colors.white));
   }
 
-  setCodec(t_CODEC codec) async {
+  setCodec(Codec codec) async {
     setState(() {
       _codec = codec;
     });

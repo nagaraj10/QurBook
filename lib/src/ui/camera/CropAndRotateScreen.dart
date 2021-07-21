@@ -32,7 +32,7 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
 
   String categoryName, categoryNameClone;
   String categoryID;
-  CarouselSlider carouselSlider;
+  CarouselController carouselSlider;
   int _current = 0;
 
   String currentImagePath;
@@ -105,21 +105,24 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Expanded(
-            child: carouselSlider = CarouselSlider(
-              height: 1.sh,
-              initialPage: 0,
-              enlargeCenterPage: true,
-              reverse: false,
-              enableInfiniteScroll: false,
-              pauseAutoPlayOnTouch: Duration(seconds: 10),
-              scrollDirection: Axis.horizontal,
-              onPageChanged: (index) {
-                setState(() {
-                  _current = index;
+            child: CarouselSlider(
+              carouselController: carouselSlider,
+              options: CarouselOptions(
+                height: 1.sh,
+                initialPage: 0,
+                enlargeCenterPage: true,
+                reverse: false,
+                enableInfiniteScroll: false,
+                // pauseAutoPlayOnTouch: Duration(seconds: 10),
+                scrollDirection: Axis.horizontal,
+                onPageChanged: (index, carouselPageChangedReason) {
+                  setState(() {
+                    _current = index;
 
-                  currentImagePath = widget.imagePath[_current];
-                });
-              },
+                    currentImagePath = widget.imagePath[_current];
+                  });
+                },
+              ),
               items: widget.imagePath.map((imgUrl) {
                 return Builder(
                   builder: (BuildContext context) {
@@ -268,28 +271,28 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
     return showDialog(
         context: context,
         barrierDismissible: false,
-        child: Material(
-          color: Colors.transparent,
-          child: Container(
-            height: double.infinity,
-            width: double.infinity,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                CircularProgressIndicator(
-                  strokeWidth: 2.0.sp,
-                  valueColor: AlwaysStoppedAnimation(primaryColor),
+        builder: (context) => Material(
+              color: Colors.transparent,
+              child: Container(
+                height: double.infinity,
+                width: double.infinity,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    CircularProgressIndicator(
+                      strokeWidth: 2.0.sp,
+                      valueColor: AlwaysStoppedAnimation(primaryColor),
+                    ),
+                    SizedBox(
+                      width: 10.0.w,
+                    ),
+                    Text(
+                      variable.strCropping,
+                      style: TextStyle(color: primaryColor),
+                    )
+                  ],
                 ),
-                SizedBox(
-                  width: 10.0.w,
-                ),
-                Text(
-                  variable.strCropping,
-                  style: TextStyle(color: primaryColor),
-                )
-              ],
-            ),
-          ),
-        ));
+              ),
+            ));
   }
 }

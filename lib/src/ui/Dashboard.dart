@@ -24,7 +24,7 @@ import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/telehealth/features/chat/view/BadgeIcon.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'package:showcaseview/showcase_widget.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 class DashboardScreen extends StatefulWidget {
   DashboardScreen({
@@ -282,19 +282,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget getChatIcon() {
     int count = 0;
     String targetID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    return StreamBuilder<QuerySnapshot>(
-        stream: Firestore.instance
+    return StreamBuilder<QuerySnapshot<Map<dynamic, dynamic>>>(
+        stream: FirebaseFirestore.instance
             .collection(STR_CHAT_LIST)
-            .document(targetID)
+            .doc(targetID)
             .collection(STR_USER_LIST)
             .snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        builder: (BuildContext context, snapshot) {
           if (snapshot.hasData) {
             count = 0;
-            snapshot.data.documents.toList().forEach((element) {
-              if (element.data[STR_IS_READ_COUNT] != null &&
-                  element.data[STR_IS_READ_COUNT] != '') {
-                count = count + element.data[STR_IS_READ_COUNT];
+            snapshot.data.docs.forEach((element) {
+              if (element.data()[STR_IS_READ_COUNT] != null &&
+                  element.data()[STR_IS_READ_COUNT] != '') {
+                count = count + element.data()[STR_IS_READ_COUNT];
               }
             });
             return BadgeIcon(

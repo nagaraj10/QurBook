@@ -26,25 +26,25 @@ class UserRelationshipCollection {
     createdOn = json['createdOn'];
     lastModifiedOn = json['lastModifiedOn'];
     parent =
-        json['parent'] != null ? new Parent.fromJson(json['parent']) : null;
+        json['parent'] != null ? Parent.fromJson(json['parent']) : null;
     relationship = json['relationship'] != null
-        ? new Relationship.fromJson(json['relationship'])
+        ? Relationship.fromJson(json['relationship'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['status'] = this.status;
-    data['nickName'] = this.nickName;
-    data['isActive'] = this.isActive;
-    data['createdOn'] = this.createdOn;
-    data['lastModifiedOn'] = this.lastModifiedOn;
-    if (this.parent != null) {
-      data['parent'] = this.parent.toJson();
+    final data = <String, dynamic>{};
+    data['id'] = id;
+    data['status'] = status;
+    data['nickName'] = nickName;
+    data['isActive'] = isActive;
+    data['createdOn'] = createdOn;
+    data['lastModifiedOn'] = lastModifiedOn;
+    if (parent != null) {
+      data['parent'] = parent.toJson();
     }
-    if (this.relationship != null) {
-      data['relationship'] = this.relationship.toJson();
+    if (relationship != null) {
+      data['relationship'] = relationship.toJson();
     }
     return data;
   }
@@ -142,35 +142,35 @@ class Parent {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['userName'] = this.userName;
-    data['firstName'] = this.firstName;
-    data['middleName'] = this.middleName;
-    data['lastName'] = this.lastName;
-    data['gender'] = this.gender;
-    data['dateOfBirth'] = this.dateOfBirth;
-    data['bloodGroup'] = this.bloodGroup;
-    data['countryCode'] = this.countryCode;
-    data['profilePicUrl'] = this.profilePicUrl;
-    data['profilePicThumbnailUrl'] = this.profilePicThumbnailUrl;
-    data['isTempUser'] = this.isTempUser;
-    data['isVirtualUser'] = this.isVirtualUser;
-    data['isMigrated'] = this.isMigrated;
-    data['isClaimed'] = this.isClaimed;
-    data['isIeUser'] = this.isIeUser;
-    data['isEmailVerified'] = this.isEmailVerified;
-    data['isCpUser'] = this.isCpUser;
-    data['communicationPreferences'] = this.communicationPreferences;
-    data['medicalPreferences'] = this.medicalPreferences;
-    data['isSignedIn'] = this.isSignedIn;
-    data['isActive'] = this.isActive;
-    data['createdBy'] = this.createdBy;
-    data['createdOn'] = this.createdOn;
-    data['lastModifiedBy'] = this.lastModifiedBy;
-    data['lastModifiedOn'] = this.lastModifiedOn;
-    data['providerId'] = this.providerId;
+    final data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['userName'] = userName;
+    data['firstName'] = firstName;
+    data['middleName'] = middleName;
+    data['lastName'] = lastName;
+    data['gender'] = gender;
+    data['dateOfBirth'] = dateOfBirth;
+    data['bloodGroup'] = bloodGroup;
+    data['countryCode'] = countryCode;
+    data['profilePicUrl'] = profilePicUrl;
+    data['profilePicThumbnailUrl'] = profilePicThumbnailUrl;
+    data['isTempUser'] = isTempUser;
+    data['isVirtualUser'] = isVirtualUser;
+    data['isMigrated'] = isMigrated;
+    data['isClaimed'] = isClaimed;
+    data['isIeUser'] = isIeUser;
+    data['isEmailVerified'] = isEmailVerified;
+    data['isCpUser'] = isCpUser;
+    data['communicationPreferences'] = communicationPreferences;
+    data['medicalPreferences'] = medicalPreferences;
+    data['isSignedIn'] = isSignedIn;
+    data['isActive'] = isActive;
+    data['createdBy'] = createdBy;
+    data['createdOn'] = createdOn;
+    data['lastModifiedBy'] = lastModifiedBy;
+    data['lastModifiedOn'] = lastModifiedOn;
+    data['providerId'] = providerId;
     return data;
   }
 }
@@ -210,16 +210,16 @@ class Relationship {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['code'] = this.code;
-    data['name'] = this.name;
-    data['description'] = this.description;
-    data['sortOrder'] = this.sortOrder;
-    data['isActive'] = this.isActive;
-    data['createdBy'] = this.createdBy;
-    data['createdOn'] = this.createdOn;
-    data['lastModifiedOn'] = this.lastModifiedOn;
+    final data = Map<String, dynamic>();
+    data['id'] = id;
+    data['code'] = code;
+    data['name'] = name;
+    data['description'] = description;
+    data['sortOrder'] = sortOrder;
+    data['isActive'] = isActive;
+    data['createdBy'] = createdBy;
+    data['createdOn'] = createdOn;
+    data['lastModifiedOn'] = lastModifiedOn;
     return data;
   }
 }

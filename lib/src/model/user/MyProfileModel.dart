@@ -1,4 +1,4 @@
-import 'package:myfhb/src/model/user/MyProfileResult.dart';
+import 'MyProfileResult.dart';
 
 class MyProfileModel {
   bool isSuccess;
@@ -11,15 +11,15 @@ class MyProfileModel {
     isSuccess = json['isSuccess'];
     message = json['message'];
     result =
-    json['result'] != null ? new MyProfileResult.fromJson(json['result']) : null;
+    json['result'] != null ? MyProfileResult.fromJson(json['result']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['isSuccess'] = this.isSuccess;
-    data['message'] = this.message;
-    if (this.result != null) {
-      data['result'] = this.result.toJson();
+    final data = <String, dynamic>{};
+    data['isSuccess'] = isSuccess;
+    data['message'] = message;
+    if (result != null) {
+      data['result'] = result.toJson();
     }
     return data;
   }

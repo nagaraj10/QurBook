@@ -20,20 +20,38 @@ import 'package:myfhb/src/ui/user/UserAccounts.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import '../colors/fhb_colors.dart' as fhbColors;
+import 'CommonUtil.dart';
+import 'FHBBasicWidget.dart';
+import 'PreferenceUtil.dart';
+import '../constants/fhb_constants.dart' as Constants;
+import '../constants/variable_constant.dart' as variable;
+import '../my_family/bloc/FamilyListBloc.dart';
+import '../my_family/models/FamilyData.dart';
+import '../my_family/models/FamilyMembersRes.dart';
+import '../my_family/screens/FamilyListView.dart';
+import '../src/blocs/User/MyProfileBloc.dart';
+import '../src/blocs/health/HealthReportListForUserBlock.dart';
+import '../src/model/user/MyProfileModel.dart';
+import '../src/model/user/user_accounts_arguments.dart';
+import '../src/ui/user/UserAccounts.dart';
+import '../src/utils/FHBUtils.dart';
+import '../src/utils/colors_utils.dart';
+import '../src/utils/screenutils/size_extensions.dart';
 
 class SwitchProfile {
   FamilyListBloc _familyListBloc;
   MyProfileBloc _myProfileBloc;
 
   BuildContext context;
-  GlobalKey<State> keyLoader = new GlobalKey<State>();
+  GlobalKey<State> keyLoader = GlobalKey<State>();
   Function callBackToRefresh;
   bool isFromDashborad;
 
-  FlutterToast toast = new FlutterToast();
+  FlutterToast toast = FlutterToast();
 
-  static const double ActionWidgetSize = 55.0;
-  static const double PlusIconSize = 14.0;
+  static const double ActionWidgetSize = 55;
+  static const double PlusIconSize = 14;
 
   Widget buildActions(BuildContext _context, GlobalKey<State> _keyLoader,
       Function _callBackToRefresh, bool isFromDashborad,
@@ -57,9 +75,9 @@ class SwitchProfile {
             onTap: () {
               if (_familyListBloc != null) {
                 _familyListBloc = null;
-                _familyListBloc = new FamilyListBloc();
+                _familyListBloc = FamilyListBloc();
               } else {
-                _familyListBloc = new FamilyListBloc();
+                _familyListBloc = FamilyListBloc();
               }
 
               /*  PreferenceUtil.getFamilyData(Constants.KEY_FAMILYMEMBER) != null
@@ -70,54 +88,57 @@ class SwitchProfile {
 
               //return new FamilyListDialog();
             },
-            child: isFromDashborad?getCirleAvatarWithBorderIcon(myProfile):CircleAvatar(
-              radius: 15,
-              child: ClipOval(
-                  child: myProfile != null
-                      ? myProfile.result != null
-                      ? myProfile.result.profilePicThumbnailUrl != null
-                      ? new FHBBasicWidget().getProfilePicWidgeUsingUrl(
-                      myProfile)
-                      : Container(
-                      height: 50.0.h,
-                      width: 50.0.h,
-                      color: Color(fhbColors.bgColorContainer),
-                      child: Center(
-                        child: Text(
-                          myProfile.result.firstName != null
-                              ? myProfile.result.firstName[0]
-                              .toUpperCase()
-                              : '',
-                          style: TextStyle(
-                              color: Color(CommonUtil()
-                                  .getMyPrimaryColor())),
-                        ),
-                      ))
-                      : Container(
-                    height: 50.0.h,
-                    width: 50.0.h,
-                    color: Color(fhbColors.bgColorContainer),
-                  )
-                      : Container(
-                    height: 50.0.h,
-                    width: 50.0.h,
-                    color: Color(fhbColors.bgColorContainer),
-                  )),
-            )));
+            child: isFromDashborad
+                ? getCirleAvatarWithBorderIcon(myProfile)
+                : CircleAvatar(
+                    radius: 15,
+                    child: ClipOval(
+                        child: myProfile != null
+                            ? myProfile.result != null
+                                ? myProfile.result.profilePicThumbnailUrl !=
+                                        null
+                                    ? FHBBasicWidget()
+                                        .getProfilePicWidgeUsingUrl(myProfile)
+                                    : Container(
+                                        height: 50.0.h,
+                                        width: 50.0.h,
+                                        color:
+                                            Color(fhbColors.bgColorContainer),
+                                        child: Center(
+                                          child: Text(
+                                            myProfile.result.firstName != null
+                                                ? myProfile.result.firstName[0]
+                                                    .toUpperCase()
+                                                : '',
+                                            style: TextStyle(
+                                                color: Color(CommonUtil()
+                                                    .getMyPrimaryColor())),
+                                          ),
+                                        ))
+                                : Container(
+                                    height: 50.0.h,
+                                    width: 50.0.h,
+                                    color: Color(fhbColors.bgColorContainer),
+                                  )
+                            : Container(
+                                height: 50.0.h,
+                                width: 50.0.h,
+                                color: Color(fhbColors.bgColorContainer),
+                              )),
+                  )));
   }
 
   Future<Widget> getDialogBoxWithFamilyMemberScrap(
       FamilyMemberResult familyData) {
-    return new FamilyListView(familyData).getDialogBoxWithFamilyMember(
+    return FamilyListView(familyData).getDialogBoxWithFamilyMember(
         familyData, context, keyLoader, (context, userId, userName, _) {
       PreferenceUtil.saveString(Constants.KEY_USERID, userId).then((onValue) {
         if (PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME) ==
             Constants.STR_IDDOCS) {
           if (PreferenceUtil.getStringValue(Constants.KEY_FAMILYMEMBERID) !=
-              null &&
+                  null &&
               PreferenceUtil.getStringValue(Constants.KEY_FAMILYMEMBERID)
-                  .length >
-                  0) {
+                  .isNotEmpty) {
             PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID, userId);
           } else {
             PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID, '');
@@ -127,12 +148,10 @@ class SwitchProfile {
         }
 
         Navigator.of(context).pop();
-        try{
-          ApiBaseHelper apiBaseHelper=new ApiBaseHelper();
-          var res= apiBaseHelper.updateLastVisited();
-        }catch(e){
-
-        }
+        try {
+          ApiBaseHelper apiBaseHelper = new ApiBaseHelper();
+          var res = apiBaseHelper.updateLastVisited();
+        } catch (e) {}
 
         getUserProfileData();
       });
@@ -140,24 +159,26 @@ class SwitchProfile {
   }
 
   getUserProfileData() async {
-    CommonUtil.showLoadingDialog(context, keyLoader, variable.strSwitchingUser);
+    await CommonUtil.showLoadingDialog(
+        context, keyLoader, variable.strSwitchingUser);
     if (_myProfileBloc != null) {
       _myProfileBloc = null;
-      _myProfileBloc = new MyProfileBloc();
+      _myProfileBloc = MyProfileBloc();
     } else {
-      _myProfileBloc = new MyProfileBloc();
+      _myProfileBloc = MyProfileBloc();
     }
-    HealthReportListForUserBlock _healthReportListForUserBlock =
-    new HealthReportListForUserBlock();
+    final _healthReportListForUserBlock = HealthReportListForUserBlock();
 
-    _myProfileBloc.getMyProfileData(Constants.KEY_USERID).then((profileData) {
+    await _myProfileBloc
+        .getMyProfileData(Constants.KEY_USERID)
+        .then((profileData) {
       PreferenceUtil.saveProfileData(Constants.KEY_PROFILE, profileData)
           .then((value) {
         _healthReportListForUserBlock.getHelthReportLists().then((value) {
           PreferenceUtil.saveCompleteData(Constants.KEY_COMPLETE_DATA, value)
               .then((value) {
             Navigator.of(keyLoader.currentContext, rootNavigator: true).pop();
-            new CommonUtil()
+            CommonUtil()
                 .getMedicalPreference(callBackToRefresh: callBackToRefresh);
           });
         });
@@ -169,8 +190,8 @@ class SwitchProfile {
   }
 
   checkInternet(
-      GlobalKey<State> _keyLoader, GlobalKey<ScaffoldState> scaffold_state) {
-    new FHBUtils().check().then((intenet) {
+      GlobalKey<State> _keyLoader, GlobalKey<ScaffoldState> scaffoldState) {
+    FHBUtils().check().then((intenet) {
       if (intenet != null && intenet) {
         _familyListBloc.getFamilyMembersListNew().then((familyMembersList) {
           if (familyMembersList != null &&
@@ -196,34 +217,34 @@ class SwitchProfile {
           child: ClipOval(
               child: myProfile != null
                   ? myProfile.result != null
-                  ? myProfile.result.profilePicThumbnailUrl != null
-                  ? new FHBBasicWidget().getProfilePicWidgeUsingUrl(
-                  myProfile)
+                      ? myProfile.result.profilePicThumbnailUrl != null
+                          ? FHBBasicWidget()
+                              .getProfilePicWidgeUsingUrl(myProfile)
+                          : Container(
+                              height: 50,
+                              width: 50,
+                              color: Color(fhbColors.bgColorContainer),
+                              child: Center(
+                                child: Text(
+                                  myProfile.result.firstName != null
+                                      ? myProfile.result.firstName[0]
+                                          .toUpperCase()
+                                      : '',
+                                  style: TextStyle(
+                                      color: Color(
+                                          CommonUtil().getMyPrimaryColor())),
+                                ),
+                              ))
+                      : Container(
+                          height: 50,
+                          width: 50,
+                          color: Color(fhbColors.bgColorContainer),
+                        )
                   : Container(
-                  height: 50,
-                  width: 50,
-                  color: Color(fhbColors.bgColorContainer),
-                  child: Center(
-                    child: Text(
-                      myProfile.result.firstName != null
-                          ? myProfile.result.firstName[0]
-                          .toUpperCase()
-                          : '',
-                      style: TextStyle(
-                          color: Color(
-                              CommonUtil().getMyPrimaryColor())),
-                    ),
-                  ))
-                  : Container(
-                height: 50,
-                width: 50,
-                color: Color(fhbColors.bgColorContainer),
-              )
-                  : Container(
-                height: 50,
-                width: 50,
-                color: Color(fhbColors.bgColorContainer),
-              )),
+                      height: 50,
+                      width: 50,
+                      color: Color(fhbColors.bgColorContainer),
+                    )),
         ),
         _getPlusIcon(),
       ],
@@ -233,7 +254,7 @@ class SwitchProfile {
   Widget _getPlusIcon() {
     return Positioned(
       bottom: 0,
-      left: ((ActionWidgetSize / 2) - (PlusIconSize / 2)),
+      left: (ActionWidgetSize / 2) - (PlusIconSize / 2),
       child: InkWell(
         onTap: () {
           navigateToAddFamily();
@@ -245,18 +266,18 @@ class SwitchProfile {
 
             decoration: BoxDecoration(
                 color: ColorUtils.countColor,
-                borderRadius: BorderRadius.circular(15.0)),
+                borderRadius: BorderRadius.circular(15)),
             child: Icon(
               Icons.add,
               color: Colors.white,
-              size: 12.0,
+              size: 12,
             )),
       ),
     );
   }
 
   navigateToAddFamily() {
-    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
       return UserAccounts(arguments: UserAccountsArguments(selectedIndex: 1));
     }));
   }

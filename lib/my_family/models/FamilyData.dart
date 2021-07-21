@@ -1,7 +1,7 @@
-import 'package:myfhb/my_family/models/SharedToMe.dart';
-import 'package:myfhb/my_family/models/Sharedbyme.dart';
-import 'package:myfhb/my_family/models/VirtualUserParent.dart';
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'SharedToMe.dart';
+import 'Sharedbyme.dart';
+import 'VirtualUserParent.dart';
+import '../../constants/fhb_parameters.dart' as parameters;
 
 class FamilyData {
   List<Sharedbyme> sharedbyme;
@@ -12,32 +12,32 @@ class FamilyData {
 
   FamilyData.fromJson(Map<String, dynamic> json) {
     if (json[parameters.strsharedbyme] != null) {
-      sharedbyme = new List<Sharedbyme>();
+      sharedbyme = List<Sharedbyme>();
       json[parameters.strsharedbyme].forEach((v) {
-        sharedbyme.add(new Sharedbyme.fromJson(v));
+        sharedbyme.add(Sharedbyme.fromJson(v));
       });
     }
     if (json[parameters.strsharedToMe] != null) {
-      sharedToMe = new List<SharedToMe>();
+      sharedToMe = List<SharedToMe>();
       json[parameters.strsharedToMe].forEach((v) {
-        sharedToMe.add(new SharedToMe.fromJson(v));
+        sharedToMe.add(SharedToMe.fromJson(v));
       });
     }
     virtualUserParent = json[parameters.strvirtualUserParent] != null
-        ? new VirtualUserParent.fromJson(json[parameters.strvirtualUserParent])
+        ? VirtualUserParent.fromJson(json[parameters.strvirtualUserParent])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.sharedbyme != null) {
-      data[parameters.strsharedbyme] = this.sharedbyme.map((v) => v.toJson()).toList();
+    final data = <String, dynamic>{};
+    if (sharedbyme != null) {
+      data[parameters.strsharedbyme] = sharedbyme.map((v) => v.toJson()).toList();
     }
-    if (this.sharedToMe != null) {
-      data[parameters.strsharedToMe] = this.sharedToMe.map((v) => v.toJson()).toList();
+    if (sharedToMe != null) {
+      data[parameters.strsharedToMe] = sharedToMe.map((v) => v.toJson()).toList();
     }
-    if (this.virtualUserParent != null) {
-      data[parameters.strvirtualUserParent] = this.virtualUserParent.toJson();
+    if (virtualUserParent != null) {
+      data[parameters.strvirtualUserParent] = virtualUserParent.toJson();
     }
     return data;
   }

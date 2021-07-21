@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'package:myfhb/authentication/constants/constants.dart';
-import 'package:myfhb/authentication/model/confirm_password_model.dart';
-import 'package:myfhb/authentication/model/confirm_password_model.dart'
-    as confirmPasswordModel;
-import 'package:myfhb/authentication/view/authentication_validator.dart';
-import 'package:myfhb/authentication/view/login_screen.dart';
-import 'package:myfhb/authentication/view_model/otp_view_model.dart';
-import 'package:myfhb/authentication/view_model/patientauth_view_model.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/src/ui/loader_class.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/widgets/RaisedGradientButton.dart';
+import '../constants/constants.dart';
+import '../model/confirm_password_model.dart';
+import '../model/confirm_password_model.dart' as confirmPasswordModel;
+import 'authentication_validator.dart';
+import 'login_screen.dart';
+import '../view_model/otp_view_model.dart';
+import '../view_model/patientauth_view_model.dart';
+import '../../common/CommonUtil.dart';
+import '../../constants/fhb_constants.dart';
+import '../../src/ui/loader_class.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
+import '../../widgets/RaisedGradientButton.dart';
 import 'package:provider/provider.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
@@ -28,9 +27,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   final NewPasswordController = TextEditingController();
   final NewPasswordAgainController = TextEditingController();
   var isLoading = false;
-  FlutterToast toast = new FlutterToast();
-  var _ChangePasswordKey = GlobalKey<FormState>();
-  var _otpKey = GlobalKey<FormState>();
+  FlutterToast toast = FlutterToast();
+  final _ChangePasswordKey = GlobalKey<FormState>();
+  final _otpKey = GlobalKey<FormState>();
   bool _autoValidateBool = false;
   AuthViewModel authViewModel;
   bool _isHidden = true;
@@ -41,7 +40,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   void initState() {
     mInitialTime = DateTime.now();
     super.initState();
-    authViewModel = new AuthViewModel();
+    authViewModel = AuthViewModel();
     Provider.of<OtpViewModel>(context, listen: false)?.startTimer();
   }
 
@@ -61,7 +60,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   @override
   Widget build(BuildContext context) {
     otpViewModel = Provider.of<OtpViewModel>(context);
-    final height = 1.sh;
+    var height = 1.sh;
     return Scaffold(
       body: Container(
         height: height,
@@ -71,7 +70,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: SingleChildScrollView(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     SizedBox(height: height * .1),
@@ -106,13 +104,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                 hintText: strCodeHintText,
                                 labelText: strCodeHintText,
                                 focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderRadius: BorderRadius.circular(10),
                                     borderSide: BorderSide(
                                       color: Color(
                                           CommonUtil().getMyPrimaryColor()),
                                     )),
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
+                                  borderRadius: BorderRadius.circular(10),
                                   borderSide: BorderSide(
                                     color:
                                         Color(CommonUtil().getMyPrimaryColor()),
@@ -155,14 +153,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                       ),
                                     ),
                                     focusedBorder: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
+                                        borderRadius: BorderRadius.circular(10),
                                         borderSide: BorderSide(
                                           color: Color(
                                               CommonUtil().getMyPrimaryColor()),
                                         )),
                                     border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
+                                      borderRadius: BorderRadius.circular(10),
                                       borderSide: BorderSide(
                                         color: Color(
                                             CommonUtil().getMyPrimaryColor()),
@@ -201,14 +198,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                     ),
                                     errorMaxLines: 2,
                                     focusedBorder: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
+                                        borderRadius: BorderRadius.circular(10),
                                         borderSide: BorderSide(
                                           color: Color(
                                               CommonUtil().getMyPrimaryColor()),
                                         )),
                                     border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
+                                      borderRadius: BorderRadius.circular(10),
                                       borderSide: BorderSide(
                                         color: Color(
                                             CommonUtil().getMyPrimaryColor()),
@@ -250,7 +246,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                 ),
                                 children: [
                                   TextSpan(
-                                    text: '${otpViewModel.timeForResend}',
+                                    text: otpViewModel.timeForResend,
                                     style: TextStyle(
                                       color: Color(
                                           CommonUtil().getMyPrimaryColor()),
@@ -273,17 +269,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                         children: [
                           RaisedGradientButton(
                             gradient: LinearGradient(colors: [
-                              Color(new CommonUtil().getMyPrimaryColor()),
-                              Color(new CommonUtil().getMyGredientColor()),
+                              Color(CommonUtil().getMyPrimaryColor()),
+                              Color(CommonUtil().getMyGredientColor()),
                             ]),
                             width: 200.0.w,
-                            child: Text(
-                              strVerifyCall,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 15.0.sp,
-                                  fontWeight: FontWeight.w600),
-                            ),
                             onPressed: otpViewModel.timerSeconds == 0
                                 ? () {
                                     if (_ChangePasswordKey.currentState
@@ -291,7 +280,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                       otpViewModel?.stopOTPTimer();
                                       otpViewModel.confirmViaCall(
                                         phoneNumber: widget.userName ?? '',
-                                        onOtpReceived: (String otpCode) {
+                                        onOtpReceived: (otpCode) {
                                           _verifyDetails(
                                             otpCode: otpCode,
                                           );
@@ -300,6 +289,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                     }
                                   }
                                 : null,
+                            child: Text(
+                              strVerifyCall,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15.0.sp,
+                                  fontWeight: FontWeight.w600),
+                            ),
                           ),
                         ],
                       ),
@@ -349,15 +345,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       blurRadius: 5,
                       spreadRadius: 2)
                 ],
-                gradient: LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                    colors: [
+                gradient: LinearGradient(end: Alignment.centerRight, colors: [
 //                  Color(0xff138fcf),
 //                  Color(0xff138fcf),
-                      Color(new CommonUtil().getMyPrimaryColor()),
-                      Color(new CommonUtil().getMyGredientColor())
-                    ])),
+                  Color(CommonUtil().getMyPrimaryColor()),
+                  Color(CommonUtil().getMyGredientColor())
+                ])),
             child: Text(
               strChangeButtonText,
               style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
@@ -380,15 +373,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         _ChangePasswordKey.currentState.save();
       }
       LoaderClass.showLoadingDialog(context);
-      PatientConfirmPasswordModel logInModel = new PatientConfirmPasswordModel(
+      var logInModel = PatientConfirmPasswordModel(
         verificationCode: otpCode ?? CodeController.text,
         userName: widget.userName,
         source: strSource,
         password: NewPasswordController.text,
       );
-      Map<String, dynamic> map = logInModel.toJson();
-      confirmPasswordModel.PatientConfirmPasswordModel response =
-          await authViewModel.confirmPassword(map);
+      var map = logInModel.toJson();
+      final response = await authViewModel.confirmPassword(map);
       print(response.toString());
       _checkResponse(response);
     } else {
@@ -404,8 +396,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       toast.getToast(response.message, Colors.lightBlue);
       Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(
-              builder: (BuildContext context) => PatientSignInScreen()),
+          MaterialPageRoute(builder: (context) => PatientSignInScreen()),
           (route) => false);
     } else {
       toast.getToast(response.message, Colors.red);

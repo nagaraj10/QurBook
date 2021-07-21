@@ -2,7 +2,7 @@ import 'dart:convert' as convert;
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
@@ -10,45 +10,45 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
-import 'package:myfhb/add_family_user_info/models/CityListModel.dart';
-import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments.dart';
-import 'package:myfhb/add_family_user_info/models/address_result.dart';
-import 'package:myfhb/add_family_user_info/models/update_relatiosnship_model.dart';
-import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
-import 'package:myfhb/add_family_user_info/widget/address_type_widget.dart';
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/FHBBasicWidget.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
-import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
-import 'package:myfhb/my_family/models/RelationShip.dart';
-import 'package:myfhb/my_family/models/relationship_response_list.dart';
-import 'package:myfhb/my_family/models/relationships.dart';
-import 'package:myfhb/my_providers/models/ProfilePicThumbnail.dart';
-import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
-import 'package:myfhb/src/model/common_response.dart';
-import 'package:myfhb/src/model/user/AddressTypeModel.dart';
-import 'package:myfhb/src/model/user/City.dart';
-import 'package:myfhb/src/model/user/MyProfileModel.dart';
-import 'package:myfhb/src/model/user/MyProfileResult.dart';
-import 'package:myfhb/src/model/user/UserAddressCollection.dart';
+import '../bloc/add_family_user_info_bloc.dart';
+import '../models/CityListModel.dart';
+import '../models/add_family_user_info_arguments.dart';
+import '../models/address_result.dart';
+import '../models/update_relatiosnship_model.dart';
+import '../services/add_family_user_info_repository.dart';
+import '../widget/address_type_widget.dart';
+import '../../colors/fhb_colors.dart' as fhbColors;
+import '../../common/CommonConstants.dart';
+import '../../common/CommonUtil.dart';
+import '../../common/FHBBasicWidget.dart';
+import '../../common/PreferenceUtil.dart';
+import '../../constants/fhb_constants.dart' as Constants;
+import '../../constants/router_variable.dart' as router;
+import '../../constants/variable_constant.dart' as variable;
+import '../../my_family/bloc/FamilyListBloc.dart';
+import '../../my_family/models/FamilyMembersRes.dart';
+import '../../my_family/models/RelationShip.dart';
+import '../../my_family/models/relationship_response_list.dart';
+import '../../my_family/models/relationships.dart';
+import '../../my_providers/models/ProfilePicThumbnail.dart';
+import '../../src/blocs/User/MyProfileBloc.dart';
+import '../../src/model/common_response.dart';
+import '../../src/model/user/AddressTypeModel.dart';
+import '../../src/model/user/City.dart';
+import '../../src/model/user/MyProfileModel.dart';
+import '../../src/model/user/MyProfileResult.dart';
+import '../../src/model/user/UserAddressCollection.dart';
 //import 'package:myfhb/src/model/user/UserAddressCollection.dart';
-import 'package:myfhb/src/model/user/city_list_model.dart';
-import 'package:myfhb/src/model/user/state_list_model.dart';
-import 'package:myfhb/src/resources/network/ApiResponse.dart';
-import 'package:myfhb/src/ui/authentication/OtpVerifyScreen.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:myfhb/src/utils/alert.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
+import '../../src/model/user/city_list_model.dart';
+import '../../src/model/user/state_list_model.dart';
+import '../../src/resources/network/ApiResponse.dart';
+import '../../src/ui/authentication/OtpVerifyScreen.dart';
+import '../../src/utils/FHBUtils.dart';
+import '../../src/utils/alert.dart';
+import '../../src/utils/colors_utils.dart';
 
 import '../../common/CommonConstants.dart';
-import 'package:myfhb/src/model/user/State.dart' as stateObj;
+import '../../src/model/user/State.dart' as stateObj;
 
 class AddFamilyUserInfoScreen extends StatefulWidget {
   AddFamilyUserInfoArguments arguments;
@@ -62,7 +62,7 @@ class AddFamilyUserInfoScreen extends StatefulWidget {
 }
 
 class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
-  GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
+  GlobalKey<ScaffoldState> scaffold_state = GlobalKey<ScaffoldState>();
   final mobileNoController = TextEditingController();
   FocusNode mobileNoFocus = FocusNode();
 
@@ -85,8 +85,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   FocusNode dateOfBirthFocus = FocusNode();
 
   AddFamilyUserInfoBloc addFamilyUserInfoBloc;
-  AddFamilyUserInfoRepository _addFamilyUserInfoRepository =
-      new AddFamilyUserInfoRepository();
+  final AddFamilyUserInfoRepository _addFamilyUserInfoRepository =
+      AddFamilyUserInfoRepository();
   bool isCalled = false;
   List<RelationsShipModel> relationShipResponseList;
   RelationsShipModel selectedRelationShip;
@@ -106,7 +106,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   bool updateProfile = false;
   bool firstTym = true;
-  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+  final GlobalKey<State> _keyLoader = GlobalKey<State>();
 
   final firstNameController = TextEditingController();
   FocusNode firstNameFocus = FocusNode();
@@ -126,10 +126,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   var dialogContext;
 
   String strErrorMsg = '';
-  CommonUtil commonUtil = new CommonUtil();
+  CommonUtil commonUtil = CommonUtil();
 
   String dateofBirthStr;
-  File imageURI;
+  PickedFile imageURI;
 
   final double circleRadius = 100.0.h;
   final double circleBorderWidth = 2.0.w;
@@ -143,20 +143,20 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   var currentSelectedProfilePic;
 
   //CityResult cityVal = new CityResult();
-  City cityVal = new City();
-  stateObj.State stateVal = new stateObj.State();
+  City cityVal = City();
+  stateObj.State stateVal = stateObj.State();
 
-  AddressResult _addressResult = new AddressResult();
-  List<AddressResult> _addressList = List();
+  AddressResult _addressResult = AddressResult();
+  List<AddressResult> _addressList = [];
   String addressTypeId;
 
   @override
   void initState() {
     super.initState();
-    String auth_token = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
-    String user_id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     PaintingBinding.instance.imageCache.clear();
-    addFamilyUserInfoBloc = new AddFamilyUserInfoBloc();
+    addFamilyUserInfoBloc = AddFamilyUserInfoBloc();
     try {
       /* if (PreferenceUtil.getFamilyRelationship(Constants.KEY_FAMILYREL) !=
           null) {
@@ -199,10 +199,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         }
       } */
     } */
-    String profilebanner =
+    var profilebanner =
         PreferenceUtil.getStringValue(Constants.KEY_PROFILE_BANNER);
     if (profilebanner != null) {
-      MySliverAppBar.imageURIProfile = File(profilebanner);
+      MySliverAppBar.imageURIProfile = PickedFile(profilebanner);
     }
 
     if (widget.arguments.fromClass == CommonConstants.my_family) {
@@ -211,10 +211,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       if (widget.arguments.sharedbyme.child.isVirtualUser != null) {
         try {
           if (widget.arguments.sharedbyme.child.isVirtualUser) {
-            MyProfileModel myProf =
-                PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+            var myProf = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
             if (myProf.result.userContactCollection3 != null) {
-              if (myProf.result.userContactCollection3.length > 0) {
+              if (myProf.result.userContactCollection3.isNotEmpty) {
                 mobileNoController.text =
                     myProf.result.userContactCollection3[0].phoneNumber;
                 emailController.text =
@@ -254,17 +253,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     if (widget.arguments.sharedbyme != null) {
       if (widget.arguments.sharedbyme.child.firstName != null) {
         firstNameController.text =
-            widget.arguments.sharedbyme.child.firstName != null
-                ? widget.arguments.sharedbyme.child.firstName
-                : '';
+            widget.arguments.sharedbyme.child.firstName ?? '';
         middleNameController.text =
-            widget.arguments.sharedbyme.child.middleName != null
-                ? widget.arguments.sharedbyme.child.middleName
-                : '';
+            widget.arguments.sharedbyme.child.middleName ?? '';
         lastNameController.text =
-            widget.arguments.sharedbyme.child.lastName != null
-                ? widget.arguments.sharedbyme.child.lastName
-                : '';
+            widget.arguments.sharedbyme.child.lastName ?? '';
       } else {
         firstNameController.text = '';
       }
@@ -289,7 +282,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
       if (widget
           ?.arguments?.sharedbyme?.child?.userAddressCollection3.isNotEmpty) {
-        UserAddressCollection3 currentAddress =
+        final currentAddress =
             widget.arguments.sharedbyme.child.userAddressCollection3[0];
         cntrlr_addr_one.text = currentAddress.addressLine1;
         cntrlr_addr_two.text = currentAddress.addressLine2;
@@ -312,9 +305,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       // }
 
       if (widget.arguments.sharedbyme.child.dateOfBirth != null) {
-        dateofBirthStr = new FHBUtils().getFormattedDateForUserBirth(
+        dateofBirthStr = FHBUtils().getFormattedDateForUserBirth(
             widget.arguments.sharedbyme.child.dateOfBirth);
-        dateOfBirthController.text = new FHBUtils().getFormattedDateOnlyNew(
+        dateOfBirthController.text = FHBUtils().getFormattedDateOnlyNew(
             widget.arguments.sharedbyme.child.dateOfBirth);
       }
     } else if (widget.arguments.fromClass == CommonConstants.user_update) {
@@ -325,8 +318,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         // MyProfileModel myProf =
         //     PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
         if (widget.arguments.myProfileResult.userContactCollection3 != null) {
-          if (widget.arguments.myProfileResult.userContactCollection3.length >
-              0) {
+          if (widget
+              .arguments.myProfileResult.userContactCollection3.isNotEmpty) {
             mobileNoController.text = widget.arguments.myProfileResult
                 .userContactCollection3[0].phoneNumber;
             emailController.text = widget
@@ -334,12 +327,12 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           }
         }
 
-        dateOfBirthController.text = new FHBUtils().getFormattedDateOnlyNew(
+        dateOfBirthController.text = FHBUtils().getFormattedDateOnlyNew(
             widget.arguments.myProfileResult.dateOfBirth);
 
         if (widget.arguments.myProfileResult.userAddressCollection3 != null &&
-            widget.arguments.myProfileResult.userAddressCollection3.length >
-                0) {
+            widget
+                .arguments.myProfileResult.userAddressCollection3.isNotEmpty) {
           cntrlr_addr_one.text = widget
               .arguments.myProfileResult.userAddressCollection3[0].addressLine1;
           cntrlr_addr_two.text = widget
@@ -367,17 +360,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       }
       if (widget.arguments.myProfileResult.firstName != null) {
         firstNameController.text =
-            widget.arguments.myProfileResult.firstName != null
-                ? widget.arguments.myProfileResult.firstName
-                : '';
+            widget.arguments.myProfileResult.firstName ?? '';
         middleNameController.text =
-            widget.arguments.myProfileResult.middleName != null
-                ? widget.arguments.myProfileResult.middleName
-                : '';
+            widget.arguments.myProfileResult.middleName ?? '';
         lastNameController.text =
-            widget.arguments.myProfileResult.lastName != null
-                ? widget.arguments.myProfileResult.lastName
-                : '';
+            widget.arguments.myProfileResult.lastName ?? '';
       }
 
       if (commonUtil
@@ -404,9 +391,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         //     .split("T"); //by space" " the string need to splited
 
         // dateOfBirthController.text = list[0];
-        dateofBirthStr = new FHBUtils().getFormattedDateForUserBirth(
+        dateofBirthStr = FHBUtils().getFormattedDateForUserBirth(
             widget.arguments.myProfileResult.dateOfBirth);
-        dateOfBirthController.text = new FHBUtils().getFormattedDateOnlyNew(
+        dateOfBirthController.text = FHBUtils().getFormattedDateOnlyNew(
             widget.arguments.myProfileResult.dateOfBirth);
       }
       if (firstTym) {
@@ -425,7 +412,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         myProfile = value;
 
         if (widget.arguments.isPrimaryNoSelected) {
-          MyProfileModel myProf =
+          final myProf =
               PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
           mobileNoController.text =
               myProf.result.userContactCollection3[0].phoneNumber;
@@ -459,11 +446,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             : toBeginningOfSentenceCase(value.result.gender.toLowerCase());
 
         dateofBirthStr = value.result.dateOfBirth != null
-            ? new FHBUtils()
-                .getFormattedDateForUserBirth(value.result.dateOfBirth)
+            ? FHBUtils().getFormattedDateForUserBirth(value.result.dateOfBirth)
             : '';
         dateOfBirthController.text = value.result.dateOfBirth != null
-            ? new FHBUtils().getFormattedDateOnlyNew(value.result.dateOfBirth)
+            ? FHBUtils().getFormattedDateOnlyNew(value.result.dateOfBirth)
             : '';
 
         if (firstTym) {
@@ -483,29 +469,29 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   void renameBloodGroup(String selectedBloodGroupClone) {
     if (selectedBloodGroupClone != null) {
-      var bloodGroupSplitName = selectedBloodGroupClone.split('_');
+      final bloodGroupSplitName = selectedBloodGroupClone.split('_');
       try {
         if (bloodGroupSplitName.length > 1) {
-          for (String bloodGroup in variable.bloodGroupArray) {
+          for (var bloodGroup in variable.bloodGroupArray) {
             if (bloodGroupSplitName[0] == bloodGroup) {
               selectedBloodGroup = bloodGroup;
             }
           }
 
-          for (String bloodRange in variable.bloodRangeArray) {
+          for (var bloodRange in variable.bloodRangeArray) {
             if (bloodGroupSplitName[1] == bloodRange) {
               selectedBloodRange = bloodRange;
             }
           }
         } else {
-          var bloodGroupSplitName = selectedBloodGroupClone.split(' ');
+          final bloodGroupSplitName = selectedBloodGroupClone.split(' ');
           if (bloodGroupSplitName.length > 1) {
-            for (String bloodGroup in variable.bloodGroupArray) {
+            for (final bloodGroup in variable.bloodGroupArray) {
               if (bloodGroupSplitName[0] == bloodGroup) {
                 selectedBloodGroup = bloodGroup;
               }
 
-              for (String bloodRange in variable.bloodRangeArray) {
+              for (var bloodRange in variable.bloodRangeArray) {
                 if (bloodGroupSplitName[1] == bloodRange) {
                   selectedBloodRange = bloodRange;
                 }
@@ -524,10 +510,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   }
 
   getUserProfileData() async {
-    MyProfileBloc _myProfileBloc = new MyProfileBloc();
-    FamilyListBloc _familyListBloc = new FamilyListBloc();
+    var _myProfileBloc = MyProfileBloc();
+    var _familyListBloc = FamilyListBloc();
 
-    _myProfileBloc
+    await _myProfileBloc
         .getMyProfileData(Constants.KEY_USERID_MAIN)
         .then((profileData) {
       PreferenceUtil.saveProfileData(Constants.KEY_PROFILE_MAIN, profileData)
@@ -559,12 +545,12 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   // }
 
   Future<void> setMyProfilePic(String userId, File image) async {
-    CommonResponse response =
+    final response =
         await _addFamilyUserInfoRepository.updateUserProfilePic(userId, image);
     if (response.isSuccess) {
-      FlutterToast().getToast('${response.message}', Colors.green);
+      FlutterToast().getToast(response.message, Colors.green);
     } else {
-      FlutterToast().getToast('${response.message}', Colors.red);
+      FlutterToast().getToast(response.message, Colors.red);
     }
   }
 
@@ -605,7 +591,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           } else if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
               child: CircularProgressIndicator(
-                backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
+                backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
               ),
             );
           } else {
@@ -661,7 +647,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           } else if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
               child: CircularProgressIndicator(
-                backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
+                backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
               ),
             );
           } else {
@@ -716,7 +702,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           } else if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
               child: CircularProgressIndicator(
-                backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
+                backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
               ),
             );
           } else {
@@ -817,10 +803,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   }
 
   saveMediaDialog(BuildContext cont) {
-    String userId = currentUserID;
+    var userId = currentUserID;
     return showDialog(
       context: cont,
-      builder: (BuildContext context) {
+      builder: (context) {
         return StatefulBuilder(builder: (context, setState) {
           return AlertDialog(
               title: Text(
@@ -835,36 +821,36 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 child: ListBody(
                   children: <Widget>[
                     GestureDetector(
+                      onTap: () async {
+                        var image = await ImagePicker.platform
+                            .pickImage(source: ImageSource.gallery);
+                        if (image != null) {
+                          imageURI = image;
+                          Navigator.pop(context);
+                        }
+                      },
                       child: Text(
                         variable.Gallery,
                         style: TextStyle(
                           fontSize: 16.0.sp,
                         ),
                       ),
-                      onTap: () async {
-                        var image = await ImagePicker.pickImage(
-                            source: ImageSource.gallery);
-                        if (image != null) {
-                          imageURI = image as File;
-                          Navigator.pop(context);
-                        }
-                      },
                     ),
                     Padding(
-                      padding: EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(8),
                     ),
                     GestureDetector(
-                      child: Text(variable.Camera),
                       onTap: () async {
                         Navigator.pop(context);
 
-                        var image = await ImagePicker.pickImage(
-                            source: ImageSource.camera);
+                        var image = await ImagePicker.platform
+                            .pickImage(source: ImageSource.camera);
                         if (image != null) {
-                          imageURI = image as File;
-                          setMyProfilePic(userId, imageURI);
+                          imageURI = image;
+                          await setMyProfilePic(userId, File(imageURI.path));
                         }
                       },
+                      child: Text(variable.Camera),
                     ),
                   ],
                 ),
@@ -873,7 +859,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       },
     ).then((value) {
       setState(() {});
-      setMyProfilePic(userId, imageURI);
+      setMyProfilePic(userId, File(imageURI.path));
     });
   }
 
@@ -892,7 +878,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         extendBodyBehindAppBar: true,
         appBar: AppBar(
             backgroundColor: Colors.transparent,
-            elevation: 0.0,
+            elevation: 0,
             leading: IconButton(
               icon: Icon(
                 Icons.arrow_back_ios,
@@ -905,116 +891,107 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             )),
         key: scaffold_state,
         body: SingleChildScrollView(
-          child: Stack(
-              fit: StackFit.loose,
-              alignment: Alignment.topCenter,
-              children: <Widget>[
-                Expanded(
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      mainAxisSize: MainAxisSize.min,
+          child: Stack(alignment: Alignment.topCenter, children: <Widget>[
+            Expanded(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Stack(
+                      alignment: Alignment.bottomLeft,
                       children: <Widget>[
-                        Stack(
-                          alignment: Alignment.bottomLeft,
-                          children: <Widget>[
-                            Padding(
-                              padding:
-                                  EdgeInsets.only(bottom: circleRadius / 2.0),
-                              child: Container(
-                                color:
-                                    Color(new CommonUtil().getMyPrimaryColor()),
-                                height: 160.0.h,
-                                child: Stack(
-                                    fit: StackFit.expand,
-                                    overflow: Overflow.visible,
-                                    children: [
-                                      Container(
-                                        color: Colors.black.withOpacity(0.2),
-                                      )
-                                    ]),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 10),
-                              child: Container(
-                                width: circleRadius,
-                                height: circleRadius,
-                                decoration: ShapeDecoration(
-                                    shape: CircleBorder(),
-                                    color: Color(
-                                        new CommonUtil().getMyPrimaryColor())),
-                                child: Padding(
-                                  padding: EdgeInsets.all(circleBorderWidth),
-                                  child: InkWell(
-                                    child: ClipOval(
-                                        child:
-                                            (imageURI != null && imageURI != '')
-                                                ? Image.file(
-                                                    imageURI,
-                                                    fit: BoxFit.cover,
-                                                    width: 60.0.h,
-                                                    height: 60.0.h,
-                                                  )
-                                                : showProfileImageNew()),
-                                    onTap: () {
-                                      saveMediaDialog(context);
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        _showMobileNoTextField(),
-                        _showFirstNameTextField(),
-                        _showMiddleNameTextField(),
-                        _showLastNameTextField(),
-                        //_showRelationShipTextField(),
-                        widget.arguments.fromClass == CommonConstants.my_family
-                            ? relationShipResponseList.isNotEmpty
-                                ? Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: <Widget>[
-                                      Expanded(
-                                        child: getRelationshipDetails(
-                                            relationShipResponseList),
-                                      )
-                                    ],
+                        Padding(
+                          padding: EdgeInsets.only(bottom: circleRadius / 2.0),
+                          child: Container(
+                            color: Color(CommonUtil().getMyPrimaryColor()),
+                            height: 160.0.h,
+                            child: Stack(
+                                clipBehavior: Clip.none,
+                                fit: StackFit.expand,
+                                children: [
+                                  Container(
+                                    color: Colors.black.withOpacity(0.2),
                                   )
-                                : _showRelationShipTextField()
-                            : widget.arguments.fromClass ==
-                                    CommonConstants.user_update
-                                ? new Container()
-                                : _showRelationShipTextField(),
-                        _showEmailAddTextField(),
-                        Row(
-                          children: <Widget>[
-                            Expanded(child: getGenderDetails())
-                          ],
+                                ]),
+                          ),
                         ),
-                        Row(
-                          children: <Widget>[
-                            Expanded(child: getBloodGroupDetails()),
-                            Expanded(child: getBloodRangeDetails())
-                          ],
+                        Padding(
+                          padding: EdgeInsets.only(left: 10),
+                          child: Container(
+                            width: circleRadius,
+                            height: circleRadius,
+                            decoration: ShapeDecoration(
+                                shape: CircleBorder(),
+                                color: Color(CommonUtil().getMyPrimaryColor())),
+                            child: Padding(
+                              padding: EdgeInsets.all(circleBorderWidth),
+                              child: InkWell(
+                                onTap: () {
+                                  saveMediaDialog(context);
+                                },
+                                child: ClipOval(
+                                    child: (imageURI != null && imageURI != '')
+                                        ? Image.file(
+                                            File(imageURI.path),
+                                            fit: BoxFit.cover,
+                                            width: 60.0.h,
+                                            height: 60.0.h,
+                                          )
+                                        : showProfileImageNew()),
+                              ),
+                            ),
+                          ),
                         ),
-                        _showDateOfBirthTextField(),
-                        AddressTypeWidget(
-                          addressResult: _addressResult,
-                          addressList: _addressList,
-                          onSelected: (addressResult, addressList) {
-                            setState(() {
-                              _addressResult = addressResult;
-                              addressTypeId = addressResult.id;
-                              _addressList = addressList;
-                            });
-                          },
-                        ),
-                        _userAddressInfo(),
-                        _showSaveButton()
-                      ]),
-                )
-              ]),
+                      ],
+                    ),
+                    _showMobileNoTextField(),
+                    _showFirstNameTextField(),
+                    _showMiddleNameTextField(),
+                    _showLastNameTextField(),
+                    //_showRelationShipTextField(),
+                    if (widget.arguments.fromClass == CommonConstants.my_family)
+                      relationShipResponseList.isNotEmpty
+                          ? Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: <Widget>[
+                                Expanded(
+                                  child: getRelationshipDetails(
+                                      relationShipResponseList),
+                                )
+                              ],
+                            )
+                          : _showRelationShipTextField()
+                    else
+                      widget.arguments.fromClass == CommonConstants.user_update
+                          ? new Container()
+                          : _showRelationShipTextField(),
+                    _showEmailAddTextField(),
+                    Row(
+                      children: <Widget>[Expanded(child: getGenderDetails())],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Expanded(child: getBloodGroupDetails()),
+                        Expanded(child: getBloodRangeDetails())
+                      ],
+                    ),
+                    _showDateOfBirthTextField(),
+                    AddressTypeWidget(
+                      addressResult: _addressResult,
+                      addressList: _addressList,
+                      onSelected: (addressResult, addressList) {
+                        setState(() {
+                          _addressResult = addressResult;
+                          addressTypeId = addressResult.id;
+                          _addressList = addressList;
+                        });
+                      },
+                    ),
+                    _userAddressInfo(),
+                    _showSaveButton()
+                  ]),
+            )
+          ]),
         ),
       ),
     );
@@ -1023,12 +1000,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   // 1
   Widget _showMobileNoTextField() {
     return Padding(
-        padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+        padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: TextField(
           enabled: false,
           cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: mobileNoController,
-          maxLines: 1,
           enableInteractiveSelection: false,
           keyboardType: TextInputType.text,
           focusNode: mobileNoFocus,
@@ -1036,7 +1012,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           onSubmitted: (term) {
             FocusScope.of(context).requestFocus(nameFocus);
           },
-          style: new TextStyle(
+          style: TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 16.0.sp,
               color: ColorUtils.blackcolor),
@@ -1052,7 +1028,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
-            border: new UnderlineInputBorder(
+            border: UnderlineInputBorder(
                 borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
           ),
         ));
@@ -1061,11 +1037,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   // 2
   Widget _showNameTextField() {
     return Padding(
-        padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+        padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: TextField(
           cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: nameController,
-          maxLines: 1,
           enabled: (widget.arguments.fromClass == CommonConstants.my_family ||
                   widget.arguments.fromClass == CommonConstants.user_update)
               ? true
@@ -1076,7 +1051,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           onSubmitted: (term) {
             FocusScope.of(context).requestFocus(relationShipFocus);
           },
-          style: new TextStyle(
+          style: TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 16.0.sp,
               color: ColorUtils.blackcolor),
@@ -1092,7 +1067,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
-            border: new UnderlineInputBorder(
+            border: UnderlineInputBorder(
                 borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
           ),
         ));
@@ -1101,7 +1076,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   // 3
   Widget _showRelationShipTextField() {
     return Padding(
-        padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+        padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: TextField(
           onTap: () {
             /*  widget.arguments.fromClass == CommonConstants.my_family
@@ -1121,7 +1096,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           },
           cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: relationShipController,
-          maxLines: 1,
           enabled: widget.arguments.fromClass == CommonConstants.my_family
               ? true
               : false,
@@ -1131,7 +1105,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           onSubmitted: (term) {
             FocusScope.of(context).requestFocus(emailFocus);
           },
-          style: new TextStyle(
+          style: TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 16.0.sp,
               color: ColorUtils.blackcolor),
@@ -1147,7 +1121,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
-            border: new UnderlineInputBorder(
+            border: UnderlineInputBorder(
                 borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
           ),
         ));
@@ -1156,25 +1130,22 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   // 4
   Widget _showEmailAddTextField() {
     return Padding(
-      padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+      padding: EdgeInsets.only(left: 20, right: 20, top: 5),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           TextField(
             cursorColor: Color(CommonUtil().getMyPrimaryColor()),
             controller: emailController,
-            maxLines: 1,
             enabled: widget.arguments.fromClass == CommonConstants.user_update
                 ? true
                 : false,
             keyboardType: TextInputType.text,
-            //          focusNode: emailFocus,
-            autofocus: false,
             textInputAction: TextInputAction.done,
             onSubmitted: (term) {
               FocusScope.of(context).requestFocus(genderFocus);
             },
-            style: new TextStyle(
+            style: TextStyle(
                 fontWeight: FontWeight.w500,
                 fontSize: 16.0.sp,
                 color: ColorUtils.blackcolor),
@@ -1190,7 +1161,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 color: ColorUtils.myFamilyGreyColor,
                 fontWeight: FontWeight.w400,
               ),
-              border: new UnderlineInputBorder(
+              border: UnderlineInputBorder(
                   borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
             ),
           ),
@@ -1231,18 +1202,17 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   // 5
   Widget _showGenderTextField() {
     return Padding(
-        padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+        padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: TextField(
           cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: genderController,
-          maxLines: 1,
           keyboardType: TextInputType.text,
           focusNode: genderFocus,
           textInputAction: TextInputAction.done,
           onSubmitted: (term) {
             FocusScope.of(context).requestFocus(bloodGroupFocus);
           },
-          style: new TextStyle(
+          style: TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 16.0.sp,
               color: ColorUtils.blackcolor),
@@ -1258,7 +1228,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
-            border: new UnderlineInputBorder(
+            border: UnderlineInputBorder(
                 borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
           ),
         ));
@@ -1267,18 +1237,17 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   // 6
   Widget _showBloodGroupTextField() {
     return Padding(
-        padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+        padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: TextField(
           cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: bloodGroupController,
-          maxLines: 1,
           keyboardType: TextInputType.text,
           focusNode: bloodGroupFocus,
           textInputAction: TextInputAction.done,
           onSubmitted: (term) {
             FocusScope.of(context).requestFocus(dateOfBirthFocus);
           },
-          style: new TextStyle(
+          style: TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 16.0.sp,
               color: ColorUtils.blackcolor),
@@ -1294,7 +1263,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
-            border: new UnderlineInputBorder(
+            border: UnderlineInputBorder(
                 borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
           ),
         ));
@@ -1305,12 +1274,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     return GestureDetector(
       onTap: dateOfBirthTapped,
       child: Padding(
-          padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+          padding: EdgeInsets.only(left: 20, right: 20, top: 5),
           child: TextField(
             cursorColor: Color(CommonUtil().getMyPrimaryColor()),
             controller: dateOfBirthController,
-            maxLines: 1,
-            autofocus: false,
             readOnly: true,
             keyboardType: TextInputType.text,
             //          focusNode: dateOfBirthFocus,
@@ -1318,13 +1285,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             onSubmitted: (term) {
               dateOfBirthFocus.unfocus();
             },
-            style: new TextStyle(
+            style: TextStyle(
                 fontWeight: FontWeight.w500,
                 fontSize: 16.0.sp,
                 color: ColorUtils.blackcolor),
             decoration: InputDecoration(
-              suffixIcon: new IconButton(
-                icon: new Icon(
+              suffixIcon: IconButton(
+                icon: Icon(
                   Icons.calendar_today,
                   size: 24.0.sp,
                 ),
@@ -1343,7 +1310,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 color: ColorUtils.myFamilyGreyColor,
                 fontWeight: FontWeight.w400,
               ),
-              border: new UnderlineInputBorder(
+              border: UnderlineInputBorder(
                   borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
             ),
           )),
@@ -1352,7 +1319,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   Widget _userAddressInfo() {
     return Padding(
-      padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+      padding: EdgeInsets.only(left: 20, right: 20, top: 5),
       child: Form(
         key: _formkey,
         child: Column(
@@ -1394,8 +1361,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               textFieldConfiguration: TextFieldConfiguration(
                   controller: cntrlr_addr_city,
                   decoration: InputDecoration(
-                    hintText: "City",
-                    labelText: "City",
+                    hintText: 'City',
+                    labelText: 'City',
                     border: InputBorder.none,
                     hintStyle: TextStyle(
                       fontSize: 16.0.sp,
@@ -1433,7 +1400,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 }
                 return null;
               },
-              onSaved: (value) => this.city = value,
+              onSaved: (value) => city = value,
             ),
             /* TextFormField(
               controller: cntrlr_addr_state,
@@ -1453,7 +1420,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               textFieldConfiguration: TextFieldConfiguration(
                   controller: cntrlr_addr_state,
                   decoration: InputDecoration(
-                    hintText: "State",
+                    hintText: 'State',
                     labelText: 'State',
                     border: InputBorder.none,
                     hintStyle: TextStyle(
@@ -1486,7 +1453,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 }
                 return null;
               },
-              onSaved: (value) => this.state = value,
+              onSaved: (value) => state = value,
             ),
             TextFormField(
               style: TextStyle(
@@ -1514,18 +1481,18 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   }
 
   Widget _showSaveButton() {
-    final GestureDetector addButtonWithGesture = new GestureDetector(
+    final addButtonWithGesture = GestureDetector(
       onTap: _saveBtnTapped,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          new Container(
+          Container(
             margin: EdgeInsets.only(top: 20, bottom: 20),
             width: 150.0.w,
             height: 40.0.h,
-            decoration: new BoxDecoration(
-              color: Color(new CommonUtil().getMyPrimaryColor()),
-              borderRadius: new BorderRadius.all(Radius.circular(10.0)),
+            decoration: BoxDecoration(
+              color: Color(CommonUtil().getMyPrimaryColor()),
+              borderRadius: BorderRadius.all(Radius.circular(10)),
               boxShadow: <BoxShadow>[
                 BoxShadow(
                   color: Color.fromARGB(15, 0, 0, 0),
@@ -1534,14 +1501,14 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 ),
               ],
             ),
-            child: new Center(
-              child: new Text(
+            child: Center(
+              child: Text(
                 (widget.arguments.fromClass == CommonConstants.my_family ||
                         widget.arguments.fromClass ==
                             CommonConstants.user_update)
                     ? CommonConstants.update
                     : CommonConstants.save,
-                style: new TextStyle(
+                style: TextStyle(
                   color: Colors.white,
                   fontSize: 16.0.sp,
                   fontWeight: FontWeight.w500,
@@ -1553,8 +1520,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       ),
     );
 
-    return new Padding(
-        padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 30.0),
+    return Padding(
+        padding: EdgeInsets.only(left: 20, right: 20, top: 30),
         child: addButtonWithGesture);
   }
 
@@ -1563,8 +1530,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
     return StreamBuilder<ApiResponse<RelationShipResponseList>>(
       stream: addFamilyUserInfoBloc.relationShipStream,
-      builder: (context,
-          AsyncSnapshot<ApiResponse<RelationShipResponseList>> snapshot) {
+      builder: (context, snapshot) {
         if (snapshot.hasData) {
           switch (snapshot.data.status) {
             case Status.LOADING:
@@ -1615,25 +1581,25 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   }
 
   Widget getRelationshipDetails(List<RelationsShipModel> data) {
-    RelationsShipModel currentSelectedUserRole = data[0];
-    for (RelationsShipModel model in data) {
+    var currentSelectedUserRole = data[0];
+    for (var model in data) {
       if (model.id == selectedRelationShip.id) {
         currentSelectedUserRole = model;
       }
     }
     return Padding(
-      padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+      padding: EdgeInsets.only(left: 20, right: 20, top: 5),
       child: DropdownButton<RelationsShipModel>(
         hint: Text(CommonConstants.relationship),
         isExpanded: true,
         value: currentSelectedUserRole,
-        items: data.map((RelationsShipModel val) {
+        items: data.map((val) {
           return DropdownMenuItem<RelationsShipModel>(
-            child: Text(val.name),
             value: val,
+            child: Text(val.name),
           );
         }).toList(),
-        onChanged: (RelationsShipModel newSelectedValue) {
+        onChanged: (newSelectedValue) {
           setState(() {
             selectedRelationShip = newSelectedValue;
           });
@@ -1675,14 +1641,14 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   }
 
   Widget getBloodGroupDetails() {
-    String bgGroup = variable.bloodGroupArray[0];
-    for (String bg in variable.bloodGroupArray) {
+    var bgGroup = variable.bloodGroupArray[0];
+    for (final bg in variable.bloodGroupArray) {
       if (bg == currentselectedBloodGroup) {
         bgGroup = currentselectedBloodGroup;
       }
     }
     return Padding(
-      padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+      padding: EdgeInsets.only(left: 20, right: 20, top: 5),
       child: Container(
         width: 1.sw / 2 - 40,
         child: DropdownButton<String>(
@@ -1690,15 +1656,15 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           value: bgGroup,
           items: variable.bloodGroupArray.map((eachBloodGroup) {
             return DropdownMenuItem<String>(
-              child: new Text(eachBloodGroup,
-                  style: new TextStyle(
+              child: Text(eachBloodGroup,
+                  style: TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 16.0.sp,
                       color: ColorUtils.blackcolor)),
               value: eachBloodGroup,
             );
           }).toList(),
-          onChanged: (String newSelectedValue) {
+          onChanged: (newSelectedValue) {
             setState(() {
               currentselectedBloodGroup = newSelectedValue;
             });
@@ -1736,14 +1702,14 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   }
 
   Widget getBloodRangeDetails() {
-    String bgGroupRange = variable.bloodRangeArray[0];
-    for (String bg in variable.bloodRangeArray) {
+    var bgGroupRange = variable.bloodRangeArray[0];
+    for (var bg in variable.bloodRangeArray) {
       if (bg == currentselectedBloodGroupRange) {
         bgGroupRange = currentselectedBloodGroupRange;
       }
     }
     return Padding(
-      padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+      padding: EdgeInsets.only(left: 20, right: 20, top: 5),
       child: Container(
         width: 1.sw / 2 - 40,
         child: DropdownButton<String>(
@@ -1752,15 +1718,15 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           value: bgGroupRange,
           items: variable.bloodRangeArray.map((eachBloodGroup) {
             return DropdownMenuItem<String>(
+              value: eachBloodGroup,
               child: new Text(eachBloodGroup,
                   style: new TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 16.0.sp,
                       color: ColorUtils.blackcolor)),
-              value: eachBloodGroup,
             );
           }).toList(),
-          onChanged: (String newSelectedValue) {
+          onChanged: (newSelectedValue) {
             setState(() {
               currentselectedBloodGroupRange = newSelectedValue;
             });
@@ -1799,7 +1765,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   Widget getGenderDetails() {
     return Padding(
-      padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+      padding: EdgeInsets.only(left: 20, right: 20, top: 5),
       child: Container(
         width: 1.sw - 40,
         child: DropdownButton<String>(
@@ -1812,15 +1778,15 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               : null,
           items: variable.genderArray.map((eachGender) {
             return DropdownMenuItem(
+              value: eachGender,
               child: new Text(eachGender,
                   style: new TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 16.0.sp,
                       color: ColorUtils.blackcolor)),
-              value: eachGender,
             );
           }).toList(),
-          onChanged: (String newSelectedValue) {
+          onChanged: (newSelectedValue) {
             setState(() {
               selectedGender = newSelectedValue;
             });
@@ -1863,10 +1829,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   }
 
   Future<void> _selectDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
+    final picked = await showDatePicker(
         context: context,
         initialDate: dateTime,
-        firstDate: DateTime(1940, 01),
+        firstDate: DateTime(1940),
         lastDate: DateTime.now());
 
     if (picked != null) {
@@ -1874,15 +1840,15 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         dateTime = picked ?? dateTime;
 
         dateofBirthStr =
-            new FHBUtils().getFormattedDateForUserBirth(dateTime.toString());
+            FHBUtils().getFormattedDateForUserBirth(dateTime.toString());
         dateOfBirthController.text =
-            new FHBUtils().getFormattedDateOnlyNew(dateTime.toString());
+            FHBUtils().getFormattedDateOnlyNew(dateTime.toString());
       });
     }
   }
 
   void _saveBtnTapped() {
-    new FHBUtils().check().then((intenet) {
+    FHBUtils().check().then((intenet) {
       if (intenet != null && intenet) {
         //address fields validation
         if (_formkey.currentState.validate()) {
@@ -1949,7 +1915,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           profileResult.dateOfBirth = dateOfBirthController.text;
           addFamilyUserInfoBloc.myProfileModel = myProf; */
 
-          FamilyListBloc _familyListBloc = new FamilyListBloc();
+          var _familyListBloc = FamilyListBloc();
           //NOTE this would be called when family member profile update
           if (widget.arguments.fromClass == CommonConstants.my_family) {
             addFamilyUserInfoBloc.userId = widget.arguments.id;
@@ -1958,9 +1924,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 id: widget.arguments.sharedbyme.id,
                 relationship: selectedRelationShip);
 
-            MyProfileModel myProf = new MyProfileModel();
+            var myProf = MyProfileModel();
 
-            MyProfileResult profileResult = new MyProfileResult();
+            var profileResult = MyProfileResult();
             profileResult.firstName = firstNameController.text;
             profileResult.middleName = middleNameController.text;
             profileResult.lastName = lastNameController.text;
@@ -1982,8 +1948,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   ' ' +
                   currentselectedBloodGroupRange;
             }
-            UserAddressCollection3 userAddressCollection3 =
-                new UserAddressCollection3();
+            final userAddressCollection3 = UserAddressCollection3();
             addFamilyUserInfoBloc.isUpdate = true;
             if (widget.arguments?.sharedbyme?.child?.userAddressCollection3
                 .isNotEmpty) {
@@ -2003,25 +1968,19 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             userAddressCollection3.lastModifiedOn = null;
             userAddressCollection3.createdBy = widget.arguments.id;
 
-            if (_addressResult == null) {
-              //? check is addressType is null
-              _addressResult = _addressList[0];
-            }
+            _addressResult ??= _addressList[0];
             userAddressCollection3.addressType = AddressType(
               id: _addressResult.id,
               code: _addressResult.code,
               name: _addressResult.name,
               description: _addressResult.name,
-              sortOrder: null,
               isActive: true,
               createdBy: PreferenceUtil.getStringValue(Constants.KEY_USERID),
               createdOn:
                   DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
-              lastModifiedOn: null,
             );
 
-            List<UserAddressCollection3> userAddressCollection3List =
-                new List();
+            final List<UserAddressCollection3> userAddressCollection3List = [];
             userAddressCollection3List.add(userAddressCollection3);
             profileResult.userAddressCollection3 = userAddressCollection3List;
 
@@ -2150,9 +2109,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             //     id: widget.arguments.sharedbyme.id,
             //     relationship: selectedRelationShip);
 
-            MyProfileModel myProf = new MyProfileModel();
+            var myProf = MyProfileModel();
 
-            MyProfileResult profileResult = new MyProfileResult();
+            var profileResult = MyProfileResult();
             profileResult.firstName = firstNameController.text;
             profileResult.middleName = middleNameController.text;
             profileResult.lastName = lastNameController.text;
@@ -2175,8 +2134,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   ' ' +
                   currentselectedBloodGroupRange;
             }
-            UserAddressCollection3 userAddressCollection3 =
-                new UserAddressCollection3();
+            final userAddressCollection3 = UserAddressCollection3();
             addFamilyUserInfoBloc.isUpdate = false;
             if (widget.arguments?.myProfileResult?.userAddressCollection3
                 .isNotEmpty) {
@@ -2213,16 +2171,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               code: _addressResult.code,
               name: _addressResult.name,
               description: _addressResult.name,
-              sortOrder: null,
               isActive: true,
               createdBy: PreferenceUtil.getStringValue(Constants.KEY_USERID),
               createdOn:
                   DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
-              lastModifiedOn: null,
             );
 
-            List<UserAddressCollection3> userAddressCollection3List =
-                new List();
+            final userAddressCollection3List = List<UserAddressCollection3>();
             userAddressCollection3List.add(userAddressCollection3);
             profileResult.userAddressCollection3 = userAddressCollection3List;
 
@@ -2319,9 +2274,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             addFamilyUserInfoBloc.phoneNo = mobileNoController.text;
             addFamilyUserInfoBloc.relationship = null;
 
-            MyProfileModel myProf = new MyProfileModel();
+            var myProf = MyProfileModel();
 
-            MyProfileResult profileResult = new MyProfileResult();
+            var profileResult = MyProfileResult();
             profileResult.firstName = firstNameController.text;
             profileResult.middleName = middleNameController.text;
             profileResult.lastName = lastNameController.text;
@@ -2343,8 +2298,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   ' ' +
                   currentselectedBloodGroupRange;
             }
-            UserAddressCollection3 userAddressCollection3 =
-                new UserAddressCollection3();
+            var userAddressCollection3 = UserAddressCollection3();
             addFamilyUserInfoBloc.isUpdate = false;
             //userAddressCollection3.id = null;
             userAddressCollection3.addressLine1 = cntrlr_addr_one.text;
@@ -2364,16 +2318,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               code: _addressResult.code,
               name: _addressResult.name,
               description: _addressResult.name,
-              sortOrder: null,
               isActive: true,
               createdBy: PreferenceUtil.getStringValue(Constants.KEY_USERID),
               createdOn:
                   DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
-              lastModifiedOn: null,
             );
 
-            List<UserAddressCollection3> userAddressCollection3List =
-                new List();
+            var userAddressCollection3List = List<UserAddressCollection3>();
             userAddressCollection3List.add(userAddressCollection3);
             profileResult.userAddressCollection3 = userAddressCollection3List;
 
@@ -2420,7 +2371,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           print('invalid user input');
         }
       } else {
-        new FHBBasicWidget()
+        FHBBasicWidget()
             .showInSnackBar(Constants.STR_NO_CONNECTIVITY, scaffold_state);
       }
     });
@@ -2438,7 +2389,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   }
 
   bool doValidation() {
-    bool isValid = false;
+    var isValid = false;
 
     if (firstNameController.text == '') {
       isValid = false;
@@ -2449,7 +2400,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     } else if (selectedGender == null) {
       isValid = false;
       strErrorMsg = variable.selectGender;
-    } else if (dateOfBirthController.text.length == 0) {
+    } else if (dateOfBirthController.text.isEmpty) {
       isValid = false;
       strErrorMsg = variable.selectDOB;
     } else {
@@ -2491,11 +2442,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   Widget _showFirstNameTextField() {
     return Padding(
-        padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+        padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: TextField(
           cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: firstNameController,
-          maxLines: 1,
           enabled: (widget.arguments.fromClass == CommonConstants.my_family ||
                   widget.arguments.fromClass == CommonConstants.user_update)
               ? true
@@ -2505,7 +2455,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           onSubmitted: (term) {
             FocusScope.of(context).requestFocus(middleNameFocus);
           },
-          style: new TextStyle(
+          style: TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 16.0.sp,
               color: ColorUtils.blackcolor),
@@ -2521,7 +2471,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
-            border: new UnderlineInputBorder(
+            border: UnderlineInputBorder(
                 borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
           ),
         ));
@@ -2529,11 +2479,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   Widget _showMiddleNameTextField() {
     return Padding(
-        padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+        padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: TextField(
           cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: middleNameController,
-          maxLines: 1,
           enabled: (widget.arguments.fromClass == CommonConstants.my_family ||
                   widget.arguments.fromClass == CommonConstants.user_update)
               ? true
@@ -2543,7 +2492,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           onSubmitted: (term) {
             FocusScope.of(context).requestFocus(lastNameFocus);
           },
-          style: new TextStyle(
+          style: TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 16.0.sp,
               color: ColorUtils.blackcolor),
@@ -2559,7 +2508,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
-            border: new UnderlineInputBorder(
+            border: UnderlineInputBorder(
                 borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
           ),
         ));
@@ -2567,11 +2516,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   Widget _showLastNameTextField() {
     return Padding(
-        padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+        padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: TextField(
           cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: lastNameController,
-          maxLines: 1,
           enabled: (widget.arguments.fromClass == CommonConstants.my_family ||
                   widget.arguments.fromClass == CommonConstants.user_update)
               ? true
@@ -2581,7 +2529,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           onSubmitted: (term) {
             FocusScope.of(context).requestFocus(relationShipFocus);
           },
-          style: new TextStyle(
+          style: TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 16.0.sp,
               color: ColorUtils.blackcolor),
@@ -2597,7 +2545,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
-            border: new UnderlineInputBorder(
+            border: UnderlineInputBorder(
                 borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
           ),
         ));
@@ -2607,7 +2555,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     addFamilyUserInfoBloc.verifyEmail().then((value) {
       if (value.success &&
           value.message.contains(Constants.MSG_VERIFYEMAIL_VERIFIED)) {
-        new FHBBasicWidget().showInSnackBar(value.message, scaffold_state);
+        FHBBasicWidget().showInSnackBar(value.message, scaffold_state);
       } else {
         PreferenceUtil.saveString(
             Constants.PROFILE_EMAIL, emailController.text);
@@ -2624,8 +2572,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                       forEmailVerify: true,
                     )))
             .then((value) {
-          Navigator.popUntil(context, (Route<dynamic> route) {
-            bool shouldPop = false;
+          Navigator.popUntil(context, (route) {
+            var shouldPop = false;
             if (route.settings.name == router.rt_UserAccounts) {
               shouldPop = true;
             }
@@ -2668,8 +2616,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
 class MySliverAppBar extends SliverPersistentHeaderDelegate {
   final double expandedHeight;
-  static File imageURI;
-  static File imageURIProfile;
+  static PickedFile imageURI;
+  static PickedFile imageURIProfile;
 
   List<int> profileData;
 
@@ -2689,8 +2637,8 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Stack(
+      clipBehavior: Clip.none,
       fit: StackFit.expand,
-      overflow: Overflow.visible,
       children: [
         InkWell(
             onTap: () {
@@ -2698,7 +2646,7 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
             },
             child: imageURIProfile != null
                 ? Image.file(
-                    imageURIProfile,
+                    File(imageURIProfile.path),
                     fit: BoxFit.cover,
                     width: 100.0.h,
                     height: 100.0.h,
@@ -2728,7 +2676,7 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
                 saveMediaDialog(context, true);
               },
               child: Opacity(
-                opacity: (1 - shrinkOffset / expandedHeight),
+                opacity: 1 - shrinkOffset / expandedHeight,
                 child: ClipOval(
                     child: profileData != null && imageURI == null
                         ? Image.memory(
@@ -2743,7 +2691,7 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
                                 height: 100.0.h,
                                 color: ColorUtils.lightPrimaryColor,
                               )
-                            : Image.file(imageURI,
+                            : Image.file(File(imageURI.path),
                                 width: 100.0.h,
                                 height: 100.0.h,
                                 fit: BoxFit.cover)),
@@ -2756,7 +2704,7 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
   saveMediaDialog(BuildContext cont, bool isProfileImage) {
     return showDialog<void>(
       context: cont,
-      builder: (BuildContext context) {
+      builder: (context) {
         return StatefulBuilder(builder: (context, setState) {
           return AlertDialog(
               title: Text(variable.makeAChoice),
@@ -2766,11 +2714,10 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
                 child: ListBody(
                   children: <Widget>[
                     GestureDetector(
-                      child: Text(variable.Gallery),
                       onTap: () {
                         Navigator.pop(context);
-                        var image =
-                            ImagePicker.pickImage(source: ImageSource.gallery);
+                        final image = ImagePicker.platform
+                            .pickImage(source: ImageSource.gallery);
                         image.then((value) {
                           if (isProfileImage) {
                             imageURI = value;
@@ -2782,27 +2729,28 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
                           (cont as Element).markNeedsBuild();
                         });
                       },
+                      child: Text(variable.Gallery),
                     ),
                     Padding(
-                      padding: EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(8),
                     ),
                     GestureDetector(
-                      child: Text(variable.Camera),
                       onTap: () {
                         Navigator.pop(context);
 
-                        var image =
-                            ImagePicker.pickImage(source: ImageSource.camera);
+                        final image = ImagePicker.platform
+                            .pickImage(source: ImageSource.camera);
                         image.then((value) {
-                          if (isProfileImage)
+                          if (isProfileImage) {
                             imageURI = value;
-                          else {
+                          } else {
                             imageURIProfile = value;
                             imageSet = true;
                           }
                           (cont as Element).markNeedsBuild();
                         });
                       },
+                      child: Text(variable.Camera),
                     ),
                   ],
                 ),
@@ -2813,12 +2761,14 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
   }
 
   Future getImageFromCamera() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.camera);
+    final image =
+        await ImagePicker.platform.pickImage(source: ImageSource.camera);
     imageURI = image;
   }
 
   Future getImageFromGallery() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    final image =
+        await ImagePicker.platform.pickImage(source: ImageSource.gallery);
     imageURI = image;
   }
 

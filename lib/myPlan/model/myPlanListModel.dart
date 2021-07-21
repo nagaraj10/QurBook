@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:myfhb/plan_dashboard/model/MetaDataForURL.dart';
+import '../../plan_dashboard/model/MetaDataForURL.dart';
 
 import 'ProviderMetaModel.dart';
 
@@ -13,18 +13,18 @@ class MyPlanListModel {
   MyPlanListModel.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['result'] != null) {
-      result = new List<MyPlanListResult>();
+      result = List<MyPlanListResult>();
       json['result'].forEach((v) {
-        result.add(new MyPlanListResult.fromJson(v));
+        result.add(MyPlanListResult.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['isSuccess'] = this.isSuccess;
-    if (this.result != null) {
-      data['result'] = this.result.map((v) => v.toJson()).toList();
+    final data = <String, dynamic>{};
+    data['isSuccess'] = isSuccess;
+    if (result != null) {
+      data['result'] = result.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -91,15 +91,15 @@ class MyPlanListResult {
         isExtendable: json['IsExtendable'],
         metadata:
             json['metadata'] != null && json['metadata'].toString().isNotEmpty
-                ? MetaDataForURL.fromJson(jsonDecode(json["metadata"] ?? '{}'))
+                ? MetaDataForURL.fromJson(jsonDecode(json['metadata'] ?? '{}'))
                 : null,
         catmetadata: json['catmetadata'] != null &&
                 json['catmetadata'].toString().isNotEmpty
-            ? MetaDataForURL.fromJson(jsonDecode(json["catmetadata"] ?? '{}'))
+            ? MetaDataForURL.fromJson(jsonDecode(json['catmetadata'] ?? '{}'))
             : null,
     providermetadata: json['providermetadata'] != null &&
         json['providermetadata'].toString().isNotEmpty
-        ? ProviderMetaModel.fromJson(jsonDecode(json["providermetadata"] ?? '{}'))
+        ? ProviderMetaModel.fromJson(jsonDecode(json['providermetadata'] ?? '{}'))
         : null);
   }
 

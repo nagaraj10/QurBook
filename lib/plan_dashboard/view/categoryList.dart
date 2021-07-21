@@ -6,19 +6,21 @@ import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:group_list_view/group_list_view.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/errors_widget.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
-import 'package:myfhb/plan_dashboard/view/planDetailsView.dart';
-import 'package:myfhb/plan_dashboard/view/planList.dart';
-import 'package:myfhb/plan_dashboard/viewModel/planViewModel.dart';
-import 'package:myfhb/plan_dashboard/viewModel/subscribeViewModel.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
+import '../../common/CommonUtil.dart';
+import '../../common/errors_widget.dart';
+import '../../constants/fhb_constants.dart';
+import '../../constants/variable_constant.dart' as variable;
+import '../model/PlanListModel.dart';
+import 'planDetailsView.dart';
+import 'planList.dart';
+import '../viewModel/planViewModel.dart';
+import '../viewModel/subscribeViewModel.dart';
+import '../../regiment/view_model/regiment_view_model.dart';
+import '../../src/utils/colors_utils.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
+import '../../telehealth/features/SearchWidget/view/SearchWidget.dart';
+import '../../widgets/GradientAppBar.dart';
+import 'package:provider/provider.dart';
 
 class CategoryList extends StatefulWidget {
   @override
@@ -28,16 +30,16 @@ class CategoryList extends StatefulWidget {
   final String diseases;
   final String icon;
 
-  CategoryList(this.providerId, this.icon, this.diseases);
+  const CategoryList(this.providerId, this.icon, this.diseases);
 }
 
 class _CategoryState extends State<CategoryList> {
   PlanListModel myPlanListModel;
-  PlanViewModel myPlanViewModel = new PlanViewModel();
+  PlanViewModel myPlanViewModel = PlanViewModel();
   bool isSearch = false;
-  List<PlanListResult> myPLanListResult = List();
-  SubscribeViewModel subscribeViewModel = new SubscribeViewModel();
-  FlutterToast toast = new FlutterToast();
+  List<PlanListResult> myPLanListResult = [];
+  SubscribeViewModel subscribeViewModel = SubscribeViewModel();
+  FlutterToast toast = FlutterToast();
 
   List<PlanListResult> categoryListUniq = [];
   List<String> selectPlan = [];
@@ -87,16 +89,16 @@ class _CategoryState extends State<CategoryList> {
         appBar: AppBar(
           flexibleSpace: GradientAppBar(),
           leading: GestureDetector(
-            onTap: () => Get.back(),
+            onTap: Get.back,
             child: Icon(
               Icons.arrow_back_ios, // add custom icons also
-              size: 24.0,
+              size: 24,
             ),
           ),
           title: Text(
             strPlans,
             style: TextStyle(
-              fontSize: 18.0,
+              fontSize: 18,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -133,7 +135,7 @@ class _CategoryState extends State<CategoryList> {
     myPLanListResult.clear();
     if (title != null) {
       myPLanListResult =
-          await myPlanViewModel.getSearchForCategory(title, planListOld);
+          myPlanViewModel.getSearchForCategory(title, planListOld);
     }
     setState(() {});
   }
@@ -145,10 +147,10 @@ class _CategoryState extends State<CategoryList> {
     isSubscribedOne = false;
     planListResultMap = {};
     isSelectedMap = {};
-    if (planList != null && planList.length > 0) {
+    if (planList != null && planList.isNotEmpty) {
       planList.forEach((element) {
         if (element?.metadata?.diseases == diseases) {
-          bool keysUniq = true;
+          var keysUniq = true;
           categoryListUniq.forEach((catElement) {
             if (catElement?.packcatid == element?.packcatid) {
               keysUniq = false;
@@ -212,9 +214,9 @@ class _CategoryState extends State<CategoryList> {
             ),
           );*/
     return (categoryListUniq != null &&
-            categoryListUniq.length > 0 &&
+            categoryListUniq.isNotEmpty &&
             planListResultMap != null &&
-            planListResultMap.length > 0)
+            planListResultMap.isNotEmpty)
         ? GroupListView(
             shrinkWrap: true,
             padding: EdgeInsets.only(
@@ -222,7 +224,7 @@ class _CategoryState extends State<CategoryList> {
             ),
             sectionsCount:
                 isSearch ? myPLanListResult.length : categoryListUniq.length,
-            countOfItemInSection: (int section) {
+            countOfItemInSection: (section) {
               return planListResultMap[isSearch
                           ? myPLanListResult[section]?.packcatid
                           : categoryListUniq[section]?.packcatid]
@@ -230,8 +232,8 @@ class _CategoryState extends State<CategoryList> {
                   0;
             },
             itemBuilder: _itemBuilder,
-            groupHeaderBuilder: (BuildContext context, int section) {
-              var catName = isSearch
+            groupHeaderBuilder: (context, section) {
+              final catName = isSearch
                   ? myPLanListResult[section]?.catname
                   : categoryListUniq[section]?.catname;
               return Column(
@@ -240,7 +242,7 @@ class _CategoryState extends State<CategoryList> {
                   Container(
                     padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
                     width: 1.sw,
-                    color: Color(new CommonUtil().getMyPrimaryColor()),
+                    color: Color(CommonUtil().getMyPrimaryColor()),
                     child: Padding(
                       padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                       child: Text(
@@ -269,20 +271,20 @@ class _CategoryState extends State<CategoryList> {
   }
 
   Widget getCategoryList(String providerId) {
-    return new FutureBuilder<PlanListModel>(
+    return FutureBuilder<PlanListModel>(
       future: planListModel,
-      builder: (BuildContext context, snapshot) {
+      builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return SafeArea(
             child: SizedBox(
               height: 1.sh / 4.5,
-              child: new Center(
+              child: Center(
                 child: SizedBox(
                   width: 30.0.h,
                   height: 30.0.h,
-                  child: new CircularProgressIndicator(
+                  child: CircularProgressIndicator(
                       backgroundColor:
-                          Color(new CommonUtil().getMyPrimaryColor())),
+                          Color(CommonUtil().getMyPrimaryColor())),
                 ),
               ),
             ),
@@ -292,7 +294,7 @@ class _CategoryState extends State<CategoryList> {
         } else {
           if (snapshot?.hasData &&
               snapshot?.data?.result != null &&
-              snapshot?.data?.result?.length > 0) {
+              snapshot?.data?.result.isNotEmpty) {
             return categoryList(snapshot.data.result);
           } else {
             return SafeArea(
@@ -331,7 +333,7 @@ class _CategoryState extends State<CategoryList> {
         });
       },
       child: Container(
-          padding: EdgeInsets.all(8.0),
+          padding: EdgeInsets.all(8),
           margin: EdgeInsets.only(left: 12, right: 12, top: 8),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -340,16 +342,15 @@ class _CategoryState extends State<CategoryList> {
               BoxShadow(
                 color: const Color(0xFFe3e2e2),
                 blurRadius: 16, // has the effect of softening the shadow
-                spreadRadius: 5.0, // has the effect of extending the shadow
+                spreadRadius: 5, // has the effect of extending the shadow
                 offset: Offset(
-                  0.0, // horizontal, move right 10
-                  0.0, // vertical, move down 10
+                  0, // horizontal, move right 10
+                  0, // vertical, move down 10
                 ),
               )
             ],
           ),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Row(
                 children: [
@@ -413,7 +414,7 @@ class _CategoryState extends State<CategoryList> {
                               fontSize: 15.0.sp,
                               fontWeight: FontWeight.w400,
                               color:
-                                  Color(new CommonUtil().getMyPrimaryColor())),
+                                  Color(CommonUtil().getMyPrimaryColor())),
                           textAlign: TextAlign.start,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
@@ -432,7 +433,7 @@ class _CategoryState extends State<CategoryList> {
   Widget _itemBuilder(BuildContext context, IndexPath inx) {
     if ((planListResultMap?.length ?? 0) > 0 &&
         (categoryListUniq?.length ?? 0) > 0) {
-      var planListResult = planListResultMap[isSearch
+      final planListResult = planListResultMap[isSearch
           ? myPLanListResult[inx.section]?.packcatid
           : categoryListUniq[inx.section]?.packcatid];
       return InkWell(
@@ -450,13 +451,13 @@ class _CategoryState extends State<CategoryList> {
                       packageDuration:
                           planListResult[inx.index]?.packageDuration,
                       providerId: planListResult[inx.index]?.plinkid,
-                      isDisable: (planListResult[inx.index]?.catselecttype ==
+                      isDisable: planListResult[inx.index]?.catselecttype ==
                               '1'
                           ? (planListResult[inx.index]?.isSubscribed == '1' ||
                               (isSelectedMap[
                                       planListResult[inx.index]?.packcatid] ??
                                   false))
-                          : (planListResult[inx.index]?.isSubscribed == '1')),
+                          : (planListResult[inx.index]?.isSubscribed == '1'),
                       hosIcon:
                           planListResult[inx.index]?.providerMetadata?.icon,
                       iconApi: planListResult[inx.index]?.metadata?.icon,
@@ -470,7 +471,7 @@ class _CategoryState extends State<CategoryList> {
           });
         },
         child: Container(
-            padding: EdgeInsets.all(4.0),
+            padding: EdgeInsets.all(4),
             margin: EdgeInsets.only(left: 12, right: 12, top: 8),
             decoration: BoxDecoration(
               color: Colors.white,
@@ -479,16 +480,15 @@ class _CategoryState extends State<CategoryList> {
                 BoxShadow(
                   color: const Color(0xFFe3e2e2),
                   blurRadius: 16, // has the effect of softening the shadow
-                  spreadRadius: 5.0, // has the effect of extending the shadow
+                  spreadRadius: 5, // has the effect of extending the shadow
                   offset: Offset(
-                    0.0, // horizontal, move right 10
-                    0.0, // vertical, move down 10
+                    0, // horizontal, move right 10
+                    0, // vertical, move down 10
                   ),
                 )
               ],
             ),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Row(
                   children: [
@@ -542,9 +542,8 @@ class _CategoryState extends State<CategoryList> {
                                         fontSize: 10.0.sp,
                                         fontWeight: FontWeight.w400),
                                   ),
-                                  planListResult[inx.index]?.packageDuration !=
-                                          null
-                                      ? Text(
+                                  if (planListResult[inx.index]?.packageDuration !=
+                                          null) Text(
                                           planListResult[inx.index]
                                                   ?.packageDuration +
                                               ' days',
@@ -552,28 +551,24 @@ class _CategoryState extends State<CategoryList> {
                                           style: TextStyle(
                                               fontSize: 10.0.sp,
                                               fontWeight: FontWeight.w600),
-                                        )
-                                      : Container()
+                                        ) else Container()
                                 ],
                               ),
                             ],
                           ),
                           Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Row(
                                 children: [
-                                  planListResult[inx.index]?.isSubscribed == '1'
-                                      ? Text(
+                                  if (planListResult[inx.index]?.isSubscribed == '1') Text(
                                           'Start Date: ',
                                           style: TextStyle(
                                               fontSize: 10.0.sp,
                                               fontWeight: FontWeight.w400),
-                                        )
-                                      : SizedBox(width: 55.w),
+                                        ) else SizedBox(width: 55.w),
                                   planListResult[inx.index]?.isSubscribed == '1'
                                       ? Text(
-                                          new CommonUtil().dateFormatConversion(
+                                          CommonUtil().dateFormatConversion(
                                               planListResult[inx.index]
                                                   ?.startDate),
                                           maxLines: 1,
@@ -582,9 +577,7 @@ class _CategoryState extends State<CategoryList> {
                                               fontWeight: FontWeight.w600),
                                         )
                                       : SizedBox(width: 55.w),
-                                  planListResult[inx.index]?.isSubscribed == '0'
-                                      ? SizedBox(width: 60.w)
-                                      : SizedBox(width: 55.w),
+                                  if (planListResult[inx.index]?.isSubscribed == '0') SizedBox(width: 60.w) else SizedBox(width: 55.w),
                                 ],
                               )
                             ],
@@ -602,15 +595,15 @@ class _CategoryState extends State<CategoryList> {
                                             .price
                                             .isNotEmpty &&
                                         planListResult[inx.index]?.price != '0',
+                                    replacement: TextWidget(
+                                        text: FREE,
+                                        fontsize: 16.0.sp,
+                                        fontWeight: FontWeight.w500,
+                                        colors: Color(CommonUtil()
+                                            .getMyPrimaryColor())),
                                     child: TextWidget(
                                         text: INR +
                                             planListResult[inx.index]?.price,
-                                        fontsize: 16.0.sp,
-                                        fontWeight: FontWeight.w500,
-                                        colors: Color(new CommonUtil()
-                                            .getMyPrimaryColor())),
-                                    replacement: TextWidget(
-                                        text: FREE,
                                         fontsize: 16.0.sp,
                                         fontWeight: FontWeight.w500,
                                         colors: Color(new CommonUtil()
@@ -619,14 +612,13 @@ class _CategoryState extends State<CategoryList> {
                                 : Container(),
                             SizedBox(height: 8.h),
                             Align(
-                                alignment: Alignment.center,
                                 child: SizedBoxWithChild(
                                   width: 95.0.w,
                                   height: 32.0.h,
                                   child: FlatButton(
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
-                                            BorderRadius.circular(18.0),
+                                            BorderRadius.circular(18),
                                         side: BorderSide(
                                             color: getBorderColor(
                                                 inx.index, planListResult))),
@@ -634,7 +626,7 @@ class _CategoryState extends State<CategoryList> {
                                     textColor: planListResult[inx.index]
                                                 ?.isSubscribed ==
                                             '0'
-                                        ? Color(new CommonUtil()
+                                        ? Color(CommonUtil()
                                             .getMyPrimaryColor())
                                         : Colors.grey,
                                     padding: EdgeInsets.all(
@@ -794,7 +786,7 @@ class _CategoryState extends State<CategoryList> {
       return Colors.grey;
     } else {
       if (planList[i]?.isSubscribed == '0') {
-        return Color(new CommonUtil().getMyPrimaryColor());
+        return Color(CommonUtil().getMyPrimaryColor());
       } else {
         return Colors.grey;
       }

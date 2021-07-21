@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/HeaderRequest.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:myfhb/telehealth/features/Notifications/constants/notification_constants.dart';
 import 'package:myfhb/telehealth/features/Notifications/model/notification_model.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart';
@@ -16,12 +17,10 @@ class FetchNotificationService {
   HeaderRequest headerRequest = new HeaderRequest();
 
   Future<NotificationModel> fetchNotificationList() async {
-    return await http
-        .get(
+    return await ApiServices.get(
       _baseUrl + qr_notification_fetch + DateTime.now().toString(),
       headers: await headerRequest.getRequestHeadersAuthContent(),
-    )
-        .then((http.Response response) {
+    ).then((http.Response response) {
 //          print(response.body);
       if (response.statusCode == 200) {
         var responseJson = convert.jsonDecode(response.body.toString());
@@ -39,26 +38,22 @@ class FetchNotificationService {
   }
 
   Future<dynamic> updateNsActionStatus(dynamic body) async {
-    final response = await http.put(
-      _baseUrl + qr_notification_action,
-      headers: await headerRequest.getRequestHeadersAuthContent(),
-      body: json.encode(body)
-    );
+    final response = await ApiServices.put(_baseUrl + qr_notification_action,
+        headers: await headerRequest.getRequestHeadersAuthContent(),
+        body: json.encode(body));
 
-    if(response.statusCode==200){
+    if (response.statusCode == 200) {
       return jsonDecode(response.body);
-    }else{
+    } else {
       return null;
     }
   }
 
   Future<dynamic> updateNsOnTapAction(dynamic body) async {
-
-    final response = await http.put(
-      _baseUrl + qr_notification_action_ontap,
-      headers: await headerRequest.getRequestHeadersAuthContent(),
-      body: json.encode(body)
-    );
+    final response = await ApiServices.put(
+        _baseUrl + qr_notification_action_ontap,
+        headers: await headerRequest.getRequestHeadersAuthContent(),
+        body: json.encode(body));
 
     if (response.statusCode == 200) {
       return jsonDecode(response.body);

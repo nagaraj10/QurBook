@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:myfhb/constants/fhb_parameters.dart';
+import '../../constants/fhb_parameters.dart';
 
 LastSync lastSyncFromJson(String str) => LastSync.fromJson(json.decode(str));
 

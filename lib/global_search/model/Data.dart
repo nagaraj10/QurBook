@@ -1,6 +1,6 @@
-import 'package:myfhb/src/model/Health/MediaMasterIds.dart';
-import 'package:myfhb/src/model/Health/MetaInfo.dart';
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import '../../src/model/Health/MediaMasterIds.dart';
+import '../../src/model/Health/MetaInfo.dart';
+import '../../constants/fhb_parameters.dart' as parameters;
 
 class Data {
   String id;
@@ -35,7 +35,7 @@ class Data {
     metaTypeId = json[parameters.strmetaTypeId];
     userId = json[parameters.struserId];
     metaInfo = json[parameters.strmetaInfo] != null
-        ? new MetaInfo.fromJson(json[parameters.strmetaInfo])
+        ? MetaInfo.fromJson(json[parameters.strmetaInfo])
         : null;
     isActive = json[parameters.strIsActive];
     createdBy = json[parameters.strCreatedBy];
@@ -45,31 +45,31 @@ class Data {
     isDraft = json[parameters.strisDraft];
     createdByUser = json[parameters.strcreatedByUser];
     if (json[parameters.strmediaMasterId] != null) {
-      mediaMasterIds = new List<MediaMasterIds>();
+      mediaMasterIds = <MediaMasterIds>[];
       json[parameters.strmediaMasterId].forEach((v) {
-        mediaMasterIds.add(new MediaMasterIds.fromJson(v));
+        mediaMasterIds.add(MediaMasterIds.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[parameters.strId] = this.id;
-    data[parameters.strmetaTypeId] = this.metaTypeId;
-    data[parameters.struserId] = this.userId;
-    if (this.metaInfo != null) {
-      data[parameters.strmetaInfo] = this.metaInfo.toJson();
+    final data = <String, dynamic>{};
+    data[parameters.strId] = id;
+    data[parameters.strmetaTypeId] = metaTypeId;
+    data[parameters.struserId] = userId;
+    if (metaInfo != null) {
+      data[parameters.strmetaInfo] = metaInfo.toJson();
     }
-    data[parameters.strIsActive] = this.isActive;
-    data[parameters.strCreatedBy] = this.createdBy;
-    data[parameters.strCreatedOn] = this.createdOn;
-    data[parameters.strLastModifiedOn] = this.lastModifiedOn;
-    data[parameters.strIsBookmarked] = this.isBookmarked;
-    data[parameters.strisDraft] = this.isDraft;
-    data[parameters.strcreatedByUser] = this.createdByUser;
-    if (this.mediaMasterIds != null) {
+    data[parameters.strIsActive] = isActive;
+    data[parameters.strCreatedBy] = createdBy;
+    data[parameters.strCreatedOn] = createdOn;
+    data[parameters.strLastModifiedOn] = lastModifiedOn;
+    data[parameters.strIsBookmarked] = isBookmarked;
+    data[parameters.strisDraft] = isDraft;
+    data[parameters.strcreatedByUser] = createdByUser;
+    if (mediaMasterIds != null) {
       data[parameters.strmediaMasterId] =
-          this.mediaMasterIds.map((v) => v.toJson()).toList();
+          mediaMasterIds.map((v) => v.toJson()).toList();
     }
     return data;
   }

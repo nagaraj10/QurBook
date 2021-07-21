@@ -1,6 +1,6 @@
-import 'package:myfhb/src/model/user/State.dart' as stateObj;
+import 'State.dart' as stateObj;
 
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import '../../../constants/fhb_parameters.dart' as parameters;
 
 class City {
   String id;
@@ -34,17 +34,17 @@ class City {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[parameters.strId] = this.id;
-    data[parameters.strName] = this.name;
+    final data = <String, dynamic>{};
+    data[parameters.strId] = id;
+    data[parameters.strName] = name;
     //data[parameters.strstateId] = this.stateId;
-    data[parameters.strIsActive] = this.isActive;
-    data[parameters.strCreatedOn] = this.createdOn;
-    if (this.state != null) {
-      data[parameters.strState] = this.state.toJson();
+    data[parameters.strIsActive] = isActive;
+    data[parameters.strCreatedOn] = createdOn;
+    if (state != null) {
+      data[parameters.strState] = state.toJson();
     }
-    data[parameters.strLastModifiedOn] = this.lastModifiedOn;
-    data[parameters.strlastModifiedBy] = this.lastModifiedBy;
+    data[parameters.strLastModifiedOn] = lastModifiedOn;
+    data[parameters.strlastModifiedBy] = lastModifiedBy;
     return data;
   }
 }

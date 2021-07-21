@@ -371,9 +371,10 @@ class TakePictureScreenForDevicesState
                                           );
 
                                           // Attempt to take a picture and log where it's been saved.
-                                          await _controller.takePicture(path);
+                                          XFile xpath =
+                                              await _controller.takePicture();
 
-                                          imagePaths.add(path);
+                                          imagePaths.add(xpath?.path);
 
                                           setState(() {});
                                         } catch (e) {
@@ -458,11 +459,12 @@ class TakePictureScreenForDevicesState
                                             'Prescription_${DateTime.now().minute}.jpg',
                                           );
                                           // Attempt to take a picture and log where it's been saved.
-                                          await _controller.takePicture(path);
+                                          XFile xpath =
+                                              await _controller.takePicture();
 
                                           if (isMultipleImages) {
                                             isThumbnails = true;
-                                            imagePaths.add(path);
+                                            imagePaths.add(xpath.path);
 
                                             setState(() {});
                                           } else {

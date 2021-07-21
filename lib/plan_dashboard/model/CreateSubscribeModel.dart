@@ -7,14 +7,14 @@ class CreateSubscribeModel {
   CreateSubscribeModel.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     result =
-    json['result'] != null ? new PaymentResult.fromJson(json['result']) : null;
+    json['result'] != null ? PaymentResult.fromJson(json['result']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['isSuccess'] = this.isSuccess;
-    if (this.result != null) {
-      data['result'] = this.result.toJson();
+    final data = Map<String, dynamic>();
+    data['isSuccess'] = isSuccess;
+    if (result != null) {
+      data['result'] = result.toJson();
     }
     return data;
   }
@@ -28,19 +28,19 @@ class PaymentResult {
 
   PaymentResult.fromJson(Map<String, dynamic> json) {
     payment =
-    json['payment'] != null ? new Payment.fromJson(json['payment']) : null;
+    json['payment'] != null ? Payment.fromJson(json['payment']) : null;
     paymentGatewayDetail = json['paymentGatewayDetail'] != null
-        ? new PaymentGatewayDetail.fromJson(json['paymentGatewayDetail'])
+        ? PaymentGatewayDetail.fromJson(json['paymentGatewayDetail'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.payment != null) {
-      data['payment'] = this.payment.toJson();
+    final data = <String, dynamic>{};
+    if (payment != null) {
+      data['payment'] = payment.toJson();
     }
-    if (this.paymentGatewayDetail != null) {
-      data['paymentGatewayDetail'] = this.paymentGatewayDetail.toJson();
+    if (paymentGatewayDetail != null) {
+      data['paymentGatewayDetail'] = paymentGatewayDetail.toJson();
     }
     return data;
   }
@@ -72,7 +72,7 @@ class Payment {
     paidfor = json['paidfor'];
     status = json['status'];
     metadata = json['metadata'] != null
-        ? new Metadata.fromJson(json['metadata'])
+        ? Metadata.fromJson(json['metadata'])
         : null;
     purpose = json['purpose'];
     subscriptionid = json['subscriptionid'];
@@ -80,17 +80,17 @@ class Payment {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['paidamount'] = this.paidamount;
-    data['paidby'] = this.paidby;
-    data['paidfor'] = this.paidfor;
-    data['status'] = this.status;
-    if (this.metadata != null) {
-      data['metadata'] = this.metadata.toJson();
+    final data = Map<String, dynamic>();
+    data['paidamount'] = paidamount;
+    data['paidby'] = paidby;
+    data['paidfor'] = paidfor;
+    data['status'] = status;
+    if (metadata != null) {
+      data['metadata'] = metadata.toJson();
     }
-    data['purpose'] = this.purpose;
-    data['subscriptionid'] = this.subscriptionid;
-    data['id'] = this.id;
+    data['purpose'] = purpose;
+    data['subscriptionid'] = subscriptionid;
+    data['id'] = id;
     return data;
   }
 }
@@ -105,8 +105,8 @@ class Metadata {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['paymentGateway'] = this.paymentGateway;
+    final data = <String, dynamic>{};
+    data['paymentGateway'] = paymentGateway;
     return data;
   }
 }
@@ -122,18 +122,18 @@ class PaymentGatewayDetail {
   PaymentGatewayDetail.fromJson(Map<String, dynamic> json) {
     sourcecode = json['sourcecode'];
     metadata = json['metadata'] != null
-        ? new PaymentMetadata.fromJson(json['metadata'])
+        ? PaymentMetadata.fromJson(json['metadata'])
         : null;
     paymentgatewayrequestid = json['paymentgatewayrequestid'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['sourcecode'] = this.sourcecode;
-    if (this.metadata != null) {
-      data['metadata'] = this.metadata.toJson();
+    final data = <String, dynamic>{};
+    data['sourcecode'] = sourcecode;
+    if (metadata != null) {
+      data['metadata'] = metadata.toJson();
     }
-    data['paymentgatewayrequestid'] = this.paymentgatewayrequestid;
+    data['paymentgatewayrequestid'] = paymentgatewayrequestid;
     return data;
   }
 }
@@ -200,25 +200,25 @@ class PaymentMetadata {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['phone'] = this.phone;
-    data['email'] = this.email;
-    data['buyer_name'] = this.buyerName;
-    data['amount'] = this.amount;
-    data['purpose'] = this.purpose;
-    data['expires_at'] = this.expiresAt;
-    data['status'] = this.status;
-    data['send_sms'] = this.sendSms;
-    data['send_email'] = this.sendEmail;
-    data['shorturl'] = this.shorturl;
-    data['longurl'] = this.longurl;
-    data['redirect_url'] = this.redirectUrl;
-    data['webhook'] = this.webhook;
-    data['allow_repeated_payments'] = this.allowRepeatedPayments;
-    data['customer_id'] = this.customerId;
-    data['created_at'] = this.createdAt;
-    data['modified_at'] = this.modifiedAt;
+    final data = <String, dynamic>{};
+    data['id'] = id;
+    data['phone'] = phone;
+    data['email'] = email;
+    data['buyer_name'] = buyerName;
+    data['amount'] = amount;
+    data['purpose'] = purpose;
+    data['expires_at'] = expiresAt;
+    data['status'] = status;
+    data['send_sms'] = sendSms;
+    data['send_email'] = sendEmail;
+    data['shorturl'] = shorturl;
+    data['longurl'] = longurl;
+    data['redirect_url'] = redirectUrl;
+    data['webhook'] = webhook;
+    data['allow_repeated_payments'] = allowRepeatedPayments;
+    data['customer_id'] = customerId;
+    data['created_at'] = createdAt;
+    data['modified_at'] = modifiedAt;
     return data;
   }
 }

@@ -1,6 +1,6 @@
 
 
-import 'package:myfhb/common/CommonConstants.dart';
+import '../../common/CommonConstants.dart';
 
 class AddressResult {
   String id;
@@ -16,10 +16,10 @@ class AddressResult {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[CommonConstants.strId] = this.id;
-    data[CommonConstants.strCode] = this.code;
-    data[CommonConstants.strName] = this.name;
+    final data = <String, dynamic>{};
+    data[CommonConstants.strId] = id;
+    data[CommonConstants.strCode] = code;
+    data[CommonConstants.strName] = name;
     return data;
   }
 }

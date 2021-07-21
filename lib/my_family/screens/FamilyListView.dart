@@ -1,22 +1,22 @@
 import 'dart:typed_data';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
-import 'package:myfhb/common/FHBBasicWidget.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/my_family/models/FamilyData.dart';
-import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
-import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
-import 'package:myfhb/my_family/models/LinkedData.dart';
-import 'package:myfhb/my_family/models/ProfileData.dart';
-import 'package:myfhb/my_family/models/Sharedbyme.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/my_family/models/relationships.dart';
-import 'package:myfhb/src/model/user/MyProfileModel.dart';
+import '../../colors/fhb_colors.dart' as fhbColors;
+import '../../common/FHBBasicWidget.dart';
+import '../../common/PreferenceUtil.dart';
+import '../../constants/fhb_constants.dart' as Constants;
+import '../models/FamilyData.dart';
+import '../models/FamilyMembersRes.dart';
+import '../models/FamilyMembersResponse.dart';
+import '../models/LinkedData.dart';
+import '../models/ProfileData.dart';
+import '../models/Sharedbyme.dart';
+import '../../common/CommonUtil.dart';
+import '../../constants/variable_constant.dart' as variable;
+import '../models/relationships.dart';
+import '../../src/model/user/MyProfileModel.dart';
 
 class FamilyListView {
   FamilyMemberResult familyData;
@@ -34,17 +34,18 @@ class FamilyListView {
 
     return showDialog(
         context: context,
-        builder: (BuildContext context) {
+        builder: (context) {
           return Material(
               type: MaterialType.transparency,
               child: Container(
                 child: Column(
                   children: <Widget>[
-                    data != null
-                        ? setupAlertDialoadContainer(data.sharedByUsers,
-                            context, onTextFieldtap, _keyLoader)
-                        : setupAlertDialoadContainer(
-                            null, context, onTextFieldtap, _keyLoader),
+                    if (data != null)
+                      setupAlertDialoadContainer(data.sharedByUsers, context,
+                          onTextFieldtap, _keyLoader)
+                    else
+                      setupAlertDialoadContainer(
+                          null, context, onTextFieldtap, _keyLoader),
                   ],
                 ),
               ));
@@ -72,19 +73,18 @@ class FamilyListView {
               String profilePic)
           onTextFieldtap,
       GlobalKey<State> _keyLoader) {
-    MyProfileModel myProfile =
-        PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+    var myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
 
-    ProfileData profileData = new ProfileData(
+    final profileData = ProfileData(
         id: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),
         userId: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN));
-    LinkedData linkedData =
-        new LinkedData(roleName: variable.Self, nickName: variable.Self);
+    final linkedData =
+        LinkedData(roleName: variable.Self, nickName: variable.Self);
 
     try {
       sharedByMeList.insert(
           0,
-          new SharedByUsers(
+          SharedByUsers(
               id: myProfile.result.id,
               nickName: 'Self',
               relationship: RelationsShipModel(name: 'Self')));
@@ -101,9 +101,9 @@ class FamilyListView {
             new Sharedbyme(profileData: profileData, linkedData: linkedData));
       }
     }*/
-    List<SharedByUsers> sharedByMe = removeDuplicates(sharedByMeList);
+    var sharedByMe = removeDuplicates(sharedByMeList);
 
-    if (sharedByMe.length > 0) {
+    if (sharedByMe.isNotEmpty) {
       return Container(
           decoration: BoxDecoration(
               color: const Color(fhbColors.bgColorContainer),
@@ -145,7 +145,7 @@ class FamilyListView {
                 child: ListView.builder(
                   shrinkWrap: true,
                   itemCount: sharedByMe.length,
-                  itemBuilder: (BuildContext context, int index) {
+                  itemBuilder: (context, index) {
                     return Card(
                       child: InkWell(
                         child: Container(
@@ -155,7 +155,6 @@ class FamilyListView {
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(10)),
                           child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
                               ClipOval(
                                   child: sharedByMe[index].relationship.name ==
@@ -163,12 +162,14 @@ class FamilyListView {
                                       ? myProfile.result
                                                   .profilePicThumbnailUrl !=
                                               null
-                                          ? new FHBBasicWidget()
+                                          ? FHBBasicWidget()
                                               .getProfilePicWidgeUsingUrl(
                                                   myProfile)
                                           : Container(
                                               height: 50.0.h,
                                               width: 50.0.h,
+                                              color: const Color(
+                                                  fhbColors.bgColorContainer),
                                               child: Center(
                                                   child: Text(
                                                       myProfile.result != null
@@ -184,8 +185,6 @@ class FamilyListView {
                                                           color: Color(CommonUtil()
                                                               .getMyPrimaryColor()),
                                                           fontSize: 22.0.sp))),
-                                              color: const Color(
-                                                  fhbColors.bgColorContainer),
                                             )
                                       : sharedByMe[index]
                                                   .child
@@ -198,33 +197,55 @@ class FamilyListView {
                                               height: 50.0.h,
                                               width: 50.0.h,
                                               fit: BoxFit.cover,
-                                    errorBuilder: (BuildContext context, Object exception, StackTrace stackTrace) {
-                                      return Container(
-                                        height: 50.0.h,
-                                        width: 50.0.h,
-                                        color: Color(new CommonUtil().getMyPrimaryColor()),
-                                        child: Center(
-                                          child: Text(
-                                            sharedByMe[index]
-                                                .child.firstName!=null && sharedByMe[index]
-                                                .child.lastName!=null?sharedByMe[index]
-                                                .child.firstName[0].toUpperCase()+sharedByMe[index]
-                                                .child.lastName[0].toUpperCase():sharedByMe[index]
-                                                .child.firstName!=null?sharedByMe[index]
-                                                .child.firstName[0].toUpperCase():'',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 22.0.sp,
-                                              fontWeight: FontWeight.w400,
-                                            ),
-                                          )
-                                        ),
-                                      );
-                                    },
+                                              errorBuilder: (context, exception,
+                                                  stackTrace) {
+                                                return Container(
+                                                  height: 50.0.h,
+                                                  width: 50.0.h,
+                                                  color: Color(CommonUtil()
+                                                      .getMyPrimaryColor()),
+                                                  child: Center(
+                                                      child: Text(
+                                                    sharedByMe[index]
+                                                                    .child
+                                                                    .firstName !=
+                                                                null &&
+                                                            sharedByMe[index]
+                                                                    .child
+                                                                    .lastName !=
+                                                                null
+                                                        ? sharedByMe[index]
+                                                                .child
+                                                                .firstName[0]
+                                                                .toUpperCase() +
+                                                            sharedByMe[index]
+                                                                .child
+                                                                .lastName[0]
+                                                                .toUpperCase()
+                                                        : sharedByMe[index]
+                                                                    .child
+                                                                    .firstName !=
+                                                                null
+                                                            ? sharedByMe[index]
+                                                                .child
+                                                                .firstName[0]
+                                                                .toUpperCase()
+                                                            : '',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 22.0.sp,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                    ),
+                                                  )),
+                                                );
+                                              },
                                             )
                                           : Container(
                                               height: 50.0.h,
                                               width: 50.0.h,
+                                              color: const Color(
+                                                  fhbColors.bgColorContainer),
                                               child: Center(
                                                 child: Text(
                                                   sharedByMe[index]
@@ -242,8 +263,6 @@ class FamilyListView {
                                                       fontSize: 22.0.sp),
                                                 ),
                                               ),
-                                              color: const Color(
-                                                  fhbColors.bgColorContainer),
                                             )),
                               SizedBox(width: 20.0.w),
                               Expanded(
@@ -255,7 +274,10 @@ class FamilyListView {
                                       child: Text(
                                         index == 0
                                             ? sharedByMe[index].nickName != null
-                                                ? sharedByMe[index]?.nickName?.capitalizeFirstofEach /* toBeginningOfSentenceCase(
+                                                ? sharedByMe[index]
+                                                    ?.nickName
+                                                    ?.capitalizeFirstofEach
+                                                /* toBeginningOfSentenceCase(
                                                     sharedByMe[index]
                                                         .nickName
                                                         .toLowerCase()) */
@@ -303,11 +325,8 @@ class FamilyListView {
                                 sharedByMe[index].id,
                                 sharedByMe[index].nickName,
                                 sharedByMe[index].nickName == variable.Self
-                                    ? myProfile.result.profilePicThumbnailUrl !=
-                                            null
-                                        ? myProfile
-                                            .result.profilePicThumbnailUrl
-                                        : ""
+                                    ? myProfile.result.profilePicThumbnailUrl ??
+                                        ""
                                     : myProfile.result != null
                                         ? myProfile.result.firstName != null
                                             ? myProfile.result.firstName[0]
@@ -320,13 +339,9 @@ class FamilyListView {
                                 sharedByMe[index].child.id,
                                 sharedByMe[index].child.firstName,
                                 sharedByMe[index]
-                                            .child
-                                            .profilePicThumbnailUrl !=
-                                        null
-                                    ? sharedByMe[index]
                                         .child
-                                        .profilePicThumbnailUrl
-                                    : (sharedByMe[index].child.firstName[0] !=
+                                        .profilePicThumbnailUrl ??
+                                    (sharedByMe[index].child.firstName[0] !=
                                             null
                                         ? sharedByMe[index]
                                             .child
@@ -348,9 +363,9 @@ class FamilyListView {
   }
 
   List<SharedByUsers> removeDuplicates(List<SharedByUsers> SharedbymeList) {
-    List<SharedByUsers> sharedByMeClone = new List();
+    final List<SharedByUsers> sharedByMeClone = [];
 
-    for (SharedByUsers sharedbymeObj in SharedbymeList) {
+    for (var sharedbymeObj in SharedbymeList) {
       if (!sharedByMeClone.contains(sharedbymeObj)) {
         sharedByMeClone.add(sharedbymeObj);
       }

@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/language/model/Language.dart';
-import 'package:myfhb/language/repository/LanguageRepository.dart';
-import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
-import 'package:myfhb/src/resources/network/ApiResponse.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import '../../common/PreferenceUtil.dart';
+import '../model/Language.dart';
+import '../repository/LanguageRepository.dart';
+import '../../src/blocs/Authentication/LoginBloc.dart';
+import '../../src/resources/network/ApiResponse.dart';
+import '../../constants/variable_constant.dart' as variable;
+import '../../constants/fhb_constants.dart' as Constants;
 
 class LanguageBlock implements BaseBloc {
   LanguageRepository _languageResponseListRepository;
@@ -34,7 +34,7 @@ class LanguageBlock implements BaseBloc {
     try {
       languageModelList = await _languageResponseListRepository.getLanguage();
 
-      PreferenceUtil.saveLanguageList(
+      await PreferenceUtil.saveLanguageList(
           Constants.KEY_LANGUAGE, languageModelList.result);
 
       categoryListSinks.add(ApiResponse.completed(languageModelList));

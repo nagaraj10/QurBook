@@ -1,4 +1,4 @@
-import 'package:myfhb/constants/fhb_parameters.dart' as param;
+import '../../constants/fhb_parameters.dart' as param;
 
 class BloodPressure {
   BloodPressure({
@@ -48,10 +48,10 @@ class BloodPressureEntity {
         systolic: json[param.strParamSystolic],
         diastolic: json[param.strParamDiastolic],
         deviceHealthRecord: json[param.strParamDeviceHealthRecord] != null
-            ? new DeviceHealthRecord.fromJson(json[param.strParamDeviceHealthRecord])
+            ? DeviceHealthRecord.fromJson(json[param.strParamDeviceHealthRecord])
             : null,
         averageAsOfNow: json['averageAsOfNow'] != null
-            ? new AverageAsOfNow.fromJson(json['averageAsOfNow'])
+            ? AverageAsOfNow.fromJson(json['averageAsOfNow'])
             : null,
 
       );
@@ -77,12 +77,12 @@ class DeviceHealthRecord {
 
   DeviceHealthRecord.fromJson(Map<String, dynamic> json) {
     sourceType = json['sourceType'] != null
-        ? new SourceType.fromJson(json['sourceType'])
+        ? SourceType.fromJson(json['sourceType'])
         : null;
     if (json['heartRateCollection'] != null) {
-      heartRateCollection = new List<HeartRateCollection>();
+      heartRateCollection = List<HeartRateCollection>();
       json['heartRateCollection'].forEach((v) {
-        heartRateCollection.add(new HeartRateCollection.fromJson(v));
+        heartRateCollection.add(HeartRateCollection.fromJson(v));
       });
     }
     createdOn = DateTime.parse(json[param.strCreatedOn]);
@@ -90,13 +90,13 @@ class DeviceHealthRecord {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.sourceType != null) {
-      data['sourceType'] = this.sourceType.toJson();
+    final data = <String, dynamic>{};
+    if (sourceType != null) {
+      data['sourceType'] = sourceType.toJson();
     }
-    if (this.heartRateCollection != null) {
+    if (heartRateCollection != null) {
       data['heartRateCollection'] =
-          this.heartRateCollection.map((v) => v.toJson()).toList();
+          heartRateCollection.map((v) => v.toJson()).toList();
     }
     data[param.strCreatedOn] = createdOn.toIso8601String();
 
@@ -125,18 +125,18 @@ class HeartRateCollection {
     endDateTime = json['endDateTime'];
     bpm = json['bpm'];
     averageAsOfNow = json['averageAsOfNow'] != null
-        ? new AverageAsOfNowPulse.fromJson(json['averageAsOfNow'])
+        ? AverageAsOfNowPulse.fromJson(json['averageAsOfNow'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['startDateTime'] = this.startDateTime;
-    data['endDateTime'] = this.endDateTime;
-    data['bpm'] = this.bpm;
-    if (this.averageAsOfNow != null) {
-      data['averageAsOfNow'] = this.averageAsOfNow.toJson();
+    final data = <String, dynamic>{};
+    data['id'] = id;
+    data['startDateTime'] = startDateTime;
+    data['endDateTime'] = endDateTime;
+    data['bpm'] = bpm;
+    if (averageAsOfNow != null) {
+      data['averageAsOfNow'] = averageAsOfNow.toJson();
     }
     return data;
   }
@@ -152,8 +152,8 @@ class AverageAsOfNowPulse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['pulseAverage'] = this.pulseAverage;
+    final data = Map<String, dynamic>();
+    data['pulseAverage'] = pulseAverage;
     return data;
   }
 }
@@ -170,9 +170,9 @@ class AverageAsOfNow {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['systolicAverage'] = this.systolicAverage;
-    data['diastolicAverage'] = this.diastolicAverage;
+    final data = Map<String, dynamic>();
+    data['systolicAverage'] = systolicAverage;
+    data['diastolicAverage'] = diastolicAverage;
     return data;
   }
 }
@@ -187,8 +187,8 @@ class SourceType {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['name'] = this.code;
+    final data = <String, dynamic>{};
+    data['name'] = code;
     return data;
   }
 }

@@ -26,7 +26,6 @@ class ConfirmLocationMapView extends StatelessWidget {
 
     return GoogleMap(
       scrollGesturesEnabled: true,
-      mapType: MapType.normal,
       initialCameraPosition: kGooglePlex,
       onCameraMove: _onCameraMove,
       markers: markers,

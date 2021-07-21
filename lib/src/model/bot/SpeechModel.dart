@@ -1,4 +1,4 @@
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import '../../../constants/fhb_parameters.dart' as parameters;
 
 class SpeechModel {
   String sender;
@@ -26,13 +26,13 @@ class SpeechModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[parameters.strSender] = this.sender;
-    data[parameters.strSenderName] = this.name;
-    data[parameters.strMessage] = this.message;
-    data[parameters.strSource] = this.source;
-    data[parameters.strSessionId] = this.sessionId;
-    data[parameters.strAuthToken] = this.authToken;
+    final data = Map<String, dynamic>();
+    data[parameters.strSender] = sender;
+    data[parameters.strSenderName] = name;
+    data[parameters.strMessage] = message;
+    data[parameters.strSource] = source;
+    data[parameters.strSessionId] = sessionId;
+    data[parameters.strAuthToken] = authToken;
     return data;
   }
 }

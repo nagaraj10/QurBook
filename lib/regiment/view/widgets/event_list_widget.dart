@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'package:myfhb/regiment/models/profile_response_model.dart';
+import '../../models/profile_response_model.dart';
 import 'event_time_tile.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/regiment/models/save_response_model.dart';
+import '../../../src/utils/screenutils/size_extensions.dart';
+import '../../../common/CommonUtil.dart';
+import '../../../constants/fhb_constants.dart';
+import '../../models/save_response_model.dart';
 import 'package:provider/provider.dart';
-import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
+import '../../view_model/regiment_view_model.dart';
 
 class EventListWidget extends StatelessWidget {
   EventListWidget({
@@ -19,23 +19,23 @@ class EventListWidget extends StatelessWidget {
   var eventTime = {};
   var eventController = {};
   bool isEventsAreValid = true;
-  List tempEventList = new List();
+  List tempEventList = [];
 
   @override
   Widget build(BuildContext context) {
-    Map<String, dynamic> saveMap = {};
+    var saveMap = <String, dynamic>{};
     return Form(
       key: _formKey,
       child: SimpleDialog(
         children: getDialogItems(
-          onTimeSelected: (TimeOfDay timeSelected, String scheduleName,
-              TextEditingController controller) {
+          onTimeSelected: (timeSelected, scheduleName,
+              controller) {
             //tempEventList = eventTime.values.toList();
-            var eventControllerList = eventController.values.toList();
-            int currentIndex = eventTime.keys.toList().indexOf(scheduleName);
+            final eventControllerList = eventController.values.toList();
+            var currentIndex = eventTime.keys.toList().indexOf(scheduleName);
             tempEventList[currentIndex] = toDouble(timeSelected);
             eventControllerList[currentIndex].text = getTimeAsString(timeSelected);
-            bool isValid = eventTimeValidation(tempEventList);
+            final isValid = eventTimeValidation(tempEventList);
             /* if(currentIndex<tempEventList.length-1 && currentIndex<eventControllerList.length-1){
               if(currentIndex==0){
                 //do nothing
@@ -65,7 +65,7 @@ class EventListWidget extends StatelessWidget {
             }else{
               //do nothing
             } */
-            var oldValue = saveMap.putIfAbsent(
+            final oldValue = saveMap.putIfAbsent(
               scheduleName,
               () => getTimeAsString(timeSelected),
             );
@@ -75,21 +75,21 @@ class EventListWidget extends StatelessWidget {
           },
           onSave: () async {
             if (_formKey.currentState.validate()) {
-              bool isValid = eventTimeValidation(tempEventList);
+              final isValid = eventTimeValidation(tempEventList);
               if (isValid) {
-                String currentLanguage = '';
-                final lan = CommonUtil.getCurrentLanCode();
-                if (lan != "undef") {
-                  final langCode = lan.split("-").first;
+                var currentLanguage = '';
+                var lan = CommonUtil.getCurrentLanCode();
+                if (lan != 'undef') {
+                  var langCode = lan.split('-').first;
                   currentLanguage = langCode;
                 } else {
                   currentLanguage = 'en';
                 }
-                String schedules = '&Language=$currentLanguage';
+                var schedules = '&Language=$currentLanguage';
                 saveMap.forEach((key, value) {
                   schedules += '&$key=$value';
                 });
-                SaveResponseModel saveResponse =
+                var saveResponse =
                     await Provider.of<RegimentViewModel>(context, listen: false)
                         .saveProfile(
                   schedules: schedules,
@@ -120,7 +120,7 @@ class EventListWidget extends StatelessWidget {
     Function onTimeSelected,
     Function onSave,
   }) {
-    List<Widget> dialogItems = [];
+    var dialogItems = <Widget>[];
 
     dialogItems.add(
       Row(
@@ -141,7 +141,7 @@ class EventListWidget extends StatelessWidget {
     try {
       profileResultModel.profileData.toJson()?.forEach(
         (key, value) {
-          List<String> timeData = value.split(':');
+          final List<String> timeData = value.split(':');
           if (timeData.length == 2) {
             eventTime[key] = toDouble(
               TimeOfDay(
@@ -149,7 +149,7 @@ class EventListWidget extends StatelessWidget {
                 minute: int.parse(timeData[1]),
               ),
             );
-            var controllerName = TextEditingController();
+            final controllerName = TextEditingController();
             eventController[key] = controllerName;
             dialogItems.add(
               EventTimeTile(
@@ -174,19 +174,19 @@ class EventListWidget extends StatelessWidget {
             Container(
               width: 150.0.w,
               child: RaisedButton(
-                child: Text(
-                  saveButton,
-                  style: TextStyle(
-                    fontSize: 16.0.sp,
-                    color: Colors.white,
-                  ),
-                ),
                 onPressed: onSave,
                 color: Color(CommonUtil().getMyPrimaryColor()),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(
                     5.0.sp,
                   )),
+                ),
+                child: Text(
+                  saveButton,
+                  style: TextStyle(
+                    fontSize: 16.0.sp,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
@@ -199,16 +199,16 @@ class EventListWidget extends StatelessWidget {
   }
 
   getTimeAsString(TimeOfDay timeOfDay) {
-    int hour = timeOfDay?.hour;
-    return '${hour > 9 ? '' : '0'}${hour}:${timeOfDay.minute > 9 ? '' : '0'}${timeOfDay.minute}';
+    var hour = timeOfDay?.hour;
+    return '${hour > 9 ? '' : '0'}$hour:${timeOfDay.minute > 9 ? '' : '0'}${timeOfDay.minute}';
   }
 
   double toDouble(TimeOfDay myTime) => myTime.hour + myTime.minute / 60.0;
 
   bool eventTimeValidation(List eventList,
       {String eventName, double currentEventTime}) {
-    var eventNames = eventTime.keys.toList();
-    for (int i = 0; i < eventList.length; i++) {
+    final eventNames = eventTime.keys.toList();
+    for (var i = 0; i < eventList.length; i++) {
       if (i + 1 == eventList.length) {
         return true;
       } else if (eventList[i] > eventList[i + 1]) {

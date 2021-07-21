@@ -1,11 +1,11 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:myfhb/authentication/constants/constants.dart';
+import '../constants/constants.dart';
 
 class AuthenticationValidator {
   String charValidation(String name, String pattern, String validText) {
-    RegExp regexName = new RegExp(pattern);
-    if (name.length == 0) {
+    var regexName = RegExp(pattern);
+    if (name.isEmpty) {
       return strUserNameCantEmpty;
     } else if (!regexName.hasMatch(name)) {
       return strUserNameCantEmpty;
@@ -15,7 +15,7 @@ class AuthenticationValidator {
 
   String loginPasswordValidation(
       String password, String pattern, String validText) {
-    if (password.length == 0) {
+    if (password.isEmpty) {
       return strPassCantEmpty;
     } else if (password.length < 6) {
       return strPasswordCheck;
@@ -24,8 +24,8 @@ class AuthenticationValidator {
   }
 
   String passwordValidation(String password, String pattern, String validText) {
-    RegExp regexPassword = new RegExp(pattern);
-    if (password.length == 0) {
+    var regexPassword = RegExp(pattern);
+    if (password.isEmpty) {
       return strPassCantEmpty;
     } else if (password.length < 6) {
       return strPasswordCheck;
@@ -37,8 +37,8 @@ class AuthenticationValidator {
 
   String confirmPasswordValidation(String password, String confirmpassword,
       String pattern, String validText) {
-    RegExp regexPassword = new RegExp(pattern);
-    if (password.length == 0) {
+    final regexPassword = RegExp(pattern);
+    if (password.isEmpty) {
       return strPassCantEmpty;
     } else if (password.length < 6) {
       return strPasswordCheck;
@@ -51,20 +51,20 @@ class AuthenticationValidator {
   }
 
   String emailValidation(String email, String pattern, String validText) {
-    RegExp regexEmail = new RegExp(pattern);
-    if (email.length == 0) {
+    var regexEmail = RegExp(pattern);
+    if (email.isEmpty) {
       return strEmailCantEmpty;
     } else if (!regexEmail.hasMatch(email)) {
       return strEmailValidText;
-    } else if('@'.allMatches(email).length > 1){
+    } else if ('@'.allMatches(email).length > 1) {
       return strEmailValidText;
     }
     return null;
   }
 
   String phoneValidation(String phone, String pattern, String validText) {
-    RegExp regexPhone = new RegExp(pattern);
-    if (phone.length == 0) {
+    var regexPhone = RegExp(pattern);
+    if (phone.isEmpty) {
       return strPhoneCantEmpty;
     } else if (!regexPhone.hasMatch(phone)) {
       return strPhoneValidText;
@@ -73,8 +73,8 @@ class AuthenticationValidator {
   }
 
   String phoneOtpValidation(String otp, String pattern, String validText) {
-    RegExp regexPhone = new RegExp(pattern);
-    if (otp.length == 0) {
+    final regexPhone = RegExp(pattern);
+    if (otp.isEmpty) {
       return strOtpCantEmpty;
     } else if (otp.length < 6) {
       return strValidOtp;
@@ -85,7 +85,7 @@ class AuthenticationValidator {
   }
 
   Future<bool> checkNetwork() async {
-    var connectivityResult = await (Connectivity().checkConnectivity());
+    final connectivityResult = await Connectivity().checkConnectivity();
     if (connectivityResult == ConnectivityResult.mobile) {
       return true;
     } else if (connectivityResult == ConnectivityResult.wifi) {

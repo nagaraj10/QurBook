@@ -1,11 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/src/model/Media/media_result.dart';
-
+import '../../common/CommonUtil.dart';
+import '../../src/model/Media/media_result.dart';
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title, this.mediaData, this.onChecked})
+  const MyHomePage({Key key, this.title, this.mediaData, this.onChecked})
       : super(key: key);
   final String title;
   final List<MediaResult> mediaData;
@@ -15,8 +14,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
-  List<CheckboxListTile> data = new List();
+  List<CheckboxListTile> data = List();
 
   @override
   void initState() {
@@ -70,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   style: TextStyle(
                     color: Color(CommonUtil().getMyPrimaryColor()),
                   )),
-              onChanged: (bool val) {
+              onChanged: (val) {
                 print(val);
                 whenAllIsChecked(val, e.name);
                 e.isChecked = val;
@@ -96,20 +94,19 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _buildChip(String label) {
     return Container(
-      padding: EdgeInsets.all(10.0),
-      margin: new EdgeInsets.all(5.0),
-      decoration: new BoxDecoration(
+      padding: EdgeInsets.all(10),
+      margin: EdgeInsets.all(5),
+      decoration: BoxDecoration(
         color: Colors.white,
-        shape: BoxShape.rectangle,
         border: Border.all(color: Theme.of(context).primaryColor),
-        borderRadius: new BorderRadius.circular(
-          5.0,
+        borderRadius: BorderRadius.circular(
+          5,
         ),
         boxShadow: <BoxShadow>[
-          new BoxShadow(
+          BoxShadow(
             color: Colors.black12,
-            blurRadius: 20.0,
-            offset: new Offset(0.0, 5.0),
+            blurRadius: 20,
+            offset: Offset(0, 5),
           ),
         ],
       ),
@@ -124,7 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void whenAllIsChecked(bool val, String name) {
     if (name == 'ALL') {
-      for (MediaResult mediaResult in widget.mediaData) {
+      for (var mediaResult in widget.mediaData) {
         if (mediaResult.name == 'Prescription' ||
             mediaResult.name == 'Lab Report' ||
             mediaResult.name == 'Medical Report' ||

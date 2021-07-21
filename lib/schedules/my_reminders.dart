@@ -1,34 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:myfhb/schedules/add_reminders.dart';
-import 'package:myfhb/src/model/ReminderModel.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:myfhb/src/utils/PageNavigator.dart';
+import 'add_reminders.dart';
+import '../src/model/ReminderModel.dart';
+import '../src/utils/FHBUtils.dart';
+import '../src/utils/PageNavigator.dart';
 import 'package:random_color/random_color.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
+import '../colors/fhb_colors.dart' as fhbColors;
 import 'package:intl/intl.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import '../common/CommonUtil.dart';
+import '../constants/fhb_constants.dart' as Constants;
+import '../constants/variable_constant.dart' as variable;
+import '../constants/router_variable.dart' as router;
+import '../src/utils/screenutils/size_extensions.dart';
 
 class MyReminders extends StatefulWidget {
   static _MyRemindersState of(BuildContext context) =>
       context.findAncestorStateOfType<State<MyReminders>>();
 
   @override
-  State<StatefulWidget> createState() => new _MyRemindersState();
+  State<StatefulWidget> createState() => _MyRemindersState();
 }
 
 class _MyRemindersState extends State<MyReminders> {
-  RandomColor _randomColor = RandomColor();
+  final RandomColor _randomColor = RandomColor();
   SharedPreferences prefs;
 
   dynamic detailsList =
-      new List(); // our default setting is to login, and we should switch to creating an account when the user chooses to
+      []; // our default setting is to login, and we should switch to creating an account when the user chooses to
   dynamic reverseDetailsList =
-      new List(); // our default setting is to login, and we should switch to creating an account when the user chooses to
+      List(); // our default setting is to login, and we should switch to creating an account when the user chooses to
 
   void refresh() {
     setState(() {});
@@ -45,25 +45,25 @@ class _MyRemindersState extends State<MyReminders> {
         } else {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
-            home: new Scaffold(
+            home: Scaffold(
               floatingActionButton: FloatingActionButton(
+                onPressed: () {
+                  PageNavigator.goTo(context, router.rt_AddRemainder);
+                },
+                backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
                 child: Icon(
                   Icons.add,
                   color: Colors.white,
                 ),
-                onPressed: () {
-                  PageNavigator.goTo(context, router.rt_AddRemainder);
-                },
-                backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
               ),
               body: detailsList.length > 0
-                  ? new ListView.builder(
+                  ? ListView.builder(
                       itemCount: detailsList.length,
-                      itemBuilder: (BuildContext ctxt, int index) {
-                        ReminderModel model = reverseDetailsList[index];
-                        var tempDate = DateFormat(variable.dateFormatMMY)
+                      itemBuilder: (ctxt, index) {
+                        final ReminderModel model = reverseDetailsList[index];
+                        final tempDate = DateFormat(variable.dateFormatMMY)
                             .format(DateTime.parse(model.date));
-                        var dateArr = tempDate.split(" ");
+                        final dateArr = tempDate.split(' ');
                         return GestureDetector(
                           onTap: () => Navigator.push(
                               context,
@@ -83,14 +83,11 @@ class _MyRemindersState extends State<MyReminders> {
                                     color:
                                         const Color(fhbColors.cardShadowColor),
                                     blurRadius:
-                                        16, // has the effect of softening the shadow
-                                    spreadRadius:
-                                        0.0, // has the effect of extending the shadow
+                                        16, // has the effect of extending the shadow
                                   )
                                 ],
                               ),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
                                 children: <Widget>[
                                   Expanded(
                                     flex: 3,
@@ -113,7 +110,7 @@ class _MyRemindersState extends State<MyReminders> {
                                                   height: 1.0.h,
                                                 ),
                                                 Padding(
-                                                  padding: EdgeInsets.all(2.0),
+                                                  padding: EdgeInsets.all(2),
                                                   child: Text(
                                                     dateArr[1],
                                                     style: TextStyle(
@@ -124,7 +121,7 @@ class _MyRemindersState extends State<MyReminders> {
                                                   ),
                                                 ),
                                                 Padding(
-                                                  padding: EdgeInsets.all(2.0),
+                                                  padding: EdgeInsets.all(2),
                                                   child: Text(
                                                     dateArr[0],
                                                     style: TextStyle(
@@ -152,8 +149,6 @@ class _MyRemindersState extends State<MyReminders> {
                                   Expanded(
                                     flex: 8,
                                     child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: <Widget>[
@@ -218,6 +213,7 @@ class _MyRemindersState extends State<MyReminders> {
                         );
                       })
                   : Container(
+                      color: Color(fhbColors.bgColorContainer),
                       child: Center(
                         child: Padding(
                           padding: EdgeInsets.only(left: 40, right: 40),
@@ -228,7 +224,6 @@ class _MyRemindersState extends State<MyReminders> {
                           ),
                         ),
                       ),
-                      color: Color(fhbColors.bgColorContainer),
                     ),
             ),
           );

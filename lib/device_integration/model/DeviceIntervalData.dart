@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:myfhb/constants/fhb_parameters.dart' as param;
+import '../../constants/fhb_parameters.dart' as param;
 import 'RefrenceValueMeta.dart';
 import 'BloodPressure.dart';
 import 'BloodGlucose.dart';
@@ -68,7 +68,7 @@ class DeviceIntervalData {
 
   factory DeviceIntervalData.fromJson(Map<String, dynamic> json) =>
       DeviceIntervalData(
-        deviceId: json["id"],
+        deviceId: json['id'],
         startDateTime: DateTime.parse(json[param.strsyncStartDate]),
         endDateTime: DateTime.parse(json[param.strsyncEndDate]),
         lastSyncDateTime: DateTime.parse(json[param.strlastSyncDateTime]),
@@ -97,7 +97,7 @@ class DeviceIntervalData {
       );
 
   Map<String, dynamic> toJson() => {
-        "id": deviceId,
+        'id': deviceId,
         param.strsyncStartDate: startDateTime.toIso8601String(),
         param.strsyncEndDate: endDateTime.toIso8601String(),
         param.strlastSyncDateTime: lastSyncDateTime.toIso8601String(),

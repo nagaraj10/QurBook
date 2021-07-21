@@ -5,20 +5,19 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'package:myfhb/authentication/constants/constants.dart';
-import 'package:myfhb/authentication/model/forgot_password_model.dart';
-import 'package:myfhb/authentication/view/authentication_validator.dart';
-import 'package:myfhb/authentication/view/confirm_password_screen.dart';
-import 'package:myfhb/authentication/view/login_screen.dart';
-import 'package:myfhb/authentication/view_model/patientauth_view_model.dart';
-import 'package:myfhb/authentication/model/forgot_password_model.dart'
-    as forgotPasswordModel;
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/authentication/widgets/country_code_picker.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/constants/variable_constant.dart';
-import 'package:myfhb/src/ui/loader_class.dart';
+import '../constants/constants.dart';
+import '../model/forgot_password_model.dart';
+import 'authentication_validator.dart';
+import 'confirm_password_screen.dart';
+import 'login_screen.dart';
+import '../view_model/patientauth_view_model.dart';
+import '../model/forgot_password_model.dart' as forgotPasswordModel;
+import '../../constants/fhb_constants.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
+import '../widgets/country_code_picker.dart';
+import '../../common/CommonUtil.dart';
+import '../../constants/variable_constant.dart';
+import '../../src/ui/loader_class.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   @override
@@ -30,14 +29,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       CountryPickerUtils.getCountryByPhoneCode(strinitialMobileLabel);
   final mobileController = TextEditingController();
   bool _autoValidateBool = false;
-  FlutterToast toast = new FlutterToast();
+  FlutterToast toast = FlutterToast();
   AuthViewModel authViewModel;
-  var _ForgetPassKey = GlobalKey<FormState>();
+  final _ForgetPassKey = GlobalKey<FormState>();
   @override
   void initState() {
     mInitialTime = DateTime.now();
     super.initState();
-    authViewModel = new AuthViewModel();
+    authViewModel = AuthViewModel();
   }
 
   @override
@@ -53,7 +52,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final height = 1.sh;
+    var height = 1.sh;
     return Scaffold(
       body: Form(
         key: _ForgetPassKey,
@@ -71,7 +70,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   padding: EdgeInsets.symmetric(horizontal: 20),
                   child: SingleChildScrollView(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         SizedBox(height: height * .1),
@@ -155,19 +153,19 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 constraints:
                     BoxConstraints(maxWidth: 100.0.w, minWidth: 50.0.w),
                 child: CountryCodePickerPage(
-                    onValuePicked: (Country country) =>
+                    onValuePicked: (country) =>
                         setState(() => _selectedDialogCountry = country),
                     selectedDialogCountry: _selectedDialogCountry),
               ),
               labelText: title,
               hintText: strPhoneHint,
               focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0),
+                  borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide(
                     color: Color(CommonUtil().getMyPrimaryColor()),
                   )),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10.0),
+                borderRadius: BorderRadius.circular(10),
                 borderSide: BorderSide(
                   color: Colors.deepPurple,
                 ),
@@ -223,16 +221,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             if (_ForgetPassKey.currentState.validate()) {
               _ForgetPassKey.currentState.save();
               LoaderClass.showLoadingDialog(context);
-              PatientForgotPasswordModel logInModel =
-                  new PatientForgotPasswordModel(
+              var logInModel = PatientForgotPasswordModel(
                 //userName: mobileController.text,
                 userName:
-                    '${strPlusSymbol}${_selectedDialogCountry.phoneCode}${mobileController.text}',
+                    '$strPlusSymbol${_selectedDialogCountry.phoneCode}${mobileController.text}',
                 source: strSource,
               );
-              Map<String, dynamic> map = logInModel.toJson();
-              forgotPasswordModel.PatientForgotPasswordModel response =
-                  await authViewModel.resetPassword(map);
+              final map = logInModel.toJson();
+              final response = await authViewModel.resetPassword(map);
               _checkResponse(response);
             } else {
               setState(() {
@@ -255,15 +251,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       blurRadius: 5,
                       spreadRadius: 2)
                 ],
-                gradient: LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                    colors: [
+                gradient: LinearGradient(end: Alignment.centerRight, colors: [
 //                  Color(0xff138fcf),
 //                  Color(0xff138fcf),
-                      Color(new CommonUtil().getMyPrimaryColor()),
-                      Color(new CommonUtil().getMyGredientColor())
-                    ])),
+                  Color(CommonUtil().getMyPrimaryColor()),
+                  Color(CommonUtil().getMyGredientColor())
+                ])),
             child: Text(
               strResetButton,
               style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
@@ -284,10 +277,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               builder: (context) => ChangePasswordScreen(
                     //userName: mobileController.text,
                     userName:
-                        '${strPlusSymbol}${_selectedDialogCountry.phoneCode}${mobileController.text}',
+                        '$strPlusSymbol${_selectedDialogCountry.phoneCode}${mobileController.text}',
                   )));
     } else {
       toast.getToast(response.message, Colors.red);
     }
   }
+
 }

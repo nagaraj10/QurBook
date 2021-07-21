@@ -1,4 +1,4 @@
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import '../../../constants/fhb_parameters.dart' as parameters;
 
 class LaboratoryIds {
   String id;
@@ -90,35 +90,35 @@ isDefault = json[parameters.strisDefault];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-     data[parameters.strId] = this.id;
-    data[parameters.strCreatedBy] = this.createdBy;
-    data[parameters.strName] = this.name;
-     data[parameters.strLogo] = this.logo;
-     data[parameters.strLatitude] = this.latitude;
-    data[parameters.strLongitute] = this.longitude;
-      data[parameters.strLogothumbnail] = this.logoThumbnail;
- data[parameters.strZipcode] = this.zipCode;
-    data[parameters.strWebsite] = this.website;
-       data[parameters.strCity] = this.city;
-    data[parameters.strGoogleMapUrl] = this.googleMapUrl;
-     data[parameters.strBranch] = this.branch;
+    final data = <String, dynamic>{};
+     data[parameters.strId] = id;
+    data[parameters.strCreatedBy] = createdBy;
+    data[parameters.strName] = name;
+     data[parameters.strLogo] = logo;
+     data[parameters.strLatitude] = latitude;
+    data[parameters.strLongitute] = longitude;
+      data[parameters.strLogothumbnail] = logoThumbnail;
+ data[parameters.strZipcode] = zipCode;
+    data[parameters.strWebsite] = website;
+       data[parameters.strCity] = city;
+    data[parameters.strGoogleMapUrl] = googleMapUrl;
+     data[parameters.strBranch] = branch;
 
- data[parameters.strAddressLine1] = this.addressLine1;
-    data[parameters.strAddressLine2] = this.addressLine2;
-    data[parameters.strState] = this.state;
-    data[parameters.strEmail] = this.email;
-        data[parameters.strDescription] = this.description;
+ data[parameters.strAddressLine1] = addressLine1;
+    data[parameters.strAddressLine2] = addressLine2;
+    data[parameters.strState] = state;
+    data[parameters.strEmail] = email;
+        data[parameters.strDescription] = description;
 
-    data[parameters.strPhoneNumber1] = this.phoneNumber1;
-    data[parameters.strPhoneNumber2] = this.phoneNumber2;
-    data[parameters.strPhoneNumber3] = this.phoneNumber3;
-    data[parameters.strPhoneNumber4] = this.phoneNumber4;
-       data[parameters.strIsUserDefined] = this.isUserDefined;
- data[parameters.strIsActive] = this.isActive;
-    data[parameters.strCreatedOn] = this.createdOn;
-    data[parameters.strLastModifiedOn] = this.lastModifiedOn;
-    data[parameters.strisDefault] = this.isDefault;
+    data[parameters.strPhoneNumber1] = phoneNumber1;
+    data[parameters.strPhoneNumber2] = phoneNumber2;
+    data[parameters.strPhoneNumber3] = phoneNumber3;
+    data[parameters.strPhoneNumber4] = phoneNumber4;
+       data[parameters.strIsUserDefined] = isUserDefined;
+ data[parameters.strIsActive] = isActive;
+    data[parameters.strCreatedOn] = createdOn;
+    data[parameters.strLastModifiedOn] = lastModifiedOn;
+    data[parameters.strisDefault] = isDefault;
    
       return data;
   }

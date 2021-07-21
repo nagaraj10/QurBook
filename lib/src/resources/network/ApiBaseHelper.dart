@@ -3,45 +3,40 @@ import 'dart:async';
 import 'dart:convert' as convert;
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:dio/dio.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' as gett;
 import 'package:http/http.dart' as http;
-import 'package:myfhb/add_family_user_info/models/address_type_list.dart';
-import 'package:myfhb/add_new_plan/model/PlanCode.dart';
-import 'package:myfhb/authentication/constants/constants.dart';
-import 'package:myfhb/authentication/view/login_screen.dart';
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/common/CommonDialogBox.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/HeaderRequest.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/constants/fhb_query.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/record_detail/model/ImageDocumentResponse.dart';
-import 'package:myfhb/src/model/Health/MediaMasterIds.dart';
-import 'package:myfhb/src/model/common_response.dart';
-import 'package:myfhb/src/model/error_map.dart';
-import 'package:myfhb/src/model/Health/asgard/health_record_success.dart';
-import 'package:myfhb/src/resources/network/AppException.dart';
-import 'package:myfhb/src/ui/authentication/SignInScreen.dart';
-import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/appointmentsModel.dart';
-import 'package:myfhb/telehealth/features/chat/model/GetRecordIdsFilter.dart';
-import 'package:myfhb/widgets/cart_genric_response.dart';
-import 'package:myfhb/widgets/fetching_cart_items_model.dart';
-import 'package:myfhb/widgets/make_payment_response.dart';
-import 'package:myfhb/widgets/update_payment_response.dart';
+import 'package:myfhb/src/resources/network/api_services.dart';
+import '../../../add_family_user_info/models/address_type_list.dart';
+import '../../../authentication/constants/constants.dart';
+import '../../../authentication/view/login_screen.dart';
+import '../../../common/CommonConstants.dart';
+import '../../../common/CommonDialogBox.dart';
+import '../../../common/CommonUtil.dart';
+import '../../../common/PreferenceUtil.dart';
+import '../../../constants/HeaderRequest.dart';
+import '../../../constants/fhb_constants.dart' as Constants;
+import '../../../constants/fhb_constants.dart';
+import '../../../constants/fhb_parameters.dart' as parameters;
+import '../../../constants/fhb_query.dart';
+import '../../../constants/variable_constant.dart' as variable;
+import '../../../record_detail/model/ImageDocumentResponse.dart';
+import '../../model/Health/MediaMasterIds.dart';
+import '../../model/common_response.dart';
+import '../../model/error_map.dart';
+import '../../model/Health/asgard/health_record_success.dart';
+import 'AppException.dart';
+import '../../ui/authentication/SignInScreen.dart';
+import '../../../telehealth/features/appointments/model/fetchAppointments/appointmentsModel.dart';
+import '../../../telehealth/features/chat/model/GetRecordIdsFilter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'AppException.dart';
 import 'package:http_parser/http_parser.dart';
 
 import 'dart:async';
-import 'package:myfhb/constants/fhb_query.dart';
-import 'package:myfhb/src/resources/network/AppException.dart';
+import '../../../constants/fhb_query.dart';
+import 'AppException.dart';
 
 class ApiBaseHelper {
   final String _baseUrl = Constants.BASE_URL;
@@ -49,13 +44,13 @@ class ApiBaseHelper {
 
   // String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-  HeaderRequest headerRequest = new HeaderRequest();
-  ErrorMap errorMap = new ErrorMap();
+  HeaderRequest headerRequest = HeaderRequest();
+  ErrorMap errorMap = ErrorMap();
 
   Future<dynamic> signIn(String url, String jsonData) async {
     var responseJson;
     try {
-      final response = await http.post(_baseUrl + url,
+      var response = await ApiServices.post(_baseUrl + url,
           body: jsonData,
           headers: await headerRequest.getRequesHeaderWithoutToken());
       responseJson = _returnResponse(response);
@@ -69,7 +64,7 @@ class ApiBaseHelper {
     var responseJson;
 
     try {
-      final response = await http.post(_baseUrl + url,
+      var response = await ApiServices.post(_baseUrl + url,
           body: otpVerifyData,
           headers: await headerRequest.getRequesHeaderWithoutToken());
       responseJson = _returnResponse(response);
@@ -81,10 +76,10 @@ class ApiBaseHelper {
 
   Future<dynamic> verifyAddFamilyOTP(String url, String otpVerifyData) async {
     var responseJson;
-    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     try {
-      final response = await http.post(_baseUrl + url,
+      var response = await ApiServices.post(_baseUrl + url,
           body: otpVerifyData,
           headers: await headerRequest.getRequestHeadersAuthContent());
       responseJson = _returnResponse(response);
@@ -97,7 +92,7 @@ class ApiBaseHelper {
   Future<dynamic> deleteHealthRecord(String url) async {
     var responseJson;
     try {
-      final response = await http.delete(_baseUrl + url,
+      var response = await ApiServices.delete(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersAuthContent());
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -110,7 +105,7 @@ class ApiBaseHelper {
     var responseJson;
 
     try {
-      final response = await http.post(_baseUrl + url,
+      var response = await ApiServices.post(_baseUrl + url,
           body: bookmarkData,
           headers: await headerRequest.getRequestHeadersAuthContent());
       responseJson = _returnResponse(response);
@@ -123,7 +118,7 @@ class ApiBaseHelper {
   Future<dynamic> updateProvidersOld(String url) async {
     var responseJson;
     try {
-      final response = await http.post(_baseUrl + url,
+      var response = await ApiServices.post(_baseUrl + url,
           body: '',
           headers: await headerRequest.getRequestHeadersForProvider());
       responseJson = _returnResponse(response);
@@ -134,8 +129,8 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> updateProviders(String url, String query) async {
-    Dio dio = new Dio();
-    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    final dio = Dio();
+    final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     var responseJson;
 
@@ -143,11 +138,11 @@ class ApiBaseHelper {
     dio.options.headers[variable.strContentType] = variable.strcntVal;
     dio.options.headers[variable.strAuthorization] = authToken;
 
-    Map<String, dynamic> mapForSignUp = new Map();
+    final Map<String, dynamic> mapForSignUp = {};
     mapForSignUp[parameters.strSections] = query;
-    FormData formData = new FormData.fromMap(mapForSignUp);
+    final FormData formData = FormData.fromMap(mapForSignUp);
 
-    var response = await dio.post(_baseUrl + url, data: formData);
+    final response = await dio.post(_baseUrl + url, data: formData);
 
     //responseJson = _returnResponse(response.data);
 
@@ -156,19 +151,19 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> updateTeleHealthProviders(String url, String query) async {
-    Dio dio = new Dio();
-    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    var dio = Dio();
+    var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     var responseJson;
 
     dio.options.headers[variable.straccept] = variable.strAcceptVal;
     dio.options.headers[variable.strAuthorization] = authToken;
 
-    Map<String, dynamic> mapForSignUp = new Map();
+    final mapForSignUp = Map<String, dynamic>();
     mapForSignUp[parameters.strSections] = query;
-    FormData formData = new FormData.fromMap(mapForSignUp);
+    final FormData formData = FormData.fromMap(mapForSignUp);
 
-    var response = await dio.post(_baseUrl + url, data: formData);
+    final response = await dio.post(_baseUrl + url, data: formData);
 
     //responseJson = _returnResponse(response.data);
 
@@ -182,19 +177,19 @@ class ApiBaseHelper {
     dio.options.headers[variable.strAuthorization] =
         await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-    var response = await dio.put(_baseUrl + url, data: jsonString);
+    final response = await dio.put(_baseUrl + url, data: jsonString);
     print(response.data);
 
     return response.data;
   }
 
   Future<dynamic> getDoctorsListFromSearchNew(String url) async {
-    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     var responseJson;
     print(url);
     try {
-      final response = await http.get(_baseUrl + url,
+      var response = await ApiServices.get(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersForSearch());
 
       responseJson = _returnResponse(response, forDoctorSearch: true);
@@ -207,7 +202,7 @@ class ApiBaseHelper {
   Future<dynamic> addProviders(String url, String jsonData) async {
     var responseJson;
     try {
-      final response = await http.post(_baseUrl + url,
+      var response = await ApiServices.post(_baseUrl + url,
           body: jsonData, headers: await headerRequest.getRequestHeader());
       responseJson = _returnResponse(response);
       print(responseJson.toString());
@@ -223,7 +218,7 @@ class ApiBaseHelper {
     var responseJson;
     try {
       print(_baseUrl + url);
-      final response = await http.get(_baseUrl + url,
+      var response = await ApiServices.get(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersAuthAcceptNew());
 
       responseJson = _returnResponse(response);
@@ -236,7 +231,7 @@ class ApiBaseHelper {
   Future<dynamic> getMedicalPreferencesList(String url) async {
     var responseJson;
     try {
-      final response = await http.get(_baseUrl + url,
+      var response = await ApiServices.get(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersAuthAcceptNew());
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -245,18 +240,16 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  /**
-   * The below method helps to get categroy list from server using the get method,
-   * it contains one parameter which describ ethe URL  type
-   * Created by Parvathi M on 7th Jan 2020
-   */
+  /// The below method helps to get categroy list from server using the get method,
+  /// it contains one parameter which describ ethe URL  type
+  /// Created by Parvathi M on 7th Jan 2020
 
   Future<dynamic> getCategoryList(String url) async {
-    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     var responseJson;
     try {
-      final response = await http.get(_baseUrl + url.trim(),
+      var response = await ApiServices.get(_baseUrl + url.trim(),
           headers: await headerRequest.getRequestHeadersAuthContent());
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -266,11 +259,11 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> getCategoryLists(String url) async {
-    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     var responseJson;
     try {
-      final response = await http.get(_baseUrl + url.trim(),
+      var response = await ApiServices.get(_baseUrl + url.trim(),
           headers: await headerRequest.getAuths());
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -279,24 +272,22 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  /**
-   * The below method helps to get health record list from server for a particular userID using the get method,
-   * it contains one parameter which describ ethe URL  type
-   * Created by Parvathi M on 7th Jan 2020
-   */
+  /// The below method helps to get health record list from server for a particular userID using the get method,
+  /// it contains one parameter which describ ethe URL  type
+  /// Created by Parvathi M on 7th Jan 2020
 
   Future<dynamic> getHealthRecordList(String url, {bool condition}) async {
-    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     var responseJson;
     try {
       if (condition) {
-        String baseURL = "https://dev.healthbook.vsolgmi.com/hb/api/v3/";
-        final response = await http.get(baseURL + url,
+        var baseURL = 'https://dev.healthbook.vsolgmi.com/hb/api/v3/';
+        var response = await ApiServices.get(baseURL + url,
             headers: await headerRequest.getAuth());
         responseJson = _returnResponse(response);
       } else {
-        final response = await http.get(_baseUrl + url,
+        var response = await ApiServices.get(_baseUrl + url,
             headers: await headerRequest.getRequestHeadersAuthAccept());
         responseJson = _returnResponse(response);
       }
@@ -307,11 +298,11 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> getMediaTypes(String url) async {
-    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     var responseJson;
     try {
-      final response = await http.get(_baseUrl + url,
+      var response = await ApiServices.get(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersAuthAccept());
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -321,11 +312,11 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> getDoctorProfilePic(String url) async {
-    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     var responseJson;
     try {
-      final response = await http.get(_baseUrl + url,
+      var response = await ApiServices.get(_baseUrl + url,
           headers: await headerRequest.getRequestHeaderWithStar());
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -335,11 +326,11 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> getHospitalListFromSearch(String url, String param) async {
-    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     var responseJson;
     try {
-      final response = await http.get(_baseUrl + url,
+      var response = await ApiServices.get(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersAuthAccept());
 
       responseJson = _returnResponse(response);
@@ -350,11 +341,11 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> getDocumentImage(String url) async {
-    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     var responseJson;
     try {
-      final response = await http.get(_baseUrl + url,
+      var response = await ApiServices.get(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersAuthAccept());
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -364,11 +355,11 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> getDoctorsListFromSearch(String url, String param) async {
-    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     var responseJson;
     try {
-      final response = await http.get(_baseUrl + url + param,
+      var response = await ApiServices.get(_baseUrl + url + param,
           headers: await headerRequest.getRequestHeadersAuthAccept());
 
       responseJson = _returnResponse(response);
@@ -379,11 +370,11 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> getFamilyMembersList(String url) async {
-    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     print(authToken);
     var responseJson;
     try {
-      final response = await http.get(_baseUrl + url,
+      var response = await ApiServices.get(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersAuthAccept());
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -393,11 +384,11 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> getFamilyMembersListNew(String url) async {
-    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     print(authToken);
     var responseJson;
     try {
-      final response = await http.get(_baseUrl + url,
+      var response = await ApiServices.get(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersAuthAcceptNew());
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -407,11 +398,11 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> getProfileInfo(String url) async {
-    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     var responseJson;
     try {
-      final response = await http.get(_baseUrl + url,
+      var response = await ApiServices.get(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersAuthAccept());
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -441,19 +432,19 @@ class ApiBaseHelper {
         return responseJson;
 
       case 201:
-        var responseJson = convert.jsonDecode(response.body.toString());
+        final responseJson = convert.jsonDecode(response.body.toString());
         exitFromApp();
 
         return responseJson;
 
       case 400:
-        var responseJson = convert.jsonDecode(response.body.toString());
+        final responseJson = convert.jsonDecode(response.body.toString());
 
         exitFromApp();
 
         return responseJson;
       case 401:
-        var responseJson = convert.jsonDecode(response.body.toString());
+        final responseJson = convert.jsonDecode(response.body.toString());
         if (responseJson[parameters.strMessage] != null &&
             responseJson[parameters.strMessage] != '') {
           SnackbarToLogout(msg: responseJson[parameters.strMessage]);
@@ -469,7 +460,7 @@ class ApiBaseHelper {
         break;
 
       case 403:
-        var responseJson = convert.jsonDecode(response.body.toString());
+        final responseJson = convert.jsonDecode(response.body.toString());
         if (responseJson[parameters.strMessage] ==
             Constants.STR_OTPMISMATCHEDFOREMAIL) {
           return responseJson;
@@ -484,14 +475,14 @@ class ApiBaseHelper {
       case 500:
         try {
           if (forDoctorSearch) {
-            var responseJson = convert.jsonDecode(response.body.toString());
+            final responseJson = convert.jsonDecode(response.body.toString());
             return responseJson;
           } else {
-            var responseJson = convert.jsonDecode(response.body.toString());
+            final responseJson = convert.jsonDecode(response.body.toString());
             return responseJson;
           }
         } catch (e) {
-          var responseJson = convert.jsonDecode(response.body.toString());
+          final responseJson = convert.jsonDecode(response.body.toString());
           return responseJson;
         }
         break;
@@ -502,12 +493,12 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> saveMediaData(String url, String jsonBody) async {
-    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     var responseJson;
     var response;
     try {
-      response = await http.post(_baseUrl + url,
+      response = await ApiServices.post(_baseUrl + url,
           body: jsonBody, headers: await headerRequest.getRequestHeader());
 
       responseJson = _returnResponse(response);
@@ -522,16 +513,16 @@ class ApiBaseHelper {
       String metaID, String jsonBody) async {
     var response;
     try {
-      String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+      var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-      Dio dio = new Dio();
+      var dio = Dio();
 
       dio.options.headers[variable.straccept] = variable.strAcceptVal;
       dio.options.headers[variable.strcontenttype] = variable.strcntVal;
       dio.options.headers[variable.strauthorization] = authToken;
-      String fileNoun = file.path.split('/').last;
+      final fileNoun = file.path.split('/').last;
 
-      FormData formData = new FormData.fromMap({
+      final FormData formData = FormData.fromMap({
         parameters.strmediaMetaId: metaID,
         parameters.strfile:
             await MultipartFile.fromFile(file.path, filename: fileNoun.trim())
@@ -548,13 +539,13 @@ class ApiBaseHelper {
       String url, Map<String, dynamic> mapForSignUp) async {
     var responseJson;
     try {
-      Dio dio = new Dio();
+      final dio = Dio();
 
       dio.options.headers[variable.straccept] = variable.strAcceptVal;
       dio.options.headers[variable.strContentType] = variable.strcntVal;
-      FormData formData = new FormData.fromMap(mapForSignUp);
+      final FormData formData = FormData.fromMap(mapForSignUp);
 
-      var response = await dio.post(_baseUrl + url, data: formData);
+      final response = await dio.post(_baseUrl + url, data: formData);
 
       responseJson = _returnResponse(response.data);
 
@@ -569,7 +560,7 @@ class ApiBaseHelper {
     print(jsonData);
     var responseJson;
     try {
-      final response = await http.post(_baseUrl + url,
+      var response = await ApiServices.post(_baseUrl + url,
           body: jsonData, headers: await headerRequest.getRequestHeader());
       responseJson = _returnResponse(response);
       print(response.body.toString());
@@ -582,7 +573,7 @@ class ApiBaseHelper {
   Future<dynamic> addUserDeLinking(String url, String jsonData) async {
     var responseJson;
     try {
-      final response = await http.post(_baseUrl + url,
+      var response = await ApiServices.post(_baseUrl + url,
           body: jsonData, headers: await headerRequest.getRequestHeader());
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -592,9 +583,9 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> updateFamilyUserProfile(String url, String query) async {
-    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-    Dio dio = new Dio();
+    var dio = Dio();
     var responseJson;
 
     //dio.options.headers[variable.strContentType] = variable.strcntVal;
@@ -603,11 +594,11 @@ class ApiBaseHelper {
     print(url);
     print(query);
 
-    Map<String, dynamic> mapForSignUp = new Map();
+    final Map<String, dynamic> mapForSignUp = {};
     mapForSignUp[parameters.strSections] = query;
-    FormData formData = new FormData.fromMap(mapForSignUp);
+    final FormData formData = FormData.fromMap(mapForSignUp);
 
-    var response = await dio.post(_baseUrl + url, data: formData);
+    final response = await dio.post(_baseUrl + url, data: formData);
 
     //responseJson = _returnResponse(response.data);
 
@@ -616,7 +607,7 @@ class ApiBaseHelper {
     /*var responseJson;
     try {
       final response =
-          await http.put(_baseUrl + url, body: '', headers: variable.requestHeadersAuthContent);
+          await ApiServices.put(_baseUrl + url, body: '', headers: variable.requestHeadersAuthContent);
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
@@ -631,7 +622,7 @@ class ApiBaseHelper {
     print(jsonData);
 
     try {
-      final response = await http.put(_baseUrl + url,
+      var response = await ApiServices.put(_baseUrl + url,
           body: jsonData,
           headers: await headerRequest.getRequestHeadersAuthContent());
       responseJson = _returnResponse(response);
@@ -642,11 +633,11 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> getCustomRoles(String url) async {
-    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     var responseJson;
     try {
-      final response = await http.get(_baseUrl + url,
+      var response = await ApiServices.get(_baseUrl + url,
           headers: await headerRequest.getRequestHeaderWithStar());
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -659,21 +650,21 @@ class ApiBaseHelper {
       String url, File file, String jsonBody) async {
     var response;
     try {
-      String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+      var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-      Dio dio = new Dio();
+      var dio = Dio();
 
       //dio.options.headers[variable.straccept] = variable.strAcceptVal;
       dio.options.headers[variable.strContentType] = variable.strcntVal;
       dio.options.headers[variable.strauthorization] = authToken;
-      String fileNoun = file.path.split('/').last;
+      final fileNoun = file.path.split('/').last;
 
-      Map<String, dynamic> mapForSignUp = new Map();
+      final Map<String, dynamic> mapForSignUp = {};
       mapForSignUp[parameters.strSections] = url;
       mapForSignUp[parameters.strprofilePic] =
           await MultipartFile.fromFile(file.path, filename: fileNoun);
 
-      FormData formData = new FormData.fromMap(mapForSignUp);
+      final FormData formData = FormData.fromMap(mapForSignUp);
       response = await dio.post(_baseUrl + jsonBody, data: formData);
 
       return response.data;
@@ -686,7 +677,7 @@ class ApiBaseHelper {
     var responseJson;
     var response;
     try {
-      response = await http.post(_baseUrl + url,
+      response = await ApiServices.post(_baseUrl + url,
           body: jsonBody, headers: await headerRequest.getRequestHeader());
 
       responseJson = _returnResponse(response);
@@ -698,12 +689,12 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> updateMediaData(String url, String jsonBody) async {
-    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     var responseJson;
     var response;
     try {
-      response = await http.put(_baseUrl + url,
+      response = await ApiServices.put(_baseUrl + url,
           body: jsonBody, headers: await headerRequest.getRequestHeader());
 
       responseJson = _returnResponse(response);
@@ -716,13 +707,14 @@ class ApiBaseHelper {
 
   Future<List<dynamic>> getDocumentImageListOld(
       String url, List<MediaMasterIds> metaMasterIdList) async {
-    var imagesList = new List<dynamic>();
-    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    final imagesList = List<dynamic>();
+    final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-    for (int i = 0; i < metaMasterIdList.length; i++) {
+    for (var i = 0; i < metaMasterIdList.length; i++) {
       var responseJson;
       try {
-        final response = await http.get(_baseUrl + url + metaMasterIdList[i].id,
+        var response = await ApiServices.get(
+            _baseUrl + url + metaMasterIdList[i].id,
             headers: await headerRequest.getRequestHeadersAuthAccept());
         responseJson = _returnResponse(response);
       } on SocketException {
@@ -736,13 +728,14 @@ class ApiBaseHelper {
 
   Future<List<ImageDocumentResponse>> getDocumentImageList(
       String url, List<MediaMasterIds> metaMasterIdList) async {
-    var imagesList = new List<ImageDocumentResponse>();
-    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    final imagesList = List<ImageDocumentResponse>();
+    var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-    for (int i = 0; i < metaMasterIdList.length; i++) {
+    for (var i = 0; i < metaMasterIdList.length; i++) {
       var responseJson;
       try {
-        final response = await http.get(_baseUrl + url + metaMasterIdList[i].id,
+        var response = await ApiServices.get(
+            _baseUrl + url + metaMasterIdList[i].id,
             headers: await headerRequest.getRequestHeadersAuthAccept());
         responseJson = _returnResponse(response);
       } on SocketException {
@@ -756,12 +749,12 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> signoutPage(String url) async {
-    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     var responseJson;
     var response;
     try {
-      response = await http.put(_baseUrl + url,
+      response = await ApiServices.put(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersAuthAccept());
 
       responseJson = _returnResponse(response);
@@ -773,11 +766,11 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> getSearchMediaFromServer(String url, String param) async {
-    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     var responseJson;
     try {
-      final response = await http.get(_baseUrl + url + param,
+      var response = await ApiServices.get(_baseUrl + url + param,
           headers: await headerRequest.getRequestHeadersAuthAccept());
 
       responseJson = _returnResponse(response);
@@ -791,25 +784,25 @@ class ApiBaseHelper {
       String payload, String jsonBody, String userId) async {
     var response;
     try {
-      String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+      final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-      Dio dio = new Dio();
+      var dio = Dio();
       dio.options.headers['content-type'] = 'multipart/form-data';
-      dio.options.headers["authorization"] = authToken;
+      dio.options.headers['authorization'] = authToken;
       FormData formData;
 
-      if (imagePaths != null && imagePaths.length > 0) {
-        formData = new FormData.fromMap({
+      if (imagePaths != null && imagePaths.isNotEmpty) {
+        formData = FormData.fromMap({
           'metadata': payload,
           'userId': userId,
         });
 
-        for (var image in imagePaths) {
-          File fileName = new File(image);
-          String fileNoun = fileName.path.split('/').last;
+        for (final image in imagePaths) {
+          final fileName = File(image);
+          final fileNoun = fileName.path.split('/').last;
           formData.files.addAll([
             MapEntry(
-                "fileName",
+                'fileName',
                 await MultipartFile.fromFile(fileName.path,
                     filename: fileNoun)),
           ]);
@@ -825,11 +818,11 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> verifyEmail(String url) async {
-    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     var responseJson;
     try {
-      final response = await http.post(_baseUrl + url,
+      var response = await ApiServices.post(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersAuthAccept());
 
       responseJson = _returnResponse(response);
@@ -840,12 +833,12 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> verifyOTPFromEmail(String url, String otpVerifyData) async {
-    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     var responseJson;
 
     try {
-      final response = await http.post(_baseUrl + url,
+      var response = await ApiServices.post(_baseUrl + url,
           body: otpVerifyData,
           headers: await headerRequest.getRequestHeadersAuthContent());
       responseJson = _returnResponse(response);
@@ -856,11 +849,11 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> getDoctorsFromId(String url, String param) async {
-    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     var responseJson;
     try {
-      final response = await http.get(_baseUrl + url + param,
+      var response = await ApiServices.get(_baseUrl + url + param,
           headers: await headerRequest.getRequestHeadersAuthAccept());
 
       responseJson = _returnResponse(response);
@@ -871,11 +864,11 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> getHospitalAndLabUsingId(String url, String param) async {
-    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     var responseJson;
     try {
-      final response = await http.get(_baseUrl + url + param,
+      var response = await ApiServices.get(_baseUrl + url + param,
           headers: await headerRequest.getRequestHeadersAuthAccept());
 
       responseJson = _returnResponse(response);
@@ -889,7 +882,7 @@ class ApiBaseHelper {
     var responseJson;
     try {
       print(_baseUrl + url);
-      final response = await http.get(_baseUrl + url,
+      var response = await ApiServices.get(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersAuthAccept());
       responseJson = _returnResponse(response);
       print(responseJson);
@@ -904,7 +897,7 @@ class ApiBaseHelper {
     try {
       print(_baseUrl + url);
       print(jsonBody);
-      final response = await http.put(_baseUrl + url,
+      var response = await ApiServices.put(_baseUrl + url,
           headers: await headerRequest.getRequestHeader(), body: jsonBody);
 
       responseJson = _returnResponse(response);
@@ -917,7 +910,7 @@ class ApiBaseHelper {
   Future<dynamic> getTimeSlotsList(String url, String jsonBody) async {
     var responseJson;
     try {
-      final response = await http.post(_baseUrl + url,
+      var response = await ApiServices.post(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersTimeSlot(),
           body: jsonBody);
 
@@ -931,15 +924,15 @@ class ApiBaseHelper {
   void SnackbarToLogout(
       {String msg = 'something went wrong, please try again later.'}) {
     PreferenceUtil.clearAllData().then((value) {
-      Get.offAll(PatientSignInScreen());
-      Get.snackbar(variable.strMessage, msg);
+      gett.Get.offAll(PatientSignInScreen());
+      gett.Get.snackbar(variable.strMessage, msg);
     });
   }
 
   Future<dynamic> bookAppointment(String url, String jsonBody) async {
     var responseJson;
     try {
-      final response = await http.post(_baseUrl + url,
+      var response = await ApiServices.post(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersTimeSlot(),
           body: jsonBody);
       print(_baseUrl + url);
@@ -953,7 +946,7 @@ class ApiBaseHelper {
   Future<dynamic> updatePayment(String url, String jsonBody) async {
     var responseJson;
     try {
-      final response = await http.post(_baseUrl + url,
+      var response = await ApiServices.post(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersTimeSlot(),
           body: jsonBody);
 
@@ -965,10 +958,10 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> saveDeviceData(String url, String jsonBody) async {
-    var header = await headerRequest.getRequestHeader();
+    final header = await headerRequest.getRequestHeader();
     var responseJson;
     try {
-      final response = await http.post(_baseUrlDeviceReading + url,
+      var response = await ApiServices.post(_baseUrlDeviceReading + url,
           body: jsonBody, headers: header);
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -978,10 +971,10 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> getByRecordDataType(String url, String jsonBody) async {
-    var header = await headerRequest.getRequestHeader();
+    final header = await headerRequest.getRequestHeader();
     var responseJson;
     try {
-      final response = await http.post(_baseUrlDeviceReading + url,
+      var response = await ApiServices.post(_baseUrlDeviceReading + url,
           body: jsonBody, headers: header);
 
       responseJson = _returnResponse(response);
@@ -992,12 +985,12 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> getDeviceInfo(String url) async {
-    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
-    var header = await headerRequest.getRequestHeader();
+    final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    final header = await headerRequest.getRequestHeader();
     var responseJson;
     try {
-      final response =
-          await http.get(_baseUrlDeviceReading + url, headers: header);
+      var response =
+          await ApiServices.get(_baseUrlDeviceReading + url, headers: header);
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
@@ -1007,7 +1000,7 @@ class ApiBaseHelper {
 
   Future<dynamic> postDeviceId(
       String url, String jsonBody, bool isActive) async {
-    Map<String, String> requestHeadersAuthAccept = new Map();
+    final Map<String, String> requestHeadersAuthAccept = {};
     requestHeadersAuthAccept['accept'] = 'application/json';
     requestHeadersAuthAccept['Content-type'] = 'application/json';
 
@@ -1017,11 +1010,11 @@ class ApiBaseHelper {
     var responseJson;
     try {
       if (isActive) {
-        final response = await http.post(_baseUrl + url,
+        var response = await ApiServices.post(_baseUrl + url,
             headers: requestHeadersAuthAccept, body: jsonBody);
         responseJson = _returnResponse(response);
       } else {
-        final response = await http.post(_baseUrl + url,
+        var response = await ApiServices.post(_baseUrl + url,
             headers: requestHeadersAuthAccept, body: jsonBody);
         responseJson = _returnResponse(response);
       }
@@ -1033,13 +1026,13 @@ class ApiBaseHelper {
 
   Future<dynamic> associateRecords(String url, String jsonString) async {
     var responseJson;
-    Map<String, String> requestHeadersAuthContent = new Map();
+    final Map<String, String> requestHeadersAuthContent = {};
 
     requestHeadersAuthContent['Content-type'] = 'application/json';
     requestHeadersAuthContent['authorization'] =
         await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     try {
-      final response = await http.post(
+      var response = await ApiServices.post(
         _baseUrl + url,
         body: jsonString,
         headers: await headerRequest.getRequestHeadersAuthContent(),
@@ -1053,18 +1046,18 @@ class ApiBaseHelper {
 
   Future<GetRecordIdsFilter> getMetaIdURL(
       List<String> recordIds, String patientId) async {
-    var inputBody = {};
+    final inputBody = {};
     inputBody[strUserId] = patientId;
     inputBody[HEALTH_RECORDIDS] = recordIds;
-    var jsonString = convert.jsonEncode(inputBody);
-    final response = await getApiForGetMetaURL(jsonString);
+    final jsonString = convert.jsonEncode(inputBody);
+    var response = await getApiForGetMetaURL(jsonString);
     return GetRecordIdsFilter.fromJson(response);
   }
 
   Future<dynamic> getApiForGetMetaURL(String jsonBody) async {
     var responseJson;
     try {
-      final response = await http.post(
+      var response = await ApiServices.post(
           _baseUrl + qr_health_record + qr_slash + qr_filter,
           headers: await headerRequest.getRequestHeader(),
           body: jsonBody);
@@ -1076,19 +1069,19 @@ class ApiBaseHelper {
   }
 
   void printWrapped(String text) {
-    final pattern = RegExp('.{1,800}'); // 800 is the size of each chunk
+    var pattern = RegExp('.{1,800}'); // 800 is the size of each chunk
     pattern.allMatches(text).forEach((match) => print(match.group(0)));
   }
 
   getValueBasedOnSearch(String name, String apiname) async {
-    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-    var response = await http.get(
+    final response = await ApiServices.get(
       '$_baseUrl$apiname/search/$name',
       headers: {HttpHeaders.authorizationHeader: authToken},
     );
     if (response.statusCode == 200) {
-      final body = jsonDecode(response.body);
+      var body = jsonDecode(response.body);
       return body;
     } else {
       //throw Exception("Unable to perform request!");
@@ -1097,11 +1090,11 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> getMediaTypesList(String url) async {
-    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     var responseJson;
     try {
-      final response = await http.get(_baseUrl + url,
+      var response = await ApiServices.get(_baseUrl + url,
           headers: await headerRequest.getAuths());
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -1113,7 +1106,7 @@ class ApiBaseHelper {
   getHealthRecordLists(String jsonData, String url) async {
     var responseJson;
     try {
-      final response = await http.post(_baseUrl + url,
+      var response = await ApiServices.post(_baseUrl + url,
           body: jsonData,
           headers: await headerRequest.getRequestHeadersAuthContents());
       responseJson = _returnResponse(response);
@@ -1127,7 +1120,7 @@ class ApiBaseHelper {
     var responseJson;
     print(jsonBody);
     try {
-      final response = await http.put(_baseUrl + url,
+      var response = await ApiServices.put(_baseUrl + url,
           body: jsonBody,
           headers: await headerRequest.getRequestHeadersAuthContent());
       responseJson = _returnResponse(response);
@@ -1138,7 +1131,7 @@ class ApiBaseHelper {
   }
 
   Future<AddressTypeResult> fetchAddressType(String responseQuery) async {
-    final response = await http.post(_baseUrl + responseQuery,
+    var response = await ApiServices.post(_baseUrl + responseQuery,
         headers: await headerRequest.getRequestHeadersAuthContent(),
         body: '["ADDTYP"]');
 
@@ -1154,48 +1147,47 @@ class ApiBaseHelper {
 
   Future<dynamic> createMediaData(String url, String payload,
       List<String> imagePaths, String audioPath, String id) async {
-    String authToken =
-        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
-    String userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
-    Dio dio = new Dio();
+    final dio = Dio();
     dio.options.headers['content-type'] = 'multipart/form-data';
-    dio.options.headers["authorization"] = authToken;
+    dio.options.headers['authorization'] = authToken;
     FormData formData;
 
-    if (imagePaths != null && imagePaths.length > 0) {
-      formData = new FormData.fromMap({
+    if (imagePaths != null && imagePaths.isNotEmpty) {
+      formData = FormData.fromMap({
         'metadata': payload,
         'userId': id,
         'isBookmarked': false,
       });
 
-      for (var image in imagePaths) {
-        File fileName = new File(image);
-        String fileNoun = fileName.path.split('/').last;
+      for (final image in imagePaths) {
+        final fileName = File(image);
+        final fileNoun = fileName.path.split('/').last;
         formData.files.addAll([
-          MapEntry("fileName",
+          MapEntry('fileName',
               await MultipartFile.fromFile(fileName.path, filename: fileNoun)),
         ]);
       }
 
       if (audioPath != null && audioPath != '') {
-        File fileName = new File(audioPath);
-        String fileNoun = fileName.path.split('/').last;
+        var fileName = File(audioPath);
+        final fileNoun = fileName.path.split('/').last;
         formData.files.addAll([
-          MapEntry("fileName",
+          MapEntry('fileName',
               await MultipartFile.fromFile(fileName.path, filename: fileNoun)),
         ]);
       }
     } else {
-      formData = new FormData.fromMap(
+      formData = FormData.fromMap(
           {'metadata': payload, 'userId': id, 'isBookmarked ': false});
 
       if (audioPath != null && audioPath != '') {
-        File fileName = new File(audioPath);
-        String fileNoun = fileName.path.split('/').last;
+        var fileName = File(audioPath);
+        var fileNoun = fileName.path.split('/').last;
         formData.files.addAll([
-          MapEntry("fileName",
+          MapEntry('fileName',
               await MultipartFile.fromFile(fileName.path, filename: fileNoun)),
         ]);
       }
@@ -1219,52 +1211,51 @@ class ApiBaseHelper {
 
   Future<dynamic> updateHealthRecords(String url, String payload,
       List<String> imagePaths, String audioPath, String metaId) async {
-    String authToken =
-        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
-    String userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
-    Dio dio = new Dio();
+    var dio = Dio();
     dio.options.headers['content-type'] = 'multipart/form-data';
-    dio.options.headers["authorization"] = authToken;
+    dio.options.headers['authorization'] = authToken;
     FormData formData;
 
-    if (imagePaths != null && imagePaths.length > 0) {
-      formData = new FormData.fromMap({
+    if (imagePaths != null && imagePaths.isNotEmpty) {
+      formData = FormData.fromMap({
         'metadata': payload,
         'userId': userId,
         'isBookmarked': true,
         'id': metaId,
       });
 
-      for (var image in imagePaths) {
-        File fileName = new File(image);
-        String fileNoun = fileName.path.split('/').last;
+      for (final image in imagePaths) {
+        var fileName = File(image);
+        var fileNoun = fileName.path.split('/').last;
         formData.files.addAll([
-          MapEntry("fileName",
+          MapEntry('fileName',
               await MultipartFile.fromFile(fileName.path, filename: fileNoun)),
         ]);
       }
 
       if (audioPath != null && audioPath != '') {
-        File fileName = new File(audioPath);
-        String fileNoun = fileName.path.split('/').last;
+        final fileName = File(audioPath);
+        final fileNoun = fileName.path.split('/').last;
         formData.files.addAll([
-          MapEntry("fileName",
+          MapEntry('fileName',
               await MultipartFile.fromFile(fileName.path, filename: fileNoun)),
         ]);
       }
     } else {
-      formData = new FormData.fromMap({
+      formData = FormData.fromMap({
         'metadata': payload,
         'userId': userId,
         'isBookmarked ': false,
         'id': metaId,
       });
       if (audioPath != null && audioPath != '') {
-        File fileName = new File(audioPath);
-        String fileNoun = fileName.path.split('/').last;
+        final fileName = File(audioPath);
+        final fileNoun = fileName.path.split('/').last;
         formData.files.addAll([
-          MapEntry("fileName",
+          MapEntry('fileName',
               await MultipartFile.fromFile(fileName.path, filename: fileNoun)),
         ]);
       }
@@ -1290,7 +1281,7 @@ class ApiBaseHelper {
     var responseJson;
     try {
       print(_baseUrl + url);
-      final response = await http.get(_baseUrl + url,
+      var response = await ApiServices.get(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersAuthAccept());
       responseJson = _returnResponse(response);
       print(responseJson);
@@ -1304,7 +1295,7 @@ class ApiBaseHelper {
     var responseJson;
     try {
       print(_baseUrl + url);
-      final response = await http.get(_baseUrl + url,
+      var response = await ApiServices.get(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersAuthAccept());
       responseJson = _returnResponse(response);
       print(responseJson);
@@ -1317,7 +1308,7 @@ class ApiBaseHelper {
   Future<dynamic> getUserProfilePic(String url) async {
     CommonResponse responseJson;
     try {
-      final response = await http.get(_baseUrl + url,
+      var response = await ApiServices.get(_baseUrl + url,
           headers: await headerRequest.getRequestHeader());
       //responseJson = _returnResponse(response);
       responseJson = CommonResponse.fromJson(json.decode(response.body));
@@ -1329,18 +1320,17 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> uploadUserProfilePicToServer(String url, File image) async {
-    String authToken =
-        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    var authToken = await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     //String userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    String filename = image.path.split('/').last;
-    String fileType = filename.split('.')[1];
-    Dio dio = new Dio();
+    var filename = image.path.split('/').last;
+    final fileType = filename.split('.')[1];
+    final dio = Dio();
     dio.options.headers['content-type'] = 'multipart/form-data';
-    dio.options.headers["authorization"] = authToken;
-    dio.options.headers["accept"] = 'application/json';
-    FormData formData = FormData.fromMap({
-      "profilePicture": await MultipartFile.fromFile(image.path,
-          filename: filename, contentType: MediaType('image', '${fileType}')),
+    dio.options.headers['authorization'] = authToken;
+    dio.options.headers['accept'] = 'application/json';
+    final FormData formData = FormData.fromMap({
+      'profilePicture': await MultipartFile.fromFile(image.path,
+          filename: filename, contentType: MediaType('image', '$fileType')),
     });
     var response;
     try {
@@ -1362,7 +1352,7 @@ class ApiBaseHelper {
   Future<dynamic> getDeviceSelection(String url) async {
     var responseJson;
     try {
-      final response = await http.get(_baseUrl + url,
+      var response = await ApiServices.get(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersAuthAccept());
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -1374,7 +1364,7 @@ class ApiBaseHelper {
   Future<dynamic> createDeviceSelection(String url, String jsonBody) async {
     var responseJson;
     try {
-      final response = await http.post(_baseUrl + url,
+      var response = await ApiServices.post(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersTimeSlot(),
           body: jsonBody);
       responseJson = _returnResponse(response);
@@ -1387,7 +1377,7 @@ class ApiBaseHelper {
   Future<dynamic> updateDeviceSelection(String url, String jsonBody) async {
     var responseJson;
     try {
-      final response = await http.put(_baseUrl + url,
+      var response = await ApiServices.put(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersTimeSlot(),
           body: jsonBody);
       responseJson = _returnResponse(response);
@@ -1399,13 +1389,13 @@ class ApiBaseHelper {
 
   Future<dynamic> associateUpdateRecords(String url, String jsonString) async {
     var responseJson;
-    Map<String, String> requestHeadersAuthContent = new Map();
+    final requestHeadersAuthContent = Map<String, String>();
 
     requestHeadersAuthContent['Content-type'] = 'application/json';
     requestHeadersAuthContent['authorization'] =
-        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+        PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     try {
-      final response = await http.put(
+      var response = await ApiServices.put(
         _baseUrl + url,
         body: jsonString,
         headers: await headerRequest.getRequestHeadersAuthContent(),
@@ -1420,7 +1410,7 @@ class ApiBaseHelper {
   Future<dynamic> getAppointmentDetail(String url) async {
     var responseJson;
     try {
-      final response = await http.get(_baseUrl + url,
+      var response = await ApiServices.get(_baseUrl + url,
           headers: await headerRequest.getRequestHeaderWithStar());
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -1432,7 +1422,7 @@ class ApiBaseHelper {
   Future<dynamic> deleteDeviceRecords(String url) async {
     var responseJson;
     try {
-      final response = await http.delete(_baseUrl + url,
+      var response = await ApiServices.delete(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersTimeSlot());
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -1445,7 +1435,7 @@ class ApiBaseHelper {
     var responseJson;
     try {
       print('refer:  ' + url + jsonString);
-      final response = await http.post(_baseUrl + url,
+      var response = await ApiServices.post(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersTimeSlot(),
           body: jsonString);
       responseJson = _returnResponse(response);
@@ -1471,7 +1461,7 @@ class ApiBaseHelper {
   Future<dynamic> getPlanDetails(String url, String jsonString) async {
     var responseJson;
     try {
-      final response = await http.post(_baseUrl + url,
+      var response = await ApiServices.post(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersTimeSlot(),
           body: jsonString);
       responseJson = _returnResponse(response);
@@ -1484,7 +1474,7 @@ class ApiBaseHelper {
   Future<dynamic> getQurPlanDashBoard(String url) async {
     var responseJson;
     try {
-      final response = await http.get(
+      var response = await ApiServices.get(
         _baseUrl + url,
         headers: await headerRequest.getRequestHeadersTimeSlot(),
       );
@@ -1499,23 +1489,23 @@ class ApiBaseHelper {
       String url, String imagePaths, String userId) async {
     var response;
     try {
-      String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+      var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-      Dio dio = new Dio();
+      final dio = Dio();
       dio.options.headers['content-type'] = 'multipart/form-data';
-      dio.options.headers["authorization"] = authToken;
+      dio.options.headers['authorization'] = authToken;
       FormData formData;
 
-      if (imagePaths != null && imagePaths.length > 0) {
-        formData = new FormData.fromMap({
+      if (imagePaths != null && imagePaths.isNotEmpty) {
+        formData = FormData.fromMap({
           'folderName': 'event',
           'userId': userId,
         });
 
-        File fileName = new File(imagePaths);
-        String fileNoun = fileName.path.split('/').last;
+        var fileName = File(imagePaths);
+        var fileNoun = fileName.path.split('/').last;
         formData.files.addAll([
-          MapEntry("file",
+          MapEntry('file',
               await MultipartFile.fromFile(fileName.path, filename: fileNoun)),
         ]);
 
@@ -1529,11 +1519,11 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> getLanguageList(String url) async {
-    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     var responseJson;
     try {
-      final response = await http.get(_baseUrl + url.trim(),
+      var response = await ApiServices.get(_baseUrl + url.trim(),
           headers: await headerRequest.getAuths());
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -1545,7 +1535,7 @@ class ApiBaseHelper {
   Future<dynamic> getSearchListApi(String url, String jsonString) async {
     var responseJson;
     try {
-      final response = await http.post(_baseUrl + url,
+      var response = await ApiServices.post(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersTimeSlot(),
           body: jsonString);
       responseJson = _returnResponse(response);
@@ -1558,7 +1548,7 @@ class ApiBaseHelper {
   Future<dynamic> getDoctorsByIdNew(String url) async {
     var responseJson;
     try {
-      final response = await http.get(_baseUrl + url,
+      var response = await ApiServices.get(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersAuthAcceptNew());
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -1570,7 +1560,7 @@ class ApiBaseHelper {
   Future<dynamic> addDoctorFromProvider(String url, String jsonData) async {
     var responseJson;
     try {
-      final response = await http.post(_baseUrl + url,
+      var response = await ApiServices.post(_baseUrl + url,
           body: jsonData, headers: await headerRequest.getRequestHeader());
       responseJson = _returnResponse(response);
       print(responseJson.toString());
@@ -1581,14 +1571,14 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> getLoginDetails() async {
-    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-    var response = await http.get(
+    final response = await ApiServices.get(
       _baseUrl + 'user/loggedin-details/',
       headers: {HttpHeaders.authorizationHeader: authToken},
     );
     if (response.statusCode == 200) {
-      final body = jsonDecode(response.body);
+      var body = jsonDecode(response.body);
       return body;
     } else {
       //throw Exception("Unable to perform request!");
@@ -1599,7 +1589,7 @@ class ApiBaseHelper {
   Future<dynamic> createSubscribe(String url, String jsonString) async {
     var responseJson;
     try {
-      final response = await http.post(_baseUrl + url,
+      var response = await ApiServices.post(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersTimeSlot(),
           body: jsonString);
       responseJson = _returnResponse(response);
@@ -1624,22 +1614,21 @@ class ApiBaseHelper {
 
   Future<dynamic> updateLastVisited() async {
     try {
-      String userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
-      DateTime dateTime = DateTime.now();
+      final userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      final dateTime = DateTime.now();
       var responseJson;
 
-      if (userID != null && userID != "") {
-        Map<String, String> jsobBodyMap = new Map();
+      if (userID != null && userID != '') {
+        final Map<String, String> jsobBodyMap = {};
         jsobBodyMap['userId'] = userID;
         jsobBodyMap['lastVisitedDatetimeUtc'] = dateTime.toUtc().toString();
-        jsobBodyMap['statusType'] = "lastVisitedDate";
+        jsobBodyMap['statusType'] = 'lastVisitedDate';
         try {
-          final response = await http.put(
-              _baseUrl + "user/update-last-visited-details",
+          var response = await ApiServices.put(
+              _baseUrl + 'user/update-last-visited-details',
               body: json.encode(jsobBodyMap),
               headers: await headerRequest.getRequestHeadersAuthContent());
-          print(response.body + " ***********************Last viviited bodyy");
-          print(userID + " ***********************Last viviited bodyy");
+          
           responseJson = _returnResponse(response);
         } on SocketException {
           throw FetchDataException(variable.strNoInternet);
@@ -1807,8 +1796,8 @@ class ApiBaseHelper {
 }
 
 void exitFromApp() async {
-  PreferenceUtil.clearAllData().then((value) {
-    Get.offAll(PatientSignInScreen());
+  await PreferenceUtil.clearAllData().then((value) {
+    gett.Get.offAll(PatientSignInScreen());
   });
 }
 
@@ -1816,15 +1805,16 @@ abstract class InnerException {
   factory InnerException([var message]) => _Exception(message);
 }
 
-/** Default implementation of [Exception] which carries a message. */
+/// Default implementation of [Exception] which carries a message. */
 class _Exception implements InnerException {
   final dynamic message;
 
   _Exception([this.message]);
 
+  @override
   String toString() {
-    String message = this.message;
-    if (message == null) return "Exception";
-    return "$message";
+    final String message = this.message;
+    if (message == null) return 'Exception';
+    return '$message';
   }
 }

@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:myfhb/add_family_user_info/models/CityListModel.dart';
 import 'package:myfhb/add_family_user_info/models/address_type_list.dart';
 import 'package:myfhb/add_family_user_info/models/update_add_family_info.dart';
@@ -20,18 +19,36 @@ import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/model/user/city_list_model.dart';
 import 'package:myfhb/src/model/user/state_list_model.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
+import '../models/CityListModel.dart';
+import '../models/address_type_list.dart';
+import '../models/update_add_family_info.dart';
+import '../models/update_relatiosnship_model.dart';
+import '../models/update_self_profile_model.dart';
+import '../models/updated_add_family_relation_info.dart';
+import '../models/verify_email_response.dart';
+import '../../common/CommonConstants.dart';
+import '../../common/PreferenceUtil.dart';
+import '../../constants/fhb_constants.dart' as Constants;
+import '../../constants/fhb_query.dart' as query;
+import '../../constants/webservice_call.dart';
+import '../../my_family/models/relationship_response_list.dart';
+import '../../src/model/common_response.dart';
+import '../../src/model/user/MyProfileModel.dart';
+import '../../src/model/user/city_list_model.dart';
+import '../../src/model/user/state_list_model.dart';
+import '../../src/resources/network/ApiBaseHelper.dart';
 
 class AddFamilyUserInfoRepository {
-  ApiBaseHelper _helper = ApiBaseHelper();
-  WebserviceCall webserviceCall = new WebserviceCall();
+  final ApiBaseHelper _helper = ApiBaseHelper();
+  WebserviceCall webserviceCall = WebserviceCall();
 
   Future<RelationShipResponseList> getCustomRoles() async {
-    final response = await _helper.getCustomRoles(query.qr_customRole);
+    var response = await _helper.getCustomRoles(query.qr_customRole);
     return RelationShipResponseList.fromJson(response);
   }
 
   Future<MyProfileModel> getMyProfileInfo(String userID) async {
-    final response = await _helper.getProfileInfo(query.qr_Userprofile +
+    var response = await _helper.getProfileInfo(query.qr_Userprofile +
         userID +
         query.qr_slash +
         query.qr_sections +
@@ -42,13 +59,12 @@ class AddFamilyUserInfoRepository {
   }
 
   Future<MyProfileModel> getMyProfileInfoNew(String userID) async {
-    var response ;
+    var response;
     if (userID != null) {
-     response = await _helper.getProfileInfo(
+      response = await _helper.getProfileInfo(
           query.qr_user + userID + query.qr_sections + query.qr_generalInfo);
     }
-          return MyProfileModel.fromJson(response);
-
+    return MyProfileModel.fromJson(response);
   }
 
   Future<UpdateAddFamilyInfo> updateUserProfileInfo(
@@ -69,7 +85,7 @@ class AddFamilyUserInfoRepository {
       String addressLine2,
       String zipcode,
       bool fromFamily) async {
-    String query = '';
+    final query = '';
 
     var response;
 
@@ -142,7 +158,7 @@ class AddFamilyUserInfoRepository {
       bool fromFamily,
       MyProfileModel myProfileModel,
       UpdateRelationshipModel relationship) async {
-    String query = '';
+    var query = '';
 
     var response;
 
@@ -198,7 +214,7 @@ class AddFamilyUserInfoRepository {
 
   Future<UpdateAddFamilyRelationInfo> updateRelationShip(
       String jsonString) async {
-    final response = await _helper.updateRelationShipUserInFamilyLinking(
+    var response = await _helper.updateRelationShipUserInFamilyLinking(
         query.qr_userlinking, jsonString);
     return UpdateAddFamilyRelationInfo.fromJson(response);
   }
@@ -221,7 +237,7 @@ class AddFamilyUserInfoRepository {
       String addressLine2,
       String zipcode,
       bool fromFamily) async {
-    String query = '';
+    var query = '';
 
     var response;
 
@@ -274,47 +290,49 @@ class AddFamilyUserInfoRepository {
   }
 
   Future<VerifyEmailResponse> verifyEmail() async {
-    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    final userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
-    var response = await _helper.verifyEmail(
+    final response = await _helper.verifyEmail(
         query.qr_Userprofile + userID + query.qr_sendVerificationMail);
     return VerifyEmailResponse.fromJson(response);
   }
 
   Future<CityModel> getValuesBaseOnSearch(
       String cityname, String apibody) async {
-    var response = await _helper.getValueBasedOnSearch(cityname, apibody);
+    final response = await _helper.getValueBasedOnSearch(cityname, apibody);
     return CityModel.fromJson(response);
   }
 
   Future<StateModel> getStateValuesBaseOnSearch(
       String stateName, String apibody) async {
-    var response = await _helper.getValueBasedOnSearch(stateName, apibody);
+    final response = await _helper.getValueBasedOnSearch(stateName, apibody);
     return StateModel.fromJson(response);
   }
 
   Future<AddressTypeResult> getAddressTypeResult(String codeType) async {
-    String responseQuery = CommonConstants.strReferenceValue +
+    final responseQuery = CommonConstants.strReferenceValue +
         CommonConstants.strSlash +
         CommonConstants.strDataCodes;
-    AddressTypeResult response = await _helper.fetchAddressType(responseQuery);
+    var response = await _helper.fetchAddressType(responseQuery);
 
     return response;
   }
 
   Future<CommonResponse> getUserProfilePic(String userId) async {
-    String responseQuery =
+    final responseQuery =
         '${CommonConstants.strUserQuery}$userId${CommonConstants.strQueryString}${CommonConstants.strGetProfilePic}';
-    CommonResponse response = await _helper.getUserProfilePic(responseQuery);
+    final CommonResponse response =
+        await _helper.getUserProfilePic(responseQuery);
 
     return response;
   }
 
   Future<CommonResponse> updateUserProfilePic(String userId, File image) async {
-    String responseQuery =
+    var responseQuery =
         '${CommonConstants.strUserQuery}$userId${CommonConstants.strQueryString}${CommonConstants.strGetProfilePic}';
-    var res = await _helper.uploadUserProfilePicToServer(responseQuery, image);
-    CommonResponse response = CommonResponse.fromJson(res);
+    final res =
+        await _helper.uploadUserProfilePicToServer(responseQuery, image);
+    final response = CommonResponse.fromJson(res);
     return response;
   }
 

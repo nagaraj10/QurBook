@@ -19,11 +19,11 @@ class OtherInfo {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['NeedPhoto'] = this.needPhoto;
-    data['NeedAudio'] = this.needAudio;
-    data['NeedVideo'] = this.needVideo;
-    data['NeedFile'] = this.needFile;
+    final data = <String, dynamic>{};
+    data['NeedPhoto'] = needPhoto;
+    data['NeedAudio'] = needAudio;
+    data['NeedVideo'] = needVideo;
+    data['NeedFile'] = needFile;
     return data;
   }
 }

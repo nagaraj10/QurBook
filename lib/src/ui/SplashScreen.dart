@@ -32,6 +32,7 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
 import 'package:myfhb/telehealth/features/appointments/view/resheduleMain.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
 import 'package:myfhb/telehealth/features/chat/view/chat.dart';
 import 'package:myfhb/telehealth/features/chat/view/home.dart';
 import 'package:provider/provider.dart';
@@ -42,6 +43,7 @@ import 'package:myfhb/src/ui/bot/SuperMaya.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myfhb/src/ui/bot/view/ChatScreen.dart' as bot;
+import 'package:get/get.dart';
 
 class SplashScreen extends StatefulWidget {
   final String nsRoute;
@@ -79,6 +81,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     PreferenceUtil.init();
     //setReminder();
+    Get.put(PDFViewController());
   }
 
   void setReminder() {
@@ -438,7 +441,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       }
                     } else {
                       FirebaseMessaging _firebaseMessaging =
-                          FirebaseMessaging();
+                          FirebaseMessaging.instance;
 
                       _firebaseMessaging.getToken().then((token) {
                         new CommonUtil()

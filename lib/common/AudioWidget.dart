@@ -6,9 +6,9 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'dart:async';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import 'CommonUtil.dart';
+import '../constants/variable_constant.dart' as variable;
+import '../src/utils/screenutils/size_extensions.dart';
 
 enum t_MEDIA {
   FILE,
@@ -26,31 +26,31 @@ class AudioWidget extends StatefulWidget {
 }
 
 class AudioWidgetState extends State<AudioWidget> {
-  bool _isRecording = false;
-  List<String> _path = [null, null, null, null, null, null, null];
+  final bool _isRecording = false;
+  final List<String> _path = [null, null, null, null, null, null, null];
   StreamSubscription _recorderSubscription;
   StreamSubscription _dbPeakSubscription;
   StreamSubscription _playerSubscription;
   FlutterSound flutterSound;
 
-  String _recorderTxt = '00:00';
+  final String _recorderTxt = '00:00';
   String _playerTxt = '00:00';
   double _dbLevel;
 
-  double sliderCurrentPosition = 0.0;
-  double maxDuration = 1.0;
-  t_MEDIA _media = t_MEDIA.FILE;
-  t_CODEC _codec = t_CODEC.CODEC_AAC;
+  double sliderCurrentPosition = 0;
+  double maxDuration = 1;
+  final t_MEDIA _media = t_MEDIA.FILE;
+  final Codec _codec = Codec.aacADTS;
 
   bool isPlaying = false;
 
   @override
   void initState() {
     super.initState();
-    flutterSound = new FlutterSound();
-    flutterSound.setSubscriptionDuration(0.01);
-    flutterSound.setDbPeakLevelUpdate(0.8);
-    flutterSound.setDbLevelEnabled(true);
+    flutterSound = FlutterSound();
+    // flutterSound.thePlayer.setSubscriptionDuration(0.01);
+    // flutterSound.thePlayer.setDbPeakLevelUpdate(0.8);
+    // flutterSound.thePlayer.setDbLevelEnabled(true);
     initializeDateFormatting();
 
     _path[_codec.index] = widget.audioFile;
@@ -61,7 +61,7 @@ class AudioWidgetState extends State<AudioWidget> {
     // TODO: implement dispose
     super.dispose();
 
-    flutterSound.stopPlayer();
+    flutterSound.thePlayer.stopPlayer();
   }
 
   @override
@@ -77,7 +77,6 @@ class AudioWidgetState extends State<AudioWidget> {
       child: Row(
         children: <Widget>[
           Expanded(
-            flex: 1,
             child: Container(
               width: 56.0.w,
               height: 50.0.h,
@@ -85,10 +84,11 @@ class AudioWidgetState extends State<AudioWidget> {
                 child: FlatButton(
                   onPressed: isPlaying
                       ? onPausePlayerPressed()
-                      : flutterSound.audioState == t_AUDIO_STATE.IS_PAUSED
+                      : flutterSound.thePlayer.playerState ==
+                              PlayerState.isPaused
                           ? onPausePlayerPressed()
                           : onStartPlayerPressed(),
-                  padding: EdgeInsets.all(4.0),
+                  padding: EdgeInsets.all(4),
                   child: onStartPlayerPressed() != null
                       ? Icon(
                           Icons.play_arrow,
@@ -103,13 +103,17 @@ class AudioWidgetState extends State<AudioWidget> {
             child: Container(
                 height: 30.0.h,
                 child: Slider(
-                    activeColor: Color(new CommonUtil().getMyPrimaryColor()),
+                    activeColor: Color(CommonUtil().getMyPrimaryColor()),
                     inactiveColor: Colors.grey,
                     value: sliderCurrentPosition,
-                    min: 0.0,
+                    min: 0,
                     max: maxDuration,
-                    onChanged: (double value) async {
-                      await flutterSound.seekToPlayer(value.toInt());
+                    onChanged: (value) async {
+                      await flutterSound.thePlayer.seekToPlayer(
+                        Duration(
+                          seconds: value.round(),
+                        ),
+                      );
                     },
                     divisions: maxDuration.toInt())),
           ),
@@ -117,7 +121,7 @@ class AudioWidgetState extends State<AudioWidget> {
             flex: 2,
             child: Center(
                 child: Text(
-              this._playerTxt,
+              _playerTxt,
               style: TextStyle(
                 fontSize: 14.0.sp,
                 color: Colors.black,
@@ -125,16 +129,17 @@ class AudioWidgetState extends State<AudioWidget> {
             )),
           ),
           Expanded(
-              flex: 1,
               child: IconButton(
                   icon:
                       Icon(Icons.delete, size: 20.0.sp, color: Colors.red[600]),
                   onPressed: () {
                     widget.audioFile = '';
 
-                    if (flutterSound.audioState == t_AUDIO_STATE.IS_PLAYING ||
-                        flutterSound.audioState == t_AUDIO_STATE.IS_PAUSED) {
-                      flutterSound.stopPlayer();
+                    if (flutterSound.thePlayer.playerState ==
+                            PlayerState.isPlaying ||
+                        flutterSound.thePlayer.playerState ==
+                            PlayerState.isPaused) {
+                      flutterSound.thePlayer.stopPlayer();
                       setState(() {
                         widget.deleteAudioFile(false, widget.audioFile);
                       });
@@ -146,21 +151,24 @@ class AudioWidgetState extends State<AudioWidget> {
                   }))
         ],
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
       ),
     );
   }
 
   void seekToPlayer(int milliSecs) async {
-    String result = await flutterSound.seekToPlayer(milliSecs);
+    await flutterSound.thePlayer.seekToPlayer(
+      Duration(
+        milliseconds: milliSecs,
+      ),
+    );
   }
 
   onStartPlayerPressed() {
     if (_media == t_MEDIA.FILE || _media == t_MEDIA.BUFFER) {
       if (_path[_codec.index] == null) return null;
     }
-    return (flutterSound.audioState == t_AUDIO_STATE.IS_STOPPED ||
-            flutterSound.audioState == t_AUDIO_STATE.IS_PAUSED)
+    return (flutterSound.thePlayer.playerState == PlayerState.isStopped ||
+            flutterSound.thePlayer.playerState == PlayerState.isPaused)
         ? startPlayer
         : null;
   }
@@ -169,51 +177,62 @@ class AudioWidgetState extends State<AudioWidget> {
     isPlaying = true;
 
     try {
-      String path = widget.audioFile;
+      var path = widget.audioFile;
       if (_media == t_MEDIA.ASSET) {
-        Uint8List buffer =
-            (await rootBundle.load(variable.assetSample[_codec.index]))
-                .buffer
-                .asUint8List();
-        path = await flutterSound.startPlayerFromBuffer(
-          buffer,
+        var buffer = (await rootBundle.load(variable.assetSample[_codec.index]))
+            .buffer
+            .asUint8List();
+        // path = await flutterSound.thePlayerstartPlayerFromBuffer(
+        //   buffer,
+        //   codec: _codec,
+        // );
+        await flutterSound.thePlayer.startPlayerFromStream(
           codec: _codec,
         );
       } else if (_media == t_MEDIA.FILE) {
         // Do we want to play from buffer or from file ?
-        if (await fileExists(widget.audioFile))
-          path = await flutterSound.startPlayer(widget.audioFile); // From file
+        if (await fileExists(widget.audioFile)) {
+          var buffer = await makeBuffer(widget.audioFile);
+          if (buffer != null) {
+            await flutterSound.thePlayer.startPlayer(
+              fromDataBuffer: buffer,
+            );
+          }
+        } // From file
       } else if (_media == t_MEDIA.BUFFER) {
         // Do we want to play from buffer or from file ?
         if (await fileExists(_path[_codec.index])) {
-          Uint8List buffer = await makeBuffer(this._path[_codec.index]);
-          if (buffer != null)
-            path = await flutterSound.startPlayerFromBuffer(
-              buffer,
+          var buffer = await makeBuffer(_path[_codec.index]);
+          if (buffer != null) {
+            await flutterSound.thePlayer.startPlayer(
+              fromDataBuffer: buffer,
               codec: _codec,
-            ); // From buffer
+            );
+          } // From buffer
         }
       }
       if (path == null) {
         return;
       }
-      await flutterSound.setVolume(1.0);
+      await flutterSound.thePlayer.setVolume(1.0);
 
-      _playerSubscription = flutterSound.onPlayerStateChanged.listen((e) {
-        if (e != null) {
-          sliderCurrentPosition = e.currentPosition;
-          maxDuration = e.duration;
-
-          DateTime date = new DateTime.fromMillisecondsSinceEpoch(
-              e.currentPosition.toInt(),
-              isUtc: true);
-          String txt =
-              DateFormat(variable.strDatems, variable.strenUs).format(date);
-          this.setState(() {
-            this._playerTxt = txt.substring(0, 5);
-          });
-        }
-      });
+      // _playerSubscription =
+      //     flutterSound.thePlayer.onPlayerStateChanged.listen((e) {
+      //   if (e != null) {
+      //     sliderCurrentPosition = e.currentPosition;
+      //     maxDuration = e.duration;
+      //
+      //     final date = DateTime.fromMillisecondsSinceEpoch(
+      //         e.currentPosition.toInt(),
+      //         isUtc: true);
+      //     final txt =
+      //         DateFormat(variable.strDatems, variable.strenUs).format(date);
+      //     setState(() {
+      //       _playerTxt = txt.substring(0, 5);
+      //     });
+      //   }
+      // });
+      //TODO: Check for audio
     } catch (err) {}
 
     setState(() {});
@@ -223,13 +242,12 @@ class AudioWidgetState extends State<AudioWidget> {
     return await File(path).exists();
   }
 
-// In this simple example, we just load a file in memory.This is stupid but just for demonstation  of startPlayerFromBuffer()
   Future<Uint8List> makeBuffer(String path) async {
     try {
       if (!await fileExists(path)) return null;
-      File file = File(path);
+      var file = File(path);
       file.openRead();
-      var contents = await file.readAsBytes();
+      final contents = await file.readAsBytes();
 
       return contents;
     } catch (e) {
@@ -238,8 +256,8 @@ class AudioWidgetState extends State<AudioWidget> {
   }
 
   onPausePlayerPressed() {
-    return flutterSound.audioState == t_AUDIO_STATE.IS_PLAYING ||
-            flutterSound.audioState == t_AUDIO_STATE.IS_PAUSED
+    return flutterSound.thePlayer.playerState == PlayerState.isPlaying ||
+            flutterSound.thePlayer.playerState == PlayerState.isPaused
         ? pausePlayer
         : startPlayer;
   }
@@ -247,10 +265,12 @@ class AudioWidgetState extends State<AudioWidget> {
   void pausePlayer() async {
     String result;
     try {
-      if (flutterSound.audioState == t_AUDIO_STATE.IS_PAUSED) {
-        result = await flutterSound.resumePlayer();
+      if (flutterSound.thePlayer.playerState == PlayerState.isPaused) {
+        await flutterSound.thePlayer.resumePlayer();
+        isPlaying = true;
       } else {
-        result = await flutterSound.pausePlayer();
+        await flutterSound.thePlayer.pausePlayer();
+        isPlaying = false;
       }
     } catch (err) {}
     if (result == variable.st_pausedplayer) {
@@ -262,22 +282,22 @@ class AudioWidgetState extends State<AudioWidget> {
   }
 
   onStopPlayerPressed() {
-    return flutterSound.audioState == t_AUDIO_STATE.IS_PLAYING ||
-            flutterSound.audioState == t_AUDIO_STATE.IS_PAUSED
+    return flutterSound.thePlayer.playerState == PlayerState.isPlaying ||
+            flutterSound.thePlayer.playerState == PlayerState.isPaused
         ? stopPlayer
         : null;
   }
 
   void stopPlayer() async {
     try {
-      String result = await flutterSound.stopPlayer();
+      await flutterSound.thePlayer.stopPlayer();
 
       if (_playerSubscription != null) {
-        _playerSubscription.cancel();
+        await _playerSubscription.cancel();
         _playerSubscription = null;
       }
       sliderCurrentPosition = 0.0;
     } catch (err) {}
-    this.setState(() {});
+    setState(() {});
   }
 }

@@ -1,4 +1,4 @@
-import 'package:myfhb/authentication/constants/constants.dart';
+import '../constants/constants.dart';
 
 class PatientConfirmPasswordModel {
   String verificationCode;
@@ -26,13 +26,13 @@ class PatientConfirmPasswordModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[strverificationCode] = this.verificationCode;
-    data[struserName] = this.userName;
-    data[strpassword] = this.password;
-    data[strsource] = this.source;
-    data[strmessage] = this.message;
-    data[strIsSuccess] = this.isSuccess;
+    final data = Map<String, dynamic>();
+    data[strverificationCode] = verificationCode;
+    data[struserName] = userName;
+    data[strpassword] = password;
+    data[strsource] = source;
+    data[strmessage] = message;
+    data[strIsSuccess] = isSuccess;
     return data;
   }
 }

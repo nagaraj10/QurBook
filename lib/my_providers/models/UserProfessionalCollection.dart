@@ -23,18 +23,18 @@ class DoctorProfessionalDetailCollection {
   DoctorProfessionalDetailCollection.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     qualificationInfo = json['qualificationInfo'] != null
-        ? new QualificationInfo.fromJson(json['qualificationInfo'])
+        ? QualificationInfo.fromJson(json['qualificationInfo'])
         : null;
     medicalCouncilInfo = json['medicalCouncilInfo'] != null
-        ? new MedicalCouncilInfo.fromJson(json['medicalCouncilInfo'])
+        ? MedicalCouncilInfo.fromJson(json['medicalCouncilInfo'])
         : null;
     specialty = json['specialty'] != null
-        ? new MedicalCouncilInfo.fromJson(json['specialty'])
+        ? MedicalCouncilInfo.fromJson(json['specialty'])
         : null;
     if (json['clinicName'] != null) {
-      clinicName = new List<ClinicName>();
+      clinicName = List<ClinicName>();
       json['clinicName'].forEach((v) {
-        clinicName.add(new ClinicName.fromJson(v));
+        clinicName.add(ClinicName.fromJson(v));
       });
     }
     aboutMe = json['aboutMe'];
@@ -44,24 +44,24 @@ class DoctorProfessionalDetailCollection {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    if (this.qualificationInfo != null) {
-      data['qualificationInfo'] = this.qualificationInfo.toJson();
+    final data = <String, dynamic>{};
+    data['id'] = id;
+    if (qualificationInfo != null) {
+      data['qualificationInfo'] = qualificationInfo.toJson();
     }
-    if (this.medicalCouncilInfo != null) {
-      data['medicalCouncilInfo'] = this.medicalCouncilInfo.toJson();
+    if (medicalCouncilInfo != null) {
+      data['medicalCouncilInfo'] = medicalCouncilInfo.toJson();
     }
-    if (this.specialty != null) {
-      data['specialty'] = this.specialty.toJson();
+    if (specialty != null) {
+      data['specialty'] = specialty.toJson();
     }
-    if (this.clinicName != null) {
-      data['clinicName'] = this.clinicName.map((v) => v.toJson()).toList();
+    if (clinicName != null) {
+      data['clinicName'] = clinicName.map((v) => v.toJson()).toList();
     }
-    data['aboutMe'] = this.aboutMe;
-    data['isActive'] = this.isActive;
-    data['createdOn'] = this.createdOn;
-    data['lastModifiedOn'] = this.lastModifiedOn;
+    data['aboutMe'] = aboutMe;
+    data['isActive'] = isActive;
+    data['createdOn'] = createdOn;
+    data['lastModifiedOn'] = lastModifiedOn;
     return data;
   }
 }
@@ -74,26 +74,26 @@ class QualificationInfo {
 
   QualificationInfo.fromJson(Map<String, dynamic> json) {
     if (json['degree'] != null) {
-      degree = new List<Degree>();
+      degree = <Degree>[];
       json['degree'].forEach((v) {
-        degree.add(new Degree.fromJson(v));
+        degree.add(Degree.fromJson(v));
       });
     }
     if (json['university'] != null) {
-      university = new List<Degree>();
+      university = List<Degree>();
       json['university'].forEach((v) {
-        university.add(new Degree.fromJson(v));
+        university.add(Degree.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.degree != null) {
-      data['degree'] = this.degree.map((v) => v.toJson()).toList();
+    final data = Map<String, dynamic>();
+    if (degree != null) {
+      data['degree'] = degree.map((v) => v.toJson()).toList();
     }
-    if (this.university != null) {
-      data['university'] = this.university.map((v) => v.toJson()).toList();
+    if (university != null) {
+      data['university'] = university.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -113,10 +113,10 @@ class Degree {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['isActive'] = this.isActive;
+    final data = Map<String, dynamic>();
+    data['id'] = id;
+    data['name'] = name;
+    data['isActive'] = isActive;
     return data;
   }
 }
@@ -147,13 +147,13 @@ class MedicalCouncilInfo {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['isActive'] = this.isActive;
-    data['createdOn'] = this.createdOn;
-    data['description'] = this.description;
-    data['lastModifiedOn'] = this.lastModifiedOn;
+    final data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['isActive'] = isActive;
+    data['createdOn'] = createdOn;
+    data['description'] = description;
+    data['lastModifiedOn'] = lastModifiedOn;
     return data;
   }
 }
@@ -168,8 +168,8 @@ class ClinicName {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['name'] = this.name;
+    final data = <String, dynamic>{};
+    data['name'] = name;
     return data;
   }
 }
