@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
-import 'package:myfhb/src/model/Health/MetaInfo.dart';
-import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
+import '../../common/CommonUtil.dart';
+import '../../common/PreferenceUtil.dart';
+import '../../src/blocs/health/HealthReportListForUserBlock.dart';
+import '../../src/model/Health/MetaInfo.dart';
+import '../../src/model/Health/UserHealthResponseList.dart';
+import '../../constants/fhb_constants.dart' as Constants;
+import '../../src/model/Health/asgard/health_record_list.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:myfhb/src/utils/DashSeparator.dart';
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
-import 'package:myfhb/src/model/Health/CompleteData.dart';
-import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import '../../src/utils/FHBUtils.dart';
+import '../../src/utils/DashSeparator.dart';
+import '../../colors/fhb_colors.dart' as fhbColors;
+import '../../src/model/Health/CompleteData.dart';
+import '../../src/model/Health/MediaMetaInfo.dart';
+import '../../constants/variable_constant.dart' as variable;
+import '../../constants/fhb_parameters.dart' as parameters;
+import '../../src/utils/screenutils/size_extensions.dart';
 
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/constants/fhb_parameters.dart';
+import '../../common/CommonConstants.dart';
+import '../../constants/fhb_parameters.dart';
 
 class RecordInfoCard {
   Widget getCardForPrescription(Metadata metaInfo, String createdDate) {
@@ -41,11 +41,10 @@ class RecordInfoCard {
               ],
             ),
             Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 ClipOval(
                     child: metaInfo.doctor != null
-                        ? new CommonUtil().getDoctorProfileImageWidget(metaInfo
+                        ? CommonUtil().getDoctorProfileImageWidget(metaInfo
                             .doctor
                             .profilePicThumbnailUrl) //getDoctorProfileImageWidget(metaInfo)
                         : Container(
@@ -58,9 +57,9 @@ class RecordInfoCard {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        metaInfo.doctor != null
-                            ? Text(
-                                /* toBeginningOfSentenceCase(
+                        if (metaInfo.doctor != null)
+                          Text(
+                            /* toBeginningOfSentenceCase(
                                     metaInfo.doctor != null
                                         ? (metaInfo.doctor.name != null &&
                                                 metaInfo.doctor.name != '')
@@ -69,43 +68,44 @@ class RecordInfoCard {
                                                 ' ' +
                                                 metaInfo.doctor.lastName
                                         : ''), */
-                                metaInfo.doctor != null
-                                    ? (metaInfo.doctor.name != null &&
-                                            metaInfo.doctor.name != '')
-                                        ? metaInfo
-                                            .doctor.name?.capitalizeFirstofEach
-                                        : metaInfo.doctor.firstName
-                                                ?.capitalizeFirstofEach +
-                                            ' ' +
-                                            metaInfo.doctor.lastName
-                                                ?.capitalizeFirstofEach
-                                    : '',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 16.0.sp,
-                                ),
-                                softWrap: false,
-                                overflow: TextOverflow.ellipsis,
-                              )
-                            : SizedBox(
-                                height: 0.0.h,
-                              ),
-                        metaInfo.hospital != null
-                            ? Text(
-                                /* toBeginningOfSentenceCase(
+                            metaInfo.doctor != null
+                                ? (metaInfo.doctor.name != null &&
+                                        metaInfo.doctor.name != '')
+                                    ? metaInfo
+                                        .doctor.name?.capitalizeFirstofEach
+                                    : metaInfo.doctor.firstName
+                                            ?.capitalizeFirstofEach +
+                                        ' ' +
+                                        metaInfo.doctor.lastName
+                                            ?.capitalizeFirstofEach
+                                : '',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16.0.sp,
+                            ),
+                            softWrap: false,
+                            overflow: TextOverflow.ellipsis,
+                          )
+                        else
+                          SizedBox(
+                            height: 0.0.h,
+                          ),
+                        if (metaInfo.hospital != null)
+                          Text(
+                            /* toBeginningOfSentenceCase(
                                     metaInfo.hospital.healthOrganizationName) */
-                                metaInfo?.hospital?.healthOrganizationName
-                                    ?.capitalizeFirstofEach,
-                                softWrap: false,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontSize: 15.0.sp,
-                                ),
-                              )
-                            //Text('')
-                            : SizedBox(
-                                height: 0.0.h,
-                              ),
+                            metaInfo?.hospital?.healthOrganizationName
+                                ?.capitalizeFirstofEach,
+                            softWrap: false,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 15.0.sp,
+                            ),
+                          )
+                        else
+                          SizedBox(
+                            height: 0.0.h,
+                          ),
                         Text(
                           metaInfo.dateOfVisit != null
                               ? variable.strDateOfVisit + metaInfo.dateOfVisit
@@ -162,19 +162,10 @@ class RecordInfoCard {
               ],
             ),
             Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 CircleAvatar(
                   radius: 30,
                   backgroundColor: Colors.grey[200],
-                  backgroundImage:
-                      /*metaInfo.hospital != null
-                      ? metaInfo.hospital.logoThumbnail != null
-                          ? NetworkImage(Constants.BASE_URL +
-                              metaInfo.hospital.logoThumbnail)
-                          : null
-                      :*/
-                      null,
                 ),
                 Expanded(
                   child: Padding(
@@ -182,29 +173,30 @@ class RecordInfoCard {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        metaInfo.hospital != null
-                            ? metaInfo.hospital.healthOrganizationName != null
-                                ? Text(
-                                    /* toBeginningOfSentenceCase(metaInfo
+                        if (metaInfo.hospital != null)
+                          metaInfo.hospital.healthOrganizationName != null
+                              ? Text(
+                                  /* toBeginningOfSentenceCase(metaInfo
                                         .hospital.healthOrganizationName), */
-                                    metaInfo?.hospital?.healthOrganizationName
-                                        ?.capitalizeFirstofEach,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 16.0.sp,
-                                    ),
-                                    softWrap: false,
-                                    overflow: TextOverflow.ellipsis,
-                                  )
-                                : SizedBox(
-                                    height: 0.0.h,
-                                  )
-                            : SizedBox(
-                                height: 0.0.h,
-                              ),
-                        metaInfo.doctor != null
-                            ? Text(
-                                /* toBeginningOfSentenceCase(
+                                  metaInfo?.hospital?.healthOrganizationName
+                                      ?.capitalizeFirstofEach,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 16.0.sp,
+                                  ),
+                                  softWrap: false,
+                                  overflow: TextOverflow.ellipsis,
+                                )
+                              : SizedBox(
+                                  height: 0.0.h,
+                                )
+                        else
+                          SizedBox(
+                            height: 0.0.h,
+                          ),
+                        if (metaInfo.doctor != null)
+                          Text(
+                            /* toBeginningOfSentenceCase(
                                     toBeginningOfSentenceCase(
                                         metaInfo.doctor != null
                                             ? (metaInfo.doctor.name != null &&
@@ -214,24 +206,25 @@ class RecordInfoCard {
                                                     ' ' +
                                                     metaInfo.doctor.lastName
                                             : '')), */
-                                metaInfo.doctor != null
-                                    ? (metaInfo.doctor.name != null &&
-                                            metaInfo.doctor.name != '')
-                                        ? metaInfo?.doctor?.name
+                            metaInfo.doctor != null
+                                ? (metaInfo.doctor.name != null &&
+                                        metaInfo.doctor.name != '')
+                                    ? metaInfo
+                                        ?.doctor?.name?.capitalizeFirstofEach
+                                    : metaInfo?.doctor?.firstName
+                                            ?.capitalizeFirstofEach +
+                                        ' ' +
+                                        metaInfo?.doctor?.lastName
                                             ?.capitalizeFirstofEach
-                                        : metaInfo?.doctor?.firstName
-                                                ?.capitalizeFirstofEach +
-                                            ' ' +
-                                            metaInfo?.doctor?.lastName
-                                                ?.capitalizeFirstofEach
-                                    : '',
-                                style: TextStyle(
-                                  fontSize: 15.0.sp,
-                                ),
-                              )
-                            : SizedBox(
-                                height: 0.0.h,
-                              ),
+                                : '',
+                            style: TextStyle(
+                              fontSize: 15.0.sp,
+                            ),
+                          )
+                        else
+                          SizedBox(
+                            height: 0.0.h,
+                          ),
                         Text(
                           variable.strDateOfVisit + metaInfo.dateOfVisit,
                           style: TextStyle(
@@ -286,20 +279,10 @@ class RecordInfoCard {
               ],
             ),
             Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 CircleAvatar(
                   radius: 30,
                   backgroundColor: Colors.grey[200],
-                  backgroundImage:
-                      /*metaInfo.laboratory != null
-                      ? metaInfo.laboratory.logoThumbnail != null
-                          ? NetworkImage(Constants.BASE_URL +
-                              metaInfo.laboratory.logoThumbnail)
-                          : null
-                      : null
-                      :*/
-                      null,
                 ),
                 Expanded(
                   child: Padding(
@@ -307,29 +290,30 @@ class RecordInfoCard {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        metaInfo.laboratory != null
-                            ? metaInfo.laboratory.healthOrganizationName != null
-                                ? Text(
-                                    // toBeginningOfSentenceCase(metaInfo
-                                    //     .laboratory.healthOrganizationName),
-                                    metaInfo?.laboratory?.healthOrganizationName
-                                        ?.capitalizeFirstofEach,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 16.0.sp,
-                                    ),
-                                    softWrap: false,
-                                    overflow: TextOverflow.ellipsis,
-                                  )
-                                : SizedBox(
-                                    height: 0.0.h,
-                                  )
-                            : SizedBox(
-                                height: 0.0.h,
-                              ),
-                        metaInfo.doctor != null
-                            ? Text(
-                                /* toBeginningOfSentenceCase(
+                        if (metaInfo.laboratory != null)
+                          metaInfo.laboratory.healthOrganizationName != null
+                              ? Text(
+                                  // toBeginningOfSentenceCase(metaInfo
+                                  //     .laboratory.healthOrganizationName),
+                                  metaInfo?.laboratory?.healthOrganizationName
+                                      ?.capitalizeFirstofEach,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 16.0.sp,
+                                  ),
+                                  softWrap: false,
+                                  overflow: TextOverflow.ellipsis,
+                                )
+                              : SizedBox(
+                                  height: 0.0.h,
+                                )
+                        else
+                          SizedBox(
+                            height: 0.0.h,
+                          ),
+                        if (metaInfo.doctor != null)
+                          Text(
+                            /* toBeginningOfSentenceCase(
                                     toBeginningOfSentenceCase(
                                         metaInfo.doctor != null
                                             ? (metaInfo.doctor.name != null &&
@@ -339,24 +323,25 @@ class RecordInfoCard {
                                                     ' ' +
                                                     metaInfo.doctor.lastName
                                             : '')), */
-                                metaInfo.doctor != null
-                                    ? (metaInfo.doctor.name != null &&
-                                            metaInfo.doctor.name != '')
-                                        ? metaInfo?.doctor?.name
+                            metaInfo.doctor != null
+                                ? (metaInfo.doctor.name != null &&
+                                        metaInfo.doctor.name != '')
+                                    ? metaInfo
+                                        ?.doctor?.name?.capitalizeFirstofEach
+                                    : metaInfo?.doctor?.firstName
+                                            ?.capitalizeFirstofEach +
+                                        ' ' +
+                                        metaInfo?.doctor?.lastName
                                             ?.capitalizeFirstofEach
-                                        : metaInfo?.doctor?.firstName
-                                                ?.capitalizeFirstofEach +
-                                            ' ' +
-                                            metaInfo?.doctor?.lastName
-                                                ?.capitalizeFirstofEach
-                                    : '',
-                                style: TextStyle(
-                                  fontSize: 15.0.sp,
-                                ),
-                              )
-                            : SizedBox(
-                                height: 0.0.h,
-                              ),
+                                : '',
+                            style: TextStyle(
+                              fontSize: 15.0.sp,
+                            ),
+                          )
+                        else
+                          SizedBox(
+                            height: 0.0.h,
+                          ),
                         Text(
                           variable.strDateOfVisit + metaInfo.dateOfVisit,
                           style: TextStyle(
@@ -424,13 +409,14 @@ class RecordInfoCard {
             SizedBox(
               height: 10.0.h,
             ),
-            metaInfo.deviceReadings != null
-                ? getDeviceReadings(metaInfo.deviceReadings)
-                : Container(
-                    height: 0.0.h,
-                  ),
+            if (metaInfo.deviceReadings != null)
+              getDeviceReadings(metaInfo.deviceReadings)
+            else
+              Container(
+                height: 0.0.h,
+              ),
             Text(
-              metaInfo.memoText != null ? metaInfo.memoText : '',
+              metaInfo.memoText ?? '',
               style: TextStyle(
                 fontSize: 15.0.sp,
               ),
@@ -465,7 +451,7 @@ class RecordInfoCard {
             ],
           ),
           Text(
-            metaInfo.fileName != null ? metaInfo.fileName : '',
+            metaInfo.fileName ?? '',
             style: TextStyle(fontSize: 16.0.sp, fontWeight: FontWeight.w500),
           ),
           /*metaInfo.memoText != null
@@ -474,22 +460,24 @@ class RecordInfoCard {
           SizedBox(
             height: 10.0.h,
           ),
-          metaInfo.doctor != null
-              ? Text(
-                  metaInfo?.doctor?.name?.capitalizeFirstofEach,
-                  style: TextStyle(
-                    fontSize: 15.0.sp,
-                  ),
-                )
-              : SizedBox(height: 0.0.h),
-          metaInfo.memoText != null
-              ? Text(
-                  metaInfo.memoText,
-                  style: TextStyle(
-                    fontSize: 15.0.sp,
-                  ),
-                )
-              : SizedBox(height: 0.0.h),
+          if (metaInfo.doctor != null)
+            Text(
+              metaInfo?.doctor?.name?.capitalizeFirstofEach,
+              style: TextStyle(
+                fontSize: 15.0.sp,
+              ),
+            )
+          else
+            SizedBox(height: 0.0.h),
+          if (metaInfo.memoText != null)
+            Text(
+              metaInfo.memoText,
+              style: TextStyle(
+                fontSize: 15.0.sp,
+              ),
+            )
+          else
+            SizedBox(height: 0.0.h),
         ],
       ),
     );
@@ -526,7 +514,7 @@ class RecordInfoCard {
             ],
           ),
           Text(
-            metaInfo.fileName != null ? metaInfo.fileName : '',
+            metaInfo.fileName ?? '',
             style: TextStyle(fontSize: 16.0.sp, fontWeight: FontWeight.w500),
           ),
           /*metaInfo.memoText != null
@@ -535,18 +523,20 @@ class RecordInfoCard {
           SizedBox(
             height: 10.0.h,
           ),
-          metaInfo.doctor != null
-              ? Text(
-                  metaInfo?.doctor?.name,
-                  style: TextStyle(fontSize: 15.0.sp),
-                )
-              : SizedBox(height: 0.0.h),
-          metaInfo.memoText != null
-              ? Text(
-                  metaInfo.memoText,
-                  style: TextStyle(fontSize: 15.0.sp),
-                )
-              : SizedBox(height: 0.0.h),
+          if (metaInfo.doctor != null)
+            Text(
+              metaInfo?.doctor?.name,
+              style: TextStyle(fontSize: 15.0.sp),
+            )
+          else
+            SizedBox(height: 0.0.h),
+          if (metaInfo.memoText != null)
+            Text(
+              metaInfo.memoText,
+              style: TextStyle(fontSize: 15.0.sp),
+            )
+          else
+            SizedBox(height: 0.0.h),
         ],
       ),
     );
@@ -576,15 +566,17 @@ class RecordInfoCard {
               metaInfo.fileName,
               style: TextStyle(fontSize: 16.0.sp, fontWeight: FontWeight.w500),
             ),
-            metaInfo.dateOfVisit != null
-                ? Text(
-                    variable.strValidThru + metaInfo.dateOfVisit,
-                    style: TextStyle(fontSize: 15.0.sp),
-                  )
-                : SizedBox(height: 0.0.h),
-            metaInfo.memoText != null
-                ? Text(metaInfo.memoText)
-                : SizedBox(height: 0.0.h),
+            if (metaInfo.dateOfVisit != null)
+              Text(
+                variable.strValidThru + metaInfo.dateOfVisit,
+                style: TextStyle(fontSize: 15.0.sp),
+              )
+            else
+              SizedBox(height: 0.0.h),
+            if (metaInfo.memoText != null)
+              Text(metaInfo.memoText)
+            else
+              SizedBox(height: 0.0.h),
             SizedBox(
               height: 20.0.h,
             ),
@@ -612,19 +604,10 @@ class RecordInfoCard {
               ],
             ),
             Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 CircleAvatar(
                   radius: 30,
                   backgroundColor: Colors.grey[200],
-                  backgroundImage:
-                      /*metaInfo.hospital != null
-                      ? metaInfo.hospital.logoThumbnail != null
-                          ? NetworkImage(Constants.BASE_URL +
-                              metaInfo.hospital.logoThumbnail)
-                          : null
-                      :*/
-                      null,
                 ),
                 Expanded(
                   child: Padding(
@@ -632,33 +615,36 @@ class RecordInfoCard {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        metaInfo.hospital != null
-                            ? metaInfo.hospital.healthOrganizationName != null
-                                ? Text(
-                                    /* toBeginningOfSentenceCase(metaInfo
+                        if (metaInfo.hospital != null)
+                          metaInfo.hospital.healthOrganizationName != null
+                              ? Text(
+                                  /* toBeginningOfSentenceCase(metaInfo
                                         .hospital.healthOrganizationName) */
-                                        metaInfo?.hospital?.healthOrganizationName?.capitalizeFirstofEach,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 16.0.sp),
-                                    softWrap: false,
-                                    overflow: TextOverflow.ellipsis,
-                                  )
-                                : SizedBox(
-                                    height: 0.0.h,
-                                  )
-                            : SizedBox(
-                                height: 0.0.h,
-                              ),
-                        metaInfo.doctor != null
-                            ? Text(
-                                //toBeginningOfSentenceCase(metaInfo.doctor.name),
-                                metaInfo?.doctor?.name?.capitalizeFirstofEach,
-                                style: TextStyle(fontSize: 15.0.sp),
-                              )
-                            : SizedBox(height: 0.0.h),
+                                  metaInfo?.hospital?.healthOrganizationName
+                                      ?.capitalizeFirstofEach,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 16.0.sp),
+                                  softWrap: false,
+                                  overflow: TextOverflow.ellipsis,
+                                )
+                              : SizedBox(
+                                  height: 0.0.h,
+                                )
+                        else
+                          SizedBox(
+                            height: 0.0.h,
+                          ),
+                        if (metaInfo.doctor != null)
+                          Text(
+                            //toBeginningOfSentenceCase(metaInfo.doctor.name),
+                            metaInfo?.doctor?.name?.capitalizeFirstofEach,
+                            style: TextStyle(fontSize: 15.0.sp),
+                          )
+                        else
+                          SizedBox(height: 0.0.h),
                         Text(
-                          new FHBUtils().getFormattedDateString(createdDate),
+                          FHBUtils().getFormattedDateString(createdDate),
                           style: TextStyle(
                               color: Colors.grey[400],
                               fontWeight: FontWeight.w200,
@@ -692,7 +678,7 @@ class RecordInfoCard {
 }
 
 Widget getDeviceReadings(List<DeviceReadings> deviceReadings) {
-  List<Widget> list = new List<Widget>();
+  final list = List<Widget>();
   for (var i = 0; i < deviceReadings.length; i++) {
     list.add(
       Padding(
@@ -740,7 +726,7 @@ Widget getDeviceReadings(List<DeviceReadings> deviceReadings) {
     );
   }
 
-  return new Column(children: <Widget>[
+  return Column(children: <Widget>[
     Padding(
       padding: EdgeInsets.only(top: 10, bottom: 10),
       child: DashSeparator(
@@ -761,11 +747,10 @@ Widget getDeviceReadings(List<DeviceReadings> deviceReadings) {
 }
 
 getDoctorProfileImageWidget(MetaInfo data) {
-  HealthReportListForUserBlock _healthReportListForUserBlock =
-      new HealthReportListForUserBlock();
+  var _healthReportListForUserBlock = HealthReportListForUserBlock();
   return FutureBuilder(
     future: _healthReportListForUserBlock.getProfilePic(data.doctor.id),
-    builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+    builder: (context, snapshot) {
       if (snapshot.hasData) {
         return Image.memory(
           snapshot.data,
@@ -774,7 +759,7 @@ getDoctorProfileImageWidget(MetaInfo data) {
           fit: BoxFit.cover,
         );
       } else {
-        return new SizedBox(
+        return SizedBox(
           width: 50.0.h,
           height: 50.0.h,
           child: Shimmer.fromColors(
@@ -807,11 +792,12 @@ getCardForBillsAndOthers(MetaInfo metaInfo, String createdDate) {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              metaInfo.doctor != null
-                  ? Text(
-                      metaInfo.doctor.name,
-                    )
-                  : SizedBox(height: 0.0.h),
+              if (metaInfo.doctor != null)
+                Text(
+                  metaInfo.doctor.name,
+                )
+              else
+                SizedBox(height: 0.0.h),
               Text(FHBUtils().getFormattedDateString(createdDate))
             ],
           ),
@@ -840,11 +826,12 @@ getCardForIDDocs(MetaInfo metaInfo, String createdDate) {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              metaInfo.doctor != null
-                  ? Text(
-                      metaInfo.doctor.name,
-                    )
-                  : SizedBox(height: 0.0.h),
+              if (metaInfo.doctor != null)
+                Text(
+                  metaInfo.doctor.name,
+                )
+              else
+                SizedBox(height: 0.0.h),
               Text(FHBUtils().getFormattedDateString(createdDate))
             ],
           ),

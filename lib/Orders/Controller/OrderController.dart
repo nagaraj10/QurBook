@@ -6,8 +6,9 @@ import 'package:http/http.dart' as http;
 import 'package:myfhb/constants/HeaderRequest.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_query.dart';
+import 'package:myfhb/src/resources/network/api_services.dart';
 
-class OrderController extends GetController {
+class OrderController extends GetxController {
   var orders = [].obs;
   var isLoading = false.obs;
 
@@ -32,7 +33,7 @@ class OrderController extends GetController {
     final url = BASE_URL + qr_user + qr_myOrders;
     final headers = await HeaderRequest().getRequestHeadersTimeSlot();
     try {
-      final response = await http.get(
+      final response = await ApiServices.get(
         url,
         headers: headers,
       );

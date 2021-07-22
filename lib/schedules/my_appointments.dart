@@ -1,24 +1,24 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:myfhb/src/model/AppointmentModel.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:myfhb/src/utils/PageNavigator.dart';
+import '../src/model/AppointmentModel.dart';
+import '../src/utils/FHBUtils.dart';
+import '../src/utils/PageNavigator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
+import '../colors/fhb_colors.dart' as fhbColors;
 import 'package:intl/intl.dart';
-import 'package:myfhb/common/CommonUtil.dart';
+import '../common/CommonUtil.dart';
 import 'package:random_color/random_color.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import '../constants/fhb_constants.dart' as Constants;
+import '../constants/variable_constant.dart' as variable;
+import '../constants/router_variable.dart' as router;
+import '../src/utils/screenutils/size_extensions.dart';
 
 class MyAppointment extends StatefulWidget {
   static _MyAppointmentState of(BuildContext context) =>
       context.findAncestorStateOfType<State<MyAppointment>>();
 
   @override
-  State<StatefulWidget> createState() => new _MyAppointmentState();
+  State<StatefulWidget> createState() => _MyAppointmentState();
 }
 
 // Used for controlling whether the user is loggin or creating an account
@@ -26,14 +26,14 @@ enum FormType { login, register }
 
 class _MyAppointmentState extends State<MyAppointment> {
   SharedPreferences prefs;
-  RandomColor _randomColor = RandomColor();
+  final RandomColor _randomColor = RandomColor();
 
   dynamic detailsList =
-      new List(); // our default setting is to login, and we should switch to creating an account when the user chooses to
+      List(); // our default setting is to login, and we should switch to creating an account when the user chooses to
   dynamic reverseDetailsList =
-      new List(); // our default setting is to login, and we should switch to creating an account when the user chooses to
+      []; // our default setting is to login, and we should switch to creating an account when the user chooses to
 
-  _MyAppointmentState() {}
+  _MyAppointmentState();
 
   void refresh() {
     setState(() {});
@@ -53,19 +53,19 @@ class _MyAppointmentState extends State<MyAppointment> {
         } else {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
-            home: new Scaffold(
+            home: Scaffold(
               floatingActionButton: FloatingActionButton(
                 onPressed: () {
                   PageNavigator.goTo(context, router.rt_AddAppointments);
                 },
+                backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
                 child: Icon(Icons.add),
-                backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
               ),
               body: detailsList.length > 0
-                  ? new ListView.builder(
+                  ? ListView.builder(
                       itemCount: detailsList.length,
-                      itemBuilder: (BuildContext ctxt, int index) {
-                        AppointmentModel model = reverseDetailsList[index];
+                      itemBuilder: (ctxt, index) {
+                        final AppointmentModel model = reverseDetailsList[index];
                         return Container(
                             padding: EdgeInsets.all(10),
                             margin:
@@ -77,14 +77,11 @@ class _MyAppointmentState extends State<MyAppointment> {
                                 BoxShadow(
                                   color: const Color(fhbColors.cardShadowColor),
                                   blurRadius:
-                                      16, // has the effect of softening the shadow
-                                  spreadRadius:
-                                      0.0, // has the effect of extending the shadow
+                                      16, // has the effect of extending the shadow
                                 )
                               ],
                             ),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
                                 CircleAvatar(
                                   radius: 25,
@@ -151,7 +148,6 @@ class _MyAppointmentState extends State<MyAppointment> {
                                   ),
                                 ),
                                 Expanded(
-                                    flex: 1,
                                     child: Row(
                                       children: <Widget>[
                                         Container(
@@ -179,6 +175,7 @@ class _MyAppointmentState extends State<MyAppointment> {
                             ));
                       })
                   : Container(
+                      color: Color(fhbColors.bgColorContainer),
                       child: Center(
                         child: Padding(
                           padding: EdgeInsets.only(left: 40, right: 40),
@@ -192,7 +189,6 @@ class _MyAppointmentState extends State<MyAppointment> {
                           ),
                         ),
                       ),
-                      color: Color(fhbColors.bgColorContainer),
                     ),
             ),
           );

@@ -8,8 +8,8 @@ class DeleteDeviceHealthRecord {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['isSuccess'] = this.isSuccess;
+    final data = Map<String, dynamic>();
+    data['isSuccess'] = isSuccess;
     return data;
   }
 }

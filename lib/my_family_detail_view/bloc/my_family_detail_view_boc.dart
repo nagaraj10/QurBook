@@ -1,14 +1,14 @@
 import 'dart:async';
 
-import 'package:myfhb/bookmark_record/bloc/bookmarkRecordBloc.dart';
-import 'package:myfhb/my_family_detail_view/models/my_family_detail_view_repository.dart';
-import 'package:myfhb/src/model/Category/CategoryResponseList.dart';
-import 'package:myfhb/src/model/Category/catergory_data_list.dart';
-import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
-import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
-import 'package:myfhb/src/resources/network/ApiResponse.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/constants/router_variable.dart' as router;
+import '../../bookmark_record/bloc/bookmarkRecordBloc.dart';
+import '../models/my_family_detail_view_repository.dart';
+import '../../src/model/Category/CategoryResponseList.dart';
+import '../../src/model/Category/catergory_data_list.dart';
+import '../../src/model/Health/UserHealthResponseList.dart';
+import '../../src/model/Health/asgard/health_record_list.dart';
+import '../../src/resources/network/ApiResponse.dart';
+import '../../constants/variable_constant.dart' as variable;
+import '../../constants/router_variable.dart' as router;
 
 class MyFamilyDetailViewBloc implements BaseBloc {
   StreamController _healthReportListController;
@@ -71,7 +71,7 @@ class MyFamilyDetailViewBloc implements BaseBloc {
   getHelthReportList() async {
     healthReportListSink.add(ApiResponse.loading(variable.strFetchingHealth));
     try {
-      UserHealthResponseList userHealthResponseList =
+      final userHealthResponseList =
           await _healthReportListForUserRepository.getHealthReportList(userId);
       healthReportListSink.add(ApiResponse.completed(userHealthResponseList));
     } catch (e) {

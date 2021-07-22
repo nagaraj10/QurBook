@@ -1,28 +1,28 @@
 import 'dart:io';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import '../../constants/fhb_constants.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
-import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments.dart';
-import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
-import 'package:myfhb/my_family/models/relationship_response_list.dart';
-import 'package:myfhb/my_family/models/relationships.dart';
-import 'package:myfhb/my_family_detail/models/my_family_detail_arguments.dart';
-import 'package:myfhb/my_family_detail_view/models/my_family_detail_view_arguments.dart';
-import 'package:myfhb/src/model/user/MyProfileModel.dart';
-import 'package:myfhb/src/model/user/UserAddressCollection.dart';
-import 'package:myfhb/src/resources/network/ApiResponse.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
-import 'package:http/http.dart' as http;
+import '../../add_family_user_info/bloc/add_family_user_info_bloc.dart';
+import '../../add_family_user_info/models/add_family_user_info_arguments.dart';
+import '../../add_family_user_info/services/add_family_user_info_repository.dart';
+import '../../common/CommonConstants.dart';
+import '../../common/CommonUtil.dart';
+import '../../common/PreferenceUtil.dart';
+import '../../constants/fhb_constants.dart' as Constants;
+import '../../constants/router_variable.dart' as router;
+import '../../constants/variable_constant.dart' as variable;
+import '../../my_family/models/FamilyMembersRes.dart';
+import '../../my_family/models/relationship_response_list.dart';
+import '../../my_family/models/relationships.dart';
+import '../models/my_family_detail_arguments.dart';
+import '../../my_family_detail_view/models/my_family_detail_view_arguments.dart';
+import '../../src/model/user/MyProfileModel.dart';
+import '../../src/model/user/UserAddressCollection.dart';
+import '../../src/resources/network/ApiResponse.dart';
+import '../../src/utils/FHBUtils.dart';
+import '../../src/utils/colors_utils.dart';
+import 'package:myfhb/src/resources/network/api_services.dart';
 
 class MyFamilyDetailScreen extends StatefulWidget {
   MyFamilyDetailArguments arguments;
@@ -37,7 +37,7 @@ class MyFamilyDetailScreen extends StatefulWidget {
 }
 
 class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
-  final PageController _pageController = PageController(initialPage: 0);
+  final PageController _pageController = PageController();
   int _currentPage = 0;
   static File imageURI;
   final double expandedHeight = 170.0.h;
@@ -107,13 +107,13 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
   var weightController = TextEditingController();
   FocusNode weightFocus = FocusNode();
-  MyProfileModel myProfile = new MyProfileModel();
+  MyProfileModel myProfile = MyProfileModel();
 
   @override
   void initState() {
     mInitialTime = DateTime.now();
     super.initState();
-    addFamilyUserInfoBloc = new AddFamilyUserInfoBloc();
+    addFamilyUserInfoBloc = AddFamilyUserInfoBloc();
     getAllCustomRoles();
     fetchUserProfileInfo();
     setState(() {
@@ -122,8 +122,8 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   }
 
   fetchUserProfileInfo() async {
-    addFamilyUserInfoRepository = new AddFamilyUserInfoRepository();
-    var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+    addFamilyUserInfoRepository = AddFamilyUserInfoRepository();
+    final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
     myProfile = widget.arguments.myProfile;
 
     return myProfile;
@@ -151,7 +151,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 //        extendBodyBehindAppBar: true,
         appBar: AppBar(
             backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-            elevation: 0.0,
+            elevation: 0,
             title: Text(
               CommonConstants.my_family_title,
               style: TextStyle(
@@ -185,18 +185,17 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                                     relationShipResponseList?.result?.isNotEmpty
                                         ? relationShipResponseList
                                             ?.result[0].referenceValueCollection
-                                        : List<RelationsShipModel>()))
+                                        : <RelationsShipModel>[]))
                         .then((value) {});
                   })
             ]),
         body: PageView(
-            scrollDirection: Axis.horizontal,
             physics: ClampingScrollPhysics(),
             controller: PageController(
                 initialPage: _currentPage,
                 keepPage: false,
-                viewportFraction: 1.0),
-            onPageChanged: (int page) {
+                viewportFraction: 1),
+            onPageChanged: (page) {
               setState(() {
                 _currentPage = page;
               });
@@ -211,9 +210,9 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   }
 
   List<Widget> buildMyFamilDetailPages() {
-    final children = <Widget>[];
+    var children = <Widget>[];
 
-    for (int i = 0; i < widget.arguments.profilesSharedByMe.length; i++) {
+    for (var i = 0; i < widget.arguments.profilesSharedByMe.length; i++) {
       children.add(_showPageData(widget.arguments.profilesSharedByMe[i]));
     }
     return children;
@@ -253,8 +252,8 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     relationShipController = TextEditingController(text: '');
     relationShipFocus = FocusNode();
 
-    heightConroller = new TextEditingController(text: '');
-    weightController = new TextEditingController(text: '');
+    heightConroller = TextEditingController(text: '');
+    weightController = TextEditingController(text: '');
 
     cntrlr_addr_one = TextEditingController(text: '');
     cntrlr_addr_two = TextEditingController(text: '');
@@ -282,13 +281,11 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       try {
         if (sharedbyme.child.isVirtualUser) {
           try {
-            MyProfileModel myProf =
-                PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) !=
-                        null
-                    ? PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN)
-                    : PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+            var myProf =
+                PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) ??
+                    PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
             if (myProf.result.userContactCollection3 != null) {
-              if (myProf.result.userContactCollection3.length > 0) {
+              if (myProf.result.userContactCollection3.isNotEmpty) {
                 mobileNoController.text =
                     myProf.result.userContactCollection3[0].phoneNumber;
                 emailController.text =
@@ -337,16 +334,12 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     }
 
     if (sharedbyme?.child?.additionalInfo != null) {
-      heightConroller.text = sharedbyme?.child?.additionalInfo.height != null
-          ? sharedbyme?.child?.additionalInfo.height
-          : '';
-      weightController.text = sharedbyme?.child?.additionalInfo.weight != null
-          ? sharedbyme?.child?.additionalInfo.weight
-          : '';
+      heightConroller.text = sharedbyme?.child?.additionalInfo.height ?? '';
+      weightController.text = sharedbyme?.child?.additionalInfo.weight ?? '';
     }
-    if (new CommonUtil().checkIfStringisNull(sharedbyme.child.bloodGroup)) {
+    if (CommonUtil().checkIfStringisNull(sharedbyme.child.bloodGroup)) {
       //renameBloodGroup(sharedbyme.child.bloodGroup);
-      String bloodGroup = sharedbyme.child.bloodGroup;
+      final bloodGroup = sharedbyme.child.bloodGroup;
       bloodGroupController.text = bloodGroup.split(' ')[0];
       bloodRangeController.text = bloodGroup.split(' ')[1];
     }
@@ -362,10 +355,10 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
     if (sharedbyme.child.dateOfBirth != null) {
       dateOfBirthController.text =
-          new FHBUtils().getFormattedDateOnlyNew(sharedbyme.child.dateOfBirth);
+          FHBUtils().getFormattedDateOnlyNew(sharedbyme.child.dateOfBirth);
     }
 
-    if (sharedbyme?.child?.userAddressCollection3.length > 0) {
+    if (sharedbyme?.child?.userAddressCollection3.isNotEmpty) {
       cntrlr_addr_one.text =
           sharedbyme?.child?.userAddressCollection3[0].addressLine1;
       cntrlr_addr_two.text =
@@ -378,7 +371,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
           sharedbyme?.child?.userAddressCollection3[0].pincode;
     }
 
-    String profilebanner =
+    final profilebanner =
         PreferenceUtil.getStringValue(Constants.KEY_PROFILE_BANNER);
 
     return SingleChildScrollView(
@@ -403,8 +396,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                                   PreferenceUtil.getStringValue(
                                       Constants.KEY_AUTHTOKEN)
                             },
-                            errorBuilder: (BuildContext context,
-                                Object exception, StackTrace stackTrace) {
+                            errorBuilder: (context, exception, stackTrace) {
                               return Container(
                                 height: 100.0.h,
                                 width: 100.0.h,
@@ -418,7 +410,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                         : Container(
                             width: 100.0.h,
                             height: 100.0.h,
-                            color: Color(new CommonUtil().getMyPrimaryColor()),
+                            color: Color(CommonUtil().getMyPrimaryColor()),
                             child: Center(
                               child: Text(
                                 sharedbyme.child.firstName != null
@@ -517,11 +509,9 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
               Expanded(
-                flex: 1,
                 child: _showViewInsuranceButton(sharedbyme),
               ),
               Expanded(
-                flex: 1,
                 child: _showViewHospitalButton(sharedbyme),
               )
             ],
@@ -538,8 +528,8 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   }
 
   List<Widget> _buildPageIndicator() {
-    List<Widget> list = [];
-    for (int i = 0; i < widget.arguments.profilesSharedByMe.length; i++) {
+    var list = <Widget>[];
+    for (var i = 0; i < widget.arguments.profilesSharedByMe.length; i++) {
       list.add(i == _currentPage ? _indicator(true) : _indicator(false));
     }
     return list;
@@ -548,12 +538,12 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   Widget _indicator(bool isActive) {
     return AnimatedContainer(
       duration: Duration(milliseconds: 150),
-      margin: EdgeInsets.symmetric(horizontal: 4.0, vertical: 10.0),
+      margin: EdgeInsets.symmetric(horizontal: 4, vertical: 10),
       height: 8.0.h,
       width: 8.0.h,
       decoration: BoxDecoration(
         color: isActive
-            ? Color(new CommonUtil().getMyPrimaryColor())
+            ? Color(CommonUtil().getMyPrimaryColor())
             : ColorUtils.greycolor,
         borderRadius: BorderRadius.all(Radius.circular(4)),
       ),
@@ -562,33 +552,33 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
   void renameBloodGroup(String selectedBloodGroupClone) {
     if (selectedBloodGroupClone != null) {
-      var bloodGroupSplitName = selectedBloodGroupClone.split('_');
+      final bloodGroupSplitName = selectedBloodGroupClone.split('_');
 
       try {
         if (bloodGroupSplitName.length > 1) {
-          for (String bloodGroup in variable.bloodGroupArray) {
+          for (final bloodGroup in variable.bloodGroupArray) {
             if (bloodGroupSplitName[0] == bloodGroup) {
               selectedBloodGroup = bloodGroup;
               bloodGroupController.text = selectedBloodGroup;
             }
           }
 
-          for (String bloodRange in variable.bloodRangeArray) {
+          for (var bloodRange in variable.bloodRangeArray) {
             if (bloodGroupSplitName[1] == bloodRange) {
               selectedBloodRange = bloodRange;
               bloodRangeController.text = selectedBloodRange;
             }
           }
         } else {
-          var bloodGroupSplitName = selectedBloodGroupClone.split(' ');
+          final bloodGroupSplitName = selectedBloodGroupClone.split(' ');
           if (bloodGroupSplitName.length > 1) {
-            for (String bloodGroup in variable.bloodGroupArray) {
+            for (var bloodGroup in variable.bloodGroupArray) {
               if (bloodGroupSplitName[0] == bloodGroup) {
                 selectedBloodGroup = bloodGroup;
                 bloodGroupController.text = selectedBloodGroup;
               }
 
-              for (String bloodRange in variable.bloodRangeArray) {
+              for (var bloodRange in variable.bloodRangeArray) {
                 if (bloodGroupSplitName[1][0] == bloodRange) {
                   selectedBloodRange = bloodRange;
                   bloodRangeController.text = selectedBloodRange;
@@ -609,12 +599,11 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
   Widget _showMobileNoTextField() {
     return Padding(
-        padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+        padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: TextField(
           enabled: false,
           cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: mobileNoController,
-          maxLines: 1,
           enableInteractiveSelection: false,
           keyboardType: TextInputType.text,
           focusNode: mobileNoFocus,
@@ -622,7 +611,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
           onSubmitted: (term) {
             FocusScope.of(context).requestFocus(nameFocus);
           },
-          style: new TextStyle(
+          style: TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 16.0.sp,
               color: ColorUtils.blackcolor),
@@ -638,7 +627,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
-            border: new UnderlineInputBorder(
+            border: UnderlineInputBorder(
                 borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
           ),
         ));
@@ -646,11 +635,10 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
   Widget _showNameTextField() {
     return Padding(
-        padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+        padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: TextField(
           cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: nameController,
-          maxLines: 1,
           enabled: false,
           keyboardType: TextInputType.text,
 //          focusNode: nameFocus,
@@ -658,7 +646,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
           onSubmitted: (term) {
             FocusScope.of(context).requestFocus(relationShipFocus);
           },
-          style: new TextStyle(
+          style: TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 16.0.sp,
               color: ColorUtils.blackcolor),
@@ -674,7 +662,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
-            border: new UnderlineInputBorder(
+            border: UnderlineInputBorder(
                 borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
           ),
         ));
@@ -682,11 +670,10 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
   Widget _showFirstNameTextField() {
     return Padding(
-        padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+        padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: TextField(
           cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: firstNameController,
-          maxLines: 1,
           enabled: false,
           keyboardType: TextInputType.text,
 //          focusNode: nameFocus,
@@ -694,7 +681,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
           onSubmitted: (term) {
             FocusScope.of(context).requestFocus(middleNameFocus);
           },
-          style: new TextStyle(
+          style: TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 16.0.sp,
               color: ColorUtils.blackcolor),
@@ -710,7 +697,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
-            border: new UnderlineInputBorder(
+            border: UnderlineInputBorder(
                 borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
           ),
         ));
@@ -718,11 +705,10 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
   Widget _showMiddleNameTextField() {
     return Padding(
-        padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+        padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: TextField(
           cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: middleNameController,
-          maxLines: 1,
           enabled: false,
           keyboardType: TextInputType.text,
 //          focusNode: nameFocus,
@@ -730,7 +716,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
           onSubmitted: (term) {
             FocusScope.of(context).requestFocus(lastNameFocus);
           },
-          style: new TextStyle(
+          style: TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 16.0.sp,
               color: ColorUtils.blackcolor),
@@ -746,7 +732,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
-            border: new UnderlineInputBorder(
+            border: UnderlineInputBorder(
                 borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
           ),
         ));
@@ -754,11 +740,10 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
   Widget _showLastNameTextField() {
     return Padding(
-        padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+        padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: TextField(
           cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: lastNameController,
-          maxLines: 1,
           enabled: false,
           keyboardType: TextInputType.text,
 //          focusNode: nameFocus,
@@ -766,7 +751,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
           onSubmitted: (term) {
             FocusScope.of(context).requestFocus(relationShipFocus);
           },
-          style: new TextStyle(
+          style: TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 16.0.sp,
               color: ColorUtils.blackcolor),
@@ -782,7 +767,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
-            border: new UnderlineInputBorder(
+            border: UnderlineInputBorder(
                 borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
           ),
         ));
@@ -790,18 +775,17 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
   Widget _showRelationShipTextField() {
     return Padding(
-        padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+        padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: TextField(
           cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: relationShipController,
-          maxLines: 1,
           enabled: false,
           keyboardType: TextInputType.text,
           textInputAction: TextInputAction.done,
           onSubmitted: (term) {
             FocusScope.of(context).requestFocus(emailFocus);
           },
-          style: new TextStyle(
+          style: TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 16.0.sp,
               color: ColorUtils.blackcolor),
@@ -817,7 +801,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
-            border: new UnderlineInputBorder(
+            border: UnderlineInputBorder(
                 borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
           ),
         ));
@@ -825,19 +809,17 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
   Widget _showEmailAddTextField() {
     return Padding(
-        padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+        padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: TextField(
           cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: emailController,
-          maxLines: 1,
           enabled: false,
           keyboardType: TextInputType.text,
-          autofocus: false,
           textInputAction: TextInputAction.done,
           onSubmitted: (term) {
             FocusScope.of(context).requestFocus(genderFocus);
           },
-          style: new TextStyle(
+          style: TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 16.0.sp,
               color: ColorUtils.blackcolor),
@@ -853,7 +835,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
-            border: new UnderlineInputBorder(
+            border: UnderlineInputBorder(
                 borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
           ),
         ));
@@ -861,11 +843,10 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
   Widget _showGenderTextField() {
     return Padding(
-        padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+        padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: TextField(
           cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: genderController,
-          maxLines: 1,
           enabled: false,
           keyboardType: TextInputType.text,
           focusNode: genderFocus,
@@ -873,7 +854,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
           onSubmitted: (term) {
             FocusScope.of(context).requestFocus(bloodGroupFocus);
           },
-          style: new TextStyle(
+          style: TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 16.0.sp,
               color: ColorUtils.blackcolor),
@@ -889,7 +870,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
-            border: new UnderlineInputBorder(
+            border: UnderlineInputBorder(
                 borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
           ),
         ));
@@ -897,13 +878,12 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
   Widget _showBloodGroupTextField() {
     return Padding(
-        padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+        padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: Container(
             width: 1.sw / 2 - 40,
             child: TextField(
               cursorColor: Color(CommonUtil().getMyPrimaryColor()),
               controller: bloodGroupController,
-              maxLines: 1,
               enabled: false,
               keyboardType: TextInputType.text,
               focusNode: bloodGroupFocus,
@@ -911,7 +891,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               onSubmitted: (term) {
                 FocusScope.of(context).requestFocus(bloodRangeFocus);
               },
-              style: new TextStyle(
+              style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 16.0.sp,
                   color: ColorUtils.blackcolor),
@@ -927,7 +907,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                   color: ColorUtils.myFamilyGreyColor,
                   fontWeight: FontWeight.w400,
                 ),
-                border: new UnderlineInputBorder(
+                border: UnderlineInputBorder(
                     borderSide:
                         BorderSide(color: ColorUtils.myFamilyGreyColor)),
               ),
@@ -936,13 +916,12 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
   Widget _showBloodRangeTextField() {
     return Padding(
-        padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+        padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: Container(
             width: 1.sw / 2 - 40,
             child: TextField(
               cursorColor: Color(CommonUtil().getMyPrimaryColor()),
               controller: bloodRangeController,
-              maxLines: 1,
               enabled: false,
               keyboardType: TextInputType.text,
               focusNode: bloodRangeFocus,
@@ -950,7 +929,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               onSubmitted: (term) {
                 FocusScope.of(context).requestFocus(dateOfBirthFocus);
               },
-              style: new TextStyle(
+              style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 16.0.sp,
                   color: ColorUtils.blackcolor),
@@ -966,7 +945,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                   color: ColorUtils.myFamilyGreyColor,
                   fontWeight: FontWeight.w400,
                 ),
-                border: new UnderlineInputBorder(
+                border: UnderlineInputBorder(
                     borderSide:
                         BorderSide(color: ColorUtils.myFamilyGreyColor)),
               ),
@@ -975,13 +954,12 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
   Widget showHeight() {
     return Padding(
-        padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+        padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: Container(
             width: 1.sw / 2 - 40,
             child: TextField(
               cursorColor: Color(CommonUtil().getMyPrimaryColor()),
               controller: heightConroller,
-              maxLines: 1,
               enabled: false,
               keyboardType: TextInputType.text,
               focusNode: heightFocus,
@@ -989,7 +967,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               onSubmitted: (term) {
                 FocusScope.of(context).requestFocus(bloodRangeFocus);
               },
-              style: new TextStyle(
+              style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 16.0.sp,
                   color: ColorUtils.blackcolor),
@@ -1005,7 +983,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                   color: ColorUtils.myFamilyGreyColor,
                   fontWeight: FontWeight.w400,
                 ),
-                border: new UnderlineInputBorder(
+                border: UnderlineInputBorder(
                     borderSide:
                         BorderSide(color: ColorUtils.myFamilyGreyColor)),
               ),
@@ -1014,13 +992,12 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
   Widget showWeight() {
     return Padding(
-        padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+        padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: Container(
             width: 1.sw / 2 - 40,
             child: TextField(
               cursorColor: Color(CommonUtil().getMyPrimaryColor()),
               controller: weightController,
-              maxLines: 1,
               enabled: false,
               keyboardType: TextInputType.text,
               focusNode: weightFocus,
@@ -1028,7 +1005,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               onSubmitted: (term) {
                 FocusScope.of(context).requestFocus(dateOfBirthFocus);
               },
-              style: new TextStyle(
+              style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 16.0.sp,
                   color: ColorUtils.blackcolor),
@@ -1044,7 +1021,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                   color: ColorUtils.myFamilyGreyColor,
                   fontWeight: FontWeight.w400,
                 ),
-                border: new UnderlineInputBorder(
+                border: UnderlineInputBorder(
                     borderSide:
                         BorderSide(color: ColorUtils.myFamilyGreyColor)),
               ),
@@ -1053,14 +1030,11 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
   Widget _showDateOfBirthTextField() {
     return GestureDetector(
-      onTap: null,
       child: Padding(
-          padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+          padding: EdgeInsets.only(left: 20, right: 20, top: 5),
           child: TextField(
             cursorColor: Color(CommonUtil().getMyPrimaryColor()),
             controller: dateOfBirthController,
-            maxLines: 1,
-            autofocus: false,
             readOnly: true,
             enabled: false,
             keyboardType: TextInputType.text,
@@ -1068,13 +1042,13 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
             onSubmitted: (term) {
               dateOfBirthFocus.unfocus();
             },
-            style: new TextStyle(
+            style: TextStyle(
                 fontWeight: FontWeight.w500,
                 fontSize: 16.0.sp,
                 color: ColorUtils.blackcolor),
             decoration: InputDecoration(
-              suffixIcon: new IconButton(
-                icon: new Icon(Icons.calendar_today),
+              suffixIcon: IconButton(
+                icon: Icon(Icons.calendar_today),
                 onPressed: () {},
               ),
               labelText: CommonConstants.year_of_birth_with_star,
@@ -1088,7 +1062,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                 color: ColorUtils.myFamilyGreyColor,
                 fontWeight: FontWeight.w400,
               ),
-              border: new UnderlineInputBorder(
+              border: UnderlineInputBorder(
                   borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
             ),
           )),
@@ -1096,7 +1070,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   }
 
   Widget _showViewInsuranceButton(SharedByUsers sharedbyme) {
-    final GestureDetector viewInsuranceButtonWithGesture = new GestureDetector(
+    final viewInsuranceButtonWithGesture = GestureDetector(
       onTap: () {
         Navigator.pushNamed(context, router.rt_FamilyInsurance,
             arguments:
@@ -1105,13 +1079,13 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          new Container(
+          Container(
             margin: EdgeInsets.only(top: 20, bottom: 20),
             width: 150.0.w,
             height: 40.0.h,
-            decoration: new BoxDecoration(
-              color: Color(new CommonUtil().getMyPrimaryColor()),
-              borderRadius: new BorderRadius.all(Radius.circular(10.0)),
+            decoration: BoxDecoration(
+              color: Color(CommonUtil().getMyPrimaryColor()),
+              borderRadius: BorderRadius.all(Radius.circular(10)),
               boxShadow: <BoxShadow>[
                 BoxShadow(
                   color: Color.fromARGB(15, 0, 0, 0),
@@ -1120,10 +1094,10 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                 ),
               ],
             ),
-            child: new Center(
-              child: new Text(
+            child: Center(
+              child: Text(
                 CommonConstants.view_insurance,
-                style: new TextStyle(
+                style: TextStyle(
                   color: Colors.white,
                   fontSize: 15.0.sp,
                   fontWeight: FontWeight.w400,
@@ -1139,7 +1113,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   }
 
   Widget _showViewHospitalButton(SharedByUsers sharedbyme) {
-    final GestureDetector viewHospitalButtonWithGesture = new GestureDetector(
+    final viewHospitalButtonWithGesture = GestureDetector(
       onTap: () {
         Navigator.pushNamed(context, router.rt_FamilyInsurance,
             arguments:
@@ -1148,13 +1122,13 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          new Container(
+          Container(
             margin: EdgeInsets.only(top: 20, bottom: 20),
             width: 150.0.w,
             height: 40.0.h,
-            decoration: new BoxDecoration(
-              color: Color(new CommonUtil().getMyPrimaryColor()),
-              borderRadius: new BorderRadius.all(Radius.circular(10.0)),
+            decoration: BoxDecoration(
+              color: Color(CommonUtil().getMyPrimaryColor()),
+              borderRadius: BorderRadius.all(Radius.circular(10)),
               boxShadow: <BoxShadow>[
                 BoxShadow(
                   color: Color.fromARGB(15, 0, 0, 0),
@@ -1163,10 +1137,10 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                 ),
               ],
             ),
-            child: new Center(
-              child: new Text(
+            child: Center(
+              child: Text(
                 CommonConstants.view_hospital,
-                style: new TextStyle(
+                style: TextStyle(
                   color: Colors.white,
                   fontSize: 15.0.sp,
                   fontWeight: FontWeight.w400,
@@ -1182,7 +1156,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   }
 
   Future<void> getAllCustomRoles() async {
-    addFamilyUserInfoRepository = new AddFamilyUserInfoRepository();
+    addFamilyUserInfoRepository = AddFamilyUserInfoRepository();
     relationShipResponseList =
         await addFamilyUserInfoRepository.getCustomRoles();
   }
@@ -1190,7 +1164,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   Widget getRelationshipDetails(RelationShipResponseList data) {
     return StatefulBuilder(builder: (context, setState) {
       return Padding(
-          padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+          padding: EdgeInsets.only(left: 20, right: 20, top: 5),
           child: Container(
               width: 1.sw - 40,
               child: DropdownButton(
@@ -1199,12 +1173,12 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                 value: selectedRelationShip,
                 items: data.result.map((relationShipDetail) {
                   return DropdownMenuItem(
+                    value: relationShipDetail,
                     child: new Text(relationShipDetail.name,
                         style: new TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 16.0.sp,
                             color: ColorUtils.blackcolor)),
-                    value: relationShipDetail,
                   );
                 }).toList(),
                 onChanged: (newValue) {
@@ -1219,7 +1193,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   Widget getBloodGroupDetails() {
     return StatefulBuilder(builder: (context, setState) {
       return Padding(
-          padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+          padding: EdgeInsets.only(left: 20, right: 20, top: 5),
           child: Container(
               width: 1.sw - 40,
               child: DropdownButton(
@@ -1228,15 +1202,15 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                 value: selectedBloodGroup,
                 items: variable.bloodGroupArray.map((eachBloodGroup) {
                   return DropdownMenuItem(
+                    value: eachBloodGroup,
                     child: new Text(eachBloodGroup,
                         style: new TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 16.0.sp,
                             color: ColorUtils.blackcolor)),
-                    value: eachBloodGroup,
                   );
                 }).toList(),
-                onChanged: (String newValue) {
+                onChanged: (newValue) {
                   setState(() {
                     selectedBloodGroup = newValue;
                   });
@@ -1248,7 +1222,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   Widget getBloodRangeDetails() {
     return StatefulBuilder(builder: (context, setState) {
       return Padding(
-          padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+          padding: EdgeInsets.only(left: 20, right: 20, top: 5),
           child: Container(
               width: 1.sw - 40,
               child: DropdownButton(
@@ -1257,15 +1231,15 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                 value: selectedBloodRange,
                 items: variable.bloodRangeArray.map((eachBloodGroup) {
                   return DropdownMenuItem(
+                    value: eachBloodGroup,
                     child: new Text(eachBloodGroup,
                         style: new TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 16.0.sp,
                             color: ColorUtils.blackcolor)),
-                    value: eachBloodGroup,
                   );
                 }).toList(),
-                onChanged: (String newValue) {
+                onChanged: (newValue) {
                   setState(() {
                     selectedBloodRange = newValue;
                   });
@@ -1277,7 +1251,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   Widget getGenderDetails() {
     return StatefulBuilder(builder: (context, setState) {
       return Padding(
-          padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+          padding: EdgeInsets.only(left: 20, right: 20, top: 5),
           child: Container(
               width: 1.sw - 40,
               child: DropdownButton(
@@ -1288,15 +1262,15 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                     : selectedGender,
                 items: variable.genderArray.map((eachGender) {
                   return DropdownMenuItem(
-                    child: new Text(eachGender,
-                        style: new TextStyle(
+                    child: Text(eachGender,
+                        style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 16.0.sp,
                             color: ColorUtils.blackcolor)),
                     value: eachGender,
                   );
                 }).toList(),
-                onChanged: (String newValue) {
+                onChanged: (newValue) {
                   setState(() {
                     selectedGender = newValue;
                   });
@@ -1306,7 +1280,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   }
 
   Future<void> _selectDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
+    final picked = await showDatePicker(
         context: context,
         initialDate: dateTime,
         firstDate: DateTime(2015, 8),
@@ -1316,7 +1290,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       setState(() {
         dateTime = picked ?? dateTime;
         dateOfBirthController.text =
-            new DateFormat(variable.strDateYear).format(dateTime).toString();
+            DateFormat(variable.strDateYear).format(dateTime).toString();
       });
     }
   }
@@ -1327,7 +1301,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
   Widget _userAddressInfo() {
     return Padding(
-      padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+      padding: EdgeInsets.only(left: 20, right: 20, top: 5),
       child: Form(
         key: _formkey,
         child: Column(
@@ -1421,7 +1395,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         myProfile.firstName[0].toUpperCase() +
             myProfile.lastName[0].toUpperCase(),
         style: TextStyle(
-          color: Color(new CommonUtil().getMyPrimaryColor()),
+          color: Color(CommonUtil().getMyPrimaryColor()),
           fontSize: 28.0.sp,
           fontWeight: FontWeight.w400,
         ),
@@ -1430,7 +1404,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       return Text(
         myProfile.firstName[0].toUpperCase(),
         style: TextStyle(
-          color: Color(new CommonUtil().getMyPrimaryColor()),
+          color: Color(CommonUtil().getMyPrimaryColor()),
           fontSize: 28.0.sp,
           fontWeight: FontWeight.w400,
         ),
@@ -1439,7 +1413,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       return Text(
         '',
         style: TextStyle(
-          color: Color(new CommonUtil().getMyPrimaryColor()),
+          color: Color(CommonUtil().getMyPrimaryColor()),
           fontSize: 28.0.sp,
           fontWeight: FontWeight.w200,
         ),

@@ -1,8 +1,8 @@
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/database/model/CountryMetrics.dart';
-import 'package:myfhb/database/model/UnitsMesurement.dart';
-import 'package:myfhb/database/services/database_helper.dart';
+import 'CommonUtil.dart';
+import 'PreferenceUtil.dart';
+import '../database/model/CountryMetrics.dart';
+import '../database/model/UnitsMesurement.dart';
+import '../database/services/database_helper.dart';
 
 class CommonConstants {
   static const String categoryDescriptionPrescription = 'Catcode001';
@@ -19,23 +19,23 @@ class CommonConstants {
   static const String categoryDescriptionNotes = 'Catcode013';
   static const String categoryDescriptionHospitalDocument = 'Catcode014';
 
-  static final String CAT_JSON_GLUCOMETER = "Catcode002_Typecode001";
-  static final String CAT_JSON_BP_METER = "Catcode002_Typecode002";
-  static final String CAT_JSON_THERMOMETER = "Catcode002_Typecode003";
-  static final String CAT_JSON_WEIGHTING_SCALE = "Catcode002_Typecode004";
-  static final String CAT_JSON_OXIMETER = "Catcode002_Typecode005";
-  static final String CAT_JSON_PRESCRIPTION = "Catcode001_Typecode001";
-  static final String CAT_JSON_MEDICAL_REPORT = "Catcode004_Typecode001";
-  static final String CAT_JSON_LAB = "Catcode003_Typecode001";
-  static final String CAT_JSON_BILLS = "Catcode005_Typecode001";
-  static final String CAT_JSON_ID_DOC = "Catcode006_Typecode001";
-  static final String CAT_JSON_Voice = "Catcode010_Typecode001";
-  static final String CAT_JSON_OTHERS = "Catcode007_Typecode001";
-  static final String CAT_JSON_WEARABLES = "Catcode008_Typecode001";
-  static final String CAT_JSON_OTHERID = "Catcode006_Typecode003";
-  static final String CAT_JSON_INSURANCE = "Catcode006_Typecode002";
-  static final String CAT_JSON_FEEDBACK = "Catcode009_Typecode001";
-  static final String CAT_JSON_HOSPITAL = "Catcode006_Typecode001";
+  static const String CAT_JSON_GLUCOMETER = 'Catcode002_Typecode001';
+  static const String CAT_JSON_BP_METER = 'Catcode002_Typecode002';
+  static const String CAT_JSON_THERMOMETER = 'Catcode002_Typecode003';
+  static const String CAT_JSON_WEIGHTING_SCALE = 'Catcode002_Typecode004';
+  static const String CAT_JSON_OXIMETER = 'Catcode002_Typecode005';
+  static const String CAT_JSON_PRESCRIPTION = 'Catcode001_Typecode001';
+  static const String CAT_JSON_MEDICAL_REPORT = 'Catcode004_Typecode001';
+  static const String CAT_JSON_LAB = 'Catcode003_Typecode001';
+  static const String CAT_JSON_BILLS = 'Catcode005_Typecode001';
+  static const String CAT_JSON_ID_DOC = 'Catcode006_Typecode001';
+  static const String CAT_JSON_Voice = 'Catcode010_Typecode001';
+  static const String CAT_JSON_OTHERS = 'Catcode007_Typecode001';
+  static const String CAT_JSON_WEARABLES = 'Catcode008_Typecode001';
+  static const String CAT_JSON_OTHERID = 'Catcode006_Typecode003';
+  static const String CAT_JSON_INSURANCE = 'Catcode006_Typecode002';
+  static const String CAT_JSON_FEEDBACK = 'Catcode009_Typecode001';
+  static const String CAT_JSON_HOSPITAL = 'Catcode006_Typecode001';
 
   static String appVersion = 'default app version';
   static String serach_specific_list = 'Search Specific List';
@@ -46,17 +46,13 @@ class CommonConstants {
   static const String STR_PULSE_OXIDOMETER = 'Pulse Oximeter';
   static const String STR_WEIGHING_SCALE = 'Weighing Scale';
 
-  /**
-   * KeyWords tp save prefernce values,error dipslay
-   */
+  /// KeyWords tp save prefernce values,error dipslay
   static String keyDoctor = 'Doctors';
   static String keyHospital = 'Hospitals';
   static String keyLab = 'Lab';
 
-  /**
-   * Following are the constants string used as hint text for the pop
-   * box that appears when a card is saved
-   */
+  /// Following are the constants string used as hint text for the pop
+  /// box that appears when a card is saved
   //static String strMessage = 'Message';
   static String strDateOfVisit = 'Date of visit *';
   static String strHospitalName = 'Hospital Name *';
@@ -66,25 +62,23 @@ class CommonConstants {
   static String strSave = 'Save';
   static String strLabName = 'Lab Name *';
 
-  /**
-   * STring for Signin the app
-   */
+  /// STring for Signin the app
   static String strTrident = 'tridentApp';
   static String strOperationSignIN = 'signIn';
   static String strTridentValue = 'trident';
 
-  static String searchPlaces = "Search Places";
-  static String comingSoon = "Coming Soon";
+  static String searchPlaces = 'Search Places';
+  static String comingSoon = 'Coming Soon';
 
-  static String fromClass = "My Providers";
+  static String fromClass = 'My Providers';
 
   static String doctors = 'Doctors';
   static String hospitals = 'Hospitals';
   static String labs = 'Labs';
 
   static String myProviders = 'My Providers';
-  static String locate_your = "Locate your ";
-  static String confirm_location = "Confirm Location";
+  static String locate_your = 'Locate your ';
+  static String confirm_location = 'Confirm Location';
 
   static String strDevice = 'Devices';
 
@@ -153,18 +147,18 @@ class CommonConstants {
 
   //From senthil
 
-  static String add_family = "Add Family";
-  static String mobile_number = "Mobile Number";
-  static String primary_number = "Same as primary number";
-  static String name = "Name";
-  static String relationship = "Relationship";
-  static String email_address_optional = "Emai Address";
-  static String gender = "Gender";
-  static String blood_group = "Blood Group";
-  static String blood_range = "+";
-  static String date_of_birth = "Date of Birth";
-  static String year_of_birth_with_star = "Year of Birth\t*";
-  static String year_of_birth = "Year of Birth";
+  static String add_family = 'Add Family';
+  static String mobile_number = 'Mobile Number';
+  static String primary_number = 'Same as primary number';
+  static String name = 'Name';
+  static String relationship = 'Relationship';
+  static String email_address_optional = 'Emai Address';
+  static String gender = 'Gender';
+  static String blood_group = 'Blood Group';
+  static String blood_range = '+';
+  static String date_of_birth = 'Date of Birth';
+  static String year_of_birth_with_star = 'Year of Birth\t*';
+  static String year_of_birth = 'Year of Birth';
   static String user_linking = 'user_linking';
 
   static String height = 'Height(cm)';
@@ -173,12 +167,12 @@ class CommonConstants {
   static String add = 'Add';
   static String save = 'Save';
   static String update = 'Update';
-  static String send_otp = "Send OTP";
+  static String send_otp = 'Send OTP';
 
-  static String verify_otp = "Verify OTP";
-  static String add_family_otp = "Add Family OTP";
+  static String verify_otp = 'Verify OTP';
+  static String add_family_otp = 'Add Family OTP';
 
-  static String delink_alert = "Are you sure you want to Remove/De-Link?";
+  static String delink_alert = 'Are you sure you want to Remove/De-Link?';
   static String my_family = 'MyFamily';
   static String user_update = 'Profile Update';
 
@@ -199,29 +193,29 @@ class CommonConstants {
   static String preferred_providers =
       'We allow only one preferred provider for a user. To remove your preference, please set another Provider as Preferred.';
 
-  static String app_name = "myFHB";
+  static String app_name = 'myFHB';
   static String preferred_providers_descrip =
-      "Do you want to ser this as preferred. Previous preferred will be updated";
+      'Do you want to ser this as preferred. Previous preferred will be updated';
 
   static String all_fields_mandatory = 'Please fill all Mandatory fields';
 
-  static String mobile_numberWithStar = "Mobile Number*";
-  static String relationshipWithStar = "Relationship*";
-  static String genderWithStar = "Gender*";
-  static String blood_groupWithStar = "Blood Group*";
-  static String blood_rangeWithStar = "RH Type*";
-  static String date_of_birthWithStar = "Date of Birth*";
-  static String firstNameWithStar = "FirstName*";
-  static String emailWithStar = "Email Address*";
-  static String middleNameWithStar = "MiddleName*";
-  static String lastNameWithStar = "LastName*";
-  static String exprityDate = "Expiry Date*";
-  static String heightName = "Height(Cm)";
-  static String weightName = "Weight(Kg)";
-  static String preferredLanguage = "Preferred Language";
+  static String mobile_numberWithStar = 'Mobile Number*';
+  static String relationshipWithStar = 'Relationship*';
+  static String genderWithStar = 'Gender*';
+  static String blood_groupWithStar = 'Blood Group*';
+  static String blood_rangeWithStar = 'RH Type*';
+  static String date_of_birthWithStar = 'Date of Birth*';
+  static String firstNameWithStar = 'FirstName*';
+  static String emailWithStar = 'Email Address*';
+  static String middleNameWithStar = 'MiddleName*';
+  static String lastNameWithStar = 'LastName*';
+  static String exprityDate = 'Expiry Date*';
+  static String heightName = 'Height(Cm)';
+  static String weightName = 'Weight(Kg)';
+  static String preferredLanguage = 'Preferred Language';
 
-  static String specialization = "Specialization";
-  static String hospitalName = "Hospital Name";
+  static String specialization = 'Specialization';
+  static String hospitalName = 'Hospital Name';
   //===========================================//
 
   static String strOperationSignUp = 'signUp';
@@ -232,19 +226,17 @@ class CommonConstants {
   static String reading_digits = 'Reading the digits from your image';
 
   //===========================================//
-  /**
-   * Edited by parvathi on 26 march 2020 for implemting SI based on country
-   */
+  /// Edited by parvathi on 26 march 2020 for implemting SI based on country
 
-  static String firstName = "FirstName";
-  static String middleName = "MiddleName";
-  static String lastName = "LastName";
+  static String firstName = 'FirstName';
+  static String middleName = 'MiddleName';
+  static String lastName = 'LastName';
 
-  static const String addr_line_1 = "Address line 1*";
-  static const String addr_line_2 = "Address line 2";
-  static const String addr_city = "City*";
-  static const String addr_state = "State*";
-  static const String addr_zip = "Zipcode*";
+  static const String addr_line_1 = 'Address line 1*';
+  static const String addr_line_2 = 'Address line 2';
+  static const String addr_city = 'City*';
+  static const String addr_state = 'State*';
+  static const String addr_zip = 'Zipcode*';
 
   static String KEY_COUNTRYCODE = 'CountryCode';
   static String KEY_COUNTRYNAME = 'CountryName';
@@ -253,10 +245,10 @@ class CommonConstants {
 
   static String STR_RHTYPE = 'Rh type';
 
-  static String SEARCH_HOSPIT_ID = "HOSPTL";
-  static String SEARCH_LAB_ID = "LAB";
+  static String SEARCH_HOSPIT_ID = 'HOSPTL';
+  static String SEARCH_LAB_ID = 'LAB';
 
-  static final CommonConstants _instance = new CommonConstants.internal();
+  static final CommonConstants _instance = CommonConstants.internal();
   static CountryMetrics countryMetrics;
   static UnitsMesurements unitsMeasurements;
 
@@ -264,9 +256,7 @@ class CommonConstants {
   static const String strGetProfilePic = 'section=profilePicture';
   static const String strUserQuery = 'user/';
 
-  /**
-   * Color for devices
-   */
+  /// Color for devices
   static var bpDarkColor = 0xff059192;
   static var bplightColor = 0xff39c5c2;
 
@@ -293,15 +283,15 @@ class CommonConstants {
   CommonConstants.internal();
 
   Future<CountryMetrics> setCountryMetrics() async {
-    var db = new DatabaseHelper();
-    CountryMetrics countryMetrics = await db.getCustomer(
+    final db = DatabaseHelper();
+    final countryMetrics = await db.getCustomer(
         PreferenceUtil.getIntValue(CommonConstants.KEY_COUNTRYCODE));
 
     return countryMetrics;
   }
 
   Future<UnitsMesurements> getValuesForUnit(String units) async {
-    var db = new DatabaseHelper();
+    final db = DatabaseHelper();
 
     unitsMeasurements = await db.getMeasurementsBasedOnUnits(units);
 

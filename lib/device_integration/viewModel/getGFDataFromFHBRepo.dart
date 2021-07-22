@@ -1,133 +1,134 @@
-import 'package:myfhb/constants/fhb_parameters.dart';
-import 'package:myfhb/src/resources/repository/deviceHealthRecords/DeviceHealthRecordRepository.dart';
+import '../../constants/fhb_parameters.dart';
+import '../../src/resources/repository/deviceHealthRecords/DeviceHealthRecordRepository.dart';
 import 'dart:convert' show json;
 
 class GetGFDataFromFHBRepo {
   DeviceHealthRecord _deviceHealthRecord;
-  Map<String, dynamic> body = new Map();
+  Map<String, dynamic> body = {};
 
   Future<dynamic> _getDataByDataType(String params) async {
     try {
       _deviceHealthRecord = DeviceHealthRecord();
       print(params);
-      final response = await _deviceHealthRecord.queryBydeviceInterval(params);
+      var response = await _deviceHealthRecord.queryBydeviceInterval(params);
       return response;
     } catch (e) {}
   }
 
   Future<dynamic> getBPData() async {
     body.clear();
-    final now = DateTime.now();
-    var currentdate = DateTime(now.year, now.month, now.day + 1);
-    var startT = new DateTime(now.year, now.month,
-        now.day-20, now.hour, now.minute);
+    var now = DateTime.now();
+    final currentdate = DateTime(now.year, now.month, now.day + 1);
+    final startT =
+        DateTime(now.year, now.month, now.day - 20, now.hour, now.minute);
 
     body[strStartTimeStamp] = startT.toIso8601String();
     body[strEndTimeStamp] = currentdate.toIso8601String();
     body[strdeviceDataType] = strDataTypeBP;
-    String params = json.encode(body);
+    final params = json.encode(body);
     try {
-      var response = await _getDataByDataType(params);
-      String res = json.encode(response);
+      final response = await _getDataByDataType(params);
+      final res = json.encode(response);
       return res;
     } catch (e) {}
   }
 
   Future<dynamic> getHeartRateData() async {
     body.clear();
-    final now = DateTime.now();
-    var currentdate = DateTime(now.year, now.month, now.day + 1);
-    var startT = new DateTime(now.year, now.month,
-        now.day - 20, now.hour, now.minute);
+    var now = DateTime.now();
+    final currentdate = DateTime(now.year, now.month, now.day + 1);
+    final startT =
+        DateTime(now.year, now.month, now.day - 20, now.hour, now.minute);
 
     body[strStartTimeStamp] = startT.toIso8601String();
     body[strEndTimeStamp] = currentdate.toIso8601String();
     body[strdeviceDataType] = strHeartRate;
-    String params = json.encode(body).toString();
+    final params = json.encode(body).toString();
     try {
-      var response = await _getDataByDataType(params);
-      String res = json.encode(response);
+      final response = await _getDataByDataType(params);
+      final res = json.encode(response);
       return res;
     } catch (e) {}
   }
 
   Future<dynamic> getOxygenSaturationData() async {
     body.clear();
-    final now = DateTime.now();
-    var currentdate = DateTime(now.year, now.month, now.day + 1);
-    var startT = new DateTime(now.year, now.month,
-        now.day - 20, now.hour, now.minute);
+    var now = DateTime.now();
+    final currentdate = DateTime(now.year, now.month, now.day + 1);
+    final startT =
+        DateTime(now.year, now.month, now.day - 20, now.hour, now.minute);
 
     body[strStartTimeStamp] = startT.toIso8601String();
     body[strEndTimeStamp] = currentdate.toIso8601String();
     body[strdeviceDataType] = strOxgenSaturation;
-    String params = json.encode(body);
+    final params = json.encode(body);
     try {
-      var response = await _getDataByDataType(params);
-      String res = json.encode(response);
+      final response = await _getDataByDataType(params);
+      var res = json.encode(response);
       return res;
     } catch (e) {}
   }
 
   Future<dynamic> getWeightData() async {
     body.clear();
-    final now = DateTime.now();
-    var currentdate = DateTime(now.year, now.month, now.day + 1);
-    var startT = new DateTime(now.year, now.month,
-        now.day - 20, now.hour, now.minute);
+    var now = DateTime.now();
+    final currentdate = DateTime(now.year, now.month, now.day + 1);
+    final startT =
+        DateTime(now.year, now.month, now.day - 20, now.hour, now.minute);
 
     body[strStartTimeStamp] = startT.toIso8601String();
     body[strEndTimeStamp] = currentdate.toIso8601String();
     body[strdeviceDataType] = strWeight;
-    String params = json.encode(body);
+    var params = json.encode(body);
     try {
-      var response = await _getDataByDataType(params);
-      String res = json.encode(response);
+      final response = await _getDataByDataType(params);
+      var res = json.encode(response);
       return res;
     } catch (e) {}
   }
 
   Future<dynamic> getBloodGlucoseData() async {
     body.clear();
-    final now = DateTime.now();
-    var currentdate = DateTime(now.year, now.month, now.day + 1);
-    var startT = new DateTime(now.year, now.month,
-        now.day - 20, now.hour, now.minute);
+    var now = DateTime.now();
+    final currentdate = DateTime(now.year, now.month, now.day + 1);
+    final startT =
+        DateTime(now.year, now.month, now.day - 20, now.hour, now.minute);
 
     body[strStartTimeStamp] = startT.toIso8601String();
     body[strEndTimeStamp] = currentdate.toIso8601String();
     body[strdeviceDataType] = strGlusoceLevel;
-    String params = json.encode(body);
+    var params = json.encode(body);
     try {
-      var response = await _getDataByDataType(params);
-      String res = json.encode(response);
+      final response = await _getDataByDataType(params);
+      final res = json.encode(response);
       return res;
     } catch (e) {}
   }
 
   Future<dynamic> getBodyTemperatureData() async {
     body.clear();
-    final now = DateTime.now();
-    var currentdate = DateTime(now.year, now.month, now.day + 1);
-    var startT = new DateTime(now.year, now.month,
-        now.day - 20, now.hour, now.minute);
+    var now = DateTime.now();
+    final currentdate = DateTime(now.year, now.month, now.day + 1);
+    final startT =
+        DateTime(now.year, now.month, now.day - 20, now.hour, now.minute);
 
     body[strStartTimeStamp] = startT.toIso8601String();
     body[strEndTimeStamp] = currentdate.toIso8601String();
     body[strdeviceDataType] = strTemperature;
-    String params = json.encode(body);
+    final params = json.encode(body);
     try {
-      var response = await _getDataByDataType(params);
-      String res = json.encode(response);
+      final response = await _getDataByDataType(params);
+      final res = json.encode(response);
       return res;
     } catch (e) {}
   }
 
   Future<dynamic> getLatestDeviceHealthRecord() async {
     try {
-      if (_deviceHealthRecord == null)
+      if (_deviceHealthRecord == null) {
         _deviceHealthRecord = DeviceHealthRecord();
-      var response = await _deviceHealthRecord.getlastMeasureSync();
+      }
+      final response = await _deviceHealthRecord.getlastMeasureSync();
       return response;
     } catch (e) {}
   }

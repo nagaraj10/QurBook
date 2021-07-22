@@ -1,4 +1,4 @@
-import 'package:myfhb/authentication/constants/constants.dart';
+import '../constants/constants.dart';
 
 class PatientLogIn {
   String userName;
@@ -23,19 +23,19 @@ class PatientLogIn {
     message = json[strmessage];
     isSuccess = json[strIsSuccess];
     diagnostics = json['diagnostics'] != null
-        ? new DiagnosticsLogin.fromJson(json['diagnostics'])
+        ? DiagnosticsLogin.fromJson(json['diagnostics'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[struserName] = this.userName;
-    data[strpassword] = this.password;
-    data[strsource] = this.source;
-    data[strmessage] = this.message;
-    data[strIsSuccess] = this.isSuccess;
-    if (this.diagnostics != null) {
-      data['diagnostics'] = this.diagnostics.toJson();
+    final data = Map<String, dynamic>();
+    data[struserName] = userName;
+    data[strpassword] = password;
+    data[strsource] = source;
+    data[strmessage] = message;
+    data[strIsSuccess] = isSuccess;
+    if (diagnostics != null) {
+      data['diagnostics'] = diagnostics.toJson();
     }
     return data;
   }
@@ -49,17 +49,17 @@ class DiagnosticsLogin {
 
   DiagnosticsLogin.fromJson(Map<String, dynamic> json) {
     errorData = json['errorData'] != null
-        ? new ErrorDataLogin.fromJson(json['errorData'])
+        ? ErrorDataLogin.fromJson(json['errorData'])
         : null;
     includeErrorDataInResponse = json['includeErrorDataInResponse'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.errorData != null) {
-      data['errorData'] = this.errorData.toJson();
+    final data = Map<String, dynamic>();
+    if (errorData != null) {
+      data['errorData'] = errorData.toJson();
     }
-    data['includeErrorDataInResponse'] = this.includeErrorDataInResponse;
+    data['includeErrorDataInResponse'] = includeErrorDataInResponse;
     return data;
   }
 }
@@ -78,10 +78,10 @@ class ErrorDataLogin {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['userId'] = this.userId;
-    data['userName'] = this.userName;
-    data['source'] = this.source;
+    final data = <String, dynamic>{};
+    data['userId'] = userId;
+    data['userName'] = userName;
+    data['source'] = source;
     return data;
   }
 }

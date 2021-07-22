@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as constants;
-import 'package:myfhb/constants/router_variable.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/landing/view/widgets/video_screen.dart';
-import 'package:myfhb/landing/view_model/landing_view_model.dart';
-import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
-import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/telehealth/features/chat/view/chat.dart';
 import 'package:myfhb/telehealth/features/chat/view/home.dart';
+import '../../../common/CommonConstants.dart';
+import '../../../common/CommonUtil.dart';
+import '../../../common/PreferenceUtil.dart';
+import '../../../constants/fhb_constants.dart' as constants;
+import '../../../constants/router_variable.dart';
+import '../../../constants/variable_constant.dart' as variable;
+import 'video_screen.dart';
+import '../../view_model/landing_view_model.dart';
+import '../../../regiment/view_model/regiment_view_model.dart';
+import '../../../src/model/user/user_accounts_arguments.dart';
+import '../../../src/utils/screenutils/size_extensions.dart';
+import '../../../telehealth/features/chat/view/chat.dart';
 import 'package:provider/provider.dart';
 
 import 'landing_card.dart';
 
 class HomeWidget extends StatelessWidget {
-  HomeWidget({
+  const HomeWidget({
     @required this.refresh,
   });
 
@@ -58,25 +58,24 @@ class HomeWidget extends StatelessWidget {
                       ),
                     );
                   } else {
-                    var dashboardData = landingViewModel?.dashboardData;
-                    var activePlanCount =
+                    final dashboardData = landingViewModel?.dashboardData;
+                    final activePlanCount =
                         dashboardData?.activePlans?.activePlanCount ?? 0;
-                    var activeDevices =
+                    final activeDevices =
                         dashboardData?.vitalsDetails?.activeDevice ?? 0;
-                    var activeDues = dashboardData?.regimenDue?.activeDues ?? 0;
-                    var activeFamilyMembers =
+                    final activeDues =
+                        dashboardData?.regimenDue?.activeDues ?? 0;
+                    final activeFamilyMembers =
                         dashboardData?.familyMember?.noOfFamilyMembers ?? 0;
-                    var activeProviders =
+                    final activeProviders =
                         (dashboardData?.providers?.doctor ?? 0) +
                             (dashboardData?.providers?.hospital ?? 0) +
                             (dashboardData?.providers?.lab ?? 0);
-                    var availableVideos =
-                        (dashboardData?.helperVideos?.length ?? 0);
-                    var availableCareProvider =
-                        (dashboardData?.careGiverInfo?.doctorId != null
-                            ? 1
-                            : 0);
-                    var careProviderName =
+                    final availableVideos =
+                        dashboardData?.helperVideos?.length ?? 0;
+                    final availableCareProvider =
+                        dashboardData?.careGiverInfo?.doctorId != null ? 1 : 0;
+                    final careProviderName =
                         (dashboardData?.careGiverInfo?.firstName ?? '') +
                             ' ' +
                             (dashboardData?.careGiverInfo?.lastName ?? '');
@@ -99,7 +98,7 @@ class HomeWidget extends StatelessWidget {
                           title: constants.strYourQurplans,
                           lastStatus: '',
                           alerts: activePlanCount > 0
-                              ? '${activePlanCount}${constants.strPlansActive} '
+                              ? '$activePlanCount${constants.strPlansActive} '
                               : constants.strNoPlansAdded,
                           icon: variable.icon_my_plan,
                           color: Color(CommonConstants.bplightColor),
@@ -119,7 +118,7 @@ class HomeWidget extends StatelessWidget {
                           // eventName:
                           //     dashboardData?.regimenDue?.lastEventTitle ?? '',
                           onEventPressed: () async {
-                            var userId = PreferenceUtil.getStringValue(
+                            final userId = PreferenceUtil.getStringValue(
                                 constants.KEY_USERID);
                             Provider.of<RegimentViewModel>(
                               Get.context,
@@ -139,7 +138,7 @@ class HomeWidget extends StatelessWidget {
                             ).redirectEventId =
                                 '${dashboardData?.regimenDue?.eid ?? ''}';
                             await Get.toNamed(rt_Regimen);
-                            var newUserId = PreferenceUtil.getStringValue(
+                            final newUserId = PreferenceUtil.getStringValue(
                                 constants.KEY_USERID);
                             refresh(userId != newUserId);
                             await landingViewModel.getQurPlanDashBoard();
@@ -165,7 +164,7 @@ class HomeWidget extends StatelessWidget {
                           color: Color(CommonConstants.pulselightColor),
                           onPressed: activePlanCount > 0
                               ? () async {
-                                  var userId = PreferenceUtil.getStringValue(
+                                  final userId = PreferenceUtil.getStringValue(
                                       constants.KEY_USERID);
                                   Provider.of<RegimentViewModel>(
                                     Get.context,
@@ -176,8 +175,9 @@ class HomeWidget extends StatelessWidget {
                                     listen: false,
                                   ).regimentFilter = RegimentFilter.Scheduled;
                                   await Get.toNamed(rt_Regimen);
-                                  var newUserId = PreferenceUtil.getStringValue(
-                                      constants.KEY_USERID);
+                                  final newUserId =
+                                      PreferenceUtil.getStringValue(
+                                          constants.KEY_USERID);
                                   refresh(userId != newUserId);
                                   await landingViewModel.getQurPlanDashBoard();
                                 }
@@ -200,7 +200,7 @@ class HomeWidget extends StatelessWidget {
                           // },
                           onLinkPressed: activePlanCount > 0
                               ? () async {
-                                  var userId = PreferenceUtil.getStringValue(
+                                  final userId = PreferenceUtil.getStringValue(
                                       constants.KEY_USERID);
                                   Provider.of<RegimentViewModel>(
                                     Get.context,
@@ -211,8 +211,9 @@ class HomeWidget extends StatelessWidget {
                                     listen: false,
                                   ).regimentFilter = RegimentFilter.Missed;
                                   await Get.toNamed(rt_Regimen);
-                                  var newUserId = PreferenceUtil.getStringValue(
-                                      constants.KEY_USERID);
+                                  final newUserId =
+                                      PreferenceUtil.getStringValue(
+                                          constants.KEY_USERID);
                                   refresh(userId != newUserId);
                                   await landingViewModel.getQurPlanDashBoard();
                                 }
@@ -222,7 +223,7 @@ class HomeWidget extends StatelessWidget {
                           title: constants.strVitals,
                           lastStatus: '',
                           alerts: activeDevices > 0
-                              ? '${activeDevices} ${constants.strVitalsDevice}'
+                              ? '$activeDevices ${constants.strVitalsDevice}'
                               : constants.strVitalsNoDevice,
                           icon: variable.icon_record_my_vitals,
                           color: Color(CommonConstants.pulselightColor),
@@ -239,7 +240,7 @@ class HomeWidget extends StatelessWidget {
                           title: constants.strSymptomsCheckIn,
                           eventName: dashboardData?.symptomsCheckIn?.title,
                           onEventPressed: () async {
-                            var userId = PreferenceUtil.getStringValue(
+                            final userId = PreferenceUtil.getStringValue(
                                 constants.KEY_USERID);
                             Provider.of<RegimentViewModel>(
                               Get.context,
@@ -255,7 +256,7 @@ class HomeWidget extends StatelessWidget {
                             ).redirectEventId =
                                 '${dashboardData?.symptomsCheckIn?.eid ?? ''}';
                             await Get.toNamed(rt_Regimen);
-                            var newUserId = PreferenceUtil.getStringValue(
+                            final newUserId = PreferenceUtil.getStringValue(
                                 constants.KEY_USERID);
                             refresh(userId != newUserId);
                             await landingViewModel.getQurPlanDashBoard();
@@ -274,7 +275,7 @@ class HomeWidget extends StatelessWidget {
                           color: Color(CommonConstants.bplightColor),
                           onPressed: activePlanCount > 0
                               ? () async {
-                                  var userId = PreferenceUtil.getStringValue(
+                                  final userId = PreferenceUtil.getStringValue(
                                       constants.KEY_USERID);
                                   Provider.of<RegimentViewModel>(
                                     Get.context,
@@ -285,8 +286,9 @@ class HomeWidget extends StatelessWidget {
                                     listen: false,
                                   ).regimentFilter = RegimentFilter.Scheduled;
                                   await Get.toNamed(rt_Regimen);
-                                  var newUserId = PreferenceUtil.getStringValue(
-                                      constants.KEY_USERID);
+                                  final newUserId =
+                                      PreferenceUtil.getStringValue(
+                                          constants.KEY_USERID);
                                   refresh(userId != newUserId);
                                   await landingViewModel.getQurPlanDashBoard();
                                 }

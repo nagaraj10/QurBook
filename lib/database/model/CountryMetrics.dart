@@ -1,4 +1,4 @@
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import '../../constants/fhb_parameters.dart' as parameters;
 
 class CountryMetrics {
   int countryCode;
@@ -37,18 +37,18 @@ class CountryMetrics {
 
     weightUnit = obj[parameters.strweightUnit];
   }
-  CountryMetrics.map(dynamic obj) {
-    this.countryCode = obj[parameters.strCountryCode];
-    this.name = obj[parameters.strName];
-    this.bpSPUnit = obj[parameters.strbpSPUnit];
-    this.bpDPUnit = obj[parameters.strbpDPUnit];
-    this.bpPulseUnit = obj[parameters.strbpPulseUnit];
-    this.glucometerUnit = obj[parameters.strglucometerUnit];
-    this.poOxySatUnit = obj[parameters.strpoOxySatUnit];
-    this.poPulseUnit = obj[parameters.strpoPulseUnit];
-    this.tempUnit = obj[parameters.strtempUnit];
+  CountryMetrics.map(obj) {
+    countryCode = obj[parameters.strCountryCode];
+    name = obj[parameters.strName];
+    bpSPUnit = obj[parameters.strbpSPUnit];
+    bpDPUnit = obj[parameters.strbpDPUnit];
+    bpPulseUnit = obj[parameters.strbpPulseUnit];
+    glucometerUnit = obj[parameters.strglucometerUnit];
+    poOxySatUnit = obj[parameters.strpoOxySatUnit];
+    poPulseUnit = obj[parameters.strpoPulseUnit];
+    tempUnit = obj[parameters.strtempUnit];
 
-    this.weightUnit = obj[parameters.strweightUnit];
+    weightUnit = obj[parameters.strweightUnit];
   }
 
   /* String get countryName => name;
@@ -64,7 +64,7 @@ class CountryMetrics {
   String get weightUNIT => weightUnit;*/
 
   Map<String, dynamic> toMap() {
-    var obj = new Map<String, dynamic>();
+    final obj = Map<String, dynamic>();
 
     obj[parameters.strCountryCode] = countryCode;
     obj[parameters.strName] = name;

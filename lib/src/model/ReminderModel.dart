@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import '../../constants/fhb_parameters.dart' as parameters;
 
 
 class ReminderModel{

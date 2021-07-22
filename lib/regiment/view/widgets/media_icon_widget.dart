@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import '../../../src/utils/screenutils/size_extensions.dart';
 
 class MediaIconWidget extends StatelessWidget {
-  MediaIconWidget({
+  const MediaIconWidget({
     @required this.color,
     @required this.icon,
     this.onPressed,

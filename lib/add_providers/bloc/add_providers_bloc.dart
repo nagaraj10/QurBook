@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:myfhb/add_providers/models/add_doctors_providers_id.dart';
-import 'package:myfhb/add_providers/models/add_hospitals_providers_id.dart';
-import 'package:myfhb/add_providers/models/add_labs_providers_id.dart';
-import 'package:myfhb/add_providers/services/add_providers_repository.dart';
-import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
-import 'package:myfhb/src/resources/network/ApiResponse.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
+import '../models/add_doctors_providers_id.dart';
+import '../models/add_hospitals_providers_id.dart';
+import '../models/add_labs_providers_id.dart';
+import '../services/add_providers_repository.dart';
+import '../../src/blocs/Authentication/LoginBloc.dart';
+import '../../src/resources/network/ApiResponse.dart';
+import '../../constants/variable_constant.dart' as variable;
 
 class AddProvidersBloc implements BaseBloc {
   AddProvidersRepository addProvidersRepository;
@@ -63,7 +63,7 @@ class AddProvidersBloc implements BaseBloc {
   addDoctors() async {
     doctorsSink.add(ApiResponse.loading(variable.strAddingDoctors));
     try {
-      AddDoctorsProvidersId addDoctorsProvidersId =
+      final addDoctorsProvidersId =
           await addProvidersRepository.addDoctors(doctorsJsonString);
       doctorsSink.add(ApiResponse.completed(addDoctorsProvidersId));
     } catch (e) {
@@ -76,7 +76,7 @@ class AddProvidersBloc implements BaseBloc {
   addHospitals() async {
     hospitalsSink.add(ApiResponse.loading(variable.strAddingHospital));
     try {
-      AddHospitalsProvidersId addHospitalsProvidersId =
+      var addHospitalsProvidersId =
           await addProvidersRepository.addHospitals(hospitalsJsonString);
       hospitalsSink.add(ApiResponse.completed(addHospitalsProvidersId));
     } catch (e) {
@@ -89,7 +89,7 @@ class AddProvidersBloc implements BaseBloc {
   addLabs() async {
     labsSink.add(ApiResponse.loading(variable.strAddingLab));
     try {
-      AddLabsProvidersId addLabProvidersId =
+      var addLabProvidersId =
           await addProvidersRepository.addLabs(labsJsonString);
       labsSink.add(ApiResponse.completed(addLabProvidersId));
     } catch (e) {

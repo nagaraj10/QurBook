@@ -1,4 +1,4 @@
-import 'package:myfhb/constants/fhb_parameters.dart';
+import '../../constants/fhb_parameters.dart';
 
 class OxySaturationValues {
   bool isSuccess;
@@ -9,18 +9,18 @@ class OxySaturationValues {
   OxySaturationValues.fromJson(Map<String, dynamic> json) {
     isSuccess = json[is_Success];
     if (json[dataResult] != null) {
-      result = new List<OxyResult>();
+      result = <OxyResult>[];
       json[dataResult].forEach((oxygenvalue) {
-        result.add(new OxyResult.fromJson(oxygenvalue));
+        result.add(OxyResult.fromJson(oxygenvalue));
       });
     }
   }
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[is_Success] = this.isSuccess;
-    if (this.result != null) {
+    final data = Map<String, dynamic>();
+    data[is_Success] = isSuccess;
+    if (result != null) {
       data[dataResult] =
-          this.result.map((oxygenvalue) => oxygenvalue.toJson()).toList();
+          result.map((oxygenvalue) => oxygenvalue.toJson()).toList();
     }
     return data;
   }
@@ -51,11 +51,11 @@ class OxyResult {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[strsourcetype] = this.sourceType;
-    data[strStartTimeStamp] = this.startDateTime;
-    data[strEndTimeStamp] = this.endDateTime;
-    data[strParamOxygen] = this.oxygenSaturation;
+    final data = <String, dynamic>{};
+    data[strsourcetype] = sourceType;
+    data[strStartTimeStamp] = startDateTime;
+    data[strEndTimeStamp] = endDateTime;
+    data[strParamOxygen] = oxygenSaturation;
     return data;
   }
 }

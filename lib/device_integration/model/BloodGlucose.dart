@@ -1,5 +1,5 @@
 import 'RefrenceValueMeta.dart';
-import 'package:myfhb/constants/fhb_parameters.dart' as param;
+import '../../constants/fhb_parameters.dart' as param;
 
 class BloodGlucose {
   BloodGlucose({
@@ -59,11 +59,11 @@ class BloodGlucoseEntity {
             ? null
             : RefrenceValueMeta.fromJson(json[param.strParamBGMealType]),
         deviceHealthRecord: json[param.strParamDeviceHealthRecord] != null
-            ? new DeviceHealthRecord.fromJson(
+            ? DeviceHealthRecord.fromJson(
                 json[param.strParamDeviceHealthRecord])
             : null,
         averageAsOfNow: json['averageAsOfNow'] != null
-            ? new AverageAsOfNow.fromJson(json['averageAsOfNow'])
+            ? AverageAsOfNow.fromJson(json['averageAsOfNow'])
             : null,
       );
 
@@ -88,15 +88,15 @@ class DeviceHealthRecord {
 
   DeviceHealthRecord.fromJson(Map<String, dynamic> json) {
     sourceType = json['sourceType'] != null
-        ? new SourceType.fromJson(json['sourceType'])
+        ? SourceType.fromJson(json['sourceType'])
         : null;
     createdOn = DateTime.parse(json[param.strCreatedOn]);
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.sourceType != null) {
-      data['sourceType'] = this.sourceType.toJson();
+    final data = <String, dynamic>{};
+    if (sourceType != null) {
+      data['sourceType'] = sourceType.toJson();
     }
     data[param.strCreatedOn] = createdOn.toIso8601String();
 
@@ -116,9 +116,9 @@ class AverageAsOfNow {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['ppAverage'] = this.ppAverage;
-    data['fastingAverage'] = this.fastingAverage;
+    final data = <String, dynamic>{};
+    data['ppAverage'] = ppAverage;
+    data['fastingAverage'] = fastingAverage;
     return data;
   }
 }
@@ -133,8 +133,8 @@ class SourceType {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['name'] = this.code;
+    final data = Map<String, dynamic>();
+    data['name'] = code;
     return data;
   }
 }

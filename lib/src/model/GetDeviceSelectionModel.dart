@@ -7,18 +7,18 @@ class GetDeviceSelectionModel {
   GetDeviceSelectionModel.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['result'] != null) {
-      result = new List<SelectionResult>();
+      result = List<SelectionResult>();
       json['result'].forEach((v) {
-        result.add(new SelectionResult.fromJson(v));
+        result.add(SelectionResult.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['isSuccess'] = this.isSuccess;
-    if (this.result != null) {
-      data['result'] = this.result.map((v) => v.toJson()).toList();
+    final data = Map<String, dynamic>();
+    data['isSuccess'] = isSuccess;
+    if (result != null) {
+      data['result'] = result.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -44,7 +44,7 @@ class SelectionResult {
     id = json['id'];
     userId = json['userId'];
     profileSetting = json['profileSetting'] != null
-        ? new ProfileSetting.fromJson(json['profileSetting'])
+        ? ProfileSetting.fromJson(json['profileSetting'])
         : null;
     isActive = json['isActive'];
     createdOn = json['createdOn'];
@@ -52,15 +52,15 @@ class SelectionResult {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['userId'] = this.userId;
-    if (this.profileSetting != null) {
-      data['profileSetting'] = this.profileSetting.toJson();
+    final data = <String, dynamic>{};
+    data['id'] = id;
+    data['userId'] = userId;
+    if (profileSetting != null) {
+      data['profileSetting'] = profileSetting.toJson();
     }
-    data['isActive'] = this.isActive;
-    data['createdOn'] = this.createdOn;
-    data['lastModifiedOn'] = this.lastModifiedOn;
+    data['isActive'] = isActive;
+    data['createdOn'] = createdOn;
+    data['lastModifiedOn'] = lastModifiedOn;
     return data;
   }
 }
@@ -113,20 +113,20 @@ class ProfileSetting {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['bpMonitor'] = this.bpMonitor;
-    data['googleFit'] = this.googleFit;
-    data['healthFit'] = this.healthFit;
-    data['allowDigit'] = this.allowDigit;
-    data['glucoMeter'] = this.glucoMeter;
-    data['weighScale'] = this.weighScale;
-    data['allowDevice'] = this.allowDevice;
-    data['thermoMeter'] = this.thermoMeter;
-    data['pulseOximeter'] = this.pulseOximeter;
-    data['priColor'] = this.preColor;
-    data['greColor'] = this.greColor;
-    data['preferred_language'] = this.preferred_language;
-    data['qa-subscription'] = this.qa_subscription;
+    final data = Map<String, dynamic>();
+    data['bpMonitor'] = bpMonitor;
+    data['googleFit'] = googleFit;
+    data['healthFit'] = healthFit;
+    data['allowDigit'] = allowDigit;
+    data['glucoMeter'] = glucoMeter;
+    data['weighScale'] = weighScale;
+    data['allowDevice'] = allowDevice;
+    data['thermoMeter'] = thermoMeter;
+    data['pulseOximeter'] = pulseOximeter;
+    data['priColor'] = preColor;
+    data['greColor'] = greColor;
+    data['preferred_language'] = preferred_language;
+    data['qa-subscription'] = qa_subscription;
     return data;
   }
 }

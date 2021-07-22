@@ -1,5 +1,5 @@
-import 'package:myfhb/my_providers/models/Doctors.dart';
-import 'package:myfhb/my_providers/models/Hospitals.dart';
+import 'Doctors.dart';
+import 'Hospitals.dart';
 
 class MyProvidersResponseData {
   String id;
@@ -93,70 +93,70 @@ class MyProvidersResponseData {
     lastModifiedBy = json['lastModifiedBy'];
     lastModifiedOn = json['lastModifiedOn'];
     if (json['doctors'] != null) {
-      doctors = new List<Doctors>();
+      doctors = List<Doctors>();
       json['doctors'].forEach((v) {
-        doctors.add(new Doctors.fromJson(v));
+        doctors.add(Doctors.fromJson(v));
       });
     }
     if (json['hospitals'] != null) {
-      hospitals = new List<Hospitals>();
+      hospitals = List<Hospitals>();
       json['hospitals'].forEach((v) {
-        hospitals.add(new Hospitals.fromJson(v));
+        hospitals.add(Hospitals.fromJson(v));
       });
     }
     if (json['labs'] != null) {
-      labs = new List<Hospitals>();
+      labs = <Hospitals>[];
       json['labs'].forEach((v) {
-        labs.add(new Hospitals.fromJson(v));
+        labs.add(Hospitals.fromJson(v));
       });
     }
     if (json['clinics'] != null) {
-      clinics = new List<Hospitals>();
+      clinics = <Hospitals>[];
       json['clinics'].forEach((v) {
-        clinics.add(new Hospitals.fromJson(v));
+        clinics.add(Hospitals.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['userName'] = this.userName;
-    data['firstName'] = this.firstName;
-    data['middleName'] = this.middleName;
-    data['lastName'] = this.lastName;
-    data['gender'] = this.gender;
-    data['dateOfBirth'] = this.dateOfBirth;
-    data['bloodGroup'] = this.bloodGroup;
-    data['countryCode'] = this.countryCode;
-    data['profilePicThumbnailUrl'] = this.profilePicThumbnailUrl;
-    data['isTempUser'] = this.isTempUser;
-    data['isVirtualUser'] = this.isVirtualUser;
-    data['isMigrated'] = this.isMigrated;
-    data['isClaimed'] = this.isClaimed;
-    data['isIeUser'] = this.isIeUser;
-    data['isEmailVerified'] = this.isEmailVerified;
-    data['isCpUser'] = this.isCpUser;
-    data['communicationPreferences'] = this.communicationPreferences;
-    data['medicalPreferences'] = this.medicalPreferences;
-    data['isSignedIn'] = this.isSignedIn;
-    data['isActive'] = this.isActive;
-    data['createdBy'] = this.createdBy;
-    data['createdOn'] = this.createdOn;
-    data['lastModifiedBy'] = this.lastModifiedBy;
-    data['lastModifiedOn'] = this.lastModifiedOn;
-    if (this.doctors != null) {
-      data['doctors'] = this.doctors.map((v) => v.toJson()).toList();
+    final data = Map<String, dynamic>();
+    data['id'] = id;
+    data['name'] = name;
+    data['userName'] = userName;
+    data['firstName'] = firstName;
+    data['middleName'] = middleName;
+    data['lastName'] = lastName;
+    data['gender'] = gender;
+    data['dateOfBirth'] = dateOfBirth;
+    data['bloodGroup'] = bloodGroup;
+    data['countryCode'] = countryCode;
+    data['profilePicThumbnailUrl'] = profilePicThumbnailUrl;
+    data['isTempUser'] = isTempUser;
+    data['isVirtualUser'] = isVirtualUser;
+    data['isMigrated'] = isMigrated;
+    data['isClaimed'] = isClaimed;
+    data['isIeUser'] = isIeUser;
+    data['isEmailVerified'] = isEmailVerified;
+    data['isCpUser'] = isCpUser;
+    data['communicationPreferences'] = communicationPreferences;
+    data['medicalPreferences'] = medicalPreferences;
+    data['isSignedIn'] = isSignedIn;
+    data['isActive'] = isActive;
+    data['createdBy'] = createdBy;
+    data['createdOn'] = createdOn;
+    data['lastModifiedBy'] = lastModifiedBy;
+    data['lastModifiedOn'] = lastModifiedOn;
+    if (doctors != null) {
+      data['doctors'] = doctors.map((v) => v.toJson()).toList();
     }
-    if (this.hospitals != null) {
-      data['hospitals'] = this.hospitals.map((v) => v.toJson()).toList();
+    if (hospitals != null) {
+      data['hospitals'] = hospitals.map((v) => v.toJson()).toList();
     }
-    if (this.labs != null) {
-      data['labs'] = this.labs.map((v) => v.toJson()).toList();
+    if (labs != null) {
+      data['labs'] = labs.map((v) => v.toJson()).toList();
     }
-    if (this.clinics != null) {
-      data['clinics'] = this.clinics.map((v) => v.toJson()).toList();
+    if (clinics != null) {
+      data['clinics'] = clinics.map((v) => v.toJson()).toList();
     }
     return data;
   }

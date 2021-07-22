@@ -1,5 +1,5 @@
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import '../../common/CommonUtil.dart';
+import '../../constants/fhb_parameters.dart' as parameters;
 
 class DoctorsData {
   String id;
@@ -48,7 +48,7 @@ class DoctorsData {
       this.lastName});
 
   DoctorsData.fromJson(Map<String, dynamic> json) {
-    CommonUtil commonUtil = new CommonUtil();
+    var commonUtil = CommonUtil();
     id = json[parameters.strId];
     name = json[parameters.strName];
     addressLine1 =
@@ -80,28 +80,28 @@ class DoctorsData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[parameters.strId] = this.id;
-    data[parameters.strName] = this.name;
-    data[parameters.strAddressLine1] = this.addressLine1;
-    data[parameters.strAddressLine2] = this.addressLine2;
-    data[parameters.strWebsite] = this.website;
-    data[parameters.strGoogleMapUrl] = this.googleMapUrl;
-    data[parameters.strPhoneNumber1] = this.phoneNumber1;
-    data[parameters.strPhoneNumber2] = this.phoneNumber2;
-    data[parameters.strPhoneNumber3] = this.phoneNumber3;
-    data[parameters.strPhoneNumber4] = this.phoneNumber4;
-    data[parameters.strEmail] = this.email;
-    data[parameters.strState] = this.state;
-    data[parameters.strCity] = this.city;
-    data[parameters.strIsActive] = this.isActive;
-    data[parameters.strSpecilization] = this.specialization;
-    data[parameters.strIsUserDefined] = this.isUserDefined;
-    data[parameters.strDescription] = this.description;
-    data[parameters.strCreatedBy] = this.createdBy;
-    data[parameters.strLastModifiedOn] = this.lastModifiedOn;
-    data[parameters.strFirstName] = this.firstName;
-    data[parameters.strLastName] = this.lastName;
+    final data = <String, dynamic>{};
+    data[parameters.strId] = id;
+    data[parameters.strName] = name;
+    data[parameters.strAddressLine1] = addressLine1;
+    data[parameters.strAddressLine2] = addressLine2;
+    data[parameters.strWebsite] = website;
+    data[parameters.strGoogleMapUrl] = googleMapUrl;
+    data[parameters.strPhoneNumber1] = phoneNumber1;
+    data[parameters.strPhoneNumber2] = phoneNumber2;
+    data[parameters.strPhoneNumber3] = phoneNumber3;
+    data[parameters.strPhoneNumber4] = phoneNumber4;
+    data[parameters.strEmail] = email;
+    data[parameters.strState] = state;
+    data[parameters.strCity] = city;
+    data[parameters.strIsActive] = isActive;
+    data[parameters.strSpecilization] = specialization;
+    data[parameters.strIsUserDefined] = isUserDefined;
+    data[parameters.strDescription] = description;
+    data[parameters.strCreatedBy] = createdBy;
+    data[parameters.strLastModifiedOn] = lastModifiedOn;
+    data[parameters.strFirstName] = firstName;
+    data[parameters.strLastName] = lastName;
     return data;
   }
 }

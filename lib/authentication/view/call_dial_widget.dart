@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:myfhb/src/ui/MyRecord.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/widgets/RaisedGradientButton.dart';
+import '../../src/ui/MyRecord.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
+import '../../widgets/RaisedGradientButton.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CallDialWidget extends StatelessWidget {
@@ -22,10 +22,15 @@ class CallDialWidget extends StatelessWidget {
       ),
       child: RaisedGradientButton(
         gradient: LinearGradient(colors: [
-          Color(new CommonUtil().getMyPrimaryColor()),
-          Color(new CommonUtil().getMyGredientColor()),
+          Color(CommonUtil().getMyPrimaryColor()),
+          Color(CommonUtil().getMyGredientColor()),
         ]),
         width: 220.0.w,
+        onPressed: () async {
+          if (await canLaunch('tel:$phoneNumber')) {
+            await launch('tel:$phoneNumber');
+          }
+        },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -46,11 +51,6 @@ class CallDialWidget extends StatelessWidget {
             ),
           ],
         ),
-        onPressed: () async {
-          if (await canLaunch('tel:$phoneNumber')) {
-            await launch('tel:$phoneNumber');
-          }
-        },
       ),
     );
   }

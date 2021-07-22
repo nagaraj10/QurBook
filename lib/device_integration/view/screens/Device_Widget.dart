@@ -1,42 +1,56 @@
 // ignore: file_names
 import 'dart:io';
-
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/common/errors_widget.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/fhb_parameters.dart';
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/constants/variable_constant.dart';
-import 'package:myfhb/device_integration/model/LastMeasureSync.dart';
-import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
-import 'package:myfhb/device_integration/view/screens/Device_Value.dart';
-import 'package:myfhb/device_integration/viewModel/Device_model.dart';
-import 'package:myfhb/device_integration/viewModel/deviceDataHelper.dart';
-import 'package:myfhb/devices/device_dashboard_arguments.dart';
-import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
-import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
-import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
-import 'package:myfhb/src/model/common_response.dart';
-import 'package:myfhb/src/model/user/MyProfileModel.dart';
-import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
-import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
-import 'package:myfhb/src/ui/bot/common/botutils.dart';
-import 'package:myfhb/src/ui/user/UserAccounts.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import '../../../add_family_user_info/services/add_family_user_info_repository.dart';
+import '../../../common/CommonUtil.dart';
+import '../../../common/PreferenceUtil.dart';
+import '../../../common/SwitchProfile.dart';
+import '../../../constants/fhb_constants.dart';
+import '../../../constants/fhb_parameters.dart';
+import '../../../common/errors_widget.dart';
+import '../../../constants/variable_constant.dart';
+import 'Clipper.dart';
+import '../../viewModel/deviceDataHelper.dart';
+import '../../../devices/device_dashboard_arguments.dart';
+import '../../../myPlan/view/myPlanList.dart';
+import '../../../my_family/bloc/FamilyListBloc.dart';
+import '../../../my_family/screens/MyFamily.dart';
+import '../../../plan_dashboard/view/categoryList.dart';
+import '../../../plan_dashboard/view/planList.dart';
+import '../../../plan_dashboard/view/planUserProviderList.dart';
+import '../../../regiment/view/regiment_tab.dart';
+import '../../../src/model/GetDeviceSelectionModel.dart';
+import '../../../src/model/common_response.dart';
+import '../../../src/model/user/MyProfileModel.dart';
+import '../../../src/model/user/user_accounts_arguments.dart';
+import '../../../src/resources/repository/health/HealthReportListForUserRepository.dart';
+import '../../../src/ui/HomeScreen.dart';
+import '../../../src/ui/user/UserAccounts.dart';
+import '../../../src/utils/FHBUtils.dart';
 import 'package:provider/provider.dart';
+import '../../../src/ui/bot/common/botutils.dart';
+import '../../../regiment/view_model/regiment_view_model.dart';
+
+import '../../../constants/variable_constant.dart' as variable;
+import '../../../constants/fhb_parameters.dart' as parameters;
+
+import 'Device_Data.dart';
+import 'Device_Value.dart';
+
+import '../../viewModel/Device_model.dart';
+
+import '../../model/LastMeasureSync.dart';
+import '../../../constants/fhb_constants.dart' as Constants;
+import '../../../constants/router_variable.dart' as router;
+import '../../../src/utils/screenutils/size_extensions.dart';
+import '../../../authentication/view/login_screen.dart';
 
 class ShowDevicesNew extends StatefulWidget {
-  ShowDevicesNew({
+  const ShowDevicesNew({
     this.fromPlans = false,
   });
 
@@ -120,24 +134,24 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       HealthReportListForUserRepository();
   GetDeviceSelectionModel selectionResult;
 
-  final GlobalKey<State> _key = new GlobalKey<State>();
+  final GlobalKey<State> _key = GlobalKey<State>();
 
-  FlutterToast toast = new FlutterToast();
+  FlutterToast toast = FlutterToast();
   FamilyListBloc _familyListBloc;
 
-  AddFamilyUserInfoRepository _addFamilyUserInfoRepository =
-      new AddFamilyUserInfoRepository();
+  final AddFamilyUserInfoRepository _addFamilyUserInfoRepository =
+      AddFamilyUserInfoRepository();
 
-  final double circleRadius = 38.0;
-  final double circleBorderWidth = 0.0;
+  final double circleRadius = 38;
+  final double circleBorderWidth = 0;
 
-  DeviceDataHelper _deviceDataHelper = DeviceDataHelper();
+  final DeviceDataHelper _deviceDataHelper = DeviceDataHelper();
 
   @override
   void initState() {
     FocusManager.instance.primaryFocus.unfocus();
     mInitialTime = DateTime.now();
-    _familyListBloc = new FamilyListBloc();
+    _familyListBloc = FamilyListBloc();
     getFamilyLength();
     // Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
     //   isInitial: true,
@@ -160,8 +174,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
   }
 
   getFamilyLength() async {
-    FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-    final token = await _firebaseMessaging.getToken();
+    var _firebaseMessaging = FirebaseMessaging.instance;
+    var token = await _firebaseMessaging.getToken();
     print('------------FCM--------------------$token');
 
     _familyListBloc.getFamilyMembersListNew().then((familyMembersList) {
@@ -182,7 +196,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
   }
 
   navigateToAddFamily() {
-    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
       return UserAccounts(arguments: UserAccountsArguments(selectedIndex: 1));
     })).then((value) {
       getFamilyLength();
@@ -191,7 +205,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
   }
 
   Future<MyProfileModel> getMyProfile() async {
-    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     if (userId != null && userId.isNotEmpty) {
       await addFamilyUserInfoRepository
           .getMyProfileInfoNew(userId)
@@ -205,7 +219,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
   }
 
   void moveToLoginPage() {
-    new CommonUtil().moveToLoginPage();
+    CommonUtil().moveToLoginPage();
   }
 
   Future<GetDeviceSelectionModel> getDeviceSelectionValues() async {
@@ -242,11 +256,11 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           if (selectionResult.result[0].profileSetting != null) {
             if (selectionResult.result[0].profileSetting.preferred_language !=
                 null) {
-              String preferredLanguage =
+              final preferredLanguage =
                   selectionResult.result[0].profileSetting.preferred_language;
-              String currentLanguage = '';
-              if (preferredLanguage != "undef") {
-                currentLanguage = preferredLanguage.split("-").first;
+              var currentLanguage = '';
+              if (preferredLanguage != 'undef') {
+                currentLanguage = preferredLanguage.split('-').first;
               } else {
                 currentLanguage = 'en';
               }
@@ -264,26 +278,22 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
             } else {
               PreferenceUtil.saveTheme(
                   Constants.keyPriColor,
-                  PreferenceUtil.getSavedTheme(Constants.keyPriColor) != null
-                      ? PreferenceUtil.getSavedTheme(Constants.keyPriColor)
-                      : 0xff5f0cf9);
+                  PreferenceUtil.getSavedTheme(Constants.keyPriColor) ??
+                      0xff5f0cf9);
               PreferenceUtil.saveTheme(
                   Constants.keyGreyColor,
-                  PreferenceUtil.getSavedTheme(Constants.keyGreyColor) != null
-                      ? PreferenceUtil.getSavedTheme(Constants.keyGreyColor)
-                      : 0xff9929ea);
+                  PreferenceUtil.getSavedTheme(Constants.keyGreyColor) ??
+                      0xff9929ea);
             }
           } else {
             PreferenceUtil.saveTheme(
                 Constants.keyPriColor,
-                PreferenceUtil.getSavedTheme(Constants.keyPriColor) != null
-                    ? PreferenceUtil.getSavedTheme(Constants.keyPriColor)
-                    : 0xff5f0cf9);
+                PreferenceUtil.getSavedTheme(Constants.keyPriColor) ??
+                    0xff5f0cf9);
             PreferenceUtil.saveTheme(
                 Constants.keyGreyColor,
-                PreferenceUtil.getSavedTheme(Constants.keyGreyColor) != null
-                    ? PreferenceUtil.getSavedTheme(Constants.keyGreyColor)
-                    : 0xff9929ea);
+                PreferenceUtil.getSavedTheme(Constants.keyGreyColor) ??
+                    0xff9929ea);
           }
         } else {
           bpMonitor = true;
@@ -306,7 +316,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
   Widget getDeviceVisibleValues(BuildContext context) {
     return FutureBuilder<GetDeviceSelectionModel>(
       future: getDeviceSelectionValues(),
-      builder: (BuildContext context, snapshot) {
+      builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return SafeArea(
             child: SizedBox(
@@ -377,17 +387,17 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
   }
 
   Widget getValuesFromSharedPrefernce(BuildContext context) {
-    return new FutureBuilder<MyProfileModel>(
+    return FutureBuilder<MyProfileModel>(
       future: getMyProfile(),
-      builder: (BuildContext context, snapshot) {
+      builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return SafeArea(
             child: SizedBox(
               height: 1.sh / 1.3,
-              child: new Center(
-                child: new CircularProgressIndicator(
+              child: Center(
+                child: CircularProgressIndicator(
                   backgroundColor: Color(
-                    new CommonUtil().getMyPrimaryColor(),
+                    CommonUtil().getMyPrimaryColor(),
                   ),
                 ),
               ),
@@ -403,7 +413,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
   }
 
   Widget showProfileImageNew() {
-    String userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     return FutureBuilder<CommonResponse>(
       future: _addFamilyUserInfoRepository.getUserProfilePic(userId),
       builder: (context, snapshot) {
@@ -430,7 +440,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                         : ''
                     : '',
                 style: TextStyle(
-                  color: Color(new CommonUtil().getMyPrimaryColor()),
+                  color: Color(CommonUtil().getMyPrimaryColor()),
                   fontSize: 16.0.sp,
                   fontWeight: FontWeight.w200,
                 ),
@@ -444,7 +454,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
               width: 20.0.h,
               child: CircularProgressIndicator(
                 strokeWidth: 1.0.sp,
-                backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
+                backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
               ),
             ),
           );
@@ -459,7 +469,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                       : ''
                   : '',
               style: TextStyle(
-                color: Color(new CommonUtil().getMyPrimaryColor()),
+                color: Color(CommonUtil().getMyPrimaryColor()),
                 fontSize: 16.0.sp,
                 fontWeight: FontWeight.w200,
               ),
@@ -470,12 +480,13 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
     );
   }
 
+  @override
   Widget build(BuildContext context) {
     return getDeviceVisibleValues(context);
   }
 
   Widget getBody(BuildContext context) {
-    DevicesViewModel _devicesmodel = Provider.of<DevicesViewModel>(context);
+    var _devicesmodel = Provider.of<DevicesViewModel>(context);
     return LayoutBuilder(builder: (context, constraints) {
       return Container(
         height: constraints.maxHeight,
@@ -484,7 +495,6 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           initialIndex:
               Provider.of<RegimentViewModel>(context, listen: false).tabIndex,
           child: Column(
-            mainAxisSize: MainAxisSize.max,
             children: [
               Expanded(
                 child: SingleChildScrollView(
@@ -520,10 +530,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           } else {
             return SizedBox(
               height: 1.sh / 1.3,
-              child: new Center(
-                child: new CircularProgressIndicator(
+              child: Center(
+                child: CircularProgressIndicator(
                   backgroundColor: Color(
-                    new CommonUtil().getMyPrimaryColor(),
+                    CommonUtil().getMyPrimaryColor(),
                   ),
                 ),
               ),
@@ -533,13 +543,13 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
   }
 
   Widget projectWidget(BuildContext context) {
-    FocusScopeNode currentFocus = FocusScope.of(context);
+    final currentFocus = FocusScope.of(context);
     if (!currentFocus.hasPrimaryFocus) {
       currentFocus.unfocus();
     }
     if (deviceValues.toString() == null) {
-      return new Center(
-        child: new CircularProgressIndicator(
+      return Center(
+        child: CircularProgressIndicator(
           backgroundColor: Colors.grey,
         ),
       );
@@ -552,9 +562,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
 
       //deviceValues.bloodPressure.entities[0].lastsyncdatetime;
       dateForBp =
-          "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForBp)}";
+          '${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForBp)}';
       timeForBp =
-          "${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStampForBp)}";
+          '${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStampForBp)}';
 
       devicevalue1ForBp =
           deviceValues.bloodPressure.entities[0].systolic.toString();
@@ -643,10 +653,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           .bloodGlucose.entities[0].deviceHealthRecord?.createdOn
           .toLocal();
 
-      dateForGulcose =
-          "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForGulcose)}";
-      timeForGulcose =
-          "${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStampForGulcose)}";
+      dateForGulcose = DateFormat(parameters.strDateYMD, variable.strenUs)
+          .format(dateTimeStampForGulcose);
+      timeForGulcose = DateFormat(parameters.strTimeHM, variable.strenUs)
+          .format(dateTimeStampForGulcose);
       devicevalue1ForGulcose =
           deviceValues.bloodGlucose.entities[0].bloodGlucoseLevel.toString();
 
@@ -699,10 +709,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           .oxygenSaturation.entities[0].deviceHealthRecord?.createdOn
           .toLocal();
 
-      dateForOs =
-          "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForOs)}";
-      timeForOs =
-          "${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStampForOs)}";
+      dateForOs = DateFormat(parameters.strDateYMD, variable.strenUs)
+          .format(dateTimeStampForOs);
+      timeForOs = DateFormat(parameters.strTimeHM, variable.strenUs)
+          .format(dateTimeStampForOs);
       devicevalue1ForOs =
           deviceValues.oxygenSaturation.entities[0].oxygenSaturation.toString();
       if (deviceValues.oxygenSaturation.entities[0].deviceHealthRecord !=
@@ -798,10 +808,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           .bodyTemperature.entities[0].deviceHealthRecord?.createdOn
           .toLocal();
 
-      dateForTemp =
-          "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForTemp)}";
-      timeForTemp =
-          "${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStampForTemp)}";
+      dateForTemp = DateFormat(parameters.strDateYMD, variable.strenUs)
+          .format(dateTimeStampForTemp);
+      timeForTemp = DateFormat(parameters.strTimeHM, variable.strenUs)
+          .format(dateTimeStampForTemp);
       devicevalue1ForTemp =
           deviceValues.bodyTemperature.entities[0].temperature.toString();
 
@@ -834,9 +844,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           .toLocal();
 
       dateForWeight =
-          "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForWeight)}";
+          '${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForWeight)}';
       timeForWeight =
-          "${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStampForWeight)}";
+          '${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStampForWeight)}';
       devicevalue1ForWeight =
           deviceValues.bodyWeight.entities[0].weight.toString();
 
@@ -895,7 +905,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
   }
 
   Widget _getUserName() {
-    var resultWidget = null;
+    var resultWidget;
     resultWidget = AnimatedSwitcher(
       duration: Duration(milliseconds: 10),
       child: Row(
@@ -989,7 +999,6 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       color: Colors.grey[200],
       child: Column(
         mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           // Container(
           //   height: 1.sw * 0.18,
@@ -1151,7 +1160,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                 child: Container(
                   // height: 170.0.h,
                   decoration: BoxDecoration(
-                    borderRadius: new BorderRadius.only(
+                    borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(
                         12.0.sp,
                       ),
@@ -1431,16 +1440,16 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                 ),
                               ),
                               Column(
-                                mainAxisSize: MainAxisSize.max,
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  sourceForBp != '' && sourceForBp != null
-                                      ? TypeIcon(
-                                          sourceForBp,
-                                          hexToColor('#059192'),
-                                        )
-                                      : SizedBox(),
+                                  if (sourceForBp != '' && sourceForBp != null)
+                                    TypeIcon(
+                                      sourceForBp,
+                                      hexToColor('#059192'),
+                                    )
+                                  else
+                                    SizedBox(),
                                   /*MaterialButton(
                                     height: 25.0.h,
                                     minWidth: 45.0.w,
@@ -1484,8 +1493,6 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
               Container(
                 child: Wrap(
                   crossAxisAlignment: WrapCrossAlignment.start,
-                  runAlignment: WrapAlignment.start,
-                  verticalDirection: VerticalDirection.down,
                   spacing: 8,
                   runSpacing: 10,
                   children: [
@@ -1517,7 +1524,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                             width: 190.0.w,
                             // height: Responsive.width(46, context),
                             decoration: BoxDecoration(
-                              borderRadius: new BorderRadius.only(
+                              borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(
                                     12.0.sp,
                                   ),
@@ -1579,11 +1586,12 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                   ],
                                                 ),
                                               ),
-                                              sourceForGluco != null &&
-                                                      sourceForGluco != ''
-                                                  ? TypeIcon(sourceForGluco,
-                                                      hexToColor('#b70a80'))
-                                                  : SizedBox()
+                                              if (sourceForGluco != null &&
+                                                  sourceForGluco != '')
+                                                TypeIcon(sourceForGluco,
+                                                    hexToColor('#b70a80'))
+                                              else
+                                                SizedBox()
                                             ],
                                           ),
                                           Row(
@@ -1648,8 +1656,6 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                 ),
                                               ),
                                               Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
                                                 children: [
                                                   Container(
                                                     child: getMealType(),
@@ -1907,7 +1913,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                             width: 190.0.w,
                             // height: Responsive.width(46, context),
                             decoration: BoxDecoration(
-                              borderRadius: new BorderRadius.only(
+                              borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(
                                   12.0.sp,
                                 ),
@@ -1968,11 +1974,12 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                   ],
                                                 ),
                                               ),
-                                              sourceForThermo != '' &&
-                                                      sourceForThermo != null
-                                                  ? TypeIcon(sourceForThermo,
-                                                      hexToColor('#d95523'))
-                                                  : SizedBox()
+                                              if (sourceForThermo != '' &&
+                                                  sourceForThermo != null)
+                                                TypeIcon(sourceForThermo,
+                                                    hexToColor('#d95523'))
+                                              else
+                                                SizedBox()
                                             ],
                                           ),
                                           Row(
@@ -2039,8 +2046,6 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                 ),
                                               ),
                                               Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
                                                 children: [
                                                   Container(
                                                     child: Text(
@@ -2301,13 +2306,14 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                   ],
                                                 ),
                                               ),
-                                              sourceForPulse != '' &&
-                                                      sourceForPulse != null
-                                                  ? TypeIcon(
-                                                      sourceForPulse,
-                                                      hexToColor('#8600bd'),
-                                                    )
-                                                  : SizedBox()
+                                              if (sourceForPulse != '' &&
+                                                  sourceForPulse != null)
+                                                TypeIcon(
+                                                  sourceForPulse,
+                                                  hexToColor('#8600bd'),
+                                                )
+                                              else
+                                                SizedBox()
                                             ],
                                           ),
                                           Row(
@@ -2369,8 +2375,6 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                 ),
                                               ),
                                               Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
                                                 children: [
                                                   Container(
                                                     child: Text(
@@ -2405,8 +2409,6 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                 width: 5.0.w,
                                               ),
                                               Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
                                                 children: [
                                                   Container(
                                                     child: Text(
@@ -2600,7 +2602,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                             width: 190.0.w,
                             // height: Responsive.width(46, context),
                             decoration: BoxDecoration(
-                              borderRadius: new BorderRadius.only(
+                              borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(
                                   12.0.sp,
                                 ),
@@ -2663,11 +2665,12 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                   ],
                                                 ),
                                               ),
-                                              sourceForWeigh != '' &&
-                                                      sourceForWeigh != null
-                                                  ? TypeIcon(sourceForWeigh,
-                                                      hexToColor('#1abadd'))
-                                                  : SizedBox()
+                                              if (sourceForWeigh != '' &&
+                                                  sourceForWeigh != null)
+                                                TypeIcon(sourceForWeigh,
+                                                    hexToColor('#1abadd'))
+                                              else
+                                                SizedBox()
                                             ],
                                           ),
                                           Row(
@@ -2734,8 +2737,6 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                 ),
                                               ),
                                               Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
                                                 children: [
                                                   Container(
                                                     child: Text(
@@ -2915,16 +2916,16 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                   onPressed: () {
                     toast.getToast('More devices coming soon!', Colors.red);
                   },
-                  color: Color(new CommonUtil().getMyPrimaryColor()),
+                  color: Color(CommonUtil().getMyPrimaryColor()),
                   textColor: Colors.white,
-                  child: Icon(
-                    Icons.add,
-                    size: 16.0.sp,
-                  ),
                   padding: EdgeInsets.all(
                     2.0.sp,
                   ),
                   shape: CircleBorder(),
+                  child: Icon(
+                    Icons.add,
+                    size: 16.0.sp,
+                  ),
                 ),
               ),
             ],
@@ -2966,13 +2967,13 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
         navigateToAddFamily();
       },
       color: Colors.white,
-      textColor: Color(new CommonUtil().getMyPrimaryColor()),
+      textColor: Color(CommonUtil().getMyPrimaryColor()),
+      padding: EdgeInsets.all(2),
+      shape: CircleBorder(),
       child: Icon(
         Icons.add,
         size: 16,
       ),
-      padding: EdgeInsets.all(2),
-      shape: CircleBorder(),
     );
   }
 }

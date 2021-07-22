@@ -7,18 +7,18 @@ class MyPlanDetailModel {
   MyPlanDetailModel.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['result'] != null) {
-      result = new List<MyPlanDetailResult>();
+      result = List<MyPlanDetailResult>();
       json['result'].forEach((v) {
-        result.add(new MyPlanDetailResult.fromJson(v));
+        result.add(MyPlanDetailResult.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['isSuccess'] = this.isSuccess;
-    if (this.result != null) {
-      data['result'] = this.result.map((v) => v.toJson()).toList();
+    final data = <String, dynamic>{};
+    data['isSuccess'] = isSuccess;
+    if (result != null) {
+      data['result'] = result.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -152,47 +152,47 @@ class MyPlanDetailResult {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['planid'] = this.planid;
-    data['packageid'] = this.packageid;
-    data['packagetitle'] = this.packagetitle;
-    data['tplanid'] = this.tplanid;
-    data['startdate'] = this.startdate;
-    data['planstemplate_title'] = this.planstemplateTitle;
-    data['planstemplate_description'] = this.planstemplateDescription;
-    data['specid'] = this.specid;
-    data['speciality_title'] = this.specialityTitle;
-    data['plancatid'] = this.plancatid;
-    data['plancategories_title'] = this.plancategoriesTitle;
-    data['deptid'] = this.deptid;
-    data['departments_title'] = this.departmentsTitle;
-    data['cid'] = this.cid;
-    data['conditions_title'] = this.conditionsTitle;
-    data['sid'] = this.sid;
-    data['steps_title'] = this.stepsTitle;
-    data['plans_duration'] = this.plansDuration;
-    data['teid_user'] = this.teidUser;
-    data['teid'] = this.teid;
-    data['title'] = this.title;
-    data['description'] = this.description;
-    data['duration'] = this.duration;
-    data['aid'] = this.aid;
-    data['pformid'] = this.pformid;
-    data['pformdata'] = this.pformdata;
-    data['uformid'] = this.uformid;
-    data['doserepeat'] = this.doserepeat;
-    data['mealtype'] = this.mealtype;
-    data['befafttime'] = this.befafttime;
-    data['daystart'] = this.daystart;
-    data['dayrepeat'] = this.dayrepeat;
-    data['weekrepeat'] = this.weekrepeat;
-    data['remindin'] = this.remindin;
-    data['remindin_type'] = this.remindinType;
-    data['ev_duration'] = this.evDuration;
-    data['providerid'] = this.providerid;
-    data['providername'] = this.providername;
-    data['titletext'] = this.titletext;
-    data['repeattext'] = this.repeattext;
+    final data = <String, dynamic>{};
+    data['planid'] = planid;
+    data['packageid'] = packageid;
+    data['packagetitle'] = packagetitle;
+    data['tplanid'] = tplanid;
+    data['startdate'] = startdate;
+    data['planstemplate_title'] = planstemplateTitle;
+    data['planstemplate_description'] = planstemplateDescription;
+    data['specid'] = specid;
+    data['speciality_title'] = specialityTitle;
+    data['plancatid'] = plancatid;
+    data['plancategories_title'] = plancategoriesTitle;
+    data['deptid'] = deptid;
+    data['departments_title'] = departmentsTitle;
+    data['cid'] = cid;
+    data['conditions_title'] = conditionsTitle;
+    data['sid'] = sid;
+    data['steps_title'] = stepsTitle;
+    data['plans_duration'] = plansDuration;
+    data['teid_user'] = teidUser;
+    data['teid'] = teid;
+    data['title'] = title;
+    data['description'] = description;
+    data['duration'] = duration;
+    data['aid'] = aid;
+    data['pformid'] = pformid;
+    data['pformdata'] = pformdata;
+    data['uformid'] = uformid;
+    data['doserepeat'] = doserepeat;
+    data['mealtype'] = mealtype;
+    data['befafttime'] = befafttime;
+    data['daystart'] = daystart;
+    data['dayrepeat'] = dayrepeat;
+    data['weekrepeat'] = weekrepeat;
+    data['remindin'] = remindin;
+    data['remindin_type'] = remindinType;
+    data['ev_duration'] = evDuration;
+    data['providerid'] = providerid;
+    data['providername'] = providername;
+    data['titletext'] = titletext;
+    data['repeattext'] = repeattext;
     return data;
   }
 }

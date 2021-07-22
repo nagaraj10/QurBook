@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/common/CommonUtil.dart';
+import '../src/utils/screenutils/size_extensions.dart';
+import '../constants/fhb_constants.dart';
+import '../constants/variable_constant.dart' as variable;
+import 'CommonUtil.dart';
 
 class ErrorsWidget extends StatelessWidget {
   @override

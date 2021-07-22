@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/common/CommonUtil.dart';
+import '../../../src/utils/screenutils/size_extensions.dart';
+import '../../../common/CommonUtil.dart';
 import 'package:flutter/services.dart';
-import 'package:myfhb/regiment/models/regiment_data_model.dart';
-import 'package:myfhb/regiment/models/field_response_model.dart';
+import '../../models/regiment_data_model.dart';
+import '../../models/field_response_model.dart';
 
 class FormDataTextField extends StatelessWidget {
-  FormDataTextField({
+  const FormDataTextField({
     @required this.fieldData,
     this.isNumberOnly = false,
     @required this.updateValue,
@@ -49,7 +49,7 @@ class FormDataTextField extends StatelessWidget {
             ),
           ),
           onChanged: (value) {
-            FieldModel updatedFieldData = fieldData;
+            final updatedFieldData = fieldData;
             updatedFieldData.value = value;
             updateValue(updatedFieldData);
           },

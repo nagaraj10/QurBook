@@ -1,4 +1,4 @@
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import '../../../constants/fhb_parameters.dart' as parameters;
 
 class State {
   String id;
@@ -29,14 +29,14 @@ class State {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[parameters.strId] = this.id;
-    data[parameters.strName] = this.name;
-    data[parameters.strCountryCode] = this.countryCode;
-    data[parameters.strIsActive] = this.isActive;
-    data[parameters.strCreatedOn] = this.createdOn;
-    data[parameters.strLastModifiedOn] = this.lastModifiedOn;
-    data[parameters.strlastModifiedBy] = this.lastModifiedBy;
+    final data = Map<String, dynamic>();
+    data[parameters.strId] = id;
+    data[parameters.strName] = name;
+    data[parameters.strCountryCode] = countryCode;
+    data[parameters.strIsActive] = isActive;
+    data[parameters.strCreatedOn] = createdOn;
+    data[parameters.strLastModifiedOn] = lastModifiedOn;
+    data[parameters.strlastModifiedBy] = lastModifiedBy;
     return data;
   }
 }

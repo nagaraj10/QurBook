@@ -1,4 +1,4 @@
-import 'package:myfhb/authentication/constants/constants.dart';
+import '../constants/constants.dart';
 
 class PatientForgotPasswordModel {
   String userName;
@@ -17,11 +17,11 @@ class PatientForgotPasswordModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[struserName] = this.userName;
-    data[strsource] = this.source;
-    data[strmessage] = this.message;
-    data[strIsSuccess] = this.isSuccess;
+    final data = Map<String, dynamic>();
+    data[struserName] = userName;
+    data[strsource] = source;
+    data[strmessage] = message;
+    data[strIsSuccess] = isSuccess;
     return data;
   }
 }

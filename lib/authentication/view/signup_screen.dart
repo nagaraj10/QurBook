@@ -5,22 +5,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'package:myfhb/authentication/model/patientsignup_model.dart';
-import 'package:myfhb/authentication/constants/constants.dart';
-import 'package:myfhb/authentication/view/authentication_validator.dart';
-import 'package:myfhb/authentication/view/login_screen.dart';
-import 'package:myfhb/authentication/view/verifypatient_screen.dart';
-import 'package:myfhb/authentication/view_model/patientauth_view_model.dart';
-import 'package:myfhb/authentication/model/patientsignup_model.dart'
-    as signuplModel;
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/authentication/widgets/country_code_picker.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/constants/variable_constant.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/src/ui/loader_class.dart';
+import '../model/patientsignup_model.dart';
+import '../constants/constants.dart';
+import 'authentication_validator.dart';
+import 'login_screen.dart';
+import 'verifypatient_screen.dart';
+import '../view_model/patientauth_view_model.dart';
+import '../model/patientsignup_model.dart' as signuplModel;
+import '../../constants/fhb_constants.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
+import '../widgets/country_code_picker.dart';
+import '../../common/CommonUtil.dart';
+import '../../constants/variable_constant.dart';
+import '../../constants/fhb_constants.dart' as Constants;
+import '../../constants/variable_constant.dart' as variable;
+import '../../src/ui/loader_class.dart';
 
 class PatientSignUpScreen extends StatefulWidget {
   @override
@@ -35,8 +34,8 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
   final passwordController = TextEditingController();
   var isLoading = false;
   bool _autoValidateBool = false;
-  FlutterToast toast = new FlutterToast();
-  var _SignupKey = GlobalKey<FormState>();
+  FlutterToast toast = FlutterToast();
+  final _SignupKey = GlobalKey<FormState>();
   List<UserContactCollection3> userCollection;
   AuthViewModel authViewModel;
   var checkedValue = true;
@@ -50,8 +49,8 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
     mInitialTime = DateTime.now();
     super.initState();
 
-    authViewModel = new AuthViewModel();
-    userCollection = new List();
+    authViewModel = AuthViewModel();
+    userCollection = List();
   }
 
   @override
@@ -67,7 +66,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final height = 1.sh;
+    var height = 1.sh;
     return Scaffold(
       body: Form(
         key: _SignupKey,
@@ -85,7 +84,6 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                   padding: EdgeInsets.symmetric(horizontal: 20),
                   child: SingleChildScrollView(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         SizedBox(height: height * .1),
@@ -111,13 +109,13 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                   hintText: strFirstNameHint,
                                   labelText: strFirstNameHint,
                                   focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
+                                      borderRadius: BorderRadius.circular(10),
                                       borderSide: BorderSide(
                                         color: Color(
                                             CommonUtil().getMyPrimaryColor()),
                                       )),
                                   border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderRadius: BorderRadius.circular(10),
                                     borderSide: BorderSide(
                                       color: Color(
                                           CommonUtil().getMyPrimaryColor()),
@@ -148,13 +146,13 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                   hintText: strLastNameHint,
                                   labelText: strLastNameHint,
                                   focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
+                                      borderRadius: BorderRadius.circular(10),
                                       borderSide: BorderSide(
                                         color: Color(
                                             CommonUtil().getMyPrimaryColor()),
                                       )),
                                   border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderRadius: BorderRadius.circular(10),
                                     borderSide: BorderSide(
                                       color: Color(
                                           CommonUtil().getMyPrimaryColor()),
@@ -184,21 +182,20 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                     constraints: BoxConstraints(
                                         maxWidth: 100.0.w, minWidth: 50.0.w),
                                     child: CountryCodePickerPage(
-                                        onValuePicked: (Country country) =>
-                                            setState(() =>
-                                                _selectedDialogCountry =
-                                                    country),
+                                        onValuePicked: (country) => setState(
+                                            () => _selectedDialogCountry =
+                                                country),
                                         selectedDialogCountry:
                                             _selectedDialogCountry),
                                   ),
                                   focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
+                                      borderRadius: BorderRadius.circular(10),
                                       borderSide: BorderSide(
                                         color: Color(
                                             CommonUtil().getMyPrimaryColor()),
                                       )),
                                   border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderRadius: BorderRadius.circular(10),
                                     borderSide: BorderSide(
                                       color: Color(
                                           CommonUtil().getMyPrimaryColor()),
@@ -226,13 +223,13 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                   hintText: strEmailHintText,
                                   labelText: strEmailHint,
                                   focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
+                                      borderRadius: BorderRadius.circular(10),
                                       borderSide: BorderSide(
                                         color: Color(
                                             CommonUtil().getMyPrimaryColor()),
                                       )),
                                   border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderRadius: BorderRadius.circular(10),
                                     borderSide: BorderSide(
                                       color: Color(
                                           CommonUtil().getMyPrimaryColor()),
@@ -270,14 +267,14 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                     ),
                                   ),
                                   focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
+                                      borderRadius: BorderRadius.circular(10),
                                       borderSide: BorderSide(
                                         color: Color(
                                             CommonUtil().getMyPrimaryColor()),
                                       )),
                                   errorMaxLines: 2,
                                   border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderRadius: BorderRadius.circular(10),
                                     borderSide: BorderSide(
                                       color: Color(
                                           CommonUtil().getMyPrimaryColor()),
@@ -354,15 +351,12 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                       blurRadius: 5,
                       spreadRadius: 2)
                 ],
-                gradient: LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                    colors: [
+                gradient: LinearGradient(begin: Alignment.centerLeft, colors: [
 //                  Color(0xff138fcf),
 //                  Color(0xff138fcf),
-                      Color(new CommonUtil().getMyPrimaryColor()),
-                      Color(new CommonUtil().getMyGredientColor())
-                    ])),
+                  Color(CommonUtil().getMyPrimaryColor()),
+                  Color(CommonUtil().getMyGredientColor())
+                ])),
             child: Text(
               strSignup,
               style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
@@ -376,29 +370,28 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
   _savePatientDetails() async {
     FocusScope.of(context).unfocus();
     userCollection.clear();
-    userCollection = new List();
+    userCollection = List();
     if (_SignupKey.currentState.validate() && checkedValue) {
       _SignupKey.currentState.save();
       LoaderClass.showLoadingDialog(context);
-      UserContactCollection3 user3 = UserContactCollection3();
+      var user3 = UserContactCollection3();
       user3.phoneNumber =
-          '${strPlusSymbol}${_selectedDialogCountry.phoneCode}${mobileNoController.text.trim()}';
+          '$strPlusSymbol${_selectedDialogCountry.phoneCode}${mobileNoController.text.trim()}';
       user3.email = emailController.text.trim();
       user3.isPrimary = true;
       userCollection.add(user3);
-      PatientSignUp patientSignUp = PatientSignUp();
+      var patientSignUp = PatientSignUp();
       patientSignUp.firstName = firstNameController.text.trim();
       patientSignUp.lastName = lastNamController.text.trim();
       patientSignUp.source = strSource;
       patientSignUp.password = passwordController.text;
-      Map<String, dynamic> postMediaData = new Map();
+      final postMediaData = Map<String, dynamic>();
       postMediaData[strfirstName] = firstNameController.text.trim();
       postMediaData[strlastName] = lastNamController.text.trim();
       postMediaData[strsource] = strSource;
       postMediaData[strpassword] = passwordController.text.trim();
       postMediaData[struserContactCollection3] = userCollection.toList();
-      signuplModel.PatientSignUp response =
-          await authViewModel.registerPatient(postMediaData);
+      final response = await authViewModel.registerPatient(postMediaData);
       print(response.toString());
       _checkResponse(response);
     } else {
@@ -417,7 +410,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
           MaterialPageRoute(
               builder: (context) => VerifyPatient(
                     PhoneNumber:
-                        '${strPlusSymbol}${_selectedDialogCountry.phoneCode}${mobileNoController.text.trim()}',
+                        '$strPlusSymbol${_selectedDialogCountry.phoneCode}${mobileNoController.text.trim()}',
                     from: strFromSignUp,
                     userConfirm: false,
                     emailId: emailController.text.trim(),
@@ -485,29 +478,29 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
               Text('By signing up, I agree with Qurhealth\'s ',
                   style: TextStyle(color: Colors.black)),
               InkWell(
+                onTap: () {
+                  CommonUtil().openWebViewNew(
+                      Constants.terms_of_service, variable.file_terms, true);
+                },
                 child: Text(
                   'T&C',
                   style: TextStyle(
                     color: Color(CommonUtil().getMyPrimaryColor()),
                   ),
                 ),
-                onTap: () {
-                  CommonUtil().openWebViewNew(
-                      Constants.terms_of_service, variable.file_terms, true);
-                },
               ),
               Text(' and '),
               InkWell(
+                onTap: () {
+                  CommonUtil().openWebViewNew(
+                      Constants.privacy_policy, variable.file_privacy, true);
+                },
                 child: Text(
                   'Privacy Policy ',
                   style: TextStyle(
                     color: Color(CommonUtil().getMyPrimaryColor()),
                   ),
                 ),
-                onTap: () {
-                  CommonUtil().openWebViewNew(
-                      Constants.privacy_policy, variable.file_privacy, true);
-                },
               ),
             ],
           ),

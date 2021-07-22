@@ -1,5 +1,5 @@
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
+import '../../../../common/CommonUtil.dart';
+import 'health_record_collection.dart';
 
 class HealthRecordList {
   bool isSuccess;
@@ -10,18 +10,18 @@ class HealthRecordList {
   HealthRecordList.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['result'] != null) {
-      result = new List<HealthResult>();
+      result = <HealthResult>[];
       json['result'].forEach((v) {
-        result.add(new HealthResult.fromJson(v));
+        result.add(HealthResult.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['isSuccess'] = this.isSuccess;
-    if (this.result != null) {
-      data['result'] = this.result.map((v) => v.toJson()).toList();
+    final data = Map<String, dynamic>();
+    data['isSuccess'] = isSuccess;
+    if (result != null) {
+      data['result'] = result.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -66,7 +66,7 @@ class HealthResult {
     healthRecordTypeId = json['healthRecordTypeId'];
     healthRecordTypeName = json['healthRecordTypeName'];
     metadata = json['metadata'] != null
-        ? new Metadata.fromJson(json['metadata'])
+        ? Metadata.fromJson(json['metadata'])
         : null;
     userId = json['userId'];
     isBookmarked = json['isBookmarked'];
@@ -76,9 +76,9 @@ class HealthResult {
     isCompleted = json['isCompleted'];
     doctorId = json['doctorId'];
     if (json['healthRecordCollection'] != null) {
-      healthRecordCollection = new List<HealthRecordCollection>();
+      healthRecordCollection = <HealthRecordCollection>[];
       json['healthRecordCollection'].forEach((v) {
-        healthRecordCollection.add(new HealthRecordCollection.fromJson(v));
+        healthRecordCollection.add(HealthRecordCollection.fromJson(v));
       });
     }
     createdOn = json['createdOn'];
@@ -92,25 +92,25 @@ class HealthResult {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['healthRecordTypeId'] = this.healthRecordTypeId;
-    data['healthRecordTypeName'] = this.healthRecordTypeName;
-    if (this.metadata != null) {
-      data['metadata'] = this.metadata.toJson();
+    final data = Map<String, dynamic>();
+    data['id'] = id;
+    data['healthRecordTypeId'] = healthRecordTypeId;
+    data['healthRecordTypeName'] = healthRecordTypeName;
+    if (metadata != null) {
+      data['metadata'] = metadata.toJson();
     }
-    data['userId'] = this.userId;
-    data['isBookmarked'] = this.isBookmarked;
-    data['isDraft'] = this.isDraft;
-    data['isVisible'] = this.isVisible;
-    data['isActive'] = this.isActive;
-    data['isCompleted'] = this.isCompleted;
-    data['doctorId'] = this.doctorId;
-    if (this.healthRecordCollection != null) {
+    data['userId'] = userId;
+    data['isBookmarked'] = isBookmarked;
+    data['isDraft'] = isDraft;
+    data['isVisible'] = isVisible;
+    data['isActive'] = isActive;
+    data['isCompleted'] = isCompleted;
+    data['doctorId'] = doctorId;
+    if (healthRecordCollection != null) {
       data['healthRecordCollection'] =
-          this.healthRecordCollection.map((v) => v.toJson()).toList();
+          healthRecordCollection.map((v) => v.toJson()).toList();
     }
-    data['createdOn'] = this.createdOn;
+    data['createdOn'] = createdOn;
     return data;
   }
 }
@@ -149,10 +149,10 @@ class Metadata {
 
   Metadata.fromJson(Map<String, dynamic> json) {
     healthRecordCategory = json['healthRecordCategory'] != null
-        ? new HealthRecordCategory.fromJson(json['healthRecordCategory'])
+        ? HealthRecordCategory.fromJson(json['healthRecordCategory'])
         : null;
     healthRecordType = json['healthRecordType'] != null
-        ? new HealthRecordType.fromJson(json['healthRecordType'])
+        ? HealthRecordType.fromJson(json['healthRecordType'])
         : null;
     memoText = json['memoText'];
     hasVoiceNotes = json['hasVoiceNotes'];
@@ -170,24 +170,24 @@ class Metadata {
     try {
       if (json.containsKey('deviceReadings')) {
         if (json['deviceReadings'] != null) {
-          deviceReadings = new List<DeviceReadings>();
+          deviceReadings = <DeviceReadings>[];
           json['deviceReadings'].forEach((v) {
-            deviceReadings.add(new DeviceReadings.fromJson(v));
+            deviceReadings.add(DeviceReadings.fromJson(v));
           });
         }
       }
       if (json.containsKey('doctor')) {
         doctor =
-            json['doctor'] != null ? new Doctor.fromJson(json['doctor']) : null;
+            json['doctor'] != null ? Doctor.fromJson(json['doctor']) : null;
       }
       if (json.containsKey('hospital')) {
         hospital = json['hospital'] != null
-            ? new Hospital.fromJson(json['hospital'])
+            ? Hospital.fromJson(json['hospital'])
             : null;
       }
       if (json.containsKey('laboratory')) {
         laboratory = json['laboratory'] != null
-            ? new Laboratory.fromJson(json['laboratory'])
+            ? Laboratory.fromJson(json['laboratory'])
             : null;
       }
     } catch (e) {
@@ -196,35 +196,35 @@ class Metadata {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.healthRecordCategory != null) {
-      data['healthRecordCategory'] = this.healthRecordCategory.toJson();
+    final data = Map<String, dynamic>();
+    if (healthRecordCategory != null) {
+      data['healthRecordCategory'] = healthRecordCategory.toJson();
     }
-    if (this.healthRecordType != null) {
-      data['healthRecordType'] = this.healthRecordType.toJson();
+    if (healthRecordType != null) {
+      data['healthRecordType'] = healthRecordType.toJson();
     }
-    data['memoText'] = this.memoText;
-    data['hasVoiceNotes'] = this.hasVoiceNotes;
-    data['dateOfVisit'] = this.dateOfVisit;
-    data['isDraft'] = this.isDraft;
-    data['sourceName'] = this.sourceName;
-    data['memoTextRaw'] = this.memoTextRaw;
-    data['startDateTime'] = this.startDateTime;
-    data['endDateTime'] = this.endDateTime;
+    data['memoText'] = memoText;
+    data['hasVoiceNotes'] = hasVoiceNotes;
+    data['dateOfVisit'] = dateOfVisit;
+    data['isDraft'] = isDraft;
+    data['sourceName'] = sourceName;
+    data['memoTextRaw'] = memoTextRaw;
+    data['startDateTime'] = startDateTime;
+    data['endDateTime'] = endDateTime;
 
-    if (this.doctor != null) {
-      data['doctor'] = this.doctor.toJson();
+    if (doctor != null) {
+      data['doctor'] = doctor.toJson();
     }
-    if (this.hospital != null) {
-      data['hospital'] = this.hospital.toJson();
+    if (hospital != null) {
+      data['hospital'] = hospital.toJson();
     }
-    data['fileName'] = this.fileName;
-    if (this.laboratory != null) {
-      data['laboratory'] = this.laboratory.toJson();
+    data['fileName'] = fileName;
+    if (laboratory != null) {
+      data['laboratory'] = laboratory.toJson();
     }
-    if (this.deviceReadings != null) {
+    if (deviceReadings != null) {
       data['deviceReadings'] =
-          this.deviceReadings.map((v) => v.toJson()).toList();
+          deviceReadings.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -262,15 +262,15 @@ class HealthRecordCategory {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['categoryName'] = this.categoryName;
-    data['categoryDescription'] = this.categoryDescription;
-    data['logo'] = this.logo;
-    data['isDisplay'] = this.isDisplay;
-    data['isActive'] = this.isActive;
-    data['createdOn'] = this.createdOn;
-    data['lastModifiedOn'] = this.lastModifiedOn;
+    final data = Map<String, dynamic>();
+    data['id'] = id;
+    data['categoryName'] = categoryName;
+    data['categoryDescription'] = categoryDescription;
+    data['logo'] = logo;
+    data['isDisplay'] = isDisplay;
+    data['isActive'] = isActive;
+    data['createdOn'] = createdOn;
+    data['lastModifiedOn'] = lastModifiedOn;
     return data;
   }
 }
@@ -310,16 +310,16 @@ class HealthRecordType {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['description'] = this.description;
-    data['logo'] = this.logo;
-    data['isDisplay'] = this.isDisplay;
-    data['isAiTranscription'] = this.isAiTranscription;
-    data['isActive'] = this.isActive;
-    data['createdOn'] = this.createdOn;
-    data['lastModifiedOn'] = this.lastModifiedOn;
+    final data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['description'] = description;
+    data['logo'] = logo;
+    data['isDisplay'] = isDisplay;
+    data['isAiTranscription'] = isAiTranscription;
+    data['isActive'] = isActive;
+    data['createdOn'] = createdOn;
+    data['lastModifiedOn'] = lastModifiedOn;
     return data;
   }
 }
@@ -368,19 +368,19 @@ class Doctor {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['doctorId'] = this.doctorId;
-    data['userId'] = this.userId;
-    data['name'] = this.name;
-    data['firstName'] = this.firstName;
-    data['lastName'] = this.lastName;
-    data['specialization'] = this.specialization;
-    data['doctorReferenceId'] = this.doctorReferenceId;
-    data['addressLine1'] = this.addressLine1;
-    data['addressLine2'] = this.addressLine2;
-    data['profilePicThumbnailUrl'] = this.profilePicThumbnailUrl;
-    data['isTelehealthEnabled'] = this.isTelehealthEnabled;
-    data['isMciVerified'] = this.isMciVerified;
+    final data = Map<String, dynamic>();
+    data['doctorId'] = doctorId;
+    data['userId'] = userId;
+    data['name'] = name;
+    data['firstName'] = firstName;
+    data['lastName'] = lastName;
+    data['specialization'] = specialization;
+    data['doctorReferenceId'] = doctorReferenceId;
+    data['addressLine1'] = addressLine1;
+    data['addressLine2'] = addressLine2;
+    data['profilePicThumbnailUrl'] = profilePicThumbnailUrl;
+    data['isTelehealthEnabled'] = isTelehealthEnabled;
+    data['isMciVerified'] = isMciVerified;
     return data;
   }
 }
@@ -432,20 +432,20 @@ class Hospital {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['healthOrganizationReferenceId'] = this.healthOrganizationReferenceId;
-    data['healthOrganizationName'] = this.healthOrganizationName;
-    data['addressLine1'] = this.addressLine1;
-    data['addressLine2'] = this.addressLine2;
-    data['cityName'] = this.cityName;
-    data['stateName'] = this.stateName;
-    data['pincode'] = this.pincode;
-    data['healthOrganizationId'] = this.healthOrganizationId;
-    data['healthOrganizationTypeId'] = this.healthOrganizationTypeId;
-    data['healthOrganizationTypeName'] = this.healthOrganizationTypeName;
-    data['phoneNumber'] = this.phoneNumber;
-    data['phoneNumberTypeId'] = this.phoneNumberTypeId;
-    data['phoneNumberTypeName'] = this.phoneNumberTypeName;
+    final data = Map<String, dynamic>();
+    data['healthOrganizationReferenceId'] = healthOrganizationReferenceId;
+    data['healthOrganizationName'] = healthOrganizationName;
+    data['addressLine1'] = addressLine1;
+    data['addressLine2'] = addressLine2;
+    data['cityName'] = cityName;
+    data['stateName'] = stateName;
+    data['pincode'] = pincode;
+    data['healthOrganizationId'] = healthOrganizationId;
+    data['healthOrganizationTypeId'] = healthOrganizationTypeId;
+    data['healthOrganizationTypeName'] = healthOrganizationTypeName;
+    data['phoneNumber'] = phoneNumber;
+    data['phoneNumberTypeId'] = phoneNumberTypeId;
+    data['phoneNumberTypeName'] = phoneNumberTypeName;
     return data;
   }
 }
@@ -497,20 +497,20 @@ class Laboratory {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['healthOrganizationId'] = this.healthOrganizationId;
-    data['healthOrganizationName'] = this.healthOrganizationName;
-    data['healthOrganizationTypeId'] = this.healthOrganizationTypeId;
-    data['healthOrganizationTypeName'] = this.healthOrganizationTypeName;
-    data['addressLine1'] = this.addressLine1;
-    data['addressLine2'] = this.addressLine2;
-    data['pincode'] = this.pincode;
-    data['cityName'] = this.cityName;
-    data['stateName'] = this.stateName;
-    data['phoneNumber'] = this.phoneNumber;
-    data['phoneNumberTypeId'] = this.phoneNumberTypeId;
-    data['phoneNumberTypeName'] = this.phoneNumberTypeName;
-    data['healthOrganizationReferenceId'] = this.healthOrganizationReferenceId;
+    final data = <String, dynamic>{};
+    data['healthOrganizationId'] = healthOrganizationId;
+    data['healthOrganizationName'] = healthOrganizationName;
+    data['healthOrganizationTypeId'] = healthOrganizationTypeId;
+    data['healthOrganizationTypeName'] = healthOrganizationTypeName;
+    data['addressLine1'] = addressLine1;
+    data['addressLine2'] = addressLine2;
+    data['pincode'] = pincode;
+    data['cityName'] = cityName;
+    data['stateName'] = stateName;
+    data['phoneNumber'] = phoneNumber;
+    data['phoneNumberTypeId'] = phoneNumberTypeId;
+    data['phoneNumberTypeName'] = phoneNumberTypeName;
+    data['healthOrganizationReferenceId'] = healthOrganizationReferenceId;
     return data;
   }
 }
@@ -529,10 +529,10 @@ class DeviceReadings {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['parameter'] = this.parameter;
-    data['value'] = this.value;
-    data['unit'] = this.unit;
+    final data = <String, dynamic>{};
+    data['parameter'] = parameter;
+    data['value'] = value;
+    data['unit'] = unit;
     return data;
   }
 }

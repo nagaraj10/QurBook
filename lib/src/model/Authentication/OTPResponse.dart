@@ -1,4 +1,4 @@
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import '../../../constants/fhb_parameters.dart' as parameters;
 
 class OTPResponse {
   int status;
@@ -13,17 +13,17 @@ class OTPResponse {
     success = json[parameters.strSuccess];
     message = json[parameters.strMessage];
     response = json[parameters.strResponse] != null
-        ? new Response.fromJson(json[parameters.strResponse])
+        ? Response.fromJson(json[parameters.strResponse])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[parameters.strStatus] = this.status;
-    data[parameters.strSuccess] = this.success;
-    data[parameters.strMessage] = this.message;
-    if (this.response != null) {
-      data[parameters.strResponse] = this.response.toJson();
+    final data = Map<String, dynamic>();
+    data[parameters.strStatus] = status;
+    data[parameters.strSuccess] = success;
+    data[parameters.strMessage] = message;
+    if (response != null) {
+      data[parameters.strResponse] = response.toJson();
     }
     return data;
   }
@@ -52,12 +52,12 @@ class Response {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[parameters.strId] = this.id;
-    data[parameters.strCountryCode] = this.countryCode;
-    data[parameters.strPhoneNumber] = this.phoneNumber;
-    data[parameters.strLastLoggedIn] = this.lastLoggedIn;
-    data[parameters.strAuthToken] = this.authToken;
+    final data = Map<String, dynamic>();
+    data[parameters.strId] = id;
+    data[parameters.strCountryCode] = countryCode;
+    data[parameters.strPhoneNumber] = phoneNumber;
+    data[parameters.strLastLoggedIn] = lastLoggedIn;
+    data[parameters.strAuthToken] = authToken;
     return data;
   }
 }

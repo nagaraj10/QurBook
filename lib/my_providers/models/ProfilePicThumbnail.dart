@@ -1,4 +1,4 @@
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import '../../constants/fhb_parameters.dart' as parameters;
 
 class ProfilePicThumbnail {
   String type;
@@ -12,8 +12,8 @@ class ProfilePicThumbnail {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[parameters.strtype] = this.type;
+    final data = Map<String, dynamic>();
+    data[parameters.strtype] = type;
     data[parameters.strData] = this.data;
     return data;
   }

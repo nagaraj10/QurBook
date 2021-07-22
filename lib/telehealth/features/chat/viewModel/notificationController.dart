@@ -4,9 +4,10 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
+import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'dart:math';
 
@@ -24,17 +25,19 @@ import 'dart:math';
 }*/
 
 class NotificationController {
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-  final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
 
   static NotificationController get instance => NotificationController();
 
   final String _firebaseChatNotifyToken = CommonUtil.FIREBASE_CHAT_NOTIFY_TOKEN;
 
-  Future<void> sendNotificationMessageToPeerUser(messageType,textFromTextField,myName,chatID,peerUserToken) async {
-    FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  Future<void> sendNotificationMessageToPeerUser(
+      messageType, textFromTextField, myName, chatID, peerUserToken) async {
+    FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
     var meetingId = getMyMeetingID().toString();
-    await http.post(
+    await ApiServices.post(
       'https://fcm.googleapis.com/fcm/send',
       headers: <String, String>{
         'Content-Type': 'application/json',
@@ -53,7 +56,7 @@ class NotificationController {
             'click_action': 'FLUTTER_NOTIFICATION_CLICK',
             'id': '1',
             'status': 'done',
-            "sound" : Platform.isIOS?'ringtone.aiff':'default',
+            "sound": Platform.isIOS ? 'ringtone.aiff' : 'default',
             'chatroomid': chatID,
             'meeting_id': meetingId,
             'type': 'ack',
@@ -65,11 +68,11 @@ class NotificationController {
     );
 
     final Completer<Map<String, dynamic>> completer =
-    Completer<Map<String, dynamic>>();
+        Completer<Map<String, dynamic>>();
 
-    _firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        completer.complete(message);
+    FirebaseMessaging.onMessage.listen(
+      (RemoteMessage message) {
+        completer.complete(message.data);
       },
     );
   }
@@ -82,5 +85,4 @@ class NotificationController {
 
     return rNum;
   }
-
 }

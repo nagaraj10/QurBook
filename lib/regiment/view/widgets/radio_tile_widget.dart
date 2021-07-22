@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/common/CommonUtil.dart';
+import '../../../src/utils/screenutils/size_extensions.dart';
+import '../../../common/CommonUtil.dart';
 
 class RadioTileWidget extends StatelessWidget {
-  RadioTileWidget({
+  const RadioTileWidget({
     @required this.title,
     @required this.value,
     @required this.radioGroupValue,

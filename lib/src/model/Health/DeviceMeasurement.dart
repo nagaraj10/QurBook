@@ -1,5 +1,5 @@
-import 'package:myfhb/src/model/Health/DeviceMesurementsData.dart';
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'DeviceMesurementsData.dart';
+import '../../../constants/fhb_parameters.dart' as parameters;
 
 
 class DeviceMeasurements {
@@ -9,9 +9,9 @@ class DeviceMeasurements {
 
   DeviceMeasurements.fromJson(Map<String, dynamic> json) {
     if (json != null) {
-      data = new List<DeviceMeasurementsData>();
+      data = List<DeviceMeasurementsData>();
       json[parameters.strData].forEach((v) {
-        data.add(new DeviceMeasurementsData.fromJson(v));
+        data.add(DeviceMeasurementsData.fromJson(v));
       });
     }
   }

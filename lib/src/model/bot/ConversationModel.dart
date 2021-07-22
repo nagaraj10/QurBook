@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/src/model/bot/button_model.dart';
-import 'package:myfhb/src/model/bot/video_links.dart';
+import '../../../constants/fhb_parameters.dart' as parameters;
+import 'button_model.dart';
+import 'video_links.dart';
 
 class Conversation {
   bool isMayaSaid;
@@ -44,16 +44,16 @@ class Conversation {
     langCode = json[parameters.strLanguage];
     provider_msg = json[parameters.strProviderMsg];
     if (json[parameters.strButtons] != null) {
-      buttons = new List<Buttons>();
+      buttons = <Buttons>[];
       json[parameters.strButtons].forEach((v) {
-        buttons.add(new Buttons.fromJson(v));
+        buttons.add(Buttons.fromJson(v));
       });
     }
     searchURL = json[parameters.strSearchUrl];
     if (json[parameters.strVideoLinks] != null) {
-      videoLinks = new List<VideoLinks>();
+      videoLinks = <VideoLinks>[];
       json[parameters.strVideoLinks].forEach((v) {
-        videoLinks.add(new VideoLinks.fromJson(v));
+        videoLinks.add(VideoLinks.fromJson(v));
       });
     }
     screen = json[parameters.strScreen];
@@ -73,15 +73,15 @@ class Conversation {
     data[parameters.strProviderMsg] = this.provider_msg;
     if (this.buttons != null) {
       data[parameters.strButtons] =
-          this.buttons.map((v) => v.toJson()).toList();
+          buttons.map((v) => v.toJson()).toList();
     }
-    data[parameters.strSearchUrl] = this.searchURL;
-    if (this.videoLinks != null) {
+    data[parameters.strSearchUrl] = searchURL;
+    if (videoLinks != null) {
       data[parameters.strVideoLinks] =
-          this.videoLinks.map((v) => v.toJson()).toList();
+          videoLinks.map((v) => v.toJson()).toList();
     }
-    data[parameters.strScreen] = this.screen;
-    data[parameters.strRedirect] = this.redirect;
+    data[parameters.strScreen] = screen;
+    data[parameters.strRedirect] = redirect;
     return data;
   }
 }

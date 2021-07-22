@@ -1,5 +1,5 @@
-import 'package:myfhb/src/model/user/ProfilePicThumbnail.dart';
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import '../../src/model/user/ProfilePicThumbnail.dart';
+import '../../constants/fhb_parameters.dart' as parameters;
 
 
 class FamilyMemberData {
@@ -57,7 +57,7 @@ class FamilyMemberData {
     isVirtualUser = json[parameters.strisVirtualUser];
     createdBy = json[parameters.strCreatedBy];
     profilePicThumbnail = json[parameters.strprofilePicThumbnail] != null
-        ? new ProfilePicThumbnailMain.fromJson(json[parameters.strprofilePicThumbnail])
+        ? ProfilePicThumbnailMain.fromJson(json[parameters.strprofilePicThumbnail])
         : null;
     bloodGroup = json[parameters.strbloodGroup];
     dateOfBirth = json[parameters.strdateOfBirth];
@@ -71,27 +71,27 @@ class FamilyMemberData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[parameters.strId] = this.id;
-    data[parameters.strPhoneNumber] = this.phoneNumber;
-    data[parameters.strEmail] = this.email;
-    data[parameters.strCreatedOn] = this.createdOn;
-    data[parameters.strIsActive] = this.isActive;
-    data[parameters.strLastModifiedOn] = this.lastModifiedOn;
-    data[parameters.strName] = this.name;
-    data[parameters.strGender] = this.gender;
-    data[parameters.strIstemper] = this.isTempUser;
-    data[parameters.strisVirtualUser] = this.isVirtualUser;
-    data[parameters.strCreatedBy] = this.createdBy;
-    if (this.profilePicThumbnail != null) {
-      data[parameters.strprofilePicThumbnail] = this.profilePicThumbnail.toJson();
+    final data = Map<String, dynamic>();
+    data[parameters.strId] = id;
+    data[parameters.strPhoneNumber] = phoneNumber;
+    data[parameters.strEmail] = email;
+    data[parameters.strCreatedOn] = createdOn;
+    data[parameters.strIsActive] = isActive;
+    data[parameters.strLastModifiedOn] = lastModifiedOn;
+    data[parameters.strName] = name;
+    data[parameters.strGender] = gender;
+    data[parameters.strIstemper] = isTempUser;
+    data[parameters.strisVirtualUser] = isVirtualUser;
+    data[parameters.strCreatedBy] = createdBy;
+    if (profilePicThumbnail != null) {
+      data[parameters.strprofilePicThumbnail] = profilePicThumbnail.toJson();
     }
-    data[parameters.strbloodGroup] = this.bloodGroup;
-    data[parameters.strdateOfBirth] = this.dateOfBirth;
-    data[parameters.strisTokenRefresh] = this.isTokenRefresh;
-    data[parameters.strCountryCode] = this.countryCode;
-    data[parameters.strisEmailVerified] = this.isEmailVerified;
-    data[parameters.strStatus] = this.status;
+    data[parameters.strbloodGroup] = bloodGroup;
+    data[parameters.strdateOfBirth] = dateOfBirth;
+    data[parameters.strisTokenRefresh] = isTokenRefresh;
+    data[parameters.strCountryCode] = countryCode;
+    data[parameters.strisEmailVerified] = isEmailVerified;
+    data[parameters.strStatus] = status;
     /*if (this.qualifiedFullName != null) {
       data[parameters.strqualifiedFullName] = this.qualifiedFullName.toJson();
     }*/

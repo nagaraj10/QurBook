@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:myfhb/regiment/models/regiment_data_model.dart';
-import 'package:myfhb/regiment/models/field_response_model.dart';
-import 'package:myfhb/regiment/models/field_response_model.dart';
+import '../../models/regiment_data_model.dart';
+import '../../models/field_response_model.dart';
+import '../../models/field_response_model.dart';
 import 'form_data_text_field.dart';
 import 'form_data_checkbox.dart';
 import 'form_data_drop_down.dart';

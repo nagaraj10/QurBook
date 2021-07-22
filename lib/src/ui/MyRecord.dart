@@ -53,7 +53,7 @@ import 'package:myfhb/telehealth/features/Notifications/view/notification_main.d
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'package:showcaseview/showcase_widget.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 import '../../constants/fhb_constants.dart';
 
@@ -1529,7 +1529,7 @@ class _CustomTabsState extends State<CustomTabView>
 //    }
     var status = await Permission.camera.status;
 
-    if (status.isUndetermined || status.isDenied) {
+    if (status.isDenied) {
       await _handleCameraAndMic();
     } else {
       saveCategoryToPrefernce();

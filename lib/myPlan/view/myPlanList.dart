@@ -3,24 +3,24 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/FHBBasicWidget.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/common/errors_widget.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/router_variable.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/myPlan/model/myPlanListModel.dart';
-import 'package:myfhb/myPlan/view/myPlanDetail.dart';
-import 'package:myfhb/myPlan/viewModel/myPlanViewModel.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
-import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
+import '../../common/CommonUtil.dart';
+import '../../common/FHBBasicWidget.dart';
+import '../../common/PreferenceUtil.dart';
+import '../../common/errors_widget.dart';
+import '../../constants/fhb_constants.dart';
+import '../../constants/fhb_constants.dart' as Constants;
+import '../../constants/router_variable.dart';
+import '../../constants/variable_constant.dart' as variable;
+import '../model/myPlanListModel.dart';
+import 'myPlanDetail.dart';
+import '../viewModel/myPlanViewModel.dart';
+import '../../regiment/view_model/regiment_view_model.dart';
+import '../../src/utils/colors_utils.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
+import '../../telehealth/features/SearchWidget/view/SearchWidget.dart';
 import 'package:provider/provider.dart';
-import 'package:showcaseview/showcase_widget.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 class MyPlanList extends StatefulWidget {
   MyPlanList({
@@ -35,9 +35,9 @@ class MyPlanList extends StatefulWidget {
 
 class _MyPlanState extends State<MyPlanList> {
   MyPlanListModel myPlanListModel;
-  MyPlanViewModel myPlanViewModel = new MyPlanViewModel();
+  MyPlanViewModel myPlanViewModel = MyPlanViewModel();
   bool isSearch = false;
-  List<MyPlanListResult> myPLanListResult = List();
+  List<MyPlanListResult> myPLanListResult = [];
   final GlobalKey _GotoRegimentKey = GlobalKey();
   final GlobalKey _PlanCardKey = GlobalKey();
   bool isFirst;
@@ -88,8 +88,8 @@ class _MyPlanState extends State<MyPlanList> {
               // await Get.toNamed(rt_Diseases);
               await Get.toNamed(rt_PlanWizard);
             },
-            elevation: 2.0,
-            backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
+            elevation: 2,
+            backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
             child: Icon(
               Icons.add,
               color: Colors.white,
@@ -141,7 +141,7 @@ class _MyPlanState extends State<MyPlanList> {
   onSearchedNew(String doctorName) async {
     myPLanListResult.clear();
     if (doctorName != null) {
-      myPLanListResult = await myPlanViewModel.getProviderSearch(doctorName);
+      myPLanListResult = myPlanViewModel.getProviderSearch(doctorName);
     }
     setState(() {});
   }
@@ -159,9 +159,9 @@ class _MyPlanState extends State<MyPlanList> {
               Constants.GoToRegimentDescription,
               FlatButton(
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18.0),
+                  borderRadius: BorderRadius.circular(18),
                 ),
-                color: Color(new CommonUtil().getMyPrimaryColor()),
+                color: Color(CommonUtil().getMyPrimaryColor()),
                 textColor: Colors.white,
                 padding: EdgeInsets.all(
                   10.0.sp,
@@ -179,7 +179,7 @@ class _MyPlanState extends State<MyPlanList> {
                     context,
                     listen: false,
                   ).regimentFilter = RegimentFilter.Scheduled;
-                  Get.toNamed(rt_Regimen);
+                  await Get.toNamed(rt_Regimen);
                 },
                 child: TextWidget(
                   text: goToRegimen,
@@ -193,13 +193,13 @@ class _MyPlanState extends State<MyPlanList> {
   }
 
   Widget hospitalList(List<MyPlanListResult> planList) {
-    return (planList != null && planList.length > 0)
+    return (planList != null && planList.isNotEmpty)
         ? ListView.builder(
             shrinkWrap: true,
             padding: EdgeInsets.only(
               bottom: 8.0.h,
             ),
-            itemBuilder: (BuildContext ctx, int i) {
+            itemBuilder: (ctx, i) {
               return i != 0
                   ? myPlanListItem(
                       ctx, i, isSearch ? myPLanListResult : planList)
@@ -224,20 +224,19 @@ class _MyPlanState extends State<MyPlanList> {
   }
 
   Widget getPlanList() {
-    return new FutureBuilder<MyPlanListModel>(
+    return FutureBuilder<MyPlanListModel>(
       future: myPlanViewModel.getMyPlanList(),
-      builder: (BuildContext context, snapshot) {
+      builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return SafeArea(
             child: SizedBox(
               height: 1.sh / 4.5,
-              child: new Center(
+              child: Center(
                 child: SizedBox(
                   width: 30.0.h,
                   height: 30.0.h,
-                  child: new CircularProgressIndicator(
-                      backgroundColor:
-                          Color(new CommonUtil().getMyPrimaryColor())),
+                  child: CircularProgressIndicator(
+                      backgroundColor: Color(CommonUtil().getMyPrimaryColor())),
                 ),
               ),
             ),
@@ -247,7 +246,7 @@ class _MyPlanState extends State<MyPlanList> {
         } else {
           if (snapshot?.hasData &&
               snapshot?.data?.result != null &&
-              snapshot?.data?.result?.length > 0) {
+              snapshot?.data?.result.isNotEmpty) {
             return hospitalList(snapshot.data.result);
           } else {
             return SafeArea(
@@ -294,7 +293,7 @@ class _MyPlanState extends State<MyPlanList> {
         });
       },
       child: Container(
-          padding: EdgeInsets.all(4.0),
+          padding: EdgeInsets.all(4),
           margin: EdgeInsets.only(left: 12, right: 12, top: 8),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -303,16 +302,15 @@ class _MyPlanState extends State<MyPlanList> {
               BoxShadow(
                 color: const Color(0xFFe3e2e2),
                 blurRadius: 16, // has the effect of softening the shadow
-                spreadRadius: 5.0, // has the effect of extending the shadow
+                spreadRadius: 5, // has the effect of extending the shadow
                 offset: Offset(
-                  0.0, // horizontal, move right 10
-                  0.0, // vertical, move down 10
+                  0, // horizontal, move right 10
+                  0, // vertical, move down 10
                 ),
               )
             ],
           ),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Row(
                 children: [
@@ -373,7 +371,7 @@ class _MyPlanState extends State<MyPlanList> {
                                       fontWeight: FontWeight.w400),
                                 ),
                                 Text(
-                                  new CommonUtil().dateFormatConversion(
+                                  CommonUtil().dateFormatConversion(
                                       planList[i].startdate),
                                   maxLines: 1,
                                   style: TextStyle(
@@ -392,28 +390,26 @@ class _MyPlanState extends State<MyPlanList> {
                       Column(
                         children: [
                           Align(
-                            alignment: Alignment.center,
                             child: SizedBoxWithChild(
                               height: 32.0.h,
                               child: FlatButton(
                                 shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(18.0),
+                                    borderRadius: BorderRadius.circular(18),
                                     side: BorderSide(
                                         color: planList[i].isexpired == '1'
-                                            ? Color(new CommonUtil()
+                                            ? Color(CommonUtil()
                                                 .getMyPrimaryColor())
                                             : Colors.red)),
                                 color: Colors.transparent,
                                 textColor: planList[i].isexpired == '1'
-                                    ? Color(
-                                        new CommonUtil().getMyPrimaryColor())
+                                    ? Color(CommonUtil().getMyPrimaryColor())
                                     : Colors.red,
                                 padding: EdgeInsets.all(
                                   8.0.sp,
                                 ),
                                 onPressed: () async {
                                   if (planList[i].isexpired == '1') {
-                                    CommonUtil().renewAlertDialog(context,
+                                    await CommonUtil().renewAlertDialog(context,
                                         packageId: planList[i]?.packageid,
                                         price: planList[i]?.price,
                                         IsExtendable:
@@ -423,7 +419,8 @@ class _MyPlanState extends State<MyPlanList> {
                                       setState(() {});
                                     });
                                   } else {
-                                    CommonUtil().unSubcribeAlertDialog(context,
+                                    await CommonUtil().unSubcribeAlertDialog(
+                                        context,
                                         packageId: planList[i].packageid,
                                         refresh: () {
                                       setState(() {});
@@ -453,7 +450,7 @@ class _MyPlanState extends State<MyPlanList> {
   }
 
   String getImage(int i, List<MyPlanListResult> planList) {
-    String image = '';
+    var image = '';
     if (planList[i] != null) {
       if (planList[i].metadata != null && planList[i].metadata != '') {
         if (planList[i].metadata.icon != null &&

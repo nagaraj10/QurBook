@@ -1,5 +1,5 @@
-import 'package:myfhb/src/model/Health/DeviceMeasurement.dart';
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'DeviceMeasurement.dart';
+import '../../../constants/fhb_parameters.dart' as parameters;
 
 class Data {
   String mediaMetaId;
@@ -12,14 +12,14 @@ class Data {
     mediaMetaId = json[parameters.strmediaMetaId];
     mediaMasterId = json[parameters.strmediaMasterId];
     deviceMeasurements = json[parameters.strDeviceMeasurements] != null
-        ? new DeviceMeasurements.fromJson(json[parameters.strDeviceMeasurements])
+        ? DeviceMeasurements.fromJson(json[parameters.strDeviceMeasurements])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[parameters.strmediaMetaId] = this.mediaMetaId;
-    data[parameters.strmediaMasterId] = this.mediaMasterId;
+    final data = <String, dynamic>{};
+    data[parameters.strmediaMetaId] = mediaMetaId;
+    data[parameters.strmediaMasterId] = mediaMasterId;
     return data;
   }
 }

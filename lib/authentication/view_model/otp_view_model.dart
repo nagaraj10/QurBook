@@ -1,12 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:myfhb/authentication/service/authservice.dart';
+import '../service/authservice.dart';
 import 'package:get/get.dart';
-import 'package:myfhb/authentication/view/confirm_via_call_widget.dart';
-import 'package:myfhb/src/ui/loader_class.dart';
-import 'package:myfhb/authentication/model/otp_response_model.dart';
-import 'package:myfhb/authentication/model/ivr_number_model.dart';
+import '../view/confirm_via_call_widget.dart';
+import '../../src/ui/loader_class.dart';
+import '../model/otp_response_model.dart';
+import '../model/ivr_number_model.dart';
 
 class OtpViewModel extends ChangeNotifier {
   final AuthService _authService = AuthService();
@@ -24,7 +24,7 @@ class OtpViewModel extends ChangeNotifier {
     timerSeconds = 30;
     _timer = Timer.periodic(
       Duration(seconds: 1),
-      (Timer timer) {
+      (timer) {
         timerSeconds = 30 - timer.tick;
         if (timerSeconds == 0) {
           stopTimer(resetValues: false);
@@ -49,19 +49,19 @@ class OtpViewModel extends ChangeNotifier {
     @required Function(String otpCode) onOtpReceived,
   }) async {
     LoaderClass.showLoadingDialog(Get.context, canDismiss: false);
-    IvrNumberModel ivrNumberslist = await getIVRNumbers();
+    final ivrNumberslist = await getIVRNumbers();
     LoaderClass.hideLoadingDialog(Get.context);
     updateDialogStatus(true);
     if ((ivrNumberslist?.result?.length ?? 0) > 0) {
-      Get.dialog(
+      await Get.dialog(
         ConfirmViaCallWidget(
           ivrNumbersList: ivrNumberslist?.result,
         ),
       );
       _otpTimer = Timer.periodic(
         Duration(seconds: 5),
-        (Timer timer) async {
-          final otpResponse =
+        (timer) async {
+          var otpResponse =
               await getOTPFromCall(phoneNumber?.replaceAll('+', ''));
           if (otpResponse?.isSuccess ?? false) {
             timer?.cancel();
@@ -82,12 +82,12 @@ class OtpViewModel extends ChangeNotifier {
   }
 
   Future<IvrNumberModel> getIVRNumbers() async {
-    var ivrResponse = await _authService.getIVRNumbers();
+    final ivrResponse = await _authService.getIVRNumbers();
     return ivrResponse;
   }
 
   Future<OtpResponseModel> getOTPFromCall(String phoneNumber) async {
-    var otpResponse = await _authService.getOTPFromCall(phoneNumber);
+    final otpResponse = await _authService.getOTPFromCall(phoneNumber);
     return otpResponse;
   }
 }

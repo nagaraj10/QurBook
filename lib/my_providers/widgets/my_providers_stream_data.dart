@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/my_providers/bloc/providers_block.dart';
-import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
-import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
-import 'package:myfhb/src/resources/network/ApiResponse.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import '../../common/CommonUtil.dart';
+import '../../constants/variable_constant.dart' as variable;
+import '../bloc/providers_block.dart';
+import '../models/MyProviderResponseNew.dart';
+import '../models/my_providers_response_list.dart';
+import '../../src/resources/network/ApiResponse.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
 
 import 'my_providers_tab_bar.dart';
 
@@ -19,18 +19,17 @@ class MyProvidersStreamData extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamBuilder<ApiResponse<MyProvidersResponse>>(
       stream: providersBloc.providersListStream,
-      builder:
-          (context, AsyncSnapshot<ApiResponse<MyProvidersResponse>> snapshot) {
+      builder: (context, snapshot) {
         if (snapshot.hasData) {
           switch (snapshot.data.status) {
             case Status.LOADING:
               return Center(
                   child: SizedBox(
+                width: 30.0.h,
+                height: 30.0.h,
                 child: CircularProgressIndicator(
                   backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
                 ),
-                width: 30.0.h,
-                height: 30.0.h,
               ));
               break;
 

@@ -7,14 +7,14 @@ class UpdatePaymentStatusSubscribe {
   UpdatePaymentStatusSubscribe.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     result =
-    json['result'] != null ? new PaymentSubscribeResult.fromJson(json['result']) : null;
+    json['result'] != null ? PaymentSubscribeResult.fromJson(json['result']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['isSuccess'] = this.isSuccess;
-    if (this.result != null) {
-      data['result'] = this.result.toJson();
+    final data = <String, dynamic>{};
+    data['isSuccess'] = isSuccess;
+    if (result != null) {
+      data['result'] = result.toJson();
     }
     return data;
   }
@@ -38,28 +38,28 @@ class PaymentSubscribeResult {
 
   PaymentSubscribeResult.fromJson(Map<String, dynamic> json) {
     planPackage = json['planPackage'] != null
-        ? new PlanPackage.fromJson(json['planPackage'])
+        ? PlanPackage.fromJson(json['planPackage'])
         : null;
     paymentId = json['paymentId'];
     paymentOrderId = json['paymentOrderId'];
     paymentRequestId = json['paymentRequestId'];
     paymentStatus = json['paymentStatus'];
     pdfGenResult = json['pdfGenResult'] != null
-        ? new PdfGenResult.fromJson(json['pdfGenResult'])
+        ? PdfGenResult.fromJson(json['pdfGenResult'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.planPackage != null) {
-      data['planPackage'] = this.planPackage.toJson();
+    final data = Map<String, dynamic>();
+    if (planPackage != null) {
+      data['planPackage'] = planPackage.toJson();
     }
-    data['paymentId'] = this.paymentId;
-    data['paymentOrderId'] = this.paymentOrderId;
-    data['paymentRequestId'] = this.paymentRequestId;
-    data['paymentStatus'] = this.paymentStatus;
-    if (this.pdfGenResult != null) {
-      data['pdfGenResult'] = this.pdfGenResult.toJson();
+    data['paymentId'] = paymentId;
+    data['paymentOrderId'] = paymentOrderId;
+    data['paymentRequestId'] = paymentRequestId;
+    data['paymentStatus'] = paymentStatus;
+    if (pdfGenResult != null) {
+      data['pdfGenResult'] = pdfGenResult.toJson();
     }
     return data;
   }
@@ -118,29 +118,29 @@ class PlanPackage {
     deleted = json['deleted'];
     docid = json['docid'];
     providers = json['providers'] != null
-        ? new Providers.fromJson(json['providers'])
+        ? Providers.fromJson(json['providers'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['packageid'] = this.packageid;
-    data['providerid'] = this.providerid;
-    data['packcatid'] = this.packcatid;
-    data['careteamid'] = this.careteamid;
-    data['title'] = this.title;
-    data['description'] = this.description;
-    data['price'] = this.price;
-    data['issubscription'] = this.issubscription;
-    data['ispublic'] = this.ispublic;
-    data['html'] = this.html;
-    data['packageDuration'] = this.packageDuration;
-    data['billingCycle'] = this.billingCycle;
-    data['ts'] = this.ts;
-    data['deleted'] = this.deleted;
-    data['docid'] = this.docid;
-    if (this.providers != null) {
-      data['providers'] = this.providers.toJson();
+    final data = <String, dynamic>{};
+    data['packageid'] = packageid;
+    data['providerid'] = providerid;
+    data['packcatid'] = packcatid;
+    data['careteamid'] = careteamid;
+    data['title'] = title;
+    data['description'] = description;
+    data['price'] = price;
+    data['issubscription'] = issubscription;
+    data['ispublic'] = ispublic;
+    data['html'] = html;
+    data['packageDuration'] = packageDuration;
+    data['billingCycle'] = billingCycle;
+    data['ts'] = ts;
+    data['deleted'] = deleted;
+    data['docid'] = docid;
+    if (providers != null) {
+      data['providers'] = providers.toJson();
     }
     return data;
   }
@@ -175,14 +175,14 @@ class Providers {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['providerid'] = this.providerid;
-    data['title'] = this.title;
-    data['description'] = this.description;
-    data['metadata'] = this.metadata;
-    data['deleted'] = this.deleted;
-    data['linkid'] = this.linkid;
-    data['ts'] = this.ts;
+    final data = Map<String, dynamic>();
+    data['providerid'] = providerid;
+    data['title'] = title;
+    data['description'] = description;
+    data['metadata'] = metadata;
+    data['deleted'] = deleted;
+    data['linkid'] = linkid;
+    data['ts'] = ts;
     return data;
   }
 }
@@ -196,14 +196,14 @@ class PdfGenResult {
   PdfGenResult.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     payload =
-    json['payload'] != null ? new Payload.fromJson(json['payload']) : null;
+    json['payload'] != null ? Payload.fromJson(json['payload']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['isSuccess'] = this.isSuccess;
-    if (this.payload != null) {
-      data['payload'] = this.payload.toJson();
+    final data = Map<String, dynamic>();
+    data['isSuccess'] = isSuccess;
+    if (payload != null) {
+      data['payload'] = payload.toJson();
     }
     return data;
   }
@@ -223,7 +223,7 @@ class Payload {
 
   Payload.fromJson(Map<String, dynamic> json) {
     responseMetadata = json['ResponseMetadata'] != null
-        ? new ResponseMetadata.fromJson(json['ResponseMetadata'])
+        ? ResponseMetadata.fromJson(json['ResponseMetadata'])
         : null;
     mD5OfMessageBody = json['MD5OfMessageBody'];
     messageId = json['MessageId'];
@@ -231,13 +231,13 @@ class Payload {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.responseMetadata != null) {
-      data['ResponseMetadata'] = this.responseMetadata.toJson();
+    final data = Map<String, dynamic>();
+    if (responseMetadata != null) {
+      data['ResponseMetadata'] = responseMetadata.toJson();
     }
-    data['MD5OfMessageBody'] = this.mD5OfMessageBody;
-    data['MessageId'] = this.messageId;
-    data['SequenceNumber'] = this.sequenceNumber;
+    data['MD5OfMessageBody'] = mD5OfMessageBody;
+    data['MessageId'] = messageId;
+    data['SequenceNumber'] = sequenceNumber;
     return data;
   }
 }
@@ -252,8 +252,8 @@ class ResponseMetadata {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['RequestId'] = this.requestId;
+    final data = <String, dynamic>{};
+    data['RequestId'] = requestId;
     return data;
   }
 }

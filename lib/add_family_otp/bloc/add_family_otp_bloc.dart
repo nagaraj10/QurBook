@@ -1,15 +1,15 @@
 import 'dart:async';
 import 'dart:convert' as convert;
 
-import 'package:myfhb/add_family_otp/models/add_family_otp_response.dart';
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
-import 'package:myfhb/src/resources/network/ApiResponse.dart';
-import 'package:myfhb/src/resources/repository/AuthenticationRepository.dart';
-import 'package:myfhb/src/utils/Validators.dart';
+import '../models/add_family_otp_response.dart';
+import '../../common/CommonConstants.dart';
+import '../../src/blocs/Authentication/LoginBloc.dart';
+import '../../src/resources/network/ApiResponse.dart';
+import '../../src/resources/repository/AuthenticationRepository.dart';
+import '../../src/utils/Validators.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import '../../constants/variable_constant.dart' as variable;
+import '../../constants/fhb_parameters.dart' as parameters;
 
 class AddFamilyOTPBloc with Validators implements BaseBloc {
   AuthenticationRepository _authenticationRepository;
@@ -45,7 +45,7 @@ class AddFamilyOTPBloc with Validators implements BaseBloc {
 
   Future<AddFamilyOTPResponse> verifyAddFamilyOtp(
       String enteredMobNumber, String selectedCountryCode, String otp) async {
-    var verifyOTP = {};
+    final verifyOTP = {};
     //verifyOTP[variable.strSrcName] = CommonConstants.strTrident;
     verifyOTP[variable.strCountryCode] = '+' + selectedCountryCode;
     verifyOTP[variable.strPhoneNumber] = enteredMobNumber;
@@ -55,7 +55,7 @@ class AddFamilyOTPBloc with Validators implements BaseBloc {
     verifyOTP[parameters.strEntityId] =parameters.strEntityIdVal;
     verifyOTP[parameters.strRoleId] = parameters.strRoleIdVal;
 
-    var jsonString = convert.jsonEncode(verifyOTP);
+    final jsonString = convert.jsonEncode(verifyOTP);
 
     otpSink.add(ApiResponse.loading(variable.strVerifyOtp));
     AddFamilyOTPResponse addFamilyOTPResponse;

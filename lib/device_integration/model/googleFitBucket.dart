@@ -1,5 +1,5 @@
-import 'package:myfhb/constants/fhb_parameters.dart';
-import 'package:myfhb/device_integration/model/googleFitDataset.dart';
+import '../../constants/fhb_parameters.dart';
+import 'googleFitDataset.dart';
 
 class Bucket {
   Bucket({

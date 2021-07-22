@@ -30,56 +30,55 @@ class Hospitals {
     createdOn = json['createdOn'];
     lastModifiedOn = json['lastModifiedOn'];
     healthOrganizationType = json['healthOrganizationType'] != null
-        ? new HealthOrganizationTypeNew.fromJson(json['healthOrganizationType'])
+        ? HealthOrganizationTypeNew.fromJson(json['healthOrganizationType'])
         : null;
     if (json['healthOrganizationAddressCollection'] != null) {
       healthOrganizationAddressCollection =
-      new List<HealthOrganizationAddressCollectionNew>();
+      <HealthOrganizationAddressCollectionNew>[];
       json['healthOrganizationAddressCollection'].forEach((v) {
         healthOrganizationAddressCollection
-            .add(new HealthOrganizationAddressCollectionNew.fromJson(v));
+            .add(HealthOrganizationAddressCollectionNew.fromJson(v));
       });
     }
     if (json['healthOrganizationContactCollection'] != null) {
       healthOrganizationContactCollection =
-      new List<HealthOrganizationContactCollectionNew>();
+      <HealthOrganizationContactCollectionNew>[];
       json['healthOrganizationContactCollection'].forEach((v) {
         healthOrganizationContactCollection
-            .add(new HealthOrganizationContactCollectionNew.fromJson(v));
+            .add(HealthOrganizationContactCollectionNew.fromJson(v));
       });
     }
     isDefault = json['isDefault'];
     providerPatientMappingId = json['providerPatientMappingId'];
-    if (json.containsKey("sharedCategories") &&
-        json['sharedCategories'] != null)
+    if (json.containsKey('sharedCategories') &&
+        json['sharedCategories'] != null) {
       sharedCategories = json['sharedCategories'].cast<String>();
+    }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['isActive'] = this.isActive;
-    data['createdOn'] = this.createdOn;
-    data['lastModifiedOn'] = this.lastModifiedOn;
-    if (this.healthOrganizationType != null) {
-      data['healthOrganizationType'] = this.healthOrganizationType.toJson();
+    final data = Map<String, dynamic>();
+    data['id'] = id;
+    data['name'] = name;
+    data['isActive'] = isActive;
+    data['createdOn'] = createdOn;
+    data['lastModifiedOn'] = lastModifiedOn;
+    if (healthOrganizationType != null) {
+      data['healthOrganizationType'] = healthOrganizationType.toJson();
     }
-    if (this.healthOrganizationAddressCollection != null) {
-      data['healthOrganizationAddressCollection'] = this
-          .healthOrganizationAddressCollection
+    if (healthOrganizationAddressCollection != null) {
+      data['healthOrganizationAddressCollection'] = healthOrganizationAddressCollection
           .map((v) => v.toJson())
           .toList();
     }
-    if (this.healthOrganizationContactCollection != null) {
-      data['healthOrganizationContactCollection'] = this
-          .healthOrganizationContactCollection
+    if (healthOrganizationContactCollection != null) {
+      data['healthOrganizationContactCollection'] = healthOrganizationContactCollection
           .map((v) => v.toJson())
           .toList();
     }
-    data['isDefault'] = this.isDefault;
-    data['providerPatientMappingId'] = this.providerPatientMappingId;
-    data['sharedCategories'] = this.sharedCategories;
+    data['isDefault'] = isDefault;
+    data['providerPatientMappingId'] = providerPatientMappingId;
+    data['sharedCategories'] = sharedCategories;
 
     return data;
   }
@@ -120,16 +119,16 @@ class HealthOrganizationTypeNew {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['code'] = this.code;
-    data['name'] = this.name;
-    data['description'] = this.description;
-    data['sortOrder'] = this.sortOrder;
-    data['isActive'] = this.isActive;
-    data['createdBy'] = this.createdBy;
-    data['createdOn'] = this.createdOn;
-    data['lastModifiedOn'] = this.lastModifiedOn;
+    final data = <String, dynamic>{};
+    data['id'] = id;
+    data['code'] = code;
+    data['name'] = name;
+    data['description'] = description;
+    data['sortOrder'] = sortOrder;
+    data['isActive'] = isActive;
+    data['createdBy'] = createdBy;
+    data['createdOn'] = createdOn;
+    data['lastModifiedOn'] = lastModifiedOn;
     return data;
   }
 }
@@ -169,31 +168,31 @@ class HealthOrganizationAddressCollectionNew {
     isActive = json['isActive'];
     createdOn = json['createdOn'];
     lastModifiedOn = json['lastModifiedOn'];
-    city = json['city'] != null ? new CityProviders.fromJson(json['city']) : null;
-    state = json['state'] != null ? new StateProviders.fromJson(json['state']) : null;
+    city = json['city'] != null ? CityProviders.fromJson(json['city']) : null;
+    state = json['state'] != null ? StateProviders.fromJson(json['state']) : null;
     addressType = json['addressType'] != null
-        ? new HealthOrganizationTypeNew.fromJson(json['addressType'])
+        ? HealthOrganizationTypeNew.fromJson(json['addressType'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['addressLine1'] = this.addressLine1;
-    data['addressLine2'] = this.addressLine2;
-    data['pincode'] = this.pincode;
-    data['isPrimary'] = this.isPrimary;
-    data['isActive'] = this.isActive;
-    data['createdOn'] = this.createdOn;
-    data['lastModifiedOn'] = this.lastModifiedOn;
-    if (this.city != null) {
-      data['city'] = this.city.toJson();
+    final data = <String, dynamic>{};
+    data['id'] = id;
+    data['addressLine1'] = addressLine1;
+    data['addressLine2'] = addressLine2;
+    data['pincode'] = pincode;
+    data['isPrimary'] = isPrimary;
+    data['isActive'] = isActive;
+    data['createdOn'] = createdOn;
+    data['lastModifiedOn'] = lastModifiedOn;
+    if (city != null) {
+      data['city'] = city.toJson();
     }
-    if (this.state != null) {
-      data['state'] = this.state.toJson();
+    if (state != null) {
+      data['state'] = state.toJson();
     }
-    if (this.addressType != null) {
-      data['addressType'] = this.addressType.toJson();
+    if (addressType != null) {
+      data['addressType'] = addressType.toJson();
     }
     return data;
   }
@@ -218,12 +217,12 @@ class CityProviders {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['isActive'] = this.isActive;
-    data['createdOn'] = this.createdOn;
-    data['lastModifiedOn'] = this.lastModifiedOn;
+    final data = Map<String, dynamic>();
+    data['id'] = id;
+    data['name'] = name;
+    data['isActive'] = isActive;
+    data['createdOn'] = createdOn;
+    data['lastModifiedOn'] = lastModifiedOn;
     return data;
   }
 }
@@ -254,13 +253,13 @@ class StateProviders {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['countryCode'] = this.countryCode;
-    data['isActive'] = this.isActive;
-    data['createdOn'] = this.createdOn;
-    data['lastModifiedOn'] = this.lastModifiedOn;
+    final data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['countryCode'] = countryCode;
+    data['isActive'] = isActive;
+    data['createdOn'] = createdOn;
+    data['lastModifiedOn'] = lastModifiedOn;
     return data;
   }
 }
@@ -291,20 +290,20 @@ class HealthOrganizationContactCollectionNew {
     createdOn = json['createdOn'];
     lastModifiedOn = json['lastModifiedOn'];
     phoneNumberType = json['phoneNumberType'] != null
-        ? new HealthOrganizationTypeNew.fromJson(json['phoneNumberType'])
+        ? HealthOrganizationTypeNew.fromJson(json['phoneNumberType'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['phoneNumber'] = this.phoneNumber;
-    data['isPrimary'] = this.isPrimary;
-    data['isActive'] = this.isActive;
-    data['createdOn'] = this.createdOn;
-    data['lastModifiedOn'] = this.lastModifiedOn;
-    if (this.phoneNumberType != null) {
-      data['phoneNumberType'] = this.phoneNumberType.toJson();
+    final data = <String, dynamic>{};
+    data['id'] = id;
+    data['phoneNumber'] = phoneNumber;
+    data['isPrimary'] = isPrimary;
+    data['isActive'] = isActive;
+    data['createdOn'] = createdOn;
+    data['lastModifiedOn'] = lastModifiedOn;
+    if (phoneNumberType != null) {
+      data['phoneNumberType'] = phoneNumberType.toJson();
     }
     return data;
   }

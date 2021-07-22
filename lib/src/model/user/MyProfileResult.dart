@@ -1,7 +1,7 @@
-import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
-import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
-import 'package:myfhb/src/model/user/UserAddressCollection.dart';
-import 'package:myfhb/src/model/user/userrelationshipcollection.dart';
+import '../../../my_family/models/FamilyMembersRes.dart';
+import '../GetDeviceSelectionModel.dart';
+import 'UserAddressCollection.dart';
+import 'userrelationshipcollection.dart';
 
 import 'AddressTypeModel.dart';
 
@@ -101,93 +101,93 @@ class MyProfileResult {
     lastModifiedBy = json['lastModifiedBy'];
     lastModifiedOn = json['lastModifiedOn'];
     if (json['userAddressCollection3'] != null) {
-      userAddressCollection3 = new List<UserAddressCollection3>();
+      userAddressCollection3 = List<UserAddressCollection3>();
       json['userAddressCollection3'].forEach((v) {
-        userAddressCollection3.add(new UserAddressCollection3.fromJson(v));
+        userAddressCollection3.add(UserAddressCollection3.fromJson(v));
       });
     }
     if (json['userContactCollection3'] != null) {
-      userContactCollection3 = new List<UserContactCollection3>();
+      userContactCollection3 = List<UserContactCollection3>();
       json['userContactCollection3'].forEach((v) {
-        userContactCollection3.add(new UserContactCollection3.fromJson(v));
+        userContactCollection3.add(UserContactCollection3.fromJson(v));
       });
     }
     if (json['userRoleCollection3'] != null) {
-      userRoleCollection3 = new List<UserRoleCollection3>();
+      userRoleCollection3 = <UserRoleCollection3>[];
       json['userRoleCollection3'].forEach((v) {
-        userRoleCollection3.add(new UserRoleCollection3.fromJson(v));
+        userRoleCollection3.add(UserRoleCollection3.fromJson(v));
       });
     }
     if (json['userRelationshipCollection'] != null) {
-      userRelationshipCollection = new List<UserRelationshipCollection>();
+      userRelationshipCollection = <UserRelationshipCollection>[];
       json['userRelationshipCollection'].forEach((v) {
         userRelationshipCollection
-            .add(new UserRelationshipCollection.fromJson(v));
+            .add(UserRelationshipCollection.fromJson(v));
       });
     }
     if (json['userProfileSettingCollection3'] != null) {
-      userProfileSettingCollection3 = new List<UserProfileSettingCollection3>();
+      userProfileSettingCollection3 = List<UserProfileSettingCollection3>();
       json['userProfileSettingCollection3'].forEach((v) {
         userProfileSettingCollection3
-            .add(new UserProfileSettingCollection3.fromJson(v));
+            .add(UserProfileSettingCollection3.fromJson(v));
       });
     }
 
     additionalInfo = json['additionalInfo'] != null
-        ? new AdditionalInfo.fromJson(json['additionalInfo'])
+        ? AdditionalInfo.fromJson(json['additionalInfo'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['userName'] = this.userName;
-    data['firstName'] = this.firstName;
-    data['middleName'] = this.middleName;
-    data['lastName'] = this.lastName;
-    data['gender'] = this.gender;
-    data['dateOfBirth'] = this.dateOfBirth;
-    data['bloodGroup'] = this.bloodGroup;
-    data['countryCode'] = this.countryCode;
-    data['profilePicThumbnailUrl'] = this.profilePicThumbnailUrl;
-    data['isTempUser'] = this.isTempUser;
-    data['isVirtualUser'] = this.isVirtualUser;
-    data['isMigrated'] = this.isMigrated;
-    data['isClaimed'] = this.isClaimed;
-    data['isIeUser'] = this.isIeUser;
-    data['isEmailVerified'] = this.isEmailVerified;
-    data['isCpUser'] = this.isCpUser;
-    data['communicationPreferences'] = this.communicationPreferences;
-    data['medicalPreferences'] = this.medicalPreferences;
-    data['isSignedIn'] = this.isSignedIn;
-    data['isActive'] = this.isActive;
+    final data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['userName'] = userName;
+    data['firstName'] = firstName;
+    data['middleName'] = middleName;
+    data['lastName'] = lastName;
+    data['gender'] = gender;
+    data['dateOfBirth'] = dateOfBirth;
+    data['bloodGroup'] = bloodGroup;
+    data['countryCode'] = countryCode;
+    data['profilePicThumbnailUrl'] = profilePicThumbnailUrl;
+    data['isTempUser'] = isTempUser;
+    data['isVirtualUser'] = isVirtualUser;
+    data['isMigrated'] = isMigrated;
+    data['isClaimed'] = isClaimed;
+    data['isIeUser'] = isIeUser;
+    data['isEmailVerified'] = isEmailVerified;
+    data['isCpUser'] = isCpUser;
+    data['communicationPreferences'] = communicationPreferences;
+    data['medicalPreferences'] = medicalPreferences;
+    data['isSignedIn'] = isSignedIn;
+    data['isActive'] = isActive;
     // data['createdBy'] = this.createdBy;
     // data['createdOn'] = this.createdOn;
-    data['lastModifiedBy'] = this.lastModifiedBy;
-    data['lastModifiedOn'] = this.lastModifiedOn;
-    if (this.userAddressCollection3 != null) {
+    data['lastModifiedBy'] = lastModifiedBy;
+    data['lastModifiedOn'] = lastModifiedOn;
+    if (userAddressCollection3 != null) {
       data['userAddressCollection3'] =
-          this.userAddressCollection3.map((v) => v.toJson()).toList();
+          userAddressCollection3.map((v) => v.toJson()).toList();
     }
-    if (this.userContactCollection3 != null) {
+    if (userContactCollection3 != null) {
       data['userContactCollection3'] =
-          this.userContactCollection3.map((v) => v.toJson()).toList();
+          userContactCollection3.map((v) => v.toJson()).toList();
     }
-    if (this.userRoleCollection3 != null) {
+    if (userRoleCollection3 != null) {
       data['userRoleCollection3'] =
-          this.userRoleCollection3.map((v) => v.toJson()).toList();
+          userRoleCollection3.map((v) => v.toJson()).toList();
     }
-    if (this.userRelationshipCollection != null) {
+    if (userRelationshipCollection != null) {
       data['userRelationshipCollection'] =
-          this.userRelationshipCollection.map((v) => v.toJson()).toList();
+          userRelationshipCollection.map((v) => v.toJson()).toList();
     }
-    if (this.additionalInfo != null) {
-      data['additionalInfo'] = this.additionalInfo.toJson();
+    if (additionalInfo != null) {
+      data['additionalInfo'] = additionalInfo.toJson();
     }
-    if (this.userProfileSettingCollection3 != null) {
+    if (userProfileSettingCollection3 != null) {
       data['userProfileSettingCollection3'] =
-          this.userProfileSettingCollection3.map((v) => v.toJson()).toList();
+          userProfileSettingCollection3.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -225,27 +225,29 @@ class AdditionalInfo {
     height = json['height'];
     weight = json['weight'];
     try {
-      if (json.containsKey('language'))
+      if (json.containsKey('language')) {
         language = json['language'].cast<String>();
+      }
     } catch (e) {}
 
     if (json.containsKey('mrdNumber')) mrdNumber = json['mrdNumber'];
     if (json.containsKey('uhidNumber')) uhidNumber = json['uhidNumber'];
     if (json.containsKey('visitReason')) visitReason = json['visitReason'];
-    if (json.containsKey('patientHistory'))
+    if (json.containsKey('patientHistory')) {
       patientHistory = json['patientHistory'];
+    }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['age'] = this.age;
-    data['height'] = this.height;
-    data['weight'] = this.weight;
-    data['language'] = this.language;
-    data['mrdNumber'] = this.mrdNumber;
-    data['uhidNumber'] = this.uhidNumber;
-    data['visitReason'] = this.visitReason;
-    data['patientHistory'] = this.patientHistory;
+    final data = Map<String, dynamic>();
+    data['age'] = age;
+    data['height'] = height;
+    data['weight'] = weight;
+    data['language'] = language;
+    data['mrdNumber'] = mrdNumber;
+    data['uhidNumber'] = uhidNumber;
+    data['visitReason'] = visitReason;
+    data['patientHistory'] = patientHistory;
     return data;
   }
 }
@@ -279,21 +281,21 @@ class UserContactCollection3 {
     lastModifiedOn = json['lastModifiedOn'];
     email = json['email'];
     phoneNumberType = json['phoneNumberType'] != null
-        ? new AddressType.fromJson(json['phoneNumberType'])
+        ? AddressType.fromJson(json['phoneNumberType'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['phoneNumber'] = this.phoneNumber;
-    data['isPrimary'] = this.isPrimary;
-    data['isActive'] = this.isActive;
-    data['createdOn'] = this.createdOn;
-    data['lastModifiedOn'] = this.lastModifiedOn;
-    data['email'] = this.email;
-    if (this.phoneNumberType != null) {
-      data['phoneNumberType'] = this.phoneNumberType.toJson();
+    final data = Map<String, dynamic>();
+    data['id'] = id;
+    data['phoneNumber'] = phoneNumber;
+    data['isPrimary'] = isPrimary;
+    data['isActive'] = isActive;
+    data['createdOn'] = createdOn;
+    data['lastModifiedOn'] = lastModifiedOn;
+    data['email'] = email;
+    if (phoneNumberType != null) {
+      data['phoneNumberType'] = phoneNumberType.toJson();
     }
     return data;
   }
@@ -314,17 +316,17 @@ class UserRoleCollection3 {
     isActive = json['isActive'];
     createdOn = json['createdOn'];
     lastModifiedOn = json['lastModifiedOn'];
-    role = json['role'] != null ? new Role.fromJson(json['role']) : null;
+    role = json['role'] != null ? Role.fromJson(json['role']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['isActive'] = this.isActive;
-    data['createdOn'] = this.createdOn;
-    data['lastModifiedOn'] = this.lastModifiedOn;
-    if (this.role != null) {
-      data['role'] = this.role.toJson();
+    final data = Map<String, dynamic>();
+    data['id'] = id;
+    data['isActive'] = isActive;
+    data['createdOn'] = createdOn;
+    data['lastModifiedOn'] = lastModifiedOn;
+    if (role != null) {
+      data['role'] = role.toJson();
     }
     return data;
   }
@@ -365,16 +367,16 @@ class Role {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['isActive'] = this.isActive;
-    data['createdOn'] = this.createdOn;
-    data['lastModifiedOn'] = this.lastModifiedOn;
-    data['roleCode'] = this.roleCode;
-    data['description'] = this.description;
-    data['isSystemRole'] = this.isSystemRole;
-    data['isEnabled'] = this.isEnabled;
+    final data = Map<String, dynamic>();
+    data['id'] = id;
+    data['name'] = name;
+    data['isActive'] = isActive;
+    data['createdOn'] = createdOn;
+    data['lastModifiedOn'] = lastModifiedOn;
+    data['roleCode'] = roleCode;
+    data['description'] = description;
+    data['isSystemRole'] = isSystemRole;
+    data['isEnabled'] = isEnabled;
     return data;
   }
 }
@@ -399,7 +401,7 @@ class UserProfileSettingCollection3 {
     id = json['id'];
     userId = json['userId'];
     profileSetting = json['profileSetting'] != null
-        ? new ProfileSetting.fromJson(json['profileSetting'])
+        ? ProfileSetting.fromJson(json['profileSetting'])
         : null;
     isActive = json['isActive'];
     createdOn = json['createdOn'];
@@ -407,15 +409,15 @@ class UserProfileSettingCollection3 {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['userId'] = this.userId;
-    if (this.profileSetting != null) {
-      data['profileSetting'] = this.profileSetting.toJson();
+    final data = <String, dynamic>{};
+    data['id'] = id;
+    data['userId'] = userId;
+    if (profileSetting != null) {
+      data['profileSetting'] = profileSetting.toJson();
     }
-    data['isActive'] = this.isActive;
-    data['createdOn'] = this.createdOn;
-    data['lastModifiedOn'] = this.lastModifiedOn;
+    data['isActive'] = isActive;
+    data['createdOn'] = createdOn;
+    data['lastModifiedOn'] = lastModifiedOn;
     return data;
   }
 }

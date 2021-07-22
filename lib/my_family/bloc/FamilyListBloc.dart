@@ -1,15 +1,15 @@
 import 'dart:async';
 
-import 'package:myfhb/add_family_otp/models/add_family_otp_response.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
-import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
-import 'package:myfhb/my_family/models/relationship_response_list.dart';
-import 'package:myfhb/my_family/models/user_delinking_response.dart';
-import 'package:myfhb/my_family/models/user_linking_response_list.dart';
-import 'package:myfhb/my_family/services/FamilyMemberListRepository.dart';
-import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
-import 'package:myfhb/src/resources/network/ApiResponse.dart';
+import '../../add_family_otp/models/add_family_otp_response.dart';
+import '../../constants/variable_constant.dart' as variable;
+import '../models/FamilyMembersRes.dart';
+import '../models/FamilyMembersResponse.dart';
+import '../models/relationship_response_list.dart';
+import '../models/user_delinking_response.dart';
+import '../models/user_linking_response_list.dart';
+import '../services/FamilyMemberListRepository.dart';
+import '../../src/blocs/Authentication/LoginBloc.dart';
+import '../../src/resources/network/ApiResponse.dart';
 
 class FamilyListBloc implements BaseBloc {
   FamilyMemberListRepository _familyResponseListRepository;
@@ -130,7 +130,7 @@ class FamilyListBloc implements BaseBloc {
   getCustomRoles() async {
     relationShipListSink.add(ApiResponse.loading(variable.strFetchRoles));
     try {
-      RelationShipResponseList relationShipResponseList =
+      var relationShipResponseList =
           await _familyResponseListRepository.getCustomRoles();
       relationShipListSink.add(ApiResponse.completed(relationShipResponseList));
     } catch (e) {

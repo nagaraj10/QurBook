@@ -1,4 +1,4 @@
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import '../../constants/fhb_parameters.dart' as parameters;
 
 class VirtualUserParent {
   String countryCode;
@@ -14,10 +14,10 @@ class VirtualUserParent {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[parameters.strCountryCode] = this.countryCode;
-    data[parameters.strPhoneNumber] = this.phoneNumber;
-    data[parameters.strEmail] = this.email;
+    final data = <String, dynamic>{};
+    data[parameters.strCountryCode] = countryCode;
+    data[parameters.strPhoneNumber] = phoneNumber;
+    data[parameters.strEmail] = email;
     return data;
   }
 }

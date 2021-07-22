@@ -1,4 +1,4 @@
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import '../../../constants/fhb_parameters.dart' as parameters;
 
 class MediaTypeInfo {
   String categoryId;
@@ -64,24 +64,24 @@ class MediaTypeInfo {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[parameters.strcategoryId] = this.categoryId;
-    data[parameters.strCreatedOn] = this.createdOn;
-    data[parameters.strDescription] = this.description;
-    data[parameters.strId] = this.id;
-    data[parameters.strisAITranscription] = this.isAITranscription;
-    data[parameters.strIsActive] = this.isActive;
-    data[parameters.strIsCreate] = this.isCreate;
-    data[parameters.strIsDelete] = this.isDelete;
-    data[parameters.strIsDisplay] = this.isDisplay;
-    data[parameters.strIsEdit] = this.isEdit;
-    data[parameters.strisManualTranscription] = this.isManualTranscription;
-    data[parameters.strIsRead] = this.isRead;
-    data[parameters.strLastModifiedOn] = this.lastModifiedOn;
-    data[parameters.strlocalid] = this.localid;
-    data[parameters.strLogo] = this.logo;
-    data[parameters.strName] = this.name;
-    data[parameters.strurl] = this.url;
+    final data = <String, dynamic>{};
+    data[parameters.strcategoryId] = categoryId;
+    data[parameters.strCreatedOn] = createdOn;
+    data[parameters.strDescription] = description;
+    data[parameters.strId] = id;
+    data[parameters.strisAITranscription] = isAITranscription;
+    data[parameters.strIsActive] = isActive;
+    data[parameters.strIsCreate] = isCreate;
+    data[parameters.strIsDelete] = isDelete;
+    data[parameters.strIsDisplay] = isDisplay;
+    data[parameters.strIsEdit] = isEdit;
+    data[parameters.strisManualTranscription] = isManualTranscription;
+    data[parameters.strIsRead] = isRead;
+    data[parameters.strLastModifiedOn] = lastModifiedOn;
+    data[parameters.strlocalid] = localid;
+    data[parameters.strLogo] = logo;
+    data[parameters.strName] = name;
+    data[parameters.strurl] = url;
     return data;
   }
 }

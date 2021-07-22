@@ -1,8 +1,8 @@
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/src/model/user/DoctorIds.dart';
-import 'package:myfhb/src/model/user/HospitalIds.dart';
-import 'package:myfhb/src/model/user/LaboratoryIds.dart';
-import 'package:myfhb/src/model/user/ProfilePicThumbnail.dart';
+import '../../../constants/fhb_parameters.dart' as parameters;
+import 'DoctorIds.dart';
+import 'HospitalIds.dart';
+import 'LaboratoryIds.dart';
+import 'ProfilePicThumbnail.dart';
 
 class ProfileCompleteData {
   int status;
@@ -17,17 +17,17 @@ class ProfileCompleteData {
     success = json[parameters.strSuccess];
     message = json[parameters.strMessage];
     response = json[parameters.strResponse] != null
-        ? new Response.fromJson(json[parameters.strResponse])
+        ? Response.fromJson(json[parameters.strResponse])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[parameters.strStatus] = this.status;
-    data[parameters.strSuccess] = this.success;
-    data[parameters.strMessage] = this.message;
-    if (this.response != null) {
-      data[parameters.strResponse] = this.response.toJson();
+    final data = <String, dynamic>{};
+    data[parameters.strStatus] = status;
+    data[parameters.strSuccess] = success;
+    data[parameters.strMessage] = message;
+    if (response != null) {
+      data[parameters.strResponse] = response.toJson();
     }
     return data;
   }
@@ -42,12 +42,12 @@ class Response {
   Response.fromJson(Map<String, dynamic> json) {
     count = json[parameters.strCount];
     data =
-        json[parameters.strData] != null ? new MyProfileData.fromJson(json[parameters.strData]) : null;
+        json[parameters.strData] != null ? MyProfileData.fromJson(json[parameters.strData]) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[parameters.strCount] = this.count;
+    final data = Map<String, dynamic>();
+    data[parameters.strCount] = count;
     if (this.data != null) {
       data[parameters.strData] = this.data.toJson();
     }
@@ -106,7 +106,7 @@ class MyProfileData {
     gender = json[parameters.strGender];
     //communicationPreferences = json['communicationPreferences'];
     medicalPreferences = json[parameters.strmedicalPreferences] != null
-        ? new MedicalPreferences.fromJson(json[parameters.strmedicalPreferences])
+        ? MedicalPreferences.fromJson(json[parameters.strmedicalPreferences])
         : null;
     isActive = json[parameters.strIsActive];
     isTempUser = json[parameters.strIstemper];
@@ -118,7 +118,7 @@ class MyProfileData {
     isEmailVerified = json[parameters.strisEmailVerified];
     bloodGroup = json[parameters.strbloodGroup];
     profilePicThumbnail = json[parameters.strprofilePicThumbnail] != null
-        ? new ProfilePicThumbnailMain.fromJson(json[parameters.strprofilePicThumbnail])
+        ? ProfilePicThumbnailMain.fromJson(json[parameters.strprofilePicThumbnail])
         : null;
     oid = json[parameters.stroid];
     countryCode = json[parameters.strCountryCode];
@@ -128,30 +128,30 @@ class MyProfileData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[parameters.strId] = this.id;
-    data[parameters.strName] = this.name;
-    data[parameters.strPhoneNumber] = this.phoneNumber;
-    data[parameters.strEmail] = this.email;
-    data[parameters.strGender] = this.gender;
+    final data = <String, dynamic>{};
+    data[parameters.strId] = id;
+    data[parameters.strName] = name;
+    data[parameters.strPhoneNumber] = phoneNumber;
+    data[parameters.strEmail] = email;
+    data[parameters.strGender] = gender;
     //data['communicationPreferences'] = this.communicationPreferences;
-    if (this.medicalPreferences != null) {
-      data[parameters.strmedicalPreferences] = this.medicalPreferences.toJson();
+    if (medicalPreferences != null) {
+      data[parameters.strmedicalPreferences] = medicalPreferences.toJson();
     }
-    data[parameters.strIsActive] = this.isActive;
-    data[parameters.strIstemper] = this.isTempUser;
-    data[parameters.strisVirtualUser] = this.isVirtualUser;
-    data[parameters.strCreatedOn] = this.createdOn;
-    data[parameters.strCreatedBy] = this.createdBy;
-    data[parameters.strLastModifiedOn] = this.lastModifiedOn;
-    data[parameters.strdateOfBirth] = this.dateOfBirth;
-    data[parameters.strisEmailVerified] = this.isEmailVerified;
-    data[parameters.strbloodGroup] = this.bloodGroup;
-    if (this.profilePicThumbnail != null) {
-      data[parameters.strprofilePicThumbnail] = this.profilePicThumbnail.toJson();
+    data[parameters.strIsActive] = isActive;
+    data[parameters.strIstemper] = isTempUser;
+    data[parameters.strisVirtualUser] = isVirtualUser;
+    data[parameters.strCreatedOn] = createdOn;
+    data[parameters.strCreatedBy] = createdBy;
+    data[parameters.strLastModifiedOn] = lastModifiedOn;
+    data[parameters.strdateOfBirth] = dateOfBirth;
+    data[parameters.strisEmailVerified] = isEmailVerified;
+    data[parameters.strbloodGroup] = bloodGroup;
+    if (profilePicThumbnail != null) {
+      data[parameters.strprofilePicThumbnail] = profilePicThumbnail.toJson();
     }
-    data[parameters.stroid] = this.oid;
-    data[parameters.strCountryCode] = this.countryCode;
+    data[parameters.stroid] = oid;
+    data[parameters.strCountryCode] = countryCode;
     /*if (this.qualifiedFullName != null) {
       data[parameters.strqualifiedFullName] = this.qualifiedFullName.toJson();
     }*/
@@ -166,14 +166,14 @@ class MedicalPreferences {
 
   MedicalPreferences.fromJson(Map<String, dynamic> json) {
     preferences = json[parameters.strpreferences] != null
-        ? new Preferences.fromJson(json[parameters.strpreferences])
+        ? Preferences.fromJson(json[parameters.strpreferences])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.preferences != null) {
-      data[parameters.strpreferences] = this.preferences.toJson();
+    final data = <String, dynamic>{};
+    if (preferences != null) {
+      data[parameters.strpreferences] = preferences.toJson();
     }
     return data;
   }
@@ -188,36 +188,36 @@ class Preferences {
 
   Preferences.fromJson(Map<String, dynamic> json) {
     if (json[parameters.strdoctorIds] != null) {
-      doctorIds = new List<DoctorIds>();
+      doctorIds = <DoctorIds>[];
       json[parameters.strdoctorIds].forEach((v) {
-        doctorIds.add(new DoctorIds.fromJson(v));
+        doctorIds.add(DoctorIds.fromJson(v));
       });
     }
     if (json[parameters.strhospitalIds] != null) {
-      hospitalIds = new List<HospitalIds>();
+      hospitalIds = List<HospitalIds>();
       json[parameters.strhospitalIds].forEach((v) {
-        hospitalIds.add(new HospitalIds.fromJson(v));
+        hospitalIds.add(HospitalIds.fromJson(v));
       });
     }
     if (json[parameters.strlaboratoryIds] != null) {
-      laboratoryIds = new List<LaboratoryIds>();
+      laboratoryIds = List<LaboratoryIds>();
       json[parameters.strlaboratoryIds].forEach((v) {
-        laboratoryIds.add(new LaboratoryIds.fromJson(v));
+        laboratoryIds.add(LaboratoryIds.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.doctorIds != null) {
-      data[parameters.strdoctorIds] = this.doctorIds.map((v) => v.toJson()).toList();
+    final data = Map<String, dynamic>();
+    if (doctorIds != null) {
+      data[parameters.strdoctorIds] = doctorIds.map((v) => v.toJson()).toList();
     }
-    if (this.hospitalIds != null) {
-      data[parameters.strhospitalIds] = this.hospitalIds.map((v) => v.toJson()).toList();
+    if (hospitalIds != null) {
+      data[parameters.strhospitalIds] = hospitalIds.map((v) => v.toJson()).toList();
     }
-    if (this.laboratoryIds != null) {
+    if (laboratoryIds != null) {
       data[parameters.strlaboratoryIds] =
-          this.laboratoryIds.map((v) => v.toJson()).toList();
+          laboratoryIds.map((v) => v.toJson()).toList();
     }
     return data;
   }

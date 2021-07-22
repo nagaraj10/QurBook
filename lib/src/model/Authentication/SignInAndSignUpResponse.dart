@@ -1,4 +1,4 @@
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import '../../../constants/fhb_parameters.dart' as parameters;
 
 class SignInAndSignUpResponse {
   String createdTimeString;
@@ -11,9 +11,9 @@ class SignInAndSignUpResponse {
     expiryTimeString = parsedJson[parameters.strExpirationTime];
   }
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[parameters.strCreationTime] = this.createdTimeString;
-    data[parameters.strExpirationTime] = this.expiryTimeString;
+    final data = <String, dynamic>{};
+    data[parameters.strCreationTime] = createdTimeString;
+    data[parameters.strExpirationTime] = expiryTimeString;
     return data;
   }
 }

@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
+import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:agora_rtc_engine/agora_rtc_engine.dart';
+import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -30,9 +32,16 @@ class CallPage extends StatefulWidget {
 
   ///check call is made from NS
   bool isAppExists;
+  RtcEngine rtcEngine;
 
   /// Creates a call page with given channel name.
-  CallPage({this.channelName, this.role, this.arguments, this.isAppExists});
+  CallPage({
+    this.channelName,
+    this.role,
+    this.arguments,
+    this.isAppExists,
+    this.rtcEngine,
+  });
 
   @override
   _CallPageState createState() => _CallPageState();
@@ -47,17 +56,17 @@ class _CallPageState extends State<CallPage> {
   final Connectivity _connectivity = Connectivity();
   StreamSubscription<ConnectivityResult> _connectivitySubscription;
   bool _internetconnection = false;
-  var _connectionStatus = '';
   bool isCustomViewShown = false;
   int videoPauseResumeState = 0;
+  RtcEngineEventHandler rtcEngineEventHandler = RtcEngineEventHandler();
 
   @override
   void dispose() {
     // clear users
     _users.clear();
     // destroy sdk
-    AgoraRtcEngine.leaveChannel();
-    AgoraRtcEngine.destroy();
+    // widget.rtcEngine.leaveChannel();
+    // widget.rtcEngine.destroy();
     cancelOnGoingNS();
     super.dispose();
     Screen.keepOn(false);
@@ -91,66 +100,8 @@ class _CallPageState extends State<CallPage> {
   Future<void> _updateConnectionStatus(ConnectivityResult result) async {
     switch (result) {
       case ConnectivityResult.wifi:
-        String wifiName, wifiBSSID, wifiIP;
-
-        try {
-          if (!kIsWeb && Platform.isIOS) {
-            LocationAuthorizationStatus status =
-                await _connectivity.getLocationServiceAuthorization();
-            if (status == LocationAuthorizationStatus.notDetermined) {
-              status =
-                  await _connectivity.requestLocationServiceAuthorization();
-            }
-            if (status == LocationAuthorizationStatus.authorizedAlways ||
-                status == LocationAuthorizationStatus.authorizedWhenInUse) {
-              wifiName = await _connectivity.getWifiName();
-            } else {
-              wifiName = await _connectivity.getWifiName();
-            }
-          } else {
-            wifiName = await _connectivity.getWifiName();
-          }
-        } on PlatformException catch (e) {
-          //print(e.toString());
-          wifiName = failed_wifi;
-        }
-
-        try {
-          if (!kIsWeb && Platform.isIOS) {
-            LocationAuthorizationStatus status =
-                await _connectivity.getLocationServiceAuthorization();
-            if (status == LocationAuthorizationStatus.notDetermined) {
-              status =
-                  await _connectivity.requestLocationServiceAuthorization();
-            }
-            if (status == LocationAuthorizationStatus.authorizedAlways ||
-                status == LocationAuthorizationStatus.authorizedWhenInUse) {
-              wifiBSSID = await _connectivity.getWifiBSSID();
-            } else {
-              wifiBSSID = await _connectivity.getWifiBSSID();
-            }
-          } else {
-            wifiBSSID = await _connectivity.getWifiBSSID();
-          }
-        } on PlatformException catch (e) {
-          //print(e.toString());
-          wifiBSSID = failed_wifi_bssid;
-        }
-
-        try {
-          wifiIP = await _connectivity.getWifiIP();
-        } on PlatformException catch (e) {
-          //print(e.toString());
-          wifiIP = failed_wifi_ip;
-        }
-
         setState(() {
           _internetconnection = true;
-          _connectionStatus = '$result\n'
-              'Wifi Name: $wifiName\n'
-              'Wifi BSSID: $wifiBSSID\n'
-              'Wifi IP: $wifiIP\n';
-          // toast.getToast(wifi_connected, Colors.green);
           isCustomViewShown = false;
         });
         break;
@@ -164,7 +115,6 @@ class _CallPageState extends State<CallPage> {
       case ConnectivityResult.none:
         setState(() {
           _internetconnection = false;
-          _connectionStatus = no_internet_conn;
           //toast.getToast(no_internet_conn, Colors.red);
           Future.delayed(Duration(seconds: 20), () {
             if (_internetconnection) {
@@ -180,7 +130,6 @@ class _CallPageState extends State<CallPage> {
       default:
         setState(() {
           _internetconnection = false;
-          _connectionStatus = failed_get_conn;
           //toast.getToast(failed_get_connectivity, Colors.red);
         });
         break;
@@ -203,40 +152,37 @@ class _CallPageState extends State<CallPage> {
       return;
     }
 
+    //todo name has to be change with dynamic
     await _initAgoraRtcEngine();
     _addAgoraEventHandlers();
-    await AgoraRtcEngine.enableWebSdkInteroperability(true);
-    VideoEncoderConfiguration configuration = VideoEncoderConfiguration();
-    configuration.dimensions = Size(1920, 1080);
-    await AgoraRtcEngine.setVideoEncoderConfiguration(configuration);
-    await AgoraRtcEngine.joinChannel(null, widget.channelName, null, 0)
-        .then((value) async {
-      //todo name has to be change with dynamic
-
-      await platform.invokeMethod(
-          parameters.startOnGoingNS, {parameters.mode: parameters.start});
-    });
+    widget?.rtcEngine?.setEventHandler(rtcEngineEventHandler);
+    await widget?.rtcEngine?.joinChannel(null, widget.channelName, null, 0);
+    await platform.invokeMethod(
+        parameters.startOnGoingNS, {parameters.mode: parameters.start});
   }
 
   /// Create agora sdk instance and initialize
   Future<void> _initAgoraRtcEngine() async {
-    await AgoraRtcEngine.create(APP_ID);
-    await AgoraRtcEngine.enableVideo();
-    await AgoraRtcEngine.setChannelProfile(ChannelProfile.LiveBroadcasting);
-    await AgoraRtcEngine.setClientRole(widget.role);
+    await widget.rtcEngine.enableWebSdkInteroperability(true);
+    VideoEncoderConfiguration configuration = VideoEncoderConfiguration();
+    configuration.dimensions = VideoDimensions(1920, 1080);
+    await widget?.rtcEngine?.setVideoEncoderConfiguration(configuration);
+    await widget?.rtcEngine?.enableVideo();
+    await widget?.rtcEngine?.setChannelProfile(ChannelProfile.LiveBroadcasting);
+    await widget?.rtcEngine?.setClientRole(widget.role);
   }
 
   /// Add agora event handlers
   void _addAgoraEventHandlers() {
     var user_id;
-    AgoraRtcEngine.onError = (dynamic code) {
+    rtcEngineEventHandler.error = (dynamic code) {
       setState(() {
         final info = 'onError: $code';
         _infoStrings.add(info);
       });
     };
 
-    AgoraRtcEngine.onJoinChannelSuccess = (
+    rtcEngineEventHandler.joinChannelSuccess = (
       String channel,
       int uid,
       int elapsed,
@@ -247,7 +193,7 @@ class _CallPageState extends State<CallPage> {
       });
     };
 
-    AgoraRtcEngine.onLeaveChannel = () {
+    rtcEngineEventHandler.leaveChannel = (RtcStats rtcStats) {
       setState(() {
         _infoStrings.add('onLeaveChannel');
         _users.clear();
@@ -255,7 +201,7 @@ class _CallPageState extends State<CallPage> {
       });
     };
 
-    AgoraRtcEngine.onUserJoined = (int uid, int elapsed) {
+    rtcEngineEventHandler.userJoined = (int uid, int elapsed) {
       setState(() {
         user_id = uid;
         final info = 'userJoined: $uid';
@@ -264,7 +210,10 @@ class _CallPageState extends State<CallPage> {
       });
     };
 
-    AgoraRtcEngine.onUserMuteAudio = (int uid, bool muted) {
+    rtcEngineEventHandler.remoteAudioStateChanged = (int uid,
+        AudioRemoteState audioRemoteState,
+        AudioRemoteStateReason audioRemoteStateReason,
+        int) {
       setState(() {
         //get the remote user mute status
       });
@@ -288,9 +237,9 @@ class _CallPageState extends State<CallPage> {
     //   });
     // };
 
-    AgoraRtcEngine.onUserOffline = (int uid, int reason) {
+    rtcEngineEventHandler.userOffline = (int uid, UserOfflineReason reason) {
       setState(() {
-        if (reason == 1) {
+        if (reason == UserOfflineReason.Dropped) {
           noResponseDialog(context, 'Disconnected due to Network Failure!');
           //print('user is OFFLINE');
         } else {
@@ -308,19 +257,21 @@ class _CallPageState extends State<CallPage> {
       });
     };
 
-    AgoraRtcEngine.onFirstRemoteVideoFrame = (
+    rtcEngineEventHandler.remoteVideoStateChanged = (
       int uid,
-      int width,
-      int height,
+      VideoRemoteState videoRemoteState,
+      VideoRemoteStateReason videoRemoteStateReason,
+      // int width,
+      // int height,
       int elapsed,
     ) {
       setState(() {
-        final info = 'firstRemoteVideo: $uid ${width}x $height';
-        _infoStrings.add(info);
+        // final info = 'firstRemoteVideo: $uid ${videoRemoteState.width}x $height';
+        // _infoStrings.add(info);
       });
     };
 
-    AgoraRtcEngine.onLocalVideoStateChanged =
+    rtcEngineEventHandler.localVideoStateChanged =
         (LocalVideoStreamState localVideoStreamState,
             LocalVideoStreamError localVideoStreamError) {
       if (localVideoStreamState == LocalVideoStreamState.Stopped) {
@@ -362,7 +313,8 @@ class _CallPageState extends State<CallPage> {
       }
     };
 
-    AgoraRtcEngine.onRemoteVideoStateChanged = (uid, state, reason, elapsed) {
+    rtcEngineEventHandler.remoteVideoStateChanged =
+        (uid, state, reason, elapsed) {
       // if (state == 'REMOTE_VIDEO_STATE_STARTING') {
       //   FlutterToast().getToast('Remote Video call is started', Colors.green);
       // } else if (state == 'REMOTE_VIDEO_STATE_FAILED') {
@@ -375,12 +327,12 @@ class _CallPageState extends State<CallPage> {
       //   print('Remote Video call is Stopped');
       // }
 
-      if (reason == 0) {
+      if (reason == VideoRemoteStateReason.Internal) {
         //FlutterToast().getToast('Remote User Went to OFFLINE', Colors.yellow);
-      } else if (reason == 6) {
+      } else if (reason == VideoRemoteStateReason.RemoteUnmuted) {
         FlutterToast().getToast('Doctor Video is resumed', Colors.green);
         videoPauseResumeState = 1;
-      } else if (reason == 5) {
+      } else if (reason == VideoRemoteStateReason.RemoteMuted) {
         FlutterToast().getToast('Doctor Video is paused', Colors.red);
         videoPauseResumeState = 2;
       } else {
@@ -388,20 +340,21 @@ class _CallPageState extends State<CallPage> {
       }
     };
 
-    AgoraRtcEngine.onLocalAudioStateChanged = (error, state) {
-      if (state == 1) {
+    rtcEngineEventHandler.localAudioStateChanged = (state, error) {
+      if (state == AudioLocalState.Recording) {
         //FlutterToast().getToast('Your on UnMute', Colors.red);
       } else {
         //FlutterToast().getToast('Your on Mute', Colors.green);
       }
     };
 
-    AgoraRtcEngine.onRemoteAudioStateChanged = (uid, state, reason, elapsed) {
+    rtcEngineEventHandler.remoteAudioStateChanged =
+        (uid, state, reason, elapsed) {
       switch (reason) {
-        case 6:
+        case AudioRemoteStateReason.RemoteUnmuted:
           FlutterToast().getToast('Doctor is on UnMute', Colors.green);
           break;
-        case 5:
+        case AudioRemoteStateReason.RemoteMuted:
           FlutterToast().getToast('Doctor is on Mute', Colors.red);
           break;
         default:
@@ -435,117 +388,115 @@ class _CallPageState extends State<CallPage> {
       } */
     };
 
-    AgoraRtcEngine.onNetworkTypeChanged = (networkType) {
-      if (networkType == 1) {
+    rtcEngineEventHandler.networkTypeChanged = (networkType) {
+      if (networkType == NetworkType.LAN) {
         print('network type is LAN');
-      } else if (networkType == 2) {
-        print('network type is Mobile2G');
-      } else if (networkType == 3) {
-        print('network type is Mobile3G');
-      } else if (networkType == 4) {
-        print('network type is Mobile4G');
-      } else if (networkType == 6) {
-        print('network type is unknown');
-      } else if (networkType == 2) {
-        print('network type is Mobile2G');
-      } else {
+      } else if (networkType == NetworkType.WIFI) {
         print('network type is WIFI');
+      } else if (networkType == NetworkType.Mobile2G) {
+        print('network type is Mobile2G');
+      } else if (networkType == NetworkType.Mobile3G) {
+        print('network type is Mobile3G');
+      } else if (networkType == NetworkType.Disconnected) {
+        print('network type is Disconnected');
+      } else {
+        print('network type is Unknown');
       }
     };
 
     if (user_id != null && user_id != '') {
-      AgoraRtcEngine.getUserInfoByUid(user_id).then((value) {
+      widget.rtcEngine.getUserInfoByUid(user_id).then((value) {
         //print('connected user info ${value?.userAccount}');
       });
     }
 
-    AgoraRtcEngine.onRejoinChannelSuccess = (channel, uid, elapsedTime) {
+    rtcEngineEventHandler.rejoinChannelSuccess = (channel, uid, elapsedTime) {
       print('After rejoining channel successfully');
       //print('channel $channel &uid $uid &elapsedTime $elapsedTime');
     };
 
     //Local user call status
-    AgoraRtcEngine.onConnectionStateChanged = (nwState, reason) {
-      if (nwState == 1) {
+    rtcEngineEventHandler.connectionStateChanged = (nwState, reason) {
+      if (nwState == ConnectionStateType.Disconnected) {
         FlutterToast().getToast('Disconnected', Colors.red);
         //print('call was disconnected');
-      } else if (nwState == 2) {
+      } else if (nwState == ConnectionStateType.Connecting) {
         FlutterToast().getToast('Connecting..', Colors.green);
         //print('call is connecting');
-      } else if (nwState == 3) {
+      } else if (nwState == ConnectionStateType.Connected) {
         FlutterToast().getToast('Connected', Colors.green);
-      } else if (nwState == 4) {
+      } else if (nwState == ConnectionStateType.Reconnecting) {
         FlutterToast().getToast('Trying to Reconnect..', Colors.red);
         //print('call is reconnecting');
-      } else if (nwState == 5) {
+      } else if (nwState == ConnectionStateType.Failed) {
         FlutterToast().getToast('Connection Failed', Colors.red);
         //print('call is connection failed');
       }
     };
 
-    AgoraRtcEngine.onNetworkQuality = (uid, tx, rx) {
+    rtcEngineEventHandler.networkQuality = (uid, tx, rx) {
       //uplink quality speed of local network state
-      if (tx == 1) {
+      if (tx == NetworkQuality.Excellent) {
         print('The quality is excellent QUALITY_EXCELLENT');
-      } else if (tx == 2) {
+      } else if (tx == NetworkQuality.Good) {
         print(
             'The quality is quite good, but the bitrate may be slightly lower than excellent. QUALITY_GOOD');
-      } else if (tx == 3) {
+      } else if (tx == NetworkQuality.Poor) {
         print(
             'Users can feel the communication slightly impaired. QUALITY_POOR');
-      } else if (tx == 4) {
+      } else if (tx == NetworkQuality.Bad) {
         // FlutterToast().getToast(
         //     'Poor Network. Please check you Internet connection', Colors.red);
         //print('Users can communicate not very smoothly. QUALITY_BAD');
-      } else if (tx == 5) {
+      } else if (tx == NetworkQuality.VBad) {
         // FlutterToast().getToast(
         //     'Poor Network. Please check you Internet connection', Colors.red);
         // print(
         //     'The quality is so bad that users can barely communicate. QUALITY_VBAD');
-      } else if (tx == 6) {
+      } else if (tx == NetworkQuality.Down) {
         // FlutterToast()
         //     .getToast('Disconnected due to Network Failure!', Colors.red);
 
         // print(
         //     'The network is disconnected and users cannot communicate at all. QUALITY_DOWN');
-      } else if (tx == 8) {
+      } else if (tx == NetworkQuality.Detecting) {
         print('The SDK is detecting the network quality. QUALITY_DETECTING');
-      } else if (tx == 0) {
+      } else if (tx == NetworkQuality.Unknown) {
         print('The quality is unknown. QUALITY_UNKNOWN');
       }
 
       //downlink quality speed of local network state
-      if (rx == 1) {
+      if (rx == NetworkQuality.Excellent) {
         print('The quality is excellent QUALITY_EXCELLENT');
-      } else if (rx == 2) {
+      } else if (rx == NetworkQuality.Good) {
         print(
             'The quality is quite good, but the bitrate may be slightly lower than excellent. QUALITY_GOOD');
-      } else if (rx == 3) {
+      } else if (rx == NetworkQuality.Poor) {
         print(
             'Users can feel the communication slightly impaired. QUALITY_POOR');
-      } else if (tx == 4) {
+      } else if (tx == NetworkQuality.Bad) {
         // FlutterToast().getToast(
         //     'Poor Network. Please check you Internet connection', Colors.red);
         //print('Users can communicate not very smoothly. QUALITY_BAD');
-      } else if (tx == 5) {
+      } else if (tx == NetworkQuality.VBad) {
         // FlutterToast().getToast(
         //     'Poor Network. Please check you Internet connection', Colors.red);
         // print(
         //     'The quality is so bad that users can barely communicate. QUALITY_VBAD');
-      } else if (tx == 6) {
+      } else if (tx == NetworkQuality.Down) {
         // FlutterToast()
         //     .getToast('Disconnected due to Network Failure!', Colors.red);
 
         // print(
         //     'The network is disconnected and users cannot communicate at all. QUALITY_DOWN');
-      } else if (rx == 8) {
+      } else if (rx == NetworkQuality.Detecting) {
         print('The SDK is detecting the network quality. QUALITY_DETECTING');
-      } else if (rx == 0) {
+      } else if (rx == NetworkQuality.Unknown) {
         print('The quality is unknown. QUALITY_UNKNOWN');
       }
     };
 
-    AgoraRtcEngine.onRemoteVideoStats = (stats) {
+    rtcEngineEventHandler.remoteVideoStats = (stats) {
       if (videoPauseResumeState != 0) {
         // dont show try to reconnect view
       } else {
@@ -564,11 +515,19 @@ class _CallPageState extends State<CallPage> {
 
   /// Helper function to get list of native views
   List<Widget> _getRenderViews() {
-    final list = <AgoraRenderWidget>[];
+    final list = <Widget>[];
     if (widget.role == ClientRole.Broadcaster) {
-      list.add(AgoraRenderWidget(0, local: true, preview: true));
+      // list.add(
+      //   RtcLocalView.SurfaceView(),
+      // );
     }
-    _users.forEach((int uid) => list.add(AgoraRenderWidget(uid)));
+    _users.forEach(
+      (int uid) => list.add(
+        RtcRemoteView.SurfaceView(
+          uid: uid,
+        ),
+      ),
+    );
     return list;
   }
 

@@ -1,4 +1,4 @@
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import '../../../constants/fhb_parameters.dart' as parameters;
 
 class MediaMasterIds {
   String id;
@@ -12,9 +12,9 @@ class MediaMasterIds {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[parameters.strId] = this.id;
-    data[parameters.strfileType] = this.fileType;
+    final data = <String, dynamic>{};
+    data[parameters.strId] = id;
+    data[parameters.strfileType] = fileType;
     return data;
   }
 }

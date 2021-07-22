@@ -95,65 +95,65 @@ class User {
     lastModifiedBy = json['lastModifiedBy'];
     lastModifiedOn = json['lastModifiedOn'];
     if (json['userContactCollection3'] != null) {
-      userContactCollection3 = new List<UserContactCollection3>();
+      userContactCollection3 = <UserContactCollection3>[];
       json['userContactCollection3'].forEach((v) {
-        userContactCollection3.add(new UserContactCollection3.fromJson(v));
+        userContactCollection3.add(UserContactCollection3.fromJson(v));
       });
     }
     if (json['userRoleCollection3'] != null) {
-      userRoleCollection3 = new List<UserRoleCollection3>();
+      userRoleCollection3 = <UserRoleCollection3>[];
       json['userRoleCollection3'].forEach((v) {
-        userRoleCollection3.add(new UserRoleCollection3.fromJson(v));
+        userRoleCollection3.add(UserRoleCollection3.fromJson(v));
       });
     }
     if (json['userAddressCollection3'] != null) {
-      userAddressCollection3 = new List<UserAddressCollection3>();
+      userAddressCollection3 = <UserAddressCollection3>[];
       json['userAddressCollection3'].forEach((v) {
-        userAddressCollection3.add(new UserAddressCollection3.fromJson(v));
+        userAddressCollection3.add(UserAddressCollection3.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['userName'] = this.userName;
-    data['firstName'] = this.firstName;
-    data['middleName'] = this.middleName;
-    data['lastName'] = this.lastName;
-    data['gender'] = this.gender;
-    data['dateOfBirth'] = this.dateOfBirth;
-    data['bloodGroup'] = this.bloodGroup;
-    data['countryCode'] = this.countryCode;
-    data['profilePicUrl'] = this.profilePicUrl;
-    data['profilePicThumbnailUrl'] = this.profilePicThumbnailUrl;
-    data['isTempUser'] = this.isTempUser;
-    data['isVirtualUser'] = this.isVirtualUser;
-    data['isMigrated'] = this.isMigrated;
-    data['isClaimed'] = this.isClaimed;
-    data['isIeUser'] = this.isIeUser;
-    data['isEmailVerified'] = this.isEmailVerified;
-    data['isCpUser'] = this.isCpUser;
-    data['communicationPreferences'] = this.communicationPreferences;
-    data['medicalPreferences'] = this.medicalPreferences;
-    data['isSignedIn'] = this.isSignedIn;
-    data['isActive'] = this.isActive;
-    data['createdBy'] = this.createdBy;
-    data['createdOn'] = this.createdOn;
-    data['lastModifiedBy'] = this.lastModifiedBy;
-    data['lastModifiedOn'] = this.lastModifiedOn;
-    if (this.userContactCollection3 != null) {
+    final data = Map<String, dynamic>();
+    data['id'] = id;
+    data['name'] = name;
+    data['userName'] = userName;
+    data['firstName'] = firstName;
+    data['middleName'] = middleName;
+    data['lastName'] = lastName;
+    data['gender'] = gender;
+    data['dateOfBirth'] = dateOfBirth;
+    data['bloodGroup'] = bloodGroup;
+    data['countryCode'] = countryCode;
+    data['profilePicUrl'] = profilePicUrl;
+    data['profilePicThumbnailUrl'] = profilePicThumbnailUrl;
+    data['isTempUser'] = isTempUser;
+    data['isVirtualUser'] = isVirtualUser;
+    data['isMigrated'] = isMigrated;
+    data['isClaimed'] = isClaimed;
+    data['isIeUser'] = isIeUser;
+    data['isEmailVerified'] = isEmailVerified;
+    data['isCpUser'] = isCpUser;
+    data['communicationPreferences'] = communicationPreferences;
+    data['medicalPreferences'] = medicalPreferences;
+    data['isSignedIn'] = isSignedIn;
+    data['isActive'] = isActive;
+    data['createdBy'] = createdBy;
+    data['createdOn'] = createdOn;
+    data['lastModifiedBy'] = lastModifiedBy;
+    data['lastModifiedOn'] = lastModifiedOn;
+    if (userContactCollection3 != null) {
       data['userContactCollection3'] =
-          this.userContactCollection3.map((v) => v.toJson()).toList();
+          userContactCollection3.map((v) => v.toJson()).toList();
     }
-    if (this.userRoleCollection3 != null) {
+    if (userRoleCollection3 != null) {
       data['userRoleCollection3'] =
-          this.userRoleCollection3.map((v) => v.toJson()).toList();
+          userRoleCollection3.map((v) => v.toJson()).toList();
     }
-    if (this.userAddressCollection3 != null) {
+    if (userAddressCollection3 != null) {
       data['userAddressCollection3'] =
-          this.userAddressCollection3.map((v) => v.toJson()).toList();
+          userAddressCollection3.map((v) => v.toJson()).toList();
     }
     return data;
   }

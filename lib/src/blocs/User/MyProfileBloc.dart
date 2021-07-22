@@ -1,11 +1,11 @@
 import 'dart:async';
-import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
-import 'package:myfhb/src/model/user/MyProfileModel.dart';
-import 'package:myfhb/src/model/user/ProfileCompletedata.dart';
-import 'package:myfhb/src/resources/network/ApiResponse.dart';
-import 'package:myfhb/src/resources/repository/User/MyProfileRepository.dart';
+import '../Authentication/LoginBloc.dart';
+import '../../model/user/MyProfileModel.dart';
+import '../../model/user/ProfileCompletedata.dart';
+import '../../resources/network/ApiResponse.dart';
+import '../../resources/repository/User/MyProfileRepository.dart';
 
-import 'package:myfhb/constants/variable_constant.dart' as variable;
+import '../../../constants/variable_constant.dart' as variable;
 
 class MyProfileBloc implements BaseBloc {
   MyProfileRepository _myProfileRepository;

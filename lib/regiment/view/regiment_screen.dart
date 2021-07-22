@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/SwitchProfile.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/router_variable.dart';
-import 'package:myfhb/regiment/models/regiment_arguments.dart';
-import 'package:myfhb/landing/view/landing_arguments.dart';
-import 'package:myfhb/regiment/view/regiment_tab.dart';
-import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
+import '../../common/CommonUtil.dart';
+import '../../common/SwitchProfile.dart';
+import '../../constants/fhb_constants.dart';
+import '../../constants/router_variable.dart';
+import '../models/regiment_arguments.dart';
+import '../../landing/view/landing_arguments.dart';
+import 'regiment_tab.dart';
+import '../view_model/regiment_view_model.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
+import '../../widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
 
 class RegimentScreen extends StatelessWidget {
@@ -25,7 +25,7 @@ class RegimentScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: GradientAppBar(),
-        backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
+        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
         elevation: 0,
         title: Text(strRegimen),
         leading: IconWidget(

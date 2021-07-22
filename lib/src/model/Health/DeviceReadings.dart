@@ -1,4 +1,4 @@
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import '../../../constants/fhb_parameters.dart' as parameters;
 
 class DeviceReadings {
   String parameter;
@@ -26,10 +26,10 @@ class DeviceReadings {
   Map<String, dynamic> toJson() {
     try{
 
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[parameters.strParameters] = this.parameter;
-    data[parameters.strunit] = this.unit;
-    data[parameters.strvalue] = this.value;
+    final data = Map<String, dynamic>();
+    data[parameters.strParameters] = parameter;
+    data[parameters.strunit] = unit;
+    data[parameters.strvalue] = value;
     return data;
      }catch(e){
       

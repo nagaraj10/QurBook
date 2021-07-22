@@ -3,34 +3,34 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:launch_review/launch_review.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/FHBBasicWidget.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/common/errors_widget.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/device_integration/viewModel/Device_model.dart';
-import 'package:myfhb/landing/view/landing_screen.dart';
-import 'package:myfhb/myfhb_weview/myfhb_webview.dart';
-import 'package:myfhb/src/model/CreateDeviceSelectionModel.dart';
-import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
-import 'package:myfhb/src/model/UpdatedDeviceModel.dart';
-import 'package:myfhb/src/model/user/MyProfileModel.dart';
-import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
-import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
-import 'package:myfhb/src/ui/HomeScreen.dart';
-import 'package:myfhb/src/ui/settings/MySettings.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
+import '../../common/CommonUtil.dart';
+import '../../common/FHBBasicWidget.dart';
+import '../../common/PreferenceUtil.dart';
+import '../../common/errors_widget.dart';
+import '../../constants/fhb_constants.dart' as Constants;
+import '../../constants/fhb_constants.dart';
+import '../../constants/router_variable.dart' as router;
+import '../../constants/variable_constant.dart' as variable;
+import '../../device_integration/viewModel/Device_model.dart';
+import '../../landing/view/landing_screen.dart';
+import '../../myfhb_weview/myfhb_webview.dart';
+import '../../src/model/CreateDeviceSelectionModel.dart';
+import '../../src/model/GetDeviceSelectionModel.dart';
+import '../../src/model/UpdatedDeviceModel.dart';
+import '../../src/model/user/MyProfileModel.dart';
+import '../../src/model/user/user_accounts_arguments.dart';
+import '../../src/resources/repository/health/HealthReportListForUserRepository.dart';
+import '../../src/ui/HomeScreen.dart';
+import '../../src/ui/settings/MySettings.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
+import '../../widgets/GradientAppBar.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MoreMenuScreen extends StatefulWidget {
   final Function(bool userChanged) refresh;
 
-  MoreMenuScreen({this.refresh});
+  const MoreMenuScreen({this.refresh});
 
   @override
   _MoreMenuScreenState createState() => _MoreMenuScreenState();
@@ -65,10 +65,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   String preferred_language;
   String qa_subscription;
 
-  String selectedMaya =
-      PreferenceUtil.getStringValue(Constants.keyMayaAsset) != null
-          ? PreferenceUtil.getStringValue(Constants.keyMayaAsset)
-          : variable.icon_mayaMain;
+  String selectedMaya = PreferenceUtil.getStringValue(Constants.keyMayaAsset) ??
+      variable.icon_mayaMain;
 
   /*int selectedPrimaryColor =
       PreferenceUtil.getSavedTheme(Constants.keyPriColor) != null
@@ -77,9 +75,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   int selectedPrimaryColor = 0xff5f0cf9;
 
   int selectedGradientColor =
-      PreferenceUtil.getSavedTheme(Constants.keyGreyColor) != null
-          ? PreferenceUtil.getSavedTheme(Constants.keyGreyColor)
-          : 0xff753aec;
+      PreferenceUtil.getSavedTheme(Constants.keyGreyColor) ?? 0xff753aec;
 
   String version = '';
 
@@ -88,7 +84,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     mInitialTime = DateTime.now();
     //getProfileImage();
     //getAppColorValues();
-    PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+    PackageInfo.fromPlatform().then((packageInfo) {
       version = packageInfo.version;
     });
   }
@@ -105,10 +101,10 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   }
 
   getProfileImage() async {
-    myProfile = await PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+    myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
 
     setState(() {
-      String profileImageFile =
+      final profileImageFile =
           PreferenceUtil.getStringValue(Constants.KEY_PROFILE_IMAGE);
       if (profileImageFile != null) {
         profileImage = File(profileImageFile);
@@ -122,7 +118,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     if (PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) != null) {
       myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
     } else {
-      myProfile = await new CommonUtil().getMyProfile();
+      myProfile = await CommonUtil().getMyProfile();
     }
     return myProfile;
   }
@@ -157,12 +153,12 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
 
   void openWebView(String title, String url, bool isLocal) {
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (BuildContext context) => MyFhbWebView(
+        builder: (context) => MyFhbWebView(
             title: title, selectedUrl: url, isLocalAsset: isLocal)));
   }
 
   Widget getBody() {
-    final theme = Theme.of(context).copyWith(dividerColor: Colors.transparent);
+    var theme = Theme.of(context).copyWith(dividerColor: Colors.transparent);
 
     return ListView(
       children: <Widget>[
@@ -186,8 +182,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                           toBeginningOfSentenceCase(
                               myProfile.result.lastName ?? '') */
                       myProfile?.result?.firstName?.capitalizeFirstofEach ??
-                          '' +
-                              ' ' +
+                          '' ' ' +
                               myProfile
                                   ?.result?.lastName?.capitalizeFirstofEach ??
                           ''
@@ -196,22 +191,17 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                 ),
                 Text(
                   (myProfile.result.userContactCollection3 != null &&
-                          myProfile.result.userContactCollection3.length > 0)
-                      ? myProfile.result.userContactCollection3[0]
-                                  .phoneNumber !=
-                              null
-                          ? myProfile
-                              .result.userContactCollection3[0].phoneNumber
-                          : ''
+                          myProfile.result.userContactCollection3.isNotEmpty)
+                      ? myProfile
+                              .result.userContactCollection3[0].phoneNumber ??
+                          ''
                       : '',
                   style: TextStyle(fontSize: 14.0.sp),
                 ),
                 Text(
                   (myProfile.result.userContactCollection3 != null &&
-                          myProfile.result.userContactCollection3.length > 0)
-                      ? myProfile.result.userContactCollection3[0].email != null
-                          ? myProfile.result.userContactCollection3[0].email
-                          : ''
+                          myProfile.result.userContactCollection3.isNotEmpty)
+                      ? myProfile.result.userContactCollection3[0].email ?? ''
                       : '',
                   style: TextStyle(fontSize: 13.0.sp),
                 )
@@ -262,6 +252,9 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                     fontWeight: FontWeight.w500, color: Colors.black)),
             children: <Widget>[
               InkWell(
+                onTap: () {
+                  openWebView(Constants.FAQ, variable.file_faq, true);
+                },
                 child: ListTile(
                     title: Row(
                   children: <Widget>[
@@ -273,9 +266,6 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                     Text(Constants.FAQ),
                   ],
                 )),
-                onTap: () {
-                  openWebView(Constants.FAQ, variable.file_faq, true);
-                },
               ),
               ListTile(
                 title: InkWell(
@@ -295,6 +285,10 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                 },
               ),
               InkWell(
+                onTap: () {
+                  openWebView(
+                      Constants.terms_of_service, variable.file_terms, true);
+                },
                 child: ListTile(
                     title: Row(
                   children: <Widget>[
@@ -308,10 +302,6 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                     Text(Constants.terms_of_service)
                   ],
                 )),
-                onTap: () {
-                  openWebView(
-                      Constants.terms_of_service, variable.file_terms, true);
-                },
               ),
               InkWell(
                 onTap: () {
@@ -592,14 +582,12 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
         : 'Y';
 
     selectedPrimaryColor =
-        PreferenceUtil.getSavedTheme(Constants.keyPriColor) != null
-            ? PreferenceUtil.getSavedTheme(Constants.keyPriColor)
-            : preColor;
+        PreferenceUtil.getSavedTheme(Constants.keyPriColor) ?? preColor;
   }
 
   Future<CreateDeviceSelectionModel> createAppColorSelection(
       int priColor, int greColor) async {
-    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     await healthReportListForUserRepository
         .createDeviceSelection(
             _isdigitRecognition,
@@ -657,12 +645,12 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   }
 
   Widget getValuesFromSharedPrefernce() {
-    return new FutureBuilder<MyProfileModel>(
+    return FutureBuilder<MyProfileModel>(
       future: getMyProfile(),
-      builder: (BuildContext context, snapshot) {
+      builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return new Center(
-            child: new CircularProgressIndicator(
+          return Center(
+            child: CircularProgressIndicator(
               backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
             ),
           );
@@ -676,12 +664,12 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   }
 
   Widget getAppColorsAndDeviceValues() {
-    return new FutureBuilder<GetDeviceSelectionModel>(
+    return FutureBuilder<GetDeviceSelectionModel>(
       future: getAppColorValues(),
-      builder: (BuildContext context, snapshot) {
+      builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return new Center(
-            child: new CircularProgressIndicator(
+          return Center(
+            child: CircularProgressIndicator(
               backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
             ),
           );
@@ -695,7 +683,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   }
 
   moveToLoginPage() {
-    new CommonUtil().moveToLoginPage();
+    CommonUtil().moveToLoginPage();
   }
 
   void launchWhatsApp({
@@ -704,9 +692,9 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   }) async {
     String url() {
       if (Platform.isIOS) {
-        return "whatsapp://wa.me/$phone/?text=${Uri.parse(message)}";
+        return 'whatsapp://wa.me/$phone/?text=${Uri.parse(message)}';
       } else {
-        return "whatsapp://send?phone=$phone&text=${Uri.parse(message)}";
+        return 'whatsapp://send?phone=$phone&text=${Uri.parse(message)}';
       }
     }
 

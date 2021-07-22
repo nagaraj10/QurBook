@@ -7,10 +7,11 @@ class DeviceInfoSucess {
 
   DeviceInfoSucess.fromJson(Map<String, dynamic> json) {
     if (json != null) {
-      isSuccess = json['isSuccess'] != null ? json['isSuccess'] : false;
+      isSuccess = json['isSuccess'] ?? false;
       if (json.containsKey('message')) message = json['message'];
-      if (json.containsKey('result'))
-        result = json['result'] != null ? json['result'] : null;
+      if (json.containsKey('result')) {
+        result = json['result'] ?? null;
+      }
     } else {
       isSuccess = false;
       message = '';
@@ -19,10 +20,10 @@ class DeviceInfoSucess {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['isSuccess'] = this.isSuccess;
-    data['message'] = this.message;
-    data['result'] = this.result;
+    final data = Map<String, dynamic>();
+    data['isSuccess'] = isSuccess;
+    data['message'] = message;
+    data['result'] = result;
     return data;
   }
 }

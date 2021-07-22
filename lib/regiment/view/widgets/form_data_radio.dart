@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:myfhb/regiment/models/regiment_data_model.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/regiment/models/field_response_model.dart';
+import '../../models/regiment_data_model.dart';
+import '../../../src/utils/screenutils/size_extensions.dart';
+import '../../../common/CommonUtil.dart';
+import '../../models/field_response_model.dart';
 import 'radio_tile_widget.dart';
 
 class FormDataRadio extends StatefulWidget {
@@ -30,11 +30,11 @@ class _FormDataRadioState extends State<FormDataRadio> {
   }
 
   List<Widget> loadRadioItems() {
-    List<String> radioList = (widget?.fieldData?.fdata ?? '')?.split('|');
-    if (radioList?.length > 0 && radioList.length.isEven) {
+    final radioList = (widget?.fieldData?.fdata ?? '')?.split('|');
+    if (radioList.isNotEmpty && radioList.length.isEven) {
       radioGroupValue ??= radioList.isNotEmpty ? radioList[0] : null;
       radioWidget.clear();
-      for (int index = 0; index < radioList.length; index++) {
+      for (var index = 0; index < radioList.length; index++) {
         radioWidget.add(
           RadioTileWidget(
             title: radioList[index + 1] ?? '',
@@ -45,7 +45,7 @@ class _FormDataRadioState extends State<FormDataRadio> {
                     setState(() {
                       radioGroupValue = selectedValue;
                     });
-                    FieldModel updatedFieldData = widget.fieldData;
+                    var updatedFieldData = widget.fieldData;
                     updatedFieldData.value = radioGroupValue.toString();
                     widget.updateValue(updatedFieldData);
                   }

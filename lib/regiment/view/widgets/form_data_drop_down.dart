@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/regiment/models/field_response_model.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import '../../../src/utils/screenutils/size_extensions.dart';
+import '../../../common/CommonUtil.dart';
+import '../../models/field_response_model.dart';
+import '../../../constants/fhb_constants.dart' as Constants;
 
 class FormDataDropDown extends StatefulWidget {
-  FormDataDropDown({
+  const FormDataDropDown({
     @required this.fieldData,
     @required this.updateValue,
     @required this.canEdit,
@@ -30,10 +30,10 @@ class _FormDataDropDownState extends State<FormDataDropDown> {
   }
 
   loadComboItems() {
-    List<String> comboItemsList = (widget?.fieldData?.fdata ?? '')?.split('|');
-    if (comboItemsList?.length > 0 && comboItemsList.length.isEven) {
+    final comboItemsList = (widget?.fieldData?.fdata ?? '')?.split('|');
+    if (comboItemsList.isNotEmpty && comboItemsList.length.isEven) {
       comboItems.clear();
-      for (int i = 0; i < comboItemsList.length; i++) {
+      for (var i = 0; i < comboItemsList.length; i++) {
         comboItems.add(
           DropdownMenuItem(
             value: comboItemsList[i],
@@ -49,7 +49,7 @@ class _FormDataDropDownState extends State<FormDataDropDown> {
         i++;
       }
     }
-    comboItems.length > 0 ? comboItems[0].value : null;
+    comboItems.isNotEmpty ? comboItems[0].value : null;
     print(comboItems);
   }
 
@@ -90,7 +90,7 @@ class _FormDataDropDownState extends State<FormDataDropDown> {
               setState(() {
                 comboValue = value;
               });
-              FieldModel updatedFieldData = widget.fieldData;
+              var updatedFieldData = widget.fieldData;
               updatedFieldData.value = (value).toString();
               widget.updateValue(updatedFieldData);
             }

@@ -1,35 +1,35 @@
-import 'package:myfhb/constants/fhb_parameters.dart';
+import '../../constants/fhb_parameters.dart';
 
-import 'package:myfhb/device_integration/services/googleSignInHelper.dart';
-import 'package:myfhb/device_integration/model/googleFitResponseModel.dart';
-import 'package:myfhb/device_integration/model/googleFitDataset.dart';
-import 'package:myfhb/device_integration/model/googleFitPoint.dart';
-import 'package:myfhb/device_integration/model/googleFitBucket.dart';
+import 'googleSignInHelper.dart';
+import '../model/googleFitResponseModel.dart';
+import '../model/googleFitDataset.dart';
+import '../model/googleFitPoint.dart';
+import '../model/googleFitBucket.dart';
 import 'dart:async';
 import 'dart:convert' show json;
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import '../../common/PreferenceUtil.dart';
+import '../../constants/fhb_constants.dart' as Constants;
 
 class GoogleFitData {
   GoogleSignInHelper _signInHelper;
-  String _userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+  final String _userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
   GoogleFitData() {
     _signInHelper = GoogleSignInHelper();
   }
 
   Future<bool> isSignedIn() async {
-    bool signedIn = await _signInHelper.isSignedIn();
+    final signedIn = await _signInHelper.isSignedIn();
     return signedIn;
   }
 
   Future<bool> signInSilently() async {
-    bool signedIn = await _signInHelper.signInSilently();
+    final signedIn = await _signInHelper.signInSilently();
     return signedIn;
   }
 
   Future<bool> signIn() async {
-    bool ret = false;
+    var ret = false;
 
     /*if (await isSignedIn()) {
       return await _signInHelper.handleScopes();
@@ -46,45 +46,45 @@ class GoogleFitData {
   }
 
   String getDataSourceBody(String startTime, String endTime, String type) {
-    Map data = {
-      "aggregateBy": [
+    final Map data = {
+      'aggregateBy': [
         {
-          "dataTypeName": type,
-          "dataSourceId": dataSourceID[type],
+          'dataTypeName': type,
+          'dataSourceId': dataSourceID[type],
         }
       ],
-      "startTimeMillis": startTime,
-      "endTimeMillis": endTime
+      'startTimeMillis': startTime,
+      'endTimeMillis': endTime
     };
     return json.encode(data);
   }
 
   String getFormatedDateFromMicro(String date) {
-    var dateString =
-        new DateTime.fromMicrosecondsSinceEpoch(int.parse(date) * 1000);
+    final dateString =
+        DateTime.fromMicrosecondsSinceEpoch(int.parse(date) * 1000);
     return dateString.toIso8601String();
   }
 
   String getFormatedDateFromNano(String date) {
-    var micro = int.parse(date) / 1000;
-    var dateString = new DateTime.fromMicrosecondsSinceEpoch(micro.toInt());
+    final micro = int.parse(date) / 1000;
+    final dateString = DateTime.fromMicrosecondsSinceEpoch(micro.toInt());
     return dateString.toIso8601String();
   }
 
   Future<String> getWeightSummary(String startTime, String endTime) async {
     try {
-      String jsonBody = getDataSourceBody(startTime, endTime, gfWeight);
-      String response = await _signInHelper.getDataAggregate(jsonBody);
+      var jsonBody = getDataSourceBody(startTime, endTime, gfWeight);
+      final String response = await _signInHelper.getDataAggregate(jsonBody);
 
-      final responseHandler = ResponseFromJson(response);
-      Map<String, dynamic> healthRecord = new Map();
+      var responseHandler = ResponseFromJson(response);
+      final healthRecord = Map<String, dynamic>();
 
-      Map<String, dynamic> userData = new Map();
+      final Map<String, dynamic> userData = {};
       userData[strId] = _userID;
 
       healthRecord[strUser] = userData;
 
-      for (Bucket bucket in responseHandler.bucket) {
+      for (final bucket in responseHandler.bucket) {
         healthRecord[strsyncStartDate] =
             getFormatedDateFromMicro(bucket.startTimeMillis);
         healthRecord[strsyncEndDate] =
@@ -95,12 +95,12 @@ class GoogleFitData {
         healthRecord[strdeviceType] = strWeighingScale;
         healthRecord[strdeviceDataType] = strWeight;
 
-        List<dynamic> dataSet = [];
+        var dataSet = <dynamic>[];
 
-        for (Dataset dataset in bucket.dataset) {
-          for (Point point in dataset.point) {
-            Map<String, dynamic> rawData = new Map();
-            String timestampString =
+        for (var dataset in bucket.dataset) {
+          for (var point in dataset.point) {
+            final Map<String, dynamic> rawData = {};
+            final timestampString =
                 getFormatedDateFromNano(point.startTimeNanos);
             rawData[strStartTimeStamp] = timestampString;
             rawData[strEndTimeStamp] = timestampString;
@@ -115,7 +115,7 @@ class GoogleFitData {
         }
         if (dataSet.isEmpty) return null;
         healthRecord[strRawData] = dataSet;
-        String params = json.encode(healthRecord);
+        var params = json.encode(healthRecord);
         return params;
       }
     } catch (e) {
@@ -125,17 +125,17 @@ class GoogleFitData {
 
   Future<String> getBPSummary(String startTime, String endTime) async {
     try {
-      String jsonBody = getDataSourceBody(startTime, endTime, gfBloodPressure);
-      String response = await _signInHelper.getDataAggregate(jsonBody);
+      final jsonBody = getDataSourceBody(startTime, endTime, gfBloodPressure);
+      final String response = await _signInHelper.getDataAggregate(jsonBody);
 
-      final responseHandler = ResponseFromJson(response);
-      Map<String, dynamic> healthRecord = new Map();
-      Map<String, dynamic> userData = new Map();
+      var responseHandler = ResponseFromJson(response);
+      final Map<String, dynamic> healthRecord = {};
+      final Map<String, dynamic> userData = {};
       userData[strId] = _userID;
 
       healthRecord[strUser] = userData;
 
-      for (Bucket bucket in responseHandler.bucket) {
+      for (var bucket in responseHandler.bucket) {
         healthRecord[strsyncStartDate] =
             getFormatedDateFromMicro(bucket.startTimeMillis);
         healthRecord[strsyncEndDate] =
@@ -146,12 +146,12 @@ class GoogleFitData {
         healthRecord[strdeviceType] = strBPMonitor;
         healthRecord[strdeviceDataType] = strDataTypeBP;
 
-        List<dynamic> dataSet = [];
+        var dataSet = <dynamic>[];
 
-        for (Dataset dataset in bucket.dataset) {
-          for (Point point in dataset.point) {
-            Map<String, dynamic> rawData = new Map();
-            String timestampString =
+        for (final dataset in bucket.dataset) {
+          for (var point in dataset.point) {
+            final rawData = Map<String, dynamic>();
+            final timestampString =
                 getFormatedDateFromNano(point.startTimeNanos);
             rawData[strStartTimeStamp] = timestampString;
             rawData[strEndTimeStamp] = timestampString;
@@ -166,7 +166,7 @@ class GoogleFitData {
         }
         if (dataSet.isEmpty) return null;
         healthRecord[strRawData] = dataSet;
-        String params = json.encode(healthRecord);
+        var params = json.encode(healthRecord);
         return params;
       }
     } catch (e) {
@@ -177,18 +177,18 @@ class GoogleFitData {
   Future<String> getBloodGlucoseSummary(
       String startTime, String endTime) async {
     try {
-      String jsonBody = getDataSourceBody(startTime, endTime, gfBloodGlucose);
-      String response = await _signInHelper.getDataAggregate(jsonBody);
+      final jsonBody = getDataSourceBody(startTime, endTime, gfBloodGlucose);
+      final String response = await _signInHelper.getDataAggregate(jsonBody);
 
-      final responseHandler = ResponseFromJson(response);
-      Map<String, dynamic> healthRecord = new Map();
+      var responseHandler = ResponseFromJson(response);
+      final Map<String, dynamic> healthRecord = {};
 
-      Map<String, dynamic> userData = new Map();
+      var userData = Map<String, dynamic>();
       userData[strId] = _userID;
 
       healthRecord[strUser] = userData;
 
-      for (Bucket bucket in responseHandler.bucket) {
+      for (final bucket in responseHandler.bucket) {
         healthRecord[strsyncStartDate] =
             getFormatedDateFromMicro(bucket.startTimeMillis);
         healthRecord[strsyncEndDate] =
@@ -199,13 +199,12 @@ class GoogleFitData {
         healthRecord[strdeviceType] = strGlucometer;
         healthRecord[strdeviceDataType] = strGlusoceLevel;
 
-        List<dynamic> dataSet = [];
+        final dataSet = <dynamic>[];
 
-        for (Dataset dataset in bucket.dataset) {
-          for (Point point in dataset.point) {
-            Map<String, dynamic> rawData = new Map();
-            String timestampString =
-                getFormatedDateFromNano(point.startTimeNanos);
+        for (var dataset in bucket.dataset) {
+          for (final point in dataset.point) {
+            final rawData = Map<String, dynamic>();
+            var timestampString = getFormatedDateFromNano(point.startTimeNanos);
             rawData[strStartTimeStamp] = timestampString;
             rawData[strEndTimeStamp] = timestampString;
             rawData[strStartTimeStampNano] = point.startTimeNanos;
@@ -221,7 +220,7 @@ class GoogleFitData {
         }
         if (dataSet.isEmpty) return null;
         healthRecord[strRawData] = dataSet;
-        String params = json.encode(healthRecord);
+        final params = json.encode(healthRecord);
         return params;
       }
     } catch (e) {
@@ -231,19 +230,18 @@ class GoogleFitData {
 
   Future<String> getBodyTempSummary(String startTime, String endTime) async {
     try {
-      String jsonBody =
-          getDataSourceBody(startTime, endTime, gfBodyTemperature);
-      String response = await _signInHelper.getDataAggregate(jsonBody);
+      var jsonBody = getDataSourceBody(startTime, endTime, gfBodyTemperature);
+      final String response = await _signInHelper.getDataAggregate(jsonBody);
 
-      final responseHandler = ResponseFromJson(response);
-      Map<String, dynamic> healthRecord = new Map();
+      var responseHandler = ResponseFromJson(response);
+      final Map<String, dynamic> healthRecord = {};
 
-      Map<String, dynamic> userData = new Map();
+      final userData = Map<String, dynamic>();
       userData[strId] = _userID;
 
       healthRecord[strUser] = userData;
 
-      for (Bucket bucket in responseHandler.bucket) {
+      for (final bucket in responseHandler.bucket) {
         healthRecord[strsyncStartDate] =
             getFormatedDateFromMicro(bucket.startTimeMillis);
         healthRecord[strsyncEndDate] =
@@ -254,13 +252,12 @@ class GoogleFitData {
         healthRecord[strdeviceType] = strThermometer;
         healthRecord[strdeviceDataType] = strTemperature;
 
-        List<dynamic> dataSet = [];
+        var dataSet = <dynamic>[];
 
-        for (Dataset dataset in bucket.dataset) {
-          for (Point point in dataset.point) {
-            Map<String, dynamic> rawData = new Map();
-            String timestampString =
-                getFormatedDateFromNano(point.startTimeNanos);
+        for (var dataset in bucket.dataset) {
+          for (var point in dataset.point) {
+            var rawData = Map<String, dynamic>();
+            var timestampString = getFormatedDateFromNano(point.startTimeNanos);
             rawData[strStartTimeStamp] = timestampString;
             rawData[strEndTimeStamp] = timestampString;
             rawData[strStartTimeStampNano] = point.startTimeNanos;
@@ -274,7 +271,7 @@ class GoogleFitData {
         }
         if (dataSet.isEmpty) return null;
         healthRecord[strRawData] = dataSet;
-        String params = json.encode(healthRecord);
+        final params = json.encode(healthRecord);
         return params;
       }
     } catch (e) {
@@ -285,19 +282,18 @@ class GoogleFitData {
   Future<String> getOxygenSaturationSummary(
       String startTime, String endTime) async {
     try {
-      String jsonBody =
-          getDataSourceBody(startTime, endTime, gfOxygenSaturation);
-      String response = await _signInHelper.getDataAggregate(jsonBody);
+      var jsonBody = getDataSourceBody(startTime, endTime, gfOxygenSaturation);
+      final String response = await _signInHelper.getDataAggregate(jsonBody);
 
-      final responseHandler = ResponseFromJson(response);
-      Map<String, dynamic> healthRecord = new Map();
+      var responseHandler = ResponseFromJson(response);
+      final healthRecord = Map<String, dynamic>();
 
-      Map<String, dynamic> userData = new Map();
+      final userData = Map<String, dynamic>();
       userData[strId] = _userID;
 
       healthRecord[strUser] = userData;
 
-      for (Bucket bucket in responseHandler.bucket) {
+      for (var bucket in responseHandler.bucket) {
         healthRecord[strsyncStartDate] =
             getFormatedDateFromMicro(bucket.startTimeMillis);
         healthRecord[strsyncEndDate] =
@@ -308,12 +304,12 @@ class GoogleFitData {
         healthRecord[strdeviceType] = strOxymeter;
         healthRecord[strdeviceDataType] = strOxgenSaturation;
 
-        List<dynamic> dataSet = [];
+        var dataSet = <dynamic>[];
 
-        for (Dataset dataset in bucket.dataset) {
-          for (Point point in dataset.point) {
-            Map<String, dynamic> rawData = new Map();
-            String timestampString =
+        for (final dataset in bucket.dataset) {
+          for (var point in dataset.point) {
+            final Map<String, dynamic> rawData = {};
+            final timestampString =
                 getFormatedDateFromNano(point.startTimeNanos);
             rawData[strStartTimeStamp] = timestampString;
             rawData[strEndTimeStamp] = timestampString;
@@ -328,8 +324,8 @@ class GoogleFitData {
         }
         if (dataSet.isEmpty) return null;
         healthRecord[strRawData] = dataSet;
-        String params = json.encode(healthRecord);
-        return (params);
+        var params = json.encode(healthRecord);
+        return params;
       }
     } catch (e) {
       return strOxgenSaturation;
@@ -338,18 +334,18 @@ class GoogleFitData {
 
   Future<String> getHeartRateSummary(String startTime, String endTime) async {
     try {
-      String jsonBody = getDataSourceBody(startTime, endTime, gfHeartRate);
-      String response = await _signInHelper.getDataAggregate(jsonBody);
+      final jsonBody = getDataSourceBody(startTime, endTime, gfHeartRate);
+      final String response = await _signInHelper.getDataAggregate(jsonBody);
 
-      final responseHandler = ResponseFromJson(response);
-      Map<String, dynamic> healthRecord = new Map();
+      var responseHandler = ResponseFromJson(response);
+      final Map<String, dynamic> healthRecord = {};
 
-      Map<String, dynamic> userData = new Map();
+      final Map<String, dynamic> userData = {};
       userData[strId] = _userID;
 
       healthRecord[strUser] = userData;
 
-      for (Bucket bucket in responseHandler.bucket) {
+      for (final bucket in responseHandler.bucket) {
         healthRecord[strsyncStartDate] =
             getFormatedDateFromMicro(bucket.startTimeMillis);
         healthRecord[strsyncEndDate] =
@@ -360,12 +356,12 @@ class GoogleFitData {
         healthRecord[strdeviceType] = strOxymeter;
         healthRecord[strdeviceDataType] = strHeartRate;
 
-        List<dynamic> dataSet = [];
+        var dataSet = <dynamic>[];
 
-        for (Dataset dataset in bucket.dataset) {
-          for (Point point in dataset.point) {
-            Map<String, dynamic> rawData = new Map();
-            String timestampString =
+        for (var dataset in bucket.dataset) {
+          for (final point in dataset.point) {
+            final Map<String, dynamic> rawData = {};
+            final timestampString =
                 getFormatedDateFromNano(point.startTimeNanos);
             rawData[strStartTimeStamp] = timestampString;
             rawData[strEndTimeStamp] = timestampString;
@@ -379,7 +375,7 @@ class GoogleFitData {
         }
         if (dataSet.isEmpty) return null;
         healthRecord[strRawData] = dataSet;
-        String params = json.encode(healthRecord);
+        var params = json.encode(healthRecord);
         return params;
       }
     } catch (e) {

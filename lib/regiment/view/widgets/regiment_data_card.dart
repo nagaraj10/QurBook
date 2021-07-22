@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/regiment/models/regiment_data_model.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
+import '../../../src/utils/screenutils/size_extensions.dart';
+import '../../models/regiment_data_model.dart';
+import '../../../constants/fhb_constants.dart';
 import 'form_data_dialog.dart';
-import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
-import 'package:myfhb/regiment/models/save_response_model.dart';
-import 'package:myfhb/regiment/models/field_response_model.dart';
+import '../../view_model/regiment_view_model.dart';
+import '../../models/save_response_model.dart';
+import '../../models/field_response_model.dart';
 import 'package:provider/provider.dart';
 import 'media_icon_widget.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/src/ui/loader_class.dart';
+import '../../../common/CommonUtil.dart';
+import '../../../src/ui/loader_class.dart';
 import 'package:intl/intl.dart';
 import 'package:get/get.dart';
 import 'regiment_webview.dart';
@@ -55,7 +55,6 @@ class RegimentDataCard extends StatelessWidget {
               child: Row(
                 children: [
                   Expanded(
-                    flex: 1,
                     child: Material(
                       color: color,
                       child: InkWell(
@@ -66,7 +65,6 @@ class RegimentDataCard extends StatelessWidget {
                           ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               icon,
                               Visibility(
@@ -138,27 +136,15 @@ class RegimentDataCard extends StatelessWidget {
                                   Padding(
                                     padding: EdgeInsets.only(left: 5.0.w),
                                     child: InkWell(
-                                      child: Text(
-                                        undo,
-                                        style: TextStyle(
-                                          fontSize: 14.0.sp,
-                                          fontWeight: FontWeight.w500,
-                                          decoration: TextDecoration.underline,
-                                          color: Color(
-                                              CommonUtil().getMyPrimaryColor()),
-                                        ),
-                                      ),
                                       onTap: () async {
                                         LoaderClass.showLoadingDialog(
                                           Get.context,
                                           canDismiss: false,
                                         );
-                                        SaveResponseModel saveResponse =
-                                            await Provider.of<
-                                                        RegimentViewModel>(
-                                                    context,
-                                                    listen: false)
-                                                .undoSaveFormData(
+                                        var saveResponse = await Provider.of<
+                                                    RegimentViewModel>(context,
+                                                listen: false)
+                                            .undoSaveFormData(
                                           eid: eid,
                                         );
                                         if (saveResponse?.isSuccess ?? false) {
@@ -178,6 +164,16 @@ class RegimentDataCard extends StatelessWidget {
                                               Get.context);
                                         }
                                       },
+                                      child: Text(
+                                        undo,
+                                        style: TextStyle(
+                                          fontSize: 14.0.sp,
+                                          fontWeight: FontWeight.w500,
+                                          decoration: TextDecoration.underline,
+                                          color: Color(
+                                              CommonUtil().getMyPrimaryColor()),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -202,7 +198,7 @@ class RegimentDataCard extends StatelessWidget {
       );
 
   List<Widget> getFieldWidgets(BuildContext context) {
-    List<Widget> fieldWidgets = [];
+    final fieldWidgets = <Widget>[];
     fieldWidgets.add(
       Row(
         children: [
@@ -212,7 +208,7 @@ class RegimentDataCard extends StatelessWidget {
                 bottom: 5.0.h,
               ),
               child: Text(
-                '${title?.trim()}',
+                title?.trim(),
                 style: TextStyle(
                   fontSize: 16.0.sp,
                   fontWeight: FontWeight.w500,
@@ -250,7 +246,7 @@ class RegimentDataCard extends StatelessWidget {
     );
 
     vitalsData?.forEach((vitalData) {
-      bool isNormal = true;
+      var isNormal = true;
 
       isNormal = (vitalData.fieldType == FieldType.NUMBER &&
               int.tryParse(vitalData.value) != null &&
@@ -282,7 +278,7 @@ class RegimentDataCard extends StatelessWidget {
                 Flexible(
                   child: Text(
                     //TODO: Replace with actual value from API
-                    '${vitalData.display ?? ''}',
+                    vitalData.display ?? '',
                     style: TextStyle(
                       color: isNormal ? color : Colors.red,
                       fontWeight: FontWeight.w600,
@@ -366,7 +362,7 @@ class RegimentDataCard extends StatelessWidget {
                       onTap: () async {
                         stopRegimenTTS();
 
-                        bool canEdit =
+                        final canEdit =
                             startTime.difference(DateTime.now()).inMinutes <=
                                     15 &&
                                 Provider.of<RegimentViewModel>(context,
@@ -378,7 +374,7 @@ class RegimentDataCard extends StatelessWidget {
                             Get.context,
                             canDismiss: false,
                           );
-                          SaveResponseModel saveResponse =
+                          var saveResponse =
                               await Provider.of<RegimentViewModel>(context,
                                       listen: false)
                                   .saveFormData(
@@ -428,8 +424,8 @@ class RegimentDataCard extends StatelessWidget {
   }
 
   bool isValidSymptom(BuildContext context) {
-    DateTime currentTime = DateTime.now();
-    var selectedDate =
+    var currentTime = DateTime.now();
+    final selectedDate =
         Provider.of<RegimentViewModel>(context, listen: false).selectedDate;
     return (Provider.of<RegimentViewModel>(context, listen: false)
                 .regimentMode ==
@@ -449,29 +445,29 @@ class RegimentDataCard extends StatelessWidget {
       title =
           '${regimentData?.estart != null ? DateFormat('hh:mm a').format(regimentData.estart) : ''},${regimentData.title}';
     } else {
-      title = '${regimentData.title}';
+      title = regimentData.title;
     }
     return title;
   }
 
   Future<void> onCardPressed(BuildContext context) async {
     stopRegimenTTS();
-    bool canEdit = startTime.difference(DateTime.now()).inMinutes <= 15 &&
+    var canEdit = startTime.difference(DateTime.now()).inMinutes <= 15 &&
         Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
             RegimentMode.Schedule;
     // if (canEdit || isValidSymptom(context)) {
-    FieldsResponseModel fieldsResponseModel =
+    final fieldsResponseModel =
         await Provider.of<RegimentViewModel>(context, listen: false)
             .getFormData(eid: eid);
     print(fieldsResponseModel);
     if (fieldsResponseModel.isSuccess &&
-        (fieldsResponseModel.result.fields.length > 0 ||
+        (fieldsResponseModel.result.fields.isNotEmpty ||
             mediaData.toJson().toString().contains('1')) &&
         Provider.of<RegimentViewModel>(context, listen: false).regimentStatus !=
             RegimentStatus.DialogOpened) {
       Provider.of<RegimentViewModel>(context, listen: false)
           .updateRegimentStatus(RegimentStatus.DialogOpened);
-      bool value = await showDialog(
+      var value = await showDialog(
         context: context,
         builder: (context) => FormDataDialog(
           fieldsData: fieldsResponseModel.result.fields,

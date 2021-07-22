@@ -19,13 +19,13 @@ class MetaDataForURL {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['icon'] = this.icon;
-    data['Details'] = this.details;
-    data['Description'] = this.description;
-    data['DescriptionURL'] = this.descriptionURL;
-    data['Disease'] = this.diseases;
-    data['DiseaseIcon'] = this.diseaseIcon;
+    final data = Map<String, dynamic>();
+    data['icon'] = icon;
+    data['Details'] = details;
+    data['Description'] = description;
+    data['DescriptionURL'] = descriptionURL;
+    data['Disease'] = diseases;
+    data['DiseaseIcon'] = diseaseIcon;
     return data;
   }
 }

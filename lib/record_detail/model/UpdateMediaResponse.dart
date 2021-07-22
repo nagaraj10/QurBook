@@ -1,9 +1,9 @@
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/record_detail/model/Doctor.dart';
-import 'package:myfhb/record_detail/model/Hospital.dart';
-import 'package:myfhb/record_detail/model/MediaTypeInfo.dart';
-import 'package:myfhb/record_detail/model/UpdateMediaResponseData.dart';
-import 'package:myfhb/src/model/Health/CategoryInfo.dart';
+import '../../constants/fhb_parameters.dart' as parameters;
+import 'Doctor.dart';
+import 'Hospital.dart';
+import 'MediaTypeInfo.dart';
+import 'UpdateMediaResponseData.dart';
+import '../../src/model/Health/CategoryInfo.dart';
 
 class UpdateMediaResponse {
   int status;
@@ -18,17 +18,17 @@ class UpdateMediaResponse {
     success = json[parameters.strSuccess];
     message = json[parameters.strMessage];
     response = json[parameters.strResponse] != null
-        ? new Response.fromJson(json[parameters.strResponse])
+        ? Response.fromJson(json[parameters.strResponse])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[parameters.strStatus] = this.status;
-    data[parameters.strSuccess] = this.success;
-    data[parameters.strMessage] = this.message;
-    if (this.response != null) {
-      data[parameters.strResponse] = this.response.toJson();
+    final data = Map<String, dynamic>();
+    data[parameters.strStatus] = status;
+    data[parameters.strSuccess] = success;
+    data[parameters.strMessage] = message;
+    if (response != null) {
+      data[parameters.strResponse] = response.toJson();
     }
     return data;
   }
@@ -43,13 +43,13 @@ class Response {
   Response.fromJson(Map<String, dynamic> json) {
     count = json[parameters.strCount];
     data = json[parameters.strData] != null
-        ? new UpdateMediaResponseData.fromJson(json[parameters.strData])
+        ? UpdateMediaResponseData.fromJson(json[parameters.strData])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[parameters.strCount] = this.count;
+    final data = Map<String, dynamic>();
+    data[parameters.strCount] = count;
     if (this.data != null) {
       data[parameters.strData] = this.data.toJson();
     }
@@ -85,50 +85,48 @@ class MetaInfo {
 
   MetaInfo.fromJson(Map<String, dynamic> json) {
     categoryInfo = json[parameters.strcategoryInfo] != null
-        ? new CategoryInfo.fromJson(json[parameters.strcategoryInfo])
+        ? CategoryInfo.fromJson(json[parameters.strcategoryInfo])
         : null;
     dateOfVisit = json[parameters.strdateOfVisit];
 
     doctor = json[parameters.strdoctor] != null
-        ? new Doctor.fromJson(json[parameters.strdoctor])
+        ? Doctor.fromJson(json[parameters.strdoctor])
         : null;
     fileName = json[parameters.strfileName];
-    isDraft = json[parameters.strisDraft] != null
-        ? json[parameters.strisDraft]
-        : false;
+    isDraft = json[parameters.strisDraft] ?? false;
     mediaTypeInfo = json[parameters.strmediaTypeInfo] != null
-        ? new MediaTypeInfo.fromJson(json[parameters.strmediaTypeInfo])
+        ? MediaTypeInfo.fromJson(json[parameters.strmediaTypeInfo])
         : null;
     memoText = json[parameters.strmemoText];
     memoTextRaw = json[parameters.strmemoTextRaw];
     sourceName = json[parameters.strsourceName];
 
     hospital = json[parameters.strhospital] != null
-        ? new Hospital.fromJson(json[parameters.strhospital])
+        ? Hospital.fromJson(json[parameters.strhospital])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.categoryInfo != null) {
-      data[parameters.strcategoryInfo] = this.categoryInfo.toJson();
+    final data = Map<String, dynamic>();
+    if (categoryInfo != null) {
+      data[parameters.strcategoryInfo] = categoryInfo.toJson();
     }
-    data[parameters.strdateOfVisit] = this.dateOfVisit;
+    data[parameters.strdateOfVisit] = dateOfVisit;
 
-    if (this.doctor != null) {
-      data[parameters.strdoctor] = this.doctor.toJson();
+    if (doctor != null) {
+      data[parameters.strdoctor] = doctor.toJson();
     }
-    data[parameters.strfileName] = this.fileName;
-    data[parameters.strisDraft] = this.isDraft;
-    if (this.mediaTypeInfo != null) {
-      data[parameters.strmediaTypeInfo] = this.mediaTypeInfo.toJson();
+    data[parameters.strfileName] = fileName;
+    data[parameters.strisDraft] = isDraft;
+    if (mediaTypeInfo != null) {
+      data[parameters.strmediaTypeInfo] = mediaTypeInfo.toJson();
     }
-    data[parameters.strmemoText] = this.memoText;
-    data[parameters.strmemoTextRaw] = this.memoTextRaw;
-    data[parameters.strsourceName] = this.sourceName;
+    data[parameters.strmemoText] = memoText;
+    data[parameters.strmemoTextRaw] = memoTextRaw;
+    data[parameters.strsourceName] = sourceName;
 
-    if (this.hospital != null) {
-      data[parameters.strhospital] = this.hospital.toJson();
+    if (hospital != null) {
+      data[parameters.strhospital] = hospital.toJson();
     }
 
     return data;

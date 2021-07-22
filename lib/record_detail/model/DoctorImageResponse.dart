@@ -12,10 +12,10 @@ class DoctorImageResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['success'] = this.success;
-    data['response'] = this.response;
+    final data = Map<String, dynamic>();
+    data['status'] = status;
+    data['success'] = success;
+    data['response'] = response;
     return data;
   }
 }

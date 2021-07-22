@@ -109,7 +109,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  CarouselSlider carouselSlider;
+  CarouselController carouselSlider;
   int _current = 0;
 
   @override
@@ -763,19 +763,22 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Expanded(
-            child: carouselSlider = CarouselSlider(
-              height: 1.sh,
-              initialPage: 0,
-              enlargeCenterPage: true,
-              reverse: false,
-              enableInfiniteScroll: false,
-              pauseAutoPlayOnTouch: Duration(seconds: 10),
-              scrollDirection: Axis.horizontal,
-              onPageChanged: (index) {
-                setState(() {
-                  _current = index;
-                });
-              },
+            child: CarouselSlider(
+              carouselController: carouselSlider,
+              options: CarouselOptions(
+                height: 1.sh,
+                initialPage: 0,
+                enlargeCenterPage: true,
+                reverse: false,
+                enableInfiniteScroll: false,
+                // pauseAutoPlayOnTouch: Duration(seconds: 10),
+                scrollDirection: Axis.horizontal,
+                onPageChanged: (index, carouselPageChangedReason) {
+                  setState(() {
+                    _current = index;
+                  });
+                },
+              ),
               items: widget.imagePath.map((imgUrl) {
                 return Builder(
                   builder: (BuildContext context) {

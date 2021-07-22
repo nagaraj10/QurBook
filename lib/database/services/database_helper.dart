@@ -1,17 +1,17 @@
 import 'dart:async';
 import 'dart:io' as io;
 
-import 'package:myfhb/database/model/CountryMetrics.dart';
-import 'package:myfhb/database/model/UnitsMesurement.dart';
+import '../model/CountryMetrics.dart';
+import '../model/UnitsMesurement.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/db_constants.dart' as DBConstants;
+import '../../common/CommonConstants.dart';
+import '../../common/PreferenceUtil.dart';
+import '../../constants/db_constants.dart' as DBConstants;
 
 class DatabaseHelper {
-  static final DatabaseHelper _instance = new DatabaseHelper.internal();
+  static final DatabaseHelper _instance = DatabaseHelper.internal();
 
   factory DatabaseHelper() => _instance;
 
@@ -20,23 +20,21 @@ class DatabaseHelper {
   Future<Database> get db async {
     if (DatabaseHelper._db != null) {
       return DatabaseHelper._db;
-    }
-    else{
+    } else {
       await initDb();
       return DatabaseHelper._db;
     }
-
   }
-
-
 
   DatabaseHelper.internal();
 
- 
   initDb() async {
-    if (DatabaseHelper._db == null){
-      io.Directory documentsDirectory = await getApplicationDocumentsDirectory();
-      DatabaseHelper._db = await openDatabase(join(documentsDirectory.path, DBConstants.DB_NAME), version: 1, onCreate: _onCreate);
+    if (DatabaseHelper._db == null) {
+      var documentsDirectory = await getApplicationDocumentsDirectory();
+      DatabaseHelper._db = await openDatabase(
+          join(documentsDirectory.path, DBConstants.DB_NAME),
+          version: 1,
+          onCreate: _onCreate);
     }
   }
 
@@ -49,35 +47,37 @@ class DatabaseHelper {
   }
 
   Future<int> saveUnitMeasurements(UnitsMesurements unitsMesurements) async {
-    var dbClient = await db;
-    int res = await dbClient.insert(DBConstants.UT_NAME, unitsMesurements.toMap());
+    final dbClient = await db;
+    final res =
+        await dbClient.insert(DBConstants.UT_NAME, unitsMesurements.toMap());
     return res;
   }
 
   Future<UnitsMesurements> getMeasurementsBasedOnUnits(
       String unitsMeasure) async {
-    var dbClient = await db;
+    final dbClient = await db;
 
-    var results = await dbClient
-        .rawQuery(DBConstants.UT_QUERY_BY_UN, [unitsMeasure]);
+    final results =
+        await dbClient.rawQuery(DBConstants.UT_QUERY_BY_UN, [unitsMeasure]);
 
-    if (results.length > 0) {
-      return new UnitsMesurements.map(results.first);
+    if (results.isNotEmpty) {
+      return UnitsMesurements.map(results.first);
     }
   }
 
   Future<int> saveCountryMetrics(CountryMetrics countryMetrics) async {
-    var dbClient = await db;
-    int res = await dbClient.insert(DBConstants.CM_NAME, countryMetrics.toMap());
+    final dbClient = await db;
+    var res =
+        await dbClient.insert(DBConstants.CM_NAME, countryMetrics.toMap());
     return res;
   }
 
   Future<List<CountryMetrics>> getCountryMetrics() async {
-    var dbClient = await db;
-    List<Map> list = await dbClient.rawQuery(DBConstants.CM_QUERY);
-    List<CountryMetrics> employees = new List();
-    for (int i = 0; i < list.length; i++) {
-      var user = new CountryMetrics(
+    final dbClient = await db;
+    final List<Map> list = await dbClient.rawQuery(DBConstants.CM_QUERY);
+    final List<CountryMetrics> employees = [];
+    for (var i = 0; i < list.length; i++) {
+      final user = CountryMetrics(
           list[i][DBConstants.PRO_COUNTRY_CODE],
           list[i][DBConstants.PRO_NAME],
           list[i][DBConstants.PRO_BPSP],
@@ -95,55 +95,64 @@ class DatabaseHelper {
   }
 
   Future<int> getDBLength() async {
-    var dbClient = await db;
-    List<Map> list = await dbClient.rawQuery(DBConstants.CM_QUERY);
+    final dbClient = await db;
+    final List<Map> list = await dbClient.rawQuery(DBConstants.CM_QUERY);
 
     return list.length;
   }
 
   Future<CountryMetrics> getCustomer(int id) async {
-    var dbClient = await db;
-    String countryName =
+    final dbClient = await db;
+    var countryName =
         PreferenceUtil.getStringValue(CommonConstants.KEY_COUNTRYNAME);
 
-    var results = await dbClient
-        .rawQuery(DBConstants.CM_QUERY_BY_CC+'$id');
+    final results = await dbClient.rawQuery(DBConstants.CM_QUERY_BY_CC + '$id');
 
-    if (results.length > 0) {
-      return new CountryMetrics.map(results.first);
+    if (results.isNotEmpty) {
+      return CountryMetrics.map(results.first);
     }
 
-    return new CountryMetrics(id, countryName, DBConstants.PRO_PMIN, DBConstants.PRO_MMHG, DBConstants.PRO_PMIN,
-        DBConstants.PRO_MGDL, DBConstants.PRO_SPO2, DBConstants.PRO_PRBPM, DBConstants.PRO_F, DBConstants.PRO_KG);
+    return CountryMetrics(
+        id,
+        countryName,
+        DBConstants.PRO_PMIN,
+        DBConstants.PRO_MMHG,
+        DBConstants.PRO_PMIN,
+        DBConstants.PRO_MGDL,
+        DBConstants.PRO_SPO2,
+        DBConstants.PRO_PRBPM,
+        DBConstants.PRO_F,
+        DBConstants.PRO_KG);
   }
 
   Future<int> deleteCountryMetrics(CountryMetrics user) async {
-    var dbClient = await db;
+    final dbClient = await db;
 
-    int res = await dbClient.rawDelete(DBConstants.CM_DEL_QUERY_BY_CC, [user.countryCode]);
+    var res = await dbClient
+        .rawDelete(DBConstants.CM_DEL_QUERY_BY_CC, [user.countryCode]);
     return res;
   }
 
   Future<bool> updateCountryMetrics(CountryMetrics user) async {
-    var dbClient = await db;
-    int res = await dbClient.update(DBConstants.CM_NAME, user.toMap(),
+    final dbClient = await db;
+    var res = await dbClient.update(DBConstants.CM_NAME, user.toMap(),
         where: DBConstants.CC_WHR_CALUSE, whereArgs: <int>[user.countryCode]);
     return res > 0 ? true : false;
   }
 
   Future<int> getDBLengthUnit() async {
-    var dbClient = await db;
-    List<Map> list = await dbClient.rawQuery(DBConstants.UT_QUERY);
+    final dbClient = await db;
+    final List<Map> list = await dbClient.rawQuery(DBConstants.UT_QUERY);
 
     return list.length;
   }
 
   Future<List<UnitsMesurements>> getUnitsMeasurement() async {
-    var dbClient = await db;
-    List<Map> list = await dbClient.rawQuery(DBConstants.UT_QUERY);
-    List<UnitsMesurements> unitsList = new List();
-    for (int i = 0; i < list.length; i++) {
-      var unitObj = new UnitsMesurements(
+    final dbClient = await db;
+    final List<Map> list = await dbClient.rawQuery(DBConstants.UT_QUERY);
+    final List<UnitsMesurements> unitsList = [];
+    for (var i = 0; i < list.length; i++) {
+      final unitObj = UnitsMesurements(
         list[i][DBConstants.PRO_COUNTRY_CODE],
         list[i][DBConstants.PRO_NAME],
         list[i][DBConstants.PRO_BPSP],

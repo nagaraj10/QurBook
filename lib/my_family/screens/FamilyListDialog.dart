@@ -2,40 +2,40 @@ import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/FHBBasicWidget.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
+import '../../common/CommonUtil.dart';
+import '../../common/FHBBasicWidget.dart';
+import '../../common/PreferenceUtil.dart';
+import '../bloc/FamilyListBloc.dart';
 
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/my_family/models/FamilyData.dart';
-import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
-import 'package:myfhb/my_family/models/LinkedData.dart';
-import 'package:myfhb/my_family/models/ProfileData.dart';
-import 'package:myfhb/my_family/models/Sharedbyme.dart';
-import 'package:myfhb/src/model/user/MyProfileModel.dart';
-import 'package:myfhb/src/resources/network/ApiResponse.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import '../../colors/fhb_colors.dart' as fhbColors;
+import '../../constants/fhb_constants.dart' as Constants;
+import '../models/FamilyData.dart';
+import '../models/FamilyMembersResponse.dart';
+import '../models/LinkedData.dart';
+import '../models/ProfileData.dart';
+import '../models/Sharedbyme.dart';
+import '../../src/model/user/MyProfileModel.dart';
+import '../../src/resources/network/ApiResponse.dart';
+import '../../constants/variable_constant.dart' as variable;
+import '../../src/utils/screenutils/size_extensions.dart';
 
 class FamilyListDialog extends StatefulWidget {
   final FamilyData familyData;
 
-  FamilyListDialog(this.familyData);
+  const FamilyListDialog(this.familyData);
   @override
   FamilyListDialogState createState() => FamilyListDialogState();
 }
 
 class FamilyListDialogState extends State<FamilyListDialog> {
   FamilyListBloc _familyListBloc;
-  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+  final GlobalKey<State> _keyLoader = GlobalKey<State>();
 
   @override
   void initState() {
     super.initState();
 
-    _familyListBloc = new FamilyListBloc();
+    _familyListBloc = FamilyListBloc();
     _familyListBloc.getFamilyMembersListNew();
   }
 
@@ -43,7 +43,7 @@ class FamilyListDialogState extends State<FamilyListDialog> {
   Widget build(BuildContext context) {
     if (_familyListBloc != null) {
       _familyListBloc = null;
-      _familyListBloc = new FamilyListBloc();
+      _familyListBloc = FamilyListBloc();
     }
 
     getDialogBoxWithFamilyMember(widget.familyData).then((widget) {
@@ -58,7 +58,7 @@ class FamilyListDialogState extends State<FamilyListDialog> {
         : StreamBuilder<ApiResponse<FamilyMembersList>>(
             stream: _familyListBloc.familyMemberListStream,
             builder: (context,
-                AsyncSnapshot<ApiResponse<FamilyMembersList>> snapshot) {
+                snapshot) {
               if (snapshot.hasData) {
                 switch (snapshot.data.status) {
                   case Status.LOADING:
@@ -96,7 +96,7 @@ class FamilyListDialogState extends State<FamilyListDialog> {
   Future<Widget> getDialogBoxWithFamilyMember(FamilyData data) async {
     return showDialog(
         context: context,
-        builder: (BuildContext context) {
+        builder: (context) {
           return AlertDialog(
               backgroundColor: const Color(fhbColors.bgColorContainer),
               shape: RoundedRectangleBorder(
@@ -150,23 +150,23 @@ class FamilyListDialogState extends State<FamilyListDialog> {
   }
 
   Widget setupAlertDialoadContainer(List<Sharedbyme> sharedByMe) {
-    MyProfileModel myProfile =
+    var myProfile =
         PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
 
-    ProfileData profileData = new ProfileData(
+    var profileData = ProfileData(
         id: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN));
-    LinkedData linkedData =
-        new LinkedData(roleName: variable.Self, nickName: variable.Self);
+    var linkedData =
+        LinkedData(roleName: variable.Self, nickName: variable.Self);
 
     if (sharedByMe == null) {
-      sharedByMe = new List();
+      sharedByMe = [];
       sharedByMe.add(
-          new Sharedbyme(profileData: profileData, linkedData: linkedData));
+          Sharedbyme(profileData: profileData, linkedData: linkedData));
     } else {
       sharedByMe.insert(
-          0, new Sharedbyme(profileData: profileData, linkedData: linkedData));
+          0, Sharedbyme(profileData: profileData, linkedData: linkedData));
     }
-    if (sharedByMe.length > 0) {
+    if (sharedByMe.isNotEmpty) {
       return Container(
           height: 1.sh, // Change as per your requirement
           width: 1.sw,
@@ -175,9 +175,8 @@ class FamilyListDialogState extends State<FamilyListDialog> {
             alignment: Alignment.bottomCenter,
             children: <Widget>[
               ListView.builder(
-                shrinkWrap: false,
                 itemCount: sharedByMe.length,
-                itemBuilder: (BuildContext context, int index) {
+                itemBuilder: (context, index) {
                   return ListTile(
                     title: InkWell(
                       child: Container(
@@ -187,12 +186,11 @@ class FamilyListDialogState extends State<FamilyListDialog> {
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(10)),
                         child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             ClipOval(
                                 child: sharedByMe[index].linkedData.nickName ==
                                         variable.Self
-                                    ? new FHBBasicWidget()
+                                    ? FHBBasicWidget()
                                         .getProfilePicWidgeUsingUrl(myProfile)
                                     : Image.memory(
                                         Uint8List.fromList(sharedByMe[index]
@@ -241,9 +239,10 @@ class FamilyListDialogState extends State<FamilyListDialog> {
               ),
               Container(
                 decoration: BoxDecoration(
-                    color: Color(new CommonUtil().getMyPrimaryColor()),
+                    color: Color(CommonUtil().getMyPrimaryColor()),
                     borderRadius: BorderRadius.circular(10)),
                 child: FlatButton(
+                  onPressed: () {},
                   child: Text(
                     variable.strAddFamily,
                     style: TextStyle(
@@ -251,7 +250,6 @@ class FamilyListDialogState extends State<FamilyListDialog> {
                       fontSize: 16.0.sp,
                     ),
                   ),
-                  onPressed: () {},
                 ),
               )
             ],
