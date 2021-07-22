@@ -25,7 +25,6 @@ class PaymentResultPage extends StatefulWidget {
   final bool isPaymentFails;
   final String cartUserId;
 
-
   PaymentResultPage({
     Key key,
     @required this.status,
@@ -81,13 +80,16 @@ class _ResultPage extends State<PaymentResultPage> {
                     fontSize: 16.0.sp,
                     color: Colors.white,
                     fontWeight: FontWeight.bold))
-            : Text(
-                PAYMENT_FAILURE_CONTENT, // TODO this need to confirm with Bussiness
-                style: TextStyle(
-                    fontSize: 12.0.sp,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
+            : Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Text(
+                  PAYMENT_FAILURE_CONTENT, // TODO this need to confirm with Bussiness
+                  style: TextStyle(
+                      fontSize: 12.0.sp,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
               ),
       ],
     );
@@ -141,7 +143,7 @@ class _ResultPage extends State<PaymentResultPage> {
                         onPressed: () {
                           Provider.of<CheckoutPageProvider>(context,
                                   listen: false)
-                              .loader(false,isNeedRelod: true);
+                              .loader(false, isNeedRelod: true);
 
                           if (status) {
                             //widget.closePage(STR_SUCCESS);
@@ -174,7 +176,7 @@ class _ResultPage extends State<PaymentResultPage> {
                               onPressed: () async {
                                 Provider.of<CheckoutPageProvider>(context,
                                         listen: false)
-                                    .loader(false,isNeedRelod: true);
+                                    .loader(false, isNeedRelod: true);
                                 Provider.of<RegimentViewModel>(
                                   Get.context,
                                   listen: false,
@@ -182,8 +184,7 @@ class _ResultPage extends State<PaymentResultPage> {
                                 Provider.of<RegimentViewModel>(
                                   Get.context,
                                   listen: false,
-                                ).regimentFilter = RegimentFilter
-                                    .Scheduled;
+                                ).regimentFilter = RegimentFilter.Scheduled;
                                 await Get.offAllNamed(router.rt_Regimen);
                               },
                               child: Text(
@@ -207,7 +208,7 @@ class _ResultPage extends State<PaymentResultPage> {
                               onPressed: () {
                                 Provider.of<CheckoutPageProvider>(context,
                                         listen: false)
-                                    .loader(false,isNeedRelod: true);
+                                    .loader(false, isNeedRelod: true);
 
                                 Get.offAll(CheckoutPage(
                                   //cartType: CartType.RETRY_CART,

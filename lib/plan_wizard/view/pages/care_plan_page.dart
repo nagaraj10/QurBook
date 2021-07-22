@@ -33,6 +33,9 @@ class _CarePlanPageState extends State<CarePlanPage> {
 
   PlanWizardViewModel planListProvider;
 
+  List sortType = ['Default', 'Price', 'Duration'];
+  ValueNotifier<String> _selectedItem = new ValueNotifier<String>('Default');
+
   @override
   void initState() {
     Provider.of<PlanWizardViewModel>(context, listen: false).currentPackageId =
@@ -40,7 +43,6 @@ class _CarePlanPageState extends State<CarePlanPage> {
 
     planListModel = Provider.of<PlanWizardViewModel>(context, listen: false)
         .getCarePlanList();
-
   }
 
   @override
@@ -69,7 +71,7 @@ class _CarePlanPageState extends State<CarePlanPage> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 10.0),
-                  child: popMenuItem(),
+                  child: popMenuItemNew(),
                 ),
                 SizedBox(width: 20.w)
               ],
@@ -132,8 +134,11 @@ class _CarePlanPageState extends State<CarePlanPage> {
           if (snapshot?.hasData &&
               snapshot?.data?.result != null &&
               snapshot?.data?.result?.length > 0) {
-            carePlanListLength = isSearch ?planSearchList.length:snapshot?.data?.result?.length ?? 0;
-            return carePlanList(isSearch?planSearchList:snapshot?.data?.result);
+            carePlanListLength = isSearch
+                ? planSearchList.length
+                : snapshot?.data?.result?.length ?? 0;
+            return carePlanList(
+                isSearch ? planSearchList : snapshot?.data?.result);
           } else {
             return SafeArea(
               child: SizedBox(
@@ -200,7 +205,7 @@ class _CarePlanPageState extends State<CarePlanPage> {
         false;
   }
 
-  Widget popMenuItem() {
+  /* Widget popMenuItem() {
     return PopupMenuButton(
       icon: Icon(
         Icons.sort,
@@ -248,6 +253,69 @@ class _CarePlanPageState extends State<CarePlanPage> {
               new Text(popUpChoiceDefault, style: TextStyle(fontSize: 14.0.sp)),
         ),
       ],
+    );
+  } */
+
+  Widget popMenuItemNew() {
+    return new PopupMenuButton<String>(
+      icon: Icon(
+        Icons.sort,
+      ),
+      itemBuilder: (BuildContext context) {
+        List<PopupMenuEntry<String>> menuItems =
+            new List<PopupMenuEntry<String>>.generate(
+          sortType.length,
+          (int index) {
+            return new PopupMenuItem(
+              value: sortType[index],
+              child: new AnimatedBuilder(
+                child: new Text(sortType[index]),
+                animation: _selectedItem,
+                builder: (BuildContext context, Widget child) {
+                  return new RadioListTile<String>(
+                    value: sortType[index],
+                    groupValue: _selectedItem.value,
+                    title: child,
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedItem.value = value;
+                        FocusManager.instance.primaryFocus.unfocus();
+                        _selectedView = value;
+                        if (value == popUpChoicePrice) {
+                          isSearch = true;
+                          onSearched(value, popUpChoicePrice);
+                        } else if (value == popUpChoiceDura) {
+                          isSearch = true;
+                          onSearched(value, popUpChoiceDura);
+                        } else if (value == popUpChoiceDefault) {
+                          isSearch = true;
+                          onSearched(value, popUpChoiceDefault);
+                        } else {
+                          isSearch = false;
+                        }
+                      });
+                      Get.back();
+                    },
+                    activeColor: Color(CommonUtil().getMyPrimaryColor()),
+                  );
+                },
+              ),
+            );
+          },
+        );
+        menuItems
+          ..insert(
+              0,
+              new CheckedPopupMenuItem(
+                enabled: false,
+                value: popUpChoiceSortLabel,
+                child: new Text(
+                  popUpChoiceSortLabel,
+                  style: TextStyle(fontSize: 14.0.sp, color: Colors.blueGrey),
+                ),
+              ));
+        return menuItems;
+      },
     );
   }
 }
