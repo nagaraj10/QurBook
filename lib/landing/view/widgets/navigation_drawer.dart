@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/Orders/View/OrdersView.dart';
 import 'package:myfhb/colors/fhb_colors.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
@@ -13,6 +15,7 @@ import 'package:myfhb/landing/view/widgets/drawer_tile.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/widgets/checkout_page.dart';
 
 class NavigationDrawer extends StatelessWidget {
   NavigationDrawer({
@@ -151,6 +154,21 @@ class NavigationDrawer extends StatelessWidget {
                         },
                       ),
                       DrawerTile(
+                        title: variable.strMyOrders,
+                        iconWidget: Image.asset(
+                          variable.icon_orderHistory,
+                          color: Colors.black54,
+                          width: 24.sp,
+                          height: 24.sp,
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          Get.to(
+                            OrdersView(),
+                          );
+                        },
+                      ),
+                      DrawerTile(
                         title: variable.strSettings,
                         iconWidget: SvgPicture.asset(
                           variable.icon_settings,
@@ -168,6 +186,7 @@ class NavigationDrawer extends StatelessWidget {
                           );
                         },
                       ),
+
                       DrawerTile(
                         title: variable.strRefer_friend,
                         // iconWidget: SvgPicture.asset(
@@ -181,6 +200,7 @@ class NavigationDrawer extends StatelessWidget {
                         ),
                         onPressed: () {
                           CommonUtil().accessContactsDialog();
+                          Navigator.pop(context);
                         },
                       ),
                       DrawerTile(

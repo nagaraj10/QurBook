@@ -112,6 +112,15 @@ class _ReceiverLayoutState extends State<ReceiverLayout> {
                 ),
               ),
             ),
+            widget?.c?.provider_msg
+                ? Text(
+                    variable.strMsgFromProvider,
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontStyle: FontStyle.italic,
+                        fontSize: 12),
+                  )
+                : SizedBox.shrink(),
             Text(
               "${widget.c.timeStamp}",
               style:

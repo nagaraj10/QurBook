@@ -1,19 +1,21 @@
 import 'dart:convert';
 
+import 'package:http/http.dart' as http;
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/HeaderRequest.dart';
-import 'package:http/http.dart' as http;
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_query.dart' as variable;
-import 'package:myfhb/regiment/models/regiment_response_model.dart';
-import 'package:myfhb/regiment/models/save_response_model.dart';
 import 'package:myfhb/regiment/models/field_response_model.dart';
 import 'package:myfhb/regiment/models/profile_response_model.dart';
-import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/regiment/models/regiment_response_model.dart';
+import 'package:myfhb/regiment/models/save_response_model.dart';
 
 class RegimentService {
-  static Future<RegimentResponseModel> getRegimentData(
-      {String dateSelected}) async {
+  static Future<RegimentResponseModel> getRegimentData({
+    String dateSelected,
+    bool isSymptoms = false,
+  }) async {
     var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     final urlForRegiment = Constants.BASE_URL + variable.regiment;
     try {
@@ -34,7 +36,7 @@ class RegimentService {
           {
             "method": "get",
             "data":
-                "Action=GetUserActivities&lang=$currentLanguage&date=$dateSelected${variable.qr_patientEqaul}$userId",
+                "Action=GetUserActivities&lang=$currentLanguage&date=$dateSelected&issymptom=${isSymptoms ? 1 : 0}${variable.qr_patientEqaul}$userId",
           },
         ),
       );

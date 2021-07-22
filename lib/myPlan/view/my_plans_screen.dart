@@ -7,7 +7,9 @@ import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/landing/view/landing_arguments.dart';
 import 'package:myfhb/myPlan/view/myPlanList.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import 'package:myfhb/widgets/CartIconWithBadge.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
+import 'package:myfhb/widgets/checkout_page.dart';
 
 class MyPlansScreen extends StatelessWidget {
   @override
@@ -24,6 +26,18 @@ class MyPlansScreen extends StatelessWidget {
           size: 24.0.sp,
           onTap: () => onBackPressed(context),
         ),
+        actions: [
+          Center(
+            child: Container(
+                margin: EdgeInsets.only(right: 15.0.sp),
+                child: InkWell(
+                    onTap: () {
+                      Get.to(CheckoutPage());
+                    },
+                    child:
+                        CartIconWithBadge(color: Colors.white, size: 32.0.sp))),
+          ),
+        ],
       ),
       body: WillPopScope(
         onWillPop: () {

@@ -249,6 +249,8 @@ const String VerifyEmail = 'Tap to verify Email address';
 const String otp_assets = 'assets/icons/otp_icon.png';
 const String planDownload = 'assets/icons/planDownload.png';
 const String sendIcon = 'assets/send.svg';
+const String ic_cart_delete = 'assets/icons/cart_delete_red.svg';
+const String ic_empty_cart = 'assets/icons/empty_cart.svg';
 
 const String enterFirstName = 'Enter First Name';
 const String enterLastName = 'Enter Last Name';
@@ -355,6 +357,7 @@ const String EXIT_APP_TO_EXIT = "Are you sure to exit app?";
 const String CANCEL = "CANCEL";
 const String YES = "YES";
 const String CHAT = "Chats";
+const String CAREPROVIDERS = "Care Providers";
 
 const String KEY_FAMILYMEMBERNEW = 'familymembernew';
 const String CONSULTING = 'CONSULTING';
@@ -406,6 +409,7 @@ const String STR_NOT_VERIFIED = 'Not Verified';
 const String STR_SUCCESS = 'success';
 const String STR_FAILED = 'failed';
 const String STR_DONE = 'Done';
+const String STR_REGIMENT = 'Go to Regimen';
 
 const String STR_LATEST_VALUE = 'Latest Value';
 
@@ -468,8 +472,9 @@ const String planActivities = 'Plan Activities';
 const String planSymptoms = 'Plan Symptoms';
 const String undo = 'Undo';
 const String filter = 'Filter';
-const String allActivities = 'All Activities';
-const String missedActivities = 'Missed Activities';
+const String scheduledActivities = 'Scheduled';
+const String asNeededActivities = 'As Needed';
+const String missedActivities = 'Missed';
 
 const strJpgDot = '.jpg';
 const strJpegDot = '.jpeg';
@@ -506,6 +511,7 @@ const strNoVideos = 'No videos available';
 const strVideosAvailable = 'videos available';
 const strChatWithUs = 'Chat with us';
 const strChatAvailable = ' is available';
+const strCareProvidersAvailable = 'care providers available';
 const strChatNotAvailable = 'No care provider assigned';
 const strMyDashboard = 'Dashboard';
 const String strSheelaG = 'Sheela';
@@ -518,11 +524,26 @@ const String strMyPlans = 'My Care Plans';
 const String strCarePlans = 'Care Plans';
 const String strHealthcon = 'Health Condition';
 const String strPlans = 'Plans';
+const String strSelectHealth = 'Select your Health Conditions';
+const String strSelectCare = 'Select your Care Plan';
+const String strSelectTherapeutic = 'Select your Therapeutic Diet';
+const String strDontCondition = 'Don\'t find your condition?';
+const String strDontPlan = 'Don\'t find your plan?';
+const String strDontDietPlan = 'Don\'t find your diet plan?';
+const String strSearchHealth = 'Search health condition';
+const String strPlanHospitalDiet = 'Search Plan/Hospital';
+const String strSearchDietPlan = 'Search Diet Plan';
+const String strLetsAdd = 'Let\'s add it';
+const String strTellToUs = 'Tell to us';
+const String strDietPlan = 'Diet Plans';
+const String strNoHealthConditions = 'No Health Conditions Available';
 
 const strUploading = 'Uploading...';
 const strSubscribe = 'Subscribe';
+const strAddToCart = 'ADD TO CART';
+const strRemoveFromCart = 'REMOVE FROM CART';
 const strUnSubscribe = 'UnSubscribe';
-const strSubscribed = 'Subscribed';
+const strSubscribed = 'SUBSCRIBED';
 const strSelectedPlan = 'Selected Plan - ';
 const strSelectedPlans = 'Selected Plan(s) - ';
 const strSelectPlan = 'Select a Plan';
@@ -551,6 +572,13 @@ const String strNoContactsSearchlbl =
     'Looks like there is no contact in this name!!';
 const String strNoContactsLabel = 'Looks Like There are No Contacts!!!';
 const String strInviteErrorMsg = 'Invite sending failed. Please try again';
+
+const String STR_NOTES_HINT =
+    "Provide details on existing illness, allergies, history of the disease and medication taken";
+const String STR_HINT_PLAN = "Tell us more about your expectations";
+
+const String STR_YES = 'yes';
+const String STR_NO = 'no';
 
 FirebaseAnalytics _firebaseAnalytics = FirebaseAnalytics();
 var mInitialTime;

@@ -71,9 +71,10 @@ class RegimentDataCard extends StatelessWidget {
                               icon,
                               Visibility(
                                 visible: Provider.of<RegimentViewModel>(context,
-                                            listen: false)
-                                        .regimentMode ==
-                                    RegimentMode.Schedule,
+                                                listen: false)
+                                            .regimentMode ==
+                                        RegimentMode.Schedule &&
+                                    !(regimentData?.asNeeded ?? false),
                                 child: Padding(
                                   padding: EdgeInsets.only(
                                     top: 2.0.h,
@@ -442,8 +443,9 @@ class RegimentDataCard extends StatelessWidget {
 
   String getDialogTitle(BuildContext context) {
     String title = '';
-    if (Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
-        RegimentMode.Schedule) {
+    if (!(regimentData?.asNeeded ?? false) &&
+        Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
+            RegimentMode.Schedule) {
       title =
           '${regimentData?.estart != null ? DateFormat('hh:mm a').format(regimentData.estart) : ''},${regimentData.title}';
     } else {

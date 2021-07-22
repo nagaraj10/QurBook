@@ -8,10 +8,13 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/constants/responseModel.dart';
+import 'package:myfhb/constants/variable_constant.dart';
+import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:myfhb/telehealth/features/chat/view/pdfiosViewer.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:path/path.dart';
@@ -23,6 +26,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:myfhb/plan_dashboard/model/MetaDataForURL.dart';
 import 'dart:developer' as dev;
+
+import 'package:provider/provider.dart';
 
 class MyPlanDetailView extends StatefulWidget {
   final String title;
@@ -37,6 +42,9 @@ class MyPlanDetailView extends StatefulWidget {
   final String hosIcon;
   final String iconApi;
   final String catIcon;
+  final bool isRenew;
+  final String isFrom;
+  final bool isExtendable;
   final MetaDataForURL metaDataForURL;
 
   MyPlanDetailView({
@@ -53,6 +61,9 @@ class MyPlanDetailView extends StatefulWidget {
     @required this.hosIcon,
     @required this.iconApi,
     @required this.catIcon,
+    @required this.isRenew,
+    @required this.isFrom,
+    @required this.isExtendable,
     @required this.metaDataForURL,
   }) : super(key: key);
 
@@ -75,6 +86,9 @@ class PlanDetail extends State<MyPlanDetailView> {
   String hosIcon = '';
   String iconApi = '';
   String catIcon = '';
+  bool isExtendable = false;
+  bool isRenew = false;
+  String isFrom = '';
   InAppWebViewController webView;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -97,6 +111,9 @@ class PlanDetail extends State<MyPlanDetailView> {
     hosIcon = widget.hosIcon;
     iconApi = widget.iconApi;
     catIcon = widget.catIcon;
+    isRenew = widget.isRenew;
+    isFrom = widget.isFrom;
+    isExtendable = widget.isExtendable;
   }
 
   @override
@@ -480,33 +497,150 @@ class PlanDetail extends State<MyPlanDetailView> {
                   OutlineButton(
                     //hoverColor: Color(getMyPrimaryColor()),
                     child: Text(
-                      issubscription == '0' ? strSubscribe : strSubscribed,
+                      isFrom == strCare
+                          ? getAddCartText()
+                          : getAddCartTextDiet(),
                       style: TextStyle(
                         color: getTextColor(isDisable, issubscription),
                         fontSize: 13.sp,
                       ),
                     ),
-                    onPressed: isDisable
+                    onPressed:
+                        /*isDisable
                         ? null
-                        : () async {
-                            if (issubscription == '0') {
-                              CommonUtil().profileValidationCheck(contxt,
-                                  packageId: packageId,
-                                  isSubscribed: issubscription,
-                                  isFrom: strIsFromSubscibe,
-                                  feeZero: price ==
-                                      '' ||price == '0',
-                                  providerId: providerId, refresh: () {
-                                Navigator.of(context).pop();
+                        :*/
+                        () async {
+                      if (issubscription == '0') {
+                        if (isExtendable) {
+                          if (isFrom == strCare) {
+                            var isSelected = Provider.of<PlanWizardViewModel>(
+                                    context,
+                                    listen: false)
+                                .checkItemInCart(packageId, strCare,
+                                    providerId: providerId);
+                            if (isSelected) {
+                              await Provider.of<PlanWizardViewModel>(context,
+                                      listen: false)
+                                  ?.removeCart(packageId: packageId);
+                              Navigator.pop(context);
+                            } else {
+                              if (Provider.of<PlanWizardViewModel>(context,
+                                          listen: false)
+                                      ?.currentPackageId !=
+                                  '') {
+                                await Provider.of<PlanWizardViewModel>(context,
+                                        listen: false)
+                                    ?.removeCart(
+                                        packageId:
+                                            Provider.of<PlanWizardViewModel>(
+                                                    context,
+                                                    listen: false)
+                                                ?.currentPackageId);
+                                Navigator.pop(context);
+                              }
+
+                              bool isItemInCart =
+                                  Provider.of<PlanWizardViewModel>(context,
+                                          listen: false)
+                                      .checkAllItems();
+                              if (isItemInCart) {
+                                await Provider.of<PlanWizardViewModel>(context,
+                                        listen: false)
+                                    ?.removeCart(
+                                        packageId:
+                                            Provider.of<PlanWizardViewModel>(
+                                                    context,
+                                                    listen: false)
+                                                ?.currentCartPackageId);
+                                Navigator.pop(context);
+                              }
+
+                              await Provider.of<PlanWizardViewModel>(context,
+                                      listen: false)
+                                  ?.addToCartItem(
+                                      packageId: packageId,
+                                      price: price,
+                                      isRenew: isRenew,
+                                      providerId: providerId,
+                                      isFromAdd: strCare)
+                                  .then((value) {
+                                if (value.isSuccess) {
+                                  Navigator.pop(context);
+                                }
                               });
                             }
-                            /*else {
+                          } else if (isFrom == strDiet) {
+                            var isSelected = Provider.of<PlanWizardViewModel>(
+                                    context,
+                                    listen: false)
+                                .checkItemInCart(packageId, strDiet);
+                            if (isSelected) {
+                              await Provider.of<PlanWizardViewModel>(context,
+                                      listen: false)
+                                  ?.removeCart(
+                                      packageId: packageId, isFromDiet: true);
+                              Navigator.pop(context);
+                            } else {
+                              if (Provider.of<PlanWizardViewModel>(context,
+                                          listen: false)
+                                      ?.currentPackageIdDiet !=
+                                  '') {
+                                await Provider.of<PlanWizardViewModel>(context,
+                                        listen: false)
+                                    ?.removeCart(
+                                        packageId:
+                                            Provider.of<PlanWizardViewModel>(
+                                                    context,
+                                                    listen: false)
+                                                ?.currentPackageIdDiet,
+                                        isFromDiet: true);
+                                Navigator.pop(context);
+                              }
+
+                              bool isItemInCart =
+                                  Provider.of<PlanWizardViewModel>(context,
+                                          listen: false)
+                                      .checkAllItemsDiet();
+                              if (isItemInCart) {
+                                await Provider.of<PlanWizardViewModel>(context,
+                                        listen: false)
+                                    ?.removeCart(
+                                        packageId:
+                                            Provider.of<PlanWizardViewModel>(
+                                                    context,
+                                                    listen: false)
+                                                ?.currentCartDietPackageId,
+                                        isFromDiet: true);
+                                Navigator.pop(context);
+                              }
+
+                              await Provider.of<PlanWizardViewModel>(context,
+                                      listen: false)
+                                  ?.addToCartItem(
+                                      packageId: packageId,
+                                      price: price,
+                                      isRenew: isRenew,
+                                      providerId: providerId,
+                                      isFromAdd: strDiet,
+                                      isFromDiet: true)
+                                  .then((value) {
+                                if (value.isSuccess) {
+                                  Navigator.pop(context);
+                                }
+                              });
+                            }
+                          }
+                        } else {
+                          FlutterToast().getToast(renewalLimit, Colors.black);
+                        }
+                      }
+                      /*else {
                               CommonUtil().unSubcribeAlertDialog(context,
                                   packageId: packageId, refresh: () {
                                 Navigator.of(context).pop();
                               });
                               }*/
-                          },
+                    },
                     borderSide: BorderSide(
                       color: issubscription == '0'
                           ? Color(
@@ -551,6 +685,44 @@ class PlanDetail extends State<MyPlanDetailView> {
     );
   }
 
+  String getAddCartText() {
+    String text = strAddToCart;
+
+    if (Provider.of<PlanWizardViewModel>(Get.context)
+            .checkItemInCart(packageId, strCare, providerId: providerId) ||
+        Provider.of<PlanWizardViewModel>(Get.context).currentPackageId ==
+            packageId) {
+      text = strRemoveFromCart;
+    } else {
+      if (issubscription == '0') {
+        text = strAddToCart;
+      } else {
+        text = strSubscribed;
+      }
+    }
+
+    return text;
+  }
+
+  String getAddCartTextDiet() {
+    String text = strAddToCart;
+
+    if (Provider.of<PlanWizardViewModel>(Get.context)
+            .checkItemInCart(packageId, strDiet) ||
+        Provider.of<PlanWizardViewModel>(Get.context).currentPackageIdDiet ==
+            packageId) {
+      text = strRemoveFromCart;
+    } else {
+      if (issubscription == '0') {
+        text = strAddToCart;
+      } else {
+        text = strSubscribed;
+      }
+    }
+
+    return text;
+  }
+
   String getImage() {
     String image;
     if (iconApi != null && iconApi != '') {
@@ -577,14 +749,14 @@ class PlanDetail extends State<MyPlanDetailView> {
   }
 
   Color getTextColor(bool disable, String isSubscribe) {
-    if (isDisable) {
+    /*if (isDisable) {
       return Colors.grey;
+    } else {*/
+    if (isSubscribe == '0') {
+      return Color(CommonUtil().getMyPrimaryColor());
     } else {
-      if (isSubscribe == '0') {
-        return Color(CommonUtil().getMyPrimaryColor());
-      } else {
-        return Colors.grey;
-      }
+      return Colors.grey;
     }
+    //}
   }
 }

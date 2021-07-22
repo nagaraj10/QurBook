@@ -83,7 +83,7 @@ const String enterFirstName = 'Enter First Name';
 const String enterLastName = 'Enter Last Name';
 const String selectGender = 'Select Gender';
 const String selectDOB = 'Select DOB';
-const String selectYOB = 'Select year of birth';
+const String selectYOB = 'Enter year of birth';
 const String selectRHType = 'Select Rh type';
 const String selectBloodGroup = 'Select Blood group';
 
@@ -167,6 +167,8 @@ const String icon_image_single = 'assets/icons/img_single.png';
 const String icon_digit_reco = 'assets/settings/digit_recognition.png';
 const String icon_device_recon = 'assets/settings/device_recognition.png';
 const String icon_provider = 'assets/navicons/my_providers.png';
+const String icon_orderHistory = 'assets/navicons/orderHistory.png';
+
 const String icon_records = 'assets/navicons/records.png';
 const String icon_chat = 'assets/navicons/chat.png';
 const String icon_digit_googleFit = 'assets/settings/googlefit.png';
@@ -286,11 +288,13 @@ List<int> myGradient = [
 ];
 
 const String strSettings = 'Settings';
+const String strMyOrders = 'My Orders';
 const String strHelp = 'Help and support';
 const String strPrivacy = 'Privacy policy';
 const String strRateus = 'Rate us';
 const String strMaya = 'Sheela';
 const String strMAYA = 'SHEELA';
+const String strMsgFromProvider = 'Message from provider';
 
 const String strColorPalete = 'Color palette';
 
@@ -618,7 +622,7 @@ const String strNoDataAvailable = 'Unable To load';
 const String strHealthOrganizationName = 'healthOrganizationName';
 
 const String EMAIL_REGEXP =
-    //r"^[a-zA-Z0-9.a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
+//r"^[a-zA-Z0-9.a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
     r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{​​​​​|}​​​​​~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
 
 const String c_chat_with_whatsapp = 'Chat with Us';
@@ -629,6 +633,9 @@ const String icon_whatsapp = 'assets/icons/ic_whatsapp.png';
 const String strAdd = 'Add';
 const String strSync = 'Syncing...';
 const String vitalsSummary = 'Vitals Summary';
+
+const String renewalLimit =
+    'Renewal limit reached for this plan. Please try after few days';
 
 //Reminders
 //

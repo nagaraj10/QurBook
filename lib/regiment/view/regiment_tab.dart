@@ -11,6 +11,7 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/regiment/models/profile_response_model.dart';
 import 'package:myfhb/regiment/models/regiment_data_model.dart';
 import 'package:myfhb/regiment/view/widgets/event_list_widget.dart';
+import 'package:myfhb/regiment/view/widgets/filter_widget.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
@@ -65,8 +66,9 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
     Provider.of<RegimentViewModel>(context, listen: false)
         .updateInitialShowIndex(
       index: Provider.of<RegimentViewModel>(context, listen: false)
-                  .regimentFilter ==
-              RegimentFilter.Missed  && widget.eventId == null
+                      .regimentFilter ==
+                  RegimentFilter.Missed &&
+              widget.eventId == null
           ? 0
           : null,
       isInitial: true,
@@ -434,7 +436,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                 Flexible(
                   child: Text(
                     _regimentViewModel.regimentMode == RegimentMode.Schedule
-                        ? planActivities
+                        ? scheduled
                         : planSymptoms,
                     style: TextStyle(
                       fontSize: 16.0.sp,
@@ -443,62 +445,29 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                     ),
                   ),
                 ),
-                Row(
-                  children: [
-                    Visibility(
-                      visible: _regimentViewModel.regimentMode ==
-                          RegimentMode.Schedule,
+                if (_regimentViewModel.regimentMode == RegimentMode.Schedule)
+                  Flexible(
+                    flex: 3,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
                       child: Row(
                         children: [
-                          Theme(
-                            data: Theme.of(context).copyWith(
-                              unselectedWidgetColor:
-                                  Color(CommonUtil().getMyPrimaryColor()),
-                            ),
-                            child: Checkbox(
-                              materialTapTargetSize:
-                                  MaterialTapTargetSize.shrinkWrap,
-                              value: _regimentViewModel.regimentFilter ==
-                                  RegimentFilter.Missed,
-                              activeColor:
-                                  Color(CommonUtil().getMyPrimaryColor()),
-                              onChanged: (isMissed) {
-                                _regimentViewModel.changeFilter(isMissed
-                                    ? RegimentFilter.Missed
-                                    : RegimentFilter.All);
-                              },
-                            ),
+                          const FilterWidget(
+                            title: scheduledActivities,
+                            value: RegimentFilter.Scheduled,
                           ),
-                          Padding(
-                            padding: EdgeInsets.only(
-                              right: 15.0.w,
-                            ),
-                            child: Text(
-                              missedActivities,
-                              style: TextStyle(
-                                fontSize: 14.0.sp,
-                                fontWeight: FontWeight.w500,
-                                color: Color(CommonUtil().getMyPrimaryColor()),
-                              ),
-                            ),
+                          const FilterWidget(
+                            title: asNeededActivities,
+                            value: RegimentFilter.AsNeeded,
+                          ),
+                          const FilterWidget(
+                            title: missedActivities,
+                            value: RegimentFilter.Missed,
                           ),
                         ],
                       ),
                     ),
-                    // InkWell(
-                    //   onTap: () {
-                    //     _regimentViewModel.changeSearchExpanded(true);
-                    //   },
-                    //   child: Center(
-                    //     child: Icon(
-                    //       Icons.search,
-                    //       color: Colors.black,
-                    //       size: 30.0.sp,
-                    //     ),
-                    //   ),
-                    // ),
-                  ],
-                ),
+                  ),
               ],
             ),
           ),

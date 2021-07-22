@@ -1,6 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -9,21 +7,17 @@ import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
 import 'package:myfhb/plan_dashboard/view/planDetailsView.dart';
 import 'package:myfhb/plan_dashboard/viewModel/planViewModel.dart';
 import 'package:myfhb/plan_dashboard/viewModel/subscribeViewModel.dart';
-import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'package:provider/provider.dart';
 import 'package:showcaseview/showcaseview.dart';
 
 class PlanList extends StatefulWidget {
@@ -67,13 +61,13 @@ class _MyPlanState extends State<PlanList> {
   void initState() {
     FocusManager.instance.primaryFocus.unfocus();
     super.initState();
-    Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
-      isInitial: true,
-    );
-    Provider.of<RegimentViewModel>(
-      context,
-      listen: false,
-    ).handleSearchField();
+    // Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
+    //   isInitial: true,
+    // );
+    // Provider.of<RegimentViewModel>(
+    //   context,
+    //   listen: false,
+    // ).handleSearchField();
     categoryId = widget.categoryId;
     hosIcon = widget.hosIcon;
     catIcon = widget.catIcon;
@@ -259,6 +253,7 @@ class _MyPlanState extends State<PlanList> {
                     iconApi: planList[i]?.metadata?.icon,
                     catIcon: catIcon,
                     metaDataForURL: planList[i]?.metadata,
+                    isRenew: planList[i]?.isexpired == '1' ? true : false,
                   )),
         ).then((value) {
           if (value == 'refreshUI') {

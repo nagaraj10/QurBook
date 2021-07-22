@@ -14,6 +14,7 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/myPlan/model/myPlanListModel.dart';
 import 'package:myfhb/myPlan/view/myPlanDetail.dart';
 import 'package:myfhb/myPlan/viewModel/myPlanViewModel.dart';
+import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
@@ -41,6 +42,7 @@ class _MyPlanState extends State<MyPlanList> {
   final GlobalKey _PlanCardKey = GlobalKey();
   bool isFirst;
   BuildContext _myContext;
+
   @override
   void initState() {
     super.initState();
@@ -51,6 +53,7 @@ class _MyPlanState extends State<MyPlanList> {
         listen: false,
       ).updateTabIndex(currentIndex: 3);
     }
+    Provider.of<PlanWizardViewModel>(context, listen: false)?.fetchCartItem();
     PreferenceUtil.init();
 
     isFirst = PreferenceUtil.isKeyValid(Constants.KEY_SHOWCASE_MyPlan);
@@ -81,7 +84,9 @@ class _MyPlanState extends State<MyPlanList> {
       return Scaffold(
           floatingActionButton: FloatingActionButton(
             onPressed: () async {
-              await Get.toNamed(rt_Diseases);
+              //TODO: Uncomment for actual plans screen
+              // await Get.toNamed(rt_Diseases);
+              await Get.toNamed(rt_PlanWizard);
             },
             elevation: 2.0,
             backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
@@ -170,6 +175,10 @@ class _MyPlanState extends State<MyPlanList> {
                     context,
                     listen: false,
                   ).regimentMode = RegimentMode.Schedule;
+                  Provider.of<RegimentViewModel>(
+                    context,
+                    listen: false,
+                  ).regimentFilter = RegimentFilter.Scheduled;
                   Get.toNamed(rt_Regimen);
                 },
                 child: TextWidget(
@@ -275,6 +284,8 @@ class _MyPlanState extends State<MyPlanList> {
                     catIcon: planList[i]?.catmetadata?.icon,
                     providerIcon: planList[i]?.providermetadata?.icon,
                     descriptionURL: planList[i]?.metadata?.descriptionURL,
+                    price: planList[i]?.price,
+                    isExtendable: planList[i]?.isExtendable,
                   )),
         ).then((value) {
           if (value == 'refreshUI') {
@@ -403,8 +414,12 @@ class _MyPlanState extends State<MyPlanList> {
                                 onPressed: () async {
                                   if (planList[i].isexpired == '1') {
                                     CommonUtil().renewAlertDialog(context,
-                                        packageId: planList[i].packageid,
-                                        refresh: () {
+                                        packageId: planList[i]?.packageid,
+                                        price: planList[i]?.price,
+                                        IsExtendable:
+                                            planList[i]?.isExtendable == '1'
+                                                ? false
+                                                : true, refresh: () {
                                       setState(() {});
                                     });
                                   } else {

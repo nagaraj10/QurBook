@@ -14,7 +14,7 @@ import 'package:provider/provider.dart';
 
 enum RegimentMode { Schedule, Symptoms }
 
-enum RegimentFilter { All, Missed, Event }
+enum RegimentFilter { All, Missed, Event, AsNeeded, Scheduled }
 
 enum RegimentStatus { Loading, Loaded, DialogOpened, DialogClosed }
 
@@ -35,7 +35,7 @@ class RegimentViewModel extends ChangeNotifier {
   int tabIndex = 0;
   double scrollOffset;
   int initialShowIndex;
-  RegimentFilter regimentFilter = RegimentFilter.All;
+  RegimentFilter regimentFilter = RegimentFilter.Scheduled;
   String redirectEventId = '';
 
   void updateInitialShowIndex({
@@ -104,7 +104,8 @@ class RegimentViewModel extends ChangeNotifier {
 
   void changeFilter(RegimentFilter newFilter) {
     regimentFilter = newFilter;
-    if (newFilter == RegimentFilter.Missed) {
+    if (newFilter == RegimentFilter.Missed ||
+        newFilter == RegimentFilter.AsNeeded) {
       updateInitialShowIndex(
         index: 0,
       );
@@ -118,10 +119,13 @@ class RegimentViewModel extends ChangeNotifier {
         ? RegimentMode.Symptoms
         : RegimentMode.Schedule;
     if (regimentMode == RegimentMode.Symptoms) {
-      regimentFilter = RegimentFilter.All;
+      regimentFilter = RegimentFilter.Scheduled;
       updateInitialShowIndex(index: 0);
     }
-    resetRegimenTab();
+    fetchRegimentData(
+      isInitial: true,
+    );
+    // resetRegimenTab();
     notifyListeners();
   }
 
@@ -135,9 +139,11 @@ class RegimentViewModel extends ChangeNotifier {
     List<RegimentDataModel> filteredList,
     bool isInitial = false,
   }) {
-    if (regimentFilter == RegimentFilter.Missed &&
-        regimentMode == RegimentMode.Schedule) {
-      regimentsList = getMissedFilter(filteredList);
+    if (regimentMode == RegimentMode.Schedule &&
+        (regimentFilter == RegimentFilter.Missed ||
+            regimentFilter == RegimentFilter.AsNeeded ||
+            regimentFilter == RegimentFilter.Scheduled)) {
+      regimentsList = getFilteredList(filteredList);
     } else if (filteredList != null) {
       regimentsList = filteredList;
     } else {
@@ -153,21 +159,34 @@ class RegimentViewModel extends ChangeNotifier {
     }
   }
 
-  List<RegimentDataModel> getMissedFilter(
+  List<RegimentDataModel> getFilteredList(
     List<RegimentDataModel> filteredList,
   ) {
-    List<RegimentDataModel> actualList = filteredList ?? regimentsScheduledList;
-    List<RegimentDataModel> missedRegimenList = [];
+    final actualList = filteredList ?? regimentsScheduledList;
+    final filteredRegimenList = <RegimentDataModel>[];
     actualList?.forEach((regimenData) {
-      if (regimenData?.estart
-              ?.difference(DateTime.now())
-              ?.inMinutes
-              ?.isNegative &&
-          regimenData.ack == null) {
-        missedRegimenList.add(regimenData);
+      if (regimentFilter == RegimentFilter.AsNeeded) {
+        if (regimenData?.asNeeded ?? false) {
+          filteredRegimenList.add(regimenData);
+        }
+      }
+      if (regimentFilter == RegimentFilter.Scheduled) {
+        if (regimenData?.scheduled ?? false) {
+          filteredRegimenList.add(regimenData);
+        }
+      } else if (regimentFilter == RegimentFilter.Missed) {
+        if (!(regimenData?.asNeeded ?? false) &&
+            (regimenData?.estart
+                    ?.difference(DateTime.now())
+                    ?.inMinutes
+                    ?.isNegative ??
+                false) &&
+            regimenData.ack == null) {
+          filteredRegimenList.add(regimenData);
+        }
       }
     });
-    return missedRegimenList;
+    return filteredRegimenList;
   }
 
   void startRegimenTTS(int index, String saytext) {
@@ -265,6 +284,7 @@ class RegimentViewModel extends ChangeNotifier {
     }
     regimentsData = await RegimentService.getRegimentData(
       dateSelected: CommonUtil().dateConversionToApiFormat(selectedDate),
+      isSymptoms: regimentMode == RegimentMode.Symptoms,
     );
     updateRegimentStatus(RegimentStatus.Loaded);
     regimentsData?.regimentsList?.forEach((event) {

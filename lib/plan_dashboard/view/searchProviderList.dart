@@ -11,12 +11,10 @@ import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
 import 'package:myfhb/plan_dashboard/view/categoryList.dart';
 import 'package:myfhb/plan_dashboard/viewModel/planViewModel.dart';
 import 'package:myfhb/plan_dashboard/viewModel/subscribeViewModel.dart';
-import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'package:provider/provider.dart';
 import 'package:showcaseview/showcaseview.dart';
 
 class SearchProviderList extends StatefulWidget {
@@ -54,13 +52,13 @@ class _SearchProviderList extends State<SearchProviderList> {
   void initState() {
     FocusManager.instance.primaryFocus.unfocus();
     super.initState();
-    Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
-      isInitial: true,
-    );
-    Provider.of<RegimentViewModel>(
-      context,
-      listen: false,
-    ).handleSearchField();
+    // Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
+    //   isInitial: true,
+    // );
+    // Provider.of<RegimentViewModel>(
+    //   context,
+    //   listen: false,
+    // ).handleSearchField();
     diseases = widget.diseases;
     planListResult = widget.planListResult;
     PreferenceUtil.init();

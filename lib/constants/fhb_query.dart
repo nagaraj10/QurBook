@@ -96,7 +96,8 @@ const String qr_doctorid = 'doctorId';
 const String qr_getSlots = 'doctor/checkavailability';
 const String qr_bookAppointment = 'appointment';
 const String qr_update_payment = 'payment/update-payment-status/';
-const String qr_update_payment_subscribe = 'payment/plan-subscription-update-payment-status';
+const String qr_update_payment_subscribe =
+    'payment/plan-subscription-update-payment-status';
 
 const String qr_created_by = 'createdBy';
 const String qr_booked_for = 'bookedFor';
@@ -152,6 +153,7 @@ const String qr_myconnection = 'myconnection/';
 const String qr_id = '?id=';
 const String qr_user = 'user/';
 const String qr_section = '?section=';
+const String qr_myOrders = 'my-orders';
 
 const String qr_doctor = 'doctor/';
 const String qr_SearchText = 'searchText=';
@@ -242,6 +244,22 @@ const String regiment = 'plan-package-master/wrapperApi';
 const String qr_save_regi_media = 'media-details/store-media';
 const String regimentImagePath = 'https://qurplan.com/assets/images/';
 
+const String qr_health_conditions = 'Action=GetMenu';
+
+const String getMenuCarePlans = 'Action=GetMenuTaggedPackages&tags=';
+
+const String excludeDiet = '&extags=diet';
+
+const String getMenuDietPlans = 'Action=GetMenuTaggedPackages2&tags=';
+
+const String diet = ',diet';
+
+const String veg = ',veg';
+
+const String prid = '&prid=';
+
+const String exact = '&exact=1';
+
 const String qr_list = 'list/';
 const String qr_doctorlist = 'doctorsList?';
 const String qr_halthOrganization = 'healthOrganizationTypeId=';
@@ -255,3 +273,4 @@ const String qr_healthOrg = 'healthOrganization';
 const String qr_all = 'all';
 
 const String qr_createSubscribe = 'payment/plan-subscription-create-payment';
+const String qr_add_cart = 'cart/add-product';

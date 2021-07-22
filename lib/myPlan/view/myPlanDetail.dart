@@ -23,6 +23,8 @@ class MyPlanDetail extends StatefulWidget {
   final String catIcon;
   final String providerIcon;
   final String descriptionURL;
+  final String price;
+  final String isExtendable;
 
   MyPlanDetail(
       {Key key,
@@ -36,7 +38,9 @@ class MyPlanDetail extends StatefulWidget {
       @required this.icon,
       @required this.catIcon,
       @required this.providerIcon,
-      @required this.descriptionURL})
+      @required this.descriptionURL,
+      @required this.price,
+      @required this.isExtendable})
       : super(key: key);
 
   @override
@@ -59,6 +63,8 @@ class PlanDetail extends State<MyPlanDetail> {
   String catIcon = '';
   String providerIcon = '';
   String descriptionURL = '';
+  String price = '';
+  String isExtendable = '';
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   InAppWebViewController webView;
@@ -81,6 +87,8 @@ class PlanDetail extends State<MyPlanDetail> {
     catIcon = widget.catIcon;
     providerIcon = widget.providerIcon;
     descriptionURL = widget.descriptionURL;
+    price = widget.price;
+    isExtendable = widget.isExtendable;
   }
 
   @override
@@ -318,8 +326,10 @@ class PlanDetail extends State<MyPlanDetail> {
                   ),
                   onPressed: () async {
                     if (isExpired == '1') {
-                      CommonUtil()
-                          .renewAlertDialog(context, packageId: packageId);
+                      CommonUtil().renewAlertDialog(context,
+                          packageId: packageId,
+                          price: price,
+                          IsExtendable: isExtendable == '1' ? false : true);
                     } else {
                       CommonUtil().unSubcribeAlertDialog(
                         context,

@@ -52,15 +52,17 @@ class LandingViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateStatus(LandingScreenStatus newStatus) {
+  void updateStatus(LandingScreenStatus newStatus, {bool needNotify = false}) {
     landingScreenStatus = newStatus;
-    notifyListeners();
+    if (needNotify) {
+      notifyListeners();
+    }
   }
 
   Future<void> getQurPlanDashBoard({bool needNotify = false}) async {
     if (isLoadDone) {
       if (needNotify) {
-        updateStatus(LandingScreenStatus.Loading);
+        updateStatus(LandingScreenStatus.Loading, needNotify: needNotify);
       }
       isLoadDone = false;
       var dashboardResponse = await LandingService.getQurPlanDashBoard();
@@ -71,7 +73,7 @@ class LandingViewModel extends ChangeNotifier {
         dashboardData = dashboardResponse?.dashboardData;
       }
       if (needNotify) {
-        updateStatus(LandingScreenStatus.Loaded);
+        updateStatus(LandingScreenStatus.Loaded, needNotify: needNotify);
       }
       notifyListeners();
     }

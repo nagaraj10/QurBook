@@ -17,6 +17,7 @@ class Conversation {
   bool redirect;
   bool isSpeaking;
   bool loadingDots;
+  bool provider_msg;
   Conversation({
     @required this.isMayaSaid,
     @required this.text,
@@ -31,6 +32,7 @@ class Conversation {
     this.redirect,
     this.isSpeaking: false,
     this.loadingDots: true,
+    this.provider_msg: false,
   });
 
   Conversation.fromJson(Map<String, dynamic> json) {
@@ -40,6 +42,7 @@ class Conversation {
     name = json[parameters.strName];
     timeStamp = json[parameters.strTimeStamp];
     langCode = json[parameters.strLanguage];
+    provider_msg = json[parameters.strProviderMsg];
     if (json[parameters.strButtons] != null) {
       buttons = new List<Buttons>();
       json[parameters.strButtons].forEach((v) {
@@ -67,6 +70,7 @@ class Conversation {
     data[parameters.strName] = this.name;
     data[parameters.strTimeStamp] = this.timeStamp;
     data[parameters.strLanguage] = this.langCode;
+    data[parameters.strProviderMsg] = this.provider_msg;
     if (this.buttons != null) {
       data[parameters.strButtons] =
           this.buttons.map((v) => v.toJson()).toList();

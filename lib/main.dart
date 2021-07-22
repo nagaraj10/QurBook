@@ -1,68 +1,67 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io' show Platform;
+
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:myfhb/IntroScreens/IntroductionScreen.dart';
-import 'package:myfhb/regiment/models/regiment_arguments.dart';
-//import 'package:myfhb/QurPlan/WelcomeScreens/qurplan_welcome_screen.dart';
-// import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:camera/camera.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/IntroScreens/IntroductionScreen.dart';
 import 'package:myfhb/authentication/service/authservice.dart';
+import 'package:myfhb/authentication/view_model/otp_view_model.dart';
 import 'package:myfhb/common/DatabseUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_router.dart' as router;
 import 'package:myfhb/constants/router_variable.dart' as routervariable;
+import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/landing/view_model/landing_view_model.dart';
+import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
+import 'package:myfhb/regiment/models/regiment_arguments.dart';
+//import 'package:myfhb/QurPlan/WelcomeScreens/qurplan_welcome_screen.dart';
+// import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/schedules/add_reminders.dart';
-import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
-import 'package:myfhb/src/model/Category/catergory_result.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
+import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
-import 'package:myfhb/src/ui/Dashboard.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
-import 'package:myfhb/src/ui/MyRecordsArguments.dart';
-import 'package:myfhb/src/ui/SplashScreen.dart';
 import 'package:myfhb/src/ui/NetworkScreen.dart';
-import 'package:myfhb/src/ui/bot/view/ChatScreen.dart' as bot;
+import 'package:myfhb/src/ui/SplashScreen.dart';
+import 'package:myfhb/src/ui/bot/SuperMaya.dart';
 import 'package:myfhb/src/ui/bot/view/sheela_arguments.dart';
 import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
+import 'package:myfhb/src/utils/screenutils/screenutil.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
-import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/doctor.dart'
     as doc;
 import 'package:myfhb/telehealth/features/appointments/view/resheduleMain.dart';
 import 'package:myfhb/telehealth/features/chat/view/chat.dart';
 import 'package:myfhb/telehealth/features/chat/view/home.dart';
 import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
-import 'package:myfhb/telehealth/features/chat/viewModel/notificationController.dart';
 import 'package:myfhb/video_call/pages/callmain.dart';
 import 'package:myfhb/video_call/services/iOS_Notification_Handler.dart';
-import 'package:myfhb/video_call/services/push_notification_provider.dart';
 import 'package:myfhb/video_call/utils/callstatus.dart';
 import 'package:myfhb/video_call/utils/hideprovider.dart';
+import 'package:myfhb/widgets/shopping_card_provider.dart';
+import 'package:myfhb/widgets/checkout_page_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart' as provider;
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:myfhb/src/ui/bot/SuperMaya.dart';
-import 'package:myfhb/constants/router_variable.dart' as router;
+
 import 'common/CommonConstants.dart';
 import 'common/CommonUtil.dart';
 import 'my_family/viewmodel/my_family_view_model.dart';
@@ -70,11 +69,6 @@ import 'src/ui/SplashScreen.dart';
 import 'src/ui/connectivity_bloc.dart';
 import 'telehealth/features/appointments/model/fetchAppointments/city.dart';
 import 'telehealth/features/appointments/model/fetchAppointments/past.dart';
-import 'package:myfhb/src/utils/screenutils/screenutil.dart';
-import 'package:appsflyer_sdk/appsflyer_sdk.dart';
-import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
-import 'package:myfhb/authentication/view_model/otp_view_model.dart';
-import 'package:myfhb/landing/view_model/landing_view_model.dart';
 
 var firstCamera;
 List<CameraDescription> listOfCameras;
@@ -102,7 +96,6 @@ Future<void> main() async {
   });
 
   PreferenceUtil.init();
-
 
   await DatabaseUtil.getDBLength().then((length) {
     if (length == 0) {
@@ -162,6 +155,9 @@ Future<void> main() async {
         provider.ChangeNotifierProvider<RegimentViewModel>(
           create: (_) => RegimentViewModel(),
         ),
+        provider.ChangeNotifierProvider<PlanWizardViewModel>(
+          create: (_) => PlanWizardViewModel(),
+        ),
       ],
       child: MyFHB(),
     ),
@@ -169,8 +165,6 @@ Future<void> main() async {
 
   // await saveToPreference();
   //await PreferenceUtil.saveString(Constants.KEY_AUTHTOKEN, Constants.AuthToken);
-
-
 }
 
 void saveToPreference() async {
@@ -263,8 +257,8 @@ class _MyFHBState extends State<MyFHB> {
     getMyRoute();
     _enableTimer();
 
-    ApiBaseHelper apiBaseHelper=new ApiBaseHelper();
-    var res= apiBaseHelper.updateLastVisited();
+    ApiBaseHelper apiBaseHelper = new ApiBaseHelper();
+    var res = apiBaseHelper.updateLastVisited();
     isAlreadyLoaded = true;
     if (Platform.isIOS) {
       // Push Notifications
@@ -687,7 +681,11 @@ class _MyFHBState extends State<MyFHB> {
         ),
         provider.ChangeNotifierProvider<LandingViewModel>(
           create: (_) => LandingViewModel(),
-        ),
+        ),provider.ChangeNotifierProvider<ShoppingCardProvider>(
+          create: (_) => ShoppingCardProvider(),
+        ),provider.ChangeNotifierProvider<CheckoutPageProvider>(
+          create: (_) => CheckoutPageProvider(),
+        )
       ],
       child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {

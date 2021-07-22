@@ -1,8 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/myPlan/model/myPlanDetailModel.dart';
-import 'package:myfhb/myPlan/model/myPlanListModel.dart';
-import 'package:myfhb/myPlan/services/myPlanService.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
 import 'package:myfhb/plan_dashboard/model/SearchListModel.dart';
