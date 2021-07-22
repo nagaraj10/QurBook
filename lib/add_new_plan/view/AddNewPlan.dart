@@ -22,7 +22,7 @@ class AddNewPlan {
   AddNewBlock _addNewPlanBlock = new AddNewBlock();
 
   Future<Widget> addNewPlan(BuildContext context, String feedbackCode,
-      String titleNameNew, Function(bool) refresh) {
+      String titleNameNew, String hintText, Function(bool) refresh) {
     feedBackType = feedbackCode;
     titleName = titleNameNew;
     StatefulBuilder dialog = new StatefulBuilder(builder: (context, setState) {
@@ -49,8 +49,8 @@ class AddNewPlan {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            fhbBasicWidget.getRichTextFieldWithNoCallbacks(context, planContent,
-                Constants.STR_HINT_PLAN, 150, validationMsg, (error) {
+            fhbBasicWidget.getRichTextFieldWithNoCallbacks(
+                context, planContent, hintText, 150, validationMsg, (error) {
               setState(() {
                 validationMsg = error;
               });
@@ -59,10 +59,8 @@ class AddNewPlan {
               height: 15.0.h,
             ),
             fhbBasicWidget.getSaveButton(() {
-
-
               if (!planContent.text.isEmpty) {
-                onPostAddPlan(context,onRefresh: refresh);
+                onPostAddPlan(context, onRefresh: refresh);
               } else {
                 validationMsg =
                     "Please Enter " + feedBackType.replaceAll("Missing", "");
@@ -83,33 +81,29 @@ class AddNewPlan {
   }
 
   void onPostAddPlan(BuildContext context, {onRefresh}) async {
-      CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
+    CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
 
-      List<PlanCodeResult> planCodeResult =
-          await _addNewPlanBlock.getPlanCode();
+    List<PlanCodeResult> planCodeResult = await _addNewPlanBlock.getPlanCode();
 
-      String feedBackID = getFeedbackId(planCodeResult, feedBackType);
+    String feedBackID = getFeedbackId(planCodeResult, feedBackType);
 
-      Map<String, dynamic> postMediaData = new Map();
-      Map<String, dynamic> postMediaFeedBack = new Map();
-      postMediaFeedBack["id"] = feedBackID;
-      postMediaData["feedbackType"] = postMediaFeedBack;
-      postMediaData["content"] = planContent.text;
-      var params = json.encode(postMediaData);
-      print(params);
+    Map<String, dynamic> postMediaData = new Map();
+    Map<String, dynamic> postMediaFeedBack = new Map();
+    postMediaFeedBack["id"] = feedBackID;
+    postMediaData["feedbackType"] = postMediaFeedBack;
+    postMediaData["content"] = planContent.text;
+    var params = json.encode(postMediaData);
+    print(params);
 
-      _addNewPlanBlock.addNewPlan(params).then((value) {
-        if (value.isSuccess) {
-          Navigator.of(context).pop();
-          Navigator.of(context).pop();
-          onRefresh(value.isSuccess);
-        }else{
-          Navigator.of(context).pop();
-
-        }
-      });
-
-
+    _addNewPlanBlock.addNewPlan(params).then((value) {
+      if (value.isSuccess) {
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+        onRefresh(value.isSuccess);
+      } else {
+        Navigator.of(context).pop();
+      }
+    });
   }
 
   bool doValidationBeforePosting() {
