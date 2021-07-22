@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/FHBBasicWidget.dart';
 import '../../common/PreferenceUtil.dart';
@@ -235,8 +236,7 @@ class _MyPlanState extends State<MyPlanList> {
                   width: 30.0.h,
                   height: 30.0.h,
                   child: CircularProgressIndicator(
-                      backgroundColor:
-                          Color(CommonUtil().getMyPrimaryColor())),
+                      backgroundColor: Color(CommonUtil().getMyPrimaryColor())),
                 ),
               ),
             ),
@@ -402,8 +402,7 @@ class _MyPlanState extends State<MyPlanList> {
                                             : Colors.red)),
                                 color: Colors.transparent,
                                 textColor: planList[i].isexpired == '1'
-                                    ? Color(
-                                        CommonUtil().getMyPrimaryColor())
+                                    ? Color(CommonUtil().getMyPrimaryColor())
                                     : Colors.red,
                                 padding: EdgeInsets.all(
                                   8.0.sp,
@@ -420,7 +419,8 @@ class _MyPlanState extends State<MyPlanList> {
                                       setState(() {});
                                     });
                                   } else {
-                                    await CommonUtil().unSubcribeAlertDialog(context,
+                                    await CommonUtil().unSubcribeAlertDialog(
+                                        context,
                                         packageId: planList[i].packageid,
                                         refresh: () {
                                       setState(() {});
