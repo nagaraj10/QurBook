@@ -17,6 +17,7 @@ import 'package:myfhb/telehealth/features/MyProvider/viewModel/SlotsAvailability
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/common/errors_widget.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 
 class DoctorSessionTimeSlot extends StatefulWidget {
   final String doctorId;
@@ -200,10 +201,7 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
               children: <Widget>[
                 SizedBoxWidget(height: 20.0.h),
                 new SizedBox(
-                  child: CircularProgressIndicator(
-                      strokeWidth: 2.0,
-                      backgroundColor:
-                          Color(new CommonUtil().getMyPrimaryColor())),
+                  child: CommonCircularIndicator(),
                   height: 20.0.h,
                   width: 20.0.h,
                 ),
@@ -220,30 +218,30 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
                     ? Container(
                         margin: EdgeInsets.only(left: 5, top: 12),
                         child: GetTimeSlots(
-                          dateSlotTimingsObj: snapshot.data,
-                          docs: widget.docs,
-                          docsReschedule: widget.docsReschedule,
-                          j: widget.i,
-                          doctorListIndex: widget.doctorListIndex,
-                          selectedDate: _selectedValue,
-                          isReshedule: widget.isReshedule,
-                          doctorsData: widget.doctorsData,
-                          healthOrganizationResult:
-                              widget.healthOrganizationResult,
-                          resultFromHospitalList: widget.resultFromHospitalList,
-                          doctorListPos: widget.doctorListPos,
-                          closePage: (value) {
-                            widget.closePage(value);
-                          },
-                          isRefresh: () {
-                            widget.refresh();
-                          },
-                          isFromNotification: widget.isFromNotification,
-                          isFromHospital: widget.isFromHospital,
-                          body: widget.body,
-                          isFromFollowReschedule:
-                              widget.isFromFollowOrReschedule
-                        ),
+                            dateSlotTimingsObj: snapshot.data,
+                            docs: widget.docs,
+                            docsReschedule: widget.docsReschedule,
+                            j: widget.i,
+                            doctorListIndex: widget.doctorListIndex,
+                            selectedDate: _selectedValue,
+                            isReshedule: widget.isReshedule,
+                            doctorsData: widget.doctorsData,
+                            healthOrganizationResult:
+                                widget.healthOrganizationResult,
+                            resultFromHospitalList:
+                                widget.resultFromHospitalList,
+                            doctorListPos: widget.doctorListPos,
+                            closePage: (value) {
+                              widget.closePage(value);
+                            },
+                            isRefresh: () {
+                              widget.refresh();
+                            },
+                            isFromNotification: widget.isFromNotification,
+                            isFromHospital: widget.isFromHospital,
+                            body: widget.body,
+                            isFromFollowReschedule:
+                                widget.isFromFollowOrReschedule),
                       )
                     : Column(
                         children: <Widget>[

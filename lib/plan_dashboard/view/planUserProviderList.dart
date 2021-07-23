@@ -22,6 +22,7 @@ import '../../src/utils/screenutils/size_extensions.dart';
 import '../../telehealth/features/SearchWidget/view/SearchWidget.dart';
 import 'package:provider/provider.dart';
 import 'package:showcaseview/showcaseview.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 
 class SearchListHome extends StatefulWidget {
   @override
@@ -105,10 +106,7 @@ class _SearchListState extends State<SearchListHome> {
                       child: SizedBox(
                         width: 30.0.h,
                         height: 30.0.h,
-                        child: CircularProgressIndicator(
-                            strokeWidth: 1.5,
-                            backgroundColor:
-                                Color(CommonUtil().getMyPrimaryColor())),
+                        child: CommonCircularIndicator(),
                       ),
                     )),
                 Expanded(
@@ -151,9 +149,7 @@ class _SearchListState extends State<SearchListHome> {
                 child: SizedBox(
                   width: 30.0.h,
                   height: 30.0.h,
-                  child: CircularProgressIndicator(
-                      backgroundColor:
-                          Color(CommonUtil().getMyPrimaryColor())),
+                  child: CommonCircularIndicator(),
                 ),
               ),
             ),
@@ -356,16 +352,19 @@ class _SearchListState extends State<SearchListHome> {
                           maxLines: 2,
                         ),
                         if (searchList[i].title != null &&
-                                searchList[i].title != '' &&
-                                searchList[i].title == strQurhealth) Text(
-                                strCovidFree,
-                                style: TextStyle(
-                                  fontSize: 15.0.sp,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.red,
-                                ),
-                                textAlign: TextAlign.start,
-                              ) else SizedBox.shrink()
+                            searchList[i].title != '' &&
+                            searchList[i].title == strQurhealth)
+                          Text(
+                            strCovidFree,
+                            style: TextStyle(
+                              fontSize: 15.0.sp,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.red,
+                            ),
+                            textAlign: TextAlign.start,
+                          )
+                        else
+                          SizedBox.shrink()
                       ],
                     ),
                   ),

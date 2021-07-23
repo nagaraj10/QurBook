@@ -8,6 +8,7 @@ import '../src/model/Category/CategoryResponseList.dart';
 import '../src/model/Category/catergory_result.dart';
 import '../src/model/Media/DeviceModel.dart';
 import '../src/utils/screenutils/size_extensions.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 
 class OverlayCategoryDialog extends ModalRoute<void> {
   @override
@@ -120,7 +121,7 @@ class OverlayCategoryDialog extends ModalRoute<void> {
                   child: CachedNetworkImage(
                     imageUrl: Constants.BASE_URL + catgoryDataList[i].logo,
                     color: Colors.white70,
-                    placeholder: (context, url) => CircularProgressIndicator(),
+                    placeholder: (context, url) => CommonCircularIndicator(),
                     errorWidget: (context, url, error) => Icon(Icons.error),
                   ),
                 ),

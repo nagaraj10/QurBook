@@ -21,6 +21,7 @@ import '../../src/utils/screenutils/size_extensions.dart';
 import '../../telehealth/features/SearchWidget/view/SearchWidget.dart';
 import 'package:provider/provider.dart';
 import 'package:showcaseview/showcaseview.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 
 class MyPlanList extends StatefulWidget {
   MyPlanList({
@@ -235,8 +236,7 @@ class _MyPlanState extends State<MyPlanList> {
                 child: SizedBox(
                   width: 30.0.h,
                   height: 30.0.h,
-                  child: CircularProgressIndicator(
-                      backgroundColor: Color(CommonUtil().getMyPrimaryColor())),
+                  child: CommonCircularIndicator(),
                 ),
               ),
             ),

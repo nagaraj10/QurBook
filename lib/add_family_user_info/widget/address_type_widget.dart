@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 import '../models/address_result.dart';
 import '../viewmodel/doctor_personal_viewmodel.dart';
 import '../../common/errors_widget.dart';
@@ -75,7 +76,7 @@ class AddressTypeWidgetState extends State<AddressTypeWidget> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Scaffold(
-            body: Center(child: CircularProgressIndicator()),
+            body: CommonCircularIndicator(),
           );
         } else if (snapshot.hasError) {
           return ErrorsWidget();

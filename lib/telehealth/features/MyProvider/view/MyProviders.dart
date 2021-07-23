@@ -19,6 +19,7 @@ import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
 import 'package:myfhb/search_providers/models/search_arguments.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
+import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/AvailableTimeSlotsModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/SlotSessionsModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/Slots.dart';
@@ -308,10 +309,7 @@ class _MyProvidersState extends State<MyProviders> {
       future: _medicalPreferenceList,
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return new Center(
-            child: new CircularProgressIndicator(
-                backgroundColor: Color(new CommonUtil().getMyPrimaryColor())),
-          );
+          return CommonCircularIndicator();
         } else if (snapshot.hasError) {
           return ErrorsWidget();
         } else {

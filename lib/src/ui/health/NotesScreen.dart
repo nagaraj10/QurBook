@@ -15,6 +15,7 @@ import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 
 class NotesScreenList extends StatefulWidget {
   final HealthRecordList completeData;
@@ -295,10 +296,7 @@ class _NotesScreenListState extends State<NotesScreenList> {
                 backgroundColor: Colors.white,
                 body: Center(
                     child: SizedBox(
-                  child: CircularProgressIndicator(
-                    backgroundColor:
-                        Color(new CommonUtil().getMyPrimaryColor()),
-                  ),
+                  child: CommonCircularIndicator(),
                   width: 30.0.h,
                   height: 30.0.h,
                 )),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 
 class PDFView extends StatefulWidget {
   @override
@@ -42,7 +43,7 @@ class _PDFViewState extends State<PDFView> {
         child: Obx(
           () {
             return controller.isLoading.value
-                ? CircularProgressIndicator()
+                ? CommonCircularIndicator()
                 : PDFViewer(
                     document: controller.document,
                   );

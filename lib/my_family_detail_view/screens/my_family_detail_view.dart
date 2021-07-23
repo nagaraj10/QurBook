@@ -29,6 +29,7 @@ import '../../src/model/Health/CompleteData.dart';
 import '../../constants/router_variable.dart' as router;
 import '../../constants/fhb_query.dart' as query;
 import '../../common/errors_widget.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 
 class MyFamilyDetailView extends StatefulWidget {
   MyFamilyDetailViewArguments arguments;
@@ -136,7 +137,7 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
                 for (final e in categoryData) {
                   if (e.categoryDescription ==
                       CommonConstants.categoryDescriptionIDDocs) {
-                    PreferenceUtil.saveString(Constants.KEY_DEVICENAME, null)
+                    PreferenceUtil.saveString(Constants.KEY_DEVICENAME, '')
                         .then((onValue) {
                       PreferenceUtil.saveString(
                               Constants.KEY_CATEGORYNAME, e.categoryName)
@@ -179,9 +180,7 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
-            child: CircularProgressIndicator(
-              backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-            ),
+            child: CommonCircularIndicator(),
           );
         } else if (snapshot.hasError) {
           return ErrorsWidget();
@@ -210,7 +209,7 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
                     child: SizedBox(
                   width: 30.0.h,
                   height: 30.0.h,
-                  child: CircularProgressIndicator(),
+                  child: CommonCircularIndicator(),
                 )),
               );
               break;
@@ -273,9 +272,7 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
             case Status.LOADING:
               return Center(
                   child: SizedBox(
-                child: CircularProgressIndicator(
-                  backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-                ),
+                child: CommonCircularIndicator(),
                 width: 30.0.h,
                 height: 30.0.h,
               ));

@@ -2,6 +2,8 @@ import 'dart:convert' as convert;
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
+import 'package:myfhb/common/common_circular_indicator.dart';
+
 import '../../src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -589,11 +591,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               );
             }
           } else if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(
-                backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-              ),
-            );
+            return CommonCircularIndicator();
           } else {
             return Center(
               child: Text(
@@ -645,11 +643,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               );
             }
           } else if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(
-                backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-              ),
-            );
+            return CommonCircularIndicator();
           } else {
             return Center(
               child: Text(
@@ -700,11 +694,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               );
             }
           } else if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(
-                backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-              ),
-            );
+            return CommonCircularIndicator();
           } else {
             return Center(
               child: Text(

@@ -31,6 +31,7 @@ import '../../src/utils/FHBUtils.dart';
 import '../../src/utils/alert.dart';
 import '../../src/utils/colors_utils.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 
 class MyFamily extends StatefulWidget {
   @override
@@ -138,9 +139,7 @@ class _MyFamilyState extends State<MyFamily> {
                   child: SizedBox(
                 width: 30.0.h,
                 height: 30.0.h,
-                child: CircularProgressIndicator(
-                  backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-                ),
+                child: CommonCircularIndicator(),
               ));
               break;
 
@@ -795,7 +794,7 @@ class _MyFamilyState extends State<MyFamily> {
                   child: SizedBox(
                 width: 30.0.h,
                 height: 30.0.h,
-                child: CircularProgressIndicator(),
+                child: CommonCircularIndicator(),
               ));
               break;
 
@@ -1298,5 +1297,4 @@ class _MyFamilyState extends State<MyFamily> {
     _familyListBloc.getFamilyMembersListNew();
     _familyListBloc.getCustomRoles();
   }
-
 }

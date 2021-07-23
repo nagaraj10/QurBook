@@ -5,6 +5,7 @@ import 'PreferenceUtil.dart';
 import '../constants/fhb_constants.dart' as Constants;
 import '../src/model/Media/DeviceModel.dart';
 import '../src/utils/screenutils/size_extensions.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 
 class OverlayDeviceDialog extends ModalRoute<void> {
   @override
@@ -117,7 +118,7 @@ class OverlayDeviceDialog extends ModalRoute<void> {
                   imageUrl: /*Constants.BASE_URL +*/ mediaDataForDevice[i]
                       .imageUrl,
                   color: Colors.white70,
-                  placeholder: (context, url) => CircularProgressIndicator(),
+                  placeholder: (context, url) => CommonCircularIndicator(),
                   errorWidget: (context, url, error) => Icon(Icons.error),
                 ),
               ),

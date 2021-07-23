@@ -412,8 +412,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
 
   void createDeviceRecords(String deviceName) async {
     if (doValidation(deviceName)) {
-      await CommonUtil.showLoadingDialog(
-          context, _keyLoader, variable.Please_Wait);
+      CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
 
       final Map<String, dynamic> postMainData = {};
       final postMediaData = Map<String, dynamic>();
@@ -1098,5 +1097,4 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
           ],
         ));
   }
-
 }

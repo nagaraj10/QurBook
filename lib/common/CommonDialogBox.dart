@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 import 'CommonConstants.dart';
 import 'CommonUtil.dart';
 import 'FHBBasicWidget.dart';
@@ -1700,8 +1701,7 @@ class CommonDialogBox {
   void onPostDataToServer(BuildContext context, List<String> imagePath,
       {Function onRefresh}) async {
     if (doValidationBeforePosting()) {
-      await CommonUtil.showLoadingDialog(
-          context, _keyLoader, variable.Please_Wait);
+      CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
 
       var postMainData = Map<String, dynamic>();
       var postMediaData = Map<String, dynamic>();
@@ -2500,9 +2500,13 @@ class CommonDialogBox {
             fhbBasicWidget.getTextForAlertDialog(
                 context, CommonConstants.strMemo),
             fhbBasicWidget.getRichTextFieldWithNoCallbacks(
-                context, memoController,Constants.STR_NOTES_HINT,500,"",(value){
-
-            },false),
+                context,
+                memoController,
+                Constants.STR_NOTES_HINT,
+                500,
+                "",
+                (value) {},
+                false),
             SizedBox(
               height: 15.0.h,
             ),
@@ -2627,7 +2631,7 @@ class CommonDialogBox {
                   child: SizedBox(
                 width: 30.0.h,
                 height: 30.0.h,
-                child: CircularProgressIndicator(),
+                child: CommonCircularIndicator(),
               ));
               break;
 

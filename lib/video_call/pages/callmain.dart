@@ -10,6 +10,7 @@ import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/video_call/model/CallArguments.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/video_call/pages/call.dart';
 import 'package:myfhb/video_call/pages/controllers.dart';
 import 'package:myfhb/video_call/pages/customappbar.dart';
@@ -167,9 +168,8 @@ class _CallMainState extends State<CallMain> {
                         PrescriptionModule(),
                       ],
                     )
-                  : CircularProgressIndicator(
-                      backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-                    )),
+                  : CommonCircularIndicator(),
+          ),
         ),
       ),
     );

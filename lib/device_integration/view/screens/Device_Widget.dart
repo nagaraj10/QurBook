@@ -1,5 +1,6 @@
 // ignore: file_names
 import 'dart:io';
+import 'package:myfhb/common/common_circular_indicator.dart';import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -321,10 +322,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           return SafeArea(
             child: SizedBox(
               height: 1.sh / 1.3,
-              child: Center(
-                  child: CircularProgressIndicator(
-                      backgroundColor:
-                          Color(CommonUtil().getMyPrimaryColor()))),
+              child: CommonCircularIndicator(),
             ),
           );
         } else if (snapshot.hasError) {
@@ -394,13 +392,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           return SafeArea(
             child: SizedBox(
               height: 1.sh / 1.3,
-              child: Center(
-                child: CircularProgressIndicator(
-                  backgroundColor: Color(
-                    CommonUtil().getMyPrimaryColor(),
-                  ),
-                ),
-              ),
+              child: CommonCircularIndicator(),
             ),
           );
         } else if (snapshot.hasError) {
@@ -452,10 +444,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
             child: SizedBox(
               height: 20.0.h,
               width: 20.0.h,
-              child: CircularProgressIndicator(
-                strokeWidth: 1.0.sp,
-                backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-              ),
+              child: CommonCircularIndicator(),
             ),
           );
         } else {
@@ -530,13 +519,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           } else {
             return SizedBox(
               height: 1.sh / 1.3,
-              child: Center(
-                child: CircularProgressIndicator(
-                  backgroundColor: Color(
-                    CommonUtil().getMyPrimaryColor(),
-                  ),
-                ),
-              ),
+              child: CommonCircularIndicator(),
             );
           }
         });
@@ -548,11 +531,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       currentFocus.unfocus();
     }
     if (deviceValues.toString() == null) {
-      return Center(
-        child: CircularProgressIndicator(
-          backgroundColor: Colors.grey,
-        ),
-      );
+      return CommonCircularIndicator();
     }
 
     if (deviceValues.bloodPressure.entities.isNotEmpty) {

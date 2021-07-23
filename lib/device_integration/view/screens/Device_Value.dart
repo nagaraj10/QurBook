@@ -5,6 +5,7 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 import '../../../colors/fhb_colors.dart';
 import '../../../common/CommonConstants.dart';
 import '../../../common/CommonUtil.dart';
@@ -290,8 +291,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
   void createDeviceRecords(String deviceName) async {
     if (doValidation(deviceName)) {
-      await CommonUtil.showLoadingDialog(
-          context, _keyLoader, variable.Please_Wait);
+      CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
 
       final postMainData = Map<String, dynamic>();
       final postMediaData = Map<String, dynamic>();
@@ -1255,11 +1255,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
               future: devicesViewModel.fetchBPDetails(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-                    ),
-                  );
+                  return CommonCircularIndicator();
                 }
 
                 final translis = snapshot.data;
@@ -1332,11 +1328,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
               future: devicesViewModel.fetchGLDetails(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-                    ),
-                  );
+                  return CommonCircularIndicator();
                 }
 
                 var translis = snapshot.data;
@@ -1410,11 +1402,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
               future: devicesViewModel.fetchOXYDetails(''),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-                    ),
-                  );
+                  return CommonCircularIndicator();
                 }
 
                 var translis = snapshot.data;
@@ -1486,11 +1474,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
               future: devicesViewModel.fetchWVDetails(''),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-                    ),
-                  );
+                  return CommonCircularIndicator();
                 }
 
                 var translis = snapshot.data;
@@ -1561,11 +1545,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
               future: devicesViewModel.fetchTMPDetails(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-                    ),
-                  );
+                  return CommonCircularIndicator();
                 }
 
                 var translis = snapshot.data;
@@ -1708,7 +1688,10 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                     SizedBox(
                       height: 2.0.h,
                     ),
-                    if (type == null) Icon(Icons.device_unknown) else TypeIcon(type),
+                    if (type == null)
+                      Icon(Icons.device_unknown)
+                    else
+                      TypeIcon(type),
                   ],
                 ),
                 SizedBox(
@@ -2129,7 +2112,10 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                     SizedBox(
                       height: 2.0.h,
                     ),
-                    if (type == null) Icon(Icons.device_unknown) else TypeIcon(type),
+                    if (type == null)
+                      Icon(Icons.device_unknown)
+                    else
+                      TypeIcon(type),
                   ],
                 ),
                 valuename1 != ''
@@ -2242,7 +2228,10 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                     SizedBox(
                       height: 2.0.h,
                     ),
-                    if (type == null) Icon(Icons.device_unknown) else TypeIcon(type),
+                    if (type == null)
+                      Icon(Icons.device_unknown)
+                    else
+                      TypeIcon(type),
                   ],
                 ),
                 valuename1 != ''

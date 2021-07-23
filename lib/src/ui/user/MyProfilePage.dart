@@ -9,6 +9,7 @@ import 'package:myfhb/add_family_user_info/services/add_family_user_info_reposit
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
@@ -99,8 +100,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
         currentLanguage = langCode;
       } else {
         currentLanguage = 'en';
-        PreferenceUtil.saveString(
-            SHEELA_LANG, 'en-IN');
+        PreferenceUtil.saveString(SHEELA_LANG, 'en-IN');
       }
       if (currentLanguage.isNotEmpty) {
         CommonUtil.supportedLanguages.forEach((language, languageCode) {
@@ -114,7 +114,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
   }
 
   String setValueLanguages(MyProfileResult myProfile) {
-    String languagePreferred="English";
+    String languagePreferred = "English";
     if (myProfile?.userProfileSettingCollection3?.isNotEmpty) {
       ProfileSetting profileSetting =
           myProfile?.userProfileSettingCollection3[0].profileSetting;
@@ -128,17 +128,15 @@ class _MyProfilePageState extends State<MyProfilePage> {
               CommonUtil.supportedLanguages.forEach((language, languageCode) {
                 if (currentLanguage == languageCode) {
                   languagePreferred = toBeginningOfSentenceCase(language);
-                  PreferenceUtil.saveString(
-        SHEELA_LANG, CommonUtil.langaugeCodes[languageCode] ?? 'en-IN');
+                  PreferenceUtil.saveString(SHEELA_LANG,
+                      CommonUtil.langaugeCodes[languageCode] ?? 'en-IN');
                 }
               });
             }
-
           }
         });
-      }else{
-        languagePreferred="English";
-
+      } else {
+        languagePreferred = "English";
       }
 
       return languagePreferred;
@@ -166,9 +164,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
           return Center(
             child: Column(
               children: [
-                CircularProgressIndicator(
-                  backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-                ),
+                CommonCircularIndicator(),
                 Text(
                   'Hey Please Hangon!\nprofile is loading.',
                   style:
@@ -670,10 +666,10 @@ class _MyProfilePageState extends State<MyProfilePage> {
     return FutureBuilder(
         future: getPreferredLanguage(myProfile?.result),
         builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-          if(snapshot.data!=null && snapshot.data!="") {
+          if (snapshot.data != null && snapshot.data != "") {
             languageController.text = snapshot.data;
-          }else{
-            languageController.text="English";
+          } else {
+            languageController.text = "English";
           }
           return Padding(
             padding: EdgeInsets.all(10),

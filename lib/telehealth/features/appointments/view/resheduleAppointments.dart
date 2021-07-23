@@ -21,6 +21,7 @@ import 'package:myfhb/telehealth/features/MyProvider/view/DoctorSessionTimeSlot.
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart'
     as Constants;
+import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
@@ -430,12 +431,12 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                     child: Center(
                       child: TextWidget(
                           text: 'INR ' +
-                              commonWidgets
-                                  .getMoneyWithForamt(widget.isReshedule
-                                      ? 0.toString()
-                                      : widget.doc.isFollowUpTaken == true
-                                          ? followUpFee(eachHospitalModel[i])
-                                          : getFees(eachHospitalModel[i], false)),
+                              commonWidgets.getMoneyWithForamt(widget
+                                      .isReshedule
+                                  ? 0.toString()
+                                  : widget.doc.isFollowUpTaken == true
+                                      ? followUpFee(eachHospitalModel[i])
+                                      : getFees(eachHospitalModel[i], false)),
 //                                  widget.doc.plannedFollowupDate == null
 //                                          ? getFees(eachHospitalModel[i])
 //                                          : widget.doc.doctorFollowUpFee != null
@@ -575,11 +576,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
         } else if (snapshot.hasError) {
           return ErrorsWidget();
         } else {
-          return Center(
-            child: new CircularProgressIndicator(
-              backgroundColor: Colors.grey,
-            ),
-          );
+          return CommonCircularIndicator();
         }
       },
     );

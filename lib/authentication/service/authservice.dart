@@ -58,7 +58,7 @@ class AuthService {
         final responseResult = jsonDecode(response.body);
         final String responseString = responseResult[strResult];
         await PreferenceUtil.saveString(
-            Constants.KEY_AUTHTOKEN, responseString);
+            Constants.KEY_AUTHTOKEN, responseString ?? '');
         return responseResult;
       } else {
         return createErrorJsonString(response);

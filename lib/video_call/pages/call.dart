@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
@@ -720,7 +721,7 @@ class _CallPageState extends State<CallPage> {
             SizedBox(
               height: 30.0.h,
               width: 30.0.h,
-              child: CircularProgressIndicator(),
+              child: CommonCircularIndicator(),
             ),
             SizedBox(
               height: 10.0.h,

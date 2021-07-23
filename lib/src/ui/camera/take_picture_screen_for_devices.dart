@@ -28,6 +28,7 @@ import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/router_variable.dart' as router;
 
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
+import 'package:myfhb/common/common_circular_indicator.dart';
 
 class TakePictureScreenForDevices extends StatefulWidget {
   final List<CameraDescription> cameras;
@@ -77,9 +78,10 @@ class TakePictureScreenForDevicesState
     // create a CameraController.
     Constants.mInitialTime = DateTime.now();
     categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
-    deviceName = PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME) == null
-        ? Constants.IS_CATEGORYNAME_DEVICES
-        : PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME);
+    deviceName =
+        (PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME) ?? '') == ''
+            ? Constants.IS_CATEGORYNAME_DEVICES
+            : PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME);
 
     isObjectDetecting =
         PreferenceUtil.getStringValue(Constants.allowDeviceRecognition) ==
@@ -110,9 +112,10 @@ class TakePictureScreenForDevicesState
 
   void initilzeData() {
     categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
-    deviceName = PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME) == null
-        ? Constants.IS_CATEGORYNAME_DEVICES
-        : PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME);
+    deviceName =
+        (PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME) ?? '') == ''
+            ? Constants.IS_CATEGORYNAME_DEVICES
+            : PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME);
   }
 
   @override
@@ -165,7 +168,7 @@ class TakePictureScreenForDevicesState
                       return CameraPreview(_controller);
                     } else {
                       // Otherwise, display a loading indicator.
-                      return Center(child: CircularProgressIndicator());
+                      return CommonCircularIndicator();
                     }
                   },
                 ),
@@ -245,8 +248,7 @@ class TakePictureScreenForDevicesState
                                 Container(
                                     width: 25.0.h,
                                     height: 25.0.h,
-                                    child: CircularProgressIndicator(
-                                        backgroundColor: Colors.white))
+                                    child: CommonCircularIndicator())
                               ]))
                       : _recognitions.length == 0 ||
                               _recognitions[0][Constants.keyDetectedClass] ==

@@ -199,8 +199,7 @@ class MyFamilyDetailViewHospitalState
   void getCategoryPreference() {
     for (final e in PreferenceUtil.getCategoryType()) {
       if (e.categoryDescription == CommonConstants.categoryDescriptionIDDocs) {
-        PreferenceUtil.saveString(Constants.KEY_DEVICENAME, null)
-            .then((onValue) {
+        PreferenceUtil.saveString(Constants.KEY_DEVICENAME, '').then((onValue) {
           PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, e.categoryName)
               .then((onValue) {
             PreferenceUtil.saveString(Constants.KEY_CATEGORYID, e.id)

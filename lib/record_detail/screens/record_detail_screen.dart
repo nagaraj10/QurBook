@@ -2,7 +2,7 @@ import 'dart:core';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:myfhb/src/resources/network/api_services.dart';
-
+import 'package:myfhb/common/common_circular_indicator.dart';
 import '../../constants/fhb_parameters.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -1297,7 +1297,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                     )
                   : ispdfPresent
                       ? pdfFile == null
-                          ? Container(child: CircularProgressIndicator())
+                          ? Container(child: CommonCircularIndicator())
                           : Container(
                               child: Center(
                                   child: Row(
@@ -1389,7 +1389,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                   child: SizedBox(
                 width: 30.0.h,
                 height: 30.0.h,
-                child: CircularProgressIndicator(),
+                child: CommonCircularIndicator(),
               ));
               break;
 
@@ -1461,9 +1461,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       future: downloadFile(audioMediaId, '.mp3'),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          CircularProgressIndicator(
-            backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-          );
+          CommonCircularIndicator();
         } else if (snapshot.hasError) {
           return ErrorsWidget();
         } else {

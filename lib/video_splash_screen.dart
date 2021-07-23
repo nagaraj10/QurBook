@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 import 'package:myfhb/constants/variable_constant.dart' as variable;
-
+import 'package:myfhb/common/common_circular_indicator.dart';
 
 class VideoSplashScreen extends StatefulWidget {
   VideoSplashScreen({Key key}) : super(key: key);
@@ -74,7 +74,7 @@ class _VideoSplashScreenState extends State<VideoSplashScreen> {
           } else {
             // If the VideoPlayerController is still initializing, show a
             // loading spinner.
-            return Center(child: CircularProgressIndicator());
+            return CommonCircularIndicator();
           }
         },
       ),
