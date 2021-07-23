@@ -21,6 +21,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/common/common_circular_indicator.dart';
 
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 
@@ -171,7 +172,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                     return CameraPreview(_controller);
                   } else {
                     // Otherwise, display a loading indicator.
-                    return Center(child: CircularProgressIndicator());
+                    return CommonCircularIndicator();
                   }
                 },
               ),
@@ -283,7 +284,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                     );
 
                                     // Attempt to take a picture and log where it's been saved.
-                                    XFile xpath = await _controller.takePicture();
+                                    XFile xpath =
+                                        await _controller.takePicture();
                                     imagePaths.add(xpath?.path);
                                     setState(() {});
                                   } catch (e) {
@@ -387,10 +389,10 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                         callDisplayPictureScreen(context);
                                       } else {
                                         try {
-                                          var image =
-                                              await FilePicker.platform.pickFiles();
-                                          if((image?.files?.length ?? 0) > 0)
-                                          imagePaths.add(image.files[0].path);
+                                          var image = await FilePicker.platform
+                                              .pickFiles();
+                                          if ((image?.files?.length ?? 0) > 0)
+                                            imagePaths.add(image.files[0].path);
                                           callDisplayPictureScreen(context);
                                         } catch (e) {
                                           // If an error occurs, log the error to the console.
@@ -427,7 +429,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                     );
 
                                     // Attempt to take a picture and log where it's been saved.
-                                    XFile xpath = await _controller.takePicture();
+                                    XFile xpath =
+                                        await _controller.takePicture();
 
                                     if (isMultipleImages) {
                                       isThumbnails = true;
@@ -590,9 +593,10 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 
   void initializeData() {
     categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
-    deviceName = PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME) == null
-        ? Constants.IS_CATEGORYNAME_DEVICES
-        : PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME);
+    deviceName =
+        (PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME) ?? '') == ''
+            ? Constants.IS_CATEGORYNAME_DEVICES
+            : PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME);
 
     categoryID = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYID);
     if (categoryName == Constants.STR_DEVICES) {
@@ -618,7 +622,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
       type: FileType.custom,
       allowedExtensions: [variable.strpdf],
     );
-    if((filePaths?.files?.length ?? 0) > 0) {
+    if ((filePaths?.files?.length ?? 0) > 0) {
       for (PlatformFile file in filePaths?.files) {
         String filePath = await FlutterAbsolutePath.getAbsolutePath(file.path);
         imagePaths.add(filePath);

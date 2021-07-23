@@ -14,6 +14,7 @@ import '../../../src/model/user/user_accounts_arguments.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import '../../../telehealth/features/chat/view/chat.dart';
 import 'package:provider/provider.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 
 import 'landing_card.dart';
 
@@ -51,12 +52,7 @@ class HomeWidget extends StatelessWidget {
                 builder: (context, landingViewModel, child) {
                   if (landingViewModel.landingScreenStatus ==
                       LandingScreenStatus.Loading) {
-                    return Center(
-                      child: CircularProgressIndicator(
-                        backgroundColor:
-                            Color(CommonUtil().getMyPrimaryColor()),
-                      ),
-                    );
+                    return CommonCircularIndicator();
                   } else {
                     final dashboardData = landingViewModel?.dashboardData;
                     final activePlanCount =

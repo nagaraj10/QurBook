@@ -19,7 +19,7 @@ import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:myfhb/telehealth/features/chat/view/chat.dart';
-import 'package:myfhb/telehealth/features/chat/view/loading.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
@@ -304,7 +304,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return new Scaffold(
-            body: Center(child: new CircularProgressIndicator()),
+            body: CommonCircularIndicator(),
           );
         } else if (snapshot.hasError) {
           return ErrorsWidget();
@@ -351,11 +351,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
             builder: (context,
                 AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
               if (!snapshot.hasData) {
-                return Center(
-                  child: CircularProgressIndicator(
-                      backgroundColor:
-                          Color(new CommonUtil().getMyPrimaryColor())),
-                );
+                return CommonCircularIndicator();
               } else {
                 return countChatListUsers(patientId, snapshot) > 0
                     ? ListView.builder(
@@ -385,7 +381,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
 
         // Loading
         Positioned(
-          child: isLoading ? const Loading() : Container(),
+          child: isLoading ? CommonCircularIndicator() : Container(),
         )
       ],
     );
@@ -444,12 +440,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                           placeholder: (context, url) =>
                                               Container(
                                                 child:
-                                                    CircularProgressIndicator(
-                                                  strokeWidth: 1.0,
-                                                  valueColor:
-                                                      AlwaysStoppedAnimation<
-                                                          Color>(themeColor),
-                                                ),
+                                                CommonCircularIndicator(),
                                                 width: 50.0,
                                                 height: 50.0,
                                                 padding: EdgeInsets.all(15.0),

@@ -11,6 +11,7 @@ import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/authentication/view/authentication_validator.dart';
 import 'package:myfhb/colors/fhb_colors.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/landing/view/landing_arguments.dart';
@@ -122,9 +123,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     child: SizedBox(
                       width: 30.0.h,
                       height: 30.0.h,
-                      child: new CircularProgressIndicator(
-                          backgroundColor:
-                              Color(new CommonUtil().getMyPrimaryColor())),
+                      child: CommonCircularIndicator(),
                     ),
                   ),
                 ),
@@ -448,9 +447,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                     width: 20,
                                                     height: 20,
                                                     child:
-                                                        CircularProgressIndicator(
-                                                      strokeWidth: 3,
-                                                    ))
+                                                        CommonCircularIndicator())
                                                 : Text(
                                                     value.cartType ==
                                                             CartType.RETRY_CART

@@ -6,7 +6,7 @@ import '../models/MyProviderResponseNew.dart';
 import '../models/my_providers_response_list.dart';
 import '../../src/resources/network/ApiResponse.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
-
+import 'package:myfhb/common/common_circular_indicator.dart';
 import 'my_providers_tab_bar.dart';
 
 class MyProvidersStreamData extends StatelessWidget {
@@ -27,9 +27,7 @@ class MyProvidersStreamData extends StatelessWidget {
                   child: SizedBox(
                 width: 30.0.h,
                 height: 30.0.h,
-                child: CircularProgressIndicator(
-                  backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-                ),
+                child: CommonCircularIndicator(),
               ));
               break;
 

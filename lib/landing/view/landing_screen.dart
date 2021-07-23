@@ -13,6 +13,7 @@ import '../../authentication/view/login_screen.dart';
 import '../../colors/fhb_colors.dart';
 import '../../common/CommonConstants.dart';
 import '../../common/CommonDialogBox.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/PreferenceUtil.dart';
 import '../../common/SwitchProfile.dart';
@@ -122,29 +123,34 @@ class _LandingScreenState extends State<LandingScreen> {
   }
 
   Future<bool> _onBackPressed() {
-    return showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              content: Text('Do you want to exit for now?'),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text('CANCEL'),
-                  onPressed: () {
-                    Navigator.of(context).pop(false);
-                  },
-                ),
-                FlatButton(
-                  child: Text('OK'),
-                  onPressed: () {
-                    Navigator.of(context).pop(true);
-                  },
-                )
-              ],
-            );
-          },
-        ) ??
-        false;
+    if (landingViewModel.currentTabIndex != 0) {
+      landingViewModel.updateTabIndex(0);
+      return Future.value(false);
+    } else {
+      return showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                content: Text('Do you want to exit for now?'),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text('CANCEL'),
+                    onPressed: () {
+                      Navigator.of(context).pop(false);
+                    },
+                  ),
+                  FlatButton(
+                    child: Text('OK'),
+                    onPressed: () {
+                      Navigator.of(context).pop(true);
+                    },
+                  )
+                ],
+              );
+            },
+          ) ??
+          false;
+    }
   }
 
   @override
@@ -178,7 +184,7 @@ class _LandingScreenState extends State<LandingScreen> {
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             begin: Alignment.centerLeft,
-                          end: Alignment.centerRight,
+                            end: Alignment.centerRight,
                             colors: <Color>[
                               Color(CommonUtil().getMyPrimaryColor()),
                               Color(CommonUtil().getMyGredientColor()),
@@ -250,12 +256,7 @@ class _LandingScreenState extends State<LandingScreen> {
                     Expanded(
                       child:
                           (snapshot.connectionState == ConnectionState.waiting)
-                              ? Center(
-                                  child: CircularProgressIndicator(
-                                    backgroundColor:
-                                        Color(CommonUtil().getMyPrimaryColor()),
-                                  ),
-                                )
+                              ? CommonCircularIndicator()
                               : (snapshot.hasError)
                                   ? Center(
                                       child: ErrorsWidget(),
@@ -455,7 +456,7 @@ class _LandingScreenState extends State<LandingScreen> {
       case 4:
         landingTab = MyRecords(
           isHome: true,
-          argument: MyRecordsArgument(),
+          argument: MyRecordsArgument(fromClass: 'landing'),
           onBackPressed: onBackPressed,
         );
         break;

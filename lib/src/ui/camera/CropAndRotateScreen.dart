@@ -6,6 +6,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/OverLayCategoryDialog.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/widgets/RaisedGradientButton.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -279,10 +280,7 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    CircularProgressIndicator(
-                      strokeWidth: 2.0.sp,
-                      valueColor: AlwaysStoppedAnimation(primaryColor),
-                    ),
+                    CommonCircularIndicator(),
                     SizedBox(
                       width: 10.0.w,
                     ),

@@ -25,6 +25,7 @@ import '../../src/resources/network/ApiResponse.dart';
 import '../../src/utils/colors_utils.dart';
 import '../../widgets/GradientAppBar.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 
 import '../bloc/doctors_list_block.dart';
 import '../bloc/hospital_list_block.dart';
@@ -246,9 +247,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             rebuildBlockObject();
             return Center(
                 child: SizedBox(
-              child: CircularProgressIndicator(
-                backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-              ),
+              child: CommonCircularIndicator(),
               width: 30.0.h,
               height: 30.0.h,
             ));
@@ -308,7 +307,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                 child: SizedBox(
               width: 30.0.h,
               height: 30.0.h,
-              child: CircularProgressIndicator(),
+              child: CommonCircularIndicator(),
             ));
 
             break;
@@ -361,7 +360,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                 child: SizedBox(
               width: 30.0.h,
               height: 30.0.h,
-              child: CircularProgressIndicator(),
+              child: CommonCircularIndicator(),
             ));
 
             break;
@@ -1371,5 +1370,4 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               ));
     }
   }
-
 }

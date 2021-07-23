@@ -16,6 +16,7 @@ import '../model/referafriendresponse.dart';
 import '../../src/ui/loader_class.dart';
 import 'package:provider/provider.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 
 class InviteContactsScreen extends StatefulWidget {
   const InviteContactsScreen();
@@ -231,11 +232,7 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
   Widget inviteContactsBodyView(List<Contact> contactsValue) {
     return Expanded(
       child: contactsValue == null
-          ? Center(
-              child: CircularProgressIndicator(
-                backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-              ),
-            )
+          ? CommonCircularIndicator()
           : contactsValue.isNotEmpty
               ? listTile(contactsValue)
               : Center(
@@ -262,8 +259,8 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
       physics: AlwaysScrollableScrollPhysics(),
       itemCount: contacts?.length ?? 0,
       itemBuilder: (context, index) {
-        final  contact = contacts?.elementAt(index);
-        final  phone = contact.phones.toList();
+        final contact = contacts?.elementAt(index);
+        final phone = contact.phones.toList();
         return phone == null || phone.isEmpty
             ? Container()
             : ListTile(
@@ -439,7 +436,9 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
                                                       .length >
                                                   1
                                               ? '${referalList[index]?.name?.split(' ')[0][0]}${referalList[index]?.name?.split(' ')[1][0]}'
-                                              : referalList[index]?.name?.split(' ')[0][0],
+                                              : referalList[index]
+                                                  ?.name
+                                                  ?.split(' ')[0][0],
                                           style: TextStyle(
                                             fontSize: 12.0.sp,
                                           ),
@@ -454,7 +453,8 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        referalList[index]?.name
+                                        referalList[index]
+                                            ?.name
                                             .capitalizeFirstofEach,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,

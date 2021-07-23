@@ -9,6 +9,7 @@ import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
 import 'package:provider/provider.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 
 class HealthConditionPage extends StatefulWidget {
   @override
@@ -49,9 +50,7 @@ class _HealthConditionPageState extends State<HealthConditionPage> {
                           child: SizedBox(
                             width: 30.0.h,
                             height: 30.0.h,
-                            child: CircularProgressIndicator(
-                                backgroundColor:
-                                    Color(CommonUtil().getMyPrimaryColor())),
+                            child: CommonCircularIndicator(),
                           ),
                         ),
                       ),

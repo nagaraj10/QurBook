@@ -4,6 +4,7 @@ import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:myfhb/Orders/Controller/OrderController.dart';
 import 'package:myfhb/Orders/View/OrderTile.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
@@ -42,13 +43,7 @@ class _OrdersViewState extends State<OrdersView> {
       body: Obx(
         () {
           return controller.isLoading.value
-              ? Center(
-                  child: CircularProgressIndicator(
-                    backgroundColor: Color(
-                      CommonUtil().getMyPrimaryColor(),
-                    ),
-                  ),
-                )
+              ? CommonCircularIndicator()
               : ShowOrders(
                   context,
                 );

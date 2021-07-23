@@ -17,6 +17,7 @@ import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
@@ -33,7 +34,7 @@ import 'package:myfhb/telehealth/features/chat/view/PDFModel.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFView.dart';
 import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
-import 'package:myfhb/telehealth/features/chat/view/loading.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'package:myfhb/telehealth/features/chat/viewModel/notificationController.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
@@ -750,11 +751,7 @@ class ChatScreenState extends State<ChatScreen> {
                       child: FlatButton(
                         child: Material(
                           child: CachedNetworkImage(
-                            placeholder: (context, url) => Container(
-                              child: CircularProgressIndicator(
-                                valueColor:
-                                    AlwaysStoppedAnimation<Color>(themeColor),
-                              ),
+                            placeholder: (context, url) => Container(child:CommonCircularIndicator(),
                               width: 200.0.h,
                               height: 200.0.h,
                               padding: EdgeInsets.all(70.0),
@@ -916,11 +913,7 @@ class ChatScreenState extends State<ChatScreen> {
                     ? Material(
                         child: CachedNetworkImage(
                             placeholder: (context, url) => Container(
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 1.0.sp,
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        themeColor),
-                                  ),
+                                  child: CommonCircularIndicator(),
                                   width: 35.0.h,
                                   height: 35.0.h,
                                   padding: EdgeInsets.all(10.0),
@@ -986,10 +979,7 @@ class ChatScreenState extends State<ChatScreen> {
                               child: Material(
                                 child: CachedNetworkImage(
                                   placeholder: (context, url) => Container(
-                                    child: CircularProgressIndicator(
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                          themeColor),
-                                    ),
+                                    child: CommonCircularIndicator(),
                                     width: 200.0.h,
                                     height: 200.0.h,
                                     padding: EdgeInsets.all(70.0),
@@ -1783,7 +1773,7 @@ class ChatScreenState extends State<ChatScreen> {
 
   Widget buildLoading() {
     return Positioned(
-      child: isLoading ? const Loading() : Container(),
+      child: isLoading ? CommonCircularIndicator() : Container(),
     );
   }
 
@@ -1908,9 +1898,7 @@ class ChatScreenState extends State<ChatScreen> {
   Widget buildListMessage() {
     return Flexible(
       child: groupChatId == ''
-          ? Center(
-              child: CircularProgressIndicator(
-                  backgroundColor: Color(new CommonUtil().getMyPrimaryColor())))
+          ? CommonCircularIndicator()
           : StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
               stream: FirebaseFirestore.instance
                   .collection(STR_MESSAGES)
@@ -1922,10 +1910,7 @@ class ChatScreenState extends State<ChatScreen> {
               builder: (context,
                   AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
                 if (!snapshot.hasData) {
-                  return Center(
-                      child: CircularProgressIndicator(
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(themeColor)));
+                  return CommonCircularIndicator();
                 } else {
                   listMessage = snapshot.data.docs;
                   for (var data in snapshot.data.docs) {

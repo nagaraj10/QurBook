@@ -18,6 +18,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'DoctorPastAppointments.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
@@ -203,9 +204,7 @@ class _AppointmentsState extends State<Appointments> {
               child: SizedBox(
                 width: 30.0.h,
                 height: 30.0.h,
-                child: new CircularProgressIndicator(
-                    backgroundColor:
-                    Color(new CommonUtil().getMyPrimaryColor())),
+                child: CommonCircularIndicator(),
               ),
             ),
           ),
@@ -330,11 +329,7 @@ class _AppointmentsState extends State<Appointments> {
                       ),
                     );
             } else {
-              return new Center(
-                child: new CircularProgressIndicator(
-                  backgroundColor: Colors.grey,
-                ),
-              );
+              return CommonCircularIndicator();
             }
           },
         );

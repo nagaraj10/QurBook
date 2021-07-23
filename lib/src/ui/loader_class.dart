@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 
 class LoaderClass {
   static showLoadingDialog(
@@ -36,11 +37,7 @@ class LoaderClass {
                         ],
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                       ),
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2.0.sp,
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                            Color(CommonUtil().getMyPrimaryColor())),
-                      ),
+                      child: CommonCircularIndicator(),
                     ),
                   )
                 ],

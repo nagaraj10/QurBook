@@ -19,6 +19,7 @@ import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRep
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 
 import 'AppleHealthSettings.dart';
 
@@ -639,9 +640,7 @@ class _MySettingsState extends State<MySettings> {
                                   },
                                 ),
                               )
-                            : Center(
-                                child: CircularProgressIndicator(),
-                              );
+                            : CommonCircularIndicator();
                       },
                     ),
                   ],

@@ -59,6 +59,7 @@ import '../../constants/fhb_constants.dart';
 
 export 'package:myfhb/common/CommonUtil.dart';
 export 'package:myfhb/src/model/Media/MediaTypeResponse.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 
 class MyRecords extends StatefulWidget {
   MyRecordsArgument argument;
@@ -231,10 +232,7 @@ class _MyRecordsState extends State<MyRecords> {
                 case Status.LOADING:
                   return Center(
                       child: SizedBox(
-                    child: CircularProgressIndicator(
-                      backgroundColor:
-                          Color(new CommonUtil().getMyPrimaryColor()),
-                    ),
+                    child: CommonCircularIndicator(),
                     width: 30.0.h,
                     height: 30.0.h,
                   ));
@@ -295,9 +293,7 @@ class _MyRecordsState extends State<MyRecords> {
             case Status.LOADING:
               return Center(
                   child: SizedBox(
-                child: CircularProgressIndicator(
-                  backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
-                ),
+                child: CommonCircularIndicator(),
                 width: 30.0.h,
                 height: 30.0.h,
               ));
@@ -929,10 +925,7 @@ class _CustomTabsState extends State<CustomTabView>
                       backgroundColor: Colors.white,
                       body: Center(
                           child: SizedBox(
-                        child: CircularProgressIndicator(
-                          backgroundColor:
-                              Color(new CommonUtil().getMyPrimaryColor()),
-                        ),
+                        child: CommonCircularIndicator(),
                         width: 30.0.h,
                         height: 30.0.h,
                       )),
@@ -983,10 +976,7 @@ class _CustomTabsState extends State<CustomTabView>
                       backgroundColor: Colors.white,
                       body: Center(
                           child: SizedBox(
-                        child: CircularProgressIndicator(
-                          backgroundColor:
-                              Color(new CommonUtil().getMyPrimaryColor()),
-                        ),
+                        child: CommonCircularIndicator(),
                         width: 30.0.h,
                         height: 30.0.h,
                       )),
@@ -1081,10 +1071,7 @@ class _CustomTabsState extends State<CustomTabView>
                       backgroundColor: Colors.white,
                       body: Center(
                           child: SizedBox(
-                        child: CircularProgressIndicator(
-                          backgroundColor:
-                              Color(new CommonUtil().getMyPrimaryColor()),
-                        ),
+                        child: CommonCircularIndicator(),
                         width: 30.0.h,
                         height: 30.0.h,
                       )),
@@ -1480,7 +1467,7 @@ class _CustomTabsState extends State<CustomTabView>
 
   void openNotesDialog() async {
     await saveCategoryToPrefernce();
-    PreferenceUtil.saveString(Constants.KEY_DEVICENAME, null).then((onValue) {
+    PreferenceUtil.saveString(Constants.KEY_DEVICENAME, '').then((onValue) {
       PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, categoryName)
           .then((onValue) {
         PreferenceUtil.saveString(Constants.KEY_CATEGORYID, categoryID)
@@ -1541,8 +1528,7 @@ class _CustomTabsState extends State<CustomTabView>
       } else if (categoryName == Constants.STR_NOTES) {
         openNotesDialog();
       } else {
-        PreferenceUtil.saveString(Constants.KEY_DEVICENAME, null)
-            .then((onValue) {
+        PreferenceUtil.saveString(Constants.KEY_DEVICENAME, '').then((onValue) {
           PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, categoryName)
               .then((onValue) {
             PreferenceUtil.saveString(Constants.KEY_CATEGORYID, categoryID)

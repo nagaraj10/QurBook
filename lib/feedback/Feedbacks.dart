@@ -271,8 +271,7 @@ class _FeedbacksState extends State<Feedbacks> {
   }
 
   void onPostDataToServer(BuildContext context, List<String> imagePaths) async {
-    await CommonUtil.showLoadingDialog(
-        context, _keyLoader, variable.Please_Wait);
+    CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
 
     final Map<String, dynamic> postMainData = {};
     final Map<String, dynamic> postMediaData = {};

@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert' as convert;
 import 'dart:typed_data';
 import 'dart:ui' as ui;
+import 'package:myfhb/common/common_circular_indicator.dart';
+
 import '../widgets/dropdown_with_categories.dart';
 import '../widgets/sample_dropdown.dart';
 import '../../src/blocs/Media/MediaTypeBlock.dart';
@@ -1333,11 +1335,7 @@ class AddProvidersState extends State<AddProviders> {
         future: _mediaTypeBlock.getMediTypesList(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return Center(
-              child: CircularProgressIndicator(
-                backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-              ),
-            );
+            return CommonCircularIndicator();
           }
           final MediaDataList mediaType = snapshot.data;
           mediaType.result

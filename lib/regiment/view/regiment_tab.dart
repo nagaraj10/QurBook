@@ -19,6 +19,7 @@ import '../../telehealth/features/SearchWidget/view/SearchWidget.dart';
 import 'package:provider/provider.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:showcaseview/showcaseview.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 
 import 'widgets/regiment_data_card.dart';
 
@@ -497,13 +498,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                 print(regimentViewModel.regimentsData?.message);
                 if (regimentViewModel.regimentStatus ==
                     RegimentStatus.Loading) {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        Color(CommonUtil().getMyPrimaryColor()),
-                      ),
-                    ),
-                  );
+                  return CommonCircularIndicator();
                 } else if ((regimentViewModel.regimentsList?.length ?? 0) > 0) {
                   final regimentsList = regimentViewModel.regimentsList;
                   if ((regimentsList?.length ?? 0) > 0) {

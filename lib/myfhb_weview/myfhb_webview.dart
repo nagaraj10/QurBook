@@ -7,6 +7,7 @@ import '../widgets/GradientAppBar.dart';
 import '../src/utils/screenutils/size_extensions.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import '../constants/variable_constant.dart' as variable;
+import 'package:myfhb/common/common_circular_indicator.dart';
 
 class MyFhbWebView extends StatefulWidget {
   final String title;
@@ -76,13 +77,7 @@ class _MyFhbWebViewState extends State<MyFhbWebView> {
                 });
               },
             ),
-            if (isLoading)
-              Center(
-                  child: CircularProgressIndicator(
-                backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-              ))
-            else
-              Container(),
+            if (isLoading) CommonCircularIndicator() else Container(),
           ],
         ));
   }

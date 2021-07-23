@@ -6,6 +6,7 @@ import 'package:launch_review/launch_review.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/FHBBasicWidget.dart';
 import '../../common/PreferenceUtil.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 import '../../common/errors_widget.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/fhb_constants.dart';
@@ -649,11 +650,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
       future: getMyProfile(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: CircularProgressIndicator(
-              backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-            ),
-          );
+          return CommonCircularIndicator();
         } else if (snapshot.hasError) {
           return ErrorsWidget();
         } else {
@@ -668,11 +665,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
       future: getAppColorValues(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: CircularProgressIndicator(
-              backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-            ),
-          );
+          return CommonCircularIndicator();
         } else if (snapshot.hasError) {
           return ErrorsWidget();
         } else {

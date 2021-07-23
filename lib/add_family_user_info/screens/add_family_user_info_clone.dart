@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 import 'package:get/get.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 import '../../constants/fhb_constants.dart';
 import '../../language/blocks/LanguageBlock.dart';
 import '../../language/model/Language.dart';
@@ -1753,7 +1754,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           await PreferenceUtil.saveString(Constants.KEY_PROFILE_BANNER,
               addFamilyUserInfoBloc.profileBanner.path);
         }
-        await CommonUtil.showLoadingDialog(
+        CommonUtil.showLoadingDialog(
             dialogContext, _keyLoader, variable.Please_Wait); //
 
         await addFamilyUserInfoBloc.updateSelfProfile(false).then((value) {
@@ -1792,7 +1793,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           await PreferenceUtil.saveString(Constants.KEY_PROFILE_BANNER,
               addFamilyUserInfoBloc.profileBanner.path);
         }
-        await CommonUtil.showLoadingDialog(
+        CommonUtil.showLoadingDialog(
             dialogContext, _keyLoader, variable.Please_Wait); //
 
         await addFamilyUserInfoBloc.updateSelfProfile(false).then((value) {
@@ -1845,7 +1846,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               addFamilyUserInfoBloc.profileBanner.path);
         }
         print('*********************');
-        await CommonUtil.showLoadingDialog(
+        CommonUtil.showLoadingDialog(
             dialogContext, _keyLoader, variable.Please_Wait); //
 
         await addFamilyUserInfoBloc.updateSelfProfile(false).then((value) {
@@ -1961,11 +1962,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               );
             }
           } else if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(
-                backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-              ),
-            );
+            return CommonCircularIndicator();
           } else {
             return Center(
               child: Text(
@@ -2052,11 +2049,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               );
             }
           } else if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(
-                backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-              ),
-            );
+            return CommonCircularIndicator();
           } else {
             return Center(
               child: Text(
@@ -2137,11 +2130,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               );
             }
           } else if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(
-                backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-              ),
-            );
+            return CommonCircularIndicator();
           } else {
             return Center(
               child: Text(
@@ -2185,13 +2174,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   children: <Widget>[
                     GestureDetector(
                       onTap: () async {
-                        var image = await ImagePicker.platform
+                        PickedFile image = await ImagePicker.platform
                             .pickImage(source: ImageSource.gallery);
                         if (image != null) {
                           if (Platform.isIOS) {
                             imageURI = File(image.path);
                           } else {
-                            imageURI = image as File;
+                            imageURI = File(image.path);
                           }
 
                           if (widget.arguments.fromClass ==
@@ -2214,13 +2203,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     ),
                     GestureDetector(
                       onTap: () async {
-                        final image = await ImagePicker.platform
+                        PickedFile image = await ImagePicker.platform
                             .pickImage(source: ImageSource.camera);
                         if (image != null) {
                           if (Platform.isIOS) {
                             imageURI = File(image.path);
                           } else {
-                            imageURI = image as File;
+                            imageURI = File(image.path);
                           }
                           Navigator.pop(context);
                           if (widget.arguments.fromClass ==

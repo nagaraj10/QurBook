@@ -10,6 +10,7 @@ import '../widgets/my_providers_appbar.dart';
 import '../widgets/my_providers_tab_bar.dart';
 import '../../search_providers/models/search_arguments.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 
 class MyProvider extends StatefulWidget {
   @override
@@ -129,9 +130,7 @@ class MyProviderState extends State<MyProvider>
                 child: SizedBox(
                 width: 30.0.h,
                 height: 30.0.h,
-                child: CircularProgressIndicator(
-                  backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-                ),
+                child: CommonCircularIndicator(),
               )),
       ),
     );

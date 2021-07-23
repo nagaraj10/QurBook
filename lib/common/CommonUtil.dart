@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
@@ -2345,7 +2345,7 @@ class CommonUtil {
                         OutlineButton(
                           //hoverColor: Color(getMyPrimaryColor()),
                           onPressed: () async {
-                            await CommonUtil.showLoadingDialog(
+                            CommonUtil.showLoadingDialog(
                                 context, _keyLoader, variable.Please_Wait);
                             await subscribeViewModel.UnsubScribePlan(packageId)
                                 .then((value) {
@@ -2469,7 +2469,7 @@ class CommonUtil {
                     // open profile page
                     if (feeZero) {
                       Navigator.pop(context);
-                      await CommonUtil.showLoadingDialog(
+                      CommonUtil.showLoadingDialog(
                           context, _keyLoader, variable.Please_Wait);
                       final userId =
                           PreferenceUtil.getStringValue(Constants.KEY_USERID);
@@ -2748,20 +2748,13 @@ class CommonUtil {
                       child: SvgPicture.network(
                         iconApi,
                         placeholderBuilder: (context) =>
-                            CircularProgressIndicator(
-                                strokeWidth: 1.5,
-                                backgroundColor:
-                                    Color(CommonUtil().getMyPrimaryColor())),
+                            CommonCircularIndicator(),
                       ),
                     ),
                   )
                 : CachedNetworkImage(
                     imageUrl: iconApi,
-                    placeholder: (context, url) =>
-                        new CircularProgressIndicator(
-                            strokeWidth: 1.5,
-                            backgroundColor:
-                                Color(new CommonUtil().getMyPrimaryColor())),
+                    placeholder: (context, url) => CommonCircularIndicator(),
                     errorWidget: (context, url, error) =>
                         defaultWidget ??
                         ClipOval(
@@ -2785,18 +2778,12 @@ class CommonUtil {
                     ? SvgPicture.network(
                         iconApi,
                         placeholderBuilder: (context) =>
-                            CircularProgressIndicator(
-                                strokeWidth: 1.5,
-                                backgroundColor:
-                                    Color(CommonUtil().getMyPrimaryColor())),
+                            CommonCircularIndicator(),
                       )
                     : CachedNetworkImage(
                         imageUrl: iconApi,
                         placeholder: (context, url) =>
-                            CircularProgressIndicator(
-                                strokeWidth: 1.5,
-                                backgroundColor: Color(
-                                    new CommonUtil().getMyPrimaryColor())),
+                            CommonCircularIndicator(),
                         errorWidget: (context, url, error) =>
                             defaultWidget ??
                             ClipOval(

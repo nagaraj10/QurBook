@@ -21,6 +21,7 @@ import '../../src/utils/screenutils/size_extensions.dart';
 import '../../telehealth/features/SearchWidget/view/SearchWidget.dart';
 import '../../widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 
 class CategoryList extends StatefulWidget {
   @override
@@ -282,9 +283,7 @@ class _CategoryState extends State<CategoryList> {
                 child: SizedBox(
                   width: 30.0.h,
                   height: 30.0.h,
-                  child: CircularProgressIndicator(
-                      backgroundColor:
-                          Color(CommonUtil().getMyPrimaryColor())),
+                  child: CommonCircularIndicator(),
                 ),
               ),
             ),
@@ -413,8 +412,7 @@ class _CategoryState extends State<CategoryList> {
                           style: TextStyle(
                               fontSize: 15.0.sp,
                               fontWeight: FontWeight.w400,
-                              color:
-                                  Color(CommonUtil().getMyPrimaryColor())),
+                              color: Color(CommonUtil().getMyPrimaryColor())),
                           textAlign: TextAlign.start,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
@@ -451,8 +449,7 @@ class _CategoryState extends State<CategoryList> {
                       packageDuration:
                           planListResult[inx.index]?.packageDuration,
                       providerId: planListResult[inx.index]?.plinkid,
-                      isDisable: planListResult[inx.index]?.catselecttype ==
-                              '1'
+                      isDisable: planListResult[inx.index]?.catselecttype == '1'
                           ? (planListResult[inx.index]?.isSubscribed == '1' ||
                               (isSelectedMap[
                                       planListResult[inx.index]?.packcatid] ??
@@ -542,16 +539,20 @@ class _CategoryState extends State<CategoryList> {
                                         fontSize: 10.0.sp,
                                         fontWeight: FontWeight.w400),
                                   ),
-                                  if (planListResult[inx.index]?.packageDuration !=
-                                          null) Text(
-                                          planListResult[inx.index]
-                                                  ?.packageDuration +
-                                              ' days',
-                                          maxLines: 1,
-                                          style: TextStyle(
-                                              fontSize: 10.0.sp,
-                                              fontWeight: FontWeight.w600),
-                                        ) else Container()
+                                  if (planListResult[inx.index]
+                                          ?.packageDuration !=
+                                      null)
+                                    Text(
+                                      planListResult[inx.index]
+                                              ?.packageDuration +
+                                          ' days',
+                                      maxLines: 1,
+                                      style: TextStyle(
+                                          fontSize: 10.0.sp,
+                                          fontWeight: FontWeight.w600),
+                                    )
+                                  else
+                                    Container()
                                 ],
                               ),
                             ],
@@ -560,12 +561,16 @@ class _CategoryState extends State<CategoryList> {
                             children: [
                               Row(
                                 children: [
-                                  if (planListResult[inx.index]?.isSubscribed == '1') Text(
-                                          'Start Date: ',
-                                          style: TextStyle(
-                                              fontSize: 10.0.sp,
-                                              fontWeight: FontWeight.w400),
-                                        ) else SizedBox(width: 55.w),
+                                  if (planListResult[inx.index]?.isSubscribed ==
+                                      '1')
+                                    Text(
+                                      'Start Date: ',
+                                      style: TextStyle(
+                                          fontSize: 10.0.sp,
+                                          fontWeight: FontWeight.w400),
+                                    )
+                                  else
+                                    SizedBox(width: 55.w),
                                   planListResult[inx.index]?.isSubscribed == '1'
                                       ? Text(
                                           CommonUtil().dateFormatConversion(
@@ -577,7 +582,11 @@ class _CategoryState extends State<CategoryList> {
                                               fontWeight: FontWeight.w600),
                                         )
                                       : SizedBox(width: 55.w),
-                                  if (planListResult[inx.index]?.isSubscribed == '0') SizedBox(width: 60.w) else SizedBox(width: 55.w),
+                                  if (planListResult[inx.index]?.isSubscribed ==
+                                      '0')
+                                    SizedBox(width: 60.w)
+                                  else
+                                    SizedBox(width: 55.w),
                                 ],
                               )
                             ],
@@ -599,8 +608,8 @@ class _CategoryState extends State<CategoryList> {
                                         text: FREE,
                                         fontsize: 16.0.sp,
                                         fontWeight: FontWeight.w500,
-                                        colors: Color(CommonUtil()
-                                            .getMyPrimaryColor())),
+                                        colors: Color(
+                                            CommonUtil().getMyPrimaryColor())),
                                     child: TextWidget(
                                         text: INR +
                                             planListResult[inx.index]?.price,
@@ -613,71 +622,66 @@ class _CategoryState extends State<CategoryList> {
                             SizedBox(height: 8.h),
                             Align(
                                 child: SizedBoxWithChild(
-                                  width: 95.0.w,
-                                  height: 32.0.h,
-                                  child: FlatButton(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(18),
-                                        side: BorderSide(
-                                            color: getBorderColor(
-                                                inx.index, planListResult))),
-                                    color: Colors.transparent,
-                                    textColor: planListResult[inx.index]
-                                                ?.isSubscribed ==
-                                            '0'
-                                        ? Color(CommonUtil()
-                                            .getMyPrimaryColor())
-                                        : Colors.grey,
-                                    padding: EdgeInsets.all(
-                                      8.0.sp,
-                                    ),
-                                    onPressed: (planListResult[inx.index]
-                                                    ?.catselecttype ==
-                                                '1'
-                                            ? (planListResult[inx.index]
-                                                        ?.isSubscribed ==
-                                                    '1' ||
-                                                (isSelectedMap[planListResult[
-                                                            inx.index]
+                              width: 95.0.w,
+                              height: 32.0.h,
+                              child: FlatButton(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(18),
+                                    side: BorderSide(
+                                        color: getBorderColor(
+                                            inx.index, planListResult))),
+                                color: Colors.transparent,
+                                textColor: planListResult[inx.index]
+                                            ?.isSubscribed ==
+                                        '0'
+                                    ? Color(CommonUtil().getMyPrimaryColor())
+                                    : Colors.grey,
+                                padding: EdgeInsets.all(
+                                  8.0.sp,
+                                ),
+                                onPressed: (planListResult[inx.index]
+                                                ?.catselecttype ==
+                                            '1'
+                                        ? (planListResult[inx.index]
+                                                    ?.isSubscribed ==
+                                                '1' ||
+                                            (isSelectedMap[
+                                                    planListResult[inx.index]
                                                         ?.packcatid] ??
-                                                    false))
-                                            : (planListResult[inx.index]
-                                                    ?.isSubscribed ==
-                                                '1'))
-                                        ? null
-                                        : () async {
-                                            if (planListResult[inx.index]
-                                                    ?.isSubscribed ==
-                                                '0') {
-                                              CommonUtil().profileValidationCheck(
-                                                  context,
-                                                  packageId:
-                                                      planListResult[inx.index]
-                                                          ?.packageid,
-                                                  isSubscribed:
-                                                      planListResult[inx.index]
-                                                          ?.isSubscribed,
-                                                  providerId:
-                                                      planListResult[inx.index]
-                                                          ?.plinkid,
-                                                  isFrom: strIsFromSubscibe,
-                                                  feeZero: planListResult[
-                                                                  inx.index]
-                                                              ?.price ==
-                                                          '' ||
-                                                      planListResult[inx.index]
-                                                              ?.price ==
-                                                          '0', refresh: () {
-                                                setState(() {
-                                                  planListModel =
-                                                      myPlanViewModel
-                                                          .getPlanList(
-                                                              providerId);
-                                                });
-                                              });
-                                            }
-                                            /*else {
+                                                false))
+                                        : (planListResult[inx.index]
+                                                ?.isSubscribed ==
+                                            '1'))
+                                    ? null
+                                    : () async {
+                                        if (planListResult[inx.index]
+                                                ?.isSubscribed ==
+                                            '0') {
+                                          CommonUtil().profileValidationCheck(
+                                              context,
+                                              packageId:
+                                                  planListResult[inx.index]
+                                                      ?.packageid,
+                                              isSubscribed:
+                                                  planListResult[inx.index]
+                                                      ?.isSubscribed,
+                                              providerId:
+                                                  planListResult[inx.index]
+                                                      ?.plinkid,
+                                              isFrom: strIsFromSubscibe,
+                                              feeZero: planListResult[inx.index]
+                                                          ?.price ==
+                                                      '' ||
+                                                  planListResult[inx.index]
+                                                          ?.price ==
+                                                      '0', refresh: () {
+                                            setState(() {
+                                              planListModel = myPlanViewModel
+                                                  .getPlanList(providerId);
+                                            });
+                                          });
+                                        }
+                                        /*else {
                                           CommonUtil().unSubcribeAlertDialog(
                                               context,
                                               packageId: planList[i].packageid,
@@ -685,17 +689,17 @@ class _CategoryState extends State<CategoryList> {
                                             setState(() {});
                                           });
                                         }*/
-                                          },
-                                    child: TextWidget(
-                                      text: planListResult[inx.index]
-                                                  ?.isSubscribed ==
+                                      },
+                                child: TextWidget(
+                                  text:
+                                      planListResult[inx.index]?.isSubscribed ==
                                               '0'
                                           ? strSubscribe
                                           : strSubscribed,
-                                      fontsize: 12.0.sp,
-                                    ),
-                                  ),
-                                )),
+                                  fontsize: 12.0.sp,
+                                ),
+                              ),
+                            )),
                           ],
                         ),
                         SizedBox(width: 4.w),

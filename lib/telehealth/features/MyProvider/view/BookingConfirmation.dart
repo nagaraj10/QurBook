@@ -16,6 +16,7 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
@@ -247,10 +248,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                 backgroundColor: Colors.white,
                 body: Center(
                     child: SizedBox(
-                  child: CircularProgressIndicator(
-                    backgroundColor:
-                        Color(new CommonUtil().getMyPrimaryColor()),
-                  ),
+                  child: CommonCircularIndicator(),
                   width: 30,
                   height: 30,
                 )),
@@ -499,10 +497,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             child: SizedBox(
                 width: 30.0.h,
                 height: 30.0.h,
-                child: CircularProgressIndicator(
-                    strokeWidth: 1.5,
-                    backgroundColor:
-                        Color(new CommonUtil().getMyPrimaryColor()))),
+                child: CommonCircularIndicator()),
           ),
         ),
         elevation: 6.0,
@@ -1061,9 +1056,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         widget.isFollowUp == true) {
       if (widget.doctorsData.isFollowUpTaken == true) {
         if (widget.selectedDate
-            .difference(
-            DateTime.parse(widget.doctorsData.plannedFollowupDate))
-            .inDays <=
+                .difference(
+                    DateTime.parse(widget.doctorsData.plannedFollowupDate))
+                .inDays <=
             0) {
           return true;
         } else {
