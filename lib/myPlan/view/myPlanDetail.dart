@@ -316,7 +316,7 @@ class PlanDetail extends State<MyPlanDetail> {
                       await CommonUtil().renewAlertDialog(context,
                           packageId: packageId,
                           price: price,
-                          IsExtendable: isExtendable == '1' ? false : true);
+                          IsExtendable: isExtendable == '1' ? true : false);
                     } else {
                       await CommonUtil().unSubcribeAlertDialog(
                         context,

@@ -68,9 +68,9 @@ class PlanWizardViewModel extends ChangeNotifier {
 
   Future<PlanListModel> getCarePlanList() async {
     try {
-      var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
       PlanListModel myPlanListModel =
-          await planWizardService.getPlanList(userid);
+          await planWizardService.getPlanList(userId);
       if (myPlanListModel.isSuccess) {
         planListResult = myPlanListModel.result;
       } else {

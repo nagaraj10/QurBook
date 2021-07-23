@@ -19,7 +19,7 @@ class PlanWizardService {
         .selectedTag;
     var body = {};
     body['method'] = qr_get;
-    body['data'] = getMenuCarePlans + tag + excludeDiet;
+    body['data'] = getMenuCarePlans + tag + excludeDiet+qr_patientEqaul+patientId;
     var jsonString = convert.jsonEncode(body);
     final response = await _helper.getPlanList(qr_plan_list, jsonString);
     return PlanListModel.fromJson(response);
@@ -32,7 +32,7 @@ class PlanWizardService {
         Provider.of<PlanWizardViewModel>(Get.context, listen: false).providerId;
     var body = {};
     body['method'] = qr_get;
-    body['data'] = getMenuDietPlans + tag + diet + (isVeg?veg:'') + prid + providerId+exact;
+    body['data'] = getMenuDietPlans + tag + diet + (isVeg?veg:'') + prid + providerId+exact+qr_patientEqaul+patientId;
     var jsonString = convert.jsonEncode(body);
     final response = await _helper.getPlanList(qr_plan_list, jsonString);
     return DietPlanModel.fromJson(response);

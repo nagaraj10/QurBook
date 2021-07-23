@@ -45,7 +45,7 @@ class DietPlanCard extends StatelessWidget {
                     catIcon: planList?.catmetadata?.icon,
                     metaDataForURL: planList?.metadata,
                     isFrom: strDiet,
-                    isExtendable: planList?.isExtendable == '0'? true : false,
+                    isExtendable: planList?.isExtendable == '1'? true : false,
                     isRenew: planList?.isexpired == '1' ? true : false,
                   )),
         );
@@ -174,7 +174,7 @@ class DietPlanCard extends StatelessWidget {
                                       .currentPackageIdDiet ==
                                   planList.packageid,
                           onTap: () async {
-                            if (planList.isExtendable == '0') {
+                            if (planList.isExtendable == '1') {
                               var isSelected = Provider.of<PlanWizardViewModel>(
                                       context,
                                       listen: false)
