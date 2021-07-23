@@ -172,7 +172,7 @@ class CarePlanCard extends StatelessWidget {
                                               .currentPackageId ==
                                           planList.packageid,
                               onTap: () async {
-                                if (planList.isExtendable == '0') {
+                                if (planList.isExtendable == '1') {
                                   var isSelected =
                                       Provider.of<PlanWizardViewModel>(
                                               context,
@@ -268,7 +268,7 @@ class CarePlanCard extends StatelessWidget {
                 iconApi: planList?.metadata?.icon,
                 catIcon: planList?.catmetadata?.icon,
                 metaDataForURL: planList?.metadata,
-                isExtendable: planList?.isExtendable == '0' ? true : false,
+                isExtendable: planList?.isExtendable == '1' ? true : false,
                 isFrom: strCare,
                 isRenew: planList?.isexpired == '1' ? true : false,
               )),

@@ -414,8 +414,8 @@ class _MyPlanState extends State<MyPlanList> {
                                         price: planList[i]?.price,
                                         IsExtendable:
                                             planList[i]?.isExtendable == '1'
-                                                ? false
-                                                : true, refresh: () {
+                                                ? true
+                                                : false, refresh: () {
                                       setState(() {});
                                     });
                                   } else {

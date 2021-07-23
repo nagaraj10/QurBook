@@ -2685,7 +2685,7 @@ class CommonUtil {
                         OutlineButton(
                           //hoverColor: Color(getMyPrimaryColor()),
                           onPressed: () async {
-                            //Navigator.pop(context);
+                            Navigator.pop(context);
                             /*_dialogForSubscribePayment(
                                 context, '', packageId, true, () {
                               refresh();
