@@ -42,6 +42,7 @@ import '../src/utils/FHBUtils.dart';
 import '../src/utils/colors_utils.dart';
 import '../src/utils/screenutils/size_extensions.dart';
 import '../telehealth/features/MyProvider/view/CommonWidgets.dart';
+import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
 
 class CommonDialogBox {
   String categoryName, deviceName;
@@ -1650,6 +1651,7 @@ class CommonDialogBox {
       }
     });
   }
+          
 
   Widget getMicIcon(BuildContext context, bool containsAudio, String audioPath,
       Function(bool, String) updateUI) {
@@ -1657,11 +1659,10 @@ class CommonDialogBox {
       onTap: () async {
         await Navigator.of(context)
             .push(MaterialPageRoute(
-          builder: (context) => AudioRecordScreen(
-              arguments: AudioScreenArguments(
+          builder: (context) => AudioRecorder(arguments: AudioScreenArguments(
             fromVoice: false,
-          )),
-        ))
+          ),),
+        ),)
             .then((results) {
           if (results != null) {
             if (results.containsKey(Constants.keyAudioFile)) {
