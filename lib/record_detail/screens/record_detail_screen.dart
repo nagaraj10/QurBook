@@ -2,7 +2,6 @@ import 'dart:core';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:myfhb/src/resources/network/api_services.dart';
-import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
 
 import '../../constants/fhb_parameters.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
@@ -57,6 +56,7 @@ import 'package:get/get.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFModel.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFView.dart';
+import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
 
 typedef OnError = void Function(Exception exception);
 
