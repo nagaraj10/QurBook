@@ -38,6 +38,7 @@ import '../confirm_location/screens/confirm_location_screen.dart';
 import '../feedback/Feedbacks.dart';
 import '../feedback/FeedbacksSucess.dart';
 import '../my_family_detail/screens/my_family_detail_screen.dart';
+import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
 
 setRouter(List<CameraDescription> listOfCameras) async {
   final firstCamera = listOfCameras[0];
@@ -53,7 +54,7 @@ setRouter(List<CameraDescription> listOfCameras) async {
     router.rt_Dashboard: (BuildContext context) => DevicesScreen(),
     router.rt_Regimen: (BuildContext context) =>
   */
-  
+
   final fhbRouter = <String, WidgetBuilder>{
     router.rt_Sheela: (context) => ChatScreen(
           arguments: ModalRoute.of(context).settings.arguments,
@@ -61,7 +62,7 @@ setRouter(List<CameraDescription> listOfCameras) async {
     router.rt_Splash: (context) => SplashScreen(),
     router.rt_SignIn: (context) => SignInScreen(),
     router.rt_Dashboard: (context) => DevicesScreen(),
-    router.rt_Regimen: (context) => 
+    router.rt_Regimen: (context) =>
         RegimentScreen(aruguments: ModalRoute.of(context).settings.arguments),
     router.rt_Landing: (context) => LandingScreen(
           landingArguments: ModalRoute.of(context).settings.arguments,
@@ -99,7 +100,7 @@ setRouter(List<CameraDescription> listOfCameras) async {
         TakePictureScreenForDevices(cameras: listOfCameras),
     router.rt_ConfirmLocation: (context) => ConfirmLocationScreen(
         arguments: ModalRoute.of(context).settings.arguments),
-    router.rt_AudioScreen: (context) => AudioRecordScreen(),
+    router.rt_AudioScreen: (context) => AudioRecorder(),
     // "/sign_up_screen": (BuildContext context) => SignUpScreen(),
     router.rt_AddFamilyOtp: (context) => AddFamilyOTPScreen(
         arguments: ModalRoute.of(context).settings.arguments),

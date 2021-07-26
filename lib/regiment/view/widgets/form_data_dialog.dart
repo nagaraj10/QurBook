@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
 import '../../../common/PreferenceUtil.dart';
 import '../../../constants/fhb_query.dart';
 import '../../view_model/AddRegimentModel.dart';
@@ -200,12 +201,15 @@ class FormDataDialogState extends State<FormDataDialog> {
                       onTap: widget.canEdit
                           ? () {
                               Navigator.of(context)
-                                  .push(MaterialPageRoute(
-                                builder: (context) => AudioRecordScreen(
+                                  .push(
+                                MaterialPageRoute(
+                                  builder: (context) => AudioRecorder(
                                     arguments: AudioScreenArguments(
-                                  fromVoice: false,
-                                )),
-                              ))
+                                      fromVoice: false,
+                                    ),
+                                  ),
+                                ),
+                              )
                                   .then((results) {
                                 final String audioPath =
                                     results[Constants.keyAudioFile];

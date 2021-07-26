@@ -59,7 +59,7 @@ dependencies:
   flutter_absolute_path: ^1.0.6
   provider: ^5.0.0
   get: ^4.1.4
-  tflite: ^1.0.6
+  tflite: ^1.1.2
   sqflite: ^2.0.0+3
   devicelocale: ^0.4.1
   flutter_local_notifications: ^6.0.0

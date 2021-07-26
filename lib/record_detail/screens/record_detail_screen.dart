@@ -56,6 +56,7 @@ import 'package:get/get.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFModel.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFView.dart';
+import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
 
 typedef OnError = void Function(Exception exception);
 
@@ -407,12 +408,15 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     return InkWell(
       onTap: () {
         Navigator.of(context)
-            .push(MaterialPageRoute(
-          builder: (context) => AudioRecordScreen(
+            .push(
+          MaterialPageRoute(
+            builder: (context) => AudioRecorder(
               arguments: AudioScreenArguments(
-            fromVoice: false,
-          )),
-        ))
+                fromVoice: false,
+              ),
+            ),
+          ),
+        )
             .then((results) {
           if (results != null) {
             if (results.containsKey(Constants.keyAudioFile)) {
