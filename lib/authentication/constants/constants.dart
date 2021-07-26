@@ -173,6 +173,10 @@ const String strCare = 'Care';
 const String strDiet = 'Diet';
 const String strMyPlan = 'MyPlan';
 
+const String strProviderCare = 'ProviderCare';
+const String strFreeCare = 'FreeCare';
+
+
 //labels for country code picker page
 const String strinitialMobileLabel = '91';
 const String strPlusSymbol = '+';

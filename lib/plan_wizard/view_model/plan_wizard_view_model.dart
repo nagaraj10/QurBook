@@ -19,6 +19,7 @@ class PlanWizardViewModel extends ChangeNotifier {
   PlanWizardService planWizardService = new PlanWizardService();
   final PageController pageController = PageController();
   int currentPage = 0;
+  int currentTab = 0;
   List<List<DietPlanResult>> dietPlanList = [];
   String currentPackageId = '';
   String currentPackageIdDiet = '';
@@ -66,11 +67,16 @@ class PlanWizardViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<PlanListModel> getCarePlanList() async {
+  void changeCurrentTab(int newPage) {
+    currentTab = newPage;
+    notifyListeners();
+  }
+
+  Future<PlanListModel> getCarePlanList(String isFrom) async {
     try {
       var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
       PlanListModel myPlanListModel =
-          await planWizardService.getPlanList(userId);
+          await planWizardService.getPlanList(userId,isFrom);
       if (myPlanListModel.isSuccess) {
         planListResult = myPlanListModel.result;
       } else {

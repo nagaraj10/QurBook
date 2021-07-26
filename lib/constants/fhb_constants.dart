@@ -544,6 +544,10 @@ const String strHintHealth = 'Tell us more about your health condition';
 const String strHintCarePlan = 'Tell us more about your care plan';
 const String strHintDietPlan = 'Tell us more about your diet plan';
 
+const String strDontProvider = 'Don\'t find your provider?';
+
+const String strAdd = 'Add';
+
 const strUploading = 'Uploading...';
 const strSubscribe = 'Subscribe';
 const strAddToCart = 'ADD TO CART';

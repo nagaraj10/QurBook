@@ -250,6 +250,10 @@ const String getMenuCarePlans = 'Action=GetMenuTaggedPackages&tags=';
 
 const String excludeDiet = '&extags=diet';
 
+const String onlyProvider = '&onlymyprovider=1';
+
+const String onlyFreePlans = '&onlyfree=1';
+
 const String getMenuDietPlans = 'Action=GetMenuTaggedPackages2&tags=';
 
 const String diet = ',diet';
