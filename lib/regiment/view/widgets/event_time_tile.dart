@@ -3,12 +3,11 @@ import '../../../src/utils/screenutils/size_extensions.dart';
 import '../../../common/CommonUtil.dart';
 
 class EventTimeTile extends StatefulWidget {
-  const EventTimeTile({
-    @required this.title,
-    @required this.onTimeSelected,
-    this.selectedTime,
-    this.controller
-  });
+  const EventTimeTile(
+      {@required this.title,
+      @required this.onTimeSelected,
+      this.selectedTime,
+      this.controller});
 
   final String title;
   final Function onTimeSelected;
@@ -178,6 +177,10 @@ class _EventTimeTileState extends State<EventTimeTile> {
       icon = Icons.food_bank;
     } else if (title.toLowerCase().contains('sleep')) {
       icon = Icons.bedtime_rounded;
+    } else if (title.toLowerCase().contains('prebreakfast')) {
+      icon = Icons.dinner_dining;
+    } else if (title.toLowerCase().contains('snack')) {
+      icon = Icons.food_bank_outlined;
     }
     return icon;
   }
