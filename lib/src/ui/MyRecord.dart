@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:math';
+import 'package:get/get.dart';
 import 'package:myfhb/landing/view_model/landing_view_model.dart';
+import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
@@ -1589,17 +1591,26 @@ class _CustomTabsState extends State<CustomTabView>
             .then((value) {
           if (widget.argument.fromClass == 'audio' ||
               widget.argument.fromClass == null) {
-            Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => AudioRecordScreen(
-                            arguments: AudioScreenArguments(
-                                fromVoice: true,
-                                fromClass: categoryName ==
-                                        Constants.STR_VOICERECORDS
-                                    ? ''
-                                    : widget.argument.fromClass ?? 'audio'))))
-                .then((results) {});
+            // Navigator.pushReplacement(
+            //         context,
+            //         MaterialPageRoute(
+            //             builder: (context) => AudioRecordScreen(
+            //                 arguments: AudioScreenArguments(
+            //                     fromVoice: true,
+            //                     fromClass: categoryName ==
+            //                             Constants.STR_VOICERECORDS
+            //                         ? ''
+            //                         : widget.argument.fromClass ?? 'audio'))))
+            //     .then((results) {});
+            Get.to(
+              () => AudioRecorder(
+                arguments: AudioScreenArguments(
+                    fromVoice: true,
+                    fromClass: categoryName == Constants.STR_VOICERECORDS
+                        ? ''
+                        : widget.argument.fromClass ?? 'audio'),
+              ),
+            );
           } else {
             Navigator.pushNamed(context, router.rt_AudioScreen,
                     arguments: AudioScreenArguments(

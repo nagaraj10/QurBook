@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
 import 'CommonConstants.dart';
 import 'CommonUtil.dart';
 import 'FHBBasicWidget.dart';
@@ -1649,6 +1650,7 @@ class CommonDialogBox {
       }
     });
   }
+          
 
   Widget getMicIcon(BuildContext context, bool containsAudio, String audioPath,
       Function(bool, String) updateUI) {
@@ -1656,11 +1658,10 @@ class CommonDialogBox {
       onTap: () async {
         await Navigator.of(context)
             .push(MaterialPageRoute(
-          builder: (context) => AudioRecordScreen(
-              arguments: AudioScreenArguments(
+          builder: (context) => AudioRecorder(arguments: AudioScreenArguments(
             fromVoice: false,
-          )),
-        ))
+          ),),
+        ),)
             .then((results) {
           if (results != null) {
             if (results.containsKey(Constants.keyAudioFile)) {
@@ -1700,8 +1701,7 @@ class CommonDialogBox {
   void onPostDataToServer(BuildContext context, List<String> imagePath,
       {Function onRefresh}) async {
     if (doValidationBeforePosting()) {
-      await CommonUtil.showLoadingDialog(
-          context, _keyLoader, variable.Please_Wait);
+      CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
 
       var postMainData = Map<String, dynamic>();
       var postMediaData = Map<String, dynamic>();
@@ -2500,9 +2500,13 @@ class CommonDialogBox {
             fhbBasicWidget.getTextForAlertDialog(
                 context, CommonConstants.strMemo),
             fhbBasicWidget.getRichTextFieldWithNoCallbacks(
-                context, memoController,Constants.STR_NOTES_HINT,500,"",(value){
-
-            },false),
+                context,
+                memoController,
+                Constants.STR_NOTES_HINT,
+                500,
+                "",
+                (value) {},
+                false),
             SizedBox(
               height: 15.0.h,
             ),

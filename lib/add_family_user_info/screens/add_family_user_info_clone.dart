@@ -1792,7 +1792,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           await PreferenceUtil.saveString(Constants.KEY_PROFILE_BANNER,
               addFamilyUserInfoBloc.profileBanner.path);
         }
-        await CommonUtil.showLoadingDialog(
+        CommonUtil.showLoadingDialog(
             dialogContext, _keyLoader, variable.Please_Wait); //
 
         await addFamilyUserInfoBloc.updateSelfProfile(false).then((value) {

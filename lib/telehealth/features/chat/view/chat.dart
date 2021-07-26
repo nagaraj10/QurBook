@@ -42,6 +42,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../common/CommonUtil.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
 
 class Chat extends StatefulWidget {
   final String peerId;
@@ -1872,12 +1873,15 @@ class ChatScreenState extends State<ChatScreen> {
                       child: RawMaterialButton(
                         onPressed: () {
                           Navigator.of(context)
-                              .push(MaterialPageRoute(
-                            builder: (context) => AudioRecordScreen(
+                              .push(
+                            MaterialPageRoute(
+                              builder: (context) => AudioRecorder(
                                 arguments: AudioScreenArguments(
-                              fromVoice: false,
-                            )),
-                          ))
+                                  fromVoice: false,
+                                ),
+                              ),
+                            ),
+                          )
                               .then((results) {
                             String audioPath = results[Constants.keyAudioFile];
                             if (audioPath != null && audioPath != '') {

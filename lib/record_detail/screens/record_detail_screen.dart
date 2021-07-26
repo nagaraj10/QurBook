@@ -2,6 +2,7 @@ import 'dart:core';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:myfhb/src/resources/network/api_services.dart';
+import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
 
 import '../../constants/fhb_parameters.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
@@ -407,12 +408,15 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     return InkWell(
       onTap: () {
         Navigator.of(context)
-            .push(MaterialPageRoute(
-          builder: (context) => AudioRecordScreen(
+            .push(
+          MaterialPageRoute(
+            builder: (context) => AudioRecorder(
               arguments: AudioScreenArguments(
-            fromVoice: false,
-          )),
-        ))
+                fromVoice: false,
+              ),
+            ),
+          ),
+        )
             .then((results) {
           if (results != null) {
             if (results.containsKey(Constants.keyAudioFile)) {
