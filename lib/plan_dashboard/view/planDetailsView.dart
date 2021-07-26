@@ -497,7 +497,6 @@ class PlanDetail extends State<MyPlanDetailView> {
                         :*/
                         () async {
                       if (issubscription == '0') {
-                        if (isExtendable) {
                           if (isFrom == strCare) {
                             var isSelected = Provider.of<PlanWizardViewModel>(
                                     context,
@@ -616,9 +615,7 @@ class PlanDetail extends State<MyPlanDetailView> {
                               });
                             }
                           }
-                        } else {
-                          FlutterToast().getToast(renewalLimit, Colors.black);
-                        }
+
                       }
                       /*else {
                               CommonUtil().unSubcribeAlertDialog(context,
