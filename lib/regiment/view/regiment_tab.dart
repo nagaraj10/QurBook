@@ -201,7 +201,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
     double iconSize,
   ) {
     var isDefault = true;
-    dynamic cardIcon = 'assets/launcher/myfhb1.png';
+    dynamic cardIcon = 'assets/launcher/myfhb.png';
     switch (activityname) {
       case Activityname.DIET:
         cardIcon = Icons.fastfood_rounded;
@@ -225,7 +225,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
         cardIcon = Icons.screen_search_desktop;
         break;
       default:
-        cardIcon = 'assets/launcher/myfhb1.png';
+        cardIcon = 'assets/launcher/myfhb.png';
     }
     var cardIconWidget = (cardIcon is String)
         ? Image.asset(

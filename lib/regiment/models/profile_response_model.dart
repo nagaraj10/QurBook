@@ -30,6 +30,8 @@ class ProfileResultModel {
     this.familyName,
     this.profileData,
     this.metadata,
+    this.profileDataMap,
+    this.profileDataKeyMap,
   });
 
   final String uid;
@@ -41,6 +43,8 @@ class ProfileResultModel {
   final String familyName;
   final ProfileDataModel profileData;
   final dynamic metadata;
+  final Map<String, dynamic> profileDataMap;
+  final List<dynamic> profileDataKeyMap;
 
   factory ProfileResultModel.fromJson(Map<String, dynamic> json) =>
       ProfileResultModel(
@@ -53,6 +57,8 @@ class ProfileResultModel {
         familyName: json['family_name'],
         profileData: ProfileDataModel.fromJson(json['profile']),
         metadata: json['metadata'],
+        profileDataMap: json['profile'] ?? {},
+        profileDataKeyMap: json['timenames'] ?? [],
       );
 
   Map<String, dynamic> toJson() => {

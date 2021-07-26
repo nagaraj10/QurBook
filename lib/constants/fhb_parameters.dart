@@ -346,6 +346,8 @@ const String noWeightFamily =
 const String noAdditionalInfoFamily =
     'Please fill your height & weight in your selected family member before you book an appointment';
 
+const String CLEAR_CART_MSG = 'Are you sure you want to remove all plans?';
+
 //Payment
 const String PAYMENT_STATUS = 'payment_status';
 const String CREDIT = 'Credit';
@@ -691,4 +693,4 @@ const String errAssociateRecords =
 const String strMetaData = 'metadata';
 const String strMultipart = 'multipart/form-data';
 
-const String qurHealthLogo = 'assets/launcher/myfhb1.png';
+const String qurHealthLogo = 'assets/launcher/myfhb.png';
