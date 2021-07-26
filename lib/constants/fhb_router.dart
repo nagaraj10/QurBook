@@ -119,7 +119,7 @@ setRouter(List<CameraDescription> listOfCameras) async {
     router.rt_CallMain: (context) =>
         CallMain(arguments: ModalRoute.of(context).settings.arguments),
     router.rt_AudioScreen: (BuildContext context) =>
-        AudioRecordScreen(arguments: ModalRoute.of(context).settings.arguments),
+        AudioRecorder(arguments: ModalRoute.of(context).settings.arguments),
     router.rt_PlanWizard: (BuildContext context) => PlanWizardScreen(),
   };
 
