@@ -149,8 +149,9 @@ class _AudioRecorderState extends State<AudioRecorder> {
           containsAudioMain,
           this._tempPath,
           (containsAudio, audioPath) {
-            audioPathMain = audioPath;
-            containsAudioMain = containsAudio;
+            // audioPathMain = audioPath;
+            // containsAudioMain = containsAudio;
+            Navigator.of(context).pop();
             setState(
               () {},
             );
