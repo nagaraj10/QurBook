@@ -98,14 +98,14 @@ class _FreeCarePlans extends State<FreeCarePlans> {
   onSearched(String title, String filterBy) async {
     planSearchList.clear();
     if (filterBy == popUpChoicePrice) {
-      planSearchList = await planListProvider.filterSorting(popUpChoicePrice);
+      planSearchList = await planListProvider.filterSortingForFree(popUpChoicePrice);
     } else if (filterBy == popUpChoiceDura) {
-      planSearchList = await planListProvider.filterSorting(popUpChoiceDura);
+      planSearchList = await planListProvider.filterSortingForFree(popUpChoiceDura);
     } else if (filterBy == popUpChoiceDefault) {
-      planSearchList = await planListProvider.filterSorting(popUpChoiceDefault);
+      planSearchList = await planListProvider.filterSortingForFree(popUpChoiceDefault);
     } else if (filterBy == 'localSearch') {
       if (title != null) {
-        planSearchList = await planListProvider.filterPlanNameProvider(title);
+        planSearchList = await planListProvider.filterPlanNameFree(title);
       }
     }
     setState(() {});

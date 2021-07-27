@@ -23,7 +23,8 @@ class PlanWizardViewModel extends ChangeNotifier {
   List<List<DietPlanResult>> dietPlanList = [];
   String currentPackageId = '';
   String currentPackageIdDiet = '';
-  List<PlanListResult> planListResult = [];
+  List<PlanListResult> providerPlanListResult = [];
+  List<PlanListResult> freePlanListResult = [];
   Map<String, List<MenuItem>> healthConditions = {};
   Map<String, List<MenuItem>> filteredHealthConditions = {};
   bool isHealthSearch = false;
@@ -78,9 +79,11 @@ class PlanWizardViewModel extends ChangeNotifier {
       PlanListModel myPlanListModel =
           await planWizardService.getPlanList(userId,isFrom);
       if (myPlanListModel.isSuccess) {
-        planListResult = myPlanListModel.result;
+        providerPlanListResult = myPlanListModel.result;
+        freePlanListResult = myPlanListModel.result;
       } else {
-        planListResult = [];
+        providerPlanListResult = [];
+        freePlanListResult = [];
       }
       return myPlanListModel;
     } catch (e) {}
@@ -149,7 +152,7 @@ class PlanWizardViewModel extends ChangeNotifier {
 
   List<PlanListResult> filterPlanNameProvider(String title) {
     List<PlanListResult> filterSearch = new List();
-    for (PlanListResult searchList in planListResult) {
+    for (PlanListResult searchList in providerPlanListResult) {
       if (searchList?.title != null && searchList?.title != '') {
         if (searchList?.title
                 .toLowerCase()
@@ -166,9 +169,28 @@ class PlanWizardViewModel extends ChangeNotifier {
     return filterSearch;
   }
 
-  List<PlanListResult> filterSorting(String filter) {
+  List<PlanListResult> filterPlanNameFree(String title) {
+    List<PlanListResult> filterSearch = new List();
+    for (PlanListResult searchList in freePlanListResult) {
+      if (searchList?.title != null && searchList?.title != '') {
+        if (searchList?.title
+            .toLowerCase()
+            .trim()
+            .contains(title.toLowerCase().trim()) ||
+            searchList?.providerName
+                .toLowerCase()
+                .trim()
+                .contains(title.toLowerCase().trim())) {
+          filterSearch.add(searchList);
+        }
+      }
+    }
+    return filterSearch;
+  }
+
+  List<PlanListResult> filterSortingForProvider(String filter) {
     List<PlanListResult> planListLocal = [];
-    List<PlanListResult> planLisDefault = List.from(planListResult);
+    List<PlanListResult> planLisDefault = List.from(providerPlanListResult);
     if (filter == popUpChoicePrice) {
       if (planLisDefault != null && planLisDefault.length > 0) {
         planLisDefault?.sort((a, b) {
@@ -188,11 +210,43 @@ class PlanWizardViewModel extends ChangeNotifier {
         planListLocal = List.from(planLisDefault);
       }
     } else if (filter == popUpChoiceDefault) {
-      if (planListResult != null && planListResult.length > 0) {
-        planListLocal = List.from(planListResult);
+      if (providerPlanListResult != null && providerPlanListResult.length > 0) {
+        planListLocal = List.from(providerPlanListResult);
       }
     } else {
-      planListLocal = List.from(planListResult);
+      planListLocal = List.from(providerPlanListResult);
+    }
+
+    return planListLocal;
+  }
+
+  List<PlanListResult> filterSortingForFree(String filter) {
+    List<PlanListResult> planListLocal = [];
+    List<PlanListResult> planLisDefault = List.from(freePlanListResult);
+    if (filter == popUpChoicePrice) {
+      if (planLisDefault != null && planLisDefault.length > 0) {
+        planLisDefault?.sort((a, b) {
+          var priceA = double.tryParse(a?.price ?? 0) ?? 0;
+          var priceB = double.tryParse(b?.price ?? 0) ?? 0;
+          return priceA?.compareTo(priceB ?? 0);
+        });
+      }
+      planListLocal = List.from(planLisDefault);
+    } else if (filter == popUpChoiceDura) {
+      if (planLisDefault != null && planLisDefault.length > 0) {
+        planLisDefault?.sort((a, b) {
+          var duraA = double.tryParse(a?.packageDuration ?? 0) ?? 0;
+          var duraB = double.tryParse(b?.packageDuration ?? 0) ?? 0;
+          return duraA?.compareTo(duraB ?? 0);
+        });
+        planListLocal = List.from(planLisDefault);
+      }
+    } else if (filter == popUpChoiceDefault) {
+      if (freePlanListResult != null && freePlanListResult.length > 0) {
+        planListLocal = List.from(freePlanListResult);
+      }
+    } else {
+      planListLocal = List.from(freePlanListResult);
     }
 
     return planListLocal;
