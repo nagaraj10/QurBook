@@ -204,7 +204,12 @@ Future<void> main() async {
 
   // check if the app install on first time
   await CommonUtil().isFirstTime();
-
+  // SystemChrome.setSystemUIOverlayStyle(
+  //   const SystemUiOverlayStyle(
+  //     statusBarIconBrightness: Brightness.light,
+  //     statusBarBrightness: Brightness.light,
+  //   ),
+  // );
   runApp(
     provider.MultiProvider(
       providers: [
@@ -762,6 +767,9 @@ class _MyFHBState extends State<MyFHB> {
               fontFamily: variable.font_poppins,
               primaryColor: Color(myPrimaryColor),
               accentColor: Colors.white,
+              appBarTheme: Theme.of(context).appBarTheme.copyWith(
+                    brightness: Brightness.dark,
+                  ),
             ),
             //home: navRoute.isEmpty ? SplashScreen() : StartTheCall(),
             home: findHomeWidget(navRoute),
