@@ -14,6 +14,7 @@ class Reminder {
   String providerid;
   String providername;
   bool alreadyScheduled = false;
+  bool evDisabled;
 
   Reminder({
     this.eid,
@@ -28,6 +29,7 @@ class Reminder {
     this.remindin_type,
     this.providerid,
     this.providername,
+    this.evDisabled = false,
   });
 
   Reminder copyWith({
@@ -43,6 +45,7 @@ class Reminder {
     String remindin_type,
     String providerid,
     String providername,
+    bool evDisabled,
   }) {
     return Reminder(
       eid: eid ?? this.eid,
@@ -57,6 +60,7 @@ class Reminder {
       remindin_type: remindin_type ?? this.remindin_type,
       providerid: providerid ?? this.providerid,
       providername: providername ?? this.providername,
+      evDisabled: evDisabled ?? this.evDisabled,
     );
   }
 
@@ -74,7 +78,8 @@ class Reminder {
       'remindin_type': remindin_type,
       'providerid': providerid,
       'providername': providername,
-      'alreadyScheduled': alreadyScheduled
+      'alreadyScheduled': alreadyScheduled,
+      'ev_disabled': evDisabled,
     };
   }
 
@@ -92,6 +97,7 @@ class Reminder {
       remindin_type: map['remindin_type'],
       providerid: map['providerid'],
       providername: map['providername'],
+      evDisabled: (map['ev_disabled'] ?? '0') == '1',
     );
   }
 
@@ -102,7 +108,7 @@ class Reminder {
 
   @override
   String toString() {
-    return 'Reminder(eid: $eid, title: $title, description: $description, estart: $estart, tplanid: $tplanid, teid_user: $teid_user, activityname: $activityname, uformname: $uformname, remindin: $remindin, remindin_type: $remindin_type, providerid: $providerid, providername: $providername)';
+    return 'Reminder(eid: $eid, title: $title, description: $description, estart: $estart, tplanid: $tplanid, teid_user: $teid_user, activityname: $activityname, uformname: $uformname, remindin: $remindin, remindin_type: $remindin_type, providerid: $providerid, providername: $providername, evDisabled: $evDisabled)';
   }
 
   @override
@@ -121,7 +127,8 @@ class Reminder {
         other.remindin == remindin &&
         other.remindin_type == remindin_type &&
         other.providerid == providerid &&
-        other.providername == providername;
+        other.providername == providername &&
+        other.evDisabled == evDisabled;
   }
 
   @override
@@ -138,5 +145,6 @@ class Reminder {
         remindin_type.hashCode ^
         providerid.hashCode ^
         providername.hashCode;
+        evDisabled.hashCode;
   }
 }
