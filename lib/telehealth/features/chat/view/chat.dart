@@ -386,24 +386,28 @@ class ChatScreenState extends State<ChatScreen> {
   }
 
   Future uploadFile(String path) async {
-    File file = File(path);
-    String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-    Reference reference =
-        FirebaseStorage.instance.ref().child(fileName + '.m4a');
-    UploadTask uploadTask = reference.putFile(file);
-    TaskSnapshot storageTaskSnapshot = await uploadTask.snapshot;
-    storageTaskSnapshot.ref.getDownloadURL().then((downloadUrl) {
-      imageUrl = downloadUrl;
-      setState(() {
-        isLoading = false;
-        onSendMessage(imageUrl, 3);
+    try {
+      File file = File(path);
+      String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+      Reference reference =
+          FirebaseStorage.instance.ref().child(fileName + '.m4a');
+      UploadTask uploadTask = reference.putFile(file);
+
+      String url;
+      await uploadTask.whenComplete(() async {
+        url = await uploadTask.snapshot.ref.getDownloadURL();
+        imageUrl = url;
+        setState(() {
+          isLoading = false;
+          onSendMessage(imageUrl, 3);
+        });
       });
-    }, onError: (err) {
+    } catch (e) {
       setState(() {
         isLoading = false;
       });
       Fluttertoast.showToast(msg: NOT_FILE_IMAGE);
-    });
+    }
   }
 
   Future<dynamic> flutterStopPlayer(url) async {
@@ -442,7 +446,7 @@ class ChatScreenState extends State<ChatScreen> {
           .collection(STR_USER_LIST)
           .doc(patientId)
           .get();
-      if (snapShot.data != null) {
+      if (snapShot.data() != null) {
         isMuted = snapShot.data()[STR_IS_MUTED] ?? false;
       }
       textValue = textEditingController.text;
@@ -752,7 +756,8 @@ class ChatScreenState extends State<ChatScreen> {
                       child: FlatButton(
                         child: Material(
                           child: CachedNetworkImage(
-                            placeholder: (context, url) => Container(child:CommonCircularIndicator(),
+                            placeholder: (context, url) => Container(
+                              child: CommonCircularIndicator(),
                               width: 200.0.h,
                               height: 200.0.h,
                               padding: EdgeInsets.all(70.0),
