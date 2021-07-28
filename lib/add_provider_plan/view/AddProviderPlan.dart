@@ -286,7 +286,7 @@ class AddProviderPlanState extends State<AddProviderPlan> {
                         setState(() {});
                       }),*/
                   RoundedCheckBox(isSelected: planList.isBookmarked,onTap: ()async{
-                    planList.isBookmarked != planList.isBookmarked;
+                    planList.isBookmarked = !planList.isBookmarked;
                     setState(() {});
                   },)
                 ],

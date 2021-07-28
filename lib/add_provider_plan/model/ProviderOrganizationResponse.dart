@@ -39,7 +39,7 @@ class Result {
   bool isHealthPlansActivated;
   bool isOptCaregiveService;
   HealthOrganizationType healthOrganizationType;
-  bool isBookmarked;
+  bool isBookmarked=false;
 
   Result(
       {this.id,
