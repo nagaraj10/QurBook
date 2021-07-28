@@ -19,6 +19,7 @@ import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:intl/intl.dart';
+import 'package:open_file/open_file.dart';
 import '../add_family_user_info/models/add_family_user_info_arguments.dart';
 import '../add_family_user_info/services/add_family_user_info_repository.dart';
 import '../add_providers/bloc/update_providers_bloc.dart';
@@ -1339,7 +1340,7 @@ class CommonUtil {
     return categoryDataObjClone;
   }
 
-  static Future<void> askPermissionForCameraAndMic() async {
+  static Future<bool> askPermissionForCameraAndMic() async {
 //    await PermissionHandler().requestPermissions(
 //      [PermissionGroup.camera, PermissionGroup.microphone],
 //    );
@@ -1362,14 +1363,16 @@ class CommonUtil {
   ) {
     if (cameraPermissionStatus == PermissionStatus.denied &&
         microphonePermissionStatus == PermissionStatus.denied) {
-      throw PlatformException(
-          code: 'PERMISSION_DENIED',
-          message: 'Access to camera and microphone denied');
+      // throw PlatformException(
+      //     code: 'PERMISSION_DENIED',
+      //     message: 'Access to camera and microphone denied');
+      print("Access to camera and microphone denied");
     } else if (cameraPermissionStatus == PermissionStatus.permanentlyDenied &&
         microphonePermissionStatus == PermissionStatus.permanentlyDenied) {
-      throw PlatformException(
-          code: 'PERMISSION_DISABLED',
-          message: 'Location data is not available on device');
+      // throw PlatformException(
+      //     code: 'PERMISSION_DISABLED',
+      //     message: 'Location data is not available on device');
+      print("Access to camera and microphone denied permanently");
     }
   }
 
@@ -2900,12 +2903,15 @@ class CommonUtil {
           content: Text('Downloaded'),
           action: SnackBarAction(
             label: 'Open',
-            onPressed: () {
-              final controller = Get.find<PDFViewController>();
-              final data =
-                  OpenPDF(type: PDFLocation.Path, path: response.result);
-              controller.data = data;
-              Get.to(() => PDFView());
+            onPressed: () async{
+              await OpenFile.open(
+                  response.result,
+                );
+              // final controller = Get.find<PDFViewController>();
+              // final data =
+              //     OpenPDF(type: PDFLocation.Path, path: response.result);
+              // controller.data = data;
+              // Get.to(() => PDFView());
             },
           ),
         ),
