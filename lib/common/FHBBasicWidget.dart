@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/services.dart';
+import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
 import 'errors_widget.dart';
 import '../my_providers/models/Doctors.dart';
 import '../src/model/user/MyProfileModel.dart';
@@ -385,27 +386,36 @@ class FHBBasicWidget {
             //backgroundColor: Colors.transparent,
             backgroundColor: ColorUtils.greycolor,
             radius: 30.0.sp,
-            child: Icon(Icons.mic,
-                size: 40.0.sp, color: Color(CommonUtil().getMyPrimaryColor())),
+            child: Icon(
+              Icons.mic,
+              size: 40.0.sp,
+              color: Color(
+                CommonUtil().getMyPrimaryColor(),
+              ),
+            ),
           ),
         ),
       ),
       onTap: () async {
         await Navigator.of(context)
-            .push(MaterialPageRoute(
-          builder: (context) => AudioRecordScreen(
-              arguments: AudioScreenArguments(fromVoice: false)),
-        ))
-            .then((results) {
-          if (results != null) {
-            if (results.containsKey(Constants.keyAudioFile)) {
-              containsAudio = true;
-              audioPath = results[Constants.keyAudioFile];
-
-              updateUI(containsAudio, audioPath);
+            .push(
+          MaterialPageRoute(
+            builder: (context) => AudioRecorder(
+              arguments: AudioScreenArguments(fromVoice: false),
+            ),
+          ),
+        )
+            .then(
+          (results) {
+            if (results != null) {
+              if (results.containsKey(Constants.keyAudioFile)) {
+                containsAudio = true;
+                audioPath = results[Constants.keyAudioFile];
+                updateUI(containsAudio, audioPath);
+              }
             }
-          }
-        });
+          },
+        );
       },
     );
   }
