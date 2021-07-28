@@ -110,6 +110,7 @@ dependencies:
   contacts_service: ^0.6.1
   group_list_view: ^1.0.5
   advance_pdf_viewer: ^2.0.0
+  open_file: ^3.2.1
 
 dev_dependencies:
   flutter_test:
