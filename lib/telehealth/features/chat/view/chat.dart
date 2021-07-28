@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data' show Uint8List;
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -13,6 +14,7 @@ import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
+import 'package:http/http.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -23,10 +25,12 @@ import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
+import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/ui/MyRecordsArguments.dart';
 import 'package:myfhb/src/ui/audio/AudioScreenArguments.dart';
 import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
+import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:myfhb/telehealth/features/chat/model/AppointmentDetailModel.dart';
@@ -187,8 +191,8 @@ class ChatScreenState extends State<ChatScreen> {
   bool firstTime = true;
   int commonIndex = 0;
   List<int> indexList = [];
+  FlutterSoundPlayer _mPlayer = FlutterSoundPlayer();
 
-  FlutterSound flutterSound = FlutterSound();
   bool isPlaying = false;
   ChatViewModel chatViewModel = new ChatViewModel();
 
@@ -220,7 +224,7 @@ class ChatScreenState extends State<ChatScreen> {
     isFromVideoCall = widget.isFromVideoCall;
 
     getPatientDetails();
-
+    set_up_audios();
     updateReadCount();
 
     textEditingController.text = widget?.message;
@@ -229,6 +233,8 @@ class ChatScreenState extends State<ChatScreen> {
   @override
   void dispose() {
     chatViewModel.setCurrentChatRoomID('none');
+    _mPlayer.closeAudioSession();
+    _mPlayer = null;
     super.dispose();
     fbaLog(eveName: 'qurbook_screen_event', eveParams: {
       'eventTime': '${DateTime.now()}',
@@ -236,6 +242,18 @@ class ChatScreenState extends State<ChatScreen> {
       'screenSessionTime':
           '${DateTime.now().difference(mInitialTime).inSeconds} secs'
     });
+  }
+
+  set_up_audios() async {
+    _mPlayer.openAudioSession().then(
+      (value) {
+        _mPlayer.setSubscriptionDuration(
+          Duration(
+            seconds: 1,
+          ),
+        );
+      },
+    );
   }
 
   updateReadCount() async {
@@ -416,8 +434,8 @@ class ChatScreenState extends State<ChatScreen> {
       isPlaying = false;
     });
     currentPlayedVoiceURL = '';
-    await flutterSound.thePlayer.stopPlayer().then((value) {
-      // flutterPlaySound(url);
+    await _mPlayer.stopPlayer().then((value) {
+      flutterPlaySound(url);
     });
   }
 
@@ -426,14 +444,13 @@ class ChatScreenState extends State<ChatScreen> {
     setState(() {
       isPlaying = true;
     });
-    await flutterSound.thePlayer.startPlayer(fromURI: url);
-    // flutterSound.onPlayerStateChanged.listen((e) {
-    //   if (e != null) {
-    //     if (flutterSound.thePlayer.playerState == PlayerState.isStopped) {
-    //       flutterStopPlayer(url);
-    //     }
-    //   }
-    // });
+    // final file = await CommonUtil.downloadFile(url, 'mp3');
+    await _mPlayer.startPlayer(fromURI: url).whenComplete(
+      () {
+        print("completed");
+      },
+    );
+
     //TODO: Check for audio
   }
 
