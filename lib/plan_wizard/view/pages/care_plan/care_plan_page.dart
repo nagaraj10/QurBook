@@ -39,7 +39,7 @@ class _CarePlanPageState extends State<CarePlanPage> {
 
   @override
   void initState() {
-    Provider.of<PlanWizardViewModel>(context, listen: false).currentPackageId =
+    Provider.of<PlanWizardViewModel>(context, listen: false).currentPackageProviderCareId =
         '';
 
     planListModel = Provider.of<PlanWizardViewModel>(context, listen: false)
@@ -85,7 +85,7 @@ class _CarePlanPageState extends State<CarePlanPage> {
         floatingActionButton: NextButton(
           onPressed: () {
             if (carePlanListLength > 0 &&
-                (planListProvider?.currentPackageId ?? '').isEmpty) {
+                (planListProvider?.currentPackageProviderCareId ?? '').isEmpty) {
               _alertForUncheckPlan();
             } else {
               planListProvider.changeCurrentPage(2);

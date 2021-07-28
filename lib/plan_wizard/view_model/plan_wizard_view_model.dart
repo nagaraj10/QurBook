@@ -21,7 +21,8 @@ class PlanWizardViewModel extends ChangeNotifier {
   int currentPage = 0;
   int currentTab = 0;
   List<List<DietPlanResult>> dietPlanList = [];
-  String currentPackageId = '';
+  String currentPackageProviderCareId = '';
+  String currentPackageFreeCareId = '';
   String currentPackageIdDiet = '';
   List<PlanListResult> providerPlanListResult = [];
   List<PlanListResult> freePlanListResult = [];
@@ -34,15 +35,26 @@ class PlanWizardViewModel extends ChangeNotifier {
   var selectedTag = '';
   var providerId = '';
 
-  var currentCartPackageId = '';
+  var currentCartProviderCarePackageId = '';
+  var currentCartFreeCarePackageId = '';
   var currentCartDietPackageId = '';
   bool isPlanWizardActive = false;
 
-  void updateSingleSelection(String packageId) {
-    if (packageId == currentPackageId) {
-      currentPackageId = '';
+  void updateSingleSelectionProvider(String packageId) {
+    if (packageId == currentPackageProviderCareId) {
+      currentPackageProviderCareId = '';
     } else {
-      currentPackageId = packageId;
+      currentPackageProviderCareId = packageId;
+    }
+
+    notifyListeners();
+  }
+
+  void updateSingleSelectionFree(String packageId) {
+    if (packageId == currentPackageFreeCareId) {
+      currentPackageFreeCareId = '';
+    } else {
+      currentPackageFreeCareId = packageId;
     }
 
     notifyListeners();
@@ -77,7 +89,7 @@ class PlanWizardViewModel extends ChangeNotifier {
     try {
       var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
       PlanListModel myPlanListModel =
-          await planWizardService.getPlanList(userId,isFrom);
+      await planWizardService.getPlanList(userId, isFrom);
       if (myPlanListModel.isSuccess) {
         providerPlanListResult = myPlanListModel.result;
         freePlanListResult = myPlanListModel.result;
@@ -108,7 +120,7 @@ class PlanWizardViewModel extends ChangeNotifier {
     try {
       var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
       HealthConditionResponseModel healthConditionResponseModel =
-          await planWizardService.getHealthConditions(userid);
+      await planWizardService.getHealthConditions(userid);
       var currentSeperator = '';
       if (healthConditionResponseModel?.isSuccess ?? false) {
         healthConditionResponseModel?.healthConditionData?.menuitems
@@ -128,9 +140,7 @@ class PlanWizardViewModel extends ChangeNotifier {
     } catch (e) {}
   }
 
-  void getFilteredHealthConditions(
-    String filterText,
-  ) async {
+  void getFilteredHealthConditions(String filterText,) async {
     if ((filterText ?? '')?.isNotEmpty ?? false) {
       isHealthSearch = true;
       filteredHealthConditions = {};
@@ -155,9 +165,9 @@ class PlanWizardViewModel extends ChangeNotifier {
     for (PlanListResult searchList in providerPlanListResult) {
       if (searchList?.title != null && searchList?.title != '') {
         if (searchList?.title
-                .toLowerCase()
-                .trim()
-                .contains(title.toLowerCase().trim()) ||
+            .toLowerCase()
+            .trim()
+            .contains(title.toLowerCase().trim()) ||
             searchList?.providerName
                 .toLowerCase()
                 .trim()
@@ -302,10 +312,10 @@ class PlanWizardViewModel extends ChangeNotifier {
       for (int i = 0; i < searchList.length; i++) {
         if (searchList[i]?.title != null && searchList[i]?.title != '') {
           if (searchList[i]
-                  ?.title
-                  .toLowerCase()
-                  .trim()
-                  .contains(title.toLowerCase().trim()) ||
+              ?.title
+              .toLowerCase()
+              .trim()
+              .contains(title.toLowerCase().trim()) ||
               searchList[i]
                   ?.providerName
                   .toLowerCase()
@@ -320,25 +330,30 @@ class PlanWizardViewModel extends ChangeNotifier {
     return filterSearchAll;
   }
 
-  Future<AddToCartModel> addToCartItem(
-      {String packageId,
-      String price,
-      bool isRenew,
-      String providerId,
-      String isFromAdd,
-      bool isFromDiet = false}) async {
+  Future<AddToCartModel> addToCartItem({String packageId,
+    String price,
+    bool isRenew,
+    String providerId,
+    String isFromAdd}) async {
     try {
       AddToCartModel addToCartModel = await planWizardService.addToCartService(
           packageId: packageId,
           price: price,
           isRenew: isRenew,
-          tag: isFromDiet ? selectedTag + ',' + strDiet : selectedTag);
+          tag: isFromAdd == strProviderCare
+              ? selectedTag + ',' + strProviderCare
+              : isFromAdd == strFreeCare
+              ? selectedTag + ',' + strFreeCare
+              : '');
 
       if (addToCartModel.isSuccess) {
         if (isFromAdd == strDiet) {
           updateSingleSelectionDiet(packageId);
-        } else if (isFromAdd == strCare) {
-          updateSingleSelection(packageId);
+        } else if (isFromAdd == strProviderCare) {
+          updateSingleSelectionProvider(packageId);
+          updateProviderId(providerId);
+        } else if (isFromAdd == strFreeCare) {
+          updateSingleSelectionFree(packageId);
           updateProviderId(providerId);
         }
         await fetchCartItem();
@@ -346,8 +361,11 @@ class PlanWizardViewModel extends ChangeNotifier {
       } else {
         if (isFromAdd == strDiet) {
           updateSingleSelectionDiet('');
-        } else if (isFromAdd == strCare) {
-          updateSingleSelection('');
+        } else if (isFromAdd == strProviderCare) {
+          updateSingleSelectionProvider('');
+          updateProviderId('');
+        } else if (isFromAdd == strFreeCare) {
+          updateSingleSelectionFree('');
           updateProviderId('');
         }
 
@@ -362,16 +380,17 @@ class PlanWizardViewModel extends ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<void> removeCart({String packageId, bool isFromDiet = false}) async {
+  Future<void> removeCart({String packageId, String isFrom}) async {
     try {
       await Provider.of<CheckoutPageProvider>(Get.context, listen: false)
           .removeCartItem(productId: packageId, needToast: false);
       await fetchCartItem();
       FlutterToast().getToast('Removed from Cart', Colors.green);
-      if (isFromDiet) {
-        updateSingleSelectionDiet('');
-      } else {
-        updateSingleSelection('');
+      if (isFrom == strProviderCare) {
+        updateSingleSelectionProvider('');
+        updateProviderId('');
+      } else if (isFrom == strFreeCare) {
+        updateSingleSelectionFree('');
         updateProviderId('');
       }
     } catch (e) {}
@@ -383,8 +402,8 @@ class PlanWizardViewModel extends ChangeNotifier {
 
   Future<void> fetchCartItem() async {
     FetchingCartItemsModel fetchingCartItemsModel =
-        await Provider.of<CheckoutPageProvider>(Get.context, listen: false)
-            .fetchCartItems();
+    await Provider.of<CheckoutPageProvider>(Get.context, listen: false)
+        .fetchCartItems();
     if (fetchingCartItemsModel?.isSuccess ?? false) {
       cartList = fetchingCartItemsModel?.result?.cart?.productList ?? [];
     } else {
@@ -397,8 +416,11 @@ class PlanWizardViewModel extends ChangeNotifier {
 
     cartList?.forEach((element) {
       if ('${element?.productDetail?.id}' == packageId) {
-        if (tag == strCare) {
-          currentPackageId = packageId;
+        if (tag == strProviderCare) {
+          currentPackageProviderCareId = packageId;
+          updateProviderId(providerId);
+        }else if (tag == strFreeCare){
+          currentPackageFreeCareId = packageId;
           updateProviderId(providerId);
         } else {
           currentPackageIdDiet = packageId;
@@ -411,12 +433,12 @@ class PlanWizardViewModel extends ChangeNotifier {
     return isItemInCart;
   }
 
-  bool checkAllItems() {
+  bool checkAllItemsForProviderCare() {
     bool isCarePlanInCart = false;
     cartList.forEach((cartItem) {
-      if ('${cartItem?.additionalInfo?.tag ?? ''}' == (selectedTag ?? '')) {
+      if ('${cartItem?.additionalInfo?.tag ?? ''}' == (selectedTag ?? '')+','+strProviderCare) {
         isCarePlanInCart = true;
-        currentCartPackageId = '${cartItem?.productDetail?.id}';
+        currentCartProviderCarePackageId = '${cartItem?.productDetail?.id}';
         /*FlutterToast().getToast(
             'Only one care plan can be added for a health condition',
             Colors.red);*/
@@ -424,7 +446,26 @@ class PlanWizardViewModel extends ChangeNotifier {
     });
 
     if (!isCarePlanInCart) {
-      currentCartPackageId = '';
+      currentCartProviderCarePackageId = '';
+    }
+
+    return isCarePlanInCart;
+  }
+
+  bool checkAllItemsForFreeCare() {
+    bool isCarePlanInCart = false;
+    cartList.forEach((cartItem) {
+      if ('${cartItem?.additionalInfo?.tag ?? ''}' == (selectedTag ?? '')+','+strFreeCare) {
+        isCarePlanInCart = true;
+        currentCartFreeCarePackageId = '${cartItem?.productDetail?.id}';
+        /*FlutterToast().getToast(
+            'Only one care plan can be added for a health condition',
+            Colors.red);*/
+      }
+    });
+
+    if (!isCarePlanInCart) {
+      currentCartFreeCarePackageId = '';
     }
 
     return isCarePlanInCart;

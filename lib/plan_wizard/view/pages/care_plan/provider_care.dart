@@ -40,7 +40,7 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
 
   @override
   void initState() {
-    Provider.of<PlanWizardViewModel>(context, listen: false).currentPackageId =
+    Provider.of<PlanWizardViewModel>(context, listen: false).currentPackageProviderCareId =
     '';
 
     planListModel = Provider.of<PlanWizardViewModel>(context, listen: false)
@@ -86,7 +86,7 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
         floatingActionButton: NextButton(
           onPressed: () {
             if (carePlanListLength > 0 &&
-                (planListProvider?.currentPackageId ?? '').isEmpty) {
+                (planListProvider?.currentPackageProviderCareId ?? '').isEmpty) {
               _alertForUncheckPlan();
             } else {
               planListProvider.changeCurrentPage(2);
@@ -164,7 +164,7 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
       ),
       itemBuilder: (BuildContext ctx, int i) => CarePlanCard(
         planList: isSearch ? planSearchList[i] : planList[i],
-        onClick: () {},
+        onClick: () {},isFrom: strProviderCare,
       ),
       itemCount: isSearch ? planSearchList.length : planList.length,
     )
