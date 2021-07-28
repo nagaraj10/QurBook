@@ -4,7 +4,7 @@ import 'package:myfhb/plan_wizard/models/DietPlanModel.dart';
 import 'package:myfhb/plan_wizard/models/health_condition_response_model.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
-import 'DietPlanCard.dart';
+import 'diet_plan_card.dart';
 import 'care_plan_card.dart';
 import 'plan_card.dart';
 import 'plan_header.dart';
@@ -30,14 +30,14 @@ class PlanDietListView extends StatelessWidget {
           PlanHeader(
             title: title,
           ),
-          ListView.builder(
+          /*ListView.builder(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             itemCount: planList?.length ?? 0,
             itemBuilder: (context, index) {
               return DietPlanCard(planList: planList[index]);
             },
-          ),
+          ),*/
         ],
       ),
     );

@@ -37,6 +37,30 @@ class PlanWizardService {
     return PlanListModel.fromJson(response);
   }
 
+  Future<PlanListModel> getDietPlanListNew({String patientId,String isFrom, bool isVeg = false}) async {
+    String tag = Provider.of<PlanWizardViewModel>(Get.context, listen: false)
+        .selectedTag;
+    var body = {};
+    var inputForFilter = '';
+    if (isFrom == strProviderDiet) {
+      inputForFilter = onlyProvider;
+    } else {
+      inputForFilter = onlyFreePlans;
+    }
+    body['method'] = qr_get;
+    body['data'] = getMenuDietPlans +
+        tag +
+        diet +
+        (isVeg ? veg : '') +
+        exact +
+        inputForFilter +
+        qr_patientEqaul +
+        patientId;
+    var jsonString = convert.jsonEncode(body);
+    final response = await _helper.getPlanList(qr_plan_list, jsonString);
+    return PlanListModel.fromJson(response);
+  }
+
   Future<DietPlanModel> getDietPlanList(
       {String patientId, bool isVeg = false}) async {
     String tag = Provider.of<PlanWizardViewModel>(Get.context, listen: false)

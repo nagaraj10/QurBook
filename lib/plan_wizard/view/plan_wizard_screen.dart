@@ -6,6 +6,7 @@ import 'package:myfhb/add_new_plan/view/AddNewPlan.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/plan_wizard/view/pages/care_plan/care_plan_page.dart';
 import 'package:myfhb/plan_wizard/view/pages/diet_plan/diet_plan_page.dart';
+import 'package:myfhb/plan_wizard/view/pages/diet_plan/tab_diet_main.dart';
 import 'package:myfhb/plan_wizard/view/pages/health_condition_page.dart';
 import 'package:myfhb/plan_wizard/view/widgets/plan_header.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
@@ -29,19 +30,15 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
   @override
   void initState() {
     super.initState();
-    Provider
-        .of<PlanWizardViewModel>(context, listen: false)
-        ?.currentPage = 0;
+    Provider.of<PlanWizardViewModel>(context, listen: false)?.currentPage = 0;
     Provider.of<PlanWizardViewModel>(context, listen: false)?.fetchCartItem();
-    Provider
-        .of<PlanWizardViewModel>(context, listen: false)
+    Provider.of<PlanWizardViewModel>(context, listen: false)
         ?.isPlanWizardActive = true;
   }
 
   @override
   void deactivate() {
-    Provider
-        .of<PlanWizardViewModel>(context, listen: false)
+    Provider.of<PlanWizardViewModel>(context, listen: false)
         ?.isPlanWizardActive = false;
     super.dispose();
   }
@@ -98,7 +95,7 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
                     children: [
                       HealthConditionPage(),
                       TabCareMain(),
-                      DietPlanPage(),
+                      TabDietMain(),
                     ],
                   ),
                 ),
@@ -120,8 +117,10 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
                             10.0.sp,
                           ),
                           child: Text(
-                            _getBottomText(planWizardViewModel.currentPage,
-                                planWizardViewModel.currentTab),
+                            _getBottomText(
+                                planWizardViewModel.currentPage,
+                                planWizardViewModel.currentTab,
+                                planWizardViewModel.currentTabDiet),
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 16.0.sp,
@@ -138,23 +137,25 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
                         onPressed: () {
                           new AddNewPlan().addNewPlan(
                               context, feedbackCode, titleName, hintText,
-                                  (bool) {
-                                FlutterToast toast = new FlutterToast();
-                                if (bool) {
-                                  toast.getToast(
-                                      "We've received your request and get back to you soon",
-                                      Colors.green);
-                                } else {
-                                  toast.getToast(
-                                      "Please try again ", Colors.red);
-                                }
-                              });
+                              (bool) {
+                            FlutterToast toast = new FlutterToast();
+                            if (bool) {
+                              toast.getToast(
+                                  "We've received your request and get back to you soon",
+                                  Colors.green);
+                            } else {
+                              toast.getToast("Please try again ", Colors.red);
+                            }
+                          });
                         },
                         borderSide: BorderSide(color: Colors.white),
                         color: Colors.white,
                         textColor: Colors.white,
                         child: Text(
-                          _getBottomButtonText(planWizardViewModel.currentPage,planWizardViewModel.currentTab),
+                          _getBottomButtonText(
+                              planWizardViewModel.currentPage,
+                              planWizardViewModel.currentTab,
+                              planWizardViewModel.currentTabDiet),
                         ),
                       ),
                     ],
@@ -168,7 +169,7 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
     );
   }
 
-  String _getBottomText(int currentPage, int currentTab) {
+  String _getBottomText(int currentPage, int currentTab, int currentTabDiet) {
     switch (currentPage) {
       case 0:
         return strDontCondition;
@@ -177,12 +178,13 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
         return currentTab == 0 ? strDontProvider : strDontPlan;
         break;
       case 2:
-        return strDontDietPlan;
+        return currentTabDiet == 0 ? strDontProvider : strDontDietPlan;
         break;
     }
   }
 
-  String _getBottomButtonText(int currentPage,int currentTab) {
+  String _getBottomButtonText(
+      int currentPage, int currentTab, int currentTabDiet) {
     switch (currentPage) {
       case 0:
         feedbackCode = "MissingCondition";
@@ -200,7 +202,7 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
         feedbackCode = "MissingDietPlan";
         titleName = strDontDietPlan;
         hintText = strHintDietPlan;
-        return strTellToUs;
+        return currentTabDiet == 0 ? strAdd : strTellToUs;
         break;
     }
   }

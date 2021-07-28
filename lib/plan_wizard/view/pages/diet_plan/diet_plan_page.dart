@@ -125,7 +125,7 @@ class _DietPlanPageState extends State<DietPlanPage> {
 
   onSearched(String title, String filterBy) async {
     planSearchList.clear();
-    if (filterBy == popUpChoicePrice) {
+    /*if (filterBy == popUpChoicePrice) {
       planSearchList =
           await planWizardViewModel.filterDietSorting(popUpChoicePrice);
     } else if (filterBy == popUpChoiceDura) {
@@ -135,11 +135,11 @@ class _DietPlanPageState extends State<DietPlanPage> {
       planSearchList =
           await planWizardViewModel.filterDietSorting(popUpChoiceDefault);
     } else if (filterBy == 'localSearch') {
-      if (title != null) {
+      *//*if (title != null) {
         planSearchList =
             await planWizardViewModel.filterPlanNameProviderDiet(title);
-      }
-    }
+      }*//*
+    }*/
     setState(() {});
   }
 

@@ -20,12 +20,23 @@ class PlanWizardViewModel extends ChangeNotifier {
   final PageController pageController = PageController();
   int currentPage = 0;
   int currentTab = 0;
+  int currentTabDiet = 0;
   List<List<DietPlanResult>> dietPlanList = [];
+
   String currentPackageProviderCareId = '';
   String currentPackageFreeCareId = '';
+
   String currentPackageIdDiet = '';
+
+  String currentPackageProviderDietId = '';
+  String currentPackageFreeDietId = '';
+
   List<PlanListResult> providerPlanListResult = [];
   List<PlanListResult> freePlanListResult = [];
+
+  List<PlanListResult> providerDietPlanListResult = [];
+  List<PlanListResult> freeDietPlanListResult = [];
+
   Map<String, List<MenuItem>> healthConditions = {};
   Map<String, List<MenuItem>> filteredHealthConditions = {};
   bool isHealthSearch = false;
@@ -37,7 +48,12 @@ class PlanWizardViewModel extends ChangeNotifier {
 
   var currentCartProviderCarePackageId = '';
   var currentCartFreeCarePackageId = '';
+
   var currentCartDietPackageId = '';
+
+  var currentCartProviderDietPackageId = '';
+  var currentCartFreeDietPackageId = '';
+
   bool isPlanWizardActive = false;
 
   void updateSingleSelectionProvider(String packageId) {
@@ -60,11 +76,21 @@ class PlanWizardViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateSingleSelectionDiet(String packageId) {
-    if (packageId == currentPackageIdDiet) {
-      currentPackageIdDiet = '';
+  void updateSingleSelectionProviderDiet(String packageId) {
+    if (packageId == currentPackageProviderDietId) {
+      currentPackageProviderDietId = '';
     } else {
-      currentPackageIdDiet = packageId;
+      currentPackageProviderDietId = packageId;
+    }
+
+    notifyListeners();
+  }
+
+  void updateSingleSelectionFreeDiet(String packageId) {
+    if (packageId == currentPackageFreeDietId) {
+      currentPackageFreeDietId = '';
+    } else {
+      currentPackageFreeDietId = packageId;
     }
 
     notifyListeners();
@@ -85,17 +111,39 @@ class PlanWizardViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void changeCurrentTabDiet(int newPage) {
+    currentTabDiet = newPage;
+    notifyListeners();
+  }
+
   Future<PlanListModel> getCarePlanList(String isFrom) async {
     try {
       var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
       PlanListModel myPlanListModel =
-      await planWizardService.getPlanList(userId, isFrom);
+          await planWizardService.getPlanList(userId, isFrom);
       if (myPlanListModel.isSuccess) {
         providerPlanListResult = myPlanListModel.result;
         freePlanListResult = myPlanListModel.result;
       } else {
         providerPlanListResult = [];
         freePlanListResult = [];
+      }
+      return myPlanListModel;
+    } catch (e) {}
+  }
+
+  Future<PlanListModel> getDietPlanListNew(
+      {String isFrom, bool isVeg = false}) async {
+    try {
+      var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      PlanListModel myPlanListModel = await planWizardService
+          .getDietPlanListNew(isFrom: isFrom, patientId: userId, isVeg: isVeg);
+      if (myPlanListModel.isSuccess) {
+        providerDietPlanListResult = myPlanListModel.result;
+        freeDietPlanListResult = myPlanListModel.result;
+      } else {
+        providerDietPlanListResult = [];
+        freeDietPlanListResult = [];
       }
       return myPlanListModel;
     } catch (e) {}
@@ -120,7 +168,7 @@ class PlanWizardViewModel extends ChangeNotifier {
     try {
       var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
       HealthConditionResponseModel healthConditionResponseModel =
-      await planWizardService.getHealthConditions(userid);
+          await planWizardService.getHealthConditions(userid);
       var currentSeperator = '';
       if (healthConditionResponseModel?.isSuccess ?? false) {
         healthConditionResponseModel?.healthConditionData?.menuitems
@@ -140,7 +188,9 @@ class PlanWizardViewModel extends ChangeNotifier {
     } catch (e) {}
   }
 
-  void getFilteredHealthConditions(String filterText,) async {
+  void getFilteredHealthConditions(
+    String filterText,
+  ) async {
     if ((filterText ?? '')?.isNotEmpty ?? false) {
       isHealthSearch = true;
       filteredHealthConditions = {};
@@ -165,9 +215,28 @@ class PlanWizardViewModel extends ChangeNotifier {
     for (PlanListResult searchList in providerPlanListResult) {
       if (searchList?.title != null && searchList?.title != '') {
         if (searchList?.title
-            .toLowerCase()
-            .trim()
-            .contains(title.toLowerCase().trim()) ||
+                .toLowerCase()
+                .trim()
+                .contains(title.toLowerCase().trim()) ||
+            searchList?.providerName
+                .toLowerCase()
+                .trim()
+                .contains(title.toLowerCase().trim())) {
+          filterSearch.add(searchList);
+        }
+      }
+    }
+    return filterSearch;
+  }
+
+  List<PlanListResult> filterPlanNameProviderDiet(String title) {
+    List<PlanListResult> filterSearch = new List();
+    for (PlanListResult searchList in providerDietPlanListResult) {
+      if (searchList?.title != null && searchList?.title != '') {
+        if (searchList?.title
+                .toLowerCase()
+                .trim()
+                .contains(title.toLowerCase().trim()) ||
             searchList?.providerName
                 .toLowerCase()
                 .trim()
@@ -184,9 +253,28 @@ class PlanWizardViewModel extends ChangeNotifier {
     for (PlanListResult searchList in freePlanListResult) {
       if (searchList?.title != null && searchList?.title != '') {
         if (searchList?.title
-            .toLowerCase()
-            .trim()
-            .contains(title.toLowerCase().trim()) ||
+                .toLowerCase()
+                .trim()
+                .contains(title.toLowerCase().trim()) ||
+            searchList?.providerName
+                .toLowerCase()
+                .trim()
+                .contains(title.toLowerCase().trim())) {
+          filterSearch.add(searchList);
+        }
+      }
+    }
+    return filterSearch;
+  }
+
+  List<PlanListResult> filterPlanNameFreeDiet(String title) {
+    List<PlanListResult> filterSearch = new List();
+    for (PlanListResult searchList in freeDietPlanListResult) {
+      if (searchList?.title != null && searchList?.title != '') {
+        if (searchList?.title
+                .toLowerCase()
+                .trim()
+                .contains(title.toLowerCase().trim()) ||
             searchList?.providerName
                 .toLowerCase()
                 .trim()
@@ -262,7 +350,72 @@ class PlanWizardViewModel extends ChangeNotifier {
     return planListLocal;
   }
 
-  List<List<DietPlanResult>> filterDietSorting(String filter) {
+  List<PlanListResult> filterSortingForProviderDiet(String filter) {
+    List<PlanListResult> planListLocal = [];
+    List<PlanListResult> planLisDefault = List.from(providerDietPlanListResult);
+    if (filter == popUpChoicePrice) {
+      if (planLisDefault != null && planLisDefault.length > 0) {
+        planLisDefault?.sort((a, b) {
+          var priceA = double.tryParse(a?.price ?? 0) ?? 0;
+          var priceB = double.tryParse(b?.price ?? 0) ?? 0;
+          return priceA?.compareTo(priceB ?? 0);
+        });
+      }
+      planListLocal = List.from(planLisDefault);
+    } else if (filter == popUpChoiceDura) {
+      if (planLisDefault != null && planLisDefault.length > 0) {
+        planLisDefault?.sort((a, b) {
+          var duraA = double.tryParse(a?.packageDuration ?? 0) ?? 0;
+          var duraB = double.tryParse(b?.packageDuration ?? 0) ?? 0;
+          return duraA?.compareTo(duraB ?? 0);
+        });
+        planListLocal = List.from(planLisDefault);
+      }
+    } else if (filter == popUpChoiceDefault) {
+      if (providerDietPlanListResult != null &&
+          providerDietPlanListResult.length > 0) {
+        planListLocal = List.from(providerDietPlanListResult);
+      }
+    } else {
+      planListLocal = List.from(providerDietPlanListResult);
+    }
+
+    return planListLocal;
+  }
+
+  List<PlanListResult> filterSortingForFreeDiet(String filter) {
+    List<PlanListResult> planListLocal = [];
+    List<PlanListResult> planLisDefault = List.from(freeDietPlanListResult);
+    if (filter == popUpChoicePrice) {
+      if (planLisDefault != null && planLisDefault.length > 0) {
+        planLisDefault?.sort((a, b) {
+          var priceA = double.tryParse(a?.price ?? 0) ?? 0;
+          var priceB = double.tryParse(b?.price ?? 0) ?? 0;
+          return priceA?.compareTo(priceB ?? 0);
+        });
+      }
+      planListLocal = List.from(planLisDefault);
+    } else if (filter == popUpChoiceDura) {
+      if (planLisDefault != null && planLisDefault.length > 0) {
+        planLisDefault?.sort((a, b) {
+          var duraA = double.tryParse(a?.packageDuration ?? 0) ?? 0;
+          var duraB = double.tryParse(b?.packageDuration ?? 0) ?? 0;
+          return duraA?.compareTo(duraB ?? 0);
+        });
+        planListLocal = List.from(planLisDefault);
+      }
+    } else if (filter == popUpChoiceDefault) {
+      if (freeDietPlanListResult != null && freeDietPlanListResult.length > 0) {
+        planListLocal = List.from(freeDietPlanListResult);
+      }
+    } else {
+      planListLocal = List.from(freeDietPlanListResult);
+    }
+
+    return planListLocal;
+  }
+
+  /*List<List<DietPlanResult>> filterDietProviderSorting(String filter) {
     List<List<DietPlanResult>> planListAll = [];
     List<List<DietPlanResult>> planListDiet = List.from(dietPlanList);
 
@@ -302,9 +455,9 @@ class PlanWizardViewModel extends ChangeNotifier {
     });
 
     return planListAll;
-  }
+  }*/
 
-  List<List<DietPlanResult>> filterPlanNameProviderDiet(String title) {
+  /*List<List<DietPlanResult>> filterPlanNameProviderDiet(String title) {
     List<List<DietPlanResult>> filterSearchAll = [];
     List<List<DietPlanResult>> searchListAll = List.from(dietPlanList);
     searchListAll.forEach((searchList) {
@@ -312,10 +465,10 @@ class PlanWizardViewModel extends ChangeNotifier {
       for (int i = 0; i < searchList.length; i++) {
         if (searchList[i]?.title != null && searchList[i]?.title != '') {
           if (searchList[i]
-              ?.title
-              .toLowerCase()
-              .trim()
-              .contains(title.toLowerCase().trim()) ||
+                  ?.title
+                  .toLowerCase()
+                  .trim()
+                  .contains(title.toLowerCase().trim()) ||
               searchList[i]
                   ?.providerName
                   .toLowerCase()
@@ -328,27 +481,46 @@ class PlanWizardViewModel extends ChangeNotifier {
       filterSearchAll.add(filterSearch);
     });
     return filterSearchAll;
+  }*/
+
+  String getTag(String isFromAdd){
+
+    String tag = '';
+
+    if(isFromAdd == strProviderCare){
+      tag = selectedTag + ',' + strProviderCare;
+    }else if(isFromAdd == strFreeCare){
+      tag = selectedTag + ',' + strFreeCare;
+    }else if (isFromAdd == strProviderDiet){
+      tag = selectedTag + ',' + strProviderDiet;
+    }else if(isFromAdd == strFreeDiet){
+      tag = selectedTag + ',' + strFreeDiet;
+    }else {
+      tag = '';
+    }
+
+    return tag;
+
   }
 
-  Future<AddToCartModel> addToCartItem({String packageId,
-    String price,
-    bool isRenew,
-    String providerId,
-    String isFromAdd}) async {
+  Future<AddToCartModel> addToCartItem(
+      {String packageId,
+      String price,
+      bool isRenew,
+      String providerId,
+      String isFromAdd}) async {
     try {
       AddToCartModel addToCartModel = await planWizardService.addToCartService(
           packageId: packageId,
           price: price,
           isRenew: isRenew,
-          tag: isFromAdd == strProviderCare
-              ? selectedTag + ',' + strProviderCare
-              : isFromAdd == strFreeCare
-              ? selectedTag + ',' + strFreeCare
-              : '');
+          tag: getTag(isFromAdd));
 
       if (addToCartModel.isSuccess) {
-        if (isFromAdd == strDiet) {
-          updateSingleSelectionDiet(packageId);
+        if (isFromAdd == strProviderDiet) {
+          updateSingleSelectionProviderDiet(packageId);
+        } else if (isFromAdd == strFreeDiet) {
+          updateSingleSelectionFreeDiet(packageId);
         } else if (isFromAdd == strProviderCare) {
           updateSingleSelectionProvider(packageId);
           updateProviderId(providerId);
@@ -359,8 +531,10 @@ class PlanWizardViewModel extends ChangeNotifier {
         await fetchCartItem();
         FlutterToast().getToast('Added to Cart', Colors.green);
       } else {
-        if (isFromAdd == strDiet) {
-          updateSingleSelectionDiet('');
+        if (isFromAdd == strProviderDiet) {
+          updateSingleSelectionProviderDiet('');
+        } else if (isFromAdd == strFreeDiet) {
+          updateSingleSelectionFreeDiet('');
         } else if (isFromAdd == strProviderCare) {
           updateSingleSelectionProvider('');
           updateProviderId('');
@@ -392,6 +566,12 @@ class PlanWizardViewModel extends ChangeNotifier {
       } else if (isFrom == strFreeCare) {
         updateSingleSelectionFree('');
         updateProviderId('');
+      }else if (isFrom == strProviderDiet) {
+        updateSingleSelectionProviderDiet('');
+        updateProviderId('');
+      }else if (isFrom == strFreeDiet) {
+        updateSingleSelectionFreeDiet('');
+        updateProviderId('');
       }
     } catch (e) {}
   }
@@ -402,8 +582,8 @@ class PlanWizardViewModel extends ChangeNotifier {
 
   Future<void> fetchCartItem() async {
     FetchingCartItemsModel fetchingCartItemsModel =
-    await Provider.of<CheckoutPageProvider>(Get.context, listen: false)
-        .fetchCartItems();
+        await Provider.of<CheckoutPageProvider>(Get.context, listen: false)
+            .fetchCartItems();
     if (fetchingCartItemsModel?.isSuccess ?? false) {
       cartList = fetchingCartItemsModel?.result?.cart?.productList ?? [];
     } else {
@@ -419,11 +599,15 @@ class PlanWizardViewModel extends ChangeNotifier {
         if (tag == strProviderCare) {
           currentPackageProviderCareId = packageId;
           updateProviderId(providerId);
-        }else if (tag == strFreeCare){
+        } else if (tag == strFreeCare) {
           currentPackageFreeCareId = packageId;
           updateProviderId(providerId);
-        } else {
-          currentPackageIdDiet = packageId;
+        } else if (tag == strProviderDiet) {
+          currentPackageProviderDietId = packageId;
+          //updateProviderId(providerId);
+        } else if (tag == strFreeDiet) {
+          currentPackageFreeDietId = packageId;
+          //updateProviderId(providerId);
         }
 
         isItemInCart = true;
@@ -436,7 +620,8 @@ class PlanWizardViewModel extends ChangeNotifier {
   bool checkAllItemsForProviderCare() {
     bool isCarePlanInCart = false;
     cartList.forEach((cartItem) {
-      if ('${cartItem?.additionalInfo?.tag ?? ''}' == (selectedTag ?? '')+','+strProviderCare) {
+      if ('${cartItem?.additionalInfo?.tag ?? ''}' ==
+          (selectedTag ?? '') + ',' + strProviderCare) {
         isCarePlanInCart = true;
         currentCartProviderCarePackageId = '${cartItem?.productDetail?.id}';
         /*FlutterToast().getToast(
@@ -452,10 +637,31 @@ class PlanWizardViewModel extends ChangeNotifier {
     return isCarePlanInCart;
   }
 
+  bool checkAllItemsForProviderDiet() {
+    bool isCarePlanInCart = false;
+    cartList.forEach((cartItem) {
+      if ('${cartItem?.additionalInfo?.tag ?? ''}' ==
+          (selectedTag ?? '') + ',' + strProviderDiet) {
+        isCarePlanInCart = true;
+        currentCartProviderDietPackageId = '${cartItem?.productDetail?.id}';
+        /*FlutterToast().getToast(
+            'Only one care plan can be added for a health condition',
+            Colors.red);*/
+      }
+    });
+
+    if (!isCarePlanInCart) {
+      currentCartProviderDietPackageId = '';
+    }
+
+    return isCarePlanInCart;
+  }
+
   bool checkAllItemsForFreeCare() {
     bool isCarePlanInCart = false;
     cartList.forEach((cartItem) {
-      if ('${cartItem?.additionalInfo?.tag ?? ''}' == (selectedTag ?? '')+','+strFreeCare) {
+      if ('${cartItem?.additionalInfo?.tag ?? ''}' ==
+          (selectedTag ?? '') + ',' + strFreeCare) {
         isCarePlanInCart = true;
         currentCartFreeCarePackageId = '${cartItem?.productDetail?.id}';
         /*FlutterToast().getToast(
@@ -466,6 +672,26 @@ class PlanWizardViewModel extends ChangeNotifier {
 
     if (!isCarePlanInCart) {
       currentCartFreeCarePackageId = '';
+    }
+
+    return isCarePlanInCart;
+  }
+
+  bool checkAllItemsForFreeDiet() {
+    bool isCarePlanInCart = false;
+    cartList.forEach((cartItem) {
+      if ('${cartItem?.additionalInfo?.tag ?? ''}' ==
+          (selectedTag ?? '') + ',' + strFreeDiet) {
+        isCarePlanInCart = true;
+        currentCartFreeDietPackageId = '${cartItem?.productDetail?.id}';
+        /*FlutterToast().getToast(
+            'Only one care plan can be added for a health condition',
+            Colors.red);*/
+      }
+    });
+
+    if (!isCarePlanInCart) {
+      currentCartFreeDietPackageId = '';
     }
 
     return isCarePlanInCart;
