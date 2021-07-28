@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:math';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/landing/view_model/landing_view_model.dart';
 import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
@@ -1555,11 +1557,14 @@ class _CustomTabsState extends State<CustomTabView>
   }
 
   Future<void> _handleCameraAndMic() async {
-    await Permission.microphone.request();
-    await Permission.camera.request();
-//    await PermissionHandler().requestPermissions(
-//      [PermissionGroup.camera, PermissionGroup.microphone],
-//    );
+    final status = await CommonUtil.askPermissionForCameraAndMic();
+    if (!status) {
+      FlutterToast toastToShow = FlutterToast();
+      toastToShow.getToast(
+        "Failed to get the camera permission",
+        Colors.red,
+      );
+    }
   }
 
   onVoiceRecordClicked() async {
