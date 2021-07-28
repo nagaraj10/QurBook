@@ -82,6 +82,7 @@ class _SplashScreenState extends State<SplashScreen> {
     PreferenceUtil.init();
     //setReminder();
     Get.put(PDFViewController());
+    CommonUtil().ListenForTokenUpdate();
   }
 
   void setReminder() {
