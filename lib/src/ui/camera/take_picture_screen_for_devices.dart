@@ -147,352 +147,361 @@ class TakePictureScreenForDevicesState
           flexibleSpace: GradientAppBar(),
         ),
         body: SafeArea(
-            child: Stack(children: <Widget>[
-          isObjectDetecting == true ||
-                  PreferenceUtil.getStringValue(
-                          Constants.allowDeviceRecognition) ==
-                      null ||
-                  PreferenceUtil.getStringValue(
-                          Constants.allowDeviceRecognition) ==
-                      'true'
-              ? Camera(
-                  widget.cameras,
-                  _model,
-                  setRecognitions,
-                )
-              : FutureBuilder<void>(
-                  future: _initializeControllerFuture,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      // If the Future is complete, display the preview.
-                      return CameraPreview(_controller);
-                    } else {
-                      // Otherwise, display a loading indicator.
-                      return CommonCircularIndicator();
-                    }
-                  },
-                ),
-          isObjectDetecting == false
-              ? Align(
-                  alignment: Alignment.topCenter,
-                  child: Container(
-                      width: double.infinity,
-                      color: Color(new CommonUtil().getMyPrimaryColor()),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Container(
-                            width: 220.0.w,
-                            height: 40.0.h,
-                            margin: EdgeInsets.all(10),
-                            constraints: BoxConstraints(maxWidth: 220.0.w),
-                            child: GestureDetector(
-                              child: DottedBorder(
-                                color: Colors.white,
-                                dashPattern: [9, 5],
-                                child: Container(
-                                    padding: EdgeInsets.all(5),
-                                    decoration: BoxDecoration(),
-                                    alignment: Alignment.center,
-                                    child: AutoSizeText(
-                                      _recognitions != null
-                                          ? _recognitions.length > 0
-                                              ? deviceNames(_recognitions[0][
-                                                          Constants
-                                                              .keyDetectedClass]) !=
-                                                      Constants
-                                                          .IS_CATEGORYNAME_DEVICES
-                                                  ? deviceNames(_recognitions[0]
-                                                      [Constants
-                                                          .keyDetectedClass])
-                                                  : deviceName[0]
-                                                          .toUpperCase() +
-                                                      deviceName.substring(1)
-                                              : deviceName[0].toUpperCase() +
-                                                  deviceName.substring(1)
-                                          : deviceName[0].toUpperCase() +
-                                              deviceName.substring(1),
-                                      maxFontSize: 14,
-                                      minFontSize: 10,
-                                      textAlign: TextAlign.center,
+            child: Stack(
+          fit: StackFit.expand,
+          children: <Widget>[
+            isObjectDetecting == true ||
+                    PreferenceUtil.getStringValue(
+                            Constants.allowDeviceRecognition) ==
+                        null ||
+                    PreferenceUtil.getStringValue(
+                            Constants.allowDeviceRecognition) ==
+                        'true'
+                ? Camera(
+                    widget.cameras,
+                    _model,
+                    setRecognitions,
+                  )
+                : FutureBuilder<void>(
+                    future: _initializeControllerFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        // If the Future is complete, display the preview.
+                        return CameraPreview(_controller);
+                      } else {
+                        // Otherwise, display a loading indicator.
+                        return CommonCircularIndicator();
+                      }
+                    },
+                  ),
+            isObjectDetecting == false
+                ? Align(
+                    alignment: Alignment.topCenter,
+                    child: Container(
+                        width: double.infinity,
+                        color: Color(new CommonUtil().getMyPrimaryColor()),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Container(
+                              width: 220.0.w,
+                              height: 40.0.h,
+                              margin: EdgeInsets.all(10),
+                              constraints: BoxConstraints(maxWidth: 220.0.w),
+                              child: GestureDetector(
+                                child: DottedBorder(
+                                  color: Colors.white,
+                                  dashPattern: [9, 5],
+                                  child: Container(
+                                      padding: EdgeInsets.all(5),
+                                      decoration: BoxDecoration(),
+                                      alignment: Alignment.center,
+                                      child: AutoSizeText(
+                                        _recognitions != null
+                                            ? _recognitions.length > 0
+                                                ? deviceNames(_recognitions[0][
+                                                            Constants
+                                                                .keyDetectedClass]) !=
+                                                        Constants
+                                                            .IS_CATEGORYNAME_DEVICES
+                                                    ? deviceNames(_recognitions[
+                                                            0][
+                                                        Constants
+                                                            .keyDetectedClass])
+                                                    : deviceName[0]
+                                                            .toUpperCase() +
+                                                        deviceName.substring(1)
+                                                : deviceName[0].toUpperCase() +
+                                                    deviceName.substring(1)
+                                            : deviceName[0].toUpperCase() +
+                                                deviceName.substring(1),
+                                        maxFontSize: 14,
+                                        minFontSize: 10,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16.0.sp,
+                                            fontWeight: FontWeight.w500),
+                                      )),
+                                ),
+                                onTap: () {
+                                  _showOverlay(context);
+                                },
+                              ),
+                            )
+                          ],
+                        )),
+                  )
+                : Container(),
+            Align(
+                alignment: Alignment.bottomCenter,
+                child: isObjectDetecting == true
+                    ? _recognitions == null
+                        ? Container(
+                            height: 60.0.h,
+                            color: Color(new CommonUtil().getMyPrimaryColor()),
+                            child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(CommonConstants.detecting_the_devices,
                                       style: TextStyle(
                                           color: Colors.white,
-                                          fontSize: 16.0.sp,
-                                          fontWeight: FontWeight.w500),
-                                    )),
-                              ),
-                              onTap: () {
-                                _showOverlay(context);
-                              },
-                            ),
-                          )
-                        ],
-                      )),
-                )
-              : Container(),
-          Align(
-              alignment: Alignment.bottomCenter,
-              child: isObjectDetecting == true
-                  ? _recognitions == null
-                      ? Container(
-                          height: 60.0.h,
-                          color: Color(new CommonUtil().getMyPrimaryColor()),
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                          fontWeight: FontWeight.w400)),
+                                  Container(
+                                      width: 25.0.h,
+                                      height: 25.0.h,
+                                      child: CommonCircularIndicator())
+                                ]))
+                        : _recognitions.length == 0 ||
+                                _recognitions[0][Constants.keyDetectedClass] ==
+                                    variable.strOthers
+                            ? Container(
+                                height: 80.0.h,
+                                color:
+                                    Color(new CommonUtil().getMyPrimaryColor()),
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: <Widget>[
+                                      SizedBox(width: 10.0.w),
+                                      Flexible(
+                                        child: Text(
+                                            CommonConstants.not_finding_devices,
+                                            softWrap: true,
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w400)),
+                                      ),
+                                      _showChooseButton(context)
+                                    ]))
+                            : Container(
+                                height: 60.0.h,
+                                color:
+                                    Color(new CommonUtil().getMyPrimaryColor()),
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: <Widget>[
+                                      SizedBox(width: 10.0.w),
+                                      Flexible(
+                                        child: Text(
+                                            variable.strDeviceFound +
+                                                ' ${deviceNames(_recognitions[0]["detectedClass"])}',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w400)),
+                                      ),
+                                      _showConfirmButton(context)
+                                    ]))
+                    : isThumbnails
+                        ? Container(
+                            height: 60.0.h,
+                            color: Colors.orange,
+                            child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
-                                Text(CommonConstants.detecting_the_devices,
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w400)),
-                                Container(
-                                    width: 25.0.h,
-                                    height: 25.0.h,
-                                    child: CommonCircularIndicator())
-                              ]))
-                      : _recognitions.length == 0 ||
-                              _recognitions[0][Constants.keyDetectedClass] ==
-                                  variable.strOthers
-                          ? Container(
-                              height: 80.0.h,
-                              color:
-                                  Color(new CommonUtil().getMyPrimaryColor()),
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    SizedBox(width: 10.0.w),
-                                    Flexible(
-                                      child: Text(
-                                          CommonConstants.not_finding_devices,
-                                          softWrap: true,
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w400)),
-                                    ),
-                                    _showChooseButton(context)
-                                  ]))
-                          : Container(
-                              height: 60.0.h,
-                              color:
-                                  Color(new CommonUtil().getMyPrimaryColor()),
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    SizedBox(width: 10.0.w),
-                                    Flexible(
-                                      child: Text(
-                                          variable.strDeviceFound +
-                                              ' ${deviceNames(_recognitions[0]["detectedClass"])}',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w400)),
-                                    ),
-                                    _showConfirmButton(context)
-                                  ]))
-                  : isThumbnails
-                      ? Container(
-                          height: 60.0.h,
-                          color: Colors.orange,
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Expanded(
-                                child: Center(
-                                    //padding: EdgeInsets.all(20),
-                                    child: Stack(
-                                  alignment: Alignment.topRight,
-                                  children: <Widget>[
-                                    Image.file(
-                                      File(imagePaths[imagePaths.length - 1]),
-                                      width: 30.0.w,
-                                      height: 40.0.h,
-                                      fit: BoxFit.cover,
-                                    ),
-                                    new Container(
-                                      padding: EdgeInsets.all(2),
-                                      decoration: new BoxDecoration(
-                                        color: Colors.red,
-                                        borderRadius: BorderRadius.circular(6),
-                                      ),
-                                      constraints: BoxConstraints(
-                                        minWidth: 14.0.h,
-                                        minHeight: 14.0.h,
-                                      ),
-                                      child: Text(
-                                        (imagePaths.length).toString(),
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 10.0.sp,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      //),
-                                    ),
-                                  ],
-                                )),
-                              ),
-                              Expanded(
-                                child: Container(),
-                              ),
-                              Expanded(
-                                child: Center(
-                                  child: IconButton(
-                                    icon: Icon(
-                                      Icons.camera,
-                                      color: Colors.white,
-                                      size: 40,
-                                    ),
-                                    onPressed: () async {
-                                      if (deviceName == 'Choose Device') {
-                                        // Alert
-                                        Alert.displayAlertPlain(context,
-                                            title: "Devices",
-                                            content:
-                                                'Please choose the devices');
-                                      } else {
-                                        //imagePaths.removeLast();
-                                        // Take the Picture in a try / catch block. If anything goes wrong,
-                                        // catch the error.
-                                        try {
-                                          // Ensure that the camera is initialized.
-                                          await _initializeControllerFuture;
-
-                                          // Construct the path where the image should be saved using the
-                                          // pattern package.
-                                          final path = join(
-                                            // Store the picture in the temp directory.
-                                            // Find the temp directory using the `path_provider` plugin.
-                                            (await getTemporaryDirectory())
-                                                .path,
-                                            'Prescription_${DateTime.now().minute}.jpg',
-                                          );
-
-                                          // Attempt to take a picture and log where it's been saved.
-                                          XFile xpath =
-                                              await _controller.takePicture();
-
-                                          imagePaths.add(xpath?.path);
-
-                                          setState(() {});
-                                        } catch (e) {
-                                          // If an error occurs, log the error to the console.
-                                        }
-                                      }
-                                    },
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Container(),
-                              ),
-                              Expanded(
+                                Expanded(
                                   child: Center(
                                       //padding: EdgeInsets.all(20),
-                                      child: IconButton(
-                                icon: Icon(
-                                  Icons.done,
-                                  color: Colors.white,
-                                  size: 40,
+                                      child: Stack(
+                                    alignment: Alignment.topRight,
+                                    children: <Widget>[
+                                      Image.file(
+                                        File(imagePaths[imagePaths.length - 1]),
+                                        width: 30.0.w,
+                                        height: 40.0.h,
+                                        fit: BoxFit.cover,
+                                      ),
+                                      new Container(
+                                        padding: EdgeInsets.all(2),
+                                        decoration: new BoxDecoration(
+                                          color: Colors.red,
+                                          borderRadius:
+                                              BorderRadius.circular(6),
+                                        ),
+                                        constraints: BoxConstraints(
+                                          minWidth: 14.0.h,
+                                          minHeight: 14.0.h,
+                                        ),
+                                        child: Text(
+                                          (imagePaths.length).toString(),
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 10.0.sp,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        //),
+                                      ),
+                                    ],
+                                  )),
                                 ),
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => CropAndRotateScreen(
-                                          imagePath: imagePaths),
-                                    ),
-                                  ).then((value) {
-                                    categoryName =
-                                        PreferenceUtil.getStringValue(
-                                            Constants.KEY_CATEGORYNAME);
-                                    if (value) {
-                                      Navigator.of(context).pop(true);
-                                    }
-                                  });
-                                },
-                              ))),
-                            ],
-                          ),
-                        )
-                      : Container(
-                          height: 60.0.h,
-                          color: Color(new CommonUtil().getMyPrimaryColor()),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Expanded(
-                                child: Center(
-                                  child: IconButton(
-                                    icon: Icon(
-                                      Icons.camera,
-                                      color: Colors.white,
-                                      size: 40,
-                                    ),
-                                    onPressed: () async {
-                                      if (deviceName == 'Choose Device') {
-                                        // Alert
-                                        Alert.displayAlertPlain(context,
-                                            title: "Devices",
-                                            content:
-                                                'Please choose the device');
-                                      } else {
-                                        // Take the Picture in a try / catch block. If anything goes wrong,
-                                        // catch the error.
-                                        try {
-                                          setState(() {
-                                            imagePaths.clear();
-                                          });
-                                          // Ensure that the camera is initialized.
-                                          await _initializeControllerFuture;
+                                Expanded(
+                                  child: Container(),
+                                ),
+                                Expanded(
+                                  child: Center(
+                                    child: IconButton(
+                                      icon: Icon(
+                                        Icons.camera,
+                                        color: Colors.white,
+                                        size: 40,
+                                      ),
+                                      onPressed: () async {
+                                        if (deviceName == 'Choose Device') {
+                                          // Alert
+                                          Alert.displayAlertPlain(context,
+                                              title: "Devices",
+                                              content:
+                                                  'Please choose the devices');
+                                        } else {
+                                          //imagePaths.removeLast();
+                                          // Take the Picture in a try / catch block. If anything goes wrong,
+                                          // catch the error.
+                                          try {
+                                            // Ensure that the camera is initialized.
+                                            await _initializeControllerFuture;
 
-                                          // Construct the path where the image should be saved using the
-                                          // pattern package.
-                                          final path = join(
-                                            // Store the picture in the temp directory.
-                                            // Find the temp directory using the `path_provider` plugin.
-                                            (await getTemporaryDirectory())
-                                                .path,
-                                            'Prescription_${DateTime.now().minute}.jpg',
-                                          );
-                                          // Attempt to take a picture and log where it's been saved.
-                                          XFile xpath =
-                                              await _controller.takePicture();
+                                            // Construct the path where the image should be saved using the
+                                            // pattern package.
+                                            final path = join(
+                                              // Store the picture in the temp directory.
+                                              // Find the temp directory using the `path_provider` plugin.
+                                              (await getTemporaryDirectory())
+                                                  .path,
+                                              'Prescription_${DateTime.now().minute}.jpg',
+                                            );
 
-                                          if (isMultipleImages) {
-                                            isThumbnails = true;
-                                            imagePaths.add(xpath.path);
+                                            // Attempt to take a picture and log where it's been saved.
+                                            XFile xpath =
+                                                await _controller.takePicture();
+
+                                            imagePaths.add(xpath?.path);
 
                                             setState(() {});
-                                          } else {
-                                            // If the picture was taken, display it on a new screen.
-                                            imagePaths.clear();
-                                            imagePaths.add(path);
-                                            setState(() {});
-                                            callDisplayPictureScreen(context);
+                                          } catch (e) {
+                                            // If an error occurs, log the error to the console.
                                           }
-                                        } catch (e) {
-                                          (await getTemporaryDirectory())
-                                              .delete(recursive: true);
-                                          toast.getToast(
-                                              'Something went wrong..Try again',
-                                              Colors.red);
-                                          // If an error occurs, log the error to the console.
                                         }
-                                      }
-                                    },
+                                      },
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ))
-        ])));
+                                Expanded(
+                                  child: Container(),
+                                ),
+                                Expanded(
+                                    child: Center(
+                                        //padding: EdgeInsets.all(20),
+                                        child: IconButton(
+                                  icon: Icon(
+                                    Icons.done,
+                                    color: Colors.white,
+                                    size: 40,
+                                  ),
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            CropAndRotateScreen(
+                                                imagePath: imagePaths),
+                                      ),
+                                    ).then((value) {
+                                      categoryName =
+                                          PreferenceUtil.getStringValue(
+                                              Constants.KEY_CATEGORYNAME);
+                                      if (value) {
+                                        Navigator.of(context).pop(true);
+                                      }
+                                    });
+                                  },
+                                ))),
+                              ],
+                            ),
+                          )
+                        : Container(
+                            height: 60.0.h,
+                            color: Color(new CommonUtil().getMyPrimaryColor()),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Expanded(
+                                  child: Center(
+                                    child: IconButton(
+                                      icon: Icon(
+                                        Icons.camera,
+                                        color: Colors.white,
+                                        size: 40,
+                                      ),
+                                      onPressed: () async {
+                                        if (deviceName == 'Choose Device') {
+                                          // Alert
+                                          Alert.displayAlertPlain(context,
+                                              title: "Devices",
+                                              content:
+                                                  'Please choose the device');
+                                        } else {
+                                          // Take the Picture in a try / catch block. If anything goes wrong,
+                                          // catch the error.
+                                          try {
+                                            setState(() {
+                                              imagePaths.clear();
+                                            });
+                                            // Ensure that the camera is initialized.
+                                            await _initializeControllerFuture;
+
+                                            // Construct the path where the image should be saved using the
+                                            // pattern package.
+                                            final path = join(
+                                              // Store the picture in the temp directory.
+                                              // Find the temp directory using the `path_provider` plugin.
+                                              (await getTemporaryDirectory())
+                                                  .path,
+                                              'Prescription_${DateTime.now().minute}.jpg',
+                                            );
+                                            // Attempt to take a picture and log where it's been saved.
+                                            XFile xpath =
+                                                await _controller.takePicture();
+
+                                            if (isMultipleImages) {
+                                              isThumbnails = true;
+                                              imagePaths.add(xpath.path);
+
+                                              setState(() {});
+                                            } else {
+                                              // If the picture was taken, display it on a new screen.
+                                              imagePaths.clear();
+                                              imagePaths.add(xpath.path);
+                                              setState(() {});
+                                              callDisplayPictureScreen(context);
+                                            }
+                                          } catch (e) {
+                                            (await getTemporaryDirectory())
+                                                .delete(recursive: true);
+                                            toast.getToast(
+                                                'Something went wrong..Try again',
+                                                Colors.red);
+                                            // If an error occurs, log the error to the console.
+                                          }
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ))
+          ],
+        )));
   }
 
   Future<void> loadAssets() async {

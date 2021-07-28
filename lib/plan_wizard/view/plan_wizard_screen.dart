@@ -186,19 +186,19 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
     switch (currentPage) {
       case 0:
         feedbackCode = "MissingCondition";
-        titleName = "Missing Health Condition";
+        titleName = strDontCondition;
         hintText = strHintHealth;
         return strTellToUs;
         break;
       case 1:
         feedbackCode = "MissingCarePlan";
-        titleName = "Missing Care Plan";
+        titleName = strDontPlan;
         hintText = strHintCarePlan;
         return currentTab == 0 ? strAdd : strTellToUs;
         break;
       case 2:
         feedbackCode = "MissingDietPlan";
-        titleName = "Missing Diet Plan";
+        titleName = strDontDietPlan;
         hintText = strHintDietPlan;
         return strTellToUs;
         break;

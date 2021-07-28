@@ -213,7 +213,7 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
     ).then((value) {
       categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
 
-      if (value) {
+      if (value ?? false) {
         Navigator.of(context).pop(true);
       }
     });
