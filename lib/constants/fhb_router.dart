@@ -6,6 +6,7 @@ import 'router_variable.dart' as router;
 import '../device_integration/viewModel/Device_model.dart';
 import '../devices/device_dashboard.dart';
 import '../landing/view/landing_screen.dart';
+import '../regiment/view/manage_activities/manage_activities_screen.dart';
 import '../myPlan/view/my_plans_screen.dart';
 import '../my_family/screens/MyFamily.dart';
 import '../my_family_detail_view/screens/my_family_detail_view.dart';
@@ -67,6 +68,7 @@ setRouter(List<CameraDescription> listOfCameras) async {
     router.rt_Landing: (context) => LandingScreen(
           landingArguments: ModalRoute.of(context).settings.arguments,
         ),
+    router.rt_ManageActivitiesScreen: (context) => ManageActivitiesScreen(),
     router.rt_MyPlans: (context) => MyPlansScreen(),
     router.rt_Plans: (context) => PlansScreen(),
     router.rt_Diseases: (context) => DiseasesScreen(),

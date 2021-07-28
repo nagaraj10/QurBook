@@ -447,8 +447,6 @@ const PLAY_STORE_URL =
 const String STR_HOS_ID = 'Hospital IDs';
 const String STR_OTHER_ID = 'Other IDs';
 const String STR_INSURE_ID = 'Insurance IDs';
-const String noRegimentData =
-    'No Regiments data available for the selected date';
 const String noRegimentScheduleData =
     'No Activities data available for the selected date';
 const String noRegimentSymptomsData =
@@ -518,6 +516,7 @@ const String strSheelaG = 'Sheela';
 const String strAppointment = 'Appointments';
 const String strNiceDay = 'Have a nice day';
 const String strRegimen = 'Regimen';
+const String strManageActivities = 'Enable / Disable Activities';
 const String strDevices = 'Devices';
 const String strHospitals = 'Hospitals';
 const String strMyPlans = 'My Care Plans';

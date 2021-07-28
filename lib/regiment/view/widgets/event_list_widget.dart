@@ -140,10 +140,13 @@ class EventListWidget extends StatelessWidget {
     );
 
     try {
-      profileResultModel?.profileDataMap?.forEach(
-        (key, value) {
-          if (profileResultModel?.profileDataKeyMap?.contains(key) ?? false) {
-            final List<String> timeData = value.split(':');
+      profileResultModel?.profileDataKeyList?.forEach(
+        (listKey) {
+          if (profileResultModel?.profileDataMap?.containsKey(listKey) ??
+              false) {
+            var key = listKey;
+            var value = profileResultModel?.profileDataMap[listKey] ?? '00:00';
+            final List<String> timeData = value?.split(':');
             if (timeData.length == 2) {
               eventTime[key] = toDouble(
                 TimeOfDay(
