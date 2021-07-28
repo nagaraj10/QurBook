@@ -2,7 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/regiment/view/widgets/filter_widget.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/FHBBasicWidget.dart';
@@ -52,6 +54,10 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
     FocusManager.instance.primaryFocus.unfocus();
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    Provider.of<RegimentViewModel>(context, listen: false).getRegimentDate(
+      dateTime: DateTime.now(),
+      isInitial: true,
+    );
     Provider.of<RegimentViewModel>(
       context,
       listen: false,
@@ -294,7 +300,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                             context: context,
                             firstDate: DateTime(2015, 8),
                             lastDate: DateTime(2101),
-                            initialDate: _regimentViewModel.selectedDate,
+                            initialDate: _regimentViewModel.selectedRegimenDate,
                           );
                           if (selectedDate != null) {
                             _regimentViewModel.handleSearchField();
@@ -386,36 +392,62 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                             ),
                             child: Material(
                               color: Colors.transparent,
-                              child: InkWell(
-                                onTap: () async {
-                                  final profileResponseModel =
-                                      await Provider.of<RegimentViewModel>(
-                                              context,
-                                              listen: false)
-                                          .getProfile();
-                                  if (profileResponseModel.isSuccess &&
-                                      profileResponseModel
-                                              ?.result?.profileData !=
-                                          null &&
-                                      _regimentViewModel.regimentStatus !=
-                                          RegimentStatus.DialogOpened) {
-                                    _regimentViewModel.updateRegimentStatus(
-                                        RegimentStatus.DialogOpened);
-                                    await showDialog(
-                                      context: context,
-                                      builder: (context) => EventListWidget(
-                                        profileResultModel:
-                                            profileResponseModel.result,
+                              child: PopupMenuButton<int>(
+                                icon: Icon(
+                                  Icons.settings_outlined,
+                                ),
+                                iconSize: 30.0.sp,
+                                itemBuilder: (context) => [
+                                  PopupMenuItem(
+                                    value: 0,
+                                    child: Text(
+                                      Schedule,
+                                      style: TextStyle(
+                                        fontSize: 14.0.sp,
+                                        fontWeight: FontWeight.w500,
                                       ),
-                                    );
-                                    _regimentViewModel.updateRegimentStatus(
-                                        RegimentStatus.DialogClosed);
+                                    ),
+                                  ),
+                                  PopupMenuItem(
+                                    value: 1,
+                                    child: Text(
+                                      strManageActivities,
+                                      style: TextStyle(
+                                        fontSize: 14.0.sp,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                                onSelected: (index) async {
+                                  if (index == 0) {
+                                    final profileResponseModel =
+                                        await Provider.of<RegimentViewModel>(
+                                                context,
+                                                listen: false)
+                                            .getProfile();
+                                    if (profileResponseModel.isSuccess &&
+                                        profileResponseModel
+                                                ?.result?.profileData !=
+                                            null &&
+                                        _regimentViewModel.regimentStatus !=
+                                            RegimentStatus.DialogOpened) {
+                                      _regimentViewModel.updateRegimentStatus(
+                                          RegimentStatus.DialogOpened);
+                                      await showDialog(
+                                        context: context,
+                                        builder: (context) => EventListWidget(
+                                          profileResultModel:
+                                              profileResponseModel.result,
+                                        ),
+                                      );
+                                      _regimentViewModel.updateRegimentStatus(
+                                          RegimentStatus.DialogClosed);
+                                    }
+                                  } else if (index == 1) {
+                                    Get.toNamed(rt_ManageActivitiesScreen);
                                   }
                                 },
-                                child: Icon(
-                                  Icons.access_time,
-                                  size: 30.0.sp,
-                                ),
                               ),
                             ),
                           ),

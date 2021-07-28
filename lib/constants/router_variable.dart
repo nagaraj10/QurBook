@@ -13,6 +13,7 @@ const String rt_AddAppointments = '/add-appointments';
 const String rt_AddRemainder = '/add-reminders';
 const String rt_Dashboard = '/dashboard-screen';
 const String rt_Landing = '/landing-screen';
+const String rt_ManageActivitiesScreen = '/manage-activities-screen';
 const String rt_Regimen = '/regimen-screen';
 const String rt_MyPlans = '/my-plans-screen';
 const String rt_Plans = '/plans-screen';
