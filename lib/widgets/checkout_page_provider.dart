@@ -106,7 +106,9 @@ class CheckoutPageProvider extends ChangeNotifier {
     await Provider.of<PlanWizardViewModel>(Get.context, listen: false)
         ?.fetchCartItem();
     Provider.of<PlanWizardViewModel>(Get.context, listen: false)
-        ?.updateSingleSelection('');
+        ?.updateSingleSelectionProvider('');
+    Provider.of<PlanWizardViewModel>(Get.context, listen: false)
+        ?.updateSingleSelectionFree('');
     Provider.of<PlanWizardViewModel>(Get.context, listen: false)
         ?.updateSingleSelectionDiet('');
     Provider.of<PlanWizardViewModel>(Get.context, listen: false)

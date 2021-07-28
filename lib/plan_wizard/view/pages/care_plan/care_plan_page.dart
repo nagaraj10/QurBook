@@ -39,11 +39,11 @@ class _CarePlanPageState extends State<CarePlanPage> {
 
   @override
   void initState() {
-    Provider.of<PlanWizardViewModel>(context, listen: false).currentPackageId =
+    Provider.of<PlanWizardViewModel>(context, listen: false).currentPackageProviderCareId =
         '';
 
     planListModel = Provider.of<PlanWizardViewModel>(context, listen: false)
-        .getCarePlanList();
+        .getCarePlanList('');
   }
 
   @override
@@ -85,7 +85,7 @@ class _CarePlanPageState extends State<CarePlanPage> {
         floatingActionButton: NextButton(
           onPressed: () {
             if (carePlanListLength > 0 &&
-                (planListProvider?.currentPackageId ?? '').isEmpty) {
+                (planListProvider?.currentPackageProviderCareId ?? '').isEmpty) {
               _alertForUncheckPlan();
             } else {
               planListProvider.changeCurrentPage(2);
@@ -97,11 +97,11 @@ class _CarePlanPageState extends State<CarePlanPage> {
   onSearched(String title, String filterBy) async {
     planSearchList.clear();
     if (filterBy == popUpChoicePrice) {
-      planSearchList = await planListProvider.filterSorting(popUpChoicePrice);
+      planSearchList = await planListProvider.filterSortingForProvider(popUpChoicePrice);
     } else if (filterBy == popUpChoiceDura) {
-      planSearchList = await planListProvider.filterSorting(popUpChoiceDura);
+      planSearchList = await planListProvider.filterSortingForProvider(popUpChoiceDura);
     } else if (filterBy == popUpChoiceDefault) {
-      planSearchList = await planListProvider.filterSorting(popUpChoiceDefault);
+      planSearchList = await planListProvider.filterSortingForProvider(popUpChoiceDefault);
     } else if (filterBy == 'localSearch') {
       if (title != null) {
         planSearchList = await planListProvider.filterPlanNameProvider(title);
