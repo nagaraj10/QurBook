@@ -1404,6 +1404,16 @@ class CommonUtil {
     }
   }
 
+  ListenForTokenUpdate() {
+    FirebaseMessaging.instance.onTokenRefresh.listen((currentToken) {
+      final localToken =
+          PreferenceUtil.getStringValue(Constants.STR_PUSH_TOKEN);
+      if (localToken != currentToken) {
+        saveTokenToDatabase(currentToken);
+      }
+    });
+  }
+
   Future<void> saveTokenToDatabase(String token) async {
     try {
       final myProfile =
