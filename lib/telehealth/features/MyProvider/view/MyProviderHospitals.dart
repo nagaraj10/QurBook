@@ -42,6 +42,7 @@ class MyProvidersHospitals extends StatefulWidget {
 
   @override
   _MyProvidersState createState() => _MyProvidersState();
+
   MyProvidersHospitals({this.closePage, this.isRefresh});
 }
 
@@ -167,12 +168,24 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
           return ErrorsWidget();
         } else {
           final items = snapshot.data ??
-              <MyProvidersResponseData>[]; // handle the case that data is null
-          if (snapshot?.hasData &&
+              <MyProvidersResponseData>[];
+          if(initialHospitalList!=null && initialHospitalList.length>0){
+            // handle the case that data is null
+            return hospitalList(isSearch
+                ? myProviderHospitalList
+                : snapshot?.data?.result?.hospitals);
+          }
+          else if (snapshot?.hasData &&
               snapshot?.data?.result != null &&
               snapshot?.data?.result?.hospitals != null &&
               snapshot?.data?.result?.hospitals?.length > 0) {
             initialHospitalList = snapshot?.data?.result?.hospitals;
+            if (snapshot?.hasData &&
+                snapshot?.data?.result != null &&
+                snapshot?.data?.result?.clinics != null &&
+                snapshot?.data?.result?.clinics?.length > 0) {
+              initialHospitalList.addAll(snapshot?.data?.result?.clinics);
+            }
             return hospitalList(isSearch
                 ? myProviderHospitalList
                 : snapshot?.data?.result?.hospitals);
