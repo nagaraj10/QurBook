@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:camera/camera.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flashlight/flashlight.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 import 'package:image_picker/image_picker.dart';
@@ -71,7 +70,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
     Constants.mInitialTime = DateTime.now();
     super.initState();
 
-    initFlashlight();
+   // initFlashlight();
 
     // To display the current output from the Camera,
     // create a CameraController.
@@ -101,10 +100,10 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   }
 
   initFlashlight() async {
-    bool hasFlash = await Flashlight.hasFlashlight;
+ /*   bool hasFlash = await Flashlight.hasFlashlight;
     setState(() {
       _hasFlashlight = hasFlash;
-    });
+    });*/
   }
 
   @override
@@ -145,7 +144,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
               IconButton(
                   icon: isFlash ? Icon(Icons.flash_off) : Icon(Icons.flash_on),
                   onPressed: () {
-                    isFlash ? Flashlight.lightOff() : Flashlight.lightOn();
+                    //isFlash ? Flashlight.lightOff() : Flashlight.lightOn();
                     setState(() {
                       if (isFlash) {
                         isFlash = false;
