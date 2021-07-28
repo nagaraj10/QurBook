@@ -1339,7 +1339,7 @@ class CommonUtil {
     return categoryDataObjClone;
   }
 
-  static Future<void> askPermissionForCameraAndMic() async {
+  static Future<bool> askPermissionForCameraAndMic() async {
 //    await PermissionHandler().requestPermissions(
 //      [PermissionGroup.camera, PermissionGroup.microphone],
 //    );
@@ -1362,14 +1362,16 @@ class CommonUtil {
   ) {
     if (cameraPermissionStatus == PermissionStatus.denied &&
         microphonePermissionStatus == PermissionStatus.denied) {
-      throw PlatformException(
-          code: 'PERMISSION_DENIED',
-          message: 'Access to camera and microphone denied');
+      // throw PlatformException(
+      //     code: 'PERMISSION_DENIED',
+      //     message: 'Access to camera and microphone denied');
+      print("Access to camera and microphone denied");
     } else if (cameraPermissionStatus == PermissionStatus.permanentlyDenied &&
         microphonePermissionStatus == PermissionStatus.permanentlyDenied) {
-      throw PlatformException(
-          code: 'PERMISSION_DISABLED',
-          message: 'Location data is not available on device');
+      // throw PlatformException(
+      //     code: 'PERMISSION_DISABLED',
+      //     message: 'Location data is not available on device');
+      print("Access to camera and microphone denied permanently");
     }
   }
 
