@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
+import 'package:open_file/open_file.dart';
 import '../../constants/fhb_parameters.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -506,13 +507,16 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
             action: SnackBarAction(
               label: 'Open',
               onPressed: () async {
-                final controller = Get.find<PDFViewController>();
-                final data = OpenPDF(
-                    type: PDFLocation.Path,
-                    path: path.path,
-                    title: widget.data.metadata.fileName);
-                controller.data = data;
-                Get.to(() => PDFView());
+                await OpenFile.open(
+                  path.path,
+                );
+                // final controller = Get.find<PDFViewController>();
+                // final data = OpenPDF(
+                //     type: PDFLocation.Path,
+                //     path: path.path,
+                //     title: widget.data.metadata.fileName);
+                // controller.data = data;
+                // Get.to(() => PDFView());
               },
             ),
           ),
@@ -534,16 +538,16 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                   _currentImage.healthRecordUrl, _currentImage.fileType)
               .then((filePath) async {
             Scaffold.of(contxt).showSnackBar(SnackBar(
-              content: const Text(variable.strFileDownloaded),
+              content: const Text(
+                variable.strFileDownloaded,
+              ),
               backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
               action: SnackBarAction(
                 label: 'Open',
                 onPressed: () async {
-                  final controller = Get.find<PDFViewController>();
-                  final data =
-                      OpenPDF(type: PDFLocation.Path, path: filePath.path);
-                  controller.data = data;
-                  Get.to(() => PDFView());
+                  await OpenFile.open(
+                    filePath.path,
+                  );
                 },
               ),
             ));

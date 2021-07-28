@@ -38,6 +38,7 @@ import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'package:myfhb/telehealth/features/chat/viewModel/notificationController.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
+import 'package:open_file/open_file.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -618,10 +619,13 @@ class ChatScreenState extends State<ChatScreen> {
             action: SnackBarAction(
               label: 'Open',
               onPressed: () async {
-                final controller = Get.find<PDFViewController>();
-                final data = OpenPDF(type: PDFLocation.Path, path: file.path);
-                controller.data = data;
-                Get.to(() => PDFView());
+                await OpenFile.open(
+                  file.path,
+                );
+                // final controller = Get.find<PDFViewController>();
+                // final data = OpenPDF(type: PDFLocation.Path, path: file.path);
+                // controller.data = data;
+                // Get.to(() => PDFView());
               },
             ),
           ),
@@ -649,11 +653,15 @@ class ChatScreenState extends State<ChatScreen> {
               action: SnackBarAction(
                 label: 'Open',
                 onPressed: () async {
-                  final controller = Get.find<PDFViewController>();
-                  final data =
-                      OpenPDF(type: PDFLocation.Path, path: filePath.path);
-                  controller.data = data;
-                  Get.to(() => PDFView());
+                  await OpenFile.open(
+                    filePath.path,
+                  );
+
+                  // final controller = Get.find<PDFViewController>();
+                  // final data =
+                  //     OpenPDF(type: PDFLocation.Path, path: filePath.path);
+                  // controller.data = data;
+                  // Get.to(() => PDFView());
                 },
               ),
             ));
