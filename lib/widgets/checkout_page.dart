@@ -42,8 +42,9 @@ import 'CartIconWithBadge.dart';
 class CheckoutPage extends StatefulWidget {
   //final CartType cartType;
   final String cartUserId;
+  final bool isFromNotification;
   //CheckoutPage({this.cartType = CartType.DEFAULT_CART, this.cartUserId});
-  CheckoutPage({this.cartUserId});
+  CheckoutPage({this.cartUserId, this.isFromNotification = false});
 
   @override
   _CheckoutPageState createState() => _CheckoutPageState();
@@ -61,9 +62,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
     Provider.of<CheckoutPageProvider>(context, listen: false)
         .fetchCartItems(isNeedRelod: true, cartUserId: widget?.cartUserId);
     // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    //   Provider.of<CheckoutPageProvider>(context, listen: false)
-    //       .loader(false, isNeedRelod: false);
-    // });
+    Provider.of<CheckoutPageProvider>(context, listen: false)
+        .loader(false, isNeedRelod: false);
+    //});
   }
 
   @override
@@ -78,7 +79,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
     // }
     // Navigator.of(context).pop(true);
 
-    if (Navigator.canPop(context)) {
+    if (widget?.isFromNotification) {
+      Get.offAllNamed(
+        router.rt_Landing,
+        arguments: LandingArguments(
+          needFreshLoad: true,
+        ),
+      );
+    } else if (Navigator.canPop(context)) {
       Get.back();
     } else {
       Get.offAllNamed(
