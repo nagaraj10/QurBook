@@ -19,9 +19,11 @@ class HospitalListRepository {
   Future<HospitalsSearchListResponse> getHospitalFromSearchNew(
       String param) async {
     final limit = 10;
+    List<String> selectedOrganization = ["HOSPTL","CLINIC"];
 
+String categories='[\"HOSPTL\",\"CLINIC\"]';
     var response = await _helper.getHospitalListFromSearchNew(
-        "${query.qr_health_organization}${query.qr_health_Search}${query.qr_healthOrgType}${CommonConstants.SEARCH_HOSPIT_ID}${query.qr_limitSearchText}$param${query.qr_sortByDesc}");
+        "${query.qr_health_organization}${query.qr_health_Search}${query.qr_healthOrgType}$categories${query.qr_limitSearchText}$param${query.qr_sortByDesc}");
     return HospitalsSearchListResponse.fromJson(response);
   }
 

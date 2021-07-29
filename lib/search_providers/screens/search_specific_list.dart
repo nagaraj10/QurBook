@@ -593,7 +593,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                 itemBuilder: (c, i) => Container(
                   padding: EdgeInsets.only(top: 2, bottom: 2),
                   child: getCardToDisplaySearchList(
-                      data[i].healthOrganizationName,
+                      data[i].name,
                       data[i].addressLine1,
                       data[i].healthOrganizationId ??
                           data[i].healthOrganizationReferenceId,
