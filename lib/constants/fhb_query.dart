@@ -254,7 +254,7 @@ const String onlyProvider = '&onlymyprovider=1';
 
 const String onlyFreePlans = '&onlyfree=1';
 
-const String getMenuDietPlans = 'Action=GetMenuTaggedPackages2&tags=';
+const String getMenuDietPlans = 'Action=GetMenuTaggedPackages&tags=';
 
 const String diet = ',diet';
 

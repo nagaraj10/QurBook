@@ -616,20 +616,21 @@ class PlanDetail extends State<MyPlanDetailView> {
                               }
                             });
                           }
-                        } else if (isFrom == strDiet) {
+                        } else if (isFrom == strProviderDiet) {
                           var isSelected = Provider.of<PlanWizardViewModel>(
                                   context,
                                   listen: false)
-                              .checkItemInCart(packageId, strDiet);
+                              .checkItemInCart(packageId, isFrom);
                           if (isSelected) {
                             await Provider.of<PlanWizardViewModel>(context,
                                     listen: false)
-                                ?.removeCart(packageId: packageId);
+                                ?.removeCart(
+                                    packageId: packageId, isFrom: isFrom);
                             Navigator.pop(context);
                           } else {
                             if (Provider.of<PlanWizardViewModel>(context,
                                         listen: false)
-                                    ?.currentPackageIdDiet !=
+                                    ?.currentPackageProviderDietId !=
                                 '') {
                               await Provider.of<PlanWizardViewModel>(context,
                                       listen: false)
@@ -638,23 +639,24 @@ class PlanDetail extends State<MyPlanDetailView> {
                                           Provider.of<PlanWizardViewModel>(
                                                   context,
                                                   listen: false)
-                                              ?.currentPackageIdDiet);
+                                              ?.currentPackageProviderDietId,
+                                      isFrom: isFrom);
                               Navigator.pop(context);
                             }
 
                             bool isItemInCart =
                                 Provider.of<PlanWizardViewModel>(context,
                                         listen: false)
-                                    .checkAllItemsDiet();
+                                    .checkAllItemsForProviderDiet();
                             if (isItemInCart) {
                               await Provider.of<PlanWizardViewModel>(context,
                                       listen: false)
                                   ?.removeCart(
-                                      packageId:
-                                          Provider.of<PlanWizardViewModel>(
-                                                  context,
-                                                  listen: false)
-                                              ?.currentCartDietPackageId);
+                                      packageId: Provider.of<
+                                                  PlanWizardViewModel>(context,
+                                              listen: false)
+                                          ?.currentCartProviderDietPackageId,
+                                      isFrom: isFrom);
                               Navigator.pop(context);
                             }
 
@@ -665,7 +667,66 @@ class PlanDetail extends State<MyPlanDetailView> {
                                     price: price,
                                     isRenew: isRenew,
                                     providerId: providerId,
-                                    isFromAdd: strDiet)
+                                    isFromAdd: isFrom)
+                                .then((value) {
+                              if (value.isSuccess) {
+                                Navigator.pop(context);
+                              }
+                            });
+                          }
+                        } else if (isFrom == strFreeDiet) {
+                          var isSelected = Provider.of<PlanWizardViewModel>(
+                                  context,
+                                  listen: false)
+                              .checkItemInCart(packageId, isFrom);
+                          if (isSelected) {
+                            await Provider.of<PlanWizardViewModel>(context,
+                                    listen: false)
+                                ?.removeCart(
+                                    packageId: packageId, isFrom: isFrom);
+                            Navigator.pop(context);
+                          } else {
+                            if (Provider.of<PlanWizardViewModel>(context,
+                                        listen: false)
+                                    ?.currentPackageFreeDietId !=
+                                '') {
+                              await Provider.of<PlanWizardViewModel>(context,
+                                      listen: false)
+                                  ?.removeCart(
+                                      packageId:
+                                          Provider.of<PlanWizardViewModel>(
+                                                  context,
+                                                  listen: false)
+                                              ?.currentPackageFreeDietId,
+                                      isFrom: isFrom);
+                              Navigator.pop(context);
+                            }
+
+                            bool isItemInCart =
+                                Provider.of<PlanWizardViewModel>(context,
+                                        listen: false)
+                                    .checkAllItemsForFreeDiet();
+                            if (isItemInCart) {
+                              await Provider.of<PlanWizardViewModel>(context,
+                                      listen: false)
+                                  ?.removeCart(
+                                      packageId:
+                                          Provider.of<PlanWizardViewModel>(
+                                                  context,
+                                                  listen: false)
+                                              ?.currentCartFreeDietPackageId,
+                                      isFrom: isFrom);
+                              Navigator.pop(context);
+                            }
+
+                            await Provider.of<PlanWizardViewModel>(context,
+                                    listen: false)
+                                ?.addToCartItem(
+                                    packageId: packageId,
+                                    price: price,
+                                    isRenew: isRenew,
+                                    providerId: providerId,
+                                    isFromAdd: isFrom)
                                 .then((value) {
                               if (value.isSuccess) {
                                 Navigator.pop(context);
@@ -690,10 +751,7 @@ class PlanDetail extends State<MyPlanDetailView> {
                     ),
                     //hoverColor: Color(getMyPrimaryColor()),
                     child: Text(
-                      isFrom == strProviderCare
-                          ? getAddCartText()
-                          : isFrom == strFreeCare
-                          ?getAddCartTextFreeCare():getAddCartTextDiet(),
+                      getText(),
                       style: TextStyle(
                         color: getTextColor(isDisable, issubscription),
                         fontSize: 13.sp,
@@ -740,6 +798,24 @@ class PlanDetail extends State<MyPlanDetailView> {
     );
   }
 
+  String getText() {
+    String text = '';
+
+    if (isFrom == strProviderCare) {
+      text = getAddCartText();
+    } else if (isFrom == strFreeCare) {
+      text = getAddCartTextFreeCare();
+    } else if (isFrom == strProviderDiet) {
+      text = getAddCartTextProviderDiet();
+    } else if (isFrom == strFreeDiet) {
+      text = getAddCartTextFreeDiet();
+    } else {
+      text = '';
+    }
+
+    return text;
+  }
+
   String getAddCartText() {
     String text = strAddToCart;
 
@@ -764,9 +840,9 @@ class PlanDetail extends State<MyPlanDetailView> {
     String text = strAddToCart;
 
     if (Provider.of<PlanWizardViewModel>(Get.context)
-        .checkItemInCart(packageId, isFrom, providerId: providerId) ||
+            .checkItemInCart(packageId, isFrom, providerId: providerId) ||
         Provider.of<PlanWizardViewModel>(Get.context)
-            .currentPackageFreeCareId ==
+                .currentPackageFreeCareId ==
             packageId) {
       text = strRemoveFromCart;
     } else {
@@ -780,12 +856,33 @@ class PlanDetail extends State<MyPlanDetailView> {
     return text;
   }
 
-  String getAddCartTextDiet() {
+  String getAddCartTextProviderDiet() {
     String text = strAddToCart;
 
     if (Provider.of<PlanWizardViewModel>(Get.context)
-            .checkItemInCart(packageId, strDiet) ||
-        Provider.of<PlanWizardViewModel>(Get.context).currentPackageIdDiet ==
+            .checkItemInCart(packageId, isFrom) ||
+        Provider.of<PlanWizardViewModel>(Get.context)
+                .currentPackageProviderDietId ==
+            packageId) {
+      text = strRemoveFromCart;
+    } else {
+      if (issubscription == '0') {
+        text = strAddToCart;
+      } else {
+        text = strSubscribed;
+      }
+    }
+
+    return text;
+  }
+
+  String getAddCartTextFreeDiet() {
+    String text = strAddToCart;
+
+    if (Provider.of<PlanWizardViewModel>(Get.context)
+            .checkItemInCart(packageId, isFrom) ||
+        Provider.of<PlanWizardViewModel>(Get.context)
+                .currentPackageFreeDietId ==
             packageId) {
       text = strRemoveFromCart;
     } else {

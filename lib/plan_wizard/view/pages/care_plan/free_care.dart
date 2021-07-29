@@ -40,8 +40,8 @@ class _FreeCarePlans extends State<FreeCarePlans> {
 
   @override
   void initState() {
-    Provider.of<PlanWizardViewModel>(context, listen: false).currentPackageFreeCareId =
-    '';
+    Provider.of<PlanWizardViewModel>(context, listen: false)
+        .currentPackageFreeCareId = '';
 
     planListModel = Provider.of<PlanWizardViewModel>(context, listen: false)
         .getCarePlanList(strFreeCare);
@@ -86,7 +86,9 @@ class _FreeCarePlans extends State<FreeCarePlans> {
         floatingActionButton: NextButton(
           onPressed: () {
             if (carePlanListLength > 0 &&
-                (planListProvider?.currentPackageFreeCareId ?? '').isEmpty) {
+                (planListProvider?.currentPackageFreeCareId ?? '').isEmpty &&
+                (planListProvider?.currentPackageProviderCareId ?? '')
+                    .isEmpty) {
               _alertForUncheckPlan();
             } else {
               planListProvider.changeCurrentPage(2);
@@ -98,11 +100,14 @@ class _FreeCarePlans extends State<FreeCarePlans> {
   onSearched(String title, String filterBy) async {
     planSearchList.clear();
     if (filterBy == popUpChoicePrice) {
-      planSearchList = await planListProvider.filterSortingForFree(popUpChoicePrice);
+      planSearchList =
+          await planListProvider.filterSortingForFree(popUpChoicePrice);
     } else if (filterBy == popUpChoiceDura) {
-      planSearchList = await planListProvider.filterSortingForFree(popUpChoiceDura);
+      planSearchList =
+          await planListProvider.filterSortingForFree(popUpChoiceDura);
     } else if (filterBy == popUpChoiceDefault) {
-      planSearchList = await planListProvider.filterSortingForFree(popUpChoiceDefault);
+      planSearchList =
+          await planListProvider.filterSortingForFree(popUpChoiceDefault);
     } else if (filterBy == 'localSearch') {
       if (title != null) {
         planSearchList = await planListProvider.filterPlanNameFree(title);
@@ -145,8 +150,8 @@ class _FreeCarePlans extends State<FreeCarePlans> {
                 height: 1.sh / 1.3,
                 child: Container(
                     child: Center(
-                      child: Text(variable.strNoPackages),
-                    )),
+                  child: Text(variable.strNoPackages),
+                )),
               ),
             );
           }
@@ -158,50 +163,51 @@ class _FreeCarePlans extends State<FreeCarePlans> {
   Widget carePlanList(List<PlanListResult> planList) {
     return (planList != null && planList.length > 0)
         ? ListView.builder(
-      shrinkWrap: true,
-      padding: EdgeInsets.only(
-        bottom: 50.0.h,
-      ),
-      itemBuilder: (BuildContext ctx, int i) => CarePlanCard(
-        planList: isSearch ? planSearchList[i] : planList[i],
-        onClick: () {},isFrom: strFreeCare,
-      ),
-      itemCount: isSearch ? planSearchList.length : planList.length,
-    )
+            shrinkWrap: true,
+            padding: EdgeInsets.only(
+              bottom: 50.0.h,
+            ),
+            itemBuilder: (BuildContext ctx, int i) => CarePlanCard(
+              planList: isSearch ? planSearchList[i] : planList[i],
+              onClick: () {},
+              isFrom: strFreeCare,
+            ),
+            itemCount: isSearch ? planSearchList.length : planList.length,
+          )
         : SafeArea(
-      child: SizedBox(
-        height: 1.sh / 1.3,
-        child: Container(
-            child: Center(
-              child: Text(variable.strNoPlans),
-            )),
-      ),
-    );
+            child: SizedBox(
+              height: 1.sh / 1.3,
+              child: Container(
+                  child: Center(
+                child: Text(variable.strNoPlans),
+              )),
+            ),
+          );
   }
 
   Future<bool> _alertForUncheckPlan() {
     return showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Are you sure?'),
-        content: Text(
-            'You’ve not chosen any care plan. Are you sure you want to continue'),
-        actions: <Widget>[
-          FlatButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('No'),
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Are you sure?'),
+            content: Text(
+                'You’ve not chosen any care plan. Are you sure you want to continue'),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('No'),
+              ),
+              FlatButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  Provider.of<PlanWizardViewModel>(context, listen: false)
+                      .changeCurrentPage(2);
+                },
+                child: Text('Yes'),
+              ),
+            ],
           ),
-          FlatButton(
-            onPressed: () {
-              Navigator.pop(context);
-              Provider.of<PlanWizardViewModel>(context, listen: false)
-                  .changeCurrentPage(2);
-            },
-            child: Text('Yes'),
-          ),
-        ],
-      ),
-    ) ??
+        ) ??
         false;
   }
 
@@ -263,9 +269,9 @@ class _FreeCarePlans extends State<FreeCarePlans> {
       ),
       itemBuilder: (BuildContext context) {
         List<PopupMenuEntry<String>> menuItems =
-        new List<PopupMenuEntry<String>>.generate(
+            new List<PopupMenuEntry<String>>.generate(
           sortType.length,
-              (int index) {
+          (int index) {
             return new PopupMenuItem(
               value: sortType[index],
               child: new AnimatedBuilder(
