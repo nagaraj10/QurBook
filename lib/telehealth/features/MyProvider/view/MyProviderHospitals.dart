@@ -284,9 +284,7 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
                 children: <Widget>[
                   SizedBox(height: 5.0.h),
                   AutoSizeText(
-                    hospitals[i].name != null
-                        ? toBeginningOfSentenceCase(hospitals[i].name)
-                        : '',
+                    getHospitalName(hospitals[i]),
                     maxLines: 1,
                     style: TextStyle(
                       fontSize: 16.0.sp,
@@ -396,4 +394,27 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
           ),
         ));
   }
+  String getHospitalName(Hospitals eachHospitalModel) {
+    String name="";
+
+    if (eachHospitalModel.name != null) {
+      if (eachHospitalModel.name != "Self" &&
+          eachHospitalModel.name != "self") {
+        name = eachHospitalModel?.name?.capitalizeFirstofEach;
+      } else {
+        if (eachHospitalModel.createdBy != null) {
+          if (eachHospitalModel.createdBy.firstName != "" &&
+              eachHospitalModel.createdBy.firstName != null) {
+            name = eachHospitalModel.createdBy.firstName;
+          }
+          if (eachHospitalModel.createdBy.lastName != "" &&
+              eachHospitalModel.createdBy.lastName != null) {
+            name = name + " " + eachHospitalModel.createdBy.lastName;
+          }
+        }
+      }
+    }
+    return name;
+  }
+
 }
