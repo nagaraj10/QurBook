@@ -83,18 +83,18 @@ class _MyPlanState extends State<MyPlanList> {
     }, builder: Builder(builder: (context) {
       _myContext = context;
       return Scaffold(
-          floatingActionButton: FloatingActionButton(
+          floatingActionButton: FloatingActionButton.extended(
             onPressed: () async {
               //TODO: Uncomment for actual plans screen
               // await Get.toNamed(rt_Diseases);
               await Get.toNamed(rt_PlanWizard);
             },
-            elevation: 2,
             backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-            child: Icon(
+            icon: Icon(
               Icons.add,
               color: Colors.white,
             ),
+            label: Text('Add',style: TextStyle(fontSize: 18.sp,color: Colors.white)),
           ),
           body: Stack(
             fit: StackFit.expand,
