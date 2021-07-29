@@ -407,7 +407,8 @@ class PlanDetail extends State<MyPlanDetailView> {
                                 if (Platform.isIOS) {
                                   downloadFileForIos(updatedData);
                                 } else {
-                                  await common.downloader(updatedData.first);
+                                  // await common.downloader(updatedData.first);
+                                  await downloadFileForIos(updatedData);
                                 }
                               }
                             },
@@ -478,7 +479,8 @@ class PlanDetail extends State<MyPlanDetailView> {
                                 if (Platform.isIOS) {
                                   downloadFileForIos(updatedData);
                                 } else {
-                                  await common.downloader(updatedData.first);
+                                  await downloadFileForIos(updatedData);
+                                  // await common.downloader(updatedData.first);
                                 }
                               }
                             }),
