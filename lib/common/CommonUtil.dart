@@ -2891,13 +2891,18 @@ class CommonUtil {
   Future<ResultFromResponse> loadPdf({String url, String fileName}) async {
     try {
       var response = await ApiServices.get(url);
-      var responseJson = response.bodyBytes;
-      var directory = await getApplicationDocumentsDirectory();
-      var path = directory.path;
-      var file = File('$path/$fileName');
-      await file.writeAsBytes(responseJson);
-      path = file.path;
-      return ResultFromResponse(true, path);
+      if (response?.statusCode == 200) {
+        var responseJson = response.bodyBytes;
+        var directory = await getApplicationDocumentsDirectory();
+        var path =
+            Platform.isIOS ? directory.path : '/storage/emulated/0/Download';
+        var file = File('$path/$fileName');
+        await file.writeAsBytes(responseJson);
+        path = file.path;
+        return ResultFromResponse(true, path);
+      } else {
+        return ResultFromResponse(false, 'Requested file not found');
+      }
     } catch (e) {
       print(e.toString());
       return ResultFromResponse(false, 'Failed to download the file');
@@ -2913,10 +2918,10 @@ class CommonUtil {
           content: Text('Downloaded'),
           action: SnackBarAction(
             label: 'Open',
-            onPressed: () async{
+            onPressed: () async {
               await OpenFile.open(
-                  response.result,
-                );
+                response.result,
+              );
               // final controller = Get.find<PDFViewController>();
               // final data =
               //     OpenPDF(type: PDFLocation.Path, path: response.result);

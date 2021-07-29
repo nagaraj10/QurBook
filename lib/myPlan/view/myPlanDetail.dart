@@ -231,7 +231,8 @@ class PlanDetail extends State<MyPlanDetail> {
                               if (Platform.isIOS) {
                                 downloadFileForIos(updatedData);
                               } else {
-                                await common.downloader(updatedData.first);
+                                await downloadFileForIos(updatedData);
+                                // await common.downloader(updatedData.first);
                               }
                             }
                           },
@@ -253,8 +254,7 @@ class PlanDetail extends State<MyPlanDetail> {
                       height: 0.65.sh,
                       child: InAppWebView(
                           initialUrlRequest: URLRequest(
-                            url: Uri.parse(
-                                descriptionURL ?? ''),
+                            url: Uri.parse(descriptionURL ?? ''),
                             headers: {},
                           ),
                           initialOptions: InAppWebViewGroupOptions(
@@ -265,14 +265,13 @@ class PlanDetail extends State<MyPlanDetail> {
                           onWebViewCreated: (controller) {
                             webView = controller;
                           },
-                          onLoadStart: (controller,
-                              url) {},
-                          onLoadStop: (controller,
-                              url) {},
+                          onLoadStart: (controller, url) {},
+                          onLoadStop: (controller, url) {},
                           onDownloadStart: (controller, url) async {
                             var common = CommonUtil();
                             //TODO: Check if any error in Inappwebview
-                            var updatedData = common.getFileNameAndUrl(url.path);
+                            var updatedData =
+                                common.getFileNameAndUrl(url.path);
                             if (updatedData.isEmpty) {
                               common.showStatusToUser(
                                   ResultFromResponse(false,
@@ -282,7 +281,8 @@ class PlanDetail extends State<MyPlanDetail> {
                               if (Platform.isIOS) {
                                 downloadFileForIos(updatedData);
                               } else {
-                                await common.downloader(updatedData.first);
+                                await downloadFileForIos(updatedData);
+                                // await common.downloader(updatedData.first);
                               }
                             }
                           }),
