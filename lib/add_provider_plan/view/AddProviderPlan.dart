@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/add_provider_plan/model/AddProviderPlanResponse.dart';
 import 'package:myfhb/add_provider_plan/model/ProviderOrganizationResponse.dart';
@@ -28,8 +29,9 @@ class AddProviderPlanState extends State<AddProviderPlan> {
 
   PlanProviderViewModel planListProvider;
   List<String> selectedCategories = [];
-  FlutterToast toast=new FlutterToast();
+  FlutterToast toast = new FlutterToast();
 
+  bool isSelectedALL = false;
 
   @override
   void initState() {
@@ -48,7 +50,7 @@ class AddProviderPlanState extends State<AddProviderPlan> {
         appBar: AppBar(
             backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
             leading: GestureDetector(
-              onTap: () => Navigator.pop(context),
+              onTap: () => Get.back(),
               child: Icon(
                 Icons.arrow_back_ios, // add custom icons also
                 size: 24.0.sp,
@@ -74,12 +76,35 @@ class AddProviderPlanState extends State<AddProviderPlan> {
                         }
                       },
                     ),*/
+                Container(
+                  padding: EdgeInsets.all(10.0),
+                  margin: EdgeInsets.only(left: 10, right: 10, top: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Select ALL"),
+                      RoundedCheckBox(
+                        isSelected: isSelectedALL,
+                        onTap: () {
+                          checkIfAllIsSelectedOrNot();
+
+                          setState(() {
+                            isSelectedALL = !isSelectedALL;
+                          });
+                        },
+                      )
+                    ],
+                  ),
+                  height: 50,
+                ),
                 SizedBox(
                   height: 5.0.h,
                 ),
                 Expanded(
                   child: getPlanList(),
-                ),_showAddButton(), SizedBox(
+                ),
+                _showAddButton(),
+                SizedBox(
                   height: 5.0.h,
                 ),
               ],
@@ -131,7 +156,6 @@ class AddProviderPlanState extends State<AddProviderPlan> {
         padding: EdgeInsets.only(left: 20, right: 20, top: 30),
         child: addButtonWithGesture);
   }
-
 
   Widget getPlanList() {
     return FutureBuilder<ProviderOrganisationResponse>(
@@ -201,14 +225,12 @@ class AddProviderPlanState extends State<AddProviderPlan> {
   }
 
   CreateDoctorProviderCard({Result planList, Function() onClick}) {
-    String specialityName="";
-    try{
-      if(planList.specialty!=null && planList.specialty.length>0){
-        specialityName=planList.specialty[0].name;
+    String specialityName = "";
+    try {
+      if (planList.specialty != null && planList.specialty.length > 0) {
+        specialityName = planList.specialty[0].name;
       }
-    }catch(e){
-
-    }
+    } catch (e) {}
     return InkWell(
       onLongPress: () {},
       onTap: () {},
@@ -232,7 +254,7 @@ class AddProviderPlanState extends State<AddProviderPlan> {
               radius: 25,
               backgroundColor: const Color(fhbColors.bgColorContainer),
               child: Image.network(
-                planList.domainUrl??"",
+                planList.domainUrl ?? "",
                 height: 25.0.h,
                 width: 25.0.h,
                 color: Color(new CommonUtil().getMyPrimaryColor()),
@@ -254,7 +276,7 @@ class AddProviderPlanState extends State<AddProviderPlan> {
                     overflow: TextOverflow.ellipsis,
                   ),
                   Text(
-                    specialityName??"",
+                    specialityName ?? "",
                     style:
                         TextStyle(color: Colors.grey[400], fontSize: 14.0.sp),
                   )
@@ -285,10 +307,13 @@ class AddProviderPlanState extends State<AddProviderPlan> {
                         planList.isBookmarked != planList.isBookmarked;
                         setState(() {});
                       }),*/
-                  RoundedCheckBox(isSelected: planList.isBookmarked,onTap: ()async{
-                    planList.isBookmarked = !planList.isBookmarked;
-                    setState(() {});
-                  },)
+                  RoundedCheckBox(
+                    isSelected: planList.isBookmarked,
+                    onTap: () async {
+                      planList.isBookmarked = !planList.isBookmarked;
+                      setState(() {});
+                    },
+                  )
                 ],
               ),
             ),
@@ -298,25 +323,30 @@ class AddProviderPlanState extends State<AddProviderPlan> {
     );
   }
 
-  void _addBtnTapped() async{
+  void _addBtnTapped() async {
     addSelectedcategoriesToList(providerMainList);
 
-    AddProviderPlanResponse response=await myPlanViewModel.addproviderPlan(selectedCategories);
-    if(response.isSuccess){
+    AddProviderPlanResponse response =
+        await myPlanViewModel.addproviderPlan(selectedCategories);
+    if (response.isSuccess) {
       toast.getToast("Added Successfully", Colors.green);
-      Navigator.pop(context);
-    }
-    
+      Get.back();    }
   }
 
   void addSelectedcategoriesToList(List<Result> result) {
     selectedCategories = [];
     for (final mediaResultObj in result) {
-      if (!selectedCategories.contains(mediaResultObj.healthOrganizationType.id) &&
+      if (!selectedCategories
+              .contains(mediaResultObj.healthOrganizationType.id) &&
           mediaResultObj.isBookmarked) {
         selectedCategories.add(mediaResultObj.id);
       }
     }
   }
 
+  void checkIfAllIsSelectedOrNot() {
+    for (final mediaResultObj in providerMainList) {
+      mediaResultObj.isBookmarked = !isSelectedALL;
+    }
+  }
 }
