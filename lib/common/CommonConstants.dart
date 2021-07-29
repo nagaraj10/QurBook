@@ -277,6 +277,8 @@ class CommonConstants {
 
   factory CommonConstants() => _instance;
 
+  static bool showNotificationdialog=true;
+
   Future<CountryMetrics> getCountryMetrics() async {
     if (countryMetrics != null) return countryMetrics;
     countryMetrics = await setCountryMetrics();
