@@ -223,8 +223,7 @@ class _FreeDietPlans extends State<FreeDietPlans> {
               FlatButton(
                 onPressed: () {
                   Navigator.pop(context);
-                  Provider.of<PlanWizardViewModel>(context, listen: false)
-                      .changeCurrentPage(2);
+                  Get.to(CheckoutPage());
                 },
                 child: Text('Yes'),
               ),
