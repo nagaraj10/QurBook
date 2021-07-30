@@ -426,7 +426,7 @@ class RegimentDataCard extends StatelessWidget {
   bool isValidSymptom(BuildContext context) {
     var currentTime = DateTime.now();
     final selectedDate =
-        Provider.of<RegimentViewModel>(context, listen: false).selectedDate;
+        Provider.of<RegimentViewModel>(context, listen: false).selectedRegimenDate;
     return (Provider.of<RegimentViewModel>(context, listen: false)
                 .regimentMode ==
             RegimentMode.Symptoms) &&

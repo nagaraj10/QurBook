@@ -1,6 +1,7 @@
 import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
@@ -43,7 +44,16 @@ class _PDFViewState extends State<PDFView> {
         child: Obx(
           () {
             return controller.isLoading.value
-                ? CommonCircularIndicator()
+                ? Container(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        Color(
+                          CommonUtil().getMyPrimaryColor(),
+                        ),
+                      ),
+                      backgroundColor: Colors.white.withOpacity(0.8),
+                    ),
+                  )
                 : PDFViewer(
                     document: controller.document,
                   );

@@ -8,6 +8,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myfhb/video_call/utils/rtc_engine.dart';
+import 'package:myfhb/widgets/checkout_page.dart';
 import 'IntroScreens/IntroductionScreen.dart';
 import 'add_provider_plan/service/PlanProviderViewModel.dart';
 import 'regiment/models/regiment_arguments.dart';
@@ -205,7 +206,12 @@ Future<void> main() async {
 
   // check if the app install on first time
   await CommonUtil().isFirstTime();
-
+  // SystemChrome.setSystemUIOverlayStyle(
+  //   const SystemUiOverlayStyle(
+  //     statusBarIconBrightness: Brightness.light,
+  //     statusBarBrightness: Brightness.light,
+  //   ),
+  // );
   runApp(
     provider.MultiProvider(
       providers: [
@@ -577,6 +583,14 @@ class _MyFHBState extends State<MyFHB> {
             message: chatParsedData[6],
           )).then((value) =>
               PageNavigator.goToPermanent(context, router.rt_Landing));
+        } else if (passedValArr[1] == 'mycart') {
+          fbaLog(eveParams: {
+            'eventTime': '${DateTime.now()}',
+            'ns_type': 'my cart',
+            'navigationPage': 'My Cart',
+          });
+          Get.to(CheckoutPage(isFromNotification: true)).then((value) =>
+              PageNavigator.goToPermanent(context, router.rt_Landing));
         } else {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
@@ -765,6 +779,9 @@ class _MyFHBState extends State<MyFHB> {
               fontFamily: variable.font_poppins,
               primaryColor: Color(myPrimaryColor),
               accentColor: Colors.white,
+              appBarTheme: Theme.of(context).appBarTheme.copyWith(
+                    brightness: Brightness.dark,
+                  ),
             ),
             //home: navRoute.isEmpty ? SplashScreen() : StartTheCall(),
             home: findHomeWidget(navRoute),
@@ -872,6 +889,12 @@ class _MyFHBState extends State<MyFHB> {
             //this need to be navigte to My Plans screen
             return SplashScreen(
               nsRoute: 'chat',
+              bundle: parsedData[2],
+            );
+          } else if (parsedData[1] == 'mycart') {
+            //this need to be navigte to My Plans screen
+            return SplashScreen(
+              nsRoute: 'mycart',
               bundle: parsedData[2],
             );
           } else {

@@ -41,6 +41,7 @@ class RegimentDataModel {
     this.isPlaying = false,
     this.scheduled = false,
     this.asNeeded = false,
+    this.isEventDisabled = false,
   });
 
   final String eid;
@@ -82,6 +83,7 @@ class RegimentDataModel {
   bool isPlaying;
   final bool scheduled;
   final bool asNeeded;
+  final bool isEventDisabled;
 
   factory RegimentDataModel.fromJson(Map<String, dynamic> json) =>
       RegimentDataModel(
@@ -133,6 +135,7 @@ class RegimentDataModel {
         metadata: json['metadata'] is List
             ? Metadata()
             : Metadata.fromJson(json['metadata'] ?? {}),
+        isEventDisabled: (json['ev_disabled'] ?? '0') == '1',
       );
 
   Map<String, dynamic> toJson() => {
@@ -172,6 +175,7 @@ class RegimentDataModel {
         'dosemeal': doseMeal,
         'doserepeat': doseRepeat,
         'metadata': metadata.toJson(),
+        'ev_disabled': isEventDisabled ? '1' : '0',
       };
 }
 

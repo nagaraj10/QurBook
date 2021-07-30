@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
+import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
@@ -13,6 +14,7 @@ class FullPhoto extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        flexibleSpace: GradientAppBar(),
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,

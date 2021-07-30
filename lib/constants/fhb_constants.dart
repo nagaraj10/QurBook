@@ -447,8 +447,6 @@ const PLAY_STORE_URL =
 const String STR_HOS_ID = 'Hospital IDs';
 const String STR_OTHER_ID = 'Other IDs';
 const String STR_INSURE_ID = 'Insurance IDs';
-const String noRegimentData =
-    'No Regiments data available for the selected date';
 const String noRegimentScheduleData =
     'No Activities data available for the selected date';
 const String noRegimentSymptomsData =
@@ -518,6 +516,7 @@ const String strSheelaG = 'Sheela';
 const String strAppointment = 'Appointments';
 const String strNiceDay = 'Have a nice day';
 const String strRegimen = 'Regimen';
+const String strManageActivities = 'Enable / Disable Activities';
 const String strDevices = 'Devices';
 const String strHospitals = 'Hospitals';
 const String strMyPlans = 'My Care Plans';
@@ -531,18 +530,22 @@ const String strSelectHealth = 'Select your Health Conditions';
 const String strSelectCare = 'Select your Care Plan';
 const String strSelectTherapeutic = 'Select your Therapeutic Diet';
 const String strDontCondition = 'Don\'t find your condition?';
-const String strDontPlan = 'Don\'t find your plan?';
+const String strDontPlan = 'Don\'t find your care plan?';
 const String strDontDietPlan = 'Don\'t find your diet plan?';
 const String strSearchHealth = 'Search health condition';
 const String strPlanHospitalDiet = 'Search Plan/Hospital';
 const String strSearchDietPlan = 'Search Diet Plan';
 const String strLetsAdd = 'Let\'s add it';
-const String strTellToUs = 'Tell to us';
+const String strTellToUs = 'Tell us';
 const String strDietPlan = 'Diet Plans';
 const String strNoHealthConditions = 'No Health Conditions Available';
 const String strHintHealth = 'Tell us more about your health condition';
 const String strHintCarePlan = 'Tell us more about your care plan';
 const String strHintDietPlan = 'Tell us more about your diet plan';
+
+const String strDontProvider = 'Don\'t find your provider?';
+
+const String strAdd = 'Add';
 
 const strUploading = 'Uploading...';
 const strSubscribe = 'Subscribe';

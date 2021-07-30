@@ -35,6 +35,7 @@ import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
 import 'package:myfhb/telehealth/features/chat/view/chat.dart';
 import 'package:myfhb/telehealth/features/chat/view/home.dart';
+import 'package:myfhb/widgets/checkout_page.dart';
 import 'package:provider/provider.dart';
 import '../utils/PageNavigator.dart';
 import 'package:connectivity/connectivity.dart';
@@ -82,6 +83,7 @@ class _SplashScreenState extends State<SplashScreen> {
     PreferenceUtil.init();
     //setReminder();
     Get.put(PDFViewController());
+    CommonUtil().ListenForTokenUpdate();
   }
 
   void setReminder() {
@@ -431,6 +433,15 @@ class _SplashScreenState extends State<SplashScreen> {
                         PageNavigator.goToPermanent(context, router.rt_Landing,
                             arguments:
                                 LandingArguments(url: widget.bundle ?? null));
+                      } else if (widget.nsRoute == 'mycart') {
+                        fbaLog(eveParams: {
+                          'eventTime': '${DateTime.now()}',
+                          'ns_type': 'my cart',
+                          'navigationPage': 'My Cart',
+                        });
+                        Get.to(CheckoutPage(isFromNotification: true,)).then((value) =>
+                            PageNavigator.goToPermanent(
+                                context, router.rt_Landing));
                       } else {
                         fbaLog(eveParams: {
                           'eventTime': '${DateTime.now()}',

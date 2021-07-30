@@ -168,7 +168,13 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
                     // If the Future is complete, display the preview.
-                    return CameraPreview(_controller);
+                    return Column(
+                      children: [
+                        Expanded(
+                          child: CameraPreview(_controller),
+                        ),
+                      ],
+                    );
                   } else {
                     // Otherwise, display a loading indicator.
                     return CommonCircularIndicator();
@@ -566,7 +572,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
       ).then((value) {
         categoryName =
             PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
-        if (value) {
+        if (value ?? false) {
           Navigator.of(context).pop(true);
         }
       });

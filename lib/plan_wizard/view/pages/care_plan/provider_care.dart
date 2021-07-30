@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
@@ -14,12 +15,12 @@ import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:provider/provider.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 
-class CarePlanPage extends StatefulWidget {
+class ProviderCarePlans extends StatefulWidget {
   @override
-  _CarePlanPageState createState() => _CarePlanPageState();
+  _ProviderCarePlans createState() => _ProviderCarePlans();
 }
 
-class _CarePlanPageState extends State<CarePlanPage> {
+class _ProviderCarePlans extends State<ProviderCarePlans> {
   Future<PlanListModel> planListModel;
 
   PlanListModel myPlanListModel;
@@ -39,11 +40,11 @@ class _CarePlanPageState extends State<CarePlanPage> {
 
   @override
   void initState() {
-    Provider.of<PlanWizardViewModel>(context, listen: false).currentPackageId =
-        '';
+    Provider.of<PlanWizardViewModel>(context, listen: false)
+        .currentPackageProviderCareId = '';
 
     planListModel = Provider.of<PlanWizardViewModel>(context, listen: false)
-        .getCarePlanList();
+        .getCarePlanList(strProviderCare);
   }
 
   @override
@@ -85,7 +86,9 @@ class _CarePlanPageState extends State<CarePlanPage> {
         floatingActionButton: NextButton(
           onPressed: () {
             if (carePlanListLength > 0 &&
-                (planListProvider?.currentPackageId ?? '').isEmpty) {
+                (planListProvider?.currentPackageProviderCareId ?? '')
+                    .isEmpty &&
+                (planListProvider?.currentPackageFreeCareId ?? '').isEmpty) {
               _alertForUncheckPlan();
             } else {
               planListProvider.changeCurrentPage(2);
@@ -97,11 +100,14 @@ class _CarePlanPageState extends State<CarePlanPage> {
   onSearched(String title, String filterBy) async {
     planSearchList.clear();
     if (filterBy == popUpChoicePrice) {
-      planSearchList = await planListProvider.filterSorting(popUpChoicePrice);
+      planSearchList =
+          await planListProvider.filterSortingForProvider(popUpChoicePrice);
     } else if (filterBy == popUpChoiceDura) {
-      planSearchList = await planListProvider.filterSorting(popUpChoiceDura);
+      planSearchList =
+          await planListProvider.filterSortingForProvider(popUpChoiceDura);
     } else if (filterBy == popUpChoiceDefault) {
-      planSearchList = await planListProvider.filterSorting(popUpChoiceDefault);
+      planSearchList =
+          await planListProvider.filterSortingForProvider(popUpChoiceDefault);
     } else if (filterBy == 'localSearch') {
       if (title != null) {
         planSearchList = await planListProvider.filterPlanNameProvider(title);
@@ -164,6 +170,7 @@ class _CarePlanPageState extends State<CarePlanPage> {
             itemBuilder: (BuildContext ctx, int i) => CarePlanCard(
               planList: isSearch ? planSearchList[i] : planList[i],
               onClick: () {},
+              isFrom: strProviderCare,
             ),
             itemCount: isSearch ? planSearchList.length : planList.length,
           )
