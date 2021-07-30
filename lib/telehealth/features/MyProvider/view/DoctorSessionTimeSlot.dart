@@ -41,6 +41,9 @@ class DoctorSessionTimeSlot extends StatefulWidget {
   dynamic body;
   bool isFromFollowOrReschedule;
 
+  bool isFromFollowUpApp;
+  bool isFromFollowUpTake;
+
   DoctorSessionTimeSlot(
       {this.doctorId,
       this.date,
@@ -61,7 +64,9 @@ class DoctorSessionTimeSlot extends StatefulWidget {
       this.onUserChangedDate,
       this.isFromHospital,
       this.body,
-      this.isFromFollowOrReschedule});
+      this.isFromFollowOrReschedule,
+      this.isFromFollowUpApp,
+      this.isFromFollowUpTake});
 
   @override
   State<StatefulWidget> createState() {
@@ -218,30 +223,32 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
                     ? Container(
                         margin: EdgeInsets.only(left: 5, top: 12),
                         child: GetTimeSlots(
-                            dateSlotTimingsObj: snapshot.data,
-                            docs: widget.docs,
-                            docsReschedule: widget.docsReschedule,
-                            j: widget.i,
-                            doctorListIndex: widget.doctorListIndex,
-                            selectedDate: _selectedValue,
-                            isReshedule: widget.isReshedule,
-                            doctorsData: widget.doctorsData,
-                            healthOrganizationResult:
-                                widget.healthOrganizationResult,
-                            resultFromHospitalList:
-                                widget.resultFromHospitalList,
-                            doctorListPos: widget.doctorListPos,
-                            closePage: (value) {
-                              widget.closePage(value);
-                            },
-                            isRefresh: () {
-                              widget.refresh();
-                            },
-                            isFromNotification: widget.isFromNotification,
-                            isFromHospital: widget.isFromHospital,
-                            body: widget.body,
-                            isFromFollowReschedule:
-                                widget.isFromFollowOrReschedule),
+                          dateSlotTimingsObj: snapshot.data,
+                          docs: widget.docs,
+                          docsReschedule: widget.docsReschedule,
+                          j: widget.i,
+                          doctorListIndex: widget.doctorListIndex,
+                          selectedDate: _selectedValue,
+                          isReshedule: widget.isReshedule,
+                          doctorsData: widget.doctorsData,
+                          healthOrganizationResult:
+                              widget.healthOrganizationResult,
+                          resultFromHospitalList: widget.resultFromHospitalList,
+                          doctorListPos: widget.doctorListPos,
+                          closePage: (value) {
+                            widget.closePage(value);
+                          },
+                          isRefresh: () {
+                            widget.refresh();
+                          },
+                          isFromNotification: widget.isFromNotification,
+                          isFromHospital: widget.isFromHospital,
+                          body: widget.body,
+                          isFromFollowReschedule:
+                              widget.isFromFollowOrReschedule,
+                          isFromFollowUpApp: widget.isFromFollowUpApp,
+                          isFromFollowUpTake: widget.isFromFollowUpTake,
+                        ),
                       )
                     : Column(
                         children: <Widget>[

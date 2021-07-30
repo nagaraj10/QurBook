@@ -52,6 +52,9 @@ class GetTimeSlots extends StatelessWidget {
   dynamic body;
   bool isFromFollowReschedule;
 
+  bool isFromFollowUpApp;
+  bool isFromFollowUpTake;
+
   MyProfileModel myProfile;
   AddFamilyUserInfoRepository addFamilyUserInfoRepository =
       AddFamilyUserInfoRepository();
@@ -73,7 +76,9 @@ class GetTimeSlots extends StatelessWidget {
       this.isFromNotification,
       this.isFromHospital,
       this.body,
-      this.isFromFollowReschedule});
+      this.isFromFollowReschedule,
+        this.isFromFollowUpApp,
+        this.isFromFollowUpTake});
 
   @override
   Widget build(BuildContext context) {
@@ -182,6 +187,8 @@ class GetTimeSlots extends StatelessWidget {
             },
             isFromHospital: isFromHospital,
             isFromFollowReschedule: isFromFollowReschedule,
+              isFromFollowUpApp: isFromFollowUpApp,
+              isFromFollowUpTake: isFromFollowUpTake,
           ),
         ));
   }
