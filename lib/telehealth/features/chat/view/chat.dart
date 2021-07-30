@@ -435,7 +435,7 @@ class ChatScreenState extends State<ChatScreen> {
     });
     currentPlayedVoiceURL = '';
     await _mPlayer.stopPlayer().then((value) {
-      flutterPlaySound(url);
+      //flutterPlaySound(url);
     });
   }
 
