@@ -245,6 +245,18 @@ class ApiBaseHelper {
     return responseJson;
   }
 
+  Future<dynamic> addProvidersForPlan(String url, String jsonData) async {
+    var responseJson;
+    try {
+      var response = await ApiServices.post(_baseUrl + url,
+          body: jsonData, headers: await headerRequest.getRequestHeader());
+      responseJson = _returnResponse(response);
+      print(responseJson.toString());
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
   /// The below method helps to get categroy list from server using the get method,
   /// it contains one parameter which describ ethe URL  type
   /// Created by Parvathi M on 7th Jan 2020
@@ -474,8 +486,12 @@ class ApiBaseHelper {
         }
         break;
       case 404:
-        exitFromApp();
-
+        if (forDoctorSearch) {
+          final responseJson = convert.jsonDecode(response.body.toString());
+          return responseJson;
+        }else {
+          exitFromApp();
+        }
         break;
       case 500:
         try {
@@ -1798,6 +1814,23 @@ class ApiBaseHelper {
       //}
     } catch (e) {}
   }
+
+  Future<dynamic> getProviderPlan(String url) async {
+    var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+
+    var responseJson;
+    print(url);
+    try {
+      var response = await ApiServices.get(_baseUrl + url,
+          headers: await headerRequest.getRequestHeadersForSearch());
+
+      responseJson = _returnResponse(response, forDoctorSearch: true);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
 }
 
 void exitFromApp() async {

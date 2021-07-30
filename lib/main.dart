@@ -10,6 +10,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myfhb/video_call/utils/rtc_engine.dart';
 import 'package:myfhb/widgets/checkout_page.dart';
 import 'IntroScreens/IntroductionScreen.dart';
+import 'add_provider_plan/service/PlanProviderViewModel.dart';
 import 'regiment/models/regiment_arguments.dart';
 //import 'package:myfhb/QurPlan/WelcomeScreens/qurplan_welcome_screen.dart';
 // import 'package:awesome_notifications/awesome_notifications.dart';
@@ -225,6 +226,8 @@ Future<void> main() async {
         ),
         provider.ChangeNotifierProvider<RTCEngineProvider>(
           create: (_) => RTCEngineProvider(),
+        ), provider.ChangeNotifierProvider<PlanProviderViewModel>(
+          create: (_) => PlanProviderViewModel(),
         ),
       ],
       child: MyFHB(),
