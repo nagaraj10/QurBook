@@ -42,6 +42,7 @@ class MyProvidersHospitals extends StatefulWidget {
 
   @override
   _MyProvidersState createState() => _MyProvidersState();
+
   MyProvidersHospitals({this.closePage, this.isRefresh});
 }
 
@@ -167,12 +168,24 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
           return ErrorsWidget();
         } else {
           final items = snapshot.data ??
-              <MyProvidersResponseData>[]; // handle the case that data is null
-          if (snapshot?.hasData &&
+              <MyProvidersResponseData>[];
+          if(initialHospitalList!=null && initialHospitalList.length>0){
+            // handle the case that data is null
+            return hospitalList(isSearch
+                ? myProviderHospitalList
+                : snapshot?.data?.result?.hospitals);
+          }
+          else if (snapshot?.hasData &&
               snapshot?.data?.result != null &&
               snapshot?.data?.result?.hospitals != null &&
               snapshot?.data?.result?.hospitals?.length > 0) {
             initialHospitalList = snapshot?.data?.result?.hospitals;
+            if (snapshot?.hasData &&
+                snapshot?.data?.result != null &&
+                snapshot?.data?.result?.clinics != null &&
+                snapshot?.data?.result?.clinics?.length > 0) {
+              initialHospitalList.addAll(snapshot?.data?.result?.clinics);
+            }
             return hospitalList(isSearch
                 ? myProviderHospitalList
                 : snapshot?.data?.result?.hospitals);
@@ -271,9 +284,7 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
                 children: <Widget>[
                   SizedBox(height: 5.0.h),
                   AutoSizeText(
-                    hospitals[i].name != null
-                        ? toBeginningOfSentenceCase(hospitals[i].name)
-                        : '',
+                    getHospitalName(hospitals[i]),
                     maxLines: 1,
                     style: TextStyle(
                       fontSize: 16.0.sp,
@@ -383,4 +394,27 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
           ),
         ));
   }
+  String getHospitalName(Hospitals eachHospitalModel) {
+    String name="";
+
+    if (eachHospitalModel.name != null) {
+      if (eachHospitalModel.name != "Self" &&
+          eachHospitalModel.name != "self") {
+        name = eachHospitalModel?.name?.capitalizeFirstofEach;
+      } else {
+        if (eachHospitalModel.createdBy != null) {
+          if (eachHospitalModel.createdBy.firstName != "" &&
+              eachHospitalModel.createdBy.firstName != null) {
+            name = eachHospitalModel.createdBy.firstName;
+          }
+          if (eachHospitalModel.createdBy.lastName != "" &&
+              eachHospitalModel.createdBy.lastName != null) {
+            name = name + " " + eachHospitalModel.createdBy.lastName;
+          }
+        }
+      }
+    }
+    return name;
+  }
+
 }

@@ -249,6 +249,7 @@ class CommonConstants {
   static String STR_RHTYPE = 'Rh type';
 
   static String SEARCH_HOSPIT_ID = 'HOSPTL';
+  static String SEARCH_CLINIC_ID = 'CLINIC';
   static String SEARCH_LAB_ID = 'LAB';
 
   static final CommonConstants _instance = CommonConstants.internal();

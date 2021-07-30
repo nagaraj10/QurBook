@@ -27,6 +27,7 @@ class HospitalsSearchListResponse {
 class HospitalsListResult {
   String healthOrganizationReferenceId;
   String healthOrganizationName;
+  String name;
   String addressLine1;
   String addressLine2;
   String cityName;
@@ -52,11 +53,16 @@ class HospitalsListResult {
         this.healthOrganizationTypeName,
         this.phoneNumber,
         this.phoneNumberTypeId,
-        this.phoneNumberTypeName});
+        this.phoneNumberTypeName,this.name});
 
   HospitalsListResult.fromJson(Map<String, dynamic> json) {
     healthOrganizationReferenceId = json['healthOrganizationReferenceId'];
     healthOrganizationName = json['healthOrganizationName'];
+    try {
+      name = json['name'];
+    }catch(e){
+
+    }
     addressLine1 = json['addressLine1'];
     addressLine2 = json['addressLine2'];
     cityName = json['cityName'];
@@ -74,6 +80,7 @@ class HospitalsListResult {
     final data = Map<String, dynamic>();
     data['healthOrganizationReferenceId'] = healthOrganizationReferenceId;
     data['healthOrganizationName'] = healthOrganizationName;
+    data['name'] = name;
     data['addressLine1'] = addressLine1;
     data['addressLine2'] = addressLine2;
     data['cityName'] = cityName;
