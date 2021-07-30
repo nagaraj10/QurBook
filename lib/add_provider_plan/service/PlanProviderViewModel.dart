@@ -7,11 +7,22 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:provider/provider.dart';
 import 'dart:convert' as convert;
 
+import 'package:scroll_to_index/util.dart';
+
 
 class PlanProviderViewModel extends ChangeNotifier {
   AddProviderService _addProviderService = new AddProviderService();
   List<Result> providerPlanResult;
+  bool hasSelectAllData=false;
 
+  void updateBool(bool condition){
+    hasSelectAllData=condition;
+    print(hasSelectAllData);
+    Future.delayed(Duration(milliseconds: 100),(){
+      notifyListeners();
+
+    });
+  }
   Future<ProviderOrganisationResponse> getCarePlanList() async {
     try {
       var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);

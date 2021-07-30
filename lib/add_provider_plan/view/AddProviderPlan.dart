@@ -8,7 +8,6 @@ import 'package:myfhb/add_provider_plan/service/PlanProviderViewModel.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/errors_widget.dart';
-import 'package:myfhb/myPlan/viewModel/myPlanViewModel.dart';
 import 'package:myfhb/plan_wizard/view/widgets/Rounded_CheckBox.dart';
 import 'package:provider/provider.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
@@ -22,7 +21,6 @@ class AddProviderPlan extends StatefulWidget {
 
 class AddProviderPlanState extends State<AddProviderPlan> {
   Future<ProviderOrganisationResponse> providerOrganizationResult;
-  PlanProviderViewModel myPlanViewModel = PlanProviderViewModel();
   List<Result> providerMainList = List();
 
   bool isSearch = false;
@@ -32,6 +30,7 @@ class AddProviderPlanState extends State<AddProviderPlan> {
   FlutterToast toast = new FlutterToast();
 
   bool isSelectedALL = false;
+  bool hasData = false;
 
   @override
   void initState() {
@@ -39,6 +38,7 @@ class AddProviderPlanState extends State<AddProviderPlan> {
     providerOrganizationResult =
         Provider.of<PlanProviderViewModel>(context, listen: false)
             .getCarePlanList();
+    //Provider.of<PlanProviderViewModel>(context, listen: false).hasSelectAllData=false;
   }
 
   @override
@@ -63,41 +63,12 @@ class AddProviderPlanState extends State<AddProviderPlan> {
           children: [
             Container(
                 child: Column(
-                  children: [
-
-                    Container(
-                      padding: EdgeInsets.all(10.0),
-                      margin: EdgeInsets.only(left: 10, right: 10, top: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("Select ALL"),
-                          RoundedCheckBox(
-                            isSelected: isSelectedALL,
-                            onTap: () {
-                              checkIfAllIsSelectedOrNot();
-
-                              setState(() {
-                                isSelectedALL = !isSelectedALL;
-                              });
-                            },
-                          )
-                        ],
-                      ),
-                      height: 50,
-                    ),
-                    SizedBox(
-                      height: 5.0.h,
-                    ),
-                    Expanded(
-                      child: getPlanList(),
-                    ),
-                    _showAddButton(),
-                    SizedBox(
-                      height: 5.0.h,
-                    ),
-                  ],
-                )),
+              children: [
+                Expanded(
+                  child: getPlanList(),
+                ),
+              ],
+            )),
             // Align(
             //   alignment: Alignment.bottomCenter,
             //   child: Padding(
@@ -164,6 +135,9 @@ class AddProviderPlanState extends State<AddProviderPlan> {
             ),
           );
         } else if (snapshot.hasError) {
+          hasData = false;
+          planListProvider.updateBool(false);
+
           return ErrorsWidget();
         } else {
           if (providerMainList != null && providerMainList.length > 0) {
@@ -172,15 +146,20 @@ class AddProviderPlanState extends State<AddProviderPlan> {
               snapshot?.data?.result != null &&
               snapshot?.data?.result.isNotEmpty) {
             providerMainList = snapshot.data.result;
+            hasData = true;
+            planListProvider.updateBool(true);
             return hospitalList(snapshot.data.result);
           } else {
+            hasData = false;
+            planListProvider.updateBool(false);
+
             return SafeArea(
               child: SizedBox(
                 height: 1.sh / 1.3,
                 child: Container(
                     child: Center(
-                      child: Text(variable.strNoHospitaldata),
-                    )),
+                  child: Text(variable.strNoHospitaldata),
+                )),
               ),
             );
           }
@@ -191,27 +170,63 @@ class AddProviderPlanState extends State<AddProviderPlan> {
 
   Widget hospitalList(List<Result> providerList) {
     return (providerList != null && providerList.length > 0)
-        ? ListView.builder(
-      shrinkWrap: true,
-      padding: EdgeInsets.only(
-        bottom: 50.0.h,
-      ),
-      itemBuilder: (BuildContext ctx, int i) =>
-          CreateDoctorProviderCard(
-            planList: isSearch ? providerMainList[i] : providerList[i],
-            onClick: () {},
-          ),
-      itemCount: isSearch ? providerMainList.length : providerList.length,
-    )
+        ? Column(
+            children: [
+              Container(
+                padding: EdgeInsets.all(10.0),
+                margin: EdgeInsets.only(left: 10, right: 15, top: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(child: SizedBox(),),
+                    Text("Select All",style: TextStyle(color: Color(CommonUtil().getMyPrimaryColor())),),
+                    SizedBox(width: 25,),
+                    RoundedCheckBox(
+                      isSelected: isSelectedALL,
+                      onTap: () {
+                        checkIfAllIsSelectedOrNot();
+
+                        setState(() {
+                          isSelectedALL = !isSelectedALL;
+                        });
+                      },
+                    )
+                  ],
+                ),
+                height: 50,
+              ),
+              SizedBox(
+                height: 5.0.h,
+              ),
+              Expanded(
+                  child: ListView.builder(
+                shrinkWrap: true,
+                padding: EdgeInsets.only(
+                  bottom: 50.0.h,
+                ),
+                itemBuilder: (BuildContext ctx, int i) =>
+                    CreateDoctorProviderCard(
+                  planList: isSearch ? providerMainList[i] : providerList[i],
+                  onClick: () {},
+                ),
+                itemCount:
+                    isSearch ? providerMainList.length : providerList.length,
+              )),
+              _showAddButton(),
+              SizedBox(
+                height: 5.0.h,
+              ),
+            ],
+          )
         : SafeArea(
-      child: SizedBox(
-        height: 1.sh / 1.3,
-        child: Container(
-            child: Center(
-              child: Text(variable.strNoHospitaldata),
-            )),
-      ),
-    );
+            child: SizedBox(
+              height: 1.sh / 1.3,
+              child: Container(
+                  child: Center(
+                child: Text(variable.strNoHospitaldata),
+              )),
+            ),
+          );
   }
 
   CreateDoctorProviderCard({Result planList, Function() onClick}) {
@@ -245,28 +260,24 @@ class AddProviderPlanState extends State<AddProviderPlan> {
                 backgroundColor: const Color(fhbColors.bgColorContainer),
                 child: (planList.domainUrl != null && planList.domainUrl != "")
                     ? Image.network(
-                  planList.domainUrl ?? "",
-                  height: 25.0.h,
-                  width: 25.0.h,
-                  color: Color(new CommonUtil().getMyPrimaryColor()),
-                )
+                        planList.domainUrl ?? "",
+                        height: 25.0.h,
+                        width: 25.0.h,
+                        color: Color(new CommonUtil().getMyPrimaryColor()),
+                      )
                     : Container(
-                    height: 50.0.h,
-                    width: 50.0.h,
-                    color: Color(fhbColors.bgColorContainer),
-                    child: Center(
-                      child: Text(
-                        planList.name != null
-                            ? planList.name[0]
-                            .toUpperCase()
-                            : '',
-                        style: TextStyle(
-                            color: Color(CommonUtil()
-                                .getMyPrimaryColor())),
-                      ),
-                    ))
-            ),
-
+                        height: 50.0.h,
+                        width: 50.0.h,
+                        color: Color(fhbColors.bgColorContainer),
+                        child: Center(
+                          child: Text(
+                            planList.name != null
+                                ? planList.name[0].toUpperCase()
+                                : '',
+                            style: TextStyle(
+                                color: Color(CommonUtil().getMyPrimaryColor())),
+                          ),
+                        ))),
             SizedBox(
               width: 20,
             ),
@@ -285,7 +296,7 @@ class AddProviderPlanState extends State<AddProviderPlan> {
                   Text(
                     specialityName ?? "",
                     style:
-                    TextStyle(color: Colors.grey[400], fontSize: 14.0.sp),
+                        TextStyle(color: Colors.grey[400], fontSize: 14.0.sp),
                   )
                 ],
               ),
@@ -316,7 +327,7 @@ class AddProviderPlanState extends State<AddProviderPlan> {
     addSelectedcategoriesToList(providerMainList);
 
     AddProviderPlanResponse response =
-    await myPlanViewModel.addproviderPlan(selectedCategories);
+        await planListProvider?.addproviderPlan(selectedCategories);
     if (response.isSuccess) {
       toast.getToast("Added Successfully", Colors.green);
       Get.back();
@@ -327,7 +338,7 @@ class AddProviderPlanState extends State<AddProviderPlan> {
     selectedCategories = [];
     for (final mediaResultObj in result) {
       if (!selectedCategories
-          .contains(mediaResultObj.healthOrganizationType.id) &&
+              .contains(mediaResultObj.healthOrganizationType.id) &&
           mediaResultObj.isBookmarked) {
         selectedCategories.add(mediaResultObj.id);
       }

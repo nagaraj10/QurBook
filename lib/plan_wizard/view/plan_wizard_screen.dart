@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/add_new_plan/view/AddNewPlan.dart';
+import 'package:myfhb/add_provider_plan/view/AddProviderPlan.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/plan_wizard/view/pages/care_plan/care_plan_page.dart';
 import 'package:myfhb/plan_wizard/view/pages/diet_plan/diet_plan_page.dart';
@@ -135,18 +136,23 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
                           ),
                         ),
                         onPressed: () {
-                          new AddNewPlan().addNewPlan(
-                              context, feedbackCode, titleName, hintText,
-                              (bool) {
-                            FlutterToast toast = new FlutterToast();
-                            if (bool) {
-                              toast.getToast(
-                                  "We've received your request and get back to you soon",
-                                  Colors.green);
-                            } else {
-                              toast.getToast("Please try again ", Colors.red);
-                            }
-                          });
+                          if(planWizardViewModel.currentPage==1 || planWizardViewModel.currentPage==2) {
+                            Get.to(AddProviderPlan());
+                          }else {
+                            new AddNewPlan().addNewPlan(
+                                context, feedbackCode, titleName, hintText,
+                                    (bool) {
+                                  FlutterToast toast = new FlutterToast();
+                                  if (bool) {
+                                    toast.getToast(
+                                        "We've received your request and get back to you soon",
+                                        Colors.green);
+                                  } else {
+                                    toast.getToast(
+                                        "Please try again ", Colors.red);
+                                  }
+                                });
+                          }
                         },
                         borderSide: BorderSide(color: Colors.white),
                         color: Colors.white,
@@ -175,10 +181,10 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
         return strDontCondition;
         break;
       case 1:
-        return currentTab == 0 ? strDontProvider : strDontPlan;
+        return currentTab == 0 ? strDontProvider : strDontProvider;
         break;
       case 2:
-        return currentTabDiet == 0 ? strDontProvider : strDontDietPlan;
+        return currentTabDiet == 0 ? strDontProvider : strDontProvider;
         break;
     }
   }
