@@ -22,6 +22,7 @@ import '../../telehealth/features/SearchWidget/view/SearchWidget.dart';
 import 'package:provider/provider.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
+import '../../authentication/constants/constants.dart';
 
 class MyPlanList extends StatefulWidget {
   MyPlanList({
@@ -94,7 +95,7 @@ class _MyPlanState extends State<MyPlanList> {
               Icons.add,
               color: Colors.white,
             ),
-            label: Text('Add',style: TextStyle(fontSize: 18.sp,color: Colors.white)),
+            label: Text(strAddPlan,style: TextStyle(fontSize: 18.sp,color: Colors.white)),
           ),
           body: Stack(
             fit: StackFit.expand,
