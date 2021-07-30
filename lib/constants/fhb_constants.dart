@@ -196,8 +196,9 @@ const String Subscribe = 'Subscribe';
 const String GoToRegimentDescription =
     'Tap here to see your updated Regimen for each Plan’s subscription';
 const String SymptomsDescription = 'Tap here to view Symptoms list';
-const String DailyScheduleDescription = 'Tap here to set your Daily Schedule';
+const String DailyScheduleDescription = 'Tap here to make changes to the order of activities';
 const String Schedule = 'Schedule';
+const String RegimenSettings = 'Settings';
 const String LogActivity = 'Log Activity';
 const String CardTap =
     'Tap on the card or Tick mark on it to mark your activity accomplishment';

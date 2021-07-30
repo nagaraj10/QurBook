@@ -46,6 +46,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
 
   bool isFirst;
   bool isFirstSymptom;
+  bool isSettingsOpen = false;
 
   BuildContext _myContext;
 
@@ -101,7 +102,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
         if (!isFirst) _regimentViewModel.updateInitialShowIndex(index: 0);
         Future.delayed(
             Duration(milliseconds: 1000),
-            () => isFirst
+            () => isFirst || isSettingsOpen
                 ? null
                 : ShowCaseWidget.of(_myContext)
                     .startShowCase([_DailyKey, _cardKey, _SymptomsKey]));
@@ -393,33 +394,40 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                             child: Material(
                               color: Colors.transparent,
                               child: PopupMenuButton<int>(
+                                onCanceled: () {
+                                  isSettingsOpen = false;
+                                },
                                 icon: Icon(
                                   Icons.settings_outlined,
                                 ),
                                 iconSize: 30.0.sp,
-                                itemBuilder: (context) => [
-                                  PopupMenuItem(
-                                    value: 0,
-                                    child: Text(
-                                      Schedule,
-                                      style: TextStyle(
-                                        fontSize: 14.0.sp,
-                                        fontWeight: FontWeight.w500,
+                                itemBuilder: (context) {
+                                  isSettingsOpen = true;
+                                  return [
+                                    PopupMenuItem(
+                                      value: 0,
+                                      child: Text(
+                                        Schedule,
+                                        style: TextStyle(
+                                          fontSize: 14.0.sp,
+                                          fontWeight: FontWeight.w500,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  PopupMenuItem(
-                                    value: 1,
-                                    child: Text(
-                                      strManageActivities,
-                                      style: TextStyle(
-                                        fontSize: 14.0.sp,
-                                        fontWeight: FontWeight.w500,
+                                    PopupMenuItem(
+                                      value: 1,
+                                      child: Text(
+                                        strManageActivities,
+                                        style: TextStyle(
+                                          fontSize: 14.0.sp,
+                                          fontWeight: FontWeight.w500,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ];
+                                },
                                 onSelected: (index) async {
+                                  isSettingsOpen = false;
                                   if (index == 0) {
                                     final profileResponseModel =
                                         await Provider.of<RegimentViewModel>(
@@ -451,7 +459,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                               ),
                             ),
                           ),
-                          Schedule)
+                          RegimenSettings)
                     ],
                   ),
                 ),
