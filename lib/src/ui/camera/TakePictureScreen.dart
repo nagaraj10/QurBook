@@ -86,6 +86,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 
     initializeData();
 
+
 /*
     var isFirstTime =
         PreferenceUtil.isKeyValid(Constants.KEY_SHOWCASE_CAMERASCREEN);
