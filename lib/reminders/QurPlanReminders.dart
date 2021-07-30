@@ -41,7 +41,6 @@ class QurPlanReminders {
       var reminders = <Reminder>[];
       data.forEach((element) {
         var newData = Reminder.fromMap(element);
-        print(newData.estart);
         if (!newData?.evDisabled) {
           reminders.add(newData);
         }
