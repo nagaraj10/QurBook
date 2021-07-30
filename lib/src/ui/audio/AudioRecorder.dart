@@ -22,6 +22,7 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import 'package:flutter_sound_platform_interface/flutter_sound_recorder_platform_interface.dart';
 
 class AudioRecorder extends StatefulWidget {
   AudioScreenArguments arguments;
@@ -44,7 +45,6 @@ class _AudioRecorderState extends State<AudioRecorder> {
   bool containsAudioMain = true;
   double sliderCurrentPosition = 0.0;
   double maxDuration = 1.0;
-  Codec _codec = Codec.aacADTS;
   FlutterToast toast = FlutterToast();
   List<CategoryResult> filteredCategoryData;
   CategoryListBlock _categoryListBlock = CategoryListBlock();
@@ -91,6 +91,8 @@ class _AudioRecorderState extends State<AudioRecorder> {
     try {
       await _mRecorder.startRecorder(
         toFile: _mPath,
+        codec: Codec.aacMP4,
+        audioSource: AudioSource.microphone,
       );
       _isRecording = true;
       setState(
@@ -190,7 +192,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
     _mPlayer
         .startPlayer(
             fromURI: _mPath,
-            codec: Codec.aacADTS,
+            codec: Codec.aacMP4,
             whenFinished: () {
               setState(
                 () {},
