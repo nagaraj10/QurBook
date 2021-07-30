@@ -8,6 +8,7 @@ import 'package:myfhb/landing/view/landing_arguments.dart';
 import 'package:myfhb/regiment/view/widgets/regiment_activities_card.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import '../../../common/CommonUtil.dart';
+import '../../../reminders/QurPlanReminders.dart';
 import '../../../constants/fhb_constants.dart';
 import '../../models/regiment_data_model.dart';
 import '../../view_model/regiment_view_model.dart';
@@ -266,6 +267,7 @@ class _ManageActivitiesScreenState extends State<ManageActivitiesScreen> {
   void onBackPressed(BuildContext context) {
     if (Navigator.canPop(context)) {
       _regimentViewModel.fetchRegimentData();
+      QurPlanReminders.getTheRemindersFromAPI();
       Get.back();
     } else {
       Get.offAllNamed(

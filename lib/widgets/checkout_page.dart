@@ -83,7 +83,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
       Get.offAllNamed(
         router.rt_Landing,
         arguments: LandingArguments(
-          needFreshLoad: true,
+          needFreshLoad: false,
         ),
       );
     } else if (Navigator.canPop(context)) {
@@ -92,7 +92,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
       Get.offAllNamed(
         router.rt_Landing,
         arguments: LandingArguments(
-          needFreshLoad: true,
+          needFreshLoad: false,
         ),
       );
     }

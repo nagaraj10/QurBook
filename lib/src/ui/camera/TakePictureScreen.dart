@@ -70,7 +70,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
     Constants.mInitialTime = DateTime.now();
     super.initState();
 
-   // initFlashlight();
+    initFlashlight();
 
     // To display the current output from the Camera,
     // create a CameraController.
@@ -100,10 +100,10 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   }
 
   initFlashlight() async {
- /*   bool hasFlash = await Flashlight.hasFlashlight;
+   // bool hasFlash = await Flashlight.hasFlashlight;
     setState(() {
-      _hasFlashlight = hasFlash;
-    });*/
+      _hasFlashlight = false;
+    });
   }
 
   @override

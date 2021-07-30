@@ -72,6 +72,9 @@ class BookingConfirmation extends StatefulWidget {
   bool isFromHospital;
   bool isFromFollowReschedule;
 
+  bool isFromFollowUpApp;
+  bool isFromFollowUpTake;
+
   BookingConfirmation(
       {this.docs,
       this.docsReschedule,
@@ -91,7 +94,9 @@ class BookingConfirmation extends StatefulWidget {
       this.closePage,
       this.refresh,
       this.isFromHospital,
-      this.isFromFollowReschedule});
+      this.isFromFollowReschedule,
+      this.isFromFollowUpApp,
+      this.isFromFollowUpTake});
 
   @override
   BookingConfirmationState createState() => BookingConfirmationState();
@@ -170,7 +175,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     getDataFromWidget();
     setLengthValue();
 
-    INR_Price = commonWidgets.getMoneyWithForamt(isFollowUp()
+
+    INR_Price = commonWidgets.getMoneyWithForamt((widget.isFromFollowUpApp &&
+            widget.isFromFollowUpTake == false && isFollowUp())
         ? getFollowUpFee()
         : widget.isFromHospital
             ? getFeesFromHospital(
@@ -1020,7 +1027,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                                     healthRecords.length > 0)
                                                 ? true
                                                 : false,
-                                            isFollowUp(),
+                                            (widget.isFromFollowUpApp&&widget.isFromFollowUpTake==false&&isFollowUp()),
                                             (healthRecords != null &&
                                                     healthRecords.length > 0)
                                                 ? healthRecords

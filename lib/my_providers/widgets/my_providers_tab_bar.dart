@@ -44,6 +44,9 @@ class MyProviderTabBarState extends State<MyProvidersTabBar> {
       hospitalsModel = widget.data.hospitals;
       doctorsModel = widget.data.doctors;
       labsModel = widget.data.labs;
+      if(widget.data.clinics!=null){
+        hospitalsModel.addAll(widget.data.clinics);
+      }
     }
 
     // // 1

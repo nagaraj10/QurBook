@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
+import 'package:myfhb/landing/view/landing_arguments.dart';
 import 'package:myfhb/regiment/models/regiment_arguments.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
@@ -152,7 +153,12 @@ class _ResultPage extends State<PaymentResultPage> {
                             if (widget?.isFreePlan ?? false) {
                               Get.back();
                             } else {
-                              Get.offAllNamed(router.rt_Landing);
+                              Get.offAllNamed(
+                                router.rt_Landing,
+                                arguments: LandingArguments(
+                                  needFreshLoad: false,
+                                ),
+                              );
                             }
                           }
                         },

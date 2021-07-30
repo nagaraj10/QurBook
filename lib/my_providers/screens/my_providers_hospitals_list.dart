@@ -137,10 +137,10 @@ class _MyProvidersDoctorsList extends State<MyProvidersHospitalsList> {
                         children: <Widget>[
                           SizedBox(height: 5.0.h),
                           AutoSizeText(
-                            eachHospitalModel.name != null
-                                ? eachHospitalModel?.name?.capitalizeFirstofEach /* toBeginningOfSentenceCase(
+                            getHospitalName(
+                                eachHospitalModel) /* toBeginningOfSentenceCase(
                                     eachHospitalModel.name) */
-                                : '',
+                            ,
                             maxLines: 1,
                             style: TextStyle(
                               fontSize: 16.0.sp,
@@ -165,27 +165,27 @@ class _MyProvidersDoctorsList extends State<MyProvidersHospitalsList> {
                     ),
                     Expanded(
                         child: Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              commonWidgets.getBookMarkedIconHealth(
-                                  eachHospitalModel, () {
-                                providerViewModel
-                                    .bookMarkHealthOrg(
-                                        eachHospitalModel,
-                                        false,
-                                        'ListItem',
-                                        eachHospitalModel.sharedCategories)
-                                    .then((status) {
-                                  if (status) {
-                                    widget.isRefresh();
-                                  }
-                                });
-                              }),
-                            ],
-                          ),
-                        )),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          commonWidgets
+                              .getBookMarkedIconHealth(eachHospitalModel, () {
+                            providerViewModel
+                                .bookMarkHealthOrg(
+                                    eachHospitalModel,
+                                    false,
+                                    'ListItem',
+                                    eachHospitalModel.sharedCategories)
+                                .then((status) {
+                              if (status) {
+                                widget.isRefresh();
+                              }
+                            });
+                          }),
+                        ],
+                      ),
+                    )),
                   ],
                 )));
       },
@@ -197,5 +197,28 @@ class _MyProvidersDoctorsList extends State<MyProvidersHospitalsList> {
       },
       itemCount: widget.hospitalsModel.length,
     );
+  }
+
+  String getHospitalName(Hospitals eachHospitalModel) {
+    String name="";
+
+    if (eachHospitalModel.name != null) {
+      if (eachHospitalModel.name != "Self" &&
+          eachHospitalModel.name != "self") {
+        name = eachHospitalModel?.name?.capitalizeFirstofEach;
+      } else {
+        if (eachHospitalModel.createdBy != null) {
+          if (eachHospitalModel.createdBy.firstName != "" &&
+              eachHospitalModel.createdBy.firstName != null) {
+            name = eachHospitalModel.createdBy.firstName;
+          }
+          if (eachHospitalModel.createdBy.lastName != "" &&
+              eachHospitalModel.createdBy.lastName != null) {
+            name = name + " " + eachHospitalModel.createdBy.lastName;
+          }
+        }
+      }
+    }
+    return name;
   }
 }

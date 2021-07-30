@@ -289,6 +289,8 @@ class _HealthOrganizationState extends State<HealthOrganization> {
               },
               isFromHospital: false,
               isFromFollowOrReschedule: false,
+              isFromFollowUpApp: false,
+              isFromFollowUpTake: true,
             ),
           ],
         ),
