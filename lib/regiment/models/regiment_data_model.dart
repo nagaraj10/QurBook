@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:myfhb/regiment/models/field_response_model.dart';
+
 class RegimentDataModel {
   RegimentDataModel({
     this.eid,
@@ -237,16 +239,19 @@ class UformData {
 }
 
 class VitalsData {
-  VitalsData({
-    this.vitalName,
-    this.value,
-    this.type,
-    this.display,
-    this.alarm,
-    this.amin,
-    this.amax,
-    this.fieldType,
-  });
+  VitalsData(
+      {this.vitalName,
+      this.value,
+      this.type,
+      this.display,
+      this.alarm,
+      this.amin,
+      this.amax,
+      this.fieldType,
+      this.photo,
+      this.audio,
+      this.video,
+      this.file});
 
   String vitalName;
   String value;
@@ -256,6 +261,10 @@ class VitalsData {
   String amin;
   String amax;
   FieldType fieldType;
+  OtherData photo;
+  OtherData audio;
+  OtherData file;
+  OtherData video;
 
   factory VitalsData.fromJson(Map<String, dynamic> json) {
     return VitalsData(
@@ -267,6 +276,10 @@ class VitalsData {
       amin: json['amin'],
       amax: json['amax'],
       fieldType: fieldTypeValues.map[json['type']],
+      photo: json['PHOTO'] != null ? OtherData.fromMap(json['PHOTO']) : null,
+      audio: json['AUDIO'] != null ? OtherData.fromMap(json['AUDIO']) : null,
+      video: json['VIDEO'] != null ? OtherData.fromMap(json['VIDEO']) : null,
+      file: json['FILE'] != null ? OtherData.fromMap(json['FILE']) : null,
     );
   }
 
@@ -348,4 +361,45 @@ class Metadata {
         'bgcolor': bgcolor,
         'metadatafrom': metadatafrom,
       };
+}
+
+class OtherData {
+  String name;
+  String url;
+  OtherData({
+    this.name,
+    this.url,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'url': url,
+    };
+  }
+
+  factory OtherData.fromMap(Map<String, dynamic> map) {
+    return OtherData(
+      name: map['name'],
+      url: map['url'],
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory OtherData.fromJson(String source) =>
+      OtherData.fromMap(json.decode(source));
+
+  @override
+  String toString() => 'OtherData(name: $name, url: $url)';
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is OtherData && other.name == name && other.url == url;
+  }
+
+  @override
+  int get hashCode => name.hashCode ^ url.hashCode;
 }
