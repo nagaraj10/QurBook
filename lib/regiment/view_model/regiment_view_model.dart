@@ -331,7 +331,7 @@ class RegimentViewModel extends ChangeNotifier {
     bool isPrevious = false,
     bool isNext = false,
     DateTime dateTime,
-    bool isInitial=false,
+    bool isInitial = false,
   }) {
     if (dateTime != null) {
       selectedRegimenDate = dateTime;
@@ -342,7 +342,7 @@ class RegimentViewModel extends ChangeNotifier {
     }
     regimentDate =
         '${CommonUtil().regimentDateFormat(selectedRegimenDate ?? DateTime.now())}';
-    if(!isInitial) {
+    if (!isInitial) {
       resetRegimenTab();
       fetchRegimentData(isInitial: true);
       notifyListeners();
@@ -358,6 +358,10 @@ class RegimentViewModel extends ChangeNotifier {
       eid: eid,
       events: events,
     );
+  }
+
+  Future<SaveResponseModel> deletMedia({String eid}) async {
+    return await RegimentService.deleteMedia(eid: eid);
   }
 
   Future<FieldsResponseModel> getFormData({
@@ -422,7 +426,7 @@ class RegimentViewModel extends ChangeNotifier {
     activitiesDate =
         '${CommonUtil().regimentDateFormat(selectedActivityDate ?? DateTime.now())}';
     if (!isInitial) {
-    fetchScheduledActivities(isInitial: true);
+      fetchScheduledActivities(isInitial: true);
       notifyListeners();
     }
   }
