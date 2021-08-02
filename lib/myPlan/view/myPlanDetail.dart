@@ -316,7 +316,10 @@ class PlanDetail extends State<MyPlanDetail> {
                       await CommonUtil().renewAlertDialog(context,
                           packageId: packageId,
                           price: price,
-                          IsExtendable: isExtendable == '1' ? true : false);
+                          IsExtendable: isExtendable == '1' ? true : false,
+                          refresh: () {
+                        Navigator.pop(context);
+                      });
                     } else {
                       await CommonUtil().unSubcribeAlertDialog(
                         context,
@@ -331,7 +334,7 @@ class PlanDetail extends State<MyPlanDetail> {
                         : Colors.red,
                   ),
                   child: Text(
-                    isExpired == '1' ? strIsRenew : strUnSubscribe,
+                    isExpired == '1' ? strIsRenew.toUpperCase() : strUnSubscribe.toUpperCase(),
                     style: TextStyle(
                       color: isExpired == '1'
                           ? Color(new CommonUtil().getMyPrimaryColor())
@@ -346,7 +349,17 @@ class PlanDetail extends State<MyPlanDetail> {
                 OutlineButton(
                   //hoverColor: Color(getMyPrimaryColor()),
                   onPressed: () async {
-                    Navigator.of(context).pop();
+                    if (isExpired == '1') {
+                      Navigator.of(context).pop();
+                    } else {
+                      await CommonUtil().renewAlertDialog(context,
+                          packageId: packageId,
+                          price: price,
+                          IsExtendable: isExtendable == '1' ? true : false,
+                          refresh: () {
+                        Navigator.pop(context);
+                      });
+                    }
                   },
                   borderSide: BorderSide(
                     color: Color(
@@ -355,7 +368,9 @@ class PlanDetail extends State<MyPlanDetail> {
                   ),
                   //hoverColor: Color(getMyPrimaryColor()),
                   child: Text(
-                    'cancel'.toUpperCase(),
+                    isExpired == '1'
+                        ? 'cancel'.toUpperCase()
+                        : 'renew'.toUpperCase(),
                     style: TextStyle(
                       color: Color(CommonUtil().getMyPrimaryColor()),
                       fontSize: 13.sp,

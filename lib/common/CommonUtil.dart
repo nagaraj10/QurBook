@@ -2711,6 +2711,7 @@ class CommonUtil {
                                       price: price,
                                       isRenew: true,
                                       isFromAdd: strMyPlan);
+                              refresh();
                             } else {
                               FlutterToast().getToast(
                                   'Renewal limit reached for this plan. Please try after few days',
