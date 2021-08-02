@@ -2704,7 +2704,8 @@ class CommonUtil {
                                 context, '', packageId, true, () {
                               refresh();
                             });*/
-
+                            await FetchNotificationService()
+                                .updateNsActionStatus(nsBody);
                             if (IsExtendable) {
                               await Provider.of<PlanWizardViewModel>(context,
                                       listen: false)
