@@ -4,6 +4,7 @@ const String lblNotifications = 'Notifications';
 const String lblNoNotification='Looks like there are no notifications';
 const String strCancelByDoctor='DoctorCancellation';
 const String strRescheduleByDoctor='DoctorRescheduling';
+const String strMyCardDetails='myCartDetails';
 
 
 String notificationDate(String value) =>

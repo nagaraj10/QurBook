@@ -13,6 +13,7 @@ import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/myPlan/view/myPlanDetail.dart';
 import 'package:myfhb/regiment/models/regiment_arguments.dart';
 import 'package:myfhb/landing/view/landing_arguments.dart';
 import 'package:myfhb/landing/view_model/landing_view_model.dart';
@@ -439,9 +440,23 @@ class _SplashScreenState extends State<SplashScreen> {
                           'ns_type': 'my cart',
                           'navigationPage': 'My Cart',
                         });
-                        Get.to(CheckoutPage(isFromNotification: true,)).then((value) =>
-                            PageNavigator.goToPermanent(
-                                context, router.rt_Landing));
+                        Get.to(CheckoutPage(
+                          isFromNotification: true,
+                        )).then((value) => PageNavigator.goToPermanent(
+                            context, router.rt_Landing));
+                      } else if (widget.nsRoute == 'renew') {
+                        final planid = widget?.bundle;
+                        fbaLog(eveParams: {
+                          'eventTime': '${DateTime.now()}',
+                          'ns_type': 'myplan_deatails',
+                          'navigationPage': 'My Plan Details',
+                        });
+                        Get.to(
+                          MyPlanDetail(
+                            packageId: planid,
+                          ),
+                        ).then((value) => PageNavigator.goToPermanent(
+                            context, router.rt_Landing));
                       } else {
                         fbaLog(eveParams: {
                           'eventTime': '${DateTime.now()}',
