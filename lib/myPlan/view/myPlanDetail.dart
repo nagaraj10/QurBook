@@ -29,11 +29,11 @@ class MyPlanDetail extends StatefulWidget {
   final String descriptionURL;
   final String price;
   final String isExtendable; */
-
-  const MyPlanDetail({
-    Key key,
-    @required this.packageId,
-    /* @required this.title,
+  bool showRenew = false;
+  MyPlanDetail(
+      {Key key,
+      @required this.packageId,
+      /* @required this.title,
       @required this.providerName,
       @required this.docName,
       @required this.startDate,
@@ -46,7 +46,8 @@ class MyPlanDetail extends StatefulWidget {
       @required this.descriptionURL,
       @required this.price,
       @required this.isExtendable */
-  }) : super(key: key);
+      showRenew})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -78,6 +79,9 @@ class PlanDetail extends State<MyPlanDetail> {
 
   @override
   void initState() {
+    if (widget.showRenew) {
+      showRenewAlert();
+    }
     super.initState();
     //setValues();
     planListFetch = myPlanViewModel.getMyPlanListDetail(widget?.packageId);
@@ -157,6 +161,13 @@ class PlanDetail extends State<MyPlanDetail> {
         },
       ),
     );
+  }
+
+  showRenewAlert() {
+    CommonUtil().renewAlertDialog(context,
+        packageId: packageId,
+        price: price,
+        IsExtendable: isExtendable == '1' ? true : false);
   }
 
   Widget getMainWidget() {

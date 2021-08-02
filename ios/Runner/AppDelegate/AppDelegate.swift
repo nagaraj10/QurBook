@@ -39,7 +39,7 @@ import Firebase
     var listOfScheduledNotificaitons:[UNNotificationRequest] = []
     let showBothButtonsCat = "showBothButtonsCat"
     let showSingleButtonCat = "showSingleButtonCat"
-    
+    let planRenewButton = "planRenewButton"
     override func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
@@ -87,6 +87,7 @@ import Firebase
         
         let snoozeAction = UNNotificationAction(identifier: "Snooze", title: "Snooze", options: [])
         let declineAction = UNNotificationAction(identifier: "Dismiss", title: "Dismiss", options: [.destructive])
+        let renewNowAction = UNNotificationAction(identifier: "Renew Now", title: "Renew Now", options: [.foreground])
         let showBothButtonscategory = UNNotificationCategory(identifier: showBothButtonsCat,
                                                              actions:  [snoozeAction, declineAction],
                                                              intentIdentifiers: [],
@@ -96,7 +97,11 @@ import Firebase
                                                               actions:  [declineAction],
                                                               intentIdentifiers: [],
                                                               options: [])
-        notificationCenter.setNotificationCategories([showBothButtonscategory,showSingleButtonCategory])
+        let planRenewButtonCategory = UNNotificationCategory(identifier: planRenewButton,
+                                                              actions:  [renewNowAction],
+                                                              intentIdentifiers: [],
+                                                              options: [])
+        notificationCenter.setNotificationCategories([showBothButtonscategory,showSingleButtonCategory,planRenewButtonCategory])
         // 2 a)
         // Speech to Text
         let sttChannel = FlutterMethodChannel(name: STT_CHANNEL,
@@ -426,9 +431,18 @@ import Firebase
                     reminderChannel.invokeMethod(Constants.navigateToRegimentMethod, arguments: nil)
                 }
             }
-            else{
+            else {
+                var newData :NSDictionary
+                if response.actionIdentifier == "Renew Now"{
+                     newData  = [
+                        "action" : response.actionIdentifier,
+                        "data" : data
+                    ]
+                }else{
+                    newData = data
+                }
                 let notificationResponseChannel = FlutterMethodChannel.init(name: Constants.reponseToRemoteNotificationMethodChannel, binaryMessenger: controller.binaryMessenger)
-                notificationResponseChannel.invokeMethod(Constants.notificationResponseMethod, arguments:data)
+                notificationResponseChannel.invokeMethod(Constants.notificationResponseMethod, arguments:newData)
             }
         }
         completionHandler()
