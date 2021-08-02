@@ -227,10 +227,14 @@ class IosNotificationHandler {
                 packageId: model.planId,
                 showRenew: renewAction,
               ),
-            )
+            ).then((value) {
+              renewAction = false;
+            })
           : Get.to(SplashScreen(
               nsRoute: 'regiment_screen',
-            ));
+            )).then((value) {
+              renewAction = false;
+            });
     } else if (model.redirect == 'googlefit') {
       fbaLog(eveParams: {
         'eventTime': '${DateTime.now()}',

@@ -19,6 +19,7 @@ import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/widgets/checkout_page.dart';
 import 'package:open_file/open_file.dart';
 import '../add_family_user_info/models/add_family_user_info_arguments.dart';
 import '../add_family_user_info/services/add_family_user_info_repository.dart';
@@ -2642,7 +2643,8 @@ class CommonUtil {
       String isSubscribed,
       bool IsExtendable,
       String price,
-      Function() refresh}) async {
+      Function() refresh,
+      bool moveToCart = false}) async {
     final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     await showDialog<void>(
         context: context,
@@ -2704,13 +2706,18 @@ class CommonUtil {
                               refresh();
                             });*/
                             if (IsExtendable) {
-                              await Provider.of<PlanWizardViewModel>(context,
-                                      listen: false)
-                                  ?.addToCartItem(
-                                      packageId: packageId,
-                                      price: price,
-                                      isRenew: true,
-                                      isFromAdd: strMyPlan);
+                              var response =
+                                  await Provider.of<PlanWizardViewModel>(
+                                          context,
+                                          listen: false)
+                                      ?.addToCartItem(
+                                          packageId: packageId,
+                                          price: price,
+                                          isRenew: true,
+                                          isFromAdd: strMyPlan);
+                              if (response.isSuccess && moveToCart) {
+                                Get.to(CheckoutPage());
+                              }
                             } else {
                               FlutterToast().getToast(
                                   'Renewal limit reached for this plan. Please try after few days',

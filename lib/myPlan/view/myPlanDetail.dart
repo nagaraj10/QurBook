@@ -165,7 +165,8 @@ class PlanDetail extends State<MyPlanDetail> {
     CommonUtil().renewAlertDialog(context,
         packageId: widget?.packageId,
         price: price,
-        IsExtendable: isExtendable == '1' ? true : false);
+        IsExtendable: isExtendable == '1' ? true : false,
+        moveToCart: true);
   }
 
   Widget getMainWidget() {
