@@ -7,6 +7,7 @@ import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/myPlan/view/myPlanDetail.dart';
 import 'package:myfhb/src/ui/bot/view/sheela_arguments.dart';
 import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/MyProvidersMain.dart';
@@ -33,6 +34,7 @@ import 'package:myfhb/telehealth/features/appointments/view/resheduleMain.dart';
 import 'package:myfhb/telehealth/features/appointments/viewModel/cancelAppointmentViewModel.dart';
 import 'package:myfhb/telehealth/features/chat/view/home.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
+import 'package:myfhb/widgets/checkout_page.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
@@ -173,6 +175,16 @@ class _NotificationScreen extends State<NotificationScreen> {
                                   payload?.healthRecordMetaIds
                             });
                       } else if (payload?.redirectTo == 'sheela|pushMessage') {
+                        notificationOnTapActions(
+                          notification?.result[index],
+                          payload?.redirectTo,
+                        );
+                      } else if (payload?.redirectTo == 'mycart') {
+                        notificationOnTapActions(
+                          notification?.result[index],
+                          payload?.redirectTo,
+                        );
+                      } else if (payload?.redirectTo == 'myCartDetails') {
                         notificationOnTapActions(
                           notification?.result[index],
                           payload?.redirectTo,
@@ -950,6 +962,20 @@ class _NotificationScreen extends State<NotificationScreen> {
             Get.to(SuperMaya());
           }
         }
+        break;
+      case "mycart":
+        Get.to(CheckoutPage(isFromNotification: true)).then(
+            (value) => PageNavigator.goToPermanent(context, router.rt_Landing));
+        readUnreadAction(result);
+        break;
+      case "myCartDetails":
+        Get.to(
+          MyPlanDetail(
+            packageId: result?.messageDetails?.payload?.planId,
+          ),
+        ).then(
+            (value) => PageNavigator.goToPermanent(context, router.rt_Landing));
+        readUnreadAction(result);
         break;
       default:
         readUnreadAction(result);

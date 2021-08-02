@@ -3,6 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
+import 'package:myfhb/common/errors_widget.dart';
+import 'package:myfhb/myPlan/model/myPlanListModel.dart';
 import '../../authentication/constants/constants.dart';
 import '../../common/CommonUtil.dart';
 import '../../constants/fhb_constants.dart';
@@ -12,7 +15,8 @@ import '../../src/utils/screenutils/size_extensions.dart';
 import '../../widgets/GradientAppBar.dart';
 
 class MyPlanDetail extends StatefulWidget {
-  final String title;
+  final String packageId;
+  /*  final String title;
   final String providerName;
   final String docName;
   final String startDate;
@@ -24,11 +28,12 @@ class MyPlanDetail extends StatefulWidget {
   final String providerIcon;
   final String descriptionURL;
   final String price;
-  final String isExtendable;
+  final String isExtendable; */
 
-  const MyPlanDetail(
-      {Key key,
-      @required this.title,
+  const MyPlanDetail({
+    Key key,
+    @required this.packageId,
+    /* @required this.title,
       @required this.providerName,
       @required this.docName,
       @required this.startDate,
@@ -40,8 +45,8 @@ class MyPlanDetail extends StatefulWidget {
       @required this.providerIcon,
       @required this.descriptionURL,
       @required this.price,
-      @required this.isExtendable})
-      : super(key: key);
+      @required this.isExtendable */
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -69,50 +74,89 @@ class PlanDetail extends State<MyPlanDetail> {
 
   InAppWebViewController webView;
 
+  Future<MyPlanListModel> planListFetch;
+
   @override
   void initState() {
     super.initState();
-    setValues();
+    //setValues();
+    planListFetch = myPlanViewModel.getMyPlanListDetail(widget?.packageId);
   }
 
-  void setValues() {
-    title = widget.title;
-    providerName = widget.providerName;
-    docName = widget.docName;
-    startDate = widget.startDate;
-    endDate = widget.endDate;
-    packageId = widget.packageId;
-    isExpired = widget.isExpired;
-    icon = widget.icon;
-    catIcon = widget.catIcon;
-    providerIcon = widget.providerIcon;
-    descriptionURL = widget.descriptionURL;
-    price = widget.price;
-    isExtendable = widget.isExtendable;
+  void setValues(MyPlanListResult planList) {
+    title = planList?.title ?? '';
+    providerName = planList?.providerName ?? '';
+    docName = planList?.docNick ?? '';
+    startDate = planList?.startdate ?? '';
+    endDate = planList?.enddate ?? '';
+    packageId = planList?.packageid ?? '';
+    isExpired = planList?.isexpired ?? '';
+    icon = planList?.metadata?.icon ?? '';
+    catIcon = planList?.catmetadata?.icon ?? '';
+    providerIcon = planList?.providermetadata?.icon ?? '';
+    descriptionURL = planList?.metadata?.descriptionURL ?? '';
+    price = planList?.price ?? '';
+    isExtendable = planList?.isExtendable ?? '';
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        key: _scaffoldKey,
-        appBar: AppBar(
-          flexibleSpace: GradientAppBar(),
-          leading: GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: Icon(
-              Icons.arrow_back_ios, // add custom icons also
-              size: 24.0.sp,
-            ),
-          ),
-          title: Text(
-            'My Plan',
-            style: TextStyle(
-              fontSize: 18.0.sp,
-              fontWeight: FontWeight.w500,
-            ),
+      key: _scaffoldKey,
+      appBar: AppBar(
+        flexibleSpace: GradientAppBar(),
+        leading: GestureDetector(
+          onTap: () => Navigator.pop(context),
+          child: Icon(
+            Icons.arrow_back_ios, // add custom icons also
+            size: 24.0.sp,
           ),
         ),
-        body: getMainWidget());
+        title: Text(
+          'My Plan',
+          style: TextStyle(
+            fontSize: 18.0.sp,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ),
+      body: FutureBuilder<MyPlanListModel>(
+        future: planListFetch,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return SafeArea(
+              child: SizedBox(
+                height: 1.sh / 4.5,
+                child: Center(
+                  child: SizedBox(
+                    width: 30.0.h,
+                    height: 30.0.h,
+                    child: CommonCircularIndicator(),
+                  ),
+                ),
+              ),
+            );
+          } else if (snapshot.hasError) {
+            return ErrorsWidget();
+          } else {
+            if (snapshot?.hasData &&
+                snapshot?.data?.result != null &&
+                snapshot?.data?.result.isNotEmpty) {
+              MyPlanListResult planList =
+                  snapshot?.data?.result[0] as MyPlanListResult;
+              setValues(planList);
+              return getMainWidget();
+            } else {
+              return SafeArea(
+                child: Center(
+                  child: Text('Plan information not available'),
+                ),
+              );
+            }
+          }
+        },
+      ),
+    );
   }
 
   Widget getMainWidget() {

@@ -14,7 +14,7 @@ class Payload {
       this.healthOrganizationId,
       this.plannedStartDateTime,
       this.redirectTo,
-      this.healthRecordMetaIds});
+      this.healthRecordMetaIds, this.planId});
 
   String type;
   String meetingId;
@@ -31,6 +31,7 @@ class Payload {
   String plannedStartDateTime;
   String redirectTo;
   String healthRecordMetaIds;
+  String planId;
 
   Payload.fromJson(Map<String, dynamic> json) {
     type = json["type"];
@@ -55,8 +56,13 @@ class Payload {
     plannedStartDateTime = json['plannedStartDateTime'] != null
         ? json['plannedStartDateTime']
         : null;
-        redirectTo = json["redirectTo"] == null ? null : json["redirectTo"];
-        healthRecordMetaIds = json["healthRecordMetaIds"] == null ? null : json["healthRecordMetaIds"];
+    redirectTo = json["redirectTo"] == null ? null : json["redirectTo"];
+    healthRecordMetaIds = json["healthRecordMetaIds"] == null
+        ? null
+        : json["healthRecordMetaIds"];
+        healthRecordMetaIds = json["planId"] == null
+        ? null
+        : json["planId"];
   }
 
   Map<String, dynamic> toJson() {
@@ -66,6 +72,7 @@ class Payload {
     data['appointmentDate'] = this.appointmentDate;
     data['redirectTo'] = this.redirectTo;
     data['healthRecordMetaIds'] = this.healthRecordMetaIds;
+    data['planId'] = this.planId;
     return data;
   }
 }
