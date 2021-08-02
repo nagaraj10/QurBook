@@ -578,6 +578,8 @@ const String make_a_choice = 'Make a Choice!';
 const String GCMUserId = 'gcm.notification.userId';
 const String strgcmAppointmentId = 'gcm.notification.appointmentId';
 const String gcmExternalLink = 'gcm.notification.externalLink';
+const String gcmplanId = 'gcm.notification.planId';
+
 const String gcmredirectTo = 'gcm.notification.redirectTo';
 const String externalLink = 'externalLink';
 const String onresume = 'OnResume New';
@@ -662,6 +664,8 @@ const String PROFILE_IMAGE = 'profile_image';
 const String ABOUT_ME = 'aboutMe';
 const String USERS = 'users';
 const String chat = 'chat';
+const String planId = 'planId';
+const String myCartDetails = 'mycartdetails';
 
 //appointment
 const String strIsFollowUp_C = 'isFollowUp';
