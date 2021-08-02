@@ -713,6 +713,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         renewIntent.putExtra(getString(R.string.nsid), NS_ID)
         renewIntent.putExtra(Intent.EXTRA_TEXT, Constants.PROP_RENEW)
         renewIntent.putExtra(Constants.PROP_PLANID, data[Constants.PROP_PLANID])
+        renewIntent.putExtra(Constants.PROP_TEMP_NAME, data[Constants.PROP_TEMP_NAME])
         val renewPendingIntent = PendingIntent.getBroadcast(
             applicationContext,
             NS_ID,

@@ -409,9 +409,9 @@ class MainActivity : FlutterActivity() {
                 "${Constants.PROP_ACK}&${redirect_to!!}&${"$doctorID|$docName|$docPic|$patId|$patName|$patPic|$message"}"
         } else if (data != null && data == "MissingActivitiesReminder") {
             sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${EVEId}"
-        } else if (planId != null && planId != "") {
+        } else if ((planId != null && planId != "") && (templateName != null && templateName != "")) {
             if (sharedValue == Constants.PROP_RENEW) {
-                sharedValue = "$sharedValue&${planId}&${""}"
+                sharedValue = "$sharedValue&${planId}&${"$templateName"}"
             }
         } else {
             if (HRMId != null && HRMId != "") {

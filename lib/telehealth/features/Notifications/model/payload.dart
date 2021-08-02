@@ -14,7 +14,8 @@ class Payload {
       this.healthOrganizationId,
       this.plannedStartDateTime,
       this.redirectTo,
-      this.healthRecordMetaIds, this.planId});
+      this.healthRecordMetaIds,
+      this.planId});
 
   String type;
   String meetingId;
@@ -60,9 +61,7 @@ class Payload {
     healthRecordMetaIds = json["healthRecordMetaIds"] == null
         ? null
         : json["healthRecordMetaIds"];
-        healthRecordMetaIds = json["planId"] == null
-        ? null
-        : json["planId"];
+    planId = json["planId"] == null ? null : json["planId"];
   }
 
   Map<String, dynamic> toJson() {

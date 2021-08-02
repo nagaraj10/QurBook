@@ -671,6 +671,7 @@ class _MyFHBState extends State<MyFHB> {
         CommonUtil().launchURL(urlInfo);
       } else if (passedValArr[0] == 'renew') {
         final planid = passedValArr[1];
+        final template = passedValArr[2];
         fbaLog(eveParams: {
           'eventTime': '${DateTime.now()}',
           'ns_type': 'myplan_deatails',
@@ -679,6 +680,8 @@ class _MyFHBState extends State<MyFHB> {
         Get.to(
           MyPlanDetail(
             packageId: planid,
+            showRenew: true,
+            templateName: template,
           ),
         );
       } else if (passedValArr[4] == 'call') {
@@ -949,7 +952,10 @@ class _MyFHBState extends State<MyFHB> {
         } else if (navRoute.split('&')[0] == 'renew') {
           return SplashScreen(
             nsRoute: 'renew',
-            bundle: navRoute.split('&')[1],
+            bundle: {
+              'planid': '${navRoute.split('&')[1]}',
+              'template': '${navRoute.split('&')[2]}'
+            },
           );
         } else {
           return StartTheCall();

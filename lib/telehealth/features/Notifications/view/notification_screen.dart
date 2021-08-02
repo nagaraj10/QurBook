@@ -184,6 +184,9 @@ class _NotificationScreen extends State<NotificationScreen> {
                           notification?.result[index],
                           payload?.redirectTo,
                         );
+                      } else if (payload?.redirectTo ==
+                          constants.strMyCardDetails) {
+                        // do nothing.
                       } else {
                         notificationOnTapActions(
                             notification?.result[index],
@@ -937,7 +940,13 @@ class _NotificationScreen extends State<NotificationScreen> {
         );
         break;
 
-      case constants.strMyCardDetails:
+      case constants.strRemiderPreFrequency7:
+      case constants.strRemiderPreFrequency3:
+      case constants.strRemiderPreFrequency1:
+      case constants.strRemiderPostFrequency1:
+      case constants.strRemiderPostFrequency3:
+      case constants.strRemiderPostFrequency7:
+      case constants.strRemiderPostFrequency14:
         return Padding(
           padding: EdgeInsets.only(left: 0, right: 0),
           child: Row(
@@ -949,6 +958,8 @@ class _NotificationScreen extends State<NotificationScreen> {
                           MyPlanDetail(
                             packageId:
                                 notification?.messageDetails?.payload?.planId,
+                            templateName: notification
+                                ?.messageDetails?.payload?.templateName,
                           ),
                         ).then((value) => PageNavigator.goToPermanent(
                             context, router.rt_Landing));

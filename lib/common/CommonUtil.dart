@@ -19,6 +19,7 @@ import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
 import 'package:open_file/open_file.dart';
 import '../add_family_user_info/models/add_family_user_info_arguments.dart';
 import '../add_family_user_info/services/add_family_user_info_repository.dart';
@@ -2642,7 +2643,8 @@ class CommonUtil {
       String isSubscribed,
       bool IsExtendable,
       String price,
-      Function() refresh}) async {
+      Function() refresh,
+      dynamic nsBody}) async {
     final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     await showDialog<void>(
         context: context,
@@ -2703,6 +2705,8 @@ class CommonUtil {
                                 context, '', packageId, true, () {
                               refresh();
                             });*/
+                            await FetchNotificationService()
+                          .updateNsActionStatus(nsBody);
                             if (IsExtendable) {
                               await Provider.of<PlanWizardViewModel>(context,
                                       listen: false)

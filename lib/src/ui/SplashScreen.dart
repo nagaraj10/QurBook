@@ -445,7 +445,8 @@ class _SplashScreenState extends State<SplashScreen> {
                         )).then((value) => PageNavigator.goToPermanent(
                             context, router.rt_Landing));
                       } else if (widget.nsRoute == 'renew') {
-                        final planid = widget?.bundle;
+                        final planid = widget?.bundle['planid'];
+                        final template = widget?.bundle['template'];
                         fbaLog(eveParams: {
                           'eventTime': '${DateTime.now()}',
                           'ns_type': 'myplan_deatails',
@@ -454,6 +455,8 @@ class _SplashScreenState extends State<SplashScreen> {
                         Get.to(
                           MyPlanDetail(
                             packageId: planid,
+                            showRenew: true,
+                            templateName: template,
                           ),
                         ).then((value) => PageNavigator.goToPermanent(
                             context, router.rt_Landing));

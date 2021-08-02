@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/myPlan/model/myPlanListModel.dart';
+import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
 import '../../authentication/constants/constants.dart';
 import '../../common/CommonUtil.dart';
 import '../../constants/fhb_constants.dart';
@@ -16,6 +17,7 @@ import '../../widgets/GradientAppBar.dart';
 
 class MyPlanDetail extends StatefulWidget {
   final String packageId;
+  final String templateName;
   /*  final String title;
   final String providerName;
   final String docName;
@@ -29,7 +31,7 @@ class MyPlanDetail extends StatefulWidget {
   final String descriptionURL;
   final String price;
   final String isExtendable; */
-  bool showRenew = false;
+  final bool showRenew;
   MyPlanDetail(
       {Key key,
       @required this.packageId,
@@ -46,7 +48,8 @@ class MyPlanDetail extends StatefulWidget {
       @required this.descriptionURL,
       @required this.price,
       @required this.isExtendable */
-      showRenew})
+      this.showRenew = false,
+      this.templateName = null})
       : super(key: key);
 
   @override
@@ -368,10 +371,16 @@ class PlanDetail extends State<MyPlanDetail> {
                 OutlineButton(
                   onPressed: () async {
                     if (isExpired == '1') {
-                      await CommonUtil().renewAlertDialog(context,
-                          packageId: packageId,
-                          price: price,
-                          IsExtendable: isExtendable == '1' ? true : false);
+                      await CommonUtil().renewAlertDialog(
+                        context,
+                        packageId: packageId,
+                        price: price,
+                        IsExtendable: isExtendable == '1' ? true : false,
+                        nsBody: {
+                          "templateName": "${widget?.templateName}",
+                          "contextId": "${widget.packageId}"
+                        },
+                      );
                     } else {
                       await CommonUtil().unSubcribeAlertDialog(
                         context,
