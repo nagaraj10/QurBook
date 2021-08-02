@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myfhb/src/utils/ImageViewer.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import '../../models/regiment_data_model.dart';
 import '../../../constants/fhb_constants.dart';
@@ -292,7 +293,12 @@ class RegimentDataCard extends StatelessWidget {
         );
       }
     });
-
+    var imageUrl = null;
+    regimentData?.uformdata?.vitalsData?.forEach((vital) {
+      if ((vital.photo?.url ?? "").isNotEmpty) {
+        imageUrl = vital.photo?.url;
+      }
+    });
     if (mediaData != null || (regimentData?.hashtml ?? false)) {
       fieldWidgets.add(
         Padding(
@@ -307,6 +313,16 @@ class RegimentDataCard extends StatelessWidget {
                 child: MediaIconWidget(
                   color: color,
                   icon: Icons.camera_alt,
+                  onPressed: imageUrl != null
+                      ? () {
+                          Get.to(
+                            () => ImageViewer(
+                              imageUrl,
+                              eid,
+                            ),
+                          );
+                        }
+                      : null,
                 ),
               ),
               Visibility(
@@ -425,8 +441,8 @@ class RegimentDataCard extends StatelessWidget {
 
   bool isValidSymptom(BuildContext context) {
     var currentTime = DateTime.now();
-    final selectedDate =
-        Provider.of<RegimentViewModel>(context, listen: false).selectedRegimenDate;
+    final selectedDate = Provider.of<RegimentViewModel>(context, listen: false)
+        .selectedRegimenDate;
     return (Provider.of<RegimentViewModel>(context, listen: false)
                 .regimentMode ==
             RegimentMode.Symptoms) &&

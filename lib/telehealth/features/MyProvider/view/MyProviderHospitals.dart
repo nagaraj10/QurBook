@@ -252,9 +252,7 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
                               color: Color(fhbColors.bgColorContainer),
                               child: Center(
                                 child: Text(
-                                  hospitals[i].name != null
-                                      ? hospitals[i].name[0].toUpperCase()
-                                      : '',
+                                  getHospitalName(hospitals[i])[0].toUpperCase(),
                                   style: TextStyle(
                                     color:
                                         Color(CommonUtil().getMyPrimaryColor()),

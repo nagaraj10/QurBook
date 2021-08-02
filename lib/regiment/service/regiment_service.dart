@@ -86,6 +86,37 @@ class RegimentService {
     }
   }
 
+  static Future<SaveResponseModel> deleteMedia({String eid}) async {
+    final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    var urlForRegiment = Constants.BASE_URL + variable.regiment;
+    try {
+      var headerRequest = await HeaderRequest().getRequestHeadersAuthContent();
+      var response = await ApiServices.post(
+        urlForRegiment,
+        headers: headerRequest,
+        body: json.encode(
+          {
+            'method': 'post',
+            'data':
+                "Action=ResetOtherData&eid=$eid&dataname=PHOTO${variable.qr_patientEqaul}$userId",
+          },
+        ),
+      );
+      if (response != null && response.statusCode == 200) {
+        print(response.body);
+        return SaveResponseModel.fromJson(json.decode(response.body));
+      } else {
+        return SaveResponseModel(
+          result: SaveResultModel(),
+          isSuccess: false,
+        );
+      }
+    } catch (e) {
+      print(e);
+      throw Exception('$e was thrown');
+    }
+  }
+
   static Future<FieldsResponseModel> getFormData({String eid}) async {
     final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var urlForRegiment = Constants.BASE_URL + variable.regiment;
@@ -220,7 +251,7 @@ class RegimentService {
       var hh = DateFormat('HH').format(startTime);
       var mm = DateFormat('mm').format(startTime);
       var date = '${CommonUtil().dateConversionToApiFormat(startTime)}';
-      var  hide = isDisable ? '1' : '0';
+      var hide = isDisable ? '1' : '0';
       var response = await ApiServices.post(
         urlForRegiment,
         headers: headerRequest,

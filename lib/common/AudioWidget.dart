@@ -21,7 +21,9 @@ enum t_MEDIA {
 class AudioWidget extends StatefulWidget {
   String audioFile;
   Function(bool, String) deleteAudioFile;
+
   AudioWidget(this.audioFile, this.deleteAudioFile);
+
   @override
   AudioWidgetState createState() => AudioWidgetState();
 }
@@ -56,7 +58,7 @@ class AudioWidgetState extends State<AudioWidget> {
   set_up_audios() async {
     flutterSound = FlutterSoundPlayer();
     flutterSound.openAudioSession().then(
-      (value) {
+          (value) {
         flutterSound.setSubscriptionDuration(
           Duration(
             seconds: 1,
@@ -91,12 +93,12 @@ class AudioWidgetState extends State<AudioWidget> {
             width: 24,
             child: IconButton(
               onPressed:
-                  isPlaying ? onPausePlayerPressed() : onStartPlayerPressed(),
+              isPlaying ? onPausePlayerPressed() : onStartPlayerPressed(),
               padding: EdgeInsets.all(2),
               icon: !isPlaying
                   ? Icon(
-                      Icons.play_arrow,
-                    )
+                Icons.play_arrow,
+              )
                   : Icon(Icons.pause),
             ),
           ),
@@ -144,13 +146,13 @@ class AudioWidgetState extends State<AudioWidget> {
                     flutterSound.playerState == PlayerState.isPaused) {
                   flutterSound.stopPlayer();
                   setState(
-                    () {
+                        () {
                       widget.deleteAudioFile(false, widget.audioFile);
                     },
                   );
                 } else {
                   setState(
-                    () {
+                        () {
                       widget.deleteAudioFile(false, widget.audioFile);
                     },
                   );
@@ -165,10 +167,9 @@ class AudioWidgetState extends State<AudioWidget> {
   }
 
   onStartPlayerPressed() {
-    return (flutterSound.playerState == PlayerState.isStopped ||
-            flutterSound.playerState == PlayerState.isPaused)
-        ? startPlayer
-        : null;
+    return flutterSound.playerState == PlayerState.isPaused
+        ? pausePlayer
+        : startPlayer;
   }
 
   void startPlayer() async {
@@ -240,10 +241,10 @@ class AudioWidgetState extends State<AudioWidget> {
       await flutterSound.setVolume(1.0);
 
       _playerSubscription = flutterSound.onProgress.listen(
-        (e) {
+            (e) {
           if (e != null) {
             setState(
-              () {
+                  () {
                 sliderCurrentPosition = e.position.inSeconds.toDouble();
                 print(sliderCurrentPosition);
                 _playerTxt = _printDuration(e.position);
@@ -258,7 +259,7 @@ class AudioWidgetState extends State<AudioWidget> {
     }
 
     setState(
-      () {},
+          () {},
     );
   }
 
@@ -288,7 +289,7 @@ class AudioWidgetState extends State<AudioWidget> {
 
   onPausePlayerPressed() {
     return flutterSound.playerState == PlayerState.isPlaying ||
-            flutterSound.playerState == PlayerState.isPaused
+        flutterSound.playerState == PlayerState.isPaused
         ? pausePlayer
         : startPlayer;
   }
@@ -298,23 +299,22 @@ class AudioWidgetState extends State<AudioWidget> {
     try {
       if (flutterSound.playerState == PlayerState.isPaused) {
         await flutterSound.resumePlayer();
+        print("Inside pause player resume");
         isPlaying = true;
       } else {
         await flutterSound.pausePlayer();
+        print("Inside pause player pause");
+
         isPlaying = false;
       }
     } catch (err) {}
-    if (result == variable.st_pausedplayer) {
-      isPlaying = false;
-    } else {
-      isPlaying = true;
-    }
+
     setState(() {});
   }
 
   onStopPlayerPressed() {
     return flutterSound.playerState == PlayerState.isPlaying ||
-            flutterSound.playerState == PlayerState.isPaused
+        flutterSound.playerState == PlayerState.isPaused
         ? stopPlayer
         : null;
   }

@@ -447,7 +447,10 @@ class ChatScreenState extends State<ChatScreen> {
     // final file = await CommonUtil.downloadFile(url, 'mp3');
     await _mPlayer.startPlayer(fromURI: url).whenComplete(
       () {
-        print("completed");
+        print("completed ***************");
+        setState(() {
+          isPlaying=false;
+        });
       },
     );
 

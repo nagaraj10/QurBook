@@ -593,7 +593,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                 itemBuilder: (c, i) => Container(
                   padding: EdgeInsets.only(top: 2, bottom: 2),
                   child: getCardToDisplaySearchList(
-                      data[i].name,
+                      (data[i].name!=null && data[i].name!="") ? data[i].name:data[i].healthOrganizationName,
                       data[i].addressLine1,
                       data[i].healthOrganizationId ??
                           data[i].healthOrganizationReferenceId,
@@ -689,7 +689,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                                 ? name
                                 : widget.arguments.searchWord ==
                                         CommonConstants.hospitals
-                                    ? hospitalData.healthOrganizationName
+                                    ? name
                                     : labData.healthOrganizationName,
                             address,
                             id,
