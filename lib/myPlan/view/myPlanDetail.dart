@@ -82,9 +82,6 @@ class PlanDetail extends State<MyPlanDetail> {
 
   @override
   void initState() {
-    if (widget.showRenew) {
-      showRenewAlert();
-    }
     super.initState();
     //setValues();
     planListFetch = myPlanViewModel.getMyPlanListDetail(widget?.packageId);
@@ -166,14 +163,20 @@ class PlanDetail extends State<MyPlanDetail> {
     );
   }
 
-  showRenewAlert() {
+  showRenewAlert() async {
+    await Future.delayed(Duration(seconds: 2));
     CommonUtil().renewAlertDialog(context,
-        packageId: packageId,
+        packageId: widget?.packageId,
         price: price,
-        IsExtendable: isExtendable == '1' ? true : false);
+        IsExtendable: isExtendable == '1' ? true : false,
+        moveToCart: true);
   }
 
   Widget getMainWidget() {
+    if (widget?.showRenew) {
+      showRenewAlert();
+      widget?.showRenew = false;
+    }
     return Builder(
       builder: (contxt) => Container(
         margin: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
