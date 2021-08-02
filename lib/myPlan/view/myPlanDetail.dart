@@ -29,7 +29,7 @@ class MyPlanDetail extends StatefulWidget {
   final String descriptionURL;
   final String price;
   final String isExtendable; */
-  bool showRenew;
+  bool showRenew = false;
   MyPlanDetail(
       {Key key,
       @required this.packageId,
@@ -46,7 +46,7 @@ class MyPlanDetail extends StatefulWidget {
       @required this.descriptionURL,
       @required this.price,
       @required this.isExtendable */
-      this.showRenew = false})
+      showRenew})
       : super(key: key);
 
   @override
