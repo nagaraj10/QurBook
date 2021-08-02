@@ -35,29 +35,24 @@ class ImageViewer extends StatelessWidget {
               size: 24.0.sp,
             ),
           ),
-          // actions: [
-          //   IconButton(
-          //     icon: Icon(
-          //       Icons.delete,
-          //       size: 24.0,
-          //       color: Colors.red[600],
-          //     ),
-          //     padding: EdgeInsets.only(
-          //       right: 2,
-          //     ),
-          //     onPressed: () async {
-          //       final event = "&photo=''";
-          //       //Need to delete and pop the screen
-          //       final saveResponse =
-          //           await Provider.of<RegimentViewModel>(context, listen: false)
-          //               .saveFormData(
-          //         eid: eid,
-          //         events: event,
-          //       );
-          //       onBackPressed(context);
-          //     },
-          //   )
-          // ],
+          actions: [
+            IconButton(
+              icon: Icon(
+                Icons.delete,
+                size: 24.0,
+                color: Colors.red[600],
+              ),
+              padding: EdgeInsets.only(
+                right: 2,
+              ),
+              onPressed: () async {
+                final saveResponse =
+                    await Provider.of<RegimentViewModel>(context, listen: false)
+                        .deletMedia(eid: eid);
+                onBackPressed(context);
+              },
+            )
+          ],
         ),
         body: Center(
           child: Padding(
@@ -86,6 +81,7 @@ class ImageViewer extends StatelessWidget {
   }
 
   onBackPressed(BuildContext context) {
+    Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData();
     Navigator.pop(context);
   }
 }
