@@ -96,6 +96,7 @@ import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFView.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import '../../authentication/constants/constants.dart';
+import 'package:myfhb/widgets/checkout_page.dart';
 
 class CommonUtil {
   static String SHEELA_URL = '';
@@ -2644,6 +2645,7 @@ class CommonUtil {
       bool IsExtendable,
       String price,
       Function() refresh,
+      bool moveToCart = false,
       dynamic nsBody}) async {
     final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     await showDialog<void>(
@@ -2706,16 +2708,21 @@ class CommonUtil {
                               refresh();
                             });*/
                             await FetchNotificationService()
-                          .updateNsActionStatus(nsBody);
+                                .updateNsActionStatus(nsBody);
                             if (IsExtendable) {
-                              await Provider.of<PlanWizardViewModel>(context,
-                                      listen: false)
-                                  ?.addToCartItem(
-                                      packageId: packageId,
-                                      price: price,
-                                      isRenew: true,
-                                      isFromAdd: strMyPlan);
+                              var response =
+                                  await Provider.of<PlanWizardViewModel>(
+                                          context,
+                                          listen: false)
+                                      ?.addToCartItem(
+                                          packageId: packageId,
+                                          price: price,
+                                          isRenew: true,
+                                          isFromAdd: strMyPlan);
                               refresh();
+                              if (response.isSuccess && moveToCart) {
+                                Get.to(CheckoutPage());
+                              }
                             } else {
                               FlutterToast().getToast(
                                   'Renewal limit reached for this plan. Please try after few days',

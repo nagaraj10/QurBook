@@ -419,16 +419,20 @@ class MainActivity : FlutterActivity() {
             } else if (data != null) {
                 sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${data!!}"
             } else {
-                if (redirect_to.contains("sheela")) {
-                    var redirectArray = redirect_to.split("|")
-                    if (redirectArray.size > 1 && redirectArray[1] == "pushMessage") {
-                        sharedValue = "${Constants.PROP_ACK}&${"sheela"}&${"$rawTitle|$rawBody"}"
+                if (redirect_to != null) {
+                    if (redirect_to.contains("sheela")) {
+                        var redirectArray = redirect_to.split("|")
+                        if (redirectArray.size > 1 && redirectArray[1] == "pushMessage") {
+                            sharedValue =
+                                "${Constants.PROP_ACK}&${"sheela"}&${"$rawTitle|$rawBody"}"
+                        } else {
+                            sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${""}"
+                        }
                     } else {
                         sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${""}"
                     }
-                } else {
-                    sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${""}"
                 }
+
 
             }
 

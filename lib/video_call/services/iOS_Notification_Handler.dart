@@ -224,9 +224,9 @@ class IosNotificationHandler {
       isAlreadyLoaded
           ? Get.to(
               () => MyPlanDetail(
-                packageId: model.planId,
-                showRenew: renewAction,
-              ),
+                  packageId: model.planId,
+                  showRenew: renewAction,
+                  templateName: model.templateName),
             ).then((value) {
               renewAction = false;
             })

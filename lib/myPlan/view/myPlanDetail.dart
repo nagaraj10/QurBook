@@ -31,7 +31,7 @@ class MyPlanDetail extends StatefulWidget {
   final String descriptionURL;
   final String price;
   final String isExtendable; */
-  final bool showRenew;
+  bool showRenew;
   MyPlanDetail(
       {Key key,
       @required this.packageId,
