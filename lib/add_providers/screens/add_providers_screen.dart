@@ -353,11 +353,12 @@ class AddProvidersState extends State<AddProviders> {
         } else if (widget.arguments.searchKeyWord ==
             CommonConstants.hospitals) {
           doctorController.text = widget
-                      .arguments.hospitalData.healthOrganizationName !=
+                      .arguments.hospitalData.name !=
                   null
-              ? widget?.arguments?.hospitalData?.healthOrganizationName
+              ? widget?.arguments?.hospitalData?.name
                   ?.capitalizeFirstofEach //toBeginningOfSentenceCase(widget.arguments.hospitalData.healthOrganizationName)
-              : '';
+              : widget
+              .arguments.hospitalData.healthOrganizationName;
 //          isPreferred = widget.arguments.hospitalData.isUserDefined ?? false;
           isPreferred = false;
           // latitude = widget.arguments.hospitalData.latitude == null
