@@ -19,6 +19,7 @@ import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
 import 'package:open_file/open_file.dart';
 import '../add_family_user_info/models/add_family_user_info_arguments.dart';
 import '../add_family_user_info/services/add_family_user_info_repository.dart';
@@ -95,6 +96,7 @@ import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFView.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import '../../authentication/constants/constants.dart';
+import 'package:myfhb/widgets/checkout_page.dart';
 
 class CommonUtil {
   static String SHEELA_URL = '';
@@ -2642,7 +2644,9 @@ class CommonUtil {
       String isSubscribed,
       bool IsExtendable,
       String price,
-      Function() refresh}) async {
+      Function() refresh,
+      bool moveToCart = false,
+      dynamic nsBody}) async {
     final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     await showDialog<void>(
         context: context,
@@ -2703,15 +2707,22 @@ class CommonUtil {
                                 context, '', packageId, true, () {
                               refresh();
                             });*/
+                            await FetchNotificationService()
+                                .updateNsActionStatus(nsBody);
                             if (IsExtendable) {
-                              await Provider.of<PlanWizardViewModel>(context,
-                                      listen: false)
-                                  ?.addToCartItem(
-                                      packageId: packageId,
-                                      price: price,
-                                      isRenew: true,
-                                      isFromAdd: strMyPlan);
+                              var response =
+                                  await Provider.of<PlanWizardViewModel>(
+                                          context,
+                                          listen: false)
+                                      ?.addToCartItem(
+                                          packageId: packageId,
+                                          price: price,
+                                          isRenew: true,
+                                          isFromAdd: strMyPlan);
                               refresh();
+                              if (response.isSuccess && moveToCart) {
+                                Get.to(CheckoutPage());
+                              }
                             } else {
                               FlutterToast().getToast(
                                   'Renewal limit reached for this plan. Please try after few days',

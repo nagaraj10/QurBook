@@ -230,6 +230,7 @@ const String qr_Google_TTS_Regiment_URL = 'google-tts/google-translate/proxy';
 const String qr_plan_list = 'plan-package-master/wrapperApi';
 const String qr_getUserPack = 'Action=GetUserPackages';
 const String qr_getPack = 'Action=GetPackages';
+const String qr_getPack_details = 'Action=GetPackages&packageid=';
 const String qr_getSearchList = 'Action=GetProviderList';
 const String qr_getUserSearchList = 'Action=GetUserProviderList';
 const String qr_qEqaul = '&q=';

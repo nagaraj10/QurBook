@@ -8,6 +8,7 @@ import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/myPlan/view/myPlanDetail.dart';
 import 'package:myfhb/regiment/models/regiment_arguments.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
@@ -27,13 +28,15 @@ class IosNotificationHandler {
   final myDB = FirebaseFirestore.instance;
   bool isAlreadyLoaded = false;
   NotificationModel model;
-
+  bool renewAction = false;
   setUpListerForTheNotification() {
     variable.reponseToRemoteNotificationMethodChannel
         .setMethodCallHandler((call) {
       if (call.method == variable.notificationResponseMethod) {
         final data = Map<String, dynamic>.from(call.arguments);
-        model = NotificationModel.fromMap(data);
+        model = NotificationModel.fromMap(data.containsKey("action")
+            ? Map<String, dynamic>.from(data["data"])
+            : data);
         if (model.externalLink != null) {
           if (model.externalLink == variable.iOSAppStoreLink) {
             LaunchReview.launch(
@@ -42,10 +45,21 @@ class IosNotificationHandler {
             CommonUtil().launchURL(model.externalLink);
           }
         }
-        if (!isAlreadyLoaded) {
-          Future.delayed(const Duration(seconds: 4), actionForTheNotification);
+        if (data.containsKey("action")) {
+          renewAction = true;
+          if (!isAlreadyLoaded) {
+            Future.delayed(
+                const Duration(seconds: 4), actionForTheNotification);
+          } else {
+            actionForTheNotification();
+          }
         } else {
-          actionForTheNotification();
+          if (!isAlreadyLoaded) {
+            Future.delayed(
+                const Duration(seconds: 4), actionForTheNotification);
+          } else {
+            actionForTheNotification();
+          }
         }
       }
     });
@@ -205,6 +219,22 @@ class IosNotificationHandler {
           : Get.to(SplashScreen(
               nsRoute: 'profile_page',
             ));
+    } else if (model.redirect == parameters.myCartDetails &&
+        (model.planId ?? '').isNotEmpty) {
+      isAlreadyLoaded
+          ? Get.to(
+              () => MyPlanDetail(
+                  packageId: model.planId,
+                  showRenew: renewAction,
+                  templateName: model.templateName),
+            ).then((value) {
+              renewAction = false;
+            })
+          : Get.to(SplashScreen(
+              nsRoute: 'regiment_screen',
+            )).then((value) {
+              renewAction = false;
+            });
     } else if (model.redirect == 'googlefit') {
       fbaLog(eveParams: {
         'eventTime': '${DateTime.now()}',

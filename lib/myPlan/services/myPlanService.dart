@@ -1,3 +1,5 @@
+import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
+
 import '../../constants/fhb_query.dart';
 import '../model/myPlanDetailModel.dart';
 import '../model/myPlanListModel.dart';
@@ -23,5 +25,14 @@ class MyPlanService {
     final jsonString = convert.jsonEncode(body);
     var response = await _helper.getPlanDetails(qr_plan_list,jsonString);
     return MyPlanDetailModel.fromJson(response);
+  }
+
+  Future<MyPlanListModel> getPlanDetailById(String patientId,String packageId) async {
+    final body = {};
+    body['method'] = qr_get;
+    body['data'] = qr_getPack_details+packageId+qr_patientEqaul+patientId;
+    final jsonString = convert.jsonEncode(body);
+    var response = await _helper.getPlanList(qr_plan_list,jsonString);
+    return MyPlanListModel.fromJson(response);
   }
 }

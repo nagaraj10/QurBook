@@ -46,6 +46,8 @@ object Constants {
     val PROP_healthOrgId ="healthOrganizationId"
     val PROP_docId ="doctorId"
     val PROP_ACCEPT ="accept"
+    val PROP_RENEW ="renew"
+    val PROP_PLANID ="planId"
     val PROP_DECLINE ="decline"
     val PROP_PROVIDER_REQID ="providerRequestId"
     val PROP_DOC_CANCELLATION ="DoctorCancellation"

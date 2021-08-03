@@ -56,4 +56,15 @@ class MyPlanViewModel extends ChangeNotifier {
     }
     return filterDoctorData;
   }
+
+  Future<MyPlanListModel> getMyPlanListDetail(String packageId) async {
+    final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    if (userid != null) {
+      try {
+        var myPlanListModel =
+            await myPlanService.getPlanDetailById(userid, packageId);
+        return myPlanListModel;
+      } catch (e) {}
+    }
+  }
 }

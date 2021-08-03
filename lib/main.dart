@@ -7,6 +7,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:myfhb/myPlan/view/myPlanDetail.dart';
 import 'package:myfhb/video_call/utils/rtc_engine.dart';
 import 'package:myfhb/widgets/checkout_page.dart';
 import 'IntroScreens/IntroductionScreen.dart';
@@ -226,7 +227,8 @@ Future<void> main() async {
         ),
         provider.ChangeNotifierProvider<RTCEngineProvider>(
           create: (_) => RTCEngineProvider(),
-        ), provider.ChangeNotifierProvider<PlanProviderViewModel>(
+        ),
+        provider.ChangeNotifierProvider<PlanProviderViewModel>(
           create: (_) => PlanProviderViewModel(),
         ),
       ],
@@ -667,6 +669,21 @@ class _MyFHBState extends State<MyFHB> {
           'navigationPage': 'Browser page',
         });
         CommonUtil().launchURL(urlInfo);
+      } else if (passedValArr[0] == 'renew') {
+        final planid = passedValArr[1];
+        final template = passedValArr[2];
+        fbaLog(eveParams: {
+          'eventTime': '${DateTime.now()}',
+          'ns_type': 'myplan_deatails',
+          'navigationPage': 'My Plan Details',
+        });
+        Get.to(
+          MyPlanDetail(
+            packageId: planid,
+            showRenew: true,
+            templateName: template,
+          ),
+        );
       } else if (passedValArr[4] == 'call') {
         try {
           doctorPic = passedValArr[3];
@@ -931,6 +948,14 @@ class _MyFHBState extends State<MyFHB> {
           return SplashScreen(
             nsRoute: 'openurl',
             bundle: navRoute.split('&')[1],
+          );
+        } else if (navRoute.split('&')[0] == 'renew') {
+          return SplashScreen(
+            nsRoute: 'renew',
+            bundle: {
+              'planid': '${navRoute.split('&')[1]}',
+              'template': '${navRoute.split('&')[2]}'
+            },
           );
         } else {
           return StartTheCall();
