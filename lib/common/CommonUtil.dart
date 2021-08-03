@@ -110,7 +110,7 @@ class CommonUtil {
   static String BASEURL_DEVICE_READINGS = '';
   static String FIREBASE_CHAT_NOTIFY_TOKEN = '';
   static const bgColor = 0xFFe3e2e2;
-
+  static bool isRenewDialogOpened = false;
   static const secondaryGrey = 0xFF545454;
 
   CategoryResult categoryDataObjClone = CategoryResult();
@@ -2679,6 +2679,7 @@ class CommonUtil {
                         OutlineButton(
                           onPressed: () async {
                             // open profile page
+                            isRenewDialogOpened = false;
                             Navigator.of(context).pop();
                           },
                           borderSide: BorderSide(
@@ -2707,8 +2708,14 @@ class CommonUtil {
                                 context, '', packageId, true, () {
                               refresh();
                             });*/
-                            await FetchNotificationService()
-                                .updateNsActionStatus(nsBody);
+                            isRenewDialogOpened = false;
+                            if (moveToCart && nsBody != null) {
+                              try {
+                                FetchNotificationService()
+                                    .updateNsActionStatus(nsBody);
+                              } catch (e) {}
+                            }
+
                             if (IsExtendable) {
                               var response =
                                   await Provider.of<PlanWizardViewModel>(
@@ -2719,9 +2726,15 @@ class CommonUtil {
                                           price: price,
                                           isRenew: true,
                                           isFromAdd: strMyPlan);
+
                               refresh();
-                              if (response.isSuccess && moveToCart) {
-                                Get.to(CheckoutPage());
+                              if (moveToCart) {
+                                if ((response.message?.toLowerCase() ==
+                                        'Product already exists in cart'
+                                            .toLowerCase()) ||
+                                    response.isSuccess) {
+                                  Get.to(CheckoutPage());
+                                }
                               }
                             } else {
                               FlutterToast().getToast(

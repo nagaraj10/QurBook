@@ -61,7 +61,14 @@ class Payload {
     healthRecordMetaIds = json["healthRecordMetaIds"] == null
         ? null
         : json["healthRecordMetaIds"];
-    planId = json["planId"] == null ? null : json["planId"];
+    if (json["planId"] != null) {
+      var plan = json["planId"];
+      if (plan.runtimeType == String) {
+        planId = plan;
+      } else if (plan.runtimeType == int) {
+        planId = '$plan';
+      }
+    }
   }
 
   Map<String, dynamic> toJson() {

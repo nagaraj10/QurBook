@@ -165,11 +165,22 @@ class PlanDetail extends State<MyPlanDetail> {
 
   showRenewAlert() async {
     await Future.delayed(Duration(seconds: 2));
-    CommonUtil().renewAlertDialog(context,
-        packageId: widget?.packageId,
-        price: price,
-        IsExtendable: isExtendable == '1' ? true : false,
-        moveToCart: true);
+    if (CommonUtil.isRenewDialogOpened) return;
+    CommonUtil.isRenewDialogOpened = true;
+    CommonUtil().renewAlertDialog(
+      context,
+      packageId: widget?.packageId,
+      price: price,
+      refresh: () {
+        print('ns done');
+      },
+      IsExtendable: isExtendable == '1' ? true : false,
+      moveToCart: true,
+      nsBody: {
+        "templateName": "${widget?.templateName}",
+        "contextId": "${widget.packageId}"
+      },
+    );
   }
 
   Widget getMainWidget() {
@@ -378,10 +389,7 @@ class PlanDetail extends State<MyPlanDetail> {
                           packageId: packageId,
                           price: price,
                           IsExtendable: isExtendable == '1' ? true : false,
-                          nsBody: {
-                            "templateName": "${widget?.templateName}",
-                            "contextId": "${widget.packageId}"
-                          }, refresh: () {
+                          refresh: () {
                         Navigator.pop(context);
                       });
                     } else {
