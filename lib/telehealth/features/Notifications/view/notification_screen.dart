@@ -960,6 +960,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                                 notification?.messageDetails?.payload?.planId,
                             templateName: notification
                                 ?.messageDetails?.payload?.templateName,
+                            showRenew: true,
                           ),
                         ).then((value) => PageNavigator.goToPermanent(
                             context, router.rt_Landing));

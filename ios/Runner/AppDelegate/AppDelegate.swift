@@ -87,7 +87,7 @@ import Firebase
         
         let snoozeAction = UNNotificationAction(identifier: "Snooze", title: "Snooze", options: [])
         let declineAction = UNNotificationAction(identifier: "Dismiss", title: "Dismiss", options: [.destructive])
-        let renewNowAction = UNNotificationAction(identifier: "Renew Now", title: "Renew Now", options: [.foreground])
+        let renewNowAction = UNNotificationAction(identifier: "Renew", title: "Renew", options: [.foreground])
         let showBothButtonscategory = UNNotificationCategory(identifier: showBothButtonsCat,
                                                              actions:  [snoozeAction, declineAction],
                                                              intentIdentifiers: [],
@@ -433,7 +433,7 @@ import Firebase
             }
             else {
                 var newData :NSDictionary
-                if response.actionIdentifier == "Renew Now"{
+                if response.actionIdentifier == "Renew"{
                      newData  = [
                         "action" : response.actionIdentifier,
                         "data" : data

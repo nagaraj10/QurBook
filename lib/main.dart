@@ -669,7 +669,7 @@ class _MyFHBState extends State<MyFHB> {
           'navigationPage': 'Browser page',
         });
         CommonUtil().launchURL(urlInfo);
-      } else if (passedValArr[0] == 'renew') {
+      } else if (passedValArr[0] == 'Renew') {
         final planid = passedValArr[1];
         final template = passedValArr[2];
         fbaLog(eveParams: {
@@ -949,7 +949,7 @@ class _MyFHBState extends State<MyFHB> {
             nsRoute: 'openurl',
             bundle: navRoute.split('&')[1],
           );
-        } else if (navRoute.split('&')[0] == 'renew') {
+        } else if (navRoute.split('&')[0] == 'Renew') {
           return SplashScreen(
             nsRoute: 'renew',
             bundle: {
