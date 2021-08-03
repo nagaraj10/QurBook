@@ -2707,8 +2707,13 @@ class CommonUtil {
                                 context, '', packageId, true, () {
                               refresh();
                             });*/
-                            await FetchNotificationService()
-                                .updateNsActionStatus(nsBody);
+                            if (moveToCart && nsBody != null) {
+                              try {
+                                FetchNotificationService()
+                                    .updateNsActionStatus(nsBody);
+                              } catch (e) {}
+                            }
+
                             if (IsExtendable) {
                               var response =
                                   await Provider.of<PlanWizardViewModel>(
