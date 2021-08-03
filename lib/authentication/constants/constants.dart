@@ -175,6 +175,7 @@ const String strMyPlan = 'MyPlan';
 
 const String strProviderCare = 'ProviderCare';
 const String strFreeCare = 'FreeCare';
+const String strDeepLink = 'DeepLink';
 
 const String strProviderDiet = 'ProviderDiet';
 const String strFreeDiet = 'FreeDiet';
