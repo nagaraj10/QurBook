@@ -136,22 +136,22 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
                           ),
                         ),
                         onPressed: () {
-                          if(planWizardViewModel.currentPage==1 || planWizardViewModel.currentPage==2) {
+                          if (planWizardViewModel.currentPage == 1 ||
+                              planWizardViewModel.currentPage == 2) {
                             Get.to(AddProviderPlan());
-                          }else {
+                          } else {
                             new AddNewPlan().addNewPlan(
                                 context, feedbackCode, titleName, hintText,
-                                    (bool) {
-                                  FlutterToast toast = new FlutterToast();
-                                  if (bool) {
-                                    toast.getToast(
-                                        "We've received your request and get back to you soon",
-                                        Colors.green);
-                                  } else {
-                                    toast.getToast(
-                                        "Please try again ", Colors.red);
-                                  }
-                                });
+                                (bool) {
+                              FlutterToast toast = new FlutterToast();
+                              if (bool) {
+                                toast.getToast(
+                                    "We've received your request and get back to you soon",
+                                    Colors.green);
+                              } else {
+                                toast.getToast("Please try again ", Colors.red);
+                              }
+                            });
                           }
                         },
                         borderSide: BorderSide(color: Colors.white),
@@ -202,7 +202,7 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
         feedbackCode = "MissingCarePlan";
         titleName = strDontPlan;
         hintText = strHintCarePlan;
-        return currentTab == 0 ? strAdd : strTellToUs;
+        return strAdd;
         break;
       case 2:
         feedbackCode = "MissingDietPlan";
