@@ -208,7 +208,7 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
         feedbackCode = "MissingDietPlan";
         titleName = strDontDietPlan;
         hintText = strHintDietPlan;
-        return currentTabDiet == 0 ? strAdd : strTellToUs;
+        return strAdd;
         break;
     }
   }
