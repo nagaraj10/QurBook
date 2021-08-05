@@ -1,4 +1,4 @@
-import 'package:agora_rtc_engine/agora_rtc_engine.dart';
+import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/video_call/model/CallArguments.dart';
 
@@ -29,6 +29,7 @@ class NotificationModel {
   String externalLink;
   CallArguments callArguments;
   Map<int, dynamic> redirectData;
+  String planId;
 
   NotificationModel(
       {this.title,
@@ -48,7 +49,8 @@ class NotificationModel {
       this.eventId,
       this.rawTitle,
       this.rawBody,
-      this.externalLink});
+      this.externalLink,
+      this.planId});
 
   Map<String, dynamic> toMap() {
     return {
@@ -66,7 +68,8 @@ class NotificationModel {
       'doctorId': doctorId,
       'username': username,
       'type': type,
-      'externalLink': externalLink
+      'externalLink': externalLink,
+      'planId': planId
     };
   }
 
@@ -160,12 +163,16 @@ class NotificationModel {
         }
         if (message[parameters.gcmEventId] != null) {
           eventId = message[parameters.gcmEventId];
-          if (message[parameters.externalLink] != null) {
-            externalLink = message[parameters.externalLink];
-          }
-          if (message[parameters.gcmExternalLink] != null) {
-            externalLink = message[parameters.gcmExternalLink];
-          }
+        }
+        if (message[parameters.externalLink] != null) {
+          externalLink = message[parameters.externalLink];
+        }
+        if (message[parameters.gcmExternalLink] != null) {
+          externalLink = message[parameters.gcmExternalLink];
+        }
+        
+        if (message[parameters.gcmplanId] != null) {
+          planId = message[parameters.gcmplanId];
         }
       }
     }
@@ -265,12 +272,18 @@ class NotificationModel {
     }
     if (message[parameters.patientPicture] != null) {
       patientPicture = message[parameters.patientPicture];
-      if (message[parameters.externalLink] != null) {
-        externalLink = message[parameters.externalLink];
-      }
-      if (message[parameters.gcmExternalLink] != null) {
-        externalLink = message[parameters.gcmExternalLink];
-      }
+    }
+    if (message[parameters.planId] != null) {
+      planId = message[parameters.planId];
+    }
+    if (message[parameters.gcmplanId] != null) {
+          planId = message[parameters.gcmplanId];
+        }
+    if (message[parameters.externalLink] != null) {
+      externalLink = message[parameters.externalLink];
+    }
+    if (message[parameters.gcmExternalLink] != null) {
+      externalLink = message[parameters.gcmExternalLink];
     }
   }
 }

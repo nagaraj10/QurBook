@@ -6,6 +6,7 @@ import 'package:myfhb/constants/HeaderRequest.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/appointmentsModel.dart';
+import 'package:myfhb/src/resources/network/api_services.dart';
 
 class FetchAppointmentsService {
   final String _baseUrl = Constants.BASE_URL;
@@ -26,12 +27,10 @@ class FetchAppointmentsService {
 //        qr_appointment_fetch +
 //        'a756c286-681e-49b3-a306-b5edcf13c997');
 
-    return await http
-        .get(
+    return await ApiServices.get(
       _baseUrl + qr_appointment_fetch + userId,
       headers: await headerRequest.getRequestHeadersAuthContent(),
-    )
-        .then((http.Response response) {
+    ).then((http.Response response) {
 //          print(response.body);
       if (response.statusCode == 200) {
         var resReturnCode =

@@ -76,7 +76,9 @@
     <string name="ns_type_call">call</string>
     <string name="ns_type_ack">ack</string>
     <string name="channel_onboard">doctor onboard</string>
+    <string name="channel_renew">plan renewal</string>
     <string name="channel_onboard_desc">This channel belong to doctor onboard</string>
+    <string name="channel_renew_desc">This channel belong to plan renewal</string>
     <string name="pat_id">patientId</string>
     <string name="pat_name">patientName</string>
     <string name="pat_pic">patientPicture</string>

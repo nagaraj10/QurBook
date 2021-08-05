@@ -6,20 +6,20 @@ class ReferAFriendRequest {
 
   ReferAFriendRequest.fromJson(Map<String, dynamic> json) {
     if (json['contacts'] != null) {
-      contacts = new List<Contacts>();
+      contacts = List<Contacts>();
       json['contacts'].forEach((v) {
-        contacts.add(new Contacts.fromJson(v));
+        contacts.add(Contacts.fromJson(v));
       });
     }
     source = json['source'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.contacts != null) {
-      data['contacts'] = this.contacts.map((v) => v.toJson()).toList();
+    final data = Map<String, dynamic>();
+    if (contacts != null) {
+      data['contacts'] = contacts.map((v) => v.toJson()).toList();
     }
-    data['source'] = this.source;
+    data['source'] = source;
     return data;
   }
 }
@@ -36,9 +36,9 @@ class Contacts {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['phoneNumber'] = this.phoneNumber;
-    data['name'] = this.name;
+    final data = Map<String, dynamic>();
+    data['phoneNumber'] = phoneNumber;
+    data['name'] = name;
     return data;
   }
 }

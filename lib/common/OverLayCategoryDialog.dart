@@ -1,13 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/src/model/Category/CategoryData.dart';
-import 'package:myfhb/src/model/Category/CategoryResponseList.dart';
-import 'package:myfhb/src/model/Category/catergory_result.dart';
-import 'package:myfhb/src/model/Media/DeviceModel.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import 'CommonUtil.dart';
+import 'PreferenceUtil.dart';
+import '../constants/fhb_constants.dart' as Constants;
+import '../src/model/Category/CategoryData.dart';
+import '../src/model/Category/CategoryResponseList.dart';
+import '../src/model/Category/catergory_result.dart';
+import '../src/model/Media/DeviceModel.dart';
+import '../src/utils/screenutils/size_extensions.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 
 class OverlayCategoryDialog extends ModalRoute<void> {
   @override
@@ -50,19 +51,17 @@ class OverlayCategoryDialog extends ModalRoute<void> {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Expanded(
-            flex: 1,
             child: Container(
               height: 50.0.h,
             ),
           ),
           getCustomGridView(context),
           Expanded(
-            flex: 1,
             child: FloatingActionButton(
               backgroundColor: Colors.white54,
               child: Icon(
                 Icons.close,
-                color: Color(new CommonUtil().getMyPrimaryColor()),
+                color: Color(CommonUtil().getMyPrimaryColor()),
               ),
               onPressed: () => Navigator.pop(context),
             ),
@@ -91,27 +90,26 @@ class OverlayCategoryDialog extends ModalRoute<void> {
   }
 
   Widget getCustomGridView(BuildContext context) {
-    return new Expanded(
+    return Expanded(
         flex: 5,
-        child: new Center(
-            child: new Container(
+        child: Center(
+            child: Container(
                 child: GridView.count(
-          padding: const EdgeInsets.all(20.0),
-          crossAxisSpacing: 10.0,
-          mainAxisSpacing: 10.0,
+          padding: const EdgeInsets.all(20),
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
           crossAxisCount: 2,
           children: getWidgetsFordevices(context),
         ))));
   }
 
   List<Widget> getWidgetsFordevices(BuildContext context) {
-    List<Widget> categoryWidgetList = new List();
+    var categoryWidgetList = List<Widget>();
 
-    List<CategoryResult> catgoryDataList =
-        PreferenceUtil.getCategoryTypeDisplay(
-            Constants.KEY_CATEGORYLIST_VISIBLE);
+    final catgoryDataList = PreferenceUtil.getCategoryTypeDisplay(
+        Constants.KEY_CATEGORYLIST_VISIBLE);
 
-    for (int i = 0; i < catgoryDataList.length; i++) {
+    for (var i = 0; i < catgoryDataList.length; i++) {
       categoryWidgetList.add(
         InkWell(
           child: Column(
@@ -123,9 +121,8 @@ class OverlayCategoryDialog extends ModalRoute<void> {
                   child: CachedNetworkImage(
                     imageUrl: Constants.BASE_URL + catgoryDataList[i].logo,
                     color: Colors.white70,
-                    placeholder: (context, url) =>
-                        new CircularProgressIndicator(),
-                    errorWidget: (context, url, error) => new Icon(Icons.error),
+                    placeholder: (context, url) => CommonCircularIndicator(),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
                   ),
                 ),
                 onTap: () {

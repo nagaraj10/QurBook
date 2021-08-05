@@ -2,25 +2,25 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:intl/intl.dart';
-import 'package:myfhb/add_family_user_info/models/update_relatiosnship_model.dart';
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/fhb_query.dart' as variable;
-import 'package:myfhb/src/model/user/AddressTypeModel.dart';
-import 'package:myfhb/src/model/user/MyProfileModel.dart';
-import 'package:myfhb/src/model/user/MyProfileResult.dart';
+import '../add_family_user_info/models/update_relatiosnship_model.dart';
+import '../common/CommonConstants.dart';
+import '../common/CommonUtil.dart';
+import '../common/PreferenceUtil.dart';
+import 'fhb_constants.dart' as Constants;
+import 'fhb_query.dart' as variable;
+import '../src/model/user/AddressTypeModel.dart';
+import '../src/model/user/MyProfileModel.dart';
+import '../src/model/user/MyProfileResult.dart';
 
 class WebserviceCall {
   String getQueryToUpdateDoctor(bool isPreferred, String providerId) {
     String query;
     if (isPreferred) {
       query =
-          "${variable.qr_MedicallPrefernce}${variable.qr_entityDoctor}${variable.qr_add}${providerId}${variable.qr_default}${providerId}";
+          "${variable.qr_MedicallPrefernce}${variable.qr_entityDoctor}${variable.qr_add}$providerId${variable.qr_default}$providerId";
     } else {
       query =
-          "${variable.qr_MedicallPrefernce}${variable.qr_entityDoctor}${variable.qr_add}${providerId}";
+          "${variable.qr_MedicallPrefernce}${variable.qr_entityDoctor}${variable.qr_add}$providerId";
     }
 
     return query;
@@ -28,7 +28,7 @@ class WebserviceCall {
 
   String getUrlToUpdateDoctor(String userID) {
     String query;
-    query = '${variable.qr_Userprofile}${userID}${variable.qr_slash}';
+    query = '${variable.qr_Userprofile}$userID${variable.qr_slash}';
 
     return query;
   }
@@ -36,7 +36,7 @@ class WebserviceCall {
   String getQueryDoctorUpdate(String userID) {
     String query;
     query =
-        '${variable.qr_User}${variable.qr_slash}${userID}${variable.qr_sections}${variable.qr_generalInfo}';
+        '${variable.qr_User}${variable.qr_slash}$userID${variable.qr_sections}${variable.qr_generalInfo}';
 
     return query;
   }
@@ -44,21 +44,21 @@ class WebserviceCall {
   String getUrlToUpdateDoctorNew(String userID) {
     String query;
     query =
-        '${variable.qr_User}${variable.qr_slash}${userID}${variable.qr_section}${variable.qr_medicalPreferences}';
+        '${variable.qr_User}${variable.qr_slash}$userID${variable.qr_section}${variable.qr_medicalPreferences}';
 
     return query;
   }
 
   String getQueryToUpdateHospital(bool isPreferred, String providerId) {
-    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    var userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     String query;
     if (isPreferred) {
       query =
-          "${variable.qr_MedicallPrefernce}${variable.qr_entityHospital}${variable.qr_add}${providerId}${variable.qr_default}${providerId}";
+          "${variable.qr_MedicallPrefernce}${variable.qr_entityHospital}${variable.qr_add}$providerId${variable.qr_default}$providerId";
     } else {
       query =
-          "${variable.qr_MedicallPrefernce}${variable.qr_entityHospital}${variable.qr_add}${providerId}";
+          "${variable.qr_MedicallPrefernce}${variable.qr_entityHospital}${variable.qr_add}$providerId";
     }
 
     //query ="${variable.qr_Userprofile}${userID}${variable.qr_sections}${query}";
@@ -67,15 +67,15 @@ class WebserviceCall {
   }
 
   String getQueryToUpdateLab(bool isPreferred, String providerId) {
-    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    final userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     String query;
     if (isPreferred) {
       query =
-          "${variable.qr_MedicallPrefernce}${variable.qy_entitylab}${variable.qr_add}${providerId}${variable.qr_default}${providerId}";
+          "${variable.qr_MedicallPrefernce}${variable.qy_entitylab}${variable.qr_add}$providerId${variable.qr_default}$providerId";
     } else {
       query =
-          "${variable.qr_MedicallPrefernce}${variable.qy_entitylab}${variable.qr_add}${providerId}";
+          "${variable.qr_MedicallPrefernce}${variable.qy_entitylab}${variable.qr_add}$providerId";
     }
 
     //query ="${variable.qr_Userprofile}${userID}${variable.qr_sections}${query}";
@@ -84,7 +84,7 @@ class WebserviceCall {
   }
 
   String getQueryBookmarkRecord() {
-    String query = '';
+    var query = '';
 
     query =
         "${variable.qr_health_record}${variable.qr_slash}${variable.qr_bookmark_healthrecord}";
@@ -92,64 +92,64 @@ class WebserviceCall {
   }
 
   String getQueryForMediaType() {
-    String query = '';
-    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    var query = '';
+    var userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     query =
-        "${variable.qr_users}${userID}${variable.qr_slash}${variable.qr_search}${variable.qr_healthRecords}${variable.qr_keyword}";
+        "${variable.qr_users}$userID${variable.qr_slash}${variable.qr_search}${variable.qr_healthRecords}${variable.qr_keyword}";
 
     return query;
   }
 
   String getQueryForFamilyMemberList() {
-    String query = '';
-    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+    var query = '';
+    final userID = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
 
     query =
-        "${variable.qr_Userprofile}${userID}${variable.qr_slash}${variable.qr_picture}";
+        "${variable.qr_Userprofile}$userID${variable.qr_slash}${variable.qr_picture}";
 
     return query;
   }
 
   String getQueryForFamilyMemberListNew() {
-    String query = '';
-    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+    var query = '';
+    var userID = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
 
     query =
-        "${variable.qr_User}${variable.qr_slash}${userID}${variable.qr_slash}${variable.qr_myconnection}";
+        "${variable.qr_User}${variable.qr_slash}$userID${variable.qr_slash}${variable.qr_myconnection}";
 
     return query;
   }
 
   String getQueryForPostUserDelinking() {
-    String query = '';
-    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+    var query = '';
+    final userID = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
 
-    query = "${variable.qr_userDelinking}${userID}${variable.qr_slash}";
+    query = "${variable.qr_userDelinking}$userID${variable.qr_slash}";
 
     return query;
   }
 
   String getQueryForSuggestion(String sessionToken, String query) {
-    final String baseUrl = CommonUtil.GOOGLE_MAP_URL;
-    String type = 'establishment';
-    String url =
+    final baseUrl = CommonUtil.GOOGLE_MAP_URL;
+    final type = 'establishment';
+    final url =
         '$baseUrl${variable.qr_input}$query${variable.qr_And}${variable.qr_key}${GoogleApiKey.place_key}${variable.qr_And}${variable.qr_type}$type&${variable.qr_placequery}$sessionToken';
 
     return url;
   }
 
   String getQueryForPlaceDetail(String placeId, String token) {
-    final String baseUrl = CommonUtil.GOOGLE_MAP_PLACE_DETAIL_URL;
-    String url =
+    final baseUrl = CommonUtil.GOOGLE_MAP_PLACE_DETAIL_URL;
+    var url =
         '$baseUrl${variable.qr_ques}${variable.qr_key}${GoogleApiKey.place_key}${variable.qr_And}${variable.qr_placedid}$placeId${variable.qr_And}${variable.qr_lang_ko}${variable.qr_And}${variable.qr_sessiontoken}$token';
 
     return url;
   }
 
   String queryAddrFromLocation(double lat, double lng) {
-    final String baseUrl = CommonUtil.GOOGLE_ADDRESS_FROM__LOCATION_URL;
-    String url =
+    final baseUrl = CommonUtil.GOOGLE_ADDRESS_FROM__LOCATION_URL;
+    var url =
         '$baseUrl${variable.qr_ques}${variable.qr_latlng}$lat,$lng${variable.qr_And}${variable.qr_key}${GoogleApiKey.place_key}${variable.qr_And}${variable.qr_lang_ko}';
 
     return url;
@@ -175,11 +175,11 @@ class WebserviceCall {
       bool fromFamily) {
     String query;
     query =
-        "${variable.qr_generalInfo}${variable.qr_DSlash}${variable.qr_gender}${gender}${variable.qr_OSlash}${variable.qr_bloodgroup}${bloodGroup}${variable.qr_OSlash}${variable.qr_dateOfBirth}${dateOfBirth}${variable.qr_OSlash}${variable.qr_name}${name}${variable.qr_OSlash}${variable.qr_firstName}${firstName}${variable.qr_OSlash}${variable.qr_middleName}${middleName}${variable.qr_OSlash}${variable.qr_lastname}${lastName}${variable.qr_OSlash}${variable.qr_email}${email}";
+        "${variable.qr_generalInfo}${variable.qr_DSlash}${variable.qr_gender}$gender${variable.qr_OSlash}${variable.qr_bloodgroup}$bloodGroup${variable.qr_OSlash}${variable.qr_dateOfBirth}$dateOfBirth${variable.qr_OSlash}${variable.qr_name}$name${variable.qr_OSlash}${variable.qr_firstName}$firstName${variable.qr_OSlash}${variable.qr_middleName}$middleName${variable.qr_OSlash}${variable.qr_lastname}$lastName${variable.qr_OSlash}${variable.qr_email}$email";
 
     if (fromFamily) {
       query = query +
-          "${variable.qr_OSlash}${variable.qr_CityId}${cityId}${variable.qr_OSlash}${variable.qr_StateId}${stateId}${variable.qr_OSlash}${variable.qr_AddressLine2}${addressLine2}${variable.qr_OSlash}${variable.qr_AddressLine1}${addressLine1}${variable.qr_OSlash}${variable.qr_pincode}${zipcode}";
+          "${variable.qr_OSlash}${variable.qr_CityId}$cityId${variable.qr_OSlash}${variable.qr_StateId}$stateId${variable.qr_OSlash}${variable.qr_AddressLine2}$addressLine2${variable.qr_OSlash}${variable.qr_AddressLine1}$addressLine1${variable.qr_OSlash}${variable.qr_pincode}$zipcode";
     }
     /*query =
         variable.qr_sections +
@@ -191,7 +191,7 @@ class WebserviceCall {
   String getQueryForUserUpdate(String userID) {
     String query;
     query =
-        '${variable.qr_User}${variable.qr_slash}${userID}${variable.qr_section}${variable.qr_generalInfo}';
+        '${variable.qr_User}${variable.qr_slash}$userID${variable.qr_section}${variable.qr_generalInfo}';
 
     return query;
   }
@@ -216,7 +216,7 @@ class WebserviceCall {
       String zipcode,
       MyProfileModel myProfileModel,
       UpdateRelationshipModel relationship) {
-    var input = {};
+    final input = {};
     input[variable.qr_gender_p] = gender;
     input[variable.qr_bloodgroup_p] = bloodGroup;
     input[variable.qr_dateOfBirth_p] = dateOfBirth;
@@ -225,14 +225,14 @@ class WebserviceCall {
     input[variable.qr_middleName_p] = middleName;
     input[variable.qr_lastname_p] = lastName;
     input[variable.qr_email_p] = email;
-    var query = json.encode(input);
+    final query = json.encode(input);
 
-    MyProfileResult profileResult = myProfileModel.result;
+    final profileResult = myProfileModel.result;
 
-    Map<String, dynamic> queryProfile = profileResult.toJson();
+    final queryProfile = profileResult.toJson();
     if (isUpdate) {
       // NOTE if user try to update the role this would change
-      var relationshipCollection = {
+      final relationshipCollection = {
         'userRelationshipCollection': [relationship.toJson()]
       };
       queryProfile.addAll(relationshipCollection);
@@ -243,16 +243,14 @@ class WebserviceCall {
       code: 'RESADD',
       name: 'Resident Address',
       description: 'Resident Address',
-      sortOrder: null,
       isActive: true,
       createdBy: userID,
       createdOn: DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
-      lastModifiedOn: null,
     );
 
     //TOD O here only check user add/update flow for removing the id from useraddresscollection
-    Map<String, dynamic> copyOfQueryProfile = queryProfile;
-    Map<String, dynamic> addressObj =
+    var copyOfQueryProfile = queryProfile;
+    final Map<String, dynamic> addressObj =
         copyOfQueryProfile['userAddressCollection3'][0];
     if (!isUpdate && addressObj['id'] == null) {
       addressObj.removeWhere((key, value) => key == 'id');
@@ -267,8 +265,8 @@ class WebserviceCall {
   }
 
   String getQueryForPostUserDelinkingNew() {
-    String query = '';
-    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+    var query = '';
+    final userID = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
 
     query =
         "${variable.qr_userlinking}${variable.qr_slash}${variable.qr_delink}";

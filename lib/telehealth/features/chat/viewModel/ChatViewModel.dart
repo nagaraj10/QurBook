@@ -13,7 +13,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 class ChatViewModel extends ChangeNotifier {
-
   ProvidersListRepository _providersListRepository = ProvidersListRepository();
 
   SharedPreferences prefs;
@@ -21,10 +20,15 @@ class ChatViewModel extends ChangeNotifier {
   AppointmentResult appointments;
 
   Future<void> storePatientDetailsToFCM(
-      String doctorId, String doctorName, String doctorPic,
-      String patientId,String patientName,String patientPicUrl,
-      BuildContext context,bool isFromVideoCall) async {
-    Firestore.instance.collection('users').document(doctorId).setData({
+      String doctorId,
+      String doctorName,
+      String doctorPic,
+      String patientId,
+      String patientName,
+      String patientPicUrl,
+      BuildContext context,
+      bool isFromVideoCall) async {
+    FirebaseFirestore.instance.collection('users').doc(doctorId).set({
       NICK_NAME: doctorName != null ? doctorName : '',
       PHOTO_URL: doctorPic != null ? doctorPic : '',
       ID: doctorId,
@@ -32,34 +36,40 @@ class ChatViewModel extends ChangeNotifier {
       CHATTING_WITH: null
     });
 
-    storeDoctorDetailsToFCM(doctorId, doctorName, doctorPic,patientId,patientName,patientPicUrl,context,isFromVideoCall);
+    storeDoctorDetailsToFCM(doctorId, doctorName, doctorPic, patientId,
+        patientName, patientPicUrl, context, isFromVideoCall);
   }
 
   Future<void> storeDoctorDetailsToFCM(
-      String doctorId, String doctorName, String doctorPic,
-      String patientId,String patientName,String patientPicUrl,BuildContext context,bool isFromVideoCall) async {
+      String doctorId,
+      String doctorName,
+      String doctorPic,
+      String patientId,
+      String patientName,
+      String patientPicUrl,
+      BuildContext context,
+      bool isFromVideoCall) async {
     prefs = await SharedPreferences.getInstance();
 
-    if(patientId==null || patientId==''){
+    if (patientId == null || patientId == '') {
       patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     }
-    if(patientName==null || patientName==''){
+    if (patientName == null || patientName == '') {
       patientName = getPatientName();
     }
-    if(patientPicUrl==null || patientPicUrl==''){
+    if (patientPicUrl == null || patientPicUrl == '') {
       patientPicUrl = getProfileURL();
     }
 
-
-    final QuerySnapshot result = await Firestore.instance
+    final QuerySnapshot result = await FirebaseFirestore.instance
         .collection(USERS)
         .where(ID, isEqualTo: patientId)
-        .getDocuments();
-    final List<DocumentSnapshot> documents = result.documents;
+        .get();
+    final List<DocumentSnapshot> documents = result.docs;
 
     if (documents.length == 0) {
       // Update data to server if new user
-      Firestore.instance.collection(USERS).document(patientId).setData({
+      FirebaseFirestore.instance.collection(USERS).doc(patientId).set({
         NICK_NAME: patientName != null ? patientName : '',
         PHOTO_URL: patientPicUrl != null ? patientPicUrl : '',
         ID: patientId,
@@ -76,69 +86,83 @@ class ChatViewModel extends ChangeNotifier {
       await prefs.setString(ID, documents[0][ID]);
       await prefs.setString(NICK_NAME, documents[0][NICK_NAME]);
       await prefs.setString(PHOTO_URL, documents[0][PHOTO_URL]);
-      await prefs.setString(ABOUT_ME, documents[0][ABOUT_ME]);
+      //await prefs.setString(ABOUT_ME, documents[0][ABOUT_ME]);
     }
 
-    goToChatPage(doctorId, doctorName, doctorPic,patientId,patientName,patientPicUrl,context,isFromVideoCall);
+    goToChatPage(doctorId, doctorName, doctorPic, patientId, patientName,
+        patientPicUrl, context, isFromVideoCall);
   }
 
-  void goToChatPage(String doctorId, String doctorName, String doctorPic,String patientId,String patientName,String patientPicUrl,BuildContext context,bool isFromVideoCall) {
+  void goToChatPage(
+      String doctorId,
+      String doctorName,
+      String doctorPic,
+      String patientId,
+      String patientName,
+      String patientPicUrl,
+      BuildContext context,
+      bool isFromVideoCall) {
     Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => Chat(
-              peerId: doctorId,
-              peerAvatar: doctorPic != null ? doctorPic : '',
-              peerName: doctorName,
-              patientId: patientId,
-              patientName: patientName,
-              patientPicture: patientPicUrl,
-              isFromVideoCall: isFromVideoCall,
-            )));
+                  peerId: doctorId,
+                  peerAvatar: doctorPic != null ? doctorPic : '',
+                  peerName: doctorName,
+                  patientId: patientId,
+                  patientName: patientName,
+                  patientPicture: patientPicUrl,
+                  isFromVideoCall: isFromVideoCall,
+                )));
   }
 
   String getPatientName() {
-    MyProfileModel myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
-    String patientName =
-    myProfile.result != null
-        ? myProfile.result.firstName +
-        ' ' +
-        myProfile.result.lastName
+    MyProfileModel myProfile =
+        PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+    String patientName = myProfile.result != null
+        ? myProfile.result.firstName + ' ' + myProfile.result.lastName
         : '';
 
     return patientName;
   }
 
   String getProfileURL() {
-    MyProfileModel myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
-    String patientPicURL =
-        myProfile.result.profilePicThumbnailUrl;
+    MyProfileModel myProfile =
+        PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+    String patientPicURL = myProfile.result.profilePicThumbnailUrl;
 
     return patientPicURL;
   }
 
-  Future<int> getUnreadMSGCount([String patientId]) async{
+  Future<int> getUnreadMSGCount([String patientId]) async {
     try {
       int unReadMSGCount = 0;
       String targetID = '';
       SharedPreferences prefs = await SharedPreferences.getInstance();
 
-      patientId == null ? targetID = (prefs.get('userId') ?? 'NoId') : targetID = patientId;
+      patientId == null
+          ? targetID = (prefs.get('userId') ?? 'NoId')
+          : targetID = patientId;
 //      if (targetID != 'NoId') {
-      final QuerySnapshot chatListResult =
-      await Firestore.instance.collection('chat_list').document(targetID).collection('user_list').getDocuments();
-      final List<DocumentSnapshot> chatListDocuments = chatListResult.documents;
-      for(var data in chatListDocuments) {
-        String groupId = createGroupId(patientId,data['id']);
-        print('checkGroup'+groupId);
-        final QuerySnapshot unReadMSGDocument = await Firestore.instance.collection('messages').
-        document(groupId).
-        collection(groupId).
-        where('idTo', isEqualTo: targetID).
-        where('isread', isEqualTo: false).
-        getDocuments();
+      final QuerySnapshot chatListResult = await FirebaseFirestore.instance
+          .collection('chat_list')
+          .doc(targetID)
+          .collection('user_list')
+          .get();
+      final List<DocumentSnapshot> chatListDocuments = chatListResult.docs;
+      for (var data in chatListDocuments) {
+        String groupId = createGroupId(patientId, data['id']);
+        print('checkGroup' + groupId);
+        final QuerySnapshot unReadMSGDocument = await FirebaseFirestore.instance
+            .collection('messages')
+            .doc(groupId)
+            .collection(groupId)
+            .where('idTo', isEqualTo: targetID)
+            .where('isread', isEqualTo: false)
+            .get();
 
-        final List<DocumentSnapshot> unReadMSGDocuments = unReadMSGDocument.documents;
+        final List<DocumentSnapshot> unReadMSGDocuments =
+            unReadMSGDocument.docs;
         unReadMSGCount = unReadMSGCount + unReadMSGDocuments.length;
       }
       print('unread MSG count is $unReadMSGCount');
@@ -146,18 +170,16 @@ class ChatViewModel extends ChangeNotifier {
       if (patientId == null) {
         //FlutterAppBadger.updateBadgeCount(unReadMSGCount);
         return null;
-      }else {
+      } else {
         return unReadMSGCount;
       }
-
-    }catch(e) {
+    } catch (e) {
       print(e.message);
     }
   }
 
-  String createGroupId(String patientId,String peerId) {
-
-    String groupId='';
+  String createGroupId(String patientId, String peerId) {
+    String groupId = '';
 
     if (patientId.hashCode <= peerId.hashCode) {
       groupId = '$patientId-$peerId';
@@ -168,35 +190,35 @@ class ChatViewModel extends ChangeNotifier {
     return groupId;
   }
 
-  void setCurrentChatRoomID(value) async { // To know where I am in chat room. Avoid local notification.
+  void setCurrentChatRoomID(value) async {
+    // To know where I am in chat room. Avoid local notification.
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('currentChatRoom', value);
   }
 
-  Future<AppointmentResult> fetchAppointmentDetail(String doctorId,String patientId) async {
+  Future<AppointmentResult> fetchAppointmentDetail(
+      String doctorId, String patientId) async {
     try {
-      AppointmentDetailModel appointmentModel =
-      await _providersListRepository.getAppointmentDetail(doctorId,patientId);
+      AppointmentDetailModel appointmentModel = await _providersListRepository
+          .getAppointmentDetail(doctorId, patientId);
       appointments = appointmentModel.result;
       return appointments;
     } catch (e) {}
   }
 
-  Future<void> upateUserNickname(String patientId,String patientName) async {
-
-    final QuerySnapshot result = await Firestore.instance
+  Future<void> upateUserNickname(String patientId, String patientName) async {
+    final QuerySnapshot result = await FirebaseFirestore.instance
         .collection(USERS)
         .where(ID, isEqualTo: patientId)
-        .getDocuments();
-    final List<DocumentSnapshot> documents = result.documents;
+        .get();
+    final List<DocumentSnapshot> documents = result.docs;
 
     if (documents.length > 0) {
       // Update data to fire store
-      Firestore.instance.collection(USERS).document(patientId).updateData({
-        NICK_NAME: patientName != null ? patientName : ''
-      });
+      FirebaseFirestore.instance
+          .collection(USERS)
+          .doc(patientId)
+          .update({NICK_NAME: patientName != null ? patientName : ''});
     }
-
   }
-
 }

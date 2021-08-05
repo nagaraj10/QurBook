@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:myfhb/add_providers/models/update_providers_id.dart';
-import 'package:myfhb/add_providers/services/update_providers_repository.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
-import 'package:myfhb/src/resources/network/ApiResponse.dart';
+import '../models/update_providers_id.dart';
+import '../services/update_providers_repository.dart';
+import '../../constants/variable_constant.dart' as variable;
+import '../../src/blocs/Authentication/LoginBloc.dart';
+import '../../src/resources/network/ApiResponse.dart';
 
 class UpdateProvidersBloc implements BaseBloc {
   UpdateProvidersRepository updateProvidersRepository;
@@ -13,7 +13,7 @@ class UpdateProvidersBloc implements BaseBloc {
   bool isPreferred;
 
   String userId;
-  List<String> selectedCategories = new List();
+  List<String> selectedCategories = [];
 
   // 1
   // Doctors

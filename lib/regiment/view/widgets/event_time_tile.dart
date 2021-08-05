@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/common/CommonUtil.dart';
+import '../../../src/utils/screenutils/size_extensions.dart';
+import '../../../common/CommonUtil.dart';
 
 class EventTimeTile extends StatefulWidget {
-  const EventTimeTile({
-    @required this.title,
-    @required this.onTimeSelected,
-    this.selectedTime,
-    this.controller
-  });
+  const EventTimeTile(
+      {@required this.title,
+      @required this.onTimeSelected,
+      this.selectedTime,
+      this.controller});
 
   final String title;
   final Function onTimeSelected;
@@ -27,11 +26,11 @@ class _EventTimeTileState extends State<EventTimeTile> {
   getTimeAsString(TimeOfDay timeOfDay) {
     if (timeOfDay != null) {
       selectedTimePeriod = timeOfDay.period;
-      int hour = timeOfDay?.hour;
+      var hour = timeOfDay?.hour;
       // if (timeOfDay?.hour == 12) {
       //   hour = 12;
       // }
-      return '${hour > 9 ? '' : '0'}${hour}:${timeOfDay.minute > 9 ? '' : '0'}${timeOfDay.minute}';
+      return '${hour > 9 ? '' : '0'}$hour:${timeOfDay.minute > 9 ? '' : '0'}${timeOfDay.minute}';
     } else {
       return '';
     }
@@ -46,9 +45,7 @@ class _EventTimeTileState extends State<EventTimeTile> {
 
   @override
   Widget build(BuildContext context) {
-    if (timeSelected == null) {
-      timeSelected = widget.selectedTime;
-    }
+    timeSelected ??= widget.selectedTime;
     return Container(
       width: 0.75.sw,
       padding: EdgeInsets.symmetric(
@@ -106,7 +103,6 @@ class _EventTimeTileState extends State<EventTimeTile> {
                   },
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       TextFormField(
                         controller: widget.controller,
@@ -168,7 +164,7 @@ class _EventTimeTileState extends State<EventTimeTile> {
   }
 
   IconData getIcon(String title) {
-    IconData icon = Icons.event;
+    var icon = Icons.event;
     if (title.toLowerCase().contains('wakeup')) {
       icon = Icons.king_bed_rounded;
     } else if (title.toLowerCase().contains('breakfast')) {
@@ -181,6 +177,10 @@ class _EventTimeTileState extends State<EventTimeTile> {
       icon = Icons.food_bank;
     } else if (title.toLowerCase().contains('sleep')) {
       icon = Icons.bedtime_rounded;
+    } else if (title.toLowerCase().contains('prebreakfast')) {
+      icon = Icons.dinner_dining;
+    } else if (title.toLowerCase().contains('snack')) {
+      icon = Icons.food_bank_outlined;
     }
     return icon;
   }

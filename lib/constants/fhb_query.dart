@@ -134,10 +134,10 @@ const String qr_User = 'user';
 const String qr_LastSyncGF = '?source=Google Fit';
 const String qr_LastSyncHK = '?source=Apple Health';
 
-const String BOOKING_ID = "bookingId";
-const String BOOKING_ID_CAPS = "bookingID";
-const String META_IDS = "mediaMetaIds";
-const String INCLUDE_MEDIA = "includeMedia";
+const String BOOKING_ID = 'bookingId';
+const String BOOKING_ID_CAPS = 'bookingID';
+const String META_IDS = 'mediaMetaIds';
+const String INCLUDE_MEDIA = 'includeMedia';
 
 const String qr_media_meta = 'mediameta/';
 const String qr_get_media_master = '/getmediamaster/';
@@ -230,6 +230,7 @@ const String qr_Google_TTS_Regiment_URL = 'google-tts/google-translate/proxy';
 const String qr_plan_list = 'plan-package-master/wrapperApi';
 const String qr_getUserPack = 'Action=GetUserPackages';
 const String qr_getPack = 'Action=GetPackages';
+const String qr_getPack_details = 'Action=GetPackages&packageid=';
 const String qr_getSearchList = 'Action=GetProviderList';
 const String qr_getUserSearchList = 'Action=GetUserProviderList';
 const String qr_qEqaul = '&q=';
@@ -250,7 +251,11 @@ const String getMenuCarePlans = 'Action=GetMenuTaggedPackages&tags=';
 
 const String excludeDiet = '&extags=diet';
 
-const String getMenuDietPlans = 'Action=GetMenuTaggedPackages2&tags=';
+const String onlyProvider = '&onlymyprovider=1';
+
+const String onlyFreePlans = '&onlyfree=1';
+
+const String getMenuDietPlans = 'Action=GetMenuTaggedPackages&tags=';
 
 const String diet = ',diet';
 

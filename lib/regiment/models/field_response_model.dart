@@ -1,4 +1,4 @@
-import 'package:myfhb/regiment/models/regiment_data_model.dart';
+import 'regiment_data_model.dart';
 import 'dart:convert';
 
 class FieldsResponseModel {
@@ -155,7 +155,7 @@ class RowModel {
         uformid: json['uformid'],
         uformdata:
             json['uformdata'] != null && json['uformdata'].toString().isNotEmpty
-                ? UformData().fromJson(jsonDecode(json["uformdata"] ?? '{}'))
+                ? UformData().fromJson(jsonDecode(json['uformdata'] ?? '{}'))
                 : null,
         providerid: json['providerid'],
         providername: json['providername'],

@@ -6,31 +6,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter_country_picker/country.dart';
 import 'package:flutter_country_picker/flutter_country_picker.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'package:myfhb/add_family_otp/models/add_family_otp_arguments.dart';
-import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments.dart';
-import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
-import 'package:myfhb/authentication/constants/constants.dart';
-import 'package:myfhb/authentication/view/verifypatient_screen.dart';
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/FHBBasicWidget.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
-import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
-import 'package:myfhb/my_family/models/relationship_response_list.dart';
-import 'package:myfhb/my_family/models/relationships.dart';
-import 'package:myfhb/my_family_detail/models/my_family_detail_arguments.dart';
-import 'package:myfhb/src/model/user/MyProfileModel.dart';
-import 'package:myfhb/src/resources/network/ApiResponse.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:myfhb/src/utils/alert.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import '../../add_family_otp/models/add_family_otp_arguments.dart';
+import '../../add_family_user_info/models/add_family_user_info_arguments.dart';
+import '../../add_family_user_info/services/add_family_user_info_repository.dart';
+import '../../authentication/constants/constants.dart';
+import '../../authentication/view/verifypatient_screen.dart';
+import '../../colors/fhb_colors.dart' as fhbColors;
+import '../../common/CommonConstants.dart';
+import '../../common/CommonUtil.dart';
+import '../../common/FHBBasicWidget.dart';
+import '../../common/PreferenceUtil.dart';
+import '../../constants/fhb_constants.dart' as Constants;
+import '../../constants/fhb_constants.dart';
+import '../../constants/router_variable.dart' as router;
+import '../../constants/variable_constant.dart' as variable;
+import '../bloc/FamilyListBloc.dart';
+import '../models/FamilyMembersRes.dart';
+import '../models/relationship_response_list.dart';
+import '../models/relationships.dart';
+import '../../my_family_detail/models/my_family_detail_arguments.dart';
+import '../../src/model/user/MyProfileModel.dart';
+import '../../src/resources/network/ApiResponse.dart';
+import '../../src/utils/FHBUtils.dart';
+import '../../src/utils/alert.dart';
+import '../../src/utils/colors_utils.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 
 class MyFamily extends StatefulWidget {
   @override
@@ -70,8 +71,8 @@ class _MyFamilyState extends State<MyFamily> {
   String selectedBloodGroup;
   RelationsShipModel selectedRelationShip;
 
-  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
-  GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
+  final GlobalKey<State> _keyLoader = GlobalKey<State>();
+  GlobalKey<ScaffoldState> scaffold_state = GlobalKey<ScaffoldState>();
 
   var dialogContext;
 
@@ -79,18 +80,18 @@ class _MyFamilyState extends State<MyFamily> {
   AddFamilyUserInfoRepository addFamilyUserInfoRepository =
       AddFamilyUserInfoRepository();
 
-  MyProfileModel myProfile = new MyProfileModel();
+  MyProfileModel myProfile = MyProfileModel();
 
   @override
   void initState() {
     mInitialTime = DateTime.now();
     super.initState();
-    _familyListBloc = new FamilyListBloc();
+    _familyListBloc = FamilyListBloc();
     _familyListBloc.getFamilyMembersListNew();
     _familyListBloc.getCustomRoles();
     parentProfilePic =
         PreferenceUtil.getStringValue(Constants.KEY_PROFILE_IMAGE);
-    PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID, "");
+    PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID, '');
 
     fetchUserProfileInfo();
   }
@@ -112,15 +113,15 @@ class _MyFamilyState extends State<MyFamily> {
     return Scaffold(
         key: scaffold_state,
         floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            saveMediaDialog(context);
+          },
+          backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
           child: Icon(
             Icons.add,
             color: Colors.white,
             size: 24.0.sp,
           ),
-          onPressed: () {
-            saveMediaDialog(context);
-          },
-          backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
         ),
         body: getAllFamilyMembers());
   }
@@ -130,17 +131,15 @@ class _MyFamilyState extends State<MyFamily> {
 
     return StreamBuilder<ApiResponse<FamilyMembers>>(
       stream: _familyListBloc.familyMemberListNewStream,
-      builder: (context, AsyncSnapshot<ApiResponse<FamilyMembers>> snapshot) {
+      builder: (context, snapshot) {
         if (snapshot.hasData) {
           switch (snapshot.data.status) {
             case Status.LOADING:
               familyWidget = Center(
                   child: SizedBox(
-                child: CircularProgressIndicator(
-                  backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-                ),
                 width: 30.0.h,
                 height: 30.0.h,
+                child: CommonCircularIndicator(),
               ));
               break;
 
@@ -226,7 +225,7 @@ class _MyFamilyState extends State<MyFamily> {
 
   Widget getMyFamilyMembers(FamilyMemberResult data) {
     return data != null
-        ? data.sharedByUsers.length > 0
+        ? data.sharedByUsers.isNotEmpty
             ? Container(
                 color: const Color(fhbColors.bgColorContainer),
                 child: ListView.builder(
@@ -241,6 +240,7 @@ class _MyFamilyState extends State<MyFamily> {
                 ),
               )
             : Container(
+                color: Color(fhbColors.bgColorContainer),
                 child: Center(
                   child: Padding(
                     padding: EdgeInsets.only(left: 40, right: 40),
@@ -250,9 +250,9 @@ class _MyFamilyState extends State<MyFamily> {
                     ),
                   ),
                 ),
-                color: Color(fhbColors.bgColorContainer),
               )
         : Container(
+            color: Color(fhbColors.bgColorContainer),
             child: Center(
               child: Padding(
                 padding: EdgeInsets.only(left: 40, right: 40),
@@ -260,13 +260,12 @@ class _MyFamilyState extends State<MyFamily> {
                     Text(Constants.NO_DATA_FAMIY, textAlign: TextAlign.center),
               ),
             ),
-            color: Color(fhbColors.bgColorContainer),
           );
   }
 
   String capitalize(String string) {
     if (string == null) {
-      throw ArgumentError("string: $string");
+      throw ArgumentError('string: $string');
     }
 
     if (string.isEmpty) {
@@ -277,9 +276,10 @@ class _MyFamilyState extends State<MyFamily> {
   }
 
   fetchUserProfileInfo() async {
-    var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
-    if (userid != null)
+    final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+    if (userid != null) {
       myProfile = await addFamilyUserInfoRepository.getMyProfileInfoNew(userid);
+    }
 
     return myProfile;
   }
@@ -291,7 +291,7 @@ class _MyFamilyState extends State<MyFamily> {
     if (data?.child != null) {
       familyMemberName = '${data.child.firstName} ${data.child.lastName}';
     } */
-    String fulName = '';
+    var fulName = '';
     try {
       myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
       fulName = myProfile.result != null
@@ -333,7 +333,7 @@ class _MyFamilyState extends State<MyFamily> {
         }
       },
       child: Container(
-          padding: EdgeInsets.all(10.0),
+          padding: EdgeInsets.all(10),
           margin: EdgeInsets.only(left: 10, right: 10, top: 10),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -342,10 +342,10 @@ class _MyFamilyState extends State<MyFamily> {
               BoxShadow(
                 color: const Color(0xFFe3e2e2),
                 blurRadius: 16, // has the effect of softening the shadow
-                spreadRadius: 2.0, // has the effect of extending the shadow
+                spreadRadius: 2, // has the effect of extending the shadow
                 offset: Offset(
-                  0.0, // horizontal, move right 10
-                  0.0, // vertical, move down 10
+                  0, // horizontal, move right 10
+                  0, // vertical, move down 10
                 ),
               )
             ],
@@ -381,13 +381,11 @@ class _MyFamilyState extends State<MyFamily> {
                                   PreferenceUtil.getStringValue(
                                       Constants.KEY_AUTHTOKEN)
                             },
-                            errorBuilder: (BuildContext context,
-                                Object exception, StackTrace stackTrace) {
+                            errorBuilder: (context, exception, stackTrace) {
                               return Container(
                                 height: 60.0.h,
                                 width: 60.0.h,
-                                color:
-                                    Color(new CommonUtil().getMyPrimaryColor()),
+                                color: Color(CommonUtil().getMyPrimaryColor()),
                                 child: Center(
                                     child: Text(
                                   data.child?.firstName != null &&
@@ -411,7 +409,7 @@ class _MyFamilyState extends State<MyFamily> {
                     : myProfile != null
                         ? myProfile.result != null
                             ? myProfile.result.profilePicThumbnailUrl != null
-                                ? new FHBBasicWidget()
+                                ? FHBBasicWidget()
                                     .getProfilePicWidgeUsingUrl(myProfile)
                                 : Container(
                                     width: 60.0.h,
@@ -472,11 +470,10 @@ class _MyFamilyState extends State<MyFamily> {
                     Text(
                       position == 0
                           ? fulName != null
-                              ? new CommonUtil()
-                                  .titleCase(fulName.toLowerCase())
+                              ? CommonUtil().titleCase(fulName.toLowerCase())
                               : ''
                           : data.child?.firstName != null
-                              ? new CommonUtil().titleCase(fulName)
+                              ? CommonUtil().titleCase(fulName)
                               : '',
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
@@ -493,8 +490,7 @@ class _MyFamilyState extends State<MyFamily> {
                           ? (myProfile?.result?.userContactCollection3 !=
                                       null &&
                                   myProfile?.result?.userContactCollection3
-                                          .length >
-                                      0)
+                                      .isNotEmpty)
                               ? myProfile?.result?.userContactCollection3[0]
                                   .phoneNumber
                               : ''
@@ -507,8 +503,7 @@ class _MyFamilyState extends State<MyFamily> {
                                   ''
                               : (data?.child?.userContactCollection3 != null &&
                                       data?.child?.userContactCollection3
-                                              .length >
-                                          0)
+                                          .isNotEmpty)
                                   ? data?.child?.userContactCollection3[0]
                                       .phoneNumber
                                   : '',
@@ -527,16 +522,14 @@ class _MyFamilyState extends State<MyFamily> {
                       position == 0
                           ? variable.Self
                           : data.relationship != null
-                              ? data.relationship.name != null
-                                  ? data.relationship.name
-                                  : ''
+                              ? data.relationship.name ?? ''
                               : '',
                       overflow: TextOverflow.ellipsis,
                       softWrap: false,
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 16.0.sp,
-                          color: Color(new CommonUtil().getMyPrimaryColor())),
+                          color: Color(CommonUtil().getMyPrimaryColor())),
                     ),
                   ],
                 ),
@@ -544,7 +537,6 @@ class _MyFamilyState extends State<MyFamily> {
               position != 0
                   ? Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         InkWell(
                           onTap: () {
@@ -552,19 +544,19 @@ class _MyFamilyState extends State<MyFamily> {
                                 title: variable.Delink,
                                 content: CommonConstants.delink_alert,
                                 onPressedConfirm: () {
-                              new FHBUtils().check().then((intenet) {
+                              FHBUtils().check().then((intenet) {
                                 if (intenet != null && intenet) {
                                   Navigator.pop(context);
 
                                   CommonUtil.showLoadingDialog(dialogContext,
                                       _keyLoader, variable.Please_Wait);
 
-                                  var deLinkingData = {};
+                                  final deLinkingData = {};
                                   deLinkingData[variable.strrelatedTo] =
                                       data.child?.id;
                                   deLinkingData[variable.strrelationshipType] =
                                       variable.strparentToChild;
-                                  var jsonString =
+                                  final jsonString =
                                       convert.jsonEncode(deLinkingData);
 
                                   _familyListBloc
@@ -583,7 +575,7 @@ class _MyFamilyState extends State<MyFamily> {
                                     }
                                   });
                                 } else {
-                                  new FHBBasicWidget().showInSnackBar(
+                                  FHBBasicWidget().showInSnackBar(
                                       Constants.STR_NO_CONNECTIVITY,
                                       scaffold_state);
                                 }
@@ -593,7 +585,7 @@ class _MyFamilyState extends State<MyFamily> {
                             });
                           },
                           child: Container(
-                            padding: EdgeInsets.all(5.0),
+                            padding: EdgeInsets.all(5),
                             margin:
                                 EdgeInsets.only(left: 10, right: 10, top: 10),
                             decoration: BoxDecoration(
@@ -601,14 +593,14 @@ class _MyFamilyState extends State<MyFamily> {
                                 borderRadius: BorderRadius.circular(5),
                                 border: Border.all(
                                     color: Color(
-                                        new CommonUtil().getMyPrimaryColor()))),
+                                        CommonUtil().getMyPrimaryColor()))),
                             child: Text(
                               variable.DeLink,
                               style: TextStyle(
                                   fontSize: 16.0.sp,
                                   fontWeight: FontWeight.w500,
-                                  color: Color(
-                                      new CommonUtil().getMyPrimaryColor())),
+                                  color:
+                                      Color(CommonUtil().getMyPrimaryColor())),
                               softWrap: false,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -631,12 +623,11 @@ class _MyFamilyState extends State<MyFamily> {
     selectedRelationShip = null;
     rebuildFamilyBlock();
 
-    List<RelationsShipModel> data =
-        PreferenceUtil.getFamilyRelationship(Constants.keyFamily);
+    final data = PreferenceUtil.getFamilyRelationship(Constants.keyFamily);
 
     return showDialog<void>(
       context: context,
-      builder: (BuildContext context) {
+      builder: (context) {
         return StatefulBuilder(builder: (context, setState) {
           return AlertDialog(
             shape:
@@ -646,7 +637,6 @@ class _MyFamilyState extends State<MyFamily> {
                 height: 1.sh / 1.5,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Expanded(
                       child: SingleChildScrollView(
@@ -674,18 +664,13 @@ class _MyFamilyState extends State<MyFamily> {
                                   dialingCodeTextStyle: TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.w500),
-                                  dense: false,
                                   showFlag: false,
                                   //displays flag, true by default
                                   showDialingCode: true,
                                   //displays dialing code, false by default
                                   showName: false,
-                                  //displays country name, true by default
-                                  showCurrency: false,
-                                  //eg. 'British pound'
-                                  showCurrencyISO: false,
                                   //eg. 'GBP'
-                                  onChanged: (Country country) {
+                                  onChanged: (country) {
                                     setState(() {
                                       _selected = country;
                                     });
@@ -699,7 +684,6 @@ class _MyFamilyState extends State<MyFamily> {
                               height: 10.0.h,
                             ),
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                 InkWell(
@@ -765,9 +749,10 @@ class _MyFamilyState extends State<MyFamily> {
                             ),
                             Row(
                               children: <Widget>[
-                                data != null
-                                    ? getRelationshipDetails(data)
-                                    : getAllCustomRoles()
+                                if (data != null)
+                                  getRelationshipDetails(data)
+                                else
+                                  getAllCustomRoles()
                                 //getRelationshipDetailsNew()
                               ],
                             ),
@@ -801,16 +786,15 @@ class _MyFamilyState extends State<MyFamily> {
 
     return StreamBuilder<ApiResponse<RelationShipResponseList>>(
       stream: _familyListBloc.relationShipStream,
-      builder: (context,
-          AsyncSnapshot<ApiResponse<RelationShipResponseList>> snapshot) {
+      builder: (context, snapshot) {
         if (snapshot.hasData) {
           switch (snapshot.data.status) {
             case Status.LOADING:
               familyWidget = Center(
                   child: SizedBox(
-                child: CircularProgressIndicator(),
                 width: 30.0.h,
                 height: 30.0.h,
+                child: CommonCircularIndicator(),
               ));
               break;
 
@@ -856,8 +840,8 @@ class _MyFamilyState extends State<MyFamily> {
             value: selectedRelationShip,
             items: data.map((relationShipDetail) {
               return DropdownMenuItem(
-                child: new Text(relationShipDetail.name,
-                    style: new TextStyle(
+                child: Text(relationShipDetail.name,
+                    style: TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 16.0.sp,
                         color: ColorUtils.blackcolor)),
@@ -875,10 +859,9 @@ class _MyFamilyState extends State<MyFamily> {
 
   Widget _ShowMobileNoTextField() {
     return Expanded(
-      child: new TextField(
+      child: TextField(
           cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: mobileNoController,
-          maxLines: 1,
           enabled: isPrimaryNoSelected ? false : true,
           keyboardType: TextInputType.text,
           focusNode: mobileNoFocus,
@@ -886,7 +869,7 @@ class _MyFamilyState extends State<MyFamily> {
           onSubmitted: (term) {
             mobileNoFocus.unfocus();
           },
-          style: new TextStyle(
+          style: TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 16.0.sp,
               color: ColorUtils.blackcolor),
@@ -901,7 +884,7 @@ class _MyFamilyState extends State<MyFamily> {
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
-            border: new UnderlineInputBorder(
+            border: UnderlineInputBorder(
                 borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
           )),
     );
@@ -909,17 +892,16 @@ class _MyFamilyState extends State<MyFamily> {
 
   Widget _ShowNameTextField() {
     return Expanded(
-      child: new TextField(
+      child: TextField(
           cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: nameController,
-          maxLines: 1,
           keyboardType: TextInputType.text,
           focusNode: nameFocus,
           textInputAction: TextInputAction.done,
           onSubmitted: (term) {
             nameFocus.unfocus();
           },
-          style: new TextStyle(
+          style: TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 16.0.sp,
               color: ColorUtils.blackcolor),
@@ -934,7 +916,7 @@ class _MyFamilyState extends State<MyFamily> {
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
-            border: new UnderlineInputBorder(
+            border: UnderlineInputBorder(
                 borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
           )),
     );
@@ -945,14 +927,13 @@ class _MyFamilyState extends State<MyFamily> {
         child: TextField(
       cursorColor: Color(CommonUtil().getMyPrimaryColor()),
       controller: firstNameController,
-      maxLines: 1,
       keyboardType: TextInputType.text,
       focusNode: firstNameFocus,
       textInputAction: TextInputAction.done,
       onSubmitted: (term) {
         FocusScope.of(context).requestFocus(middleNameFocus);
       },
-      style: new TextStyle(
+      style: TextStyle(
           fontWeight: FontWeight.w500,
           fontSize: 16.0.sp,
           color: ColorUtils.blackcolor),
@@ -968,7 +949,7 @@ class _MyFamilyState extends State<MyFamily> {
           color: ColorUtils.myFamilyGreyColor,
           fontWeight: FontWeight.w400,
         ),
-        border: new UnderlineInputBorder(
+        border: UnderlineInputBorder(
             borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
       ),
     ));
@@ -979,14 +960,13 @@ class _MyFamilyState extends State<MyFamily> {
         child: TextField(
       cursorColor: Color(CommonUtil().getMyPrimaryColor()),
       controller: middleNameController,
-      maxLines: 1,
       keyboardType: TextInputType.text,
       focusNode: middleNameFocus,
       textInputAction: TextInputAction.done,
       onSubmitted: (term) {
         FocusScope.of(context).requestFocus(lastNameFocus);
       },
-      style: new TextStyle(
+      style: TextStyle(
           fontWeight: FontWeight.w500,
           fontSize: 16.0.sp,
           color: ColorUtils.blackcolor),
@@ -1002,7 +982,7 @@ class _MyFamilyState extends State<MyFamily> {
           color: ColorUtils.myFamilyGreyColor,
           fontWeight: FontWeight.w400,
         ),
-        border: new UnderlineInputBorder(
+        border: UnderlineInputBorder(
             borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
       ),
     ));
@@ -1013,14 +993,13 @@ class _MyFamilyState extends State<MyFamily> {
         child: TextField(
       cursorColor: Color(CommonUtil().getMyPrimaryColor()),
       controller: lastNameController,
-      maxLines: 1,
       keyboardType: TextInputType.text,
       focusNode: lastNameFocus,
       textInputAction: TextInputAction.done,
       onSubmitted: (term) {
         lastNameFocus.unfocus();
       },
-      style: new TextStyle(
+      style: TextStyle(
           fontWeight: FontWeight.w500,
           fontSize: 16.0.sp,
           color: ColorUtils.blackcolor),
@@ -1036,21 +1015,21 @@ class _MyFamilyState extends State<MyFamily> {
           color: ColorUtils.myFamilyGreyColor,
           fontWeight: FontWeight.w400,
         ),
-        border: new UnderlineInputBorder(
+        border: UnderlineInputBorder(
             borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
       ),
     ));
   }
 
   Widget _showOTPButton() {
-    final GestureDetector addButtonWithGesture = new GestureDetector(
+    final addButtonWithGesture = GestureDetector(
       onTap: _sendOTPBtnTapped,
-      child: new Container(
+      child: Container(
         width: 130.0.w,
         height: 40.0.h,
-        decoration: new BoxDecoration(
-          color: Color(new CommonUtil().getMyPrimaryColor()),
-          borderRadius: new BorderRadius.all(Radius.circular(2.0)),
+        decoration: BoxDecoration(
+          color: Color(CommonUtil().getMyPrimaryColor()),
+          borderRadius: BorderRadius.all(Radius.circular(2)),
           boxShadow: <BoxShadow>[
             BoxShadow(
               color: Color.fromARGB(15, 0, 0, 0),
@@ -1059,12 +1038,12 @@ class _MyFamilyState extends State<MyFamily> {
             ),
           ],
         ),
-        child: new Center(
-          child: new Text(
+        child: Center(
+          child: Text(
             isPrimaryNoSelected == true
                 ? CommonConstants.add
                 : CommonConstants.send_otp,
-            style: new TextStyle(
+            style: TextStyle(
               color: Colors.white,
               fontSize: 16.0.sp,
               fontWeight: FontWeight.w400,
@@ -1074,23 +1053,23 @@ class _MyFamilyState extends State<MyFamily> {
       ),
     );
 
-    return new Padding(
-        padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 30.0),
+    return Padding(
+        padding: EdgeInsets.only(left: 20, right: 20, top: 30),
         child: addButtonWithGesture);
   }
 
   void _sendOTPBtnTapped() {
-    if (mobileNoController.text.length > 0 &&
-        firstNameController.text.length > 0 &&
-        lastNameController.text.length > 0 &&
+    if (mobileNoController.text.isNotEmpty &&
+        firstNameController.text.isNotEmpty &&
+        lastNameController.text.isNotEmpty &&
         selectedRelationShip != null) {
-      new FHBUtils().check().then((intenet) {
+      FHBUtils().check().then((intenet) {
         if (intenet != null && intenet) {
           CommonUtil.showLoadingDialog(
               context, _keyLoader, variable.Please_Wait);
 
           if (isPrimaryNoSelected) {
-            var addFamilyMemberRequest = {};
+            final addFamilyMemberRequest = {};
             addFamilyMemberRequest['isVirtualUser'] = true;
             addFamilyMemberRequest['firstName'] = firstNameController.text;
             addFamilyMemberRequest['lastName'] = lastNameController.text;
@@ -1100,7 +1079,7 @@ class _MyFamilyState extends State<MyFamily> {
             addFamilyMemberRequest['email'] = '';
             addFamilyMemberRequest['isPrimary'] = true;
 
-            var jsonString = convert.jsonEncode(addFamilyMemberRequest);
+            final jsonString = convert.jsonEncode(addFamilyMemberRequest);
 
             _familyListBloc
                 .postUserLinkingForPrimaryNo(jsonString)
@@ -1126,9 +1105,7 @@ class _MyFamilyState extends State<MyFamily> {
                             isPrimaryNoSelected: isPrimaryNoSelected,
                             id: addFamilyOTPResponse.result.childInfo.id,
                             addFamilyUserInfo:
-                                addFamilyOTPResponse.result != null
-                                    ? addFamilyOTPResponse.result
-                                    : ''),
+                                addFamilyOTPResponse.result ?? ''),
                       ).then((value) {
                         mobileNoController.text = '';
                         nameController.text = '';
@@ -1162,8 +1139,8 @@ class _MyFamilyState extends State<MyFamily> {
               }
             });
           } else {
-            var mobileNo = '+91${mobileNoController.text}';
-            var addFamilyMemberRequest = {};
+            final mobileNo = '+91${mobileNoController.text}';
+            final addFamilyMemberRequest = {};
             addFamilyMemberRequest['isVirtualUser'] = false;
             addFamilyMemberRequest['firstName'] = firstNameController.text;
             addFamilyMemberRequest['lastName'] = lastNameController.text;
@@ -1174,7 +1151,7 @@ class _MyFamilyState extends State<MyFamily> {
             addFamilyMemberRequest['email'] = '';
             addFamilyMemberRequest['isPrimary'] = true;
 
-            var jsonString = convert.jsonEncode(addFamilyMemberRequest);
+            final jsonString = convert.jsonEncode(addFamilyMemberRequest);
 
             _familyListBloc.postUserLinking(jsonString).then((userLinking) {
               if (userLinking.success) {
@@ -1302,7 +1279,7 @@ class _MyFamilyState extends State<MyFamily> {
             });
           }
         } else {
-          new FHBBasicWidget()
+          FHBBasicWidget()
               .showInSnackBar(Constants.STR_NO_CONNECTIVITY, scaffold_state);
         }
       });
@@ -1316,7 +1293,7 @@ class _MyFamilyState extends State<MyFamily> {
 
   rebuildFamilyBlock() {
     _familyListBloc = null;
-    _familyListBloc = new FamilyListBloc();
+    _familyListBloc = FamilyListBloc();
     _familyListBloc.getFamilyMembersListNew();
     _familyListBloc.getCustomRoles();
   }

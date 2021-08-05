@@ -14,7 +14,7 @@ import 'package:myfhb/src/ui/bot/view/sheela_arguments.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/widgets/RaisedGradientButton.dart';
-import 'package:showcaseview/showcase_widget.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 import 'view/ChatScreen.dart';

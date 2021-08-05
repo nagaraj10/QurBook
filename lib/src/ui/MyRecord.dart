@@ -1,6 +1,10 @@
 import 'dart:convert';
 import 'dart:math';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/landing/view_model/landing_view_model.dart';
+import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
@@ -53,12 +57,13 @@ import 'package:myfhb/telehealth/features/Notifications/view/notification_main.d
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'package:showcaseview/showcase_widget.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 import '../../constants/fhb_constants.dart';
 
 export 'package:myfhb/common/CommonUtil.dart';
 export 'package:myfhb/src/model/Media/MediaTypeResponse.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 
 class MyRecords extends StatefulWidget {
   MyRecordsArgument argument;
@@ -231,10 +236,7 @@ class _MyRecordsState extends State<MyRecords> {
                 case Status.LOADING:
                   return Center(
                       child: SizedBox(
-                    child: CircularProgressIndicator(
-                      backgroundColor:
-                          Color(new CommonUtil().getMyPrimaryColor()),
-                    ),
+                    child: CommonCircularIndicator(),
                     width: 30.0.h,
                     height: 30.0.h,
                   ));
@@ -295,9 +297,7 @@ class _MyRecordsState extends State<MyRecords> {
             case Status.LOADING:
               return Center(
                   child: SizedBox(
-                child: CircularProgressIndicator(
-                  backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
-                ),
+                child: CommonCircularIndicator(),
                 width: 30.0.h,
                 height: 30.0.h,
               ));
@@ -929,10 +929,7 @@ class _CustomTabsState extends State<CustomTabView>
                       backgroundColor: Colors.white,
                       body: Center(
                           child: SizedBox(
-                        child: CircularProgressIndicator(
-                          backgroundColor:
-                              Color(new CommonUtil().getMyPrimaryColor()),
-                        ),
+                        child: CommonCircularIndicator(),
                         width: 30.0.h,
                         height: 30.0.h,
                       )),
@@ -983,10 +980,7 @@ class _CustomTabsState extends State<CustomTabView>
                       backgroundColor: Colors.white,
                       body: Center(
                           child: SizedBox(
-                        child: CircularProgressIndicator(
-                          backgroundColor:
-                              Color(new CommonUtil().getMyPrimaryColor()),
-                        ),
+                        child: CommonCircularIndicator(),
                         width: 30.0.h,
                         height: 30.0.h,
                       )),
@@ -1081,10 +1075,7 @@ class _CustomTabsState extends State<CustomTabView>
                       backgroundColor: Colors.white,
                       body: Center(
                           child: SizedBox(
-                        child: CircularProgressIndicator(
-                          backgroundColor:
-                              Color(new CommonUtil().getMyPrimaryColor()),
-                        ),
+                        child: CommonCircularIndicator(),
                         width: 30.0.h,
                         height: 30.0.h,
                       )),
@@ -1480,7 +1471,7 @@ class _CustomTabsState extends State<CustomTabView>
 
   void openNotesDialog() async {
     await saveCategoryToPrefernce();
-    PreferenceUtil.saveString(Constants.KEY_DEVICENAME, null).then((onValue) {
+    PreferenceUtil.saveString(Constants.KEY_DEVICENAME, '').then((onValue) {
       PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, categoryName)
           .then((onValue) {
         PreferenceUtil.saveString(Constants.KEY_CATEGORYID, categoryID)
@@ -1529,7 +1520,7 @@ class _CustomTabsState extends State<CustomTabView>
 //    }
     var status = await Permission.camera.status;
 
-    if (status.isUndetermined || status.isDenied) {
+    if (status.isDenied) {
       await _handleCameraAndMic();
     } else {
       saveCategoryToPrefernce();
@@ -1541,8 +1532,7 @@ class _CustomTabsState extends State<CustomTabView>
       } else if (categoryName == Constants.STR_NOTES) {
         openNotesDialog();
       } else {
-        PreferenceUtil.saveString(Constants.KEY_DEVICENAME, null)
-            .then((onValue) {
+        PreferenceUtil.saveString(Constants.KEY_DEVICENAME, '').then((onValue) {
           PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, categoryName)
               .then((onValue) {
             PreferenceUtil.saveString(Constants.KEY_CATEGORYID, categoryID)
@@ -1567,11 +1557,14 @@ class _CustomTabsState extends State<CustomTabView>
   }
 
   Future<void> _handleCameraAndMic() async {
-    await Permission.microphone.request();
-    await Permission.camera.request();
-//    await PermissionHandler().requestPermissions(
-//      [PermissionGroup.camera, PermissionGroup.microphone],
-//    );
+    final status = await CommonUtil.askPermissionForCameraAndMic();
+    if (!status) {
+      FlutterToast toastToShow = FlutterToast();
+      toastToShow.getToast(
+        "Failed to get the camera permission",
+        Colors.red,
+      );
+    }
   }
 
   onVoiceRecordClicked() async {
@@ -1589,17 +1582,26 @@ class _CustomTabsState extends State<CustomTabView>
             .then((value) {
           if (widget.argument.fromClass == 'audio' ||
               widget.argument.fromClass == null) {
-            Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => AudioRecordScreen(
-                            arguments: AudioScreenArguments(
-                                fromVoice: true,
-                                fromClass: categoryName ==
-                                        Constants.STR_VOICERECORDS
-                                    ? ''
-                                    : widget.argument.fromClass ?? 'audio'))))
-                .then((results) {});
+            // Navigator.pushReplacement(
+            //         context,
+            //         MaterialPageRoute(
+            //             builder: (context) => AudioRecordScreen(
+            //                 arguments: AudioScreenArguments(
+            //                     fromVoice: true,
+            //                     fromClass: categoryName ==
+            //                             Constants.STR_VOICERECORDS
+            //                         ? ''
+            //                         : widget.argument.fromClass ?? 'audio'))))
+            //     .then((results) {});
+            Get.to(
+              () => AudioRecorder(
+                arguments: AudioScreenArguments(
+                    fromVoice: true,
+                    fromClass: categoryName == Constants.STR_VOICERECORDS
+                        ? ''
+                        : widget.argument.fromClass ?? 'audio'),
+              ),
+            );
           } else {
             Navigator.pushNamed(context, router.rt_AudioScreen,
                     arguments: AudioScreenArguments(

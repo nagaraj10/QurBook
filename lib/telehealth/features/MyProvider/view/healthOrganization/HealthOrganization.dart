@@ -10,6 +10,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/my_providers/bloc/providers_block.dart';
 import 'package:myfhb/my_providers/models/Doctors.dart';
 import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
@@ -288,6 +289,8 @@ class _HealthOrganizationState extends State<HealthOrganization> {
               },
               isFromHospital: false,
               isFromFollowOrReschedule: false,
+              isFromFollowUpApp: false,
+              isFromFollowUpTake: true,
             ),
           ],
         ),
@@ -497,10 +500,7 @@ class _HealthOrganizationState extends State<HealthOrganization> {
       future: providerViewModel.getHealthOrgFromDoctor(doctorId),
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return new Center(
-            child: new CircularProgressIndicator(
-                backgroundColor: Color(new CommonUtil().getMyPrimaryColor())),
-          );
+          return CommonCircularIndicator();
         } else if (snapshot.hasError) {
           return ErrorsWidget();
         } else {

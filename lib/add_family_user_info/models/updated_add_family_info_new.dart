@@ -9,15 +9,15 @@ class UpdateAddFamilyInfo {
     isSuccess = json['isSuccess'];
     message = json['message'];
     result =
-        json['result'] != null ? new Result.fromJson(json['result']) : null;
+        json['result'] != null ? Result.fromJson(json['result']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['isSuccess'] = this.isSuccess;
-    data['message'] = this.message;
-    if (this.result != null) {
-      data['result'] = this.result.toJson();
+    final data = <String, dynamic>{};
+    data['isSuccess'] = isSuccess;
+    data['message'] = message;
+    if (result != null) {
+      data['result'] = result.toJson();
     }
     return data;
   }
@@ -33,8 +33,8 @@ class Result {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
+    final data = Map<String, dynamic>();
+    data['id'] = id;
     return data;
   }
 }

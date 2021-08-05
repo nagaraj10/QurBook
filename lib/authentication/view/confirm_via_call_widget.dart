@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/authentication/constants/constants.dart';
-import 'package:myfhb/authentication/view_model/otp_view_model.dart';
-import 'package:myfhb/authentication/view/call_dial_widget.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
+import '../constants/constants.dart';
+import '../view_model/otp_view_model.dart';
+import 'call_dial_widget.dart';
 import 'package:provider/provider.dart';
 import 'or_divider.dart';
 
@@ -52,7 +52,6 @@ class ConfirmViaCallWidget extends StatelessWidget {
             ),
             child: Center(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: getPhoneWidgets(),
               ),
             ),
@@ -63,18 +62,18 @@ class ConfirmViaCallWidget extends StatelessWidget {
   }
 
   List<Widget> getPhoneWidgets() {
-    final phoneWidgets = <Widget>[];
+    var phoneWidgets = <Widget>[];
     primaryNumber;
-    int index = 0;
-    for (var ivrNumber in ivrNumbersList) {
-      phoneWidgets.add(('${ivrNumber ?? ''}').isNotEmpty
+    var index = 0;
+    for (final ivrNumber in ivrNumbersList) {
+      phoneWidgets.add((ivrNumber ?? '').isNotEmpty
           ? Column(
               children: [
                 if (index != 0) OrDivider(),
                 CallDialWidget(
                   phoneNumber: ivrNumber ?? '',
                   phoneNumberName:
-                      index == 0 ? primaryNumber : '${alternateNumber} $index',
+                      index == 0 ? primaryNumber : '$alternateNumber $index',
                 ),
               ],
             )

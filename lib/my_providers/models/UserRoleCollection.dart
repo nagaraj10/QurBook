@@ -15,11 +15,11 @@ class UserRoleCollection3 {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['isActive'] = this.isActive;
-    data['createdOn'] = this.createdOn;
-    data['lastModifiedOn'] = this.lastModifiedOn;
+    final data = <String, dynamic>{};
+    data['id'] = id;
+    data['isActive'] = isActive;
+    data['createdOn'] = createdOn;
+    data['lastModifiedOn'] = lastModifiedOn;
     return data;
   }
 }

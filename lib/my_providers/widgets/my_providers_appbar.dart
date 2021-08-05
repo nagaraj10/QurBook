@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import '../../common/CommonConstants.dart';
+import '../../common/CommonUtil.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
 
 class MyProvidersAppBar extends StatelessWidget implements PreferredSizeWidget {
   TabController tabController;
@@ -27,10 +27,9 @@ class MyProvidersAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ],
         controller: tabController,
-        labelColor: Color(new CommonUtil().getMyPrimaryColor()),
+        labelColor: Color(CommonUtil().getMyPrimaryColor()),
         indicatorSize: TabBarIndicatorSize.label,
-        indicatorColor: Color(new CommonUtil().getMyPrimaryColor()),
-        indicatorWeight: 2,
+        indicatorColor: Color(CommonUtil().getMyPrimaryColor()),
       ),
       /*   title: Container(
         height: 0,
@@ -44,5 +43,6 @@ class MyProvidersAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  Size get preferredSize => new Size.fromHeight(30.0.h);
+  @override
+  Size get preferredSize => Size.fromHeight(30.0.h);
 }

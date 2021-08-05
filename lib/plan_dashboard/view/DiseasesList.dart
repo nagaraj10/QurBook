@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/errors_widget.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
-import 'package:myfhb/plan_dashboard/view/categoryList.dart';
-import 'package:myfhb/plan_dashboard/view/searchProviderList.dart';
-import 'package:myfhb/plan_dashboard/viewModel/planViewModel.dart';
-import 'package:myfhb/plan_dashboard/viewModel/subscribeViewModel.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
+import '../../common/CommonUtil.dart';
+import '../../common/errors_widget.dart';
+import '../../constants/fhb_constants.dart';
+import '../../constants/variable_constant.dart' as variable;
+import '../model/PlanListModel.dart';
+import 'categoryList.dart';
+import 'searchProviderList.dart';
+import '../viewModel/planViewModel.dart';
+import '../viewModel/subscribeViewModel.dart';
+import '../../src/utils/colors_utils.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
+import '../../telehealth/features/SearchWidget/view/SearchWidget.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 
 class DiseasesList extends StatefulWidget {
   @override
@@ -21,11 +22,11 @@ class DiseasesList extends StatefulWidget {
 
 class _DiseasesList extends State<DiseasesList> {
   PlanListModel myPlanListModel;
-  PlanViewModel myPlanViewModel = new PlanViewModel();
+  PlanViewModel myPlanViewModel = PlanViewModel();
   bool isSearch = false;
-  List<PlanListResult> myPLanListResult = List();
-  SubscribeViewModel subscribeViewModel = new SubscribeViewModel();
-  FlutterToast toast = new FlutterToast();
+  List<PlanListResult> myPLanListResult = [];
+  SubscribeViewModel subscribeViewModel = SubscribeViewModel();
+  FlutterToast toast = FlutterToast();
 
   List<PlanListResult> categoryListUniq = [];
   List<String> selectPlan = [];
@@ -82,8 +83,7 @@ class _DiseasesList extends State<DiseasesList> {
   onSearchedNew(String title, List<PlanListResult> planListOld) async {
     myPLanListResult.clear();
     if (title != null) {
-      myPLanListResult =
-          await myPlanViewModel.getSearchDiseases(title, planListOld);
+      myPLanListResult = myPlanViewModel.getSearchDiseases(title, planListOld);
     }
     setState(() {});
   }
@@ -94,12 +94,12 @@ class _DiseasesList extends State<DiseasesList> {
     selectedTitle = {};
     providerList = [];
 
-    if (planList != null && planList.length > 0) {
+    if (planList != null && planList.isNotEmpty) {
       planList.forEach((element) {
         if (element?.metadata != null && element?.metadata != '') {
           if (element?.metadata?.diseases != null &&
               element?.metadata?.diseases != '') {
-            bool keysUniq = true;
+            var keysUniq = true;
             categoryListUniq.forEach((catElement) {
               if (catElement?.metadata?.diseases ==
                   element?.metadata?.diseases) {
@@ -113,7 +113,7 @@ class _DiseasesList extends State<DiseasesList> {
         }
       });
     }
-    return (categoryListUniq != null && categoryListUniq.length > 0)
+    return (categoryListUniq != null && categoryListUniq.isNotEmpty)
         ? Column(
             children: [
               SizedBox(
@@ -123,7 +123,7 @@ class _DiseasesList extends State<DiseasesList> {
                 padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
                 width: 1.sw,
                 //margin: EdgeInsets.only(left: 16, right: 16, top: 8),
-                color: Color(new CommonUtil().getMyPrimaryColor()),
+                color: Color(CommonUtil().getMyPrimaryColor()),
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                   child: Text(
@@ -142,11 +142,8 @@ class _DiseasesList extends State<DiseasesList> {
                   padding: EdgeInsets.only(
                     bottom: 8.0.h,
                   ),
-                  itemBuilder: (BuildContext ctx, int i) => diseasesListItem(
-                      ctx,
-                      i,
-                      isSearch ? myPLanListResult : categoryListUniq,
-                      planList),
+                  itemBuilder: (ctx, i) => diseasesListItem(ctx, i,
+                      isSearch ? myPLanListResult : categoryListUniq, planList),
                   itemCount: isSearch
                       ? myPLanListResult.length
                       : categoryListUniq.length,
@@ -256,20 +253,18 @@ class _DiseasesList extends State<DiseasesList> {
   }
 
   Widget getDiseasesList(String providerId) {
-    return new FutureBuilder<PlanListModel>(
+    return FutureBuilder<PlanListModel>(
       future: planListModel,
-      builder: (BuildContext context, snapshot) {
+      builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return SafeArea(
             child: SizedBox(
               height: 1.sh / 4.5,
-              child: new Center(
+              child: Center(
                 child: SizedBox(
                   width: 30.0.h,
                   height: 30.0.h,
-                  child: new CircularProgressIndicator(
-                      backgroundColor:
-                          Color(new CommonUtil().getMyPrimaryColor())),
+                  child: CommonCircularIndicator(),
                 ),
               ),
             ),
@@ -279,7 +274,7 @@ class _DiseasesList extends State<DiseasesList> {
         } else {
           if (snapshot?.hasData &&
               snapshot?.data?.result != null &&
-              snapshot?.data?.result?.length > 0) {
+              snapshot?.data?.result.isNotEmpty) {
             return diseasesList(snapshot.data.result);
           } else {
             return SafeArea(
@@ -302,12 +297,12 @@ class _DiseasesList extends State<DiseasesList> {
     return InkWell(
       onTap: () {
         try {
-          if (planListFull != null && planList.length > 0) {
+          if (planListFull != null && planList.isNotEmpty) {
             planListFull.where((element1) {
               return (element1?.metadata?.diseases ?? '') ==
                   planList[i]?.metadata?.diseases;
             }).forEach((element) {
-              bool keysUniq = true;
+              var keysUniq = true;
               providerList.forEach((catElement) {
                 if (catElement?.plinkid == element.plinkid) {
                   keysUniq = false;
@@ -367,7 +362,7 @@ class _DiseasesList extends State<DiseasesList> {
         }
       },
       child: Container(
-        padding: EdgeInsets.all(6.0),
+        padding: EdgeInsets.all(6),
         //margin: EdgeInsets.only(left: 16, right: 16),
         child: Column(
           children: [

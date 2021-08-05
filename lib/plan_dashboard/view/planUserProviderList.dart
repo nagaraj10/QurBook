@@ -1,19 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/FHBBasicWidget.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/common/errors_widget.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/plan_dashboard/model/SearchListModel.dart';
-import 'package:myfhb/plan_dashboard/services/SearchListService.dart';
-import 'package:myfhb/plan_dashboard/view/categoryList.dart';
-import 'package:myfhb/plan_dashboard/viewModel/planViewModel.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:showcaseview/showcase_widget.dart';
+import '../../common/CommonUtil.dart';
+import '../../common/FHBBasicWidget.dart';
+import '../../common/PreferenceUtil.dart';
+import '../../common/errors_widget.dart';
+import '../../constants/fhb_constants.dart' as Constants;
+import '../../constants/fhb_constants.dart';
+import '../../constants/fhb_parameters.dart';
+import '../../constants/variable_constant.dart' as variable;
+import '../model/PlanListModel.dart';
+import '../model/SearchListModel.dart';
+import '../services/SearchListService.dart';
+import 'categoryList.dart';
+import 'planList.dart';
+import 'searchProviderList.dart';
+import '../viewModel/planViewModel.dart';
+import '../viewModel/subscribeViewModel.dart';
+import '../../regiment/view_model/regiment_view_model.dart';
+import '../../src/utils/colors_utils.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
+import '../../telehealth/features/SearchWidget/view/SearchWidget.dart';
+import 'package:provider/provider.dart';
+import 'package:showcaseview/showcaseview.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 
 class SearchListHome extends StatefulWidget {
   @override
@@ -21,9 +30,9 @@ class SearchListHome extends StatefulWidget {
 }
 
 class _SearchListState extends State<SearchListHome> {
-  PlanViewModel myPlanViewModel = new PlanViewModel();
+  PlanViewModel myPlanViewModel = PlanViewModel();
   SearchListModel searchModel;
-  SearchListService searchListService = new SearchListService();
+  SearchListService searchListService = SearchListService();
 
   //bool isListVisible = false;
   bool isLoaderVisible = false;
@@ -36,7 +45,7 @@ class _SearchListState extends State<SearchListHome> {
   bool isFirst;
   BuildContext _myContext;
 
-  List<SearchListResult> providerListSelected = new List();
+  List<SearchListResult> providerListSelected = [];
 
   @override
   void initState() {
@@ -93,14 +102,11 @@ class _SearchListState extends State<SearchListHome> {
                 ),
                 Visibility(
                     visible: isLoaderVisible,
-                    child: new Center(
+                    child: Center(
                       child: SizedBox(
                         width: 30.0.h,
                         height: 30.0.h,
-                        child: new CircularProgressIndicator(
-                            strokeWidth: 1.5,
-                            backgroundColor:
-                                Color(new CommonUtil().getMyPrimaryColor())),
+                        child: CommonCircularIndicator(),
                       ),
                     )),
                 Expanded(
@@ -111,7 +117,7 @@ class _SearchListState extends State<SearchListHome> {
             ),
           ),
           floatingActionButton: FloatingActionButton(
-            heroTag: "searchOpt",
+            heroTag: 'searchOpt',
             onPressed: () {
               /*Navigator.push(
                 context,
@@ -124,7 +130,7 @@ class _SearchListState extends State<SearchListHome> {
             },
             child: Icon(
               Icons.add,
-              color: Color(new CommonUtil().getMyPrimaryColor()),
+              color: Color(CommonUtil().getMyPrimaryColor()),
               size: 24.0.sp,
             ),
           ));
@@ -132,20 +138,18 @@ class _SearchListState extends State<SearchListHome> {
   }
 
   Widget getProviderList() {
-    return new FutureBuilder<SearchListModel>(
+    return FutureBuilder<SearchListModel>(
       future: providerList,
-      builder: (BuildContext context, snapshot) {
+      builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return SafeArea(
             child: SizedBox(
               height: 1.sh / 4.5,
-              child: new Center(
+              child: Center(
                 child: SizedBox(
                   width: 30.0.h,
                   height: 30.0.h,
-                  child: new CircularProgressIndicator(
-                      backgroundColor:
-                          Color(new CommonUtil().getMyPrimaryColor())),
+                  child: CommonCircularIndicator(),
                 ),
               ),
             ),
@@ -155,7 +159,7 @@ class _SearchListState extends State<SearchListHome> {
         } else {
           if (snapshot?.hasData &&
               snapshot?.data?.result != null &&
-              snapshot?.data?.result?.length > 0) {
+              snapshot?.data?.result.isNotEmpty) {
             providerListSelected = snapshot?.data?.result;
             return searchListView(snapshot.data.result);
           } else {
@@ -179,7 +183,7 @@ class _SearchListState extends State<SearchListHome> {
       setState(() {
         isLoaderVisible = true;
       });
-      searchListService.getSearchList(title).then((value) {
+      await searchListService.getSearchList(title).then((value) {
         if (value.isSuccess) {
           if (value.result != null) {
             setState(() {
@@ -244,13 +248,13 @@ class _SearchListState extends State<SearchListHome> {
   }*/
 
   Widget searchListView(List<SearchListResult> searchListResult) {
-    return (searchListResult != null && searchListResult.length > 0)
+    return (searchListResult != null && searchListResult.isNotEmpty)
         ? ListView.builder(
             shrinkWrap: true,
             padding: EdgeInsets.only(
               bottom: 8.0.h,
             ),
-            itemBuilder: (BuildContext ctx, int i) => i != 0
+            itemBuilder: (ctx, i) => i != 0
                 ? searchListItem(ctx, i, searchListResult)
                 : FHBBasicWidget.customShowCase(
                     _hospitalKey,
@@ -284,7 +288,7 @@ class _SearchListState extends State<SearchListHome> {
         });
       },
       child: Container(
-          padding: EdgeInsets.all(8.0),
+          padding: EdgeInsets.all(8),
           margin: EdgeInsets.only(left: 12, right: 12, top: 8),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -293,16 +297,15 @@ class _SearchListState extends State<SearchListHome> {
               BoxShadow(
                 color: const Color(0xFFe3e2e2),
                 blurRadius: 16, // has the effect of softening the shadow
-                spreadRadius: 5.0, // has the effect of extending the shadow
+                spreadRadius: 5, // has the effect of extending the shadow
                 offset: Offset(
-                  0.0, // horizontal, move right 10
-                  0.0, // vertical, move down 10
+                  0, // horizontal, move right 10
+                  0, // vertical, move down 10
                 ),
               )
             ],
           ),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Row(
                 children: [
@@ -348,19 +351,20 @@ class _SearchListState extends State<SearchListHome> {
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
                         ),
-                        searchList[i].title != null &&
-                                searchList[i].title != '' &&
-                                searchList[i].title == strQurhealth
-                            ? Text(
-                                strCovidFree,
-                                style: TextStyle(
-                                  fontSize: 15.0.sp,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.red,
-                                ),
-                                textAlign: TextAlign.start,
-                              )
-                            : SizedBox.shrink()
+                        if (searchList[i].title != null &&
+                            searchList[i].title != '' &&
+                            searchList[i].title == strQurhealth)
+                          Text(
+                            strCovidFree,
+                            style: TextStyle(
+                              fontSize: 15.0.sp,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.red,
+                            ),
+                            textAlign: TextAlign.start,
+                          )
+                        else
+                          SizedBox.shrink()
                       ],
                     ),
                   ),

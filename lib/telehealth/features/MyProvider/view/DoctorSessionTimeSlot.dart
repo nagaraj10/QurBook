@@ -17,6 +17,7 @@ import 'package:myfhb/telehealth/features/MyProvider/viewModel/SlotsAvailability
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/common/errors_widget.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 
 class DoctorSessionTimeSlot extends StatefulWidget {
   final String doctorId;
@@ -40,6 +41,9 @@ class DoctorSessionTimeSlot extends StatefulWidget {
   dynamic body;
   bool isFromFollowOrReschedule;
 
+  bool isFromFollowUpApp;
+  bool isFromFollowUpTake;
+
   DoctorSessionTimeSlot(
       {this.doctorId,
       this.date,
@@ -60,7 +64,9 @@ class DoctorSessionTimeSlot extends StatefulWidget {
       this.onUserChangedDate,
       this.isFromHospital,
       this.body,
-      this.isFromFollowOrReschedule});
+      this.isFromFollowOrReschedule,
+      this.isFromFollowUpApp,
+      this.isFromFollowUpTake});
 
   @override
   State<StatefulWidget> createState() {
@@ -200,10 +206,7 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
               children: <Widget>[
                 SizedBoxWidget(height: 20.0.h),
                 new SizedBox(
-                  child: CircularProgressIndicator(
-                      strokeWidth: 2.0,
-                      backgroundColor:
-                          Color(new CommonUtil().getMyPrimaryColor())),
+                  child: CommonCircularIndicator(),
                   height: 20.0.h,
                   width: 20.0.h,
                 ),
@@ -242,7 +245,9 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
                           isFromHospital: widget.isFromHospital,
                           body: widget.body,
                           isFromFollowReschedule:
-                              widget.isFromFollowOrReschedule
+                              widget.isFromFollowOrReschedule,
+                          isFromFollowUpApp: widget.isFromFollowUpApp,
+                          isFromFollowUpTake: widget.isFromFollowUpTake,
                         ),
                       )
                     : Column(

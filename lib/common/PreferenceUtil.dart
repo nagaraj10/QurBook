@@ -3,24 +3,24 @@ import 'dart:convert';
 import 'dart:core';
 
 import 'package:flutter/widgets.dart';
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/language/model/Language.dart';
-import 'package:myfhb/my_family/models/FamilyData.dart';
-import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
-import 'package:myfhb/my_family/models/RelationShip.dart';
-import 'package:myfhb/my_family/models/relationship_response_list.dart';
-import 'package:myfhb/my_family/models/relationships.dart';
-import 'package:myfhb/src/model/Authentication/UserModel.dart';
-import 'package:myfhb/src/model/Category/catergory_result.dart';
-import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
-import 'package:myfhb/src/model/Media/media_result.dart';
-import 'package:myfhb/src/model/user/DoctorIds.dart';
-import 'package:myfhb/src/model/user/HospitalIds.dart';
-import 'package:myfhb/src/model/user/LaboratoryIds.dart';
-import 'package:myfhb/src/model/user/MyProfileModel.dart';
-import 'package:myfhb/telehealth/features/Notifications/constants/notification_constants.dart';
-import 'package:myfhb/video_call/model/NotificationModel.dart';
+import 'CommonConstants.dart';
+import '../constants/fhb_constants.dart' as Constants;
+import '../language/model/Language.dart';
+import '../my_family/models/FamilyData.dart';
+import '../my_family/models/FamilyMembersRes.dart';
+import '../my_family/models/RelationShip.dart';
+import '../my_family/models/relationship_response_list.dart';
+import '../my_family/models/relationships.dart';
+import '../src/model/Authentication/UserModel.dart';
+import '../src/model/Category/catergory_result.dart';
+import '../src/model/Health/asgard/health_record_list.dart';
+import '../src/model/Media/media_result.dart';
+import '../src/model/user/DoctorIds.dart';
+import '../src/model/user/HospitalIds.dart';
+import '../src/model/user/LaboratoryIds.dart';
+import '../src/model/user/MyProfileModel.dart';
+import '../telehealth/features/Notifications/constants/notification_constants.dart';
+import '../video_call/model/NotificationModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PreferenceUtil {
@@ -44,14 +44,14 @@ class PreferenceUtil {
   }
 
   static saveShownIntroScreens() async {
-    var instance = await _prefs;
-    instance.setBool(Constants.KeyShowIntroScreens, true);
+    final instance = await _prefs;
+    await instance.setBool(Constants.KeyShowIntroScreens, true);
   }
 
   static Future<bool> saveMediaData(
       String keyProfile, MediaResult mediaData) async {
-    var instance = await _prefs;
-    String profile = json.encode(mediaData);
+    final instance = await _prefs;
+    final profile = json.encode(mediaData);
 
     return instance.setString(keyProfile, profile);
   }
@@ -64,13 +64,13 @@ class PreferenceUtil {
 
   static Future<bool> saveMediaType(
       String membershipKey, List<MediaResult> mediaDataList) async {
-    var instance = await _prefs;
+    final instance = await _prefs;
 
     return instance.setString(membershipKey, json.encode(mediaDataList));
   }
 
   static Future<bool> saveString(String key, String value) async {
-    var instance = await _prefs;
+    final instance = await _prefs;
     return instance.setString(key, value);
   }
 
@@ -80,13 +80,13 @@ class PreferenceUtil {
   } */
 
   static List<MediaResult> getMediaType() {
-    List<MediaResult> mediaData = new List();
+    var mediaData = List<MediaResult>();
 
     if (_prefsInstance == null) {}
     json
         .decode(_prefsInstance.getString(Constants.KEY_METADATA))
         .forEach((map) {
-      mediaData.add(new MediaResult.fromJson(map));
+      mediaData.add(MediaResult.fromJson(map));
     });
 
     return mediaData;
@@ -94,15 +94,15 @@ class PreferenceUtil {
 
   static Future<bool> saveNotificationData(NotificationModel data) async {
     _prefsInstance ??= await _prefs;
-    final dataInMap = data.toMap();
-    final jsonData = json.encode(dataInMap);
+    var dataInMap = data.toMap();
+    var jsonData = json.encode(dataInMap);
     return await _prefsInstance.setString(Constants.NotificationData, jsonData);
   }
 
   static Future<NotificationModel> getNotifiationData() async {
     _prefsInstance ??= await _prefs;
-    final jsonData = _prefsInstance.getString(Constants.NotificationData);
-    final dataInMap = json.decode(jsonData);
+    var jsonData = _prefsInstance.getString(Constants.NotificationData);
+    var dataInMap = json.decode(jsonData);
     return NotificationModel.fromSharePreferences(dataInMap);
   }
 
@@ -116,7 +116,7 @@ class PreferenceUtil {
   }
 
   static Future<bool> saveTheme(String key, int value) async {
-    var instance = await _prefs;
+    final instance = await _prefs;
     return instance.setInt(key, value);
   }
 
@@ -126,12 +126,12 @@ class PreferenceUtil {
 
   static Future<bool> saveCategoryList(
       String membershipKey, List<CategoryResult> categoryList) async {
-    var instance = await _prefs;
+    final instance = await _prefs;
 
-    for (CategoryResult categoryData in categoryList) {
+    for (var categoryData in categoryList) {
       if (categoryData.categoryDescription ==
           CommonConstants.categoryDescriptionVoiceRecord) {
-        saveString(Constants.KEY_VOICE_ID, categoryData.id);
+        await saveString(Constants.KEY_VOICE_ID, categoryData.id);
       }
     }
 
@@ -140,8 +140,8 @@ class PreferenceUtil {
 
   static Future<bool> saveProfileData(
       String keyProfile, MyProfileModel profileData) async {
-    var instance = await _prefs;
-    String profile = json.encode(profileData);
+    final instance = await _prefs;
+    var profile = json.encode(profileData);
     return instance.setString(keyProfile, profile);
   }
 
@@ -152,14 +152,14 @@ class PreferenceUtil {
   }
 
   static List<CategoryResult> getCategoryType() {
-    List<CategoryResult> categoryData = new List();
+    final categoryData = List<CategoryResult>();
 
     try {
       if (_prefsInstance == null) {}
       json
           .decode(_prefsInstance.getString(Constants.KEY_CATEGORYLIST))
           .forEach((map) {
-        categoryData.add(new CategoryResult.fromJson(map));
+        categoryData.add(CategoryResult.fromJson(map));
       });
 
       return categoryData;
@@ -168,30 +168,30 @@ class PreferenceUtil {
 
   static Future<bool> clearAllData() async {
     if (_prefsInstance == null) {}
-    var instance = await _prefs;
+    final instance = await _prefs;
     return instance.clear();
   }
 
   static Future<bool> savePrefereDoctors(
       String keyPreferredDoctor, DoctorIds doctorIds) async {
-    var instance = await _prefs;
-    String doctorProfile = json.encode(doctorIds);
+    final instance = await _prefs;
+    var doctorProfile = json.encode(doctorIds);
 
     return instance.setString(keyPreferredDoctor, doctorProfile);
   }
 
   static Future<bool> savePrefereHospital(
       String keyPrefrredHospital, HospitalIds hospitalIds) async {
-    var instance = await _prefs;
-    String hospitalData = json.encode(hospitalIds);
+    final instance = await _prefs;
+    final hospitalData = json.encode(hospitalIds);
 
     return instance.setString(keyPrefrredHospital, hospitalData);
   }
 
   static Future<bool> savePreferedLab(
       String keyPreferredLab, LaboratoryIds laboratoryIds) async {
-    var instance = await _prefs;
-    String labData = json.encode(laboratoryIds);
+    final instance = await _prefs;
+    var labData = json.encode(laboratoryIds);
 
     return instance.setString(keyPreferredLab, labData);
   }
@@ -216,7 +216,7 @@ class PreferenceUtil {
   }
 
   static Future<bool> saveInt(String key, int value) async {
-    var instance = await _prefs;
+    final instance = await _prefs;
     return instance.setInt(key, value);
   }
 
@@ -228,8 +228,8 @@ class PreferenceUtil {
 
   static Future<bool> saveCompleteData(
       String keyCompletedData, HealthRecordList completeData) async {
-    var instance = await _prefs;
-    String completeDataStr = json.encode(completeData);
+    final instance = await _prefs;
+    final completeDataStr = json.encode(completeData);
 
     return instance.setString(keyCompletedData, completeDataStr);
   }
@@ -243,12 +243,12 @@ class PreferenceUtil {
   }
 
   static List<CategoryResult> getCategoryTypeDisplay(String key) {
-    List<CategoryResult> categoryData = new List();
+    var categoryData = List<CategoryResult>();
 
     try {
       if (_prefsInstance == null) {}
       json.decode(_prefsInstance.getString(key)).forEach((map) {
-        categoryData.add(new CategoryResult.fromJson(map));
+        categoryData.add(CategoryResult.fromJson(map));
       });
 
       return categoryData;
@@ -259,10 +259,10 @@ class PreferenceUtil {
 
   static Future<bool> saveFamilyData(
       String keyFamily, FamilyMemberResult familyData) async {
-    var instance = await _prefs;
+    final instance = await _prefs;
 
     try {
-      String family = json.encode(familyData);
+      var family = json.encode(familyData);
 
       return instance.setString(keyFamily, family);
     } catch (e) {
@@ -281,10 +281,10 @@ class PreferenceUtil {
 
   static Future<bool> saveFamilyDataNew(
       String keyFamily, FamilyMemberResult familyData) async {
-    var instance = await _prefs;
+    final instance = await _prefs;
 
     try {
-      String family = json.encode(familyData);
+      var family = json.encode(familyData);
 
       return instance.setString(keyFamily, family);
     } catch (e) {
@@ -294,18 +294,18 @@ class PreferenceUtil {
 
   static Future<bool> saveLanguageList(
       String membershipKey, List<LanguageResult> categoryList) async {
-    var instance = await _prefs;
+    final instance = await _prefs;
 
     return instance.setString(membershipKey, json.encode(categoryList));
   }
 
   static List<LanguageResult> getLanguagegeList(String keyLanguage) {
-    List<LanguageResult> categoryData = new List();
+    var categoryData = List<LanguageResult>();
 
     try {
       if (_prefsInstance == null) {}
       json.decode(_prefsInstance.getString(keyLanguage)).forEach((map) {
-        categoryData.add(new LanguageResult.fromJson(map));
+        categoryData.add(LanguageResult.fromJson(map));
       });
 
       return categoryData;
@@ -323,10 +323,10 @@ class PreferenceUtil {
 
   static Future<bool> saveFamilyRelationShip(
       String keyFamilyrel, RelationShipResponseList familyData) async {
-    var instance = await _prefs;
+    final instance = await _prefs;
 
     try {
-      String family = json.encode(familyData);
+      final family = json.encode(familyData);
 
       return instance.setString(keyFamilyrel, family);
     } catch (e) {
@@ -347,19 +347,19 @@ class PreferenceUtil {
 
   static Future<bool> saveRelationshipArray(
       String familyRelation, List<RelationsShipModel> relationShipAry) async {
-    var instance = await _prefs;
+    final instance = await _prefs;
 
     return instance.setString(familyRelation, json.encode(relationShipAry));
   }
 
   static List<RelationsShipModel> getFamilyRelationship(
       String keyFamilyRelation) {
-    List<RelationsShipModel> categoryData = new List();
+    var categoryData = List<RelationsShipModel>();
 
     try {
       if (_prefsInstance == null) {}
       json.decode(_prefsInstance.getString(keyFamilyRelation)).forEach((map) {
-        categoryData.add(new RelationsShipModel.fromJson(map));
+        categoryData.add(RelationsShipModel.fromJson(map));
       });
 
       return categoryData;
@@ -367,8 +367,8 @@ class PreferenceUtil {
   }
 
   static save(String key, value) async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString(key, json.encode(value));
+    var prefs = await SharedPreferences.getInstance();
+    await prefs.setString(key, json.encode(value));
   }
 
   static UserModel getPatientDetails(String keyProfile) {

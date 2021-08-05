@@ -5,47 +5,48 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/colors/fhb_colors.dart';
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/FHBBasicWidget.dart';
-import 'package:myfhb/common/customized_checkbox.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/router_variable.dart';
-import 'package:myfhb/constants/variable_constant.dart';
-import 'package:myfhb/device_integration/model/DeleteDeviceHealthRecord.dart';
-import 'package:myfhb/device_integration/model/DeviceIntervalData.dart';
-import 'package:myfhb/device_integration/model/HeartRate.dart';
-import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
-import 'package:myfhb/src/blocs/Media/MediaTypeBlock.dart';
-import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
-import 'package:myfhb/src/model/Category/catergory_result.dart';
-import 'package:myfhb/src/model/Media/media_data_list.dart';
-import 'package:myfhb/src/model/Media/media_result.dart';
-import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
-import 'package:myfhb/src/ui/bot/view/ChatScreen.dart';
-import 'package:myfhb/src/ui/bot/view/sheela_arguments.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
+import '../../../colors/fhb_colors.dart';
+import '../../../common/CommonConstants.dart';
+import '../../../common/CommonUtil.dart';
+import '../../../common/FHBBasicWidget.dart';
+import '../../../common/customized_checkbox.dart';
+import '../../../constants/fhb_constants.dart';
+import '../../../constants/router_variable.dart';
+import '../../../constants/variable_constant.dart';
+import '../../model/DeleteDeviceHealthRecord.dart';
+import '../../model/DeviceIntervalData.dart';
+import '../../model/HeartRate.dart';
+import '../../../src/blocs/Category/CategoryListBlock.dart';
+import '../../../src/blocs/Media/MediaTypeBlock.dart';
+import '../../../src/blocs/health/HealthReportListForUserBlock.dart';
+import '../../../src/model/Category/catergory_result.dart';
+import '../../../src/model/Media/media_data_list.dart';
+import '../../../src/model/Media/media_result.dart';
+import '../../../src/resources/repository/health/HealthReportListForUserRepository.dart';
+import '../../../src/ui/bot/view/ChatScreen.dart';
+import '../../../src/ui/bot/view/sheela_arguments.dart';
+import '../../../src/utils/FHBUtils.dart';
 import 'package:provider/provider.dart';
 
-import 'package:myfhb/constants/fhb_parameters.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
+import '../../../constants/fhb_parameters.dart';
+import '../../../constants/variable_constant.dart' as variable;
 
-import 'package:myfhb/widgets/GradientAppBar.dart';
+import '../../../widgets/GradientAppBar.dart';
 
-import 'package:myfhb/device_integration/model/BPValues.dart';
-import 'package:myfhb/device_integration/model/GulcoseValues.dart';
-import 'package:myfhb/device_integration/model/OxySaturationValues.dart';
-import 'package:myfhb/device_integration/model/TemperatureValues.dart';
-import 'package:myfhb/device_integration/model/WeightValues.dart';
-import 'package:myfhb/device_integration/viewModel/Device_model.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import '../../model/BPValues.dart';
+import '../../model/GulcoseValues.dart';
+import '../../model/OxySaturationValues.dart';
+import '../../model/TemperatureValues.dart';
+import '../../model/WeightValues.dart';
+import '../../viewModel/Device_model.dart';
+import '../../../common/PreferenceUtil.dart';
+import '../../../constants/fhb_parameters.dart' as parameters;
 import 'dart:convert';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import '../../../src/utils/screenutils/size_extensions.dart';
 
 class EachDeviceValues extends StatefulWidget {
-  EachDeviceValues(
+  const EachDeviceValues(
       {this.device_name,
       this.device_icon,
       this.sheelaRequestString,
@@ -61,40 +62,40 @@ class EachDeviceValues extends StatefulWidget {
 }
 
 class _EachDeviceValuesState extends State<EachDeviceValues> {
-  GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
-  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+  GlobalKey<ScaffoldState> scaffold_state = GlobalKey<ScaffoldState>();
+  final GlobalKey<State> _keyLoader = GlobalKey<State>();
   String errorMsg = '';
   bool onOkClicked = false;
   String categoryName = STR_DEVICES;
 
-  CategoryListBlock _categoryListBlock = new CategoryListBlock();
-  List<CategoryResult> catgoryDataList = new List();
-  MediaTypeBlock _mediaTypeBlock = new MediaTypeBlock();
-  MediaDataList mediaTypesResponse = new MediaDataList();
+  final CategoryListBlock _categoryListBlock = CategoryListBlock();
+  List<CategoryResult> catgoryDataList = List();
+  final MediaTypeBlock _mediaTypeBlock = MediaTypeBlock();
+  MediaDataList mediaTypesResponse = MediaDataList();
 
-  CategoryResult categoryDataObj = new CategoryResult();
+  CategoryResult categoryDataObj = CategoryResult();
   String categoryID = '14c3f2a1-70d3-49dd-a922-6bee255eed26';
-  MediaResult mediaDataObj = new MediaResult();
+  MediaResult mediaDataObj = MediaResult();
 
-  TextEditingController deviceController = new TextEditingController(text: '');
-  TextEditingController pulse = new TextEditingController(text: '');
-  TextEditingController memoController = new TextEditingController(text: '');
-  TextEditingController diaStolicPressure = new TextEditingController(text: '');
+  TextEditingController deviceController = TextEditingController(text: '');
+  TextEditingController pulse = TextEditingController(text: '');
+  TextEditingController memoController = TextEditingController(text: '');
+  TextEditingController diaStolicPressure = TextEditingController(text: '');
 
-  List<bool> isSelected = new List(2);
+  List<bool> isSelected = List(2);
 
-  HealthReportListForUserBlock _healthReportListForUserBlock =
-      new HealthReportListForUserBlock();
+  final HealthReportListForUserBlock _healthReportListForUserBlock =
+      HealthReportListForUserBlock();
 
-  List<String> imagePathMain = new List();
+  List<String> imagePathMain = List();
 
-  FlutterToast toast = new FlutterToast();
+  FlutterToast toast = FlutterToast();
 
   String validationMsg;
 
-  FHBBasicWidget fhbBasicWidget = new FHBBasicWidget();
+  FHBBasicWidget fhbBasicWidget = FHBBasicWidget();
 
-  var commonConstants = new CommonConstants();
+  var commonConstants = CommonConstants();
 
   @override
   void initState() {
@@ -124,7 +125,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
   @override
   Widget build(BuildContext context) {
-    DevicesViewModel _devicesmodel = Provider.of<DevicesViewModel>(context);
+    final _devicesmodel = Provider.of<DevicesViewModel>(context);
     return Scaffold(
       key: scaffold_state,
       appBar: AppBar(
@@ -206,12 +207,11 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
           style: TextStyle(fontSize: 14.0.sp),
         ),
         SizedBoxWidget(height: 5.0.h),
-        new Container(
+        Container(
           child: Padding(
-            padding: const EdgeInsets.only(
-                left: 8.0, top: 4.0, right: 8.0, bottom: 0.0),
+            padding:
+                const EdgeInsets.only(left: 8, top: 4, right: 8, bottom: 0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 SizedBox(
@@ -223,12 +223,12 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                       : () async {
                           onOkClicked = true;
 
-                          new FHBUtils().check().then((intenet) {
+                          FHBUtils().check().then((intenet) {
                             if (intenet != null && intenet) {
                               createDeviceRecords(widget.deviceNameForAdding);
                             } else {
                               onOkClicked = false;
-                              new FHBBasicWidget().showInSnackBar(
+                              FHBBasicWidget().showInSnackBar(
                                   STR_NO_CONNECTIVITY, scaffold_state);
                             }
                           });
@@ -243,13 +243,13 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                       });
                     }*/
                   ,
-                  child: Text('OK'),
                   textColor: Color(CommonUtil().getMyPrimaryColor()),
                   color: Colors.transparent,
                   borderSide: BorderSide(
                       color: Color(CommonUtil().getMyPrimaryColor())),
                   shape: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10)),
+                  child: Text('OK'),
                 ),
                 //submitButton(_otpVerifyBloc)
                 MaterialButton(
@@ -270,12 +270,11 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   }
 
   void deleteDeviceRecord(String deviceId) async {
-    HealthReportListForUserRepository healthReportListForUserRepository =
-        HealthReportListForUserRepository();
+    var healthReportListForUserRepository = HealthReportListForUserRepository();
 
     DeleteDeviceHealthRecord deviceHealthRecord;
 
-    FlutterToast toast = new FlutterToast();
+    final toast = FlutterToast();
 
     await healthReportListForUserRepository
         .deleteDeviceRecords(deviceId)
@@ -294,37 +293,37 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     if (doValidation(deviceName)) {
       CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
 
-      Map<String, dynamic> postMainData = new Map();
-      Map<String, dynamic> postMediaData = new Map();
+      final postMainData = Map<String, dynamic>();
+      final postMediaData = Map<String, dynamic>();
 
-      String userID = PreferenceUtil.getStringValue(KEY_USERID);
+      final userID = PreferenceUtil.getStringValue(KEY_USERID);
       try {
         catgoryDataList = PreferenceUtil.getCategoryType();
-        categoryDataObj = new CommonUtil()
+        categoryDataObj = CommonUtil()
             .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
         postMediaData[strhealthRecordCategory] = categoryDataObj.toJson();
       } catch (e) {
         if (catgoryDataList == null) {
-          _categoryListBlock.getCategoryLists().then((value) {
+          await _categoryListBlock.getCategoryLists().then((value) {
             catgoryDataList = value.result;
-            categoryDataObj = new CommonUtil()
+            categoryDataObj = CommonUtil()
                 .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
             postMediaData[strhealthRecordCategory] = categoryDataObj.toJson();
           });
         }
       }
 
-      List<MediaResult> metaDataFromSharedPrefernce = new List();
+      var metaDataFromSharedPrefernce = List<MediaResult>();
       if (mediaTypesResponse != null &&
           mediaTypesResponse.result != null &&
-          mediaTypesResponse.result.length > 0) {
+          mediaTypesResponse.result.isNotEmpty) {
         metaDataFromSharedPrefernce = mediaTypesResponse.result;
       } else {
         mediaTypesResponse = await _mediaTypeBlock.getMediTypesList();
 
         metaDataFromSharedPrefernce = mediaTypesResponse.result;
       }
-      mediaDataObj = new CommonUtil().getMediaTypeInfoForParticularDevice(
+      mediaDataObj = CommonUtil().getMediaTypeInfoForParticularDevice(
           deviceName, metaDataFromSharedPrefernce);
 
       postMediaData[parameters.strhealthRecordType] = mediaDataObj.toJson();
@@ -335,16 +334,16 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
       postMediaData[parameters.strSourceName] = CommonConstants.strTridentValue;
       postMediaData[parameters.strmemoTextRaw] = memoController.text;
-      DateTime dateTime = DateTime.now();
+      var dateTime = DateTime.now();
       postMediaData[parameters.strStartDate] = dateTime.toUtc().toString();
       postMediaData[parameters.strEndDate] = dateTime.toUtc().toString();
-      var commonConstants = new CommonConstants();
+      final commonConstants = CommonConstants();
 
       if (categoryName == CommonConstants.strDevice) {
-        List<Map<String, dynamic>> postDeviceData = new List();
-        Map<String, dynamic> postDeviceValues = new Map();
-        Map<String, dynamic> postDeviceValuesExtra = new Map();
-        Map<String, dynamic> postDeviceValuesExtraClone = new Map();
+        final List<Map<String, dynamic>> postDeviceData = [];
+        final Map<String, dynamic> postDeviceValues = {};
+        final Map<String, dynamic> postDeviceValuesExtra = {};
+        final Map<String, dynamic> postDeviceValuesExtraClone = {};
 
         if (deviceName == STR_GLUCOMETER) {
           postDeviceValues[parameters.strParameters] =
@@ -417,16 +416,16 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         postMediaData[parameters.strdeviceReadings] = postDeviceData;
         postMediaData[parameters.strfileName] =
             deviceName + '_${DateTime.now().toUtc().millisecondsSinceEpoch}';
-        DateTime dateTime = DateTime.now();
+        var dateTime = DateTime.now();
 
         postMediaData[parameters.strdateOfVisit] =
-            new FHBUtils().getFormattedDateOnly(dateTime.toString());
+            FHBUtils().getFormattedDateOnly(dateTime.toString());
 
         postMainData[parameters.strmetaInfo] = postMediaData;
 
-        var params = json.encode(postMediaData);
+        final params = json.encode(postMediaData);
 
-        _healthReportListForUserBlock
+        await _healthReportListForUserBlock
             .createHealtRecords(params.toString(), imagePathMain, '')
             .then((value) {
           if (value != null && value.isSuccess) {
@@ -459,17 +458,17 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     } else {
       onOkClicked = false;
 
-      showDialog(
+      await showDialog(
           context: context,
-          child: new AlertDialog(
-            title: new Text(variable.strAPP_NAME),
-            content: new Text(validationMsg),
-          ));
+          builder: (context) => AlertDialog(
+                title: Text(variable.strAPP_NAME),
+                content: Text(validationMsg),
+              ));
     }
   }
 
   bool doValidation(String deviceName) {
-    bool validationConditon = false;
+    var validationConditon = false;
     if (categoryName == STR_DEVICES) {
       if (deviceName == STR_GLUCOMETER) {
         if (deviceController.text == '' || deviceController.text == null) {
@@ -551,7 +550,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   Widget getCardForBPMonitor(String deviceName) {
     return Container(
         //height: 70.0.h,
-        padding: EdgeInsets.all(10.0),
+        padding: EdgeInsets.all(10),
         margin: EdgeInsets.only(left: 15, right: 15, top: 10),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -559,8 +558,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
           boxShadow: [
             BoxShadow(
               color: const Color(cardShadowColor),
-              blurRadius: 16, // has the effect of softening the shadow
-              spreadRadius: 0, // has the effect of extending the shadow
+              blurRadius: 16, // has the effect of extending the shadow
             )
           ],
         ),
@@ -591,13 +589,13 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 ),
                 Expanded(
                   child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SizedBox(
                         width: 15.0.w,
                       ),
                       Expanded(
+                          flex: 1,
                           child: Padding(
                             padding: EdgeInsets.all(5),
                             child: Column(
@@ -654,21 +652,19 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                 )
                               ],
                             ),
-                          ),
-                          flex: 1),
+                          )),
                       Expanded(
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                'Dia',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 14.0.sp,
-                                    color: Color(CommonConstants.bplightColor)),
-                                softWrap: true,
-                              ),
-                              /*Container(
+                        children: <Widget>[
+                          Text(
+                            'Dia',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14.0.sp,
+                                color: Color(CommonConstants.bplightColor)),
+                            softWrap: true,
+                          ),
+                          /*Container(
                                 constraints: BoxConstraints(maxWidth: 100),
                                 child: TextFormField(
                                     controller: diaStolicPressure,
@@ -693,24 +689,24 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                     cursorWidth: 0.5,
                                     onSaved: (input) => setState(() {})),
                               ),*/
-                              fhbBasicWidget.getErrorMsgForUnitEntered(
-                                context,
-                                CommonConstants.strDiastolicPressure,
-                                commonConstants.bpDPUNIT,
-                                diaStolicPressure,
-                                (errorValue) {
-                                  setState(() {
-                                    errorMsg = errorValue;
-                                  });
-                                },
-                                errorMsg,
-                                variable.strbpunit,
-                                deviceName,
-                              )
-                            ],
-                          ),
-                          flex: 1),
+                          fhbBasicWidget.getErrorMsgForUnitEntered(
+                            context,
+                            CommonConstants.strDiastolicPressure,
+                            commonConstants.bpDPUNIT,
+                            diaStolicPressure,
+                            (errorValue) {
+                              setState(() {
+                                errorMsg = errorValue;
+                              });
+                            },
+                            errorMsg,
+                            variable.strbpunit,
+                            deviceName,
+                          )
+                        ],
+                      )),
                       Expanded(
+                          flex: 1,
                           child: Padding(
                             padding: EdgeInsets.all(5),
                             child: Column(
@@ -768,8 +764,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                 ),
                               ],
                             ),
-                          ),
-                          flex: 1),
+                          )),
                       SizedBox(
                         width: 15.0.w,
                       ),
@@ -785,7 +780,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   Widget getCardForThermometer(String deviceName) {
     return Container(
         //height: 70.0.h,
-        padding: EdgeInsets.all(10.0),
+        padding: EdgeInsets.all(10),
         margin: EdgeInsets.only(left: 15, right: 15, top: 10),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -793,8 +788,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
           boxShadow: [
             BoxShadow(
               color: const Color(cardShadowColor),
-              blurRadius: 16, // has the effect of softening the shadow
-              spreadRadius: 0, // has the effect of extending the shadow
+              blurRadius: 16, // has the effect of extending the shadow
             )
           ],
         ),
@@ -819,19 +813,15 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                   ),
                 ],
               ),
-              flex: 1,
             ),
             SizedBox(
               width: 5.0.w,
             ),
             Expanded(
-              flex: 1,
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       Text(
                         'Temp',
@@ -884,7 +874,6 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                     ],
                   ),
                   Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       Text(
                         '',
@@ -918,7 +907,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   Widget getCardForPulseOxidometer(String deviceName) {
     return Container(
         //height: 70.0.h,
-        padding: EdgeInsets.all(10.0),
+        padding: EdgeInsets.all(10),
         margin: EdgeInsets.only(left: 15, right: 15, top: 10),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -926,14 +915,14 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
           boxShadow: [
             BoxShadow(
               color: const Color(cardShadowColor),
-              blurRadius: 16, // has the effect of softening the shadow
-              spreadRadius: 0, // has the effect of extending the shadow
+              blurRadius: 16, // has the effect of extending the shadow
             )
           ],
         ),
         child: Row(
           children: [
             Expanded(
+              flex: 1,
               child: Column(
                 children: [
                   Image.asset(
@@ -955,55 +944,48 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                   ),
                 ],
               ),
-              flex: 1,
             ),
             SizedBox(
               width: 5.0.w,
             ),
             Expanded(
-              flex: 1,
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Expanded(
-                      flex: 1,
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            'SPO2',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14.0.sp,
-                                color: Color(CommonConstants.pulselightColor)),
-                            softWrap: true,
-                          ),
-                          fhbBasicWidget.getErrorMsgForUnitEntered(
-                              context,
-                              CommonConstants.strOxygenSaturation,
-                              commonConstants.poOxySatUNIT,
-                              deviceController, (errorValue) {
-                            setState(() {
-                              errorMsg = errorValue;
-                            });
-                          }, errorMsg, variable.strpulseUnit, deviceName),
-                        ],
-                      )),
+                    children: <Widget>[
+                      Text(
+                        'SPO2',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14.0.sp,
+                            color: Color(CommonConstants.pulselightColor)),
+                        softWrap: true,
+                      ),
+                      fhbBasicWidget.getErrorMsgForUnitEntered(
+                          context,
+                          CommonConstants.strOxygenSaturation,
+                          commonConstants.poOxySatUNIT,
+                          deviceController, (errorValue) {
+                        setState(() {
+                          errorMsg = errorValue;
+                        });
+                      }, errorMsg, variable.strpulseUnit, deviceName),
+                    ],
+                  )),
                   Expanded(
-                      flex: 1,
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            'PRBpm',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14.0.sp,
-                                color: Color(CommonConstants.pulselightColor)),
-                            softWrap: true,
-                          ),
-                          /* Container(
+                    children: <Widget>[
+                      Text(
+                        'PRBpm',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14.0.sp,
+                            color: Color(CommonConstants.pulselightColor)),
+                        softWrap: true,
+                      ),
+                      /* Container(
                             width: 50,
                             constraints: BoxConstraints(maxWidth: 100),
                             child: TextFormField(
@@ -1031,17 +1013,17 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                 cursorWidth: 0.5,
                                 onSaved: (input) => setState(() {})),
                           ),*/
-                          fhbBasicWidget.getErrorMsgForUnitEntered(
-                              context,
-                              CommonConstants.strPulse,
-                              commonConstants.poPulseUNIT,
-                              pulse, (errorValue) {
-                            setState(() {
-                              errorMsg = errorValue;
-                            });
-                          }, errorMsg, variable.strpulse, deviceName),
-                        ],
-                      ))
+                      fhbBasicWidget.getErrorMsgForUnitEntered(
+                          context,
+                          CommonConstants.strPulse,
+                          commonConstants.poPulseUNIT,
+                          pulse, (errorValue) {
+                        setState(() {
+                          errorMsg = errorValue;
+                        });
+                      }, errorMsg, variable.strpulse, deviceName),
+                    ],
+                  ))
                 ],
               ),
             ),
@@ -1052,7 +1034,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   Widget getCardForWeighingScale(String deviceName) {
     return Container(
         //height: 70.0.h,
-        padding: EdgeInsets.all(10.0),
+        padding: EdgeInsets.all(10),
         margin: EdgeInsets.only(left: 15, right: 15, top: 10),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -1060,8 +1042,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
           boxShadow: [
             BoxShadow(
               color: const Color(cardShadowColor),
-              blurRadius: 16, // has the effect of softening the shadow
-              spreadRadius: 0, // has the effect of extending the shadow
+              blurRadius: 16, // has the effect of extending the shadow
             )
           ],
         ),
@@ -1086,19 +1067,15 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                   ),
                 ],
               ),
-              flex: 1,
             ),
             SizedBox(
               width: 5.0.w,
             ),
             Expanded(
-              flex: 1,
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       Text(
                         'Kg',
@@ -1129,7 +1106,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   Widget getCardForGlucometer(String deviceName) {
     return Container(
         //height: 70.0.h,
-        padding: EdgeInsets.all(10.0),
+        padding: EdgeInsets.all(10),
         margin: EdgeInsets.only(left: 15, right: 15, top: 10),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -1137,14 +1114,14 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
           boxShadow: [
             BoxShadow(
               color: const Color(cardShadowColor),
-              blurRadius: 16, // has the effect of softening the shadow
-              spreadRadius: 0, // has the effect of extending the shadow
+              blurRadius: 16, // has the effect of extending the shadow
             )
           ],
         ),
         child: Row(
           children: [
             Expanded(
+              flex: 1,
               child: Column(
                 children: [
                   Image.asset(
@@ -1166,99 +1143,90 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                   ),
                 ],
               ),
-              flex: 1,
             ),
             SizedBox(
               width: 5.0.w,
             ),
             Expanded(
-                flex: 1,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      'mg/dl',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14.0.sp,
-                          color: Color(CommonConstants.GlucolightColor)),
-                      softWrap: true,
-                    ),
-                    fhbBasicWidget.getErrorMsgForUnitEntered(
-                        context,
-                        CommonConstants.strValue,
-                        commonConstants.glucometerUNIT,
-                        deviceController, (errorValue) {
-                      setState(() {
-                        errorMsg = errorValue;
-                      });
-                    }, errorMsg, variable.strGlucUnit, deviceName)
-                  ],
-                )),
+              children: <Widget>[
+                Text(
+                  'mg/dl',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 14.0.sp,
+                      color: Color(CommonConstants.GlucolightColor)),
+                  softWrap: true,
+                ),
+                fhbBasicWidget.getErrorMsgForUnitEntered(
+                    context,
+                    CommonConstants.strValue,
+                    commonConstants.glucometerUNIT,
+                    deviceController, (errorValue) {
+                  setState(() {
+                    errorMsg = errorValue;
+                  });
+                }, errorMsg, variable.strGlucUnit, deviceName)
+              ],
+            )),
             SizedBox(
               width: 5.0.w,
             ),
             Expanded(
-              flex: 1,
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Expanded(
-                      flex: 1,
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            'Fasting',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14.0.sp,
-                                color: Colors.grey),
-                            softWrap: true,
-                          ),
-                          Container(
-                              width: 50.0.w,
-                              constraints: BoxConstraints(maxWidth: 100.0.w),
-                              child: MyCheckbox(
-                                  value: isSelected[0],
-                                  onChanged: (value) {
-                                    setState(() {
-                                      isSelected[0] = value;
-                                      isSelected[1] = null;
-                                    });
-                                  })),
-                        ],
-                      )),
+                    children: <Widget>[
+                      Text(
+                        'Fasting',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14.0.sp,
+                            color: Colors.grey),
+                        softWrap: true,
+                      ),
+                      Container(
+                          width: 50.0.w,
+                          constraints: BoxConstraints(maxWidth: 100.0.w),
+                          child: MyCheckbox(
+                              value: isSelected[0],
+                              onChanged: (value) {
+                                setState(() {
+                                  isSelected[0] = value;
+                                  isSelected[1] = null;
+                                });
+                              })),
+                    ],
+                  )),
                   SizedBox(
                     width: 5.0.w,
                   ),
                   Expanded(
-                      flex: 1,
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            'PP',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14.0.sp,
-                                color: Colors.grey),
-                            softWrap: true,
-                          ),
-                          Container(
-                              width: 50.0.w,
-                              constraints: BoxConstraints(maxWidth: 100.0.w),
-                              child: MyCheckbox(
-                                  value: isSelected[1],
-                                  onChanged: (value) {
-                                    setState(() {
-                                      isSelected[1] = value;
-                                      isSelected[0] = null;
-                                    });
-                                  })),
-                        ],
-                      ))
+                    children: <Widget>[
+                      Text(
+                        'PP',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14.0.sp,
+                            color: Colors.grey),
+                        softWrap: true,
+                      ),
+                      Container(
+                          width: 50.0.w,
+                          constraints: BoxConstraints(maxWidth: 100.0.w),
+                          child: MyCheckbox(
+                              value: isSelected[1],
+                              onChanged: (value) {
+                                setState(() {
+                                  isSelected[1] = value;
+                                  isSelected[0] = null;
+                                });
+                              })),
+                    ],
+                  ))
                 ],
               ),
             ),
@@ -1267,19 +1235,19 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   }
 
   String getFormattedDateTime(String datetime) {
-    DateTime dateTimeStamp = DateTime.parse(datetime).toLocal();
-    String formattedDate = DateFormat('d MMM yyyy').format(dateTimeStamp);
+    final dateTimeStamp = DateTime.parse(datetime).toLocal();
+    final formattedDate = DateFormat('d MMM yyyy').format(dateTimeStamp);
     return formattedDate;
   }
 
   String getFormattedTime(String datetime) {
-    DateTime dateTimeStamp = DateTime.parse(datetime).toLocal();
-    String formattedDate = DateFormat('h:mm a').format(dateTimeStamp);
+    var dateTimeStamp = DateTime.parse(datetime).toLocal();
+    var formattedDate = DateFormat('h:mm a').format(dateTimeStamp);
     return formattedDate;
   }
 
   Widget getValues(BuildContext context, DevicesViewModel devicesViewModel) {
-    var todayDate = getFormattedDateTime(DateTime.now().toString());
+    final todayDate = getFormattedDateTime(DateTime.now().toString());
     switch (widget.device_name) {
       case strDataTypeBP:
         {
@@ -1287,31 +1255,26 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
               future: devicesViewModel.fetchBPDetails(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return new Center(
-                    child: new CircularProgressIndicator(
-                      backgroundColor:
-                          Color(new CommonUtil().getMyPrimaryColor()),
-                    ),
-                  );
+                  return CommonCircularIndicator();
                 }
 
-                List<dynamic> translis = snapshot.data;
+                final translis = snapshot.data;
                 //List<WVResult> translist = translis.first;
-                List<BPResult> bpResultNew = translis.first;
+                final List<BPResult> bpResultNew = translis.first;
                 bpResultNew.sort((translisCopy, translisClone) {
                   return translisClone.dateTimeValue
                       .compareTo(translisCopy.dateTimeValue);
                 });
-                List<BPResult> bpResult = bpResultNew;
-                List<DeviceIntervalData> deviceFullList = translis.last;
-                return !bpResult.isEmpty
+                final bpResult = bpResultNew;
+                final List<DeviceIntervalData> deviceFullList = translis.last;
+                return bpResult.isNotEmpty
                     ? GroupedListView<BPResult, String>(
                         groupBy: (element) =>
                             getFormattedDateTime(element.startDateTime),
                         elements: bpResult,
                         sort: false,
-                        groupSeparatorBuilder: (String value) => Padding(
-                          padding: const EdgeInsets.all(6.0),
+                        groupSeparatorBuilder: (value) => Padding(
+                          padding: const EdgeInsets.all(6),
                           child: Row(
                             children: [
                               SizedBoxWidget(width: 15.0.w),
@@ -1348,7 +1311,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                           child: Padding(
                             padding: EdgeInsets.only(left: 40, right: 40),
                             child: Text(
-                              "No health record details available.",
+                              'No health record details available.',
                               textAlign: TextAlign.center,
                               style:
                                   TextStyle(fontFamily: variable.font_roboto),
@@ -1365,31 +1328,26 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
               future: devicesViewModel.fetchGLDetails(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return new Center(
-                    child: new CircularProgressIndicator(
-                      backgroundColor:
-                          Color(new CommonUtil().getMyPrimaryColor()),
-                    ),
-                  );
+                  return CommonCircularIndicator();
                 }
 
-                List<dynamic> translis = snapshot.data;
+                var translis = snapshot.data;
                 //List<WVResult> translist = translis.first;
-                List<GVResult> translistNew = translis.first;
+                final List<GVResult> translistNew = translis.first;
                 translistNew.sort((translisCopy, translisClone) {
                   return translisClone.dateTimeValue
                       .compareTo(translisCopy.dateTimeValue);
                 });
-                List<GVResult> translist = translistNew;
-                List<DeviceIntervalData> deviceFullList = translis.last;
-                return !translist.isEmpty
+                final translist = translistNew;
+                final List<DeviceIntervalData> deviceFullList = translis.last;
+                return translist.isNotEmpty
                     ? GroupedListView<GVResult, String>(
                         groupBy: (element) =>
                             getFormattedDateTime(element.startDateTime),
                         elements: translist,
                         sort: false,
-                        groupSeparatorBuilder: (String value) => Padding(
-                          padding: const EdgeInsets.all(6.0),
+                        groupSeparatorBuilder: (value) => Padding(
+                          padding: const EdgeInsets.all(6),
                           child: Row(
                             children: [
                               SizedBoxWidget(width: 15.0.w),
@@ -1412,7 +1370,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                               translist[index].mealContext == null ||
                                       translist[index].mealContext == ''
                                   ? 'Random'
-                                  : '${translist[index].mealContext}',
+                                  : translist[index].mealContext,
                               '',
                               'Blood Glucose',
                               'Meal Type',
@@ -1427,7 +1385,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                           child: Padding(
                             padding: EdgeInsets.only(left: 40, right: 40),
                             child: Text(
-                              "No health record details available.",
+                              'No health record details available.',
                               textAlign: TextAlign.center,
                               style:
                                   TextStyle(fontFamily: variable.font_roboto),
@@ -1444,31 +1402,26 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
               future: devicesViewModel.fetchOXYDetails(''),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return new Center(
-                    child: new CircularProgressIndicator(
-                      backgroundColor:
-                          Color(new CommonUtil().getMyPrimaryColor()),
-                    ),
-                  );
+                  return CommonCircularIndicator();
                 }
 
-                List<dynamic> translis = snapshot.data;
+                var translis = snapshot.data;
                 //List<WVResult> translist = translis.first;
-                List<OxyResult> translistNew = translis.first;
+                final List<OxyResult> translistNew = translis.first;
                 translistNew.sort((translisCopy, translisClone) {
                   return translisClone.dateTimeValue
                       .compareTo(translisCopy.dateTimeValue);
                 });
-                List<OxyResult> translist = translistNew;
-                List<DeviceIntervalData> deviceFullList = translis.last;
-                return !translist.isEmpty
+                var translist = translistNew;
+                final List<DeviceIntervalData> deviceFullList = translis.last;
+                return translist.isNotEmpty
                     ? GroupedListView<OxyResult, String>(
                         groupBy: (element) =>
                             getFormattedDateTime(element.startDateTime),
                         elements: translist,
                         sort: false,
-                        groupSeparatorBuilder: (String value) => Padding(
-                          padding: const EdgeInsets.all(6.0),
+                        groupSeparatorBuilder: (value) => Padding(
+                          padding: const EdgeInsets.all(6),
                           child: Row(
                             children: [
                               SizedBoxWidget(width: 15.0.w),
@@ -1504,7 +1457,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                           child: Padding(
                             padding: EdgeInsets.only(left: 40, right: 40),
                             child: Text(
-                              "No health record details available.",
+                              'No health record details available.',
                               textAlign: TextAlign.center,
                               style:
                                   TextStyle(fontFamily: variable.font_roboto),
@@ -1521,31 +1474,26 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
               future: devicesViewModel.fetchWVDetails(''),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return new Center(
-                    child: new CircularProgressIndicator(
-                      backgroundColor:
-                          Color(new CommonUtil().getMyPrimaryColor()),
-                    ),
-                  );
+                  return CommonCircularIndicator();
                 }
 
-                List<dynamic> translis = snapshot.data;
+                var translis = snapshot.data;
                 //List<WVResult> translist = translis.first;
-                List<WVResult> translistNew = translis.first;
+                final List<WVResult> translistNew = translis.first;
                 translistNew.sort((translisCopy, translisClone) {
                   return translisClone.dateTimeValue
                       .compareTo(translisCopy.dateTimeValue);
                 });
-                List<WVResult> translist = translistNew;
-                List<DeviceIntervalData> deviceFullList = translis.last;
-                return !translist.isEmpty
+                var translist = translistNew;
+                final List<DeviceIntervalData> deviceFullList = translis.last;
+                return translist.isNotEmpty
                     ? GroupedListView<WVResult, String>(
                         groupBy: (element) =>
                             getFormattedDateTime(element.startDateTime),
                         elements: translist,
                         sort: false,
-                        groupSeparatorBuilder: (String value) => Padding(
-                          padding: const EdgeInsets.all(6.0),
+                        groupSeparatorBuilder: (value) => Padding(
+                          padding: const EdgeInsets.all(6),
                           child: Row(
                             children: [
                               SizedBoxWidget(width: 15.0.w),
@@ -1564,7 +1512,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                               translist[index].sourceType,
                               getFormattedDateTime(
                                   translist[index].startDateTime),
-                              '${translist[index].weight}',
+                              translist[index].weight,
                               '',
                               '',
                               'Weight',
@@ -1580,7 +1528,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                           child: Padding(
                             padding: EdgeInsets.only(left: 40, right: 40),
                             child: Text(
-                              "No health record details available.",
+                              'No health record details available.',
                               textAlign: TextAlign.center,
                               style:
                                   TextStyle(fontFamily: variable.font_roboto),
@@ -1597,31 +1545,26 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
               future: devicesViewModel.fetchTMPDetails(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return new Center(
-                    child: new CircularProgressIndicator(
-                      backgroundColor:
-                          Color(new CommonUtil().getMyPrimaryColor()),
-                    ),
-                  );
+                  return CommonCircularIndicator();
                 }
 
-                List<dynamic> translis = snapshot.data;
+                var translis = snapshot.data;
                 //List<WVResult> translist = translis.first;
-                List<TMPResult> translistNew = translis.first;
+                final List<TMPResult> translistNew = translis.first;
                 translistNew.sort((translisCopy, translisClone) {
                   return translisClone.dateTimeValue
                       .compareTo(translisCopy.dateTimeValue);
                 });
-                List<TMPResult> translist = translistNew;
-                List<DeviceIntervalData> deviceFullList = translis.last;
-                return !translist.isEmpty
+                var translist = translistNew;
+                final List<DeviceIntervalData> deviceFullList = translis.last;
+                return translist.isNotEmpty
                     ? GroupedListView<TMPResult, String>(
                         groupBy: (element) =>
                             getFormattedDateTime(element.startDateTime),
                         elements: translist,
                         sort: false,
-                        groupSeparatorBuilder: (String value) => Padding(
-                          padding: const EdgeInsets.all(6.0),
+                        groupSeparatorBuilder: (value) => Padding(
+                          padding: const EdgeInsets.all(6),
                           child: Row(
                             children: [
                               SizedBoxWidget(width: 15.0.w),
@@ -1640,7 +1583,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                               translist[index].sourceType,
                               getFormattedDateTime(
                                   translist[index].startDateTime),
-                              '${translist[index].temperature}',
+                              translist[index].temperature,
                               '',
                               '',
                               'Temperature',
@@ -1656,7 +1599,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                           child: Padding(
                             padding: EdgeInsets.only(left: 40, right: 40),
                             child: Text(
-                              "No health record details available.",
+                              'No health record details available.',
                               textAlign: TextAlign.center,
                               style:
                                   TextStyle(fontFamily: variable.font_roboto),
@@ -1723,7 +1666,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
       String bpm,
       String deviceId) {
     return Padding(
-      padding: const EdgeInsets.only(top: 5.0),
+      padding: const EdgeInsets.only(top: 5),
       child: Container(
         height: 60.0.h,
         color: Colors.white,
@@ -1731,7 +1674,6 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 SizedBox(
                   width: 10.0.w,
@@ -1746,7 +1688,10 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                     SizedBox(
                       height: 2.0.h,
                     ),
-                    type == null ? Icons.device_unknown : TypeIcon(type),
+                    if (type == null)
+                      Icon(Icons.device_unknown)
+                    else
+                      TypeIcon(type),
                   ],
                 ),
                 SizedBox(
@@ -1754,10 +1699,8 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 ),
                 valuename1 != ''
                     ? Expanded(
-                        flex: 1,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             SizedBox(height: 5.0.h),
                             Text(
@@ -1769,13 +1712,12 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                             SizedBox(height: 5.0.h),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
                                   value1 == '' ? '' : value1,
                                   style: TextStyle(
                                       color: Color(
-                                          new CommonUtil().getMyPrimaryColor()),
+                                          CommonUtil().getMyPrimaryColor()),
                                       fontSize: 15.0.sp,
                                       fontWeight: FontWeight.w500),
                                 ),
@@ -1786,7 +1728,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                   value1 == '' ? '' : 'mm Hg',
                                   style: TextStyle(
                                       color: Color(
-                                          new CommonUtil().getMyPrimaryColor()),
+                                          CommonUtil().getMyPrimaryColor()),
                                       fontSize: 11.0.sp),
                                 ),
                               ],
@@ -1797,10 +1739,8 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                     : SizedBox(),
                 valuename2 != ''
                     ? Expanded(
-                        flex: 1,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             SizedBox(height: 5.0.h),
                             Text(
@@ -1813,13 +1753,12 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
                                   value2,
                                   style: TextStyle(
                                       color: Color(
-                                          new CommonUtil().getMyPrimaryColor()),
+                                          CommonUtil().getMyPrimaryColor()),
                                       fontSize: 15.0.sp,
                                       fontWeight: FontWeight.w500),
                                 ),
@@ -1830,7 +1769,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                   value1 == '' ? '' : 'mm Hg',
                                   style: TextStyle(
                                       color: Color(
-                                          new CommonUtil().getMyPrimaryColor()),
+                                          CommonUtil().getMyPrimaryColor()),
                                       fontSize: 11.0.sp),
                                 ),
                               ],
@@ -1841,10 +1780,8 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                     : SizedBox(),
                 bpm != ''
                     ? Expanded(
-                        flex: 1,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             SizedBox(height: 5.0.h),
                             Text(
@@ -1857,13 +1794,12 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
                                   bpm != '' ? bpm : '',
                                   style: TextStyle(
                                       color: Color(
-                                          new CommonUtil().getMyPrimaryColor()),
+                                          CommonUtil().getMyPrimaryColor()),
                                       fontSize: 15.0.sp,
                                       fontWeight: FontWeight.w500),
                                 ),
@@ -1874,7 +1810,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                   bpm == '' ? '' : CommonConstants.strPulseUnit,
                                   style: TextStyle(
                                       color: Color(
-                                          new CommonUtil().getMyPrimaryColor()),
+                                          CommonUtil().getMyPrimaryColor()),
                                       fontSize: 11.0.sp),
                                 ),
                               ],
@@ -1973,7 +1909,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
       String unit,
       String deviceId) {
     return Padding(
-      padding: const EdgeInsets.only(top: 5.0),
+      padding: const EdgeInsets.only(top: 5),
       child: Container(
         height: 60.0.h,
         color: Colors.white,
@@ -1981,12 +1917,11 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
-              padding: const EdgeInsets.only(left: 5.0),
+              padding: const EdgeInsets.only(left: 5),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   SizedBox(
-                    width: 8.0,
+                    width: 8,
                   ),
                   Column(
                     children: [
@@ -1998,7 +1933,10 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                       SizedBox(
                         height: 2.0.h,
                       ),
-                      type == null ? Icons.device_unknown : TypeIcon(type),
+                      if (type == null)
+                        Icon(Icons.device_unknown)
+                      else
+                        TypeIcon(type),
                     ],
                   ),
                   SizedBox(
@@ -2006,7 +1944,6 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                   ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
                         getMealText(value2),
@@ -2018,13 +1955,11 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
                             value1 == '' ? '' : value1,
                             style: TextStyle(
-                                color:
-                                    Color(new CommonUtil().getMyPrimaryColor()),
+                                color: Color(CommonUtil().getMyPrimaryColor()),
                                 fontSize: 15.0.sp,
                                 fontWeight: FontWeight.w500),
                           ),
@@ -2034,8 +1969,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                           Text(
                             value1 == '' ? '' : unit,
                             style: TextStyle(
-                                color:
-                                    Color(new CommonUtil().getMyPrimaryColor()),
+                                color: Color(CommonUtil().getMyPrimaryColor()),
                                 fontSize: 11.0.sp),
                           ),
                         ],
@@ -2043,7 +1977,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                     ],
                   ),
                   SizedBox(
-                    width: 10.0,
+                    width: 10,
                   ),
                   Expanded(
                     child: Row(
@@ -2135,7 +2069,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
       String unit,
       String deviceId) {
     return Padding(
-      padding: const EdgeInsets.only(top: 5.0),
+      padding: const EdgeInsets.only(top: 5),
       child: Container(
         height: 60.0.h,
         color: Colors.white,
@@ -2143,7 +2077,6 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 SizedBox(
                   width: 15,
@@ -2179,14 +2112,16 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                     SizedBox(
                       height: 2.0.h,
                     ),
-                    type == null ? Icons.device_unknown : TypeIcon(type),
+                    if (type == null)
+                      Icon(Icons.device_unknown)
+                    else
+                      TypeIcon(type),
                   ],
                 ),
                 valuename1 != ''
                     ? Expanded(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             SizedBox(height: 5.0.h),
                             Column(
@@ -2199,13 +2134,12 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                 ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Text(
                                       value1 == '' ? '' : value1,
                                       style: TextStyle(
-                                          color: Color(new CommonUtil()
-                                              .getMyPrimaryColor()),
+                                          color: Color(
+                                              CommonUtil().getMyPrimaryColor()),
                                           fontSize: 15.0.sp,
                                           fontWeight: FontWeight.w500),
                                     ),
@@ -2215,8 +2149,8 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                     Text(
                                       unit != '' ? unit : '',
                                       style: TextStyle(
-                                          color: Color(new CommonUtil()
-                                              .getMyPrimaryColor()),
+                                          color: Color(
+                                              CommonUtil().getMyPrimaryColor()),
                                           fontSize: 14.0.sp),
                                     ),
                                   ],
@@ -2251,7 +2185,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
       String bpm,
       String deviceId) {
     return Padding(
-      padding: const EdgeInsets.only(top: 5.0),
+      padding: const EdgeInsets.only(top: 5),
       child: Container(
         height: 60.0.h,
         color: Colors.white,
@@ -2259,7 +2193,6 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 SizedBox(
                   width: 15,
@@ -2295,14 +2228,16 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                     SizedBox(
                       height: 2.0.h,
                     ),
-                    type == null ? Icons.device_unknown : TypeIcon(type),
+                    if (type == null)
+                      Icon(Icons.device_unknown)
+                    else
+                      TypeIcon(type),
                   ],
                 ),
                 valuename1 != ''
                     ? Expanded(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             SizedBox(height: 5.0.h),
                             Column(
@@ -2315,13 +2250,12 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                 ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Text(
                                       value1 == '' ? '' : value1,
                                       style: TextStyle(
-                                          color: Color(new CommonUtil()
-                                              .getMyPrimaryColor()),
+                                          color: Color(
+                                              CommonUtil().getMyPrimaryColor()),
                                           fontSize: 15.0.sp,
                                           fontWeight: FontWeight.w500),
                                     ),
@@ -2331,8 +2265,8 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                     Text(
                                       unit != '' ? unit : '',
                                       style: TextStyle(
-                                          color: Color(new CommonUtil()
-                                              .getMyPrimaryColor()),
+                                          color: Color(
+                                              CommonUtil().getMyPrimaryColor()),
                                           fontSize: 14.0.sp),
                                     ),
                                   ],
@@ -2346,7 +2280,6 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 bpm != ''
                     ? Expanded(
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             SizedBox(height: 5.0.h),
@@ -2360,13 +2293,12 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                 ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Text(
                                       bpm == '' ? '' : bpm,
                                       style: TextStyle(
-                                          color: Color(new CommonUtil()
-                                              .getMyPrimaryColor()),
+                                          color: Color(
+                                              CommonUtil().getMyPrimaryColor()),
                                           fontSize: 15.0.sp,
                                           fontWeight: FontWeight.w500),
                                     ),
@@ -2422,14 +2354,14 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         'assets/devices/caregiver_source.png',
         height: 32.0.h,
         width: 32.0.h,
-        color: Color(new CommonUtil().getMyPrimaryColor()),
+        color: Color(CommonUtil().getMyPrimaryColor()),
       );
     } else {
       return Image.asset(
         'assets/icons/myfhb_source.png',
         height: 32.0.h,
         width: 32.0.h,
-        color: Color(new CommonUtil().getMyPrimaryColor()),
+        color: Color(CommonUtil().getMyPrimaryColor()),
       );
     }
   }

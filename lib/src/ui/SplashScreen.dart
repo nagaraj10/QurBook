@@ -13,6 +13,7 @@ import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/myPlan/view/myPlanDetail.dart';
 import 'package:myfhb/regiment/models/regiment_arguments.dart';
 import 'package:myfhb/landing/view/landing_arguments.dart';
 import 'package:myfhb/landing/view_model/landing_view_model.dart';
@@ -32,8 +33,10 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
 import 'package:myfhb/telehealth/features/appointments/view/resheduleMain.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
 import 'package:myfhb/telehealth/features/chat/view/chat.dart';
 import 'package:myfhb/telehealth/features/chat/view/home.dart';
+import 'package:myfhb/widgets/checkout_page.dart';
 import 'package:provider/provider.dart';
 import '../utils/PageNavigator.dart';
 import 'package:connectivity/connectivity.dart';
@@ -42,6 +45,7 @@ import 'package:myfhb/src/ui/bot/SuperMaya.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myfhb/src/ui/bot/view/ChatScreen.dart' as bot;
+import 'package:get/get.dart';
 
 class SplashScreen extends StatefulWidget {
   final String nsRoute;
@@ -79,6 +83,8 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     PreferenceUtil.init();
     //setReminder();
+    Get.put(PDFViewController());
+    CommonUtil().ListenForTokenUpdate();
   }
 
   void setReminder() {
@@ -428,6 +434,32 @@ class _SplashScreenState extends State<SplashScreen> {
                         PageNavigator.goToPermanent(context, router.rt_Landing,
                             arguments:
                                 LandingArguments(url: widget.bundle ?? null));
+                      } else if (widget.nsRoute == 'mycart') {
+                        fbaLog(eveParams: {
+                          'eventTime': '${DateTime.now()}',
+                          'ns_type': 'my cart',
+                          'navigationPage': 'My Cart',
+                        });
+                        Get.to(CheckoutPage(
+                          isFromNotification: true,
+                        )).then((value) => PageNavigator.goToPermanent(
+                            context, router.rt_Landing));
+                      } else if (widget.nsRoute == 'renew') {
+                        final planid = widget?.bundle['planid'];
+                        final template = widget?.bundle['template'];
+                        fbaLog(eveParams: {
+                          'eventTime': '${DateTime.now()}',
+                          'ns_type': 'myplan_deatails',
+                          'navigationPage': 'My Plan Details',
+                        });
+                        Get.to(
+                          MyPlanDetail(
+                            packageId: planid,
+                            showRenew: true,
+                            templateName: template,
+                          ),
+                        ).then((value) => PageNavigator.goToPermanent(
+                            context, router.rt_Landing));
                       } else {
                         fbaLog(eveParams: {
                           'eventTime': '${DateTime.now()}',
@@ -438,7 +470,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       }
                     } else {
                       FirebaseMessaging _firebaseMessaging =
-                          FirebaseMessaging();
+                          FirebaseMessaging.instance;
 
                       _firebaseMessaging.getToken().then((token) {
                         new CommonUtil()

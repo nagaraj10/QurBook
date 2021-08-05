@@ -1,33 +1,36 @@
 import 'package:flutter/cupertino.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
-import 'package:myfhb/plan_dashboard/model/SearchListModel.dart';
-import 'package:myfhb/plan_dashboard/services/SearchListService.dart';
-import 'package:myfhb/plan_dashboard/services/planService.dart';
+import '../../common/PreferenceUtil.dart';
+import '../../myPlan/model/myPlanDetailModel.dart';
+import '../../myPlan/model/myPlanListModel.dart';
+import '../../myPlan/services/myPlanService.dart';
+import '../../constants/fhb_constants.dart' as Constants;
+import '../model/PlanListModel.dart';
+import '../model/SearchListModel.dart';
+import '../services/SearchListService.dart';
+import '../services/planService.dart';
 
 class PlanViewModel extends ChangeNotifier {
+  PlanService myPlanService = PlanService();
+  SearchListService searchListService = SearchListService();
 
-  PlanService myPlanService = new PlanService();
-  SearchListService searchListService = new SearchListService();
-
-  List<PlanListResult> myPLanListResult = List();
+  List<PlanListResult> myPLanListResult = [];
 
   Future<PlanListModel> getPlanList(String providerId) async {
     try {
-      var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-      PlanListModel myPlanListModel =
-      await myPlanService.getPlanList(providerId,userid);
-      if(myPlanListModel.isSuccess){
+      final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      final myPlanListModel =
+          await myPlanService.getPlanList(providerId, userid);
+      if (myPlanListModel.isSuccess) {
         myPLanListResult = myPlanListModel.result;
       }
       return myPlanListModel;
     } catch (e) {}
   }
 
-  List<PlanListResult> getSearchForCategory(String title,List<PlanListResult> planListOld) {
-    List<PlanListResult> filterDoctorData = new List();
-    for (PlanListResult planList in planListOld) {
+  List<PlanListResult> getSearchForCategory(
+      String title, List<PlanListResult> planListOld) {
+    final filterDoctorData = List<PlanListResult>();
+    for (var planList in planListOld) {
       if (planList.catname != null && planList.catname != '') {
         if (planList.catname
             .toLowerCase()
@@ -40,10 +43,12 @@ class PlanViewModel extends ChangeNotifier {
     return filterDoctorData;
   }
 
-  List<PlanListResult> getSearchDiseases(String title,List<PlanListResult> planListOld) {
-    List<PlanListResult> filterDoctorData = new List();
-    for (PlanListResult planList in planListOld) {
-      if (planList?.metadata?.diseases != null && planList?.metadata?.diseases != '') {
+  List<PlanListResult> getSearchDiseases(
+      String title, List<PlanListResult> planListOld) {
+    final filterDoctorData = List<PlanListResult>();
+    for (var planList in planListOld) {
+      if (planList?.metadata?.diseases != null &&
+          planList?.metadata?.diseases != '') {
         if (planList?.metadata?.diseases
             .toLowerCase()
             .trim()
@@ -55,9 +60,10 @@ class PlanViewModel extends ChangeNotifier {
     return filterDoctorData;
   }
 
-  List<PlanListResult> getSearchForPlanList(String title,List<PlanListResult> planListOld) {
-    List<PlanListResult> filterDoctorData = new List();
-    for (PlanListResult planList in planListOld) {
+  List<PlanListResult> getSearchForPlanList(
+      String title, List<PlanListResult> planListOld) {
+    var filterDoctorData = List<PlanListResult>();
+    for (final planList in planListOld) {
       if (planList.providerName != null && planList.providerName != '') {
         if (planList.providerName
             .toLowerCase()
@@ -72,31 +78,28 @@ class PlanViewModel extends ChangeNotifier {
 
   Future<SearchListModel> getSearchListInit(String title) async {
     try {
-      SearchListModel searchListModel =
-      await searchListService.getSearchList(title);
+      var searchListModel = await searchListService.getSearchList(title);
       return searchListModel;
     } catch (e) {}
   }
 
-
   Future<SearchListModel> getUserSearchListInit() async {
     try {
-      var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-      SearchListModel searchListModel =
-      await searchListService.getUserProviderList(userid);
+      final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      var searchListModel = await searchListService.getUserProviderList(userid);
       return searchListModel;
     } catch (e) {}
   }
 
   List<PlanListResult> getFilterForProvider(
       String title, List<PlanListResult> planListOld) {
-    List<PlanListResult> filterSearch = new List();
-    for (PlanListResult searchList in planListOld) {
+    var filterSearch = List<PlanListResult>();
+    for (final searchList in planListOld) {
       if (searchList?.providerName != null && searchList?.providerName != '') {
         if (searchList?.providerName
-            .toLowerCase()
-            .trim()
-            .contains(title.toLowerCase().trim()) ||
+                .toLowerCase()
+                .trim()
+                .contains(title.toLowerCase().trim()) ||
             searchList?.providerDesc
                 .toLowerCase()
                 .trim()
@@ -107,5 +110,4 @@ class PlanViewModel extends ChangeNotifier {
     }
     return filterSearch;
   }
-
 }

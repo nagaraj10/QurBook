@@ -1,4 +1,4 @@
-import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
+import '../../my_family/models/FamilyMembersRes.dart';
 
 class MyFamilyDetailViewArguments {
   int index;

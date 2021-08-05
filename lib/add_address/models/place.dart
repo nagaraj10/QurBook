@@ -1,5 +1,5 @@
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
+import '../../constants/fhb_parameters.dart' as parameters;
+import '../../constants/variable_constant.dart' as variable;
 
 class Place {
   final String title;
@@ -9,15 +9,15 @@ class Place {
   Place({this.title, this.description, this.placeId});
 
   Place.fromJson(Map<String, dynamic> json)
-      : this.title = json[parameters.strTerms][0][parameters.strvalue],
-        this.description = json[parameters.strDescription],
-        this.placeId = json[parameters.strplace_id];
+      : title = json[parameters.strTerms][0][parameters.strvalue],
+        description = json[parameters.strDescription],
+        placeId = json[parameters.strplace_id];
 
   Map<String, dynamic> toMap() {
     return {
-      parameters.strtitle: this.title,
-      parameters.strDescription: this.description,
-      parameters.strplaceId: this.placeId,
+      parameters.strtitle: title,
+      parameters.strDescription: description,
+      parameters.strplaceId: placeId,
     };
   }
 }
@@ -48,31 +48,31 @@ class PlaceDetail {
   });
 
   PlaceDetail.fromJson(Map<String, dynamic> json)
-      : this.placeId = json[parameters.strplace_id],
-        this.formattedAddress = json[parameters.strformatted_address],
-        this.formattedPhoneNumber = json[parameters.strformatted_phone_number],
-        this.name = json[parameters.strName],
-        this.rating = json[parameters.strrating].toDouble(),
-        this.vicinity = json[parameters.strvicinity],
-        this.website = json[parameters.strWebsite] ?? '',
-        this.url = json[parameters.strurl] ?? '',
-        this.lat = json[parameters.strgeometry][parameters.strlocation]
+      : placeId = json[parameters.strplace_id],
+        formattedAddress = json[parameters.strformatted_address],
+        formattedPhoneNumber = json[parameters.strformatted_phone_number],
+        name = json[parameters.strName],
+        rating = json[parameters.strrating].toDouble(),
+        vicinity = json[parameters.strvicinity],
+        website = json[parameters.strWebsite] ?? '',
+        url = json[parameters.strurl] ?? '',
+        lat = json[parameters.strgeometry][parameters.strlocation]
             [parameters.strlat],
-        this.lng = json[parameters.strgeometry][parameters.strlocation]
+        lng = json[parameters.strgeometry][parameters.strlocation]
             [parameters.strlng];
 
   Map<String, dynamic> toMap() {
     return {
-      parameters.strplaceId: this.placeId,
-      variable.strformateedAddress: this.formattedAddress,
-      variable.strformateedPhoneNumber: this.formattedPhoneNumber,
-      parameters.strName: this.name,
-      parameters.strrating: this.rating,
-      parameters.strvicinity: this.vicinity,
-      parameters.strWebsite: this.website,
-      parameters.strurl: this.url,
-      parameters.strlat: this.lat,
-      parameters.strlng: this.lng,
+      parameters.strplaceId: placeId,
+      variable.strformateedAddress: formattedAddress,
+      variable.strformateedPhoneNumber: formattedPhoneNumber,
+      parameters.strName: name,
+      parameters.strrating: rating,
+      parameters.strvicinity: vicinity,
+      parameters.strWebsite: website,
+      parameters.strurl: url,
+      parameters.strlat: lat,
+      parameters.strlng: lng,
     };
   }
 }

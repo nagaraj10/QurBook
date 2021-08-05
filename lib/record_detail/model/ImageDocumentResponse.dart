@@ -13,17 +13,17 @@ class ImageDocumentResponse {
     success = json['success'];
     message = json['message'];
     response = json['response'] != null
-        ? new Response.fromJson(json['response'])
+        ? Response.fromJson(json['response'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['success'] = this.success;
-    data['message'] = this.message;
-    if (this.response != null) {
-      data['response'] = this.response.toJson();
+    final data = <String, dynamic>{};
+    data['status'] = status;
+    data['success'] = success;
+    data['message'] = message;
+    if (response != null) {
+      data['response'] = response.toJson();
     }
     return data;
   }
@@ -37,12 +37,12 @@ class Response {
 
   Response.fromJson(Map<String, dynamic> json) {
     count = json['count'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['count'] = this.count;
+    final data = <String, dynamic>{};
+    data['count'] = count;
     if (this.data != null) {
       data['data'] = this.data.toJson();
     }
@@ -62,9 +62,9 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['fileContent'] = this.fileContent;
-    data['fileType'] = this.fileType;
+    final data = Map<String, dynamic>();
+    data['fileContent'] = fileContent;
+    data['fileType'] = fileType;
     return data;
   }
 }

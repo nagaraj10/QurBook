@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:myfhb/IntroScreens/IntroWidget.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/variable_constant.dart';
-import 'package:myfhb/src/ui/SplashScreen.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
+import 'IntroWidget.dart';
+import '../common/CommonUtil.dart';
+import '../common/PreferenceUtil.dart';
+import '../constants/variable_constant.dart';
+import '../src/ui/SplashScreen.dart';
+import '../src/utils/colors_utils.dart';
 
 class IntroductionScreen extends StatefulWidget {
   @override
@@ -35,7 +35,6 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
         children: [
           Expanded(
               child: PageView.builder(
-                  scrollDirection: Axis.horizontal,
                   onPageChanged: (value) {
                     setState(() {
                       currentScreen = value;

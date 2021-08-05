@@ -8,24 +8,22 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'package:myfhb/authentication/constants/constants.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/fhb_parameters.dart';
-import 'package:myfhb/constants/responseModel.dart';
 import 'package:myfhb/constants/variable_constant.dart';
-import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
-import 'package:myfhb/telehealth/features/chat/view/pdfiosViewer.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
+import '../../common/CommonUtil.dart';
+import '../../constants/fhb_constants.dart';
+import '../../constants/fhb_parameters.dart';
+import '../../constants/responseModel.dart';
+import '../../widgets/GradientAppBar.dart';
 import 'package:path/path.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
 import 'package:get/get.dart';
 import 'package:path/path.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:http/http.dart' as http;
-import 'package:myfhb/plan_dashboard/model/MetaDataForURL.dart';
-import 'dart:developer' as dev;
+import 'package:myfhb/src/resources/network/api_services.dart';
+import '../model/MetaDataForURL.dart';
+import '../../authentication/constants/constants.dart';
+import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 
 import 'package:provider/provider.dart';
 
@@ -47,7 +45,7 @@ class MyPlanDetailView extends StatefulWidget {
   final bool isExtendable;
   final MetaDataForURL metaDataForURL;
 
-  MyPlanDetailView({
+  const MyPlanDetailView({
     Key key,
     @required this.title,
     @required this.description,
@@ -90,7 +88,7 @@ class PlanDetail extends State<MyPlanDetailView> {
   bool isRenew = false;
   String isFrom = '';
   InAppWebViewController webView;
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -123,16 +121,16 @@ class PlanDetail extends State<MyPlanDetailView> {
       appBar: AppBar(
         flexibleSpace: GradientAppBar(),
         leading: GestureDetector(
-          onTap: () => Get.back(),
+          onTap: Get.back,
           child: Icon(
             Icons.arrow_back_ios, // add custom icons also
-            size: 24.0,
+            size: 24,
           ),
         ),
         title: Text(
           'Plans',
           style: TextStyle(
-            fontSize: 18.0,
+            fontSize: 18,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -143,15 +141,12 @@ class PlanDetail extends State<MyPlanDetailView> {
           //alignment: Alignment.center,
           height: 1.sh - AppBar().preferredSize.height,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
-                    flex: 1,
                     child: CircleAvatar(
                         backgroundColor: Colors.grey[200],
                         radius: 30,
@@ -273,7 +268,6 @@ class PlanDetail extends State<MyPlanDetailView> {
                   Expanded(
                     flex: 2,
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
@@ -296,7 +290,6 @@ class PlanDetail extends State<MyPlanDetailView> {
                         ),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Row(
                               children: [
@@ -366,7 +359,7 @@ class PlanDetail extends State<MyPlanDetailView> {
                     ),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(10.0),
+                    padding: const EdgeInsets.all(10),
                     child: SingleChildScrollView(
                       child: Text(
                         description != null && description != ''
@@ -402,8 +395,8 @@ class PlanDetail extends State<MyPlanDetailView> {
                               ),
                             ),
                             onPressed: () async {
-                              final common = CommonUtil();
-                              final updatedData = common.getFileNameAndUrl(
+                              var common = CommonUtil();
+                              var updatedData = common.getFileNameAndUrl(
                                   widget?.metaDataForURL?.descriptionURL);
                               if (updatedData.isEmpty) {
                                 common.showStatusToUser(
@@ -414,7 +407,8 @@ class PlanDetail extends State<MyPlanDetailView> {
                                 if (Platform.isIOS) {
                                   downloadFileForIos(updatedData);
                                 } else {
-                                  common.downloader(updatedData.first);
+                                  // await common.downloader(updatedData.first);
+                                  await downloadFileForIos(updatedData);
                                 }
                               }
                             },
@@ -422,8 +416,6 @@ class PlanDetail extends State<MyPlanDetailView> {
                               color: Color(
                                 CommonUtil().getMyPrimaryColor(),
                               ),
-                              style: BorderStyle.solid,
-                              width: 1,
                             ),
                           ),
                         ],
@@ -441,7 +433,10 @@ class PlanDetail extends State<MyPlanDetailView> {
                       child: Html(
                         data: description.replaceAll('src="//', 'src="'),
                         shrinkWrap: true,
-                        onLinkTap: (linkUrl) {
+                        onLinkTap: (linkUrl,
+                   context,
+                   attributes,
+                   element) {
                           CommonUtil()
                               .openWebViewNew(widget.title, linkUrl, false);
                         },
@@ -455,24 +450,26 @@ class PlanDetail extends State<MyPlanDetailView> {
                         padding:
                             EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                         child: InAppWebView(
-                            initialUrl:
-                                "${widget?.metaDataForURL?.descriptionURL}",
-                            initialHeaders: {},
+                            initialUrlRequest: URLRequest(
+                              url: Uri.parse(
+                                  widget?.metaDataForURL?.descriptionURL ?? ''),
+                              headers: {},
+                            ),
                             initialOptions: InAppWebViewGroupOptions(
                               crossPlatform: InAppWebViewOptions(
-                                  debuggingEnabled: true,
+                                  // debuggingEnabled: true,
                                   useOnDownloadStart: true),
                             ),
                             onWebViewCreated: (controller) {
                               webView = controller;
                             },
-                            onLoadStart: (InAppWebViewController controller,
-                                String url) {},
-                            onLoadStop: (InAppWebViewController controller,
-                                String url) {},
+                            onLoadStart: (controller, url) {},
+                            onLoadStop: (controller, url) {},
                             onDownloadStart: (controller, url) async {
-                              final common = CommonUtil();
-                              final updatedData = common.getFileNameAndUrl(url);
+                              var common = CommonUtil();
+                              //TODO: Check if any error in Inappwebview
+                              var updatedData =
+                                  common.getFileNameAndUrl(url.path);
                               if (updatedData.isEmpty) {
                                 common.showStatusToUser(
                                     ResultFromResponse(false,
@@ -482,7 +479,8 @@ class PlanDetail extends State<MyPlanDetailView> {
                                 if (Platform.isIOS) {
                                   downloadFileForIos(updatedData);
                                 } else {
-                                  common.downloader(updatedData.first);
+                                  await downloadFileForIos(updatedData);
+                                  // await common.downloader(updatedData.first);
                                 }
                               }
                             }),
@@ -491,147 +489,252 @@ class PlanDetail extends State<MyPlanDetailView> {
                     : Container(),
               ),
               Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   OutlineButton(
                     //hoverColor: Color(getMyPrimaryColor()),
-                    child: Text(
-                      isFrom == strCare
-                          ? getAddCartText()
-                          : getAddCartTextDiet(),
-                      style: TextStyle(
-                        color: getTextColor(isDisable, issubscription),
-                        fontSize: 13.sp,
-                      ),
-                    ),
                     onPressed:
                         /*isDisable
                         ? null
                         :*/
                         () async {
                       if (issubscription == '0') {
-                        if (isExtendable) {
-                          if (isFrom == strCare) {
-                            var isSelected = Provider.of<PlanWizardViewModel>(
-                                    context,
+                        if (isFrom == strProviderCare) {
+                          var isSelected = Provider.of<PlanWizardViewModel>(
+                                  context,
+                                  listen: false)
+                              .checkItemInCart(packageId, isFrom,
+                                  providerId: providerId);
+                          if (isSelected) {
+                            await Provider.of<PlanWizardViewModel>(context,
                                     listen: false)
-                                .checkItemInCart(packageId, strCare,
-                                    providerId: providerId);
-                            if (isSelected) {
-                              await Provider.of<PlanWizardViewModel>(context,
-                                      listen: false)
-                                  ?.removeCart(packageId: packageId);
-                              Navigator.pop(context);
-                            } else {
-                              if (Provider.of<PlanWizardViewModel>(context,
-                                          listen: false)
-                                      ?.currentPackageId !=
-                                  '') {
-                                await Provider.of<PlanWizardViewModel>(context,
+                                ?.removeCart(
+                                    packageId: packageId, isFrom: isFrom);
+                            Navigator.pop(context);
+                          } else {
+                            if (Provider.of<PlanWizardViewModel>(context,
                                         listen: false)
-                                    ?.removeCart(
-                                        packageId:
-                                            Provider.of<PlanWizardViewModel>(
-                                                    context,
-                                                    listen: false)
-                                                ?.currentPackageId);
-                                Navigator.pop(context);
-                              }
-
-                              bool isItemInCart =
-                                  Provider.of<PlanWizardViewModel>(context,
-                                          listen: false)
-                                      .checkAllItems();
-                              if (isItemInCart) {
-                                await Provider.of<PlanWizardViewModel>(context,
-                                        listen: false)
-                                    ?.removeCart(
-                                        packageId:
-                                            Provider.of<PlanWizardViewModel>(
-                                                    context,
-                                                    listen: false)
-                                                ?.currentCartPackageId);
-                                Navigator.pop(context);
-                              }
-
-                              await Provider.of<PlanWizardViewModel>(context,
-                                      listen: false)
-                                  ?.addToCartItem(
-                                      packageId: packageId,
-                                      price: price,
-                                      isRenew: isRenew,
-                                      providerId: providerId,
-                                      isFromAdd: strCare)
-                                  .then((value) {
-                                if (value.isSuccess) {
-                                  Navigator.pop(context);
-                                }
-                              });
-                            }
-                          } else if (isFrom == strDiet) {
-                            var isSelected = Provider.of<PlanWizardViewModel>(
-                                    context,
-                                    listen: false)
-                                .checkItemInCart(packageId, strDiet);
-                            if (isSelected) {
+                                    ?.currentPackageProviderCareId !=
+                                '') {
                               await Provider.of<PlanWizardViewModel>(context,
                                       listen: false)
                                   ?.removeCart(
-                                      packageId: packageId, isFromDiet: true);
+                                      packageId:
+                                          Provider.of<PlanWizardViewModel>(
+                                                  context,
+                                                  listen: false)
+                                              ?.currentPackageProviderCareId,
+                                      isFrom: isFrom);
                               Navigator.pop(context);
-                            } else {
-                              if (Provider.of<PlanWizardViewModel>(context,
-                                          listen: false)
-                                      ?.currentPackageIdDiet !=
-                                  '') {
-                                await Provider.of<PlanWizardViewModel>(context,
-                                        listen: false)
-                                    ?.removeCart(
-                                        packageId:
-                                            Provider.of<PlanWizardViewModel>(
-                                                    context,
-                                                    listen: false)
-                                                ?.currentPackageIdDiet,
-                                        isFromDiet: true);
-                                Navigator.pop(context);
-                              }
+                            }
 
-                              bool isItemInCart =
-                                  Provider.of<PlanWizardViewModel>(context,
-                                          listen: false)
-                                      .checkAllItemsDiet();
-                              if (isItemInCart) {
-                                await Provider.of<PlanWizardViewModel>(context,
+                            bool isItemInCart =
+                                Provider.of<PlanWizardViewModel>(context,
                                         listen: false)
-                                    ?.removeCart(
-                                        packageId:
-                                            Provider.of<PlanWizardViewModel>(
-                                                    context,
-                                                    listen: false)
-                                                ?.currentCartDietPackageId,
-                                        isFromDiet: true);
-                                Navigator.pop(context);
-                              }
-
+                                    .checkAllItemsForProviderCare();
+                            if (isItemInCart) {
                               await Provider.of<PlanWizardViewModel>(context,
                                       listen: false)
-                                  ?.addToCartItem(
-                                      packageId: packageId,
-                                      price: price,
-                                      isRenew: isRenew,
-                                      providerId: providerId,
-                                      isFromAdd: strDiet,
-                                      isFromDiet: true)
-                                  .then((value) {
-                                if (value.isSuccess) {
-                                  Navigator.pop(context);
-                                }
-                              });
+                                  ?.removeCart(
+                                      packageId: Provider.of<
+                                                  PlanWizardViewModel>(context,
+                                              listen: false)
+                                          ?.currentCartProviderCarePackageId,
+                                      isFrom: isFrom);
+                              Navigator.pop(context);
                             }
+
+                            await Provider.of<PlanWizardViewModel>(context,
+                                    listen: false)
+                                ?.addToCartItem(
+                                    packageId: packageId,
+                                    price: price,
+                                    isRenew: isRenew,
+                                    providerId: providerId,
+                                    isFromAdd: isFrom)
+                                .then((value) {
+                              if (value.isSuccess) {
+                                Navigator.pop(context);
+                              }
+                            });
                           }
-                        } else {
-                          FlutterToast().getToast(renewalLimit, Colors.black);
+                        } else if (isFrom == strFreeCare) {
+                          var isSelected = Provider.of<PlanWizardViewModel>(
+                                  context,
+                                  listen: false)
+                              .checkItemInCart(packageId, isFrom,
+                                  providerId: providerId);
+                          if (isSelected) {
+                            await Provider.of<PlanWizardViewModel>(context,
+                                    listen: false)
+                                ?.removeCart(
+                                    packageId: packageId, isFrom: isFrom);
+                            Navigator.pop(context);
+                          } else {
+                            if (Provider.of<PlanWizardViewModel>(context,
+                                        listen: false)
+                                    ?.currentPackageFreeCareId !=
+                                '') {
+                              await Provider.of<PlanWizardViewModel>(context,
+                                      listen: false)
+                                  ?.removeCart(
+                                      packageId:
+                                          Provider.of<PlanWizardViewModel>(
+                                                  context,
+                                                  listen: false)
+                                              ?.currentPackageFreeCareId,
+                                      isFrom: isFrom);
+                              Navigator.pop(context);
+                            }
+
+                            bool isItemInCart =
+                                Provider.of<PlanWizardViewModel>(context,
+                                        listen: false)
+                                    .checkAllItemsForFreeCare();
+                            if (isItemInCart) {
+                              await Provider.of<PlanWizardViewModel>(context,
+                                      listen: false)
+                                  ?.removeCart(
+                                      packageId:
+                                          Provider.of<PlanWizardViewModel>(
+                                                  context,
+                                                  listen: false)
+                                              ?.currentCartFreeCarePackageId,
+                                      isFrom: isFrom);
+                              Navigator.pop(context);
+                            }
+
+                            await Provider.of<PlanWizardViewModel>(context,
+                                    listen: false)
+                                ?.addToCartItem(
+                                    packageId: packageId,
+                                    price: price,
+                                    isRenew: isRenew,
+                                    providerId: providerId,
+                                    isFromAdd: isFrom)
+                                .then((value) {
+                              if (value.isSuccess) {
+                                Navigator.pop(context);
+                              }
+                            });
+                          }
+                        } else if (isFrom == strProviderDiet) {
+                          var isSelected = Provider.of<PlanWizardViewModel>(
+                                  context,
+                                  listen: false)
+                              .checkItemInCart(packageId, isFrom);
+                          if (isSelected) {
+                            await Provider.of<PlanWizardViewModel>(context,
+                                    listen: false)
+                                ?.removeCart(
+                                    packageId: packageId, isFrom: isFrom);
+                            Navigator.pop(context);
+                          } else {
+                            if (Provider.of<PlanWizardViewModel>(context,
+                                        listen: false)
+                                    ?.currentPackageProviderDietId !=
+                                '') {
+                              await Provider.of<PlanWizardViewModel>(context,
+                                      listen: false)
+                                  ?.removeCart(
+                                      packageId:
+                                          Provider.of<PlanWizardViewModel>(
+                                                  context,
+                                                  listen: false)
+                                              ?.currentPackageProviderDietId,
+                                      isFrom: isFrom);
+                              Navigator.pop(context);
+                            }
+
+                            bool isItemInCart =
+                                Provider.of<PlanWizardViewModel>(context,
+                                        listen: false)
+                                    .checkAllItemsForProviderDiet();
+                            if (isItemInCart) {
+                              await Provider.of<PlanWizardViewModel>(context,
+                                      listen: false)
+                                  ?.removeCart(
+                                      packageId: Provider.of<
+                                                  PlanWizardViewModel>(context,
+                                              listen: false)
+                                          ?.currentCartProviderDietPackageId,
+                                      isFrom: isFrom);
+                              Navigator.pop(context);
+                            }
+
+                            await Provider.of<PlanWizardViewModel>(context,
+                                    listen: false)
+                                ?.addToCartItem(
+                                    packageId: packageId,
+                                    price: price,
+                                    isRenew: isRenew,
+                                    providerId: providerId,
+                                    isFromAdd: isFrom)
+                                .then((value) {
+                              if (value.isSuccess) {
+                                Navigator.pop(context);
+                              }
+                            });
+                          }
+                        } else if (isFrom == strFreeDiet) {
+                          var isSelected = Provider.of<PlanWizardViewModel>(
+                                  context,
+                                  listen: false)
+                              .checkItemInCart(packageId, isFrom);
+                          if (isSelected) {
+                            await Provider.of<PlanWizardViewModel>(context,
+                                    listen: false)
+                                ?.removeCart(
+                                    packageId: packageId, isFrom: isFrom);
+                            Navigator.pop(context);
+                          } else {
+                            if (Provider.of<PlanWizardViewModel>(context,
+                                        listen: false)
+                                    ?.currentPackageFreeDietId !=
+                                '') {
+                              await Provider.of<PlanWizardViewModel>(context,
+                                      listen: false)
+                                  ?.removeCart(
+                                      packageId:
+                                          Provider.of<PlanWizardViewModel>(
+                                                  context,
+                                                  listen: false)
+                                              ?.currentPackageFreeDietId,
+                                      isFrom: isFrom);
+                              Navigator.pop(context);
+                            }
+
+                            bool isItemInCart =
+                                Provider.of<PlanWizardViewModel>(context,
+                                        listen: false)
+                                    .checkAllItemsForFreeDiet();
+                            if (isItemInCart) {
+                              await Provider.of<PlanWizardViewModel>(context,
+                                      listen: false)
+                                  ?.removeCart(
+                                      packageId:
+                                          Provider.of<PlanWizardViewModel>(
+                                                  context,
+                                                  listen: false)
+                                              ?.currentCartFreeDietPackageId,
+                                      isFrom: isFrom);
+                              Navigator.pop(context);
+                            }
+
+                            await Provider.of<PlanWizardViewModel>(context,
+                                    listen: false)
+                                ?.addToCartItem(
+                                    packageId: packageId,
+                                    price: price,
+                                    isRenew: isRenew,
+                                    providerId: providerId,
+                                    isFromAdd: isFrom)
+                                .then((value) {
+                              if (value.isSuccess) {
+                                Navigator.pop(context);
+                              }
+                            });
+                          }
                         }
                       }
                       /*else {
@@ -647,22 +750,28 @@ class PlanDetail extends State<MyPlanDetailView> {
                               CommonUtil().getMyPrimaryColor(),
                             )
                           : Colors.grey,
-                      style: BorderStyle.solid,
-                      width: 1,
                     ),
+                    //hoverColor: Color(getMyPrimaryColor()),
+                    child: Text(
+                      getText(),
+                      style: TextStyle(
+                        color: getTextColor(isDisable, issubscription),
+                        fontSize: 13.sp,
+                      ),
+                    ),
+                    // child: Text(
+                    //   issubscription == '0' ? strSubscribe : strSubscribed,
+                    //   style: TextStyle(
+                    //     color: getTextColor(isDisable, issubscription),
+                    //     fontSize: 13.sp,
+                    //   ),
+                    // ),
                   ),
                   SizedBox(
                     width: 10,
                   ),
                   OutlineButton(
                     //hoverColor: Color(getMyPrimaryColor()),
-                    child: Text(
-                      'cancel'.toUpperCase(),
-                      style: TextStyle(
-                        color: Color(CommonUtil().getMyPrimaryColor()),
-                        fontSize: 13.sp,
-                      ),
-                    ),
                     onPressed: () async {
                       // open profile page
                       //Navigator.of(context).pop();
@@ -672,8 +781,14 @@ class PlanDetail extends State<MyPlanDetailView> {
                       color: Color(
                         CommonUtil().getMyPrimaryColor(),
                       ),
-                      style: BorderStyle.solid,
-                      width: 1,
+                    ),
+                    //hoverColor: Color(getMyPrimaryColor()),
+                    child: Text(
+                      'cancel'.toUpperCase(),
+                      style: TextStyle(
+                        color: Color(CommonUtil().getMyPrimaryColor()),
+                        fontSize: 13.sp,
+                      ),
                     ),
                   ),
                 ],
@@ -685,12 +800,31 @@ class PlanDetail extends State<MyPlanDetailView> {
     );
   }
 
+  String getText() {
+    String text = '';
+
+    if (isFrom == strProviderCare) {
+      text = getAddCartText();
+    } else if (isFrom == strFreeCare) {
+      text = getAddCartTextFreeCare();
+    } else if (isFrom == strProviderDiet) {
+      text = getAddCartTextProviderDiet();
+    } else if (isFrom == strFreeDiet) {
+      text = getAddCartTextFreeDiet();
+    } else {
+      text = '';
+    }
+
+    return text;
+  }
+
   String getAddCartText() {
     String text = strAddToCart;
 
     if (Provider.of<PlanWizardViewModel>(Get.context)
-            .checkItemInCart(packageId, strCare, providerId: providerId) ||
-        Provider.of<PlanWizardViewModel>(Get.context).currentPackageId ==
+            .checkItemInCart(packageId, isFrom, providerId: providerId) ||
+        Provider.of<PlanWizardViewModel>(Get.context)
+                .currentPackageProviderCareId ==
             packageId) {
       text = strRemoveFromCart;
     } else {
@@ -704,12 +838,53 @@ class PlanDetail extends State<MyPlanDetailView> {
     return text;
   }
 
-  String getAddCartTextDiet() {
+  String getAddCartTextFreeCare() {
     String text = strAddToCart;
 
     if (Provider.of<PlanWizardViewModel>(Get.context)
-            .checkItemInCart(packageId, strDiet) ||
-        Provider.of<PlanWizardViewModel>(Get.context).currentPackageIdDiet ==
+            .checkItemInCart(packageId, isFrom, providerId: providerId) ||
+        Provider.of<PlanWizardViewModel>(Get.context)
+                .currentPackageFreeCareId ==
+            packageId) {
+      text = strRemoveFromCart;
+    } else {
+      if (issubscription == '0') {
+        text = strAddToCart;
+      } else {
+        text = strSubscribed;
+      }
+    }
+
+    return text;
+  }
+
+  String getAddCartTextProviderDiet() {
+    String text = strAddToCart;
+
+    if (Provider.of<PlanWizardViewModel>(Get.context)
+            .checkItemInCart(packageId, isFrom) ||
+        Provider.of<PlanWizardViewModel>(Get.context)
+                .currentPackageProviderDietId ==
+            packageId) {
+      text = strRemoveFromCart;
+    } else {
+      if (issubscription == '0') {
+        text = strAddToCart;
+      } else {
+        text = strSubscribed;
+      }
+    }
+
+    return text;
+  }
+
+  String getAddCartTextFreeDiet() {
+    String text = strAddToCart;
+
+    if (Provider.of<PlanWizardViewModel>(Get.context)
+            .checkItemInCart(packageId, isFrom) ||
+        Provider.of<PlanWizardViewModel>(Get.context)
+                .currentPackageFreeDietId ==
             packageId) {
       text = strRemoveFromCart;
     } else {
@@ -743,7 +918,7 @@ class PlanDetail extends State<MyPlanDetailView> {
   }
 
   downloadFileForIos(List<String> updatedData) async {
-    final response = await CommonUtil()
+    var response = await CommonUtil()
         .loadPdf(url: updatedData.first, fileName: updatedData.last);
     CommonUtil().showStatusToUser(response, _scaffoldKey);
   }

@@ -19,6 +19,7 @@ import 'package:myfhb/my_providers/models/MyProviderResponseData.dart';
 import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
 import 'package:myfhb/search_providers/models/search_arguments.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/AvailableTimeSlotsModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/SlotSessionsModel.dart';
@@ -41,6 +42,7 @@ class MyProvidersHospitals extends StatefulWidget {
 
   @override
   _MyProvidersState createState() => _MyProvidersState();
+
   MyProvidersHospitals({this.closePage, this.isRefresh});
 }
 
@@ -161,20 +163,29 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
       future: _medicalPreferenceList,
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return new Center(
-            child: new CircularProgressIndicator(
-                backgroundColor: Color(new CommonUtil().getMyPrimaryColor())),
-          );
+          return CommonCircularIndicator();
         } else if (snapshot.hasError) {
           return ErrorsWidget();
         } else {
           final items = snapshot.data ??
-              <MyProvidersResponseData>[]; // handle the case that data is null
-          if (snapshot?.hasData &&
+              <MyProvidersResponseData>[];
+          if(initialHospitalList!=null && initialHospitalList.length>0){
+            // handle the case that data is null
+            return hospitalList(isSearch
+                ? myProviderHospitalList
+                : snapshot?.data?.result?.hospitals);
+          }
+          else if (snapshot?.hasData &&
               snapshot?.data?.result != null &&
               snapshot?.data?.result?.hospitals != null &&
               snapshot?.data?.result?.hospitals?.length > 0) {
             initialHospitalList = snapshot?.data?.result?.hospitals;
+            if (snapshot?.hasData &&
+                snapshot?.data?.result != null &&
+                snapshot?.data?.result?.clinics != null &&
+                snapshot?.data?.result?.clinics?.length > 0) {
+              initialHospitalList.addAll(snapshot?.data?.result?.clinics);
+            }
             return hospitalList(isSearch
                 ? myProviderHospitalList
                 : snapshot?.data?.result?.hospitals);
@@ -241,9 +252,7 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
                               color: Color(fhbColors.bgColorContainer),
                               child: Center(
                                 child: Text(
-                                  hospitals[i].name != null
-                                      ? hospitals[i].name[0].toUpperCase()
-                                      : '',
+                                  getHospitalName(hospitals[i])[0].toUpperCase(),
                                   style: TextStyle(
                                     color:
                                         Color(CommonUtil().getMyPrimaryColor()),
@@ -273,9 +282,7 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
                 children: <Widget>[
                   SizedBox(height: 5.0.h),
                   AutoSizeText(
-                    hospitals[i].name != null
-                        ? toBeginningOfSentenceCase(hospitals[i].name)
-                        : '',
+                    getHospitalName(hospitals[i]),
                     maxLines: 1,
                     style: TextStyle(
                       fontSize: 16.0.sp,
@@ -385,4 +392,27 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
           ),
         ));
   }
+  String getHospitalName(Hospitals eachHospitalModel) {
+    String name="";
+
+    if (eachHospitalModel.name != null) {
+      if (eachHospitalModel.name != "Self" &&
+          eachHospitalModel.name != "self") {
+        name = eachHospitalModel?.name?.capitalizeFirstofEach;
+      } else {
+        if (eachHospitalModel.createdBy != null) {
+          if (eachHospitalModel.createdBy.firstName != "" &&
+              eachHospitalModel.createdBy.firstName != null) {
+            name = eachHospitalModel.createdBy.firstName;
+          }
+          if (eachHospitalModel.createdBy.lastName != "" &&
+              eachHospitalModel.createdBy.lastName != null) {
+            name = name + " " + eachHospitalModel.createdBy.lastName;
+          }
+        }
+      }
+    }
+    return name;
+  }
+
 }

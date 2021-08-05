@@ -1,20 +1,20 @@
 import 'package:flutter/cupertino.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/myPlan/model/myPlanDetailModel.dart';
-import 'package:myfhb/myPlan/model/myPlanListModel.dart';
-import 'package:myfhb/myPlan/services/myPlanService.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import '../../common/PreferenceUtil.dart';
+import '../model/myPlanDetailModel.dart';
+import '../model/myPlanListModel.dart';
+import '../services/myPlanService.dart';
+import '../../constants/fhb_constants.dart' as Constants;
 
 class MyPlanViewModel extends ChangeNotifier {
-  MyPlanService myPlanService = new MyPlanService();
+  MyPlanService myPlanService = MyPlanService();
 
-  List<MyPlanListResult> myPLanListResult = List();
+  List<MyPlanListResult> myPLanListResult = [];
 
   Future<MyPlanListModel> getMyPlanList() async {
-    var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     if (userid != null) {
       try {
-        MyPlanListModel myPlanListModel = await myPlanService.getMyPlanList(userid);
+        var myPlanListModel = await myPlanService.getMyPlanList(userid);
         if (myPlanListModel.isSuccess) {
           myPLanListResult = myPlanListModel.result;
         }
@@ -25,15 +25,14 @@ class MyPlanViewModel extends ChangeNotifier {
 
   Future<MyPlanDetailModel> getMyPlanDetails(String packageId) async {
     try {
-      MyPlanDetailModel myPlanDetailModel =
-          await myPlanService.getMyPlanDetails(packageId);
+      var myPlanDetailModel = await myPlanService.getMyPlanDetails(packageId);
       return myPlanDetailModel;
     } catch (e) {}
   }
 
   List<MyPlanListResult> getProviderName(
       {List<MyPlanListResult> planList, String query}) {
-    List<MyPlanListResult> dummyPlanList = List();
+    var dummyPlanList = List<MyPlanListResult>();
     dummyPlanList = planList
         .where((element) => element.providerName
             .toLowerCase()
@@ -44,8 +43,8 @@ class MyPlanViewModel extends ChangeNotifier {
   }
 
   List<MyPlanListResult> getProviderSearch(String doctorName) {
-    List<MyPlanListResult> filterDoctorData = new List();
-    for (MyPlanListResult doctorData in myPLanListResult) {
+    var filterDoctorData = List<MyPlanListResult>();
+    for (final doctorData in myPLanListResult) {
       if (doctorData.title != null && doctorData.title != '') {
         if (doctorData.title
             .toLowerCase()
@@ -56,5 +55,16 @@ class MyPlanViewModel extends ChangeNotifier {
       }
     }
     return filterDoctorData;
+  }
+
+  Future<MyPlanListModel> getMyPlanListDetail(String packageId) async {
+    final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    if (userid != null) {
+      try {
+        var myPlanListModel =
+            await myPlanService.getPlanDetailById(userid, packageId);
+        return myPlanListModel;
+      } catch (e) {}
+    }
   }
 }

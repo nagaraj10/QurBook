@@ -12,6 +12,7 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:provider/provider.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 
 class CarePlanPage extends StatefulWidget {
   @override
@@ -38,11 +39,11 @@ class _CarePlanPageState extends State<CarePlanPage> {
 
   @override
   void initState() {
-    Provider.of<PlanWizardViewModel>(context, listen: false).currentPackageId =
+    Provider.of<PlanWizardViewModel>(context, listen: false).currentPackageProviderCareId =
         '';
 
     planListModel = Provider.of<PlanWizardViewModel>(context, listen: false)
-        .getCarePlanList();
+        .getCarePlanList('');
   }
 
   @override
@@ -84,7 +85,7 @@ class _CarePlanPageState extends State<CarePlanPage> {
         floatingActionButton: NextButton(
           onPressed: () {
             if (carePlanListLength > 0 &&
-                (planListProvider?.currentPackageId ?? '').isEmpty) {
+                (planListProvider?.currentPackageProviderCareId ?? '').isEmpty) {
               _alertForUncheckPlan();
             } else {
               planListProvider.changeCurrentPage(2);
@@ -96,11 +97,11 @@ class _CarePlanPageState extends State<CarePlanPage> {
   onSearched(String title, String filterBy) async {
     planSearchList.clear();
     if (filterBy == popUpChoicePrice) {
-      planSearchList = await planListProvider.filterSorting(popUpChoicePrice);
+      planSearchList = await planListProvider.filterSortingForProvider(popUpChoicePrice);
     } else if (filterBy == popUpChoiceDura) {
-      planSearchList = await planListProvider.filterSorting(popUpChoiceDura);
+      planSearchList = await planListProvider.filterSortingForProvider(popUpChoiceDura);
     } else if (filterBy == popUpChoiceDefault) {
-      planSearchList = await planListProvider.filterSorting(popUpChoiceDefault);
+      planSearchList = await planListProvider.filterSortingForProvider(popUpChoiceDefault);
     } else if (filterBy == 'localSearch') {
       if (title != null) {
         planSearchList = await planListProvider.filterPlanNameProvider(title);
@@ -121,9 +122,7 @@ class _CarePlanPageState extends State<CarePlanPage> {
                 child: SizedBox(
                   width: 30.0.h,
                   height: 30.0.h,
-                  child: new CircularProgressIndicator(
-                      backgroundColor:
-                          Color(new CommonUtil().getMyPrimaryColor())),
+                  child: CommonCircularIndicator(),
                 ),
               ),
             ),

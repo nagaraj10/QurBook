@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:myfhb/regiment/models/field_response_model.dart';
+
 class RegimentDataModel {
   RegimentDataModel({
     this.eid,
@@ -41,6 +43,7 @@ class RegimentDataModel {
     this.isPlaying = false,
     this.scheduled = false,
     this.asNeeded = false,
+    this.isEventDisabled = false,
   });
 
   final String eid;
@@ -82,6 +85,7 @@ class RegimentDataModel {
   bool isPlaying;
   final bool scheduled;
   final bool asNeeded;
+  final bool isEventDisabled;
 
   factory RegimentDataModel.fromJson(Map<String, dynamic> json) =>
       RegimentDataModel(
@@ -133,7 +137,7 @@ class RegimentDataModel {
         metadata: json['metadata'] is List
             ? Metadata()
             : Metadata.fromJson(json['metadata'] ?? {}),
-        isPlaying: false,
+        isEventDisabled: (json['ev_disabled'] ?? '0') == '1',
       );
 
   Map<String, dynamic> toJson() => {
@@ -173,6 +177,7 @@ class RegimentDataModel {
         'dosemeal': doseMeal,
         'doserepeat': doseRepeat,
         'metadata': metadata.toJson(),
+        'ev_disabled': isEventDisabled ? '1' : '0',
       };
 }
 
@@ -212,9 +217,9 @@ class UformData {
   List<VitalsData> vitalsData;
 
   UformData fromJson(Map<String, dynamic> json) {
-    List<VitalsData> vitalsDataList = [];
+    final vitalsDataList = <VitalsData>[];
     json.forEach((key, value) {
-      Map<String, dynamic> vitalsMap = {};
+      final vitalsMap = <String, dynamic>{};
       vitalsMap.addAll(value);
       vitalsMap.putIfAbsent('vitalName', () => key);
       vitalsDataList.add(VitalsData.fromJson(vitalsMap ?? {}));
@@ -225,7 +230,7 @@ class UformData {
   }
 
   Map<String, dynamic> toJson() {
-    Map<String, dynamic> jsonMap = {};
+    final jsonMap = <String, dynamic>{};
     vitalsData.forEach((vitalData) {
       jsonMap.putIfAbsent(vitalData.vitalName, () => vitalData.toJson());
     });
@@ -234,16 +239,19 @@ class UformData {
 }
 
 class VitalsData {
-  VitalsData({
-    this.vitalName,
-    this.value,
-    this.type,
-    this.display,
-    this.alarm,
-    this.amin,
-    this.amax,
-    this.fieldType,
-  });
+  VitalsData(
+      {this.vitalName,
+      this.value,
+      this.type,
+      this.display,
+      this.alarm,
+      this.amin,
+      this.amax,
+      this.fieldType,
+      this.photo,
+      this.audio,
+      this.video,
+      this.file});
 
   String vitalName;
   String value;
@@ -253,6 +261,10 @@ class VitalsData {
   String amin;
   String amax;
   FieldType fieldType;
+  OtherData photo;
+  OtherData audio;
+  OtherData file;
+  OtherData video;
 
   factory VitalsData.fromJson(Map<String, dynamic> json) {
     return VitalsData(
@@ -264,6 +276,10 @@ class VitalsData {
       amin: json['amin'],
       amax: json['amax'],
       fieldType: fieldTypeValues.map[json['type']],
+      photo: json['PHOTO'] != null ? OtherData.fromMap(json['PHOTO']) : null,
+      audio: json['AUDIO'] != null ? OtherData.fromMap(json['AUDIO']) : null,
+      video: json['VIDEO'] != null ? OtherData.fromMap(json['VIDEO']) : null,
+      file: json['FILE'] != null ? OtherData.fromMap(json['FILE']) : null,
     );
   }
 
@@ -314,9 +330,7 @@ class EnumValues<T> {
   EnumValues(this.map);
 
   Map<T, String> get reverse {
-    if (reverseMap == null) {
-      reverseMap = map.map((k, v) => new MapEntry(v, k));
-    }
+    reverseMap ??= map.map((k, v) => new MapEntry(v, k));
     return reverseMap;
   }
 }
@@ -347,4 +361,45 @@ class Metadata {
         'bgcolor': bgcolor,
         'metadatafrom': metadatafrom,
       };
+}
+
+class OtherData {
+  String name;
+  String url;
+  OtherData({
+    this.name,
+    this.url,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'url': url,
+    };
+  }
+
+  factory OtherData.fromMap(Map<String, dynamic> map) {
+    return OtherData(
+      name: map['name'],
+      url: map['url'],
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory OtherData.fromJson(String source) =>
+      OtherData.fromMap(json.decode(source));
+
+  @override
+  String toString() => 'OtherData(name: $name, url: $url)';
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is OtherData && other.name == name && other.url == url;
+  }
+
+  @override
+  int get hashCode => name.hashCode ^ url.hashCode;
 }

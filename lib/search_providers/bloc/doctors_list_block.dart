@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/search_providers/models/doctor_list_response_new.dart';
-import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
-import 'package:myfhb/src/resources/network/ApiResponse.dart';
+import '../../constants/variable_constant.dart' as variable;
+import '../models/doctor_list_response_new.dart';
+import '../../src/blocs/Authentication/LoginBloc.dart';
+import '../../src/resources/network/ApiResponse.dart';
 
 import '../models/doctors_list_response.dart';
 import '../services/doctors_list_repository.dart';
@@ -38,13 +38,13 @@ class DoctorsListBlock implements BaseBloc {
     _doctorsListNewController =
         StreamController<ApiResponse<DoctorsSearchListResponse>>();
 
-    _doctorsListRepository = new DoctorsListRepository();
+    _doctorsListRepository = DoctorsListRepository();
   }
 
   getDoctorsList(String param) async {
     doctorsListSink.add(ApiResponse.loading(variable.strGetDoctorsList));
     try {
-      DoctorsListResponse userHealthResponseList =
+      var userHealthResponseList =
           await _doctorsListRepository.getDoctorsListFromSearch(param);
       doctorsListSink.add(ApiResponse.completed(userHealthResponseList));
     } catch (e) {

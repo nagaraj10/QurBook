@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/constants/HeaderRequest.dart';
-import 'package:myfhb/constants/variable_constant.dart';
-import 'package:myfhb/reminders/ReminderModel.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:http/http.dart' as http;
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/src/resources/network/api_services.dart';
+
+import '../common/CommonUtil.dart';
+import '../constants/HeaderRequest.dart';
+import '../constants/variable_constant.dart';
+import 'ReminderModel.dart';
+import '../src/utils/FHBUtils.dart';
+import 'package:myfhb/src/resources/network/api_services.dart';
+import '../constants/fhb_constants.dart' as Constants;
 
 class QurPlanReminders {
   static const reminderLocalFile = 'notificationList.json';
@@ -15,41 +17,42 @@ class QurPlanReminders {
     //final fileName = 'assets/tempData.json';
 
     //final dataString = await rootBundle.loadString(fileName);
-    HeaderRequest headerRequest = new HeaderRequest();
-    final headers = await headerRequest.getRequestHeadersAuthContents();
-    final now = DateTime.now();
-    final dayAfterTomorrowDate = DateTime(now.year, now.month, now.day + 2);
-    final today = CommonUtil().dateConversionToApiFormat(now);
-    final dayAfterTomorrow =
+    final headerRequest = HeaderRequest();
+    var headers = await headerRequest.getRequestHeadersAuthContents();
+    var now = DateTime.now();
+    var dayAfterTomorrowDate = DateTime(now.year, now.month, now.day + 2);
+    var today = CommonUtil().dateConversionToApiFormat(now);
+    var dayAfterTomorrow =
         CommonUtil().dateConversionToApiFormat(dayAfterTomorrowDate);
-    final String _baseUrl = Constants.BASE_URL;
-    final params = jsonEncode({
-      "method": "get",
-      "data":
-          "Action=GetUserReminders&startdate=$today&enddate=$dayAfterTomorrow"
+    final _baseUrl = Constants.BASE_URL;
+    var params = jsonEncode({
+      'method': 'get',
+      'data':
+          'Action=GetUserReminders&startdate=$today&enddate=$dayAfterTomorrow'
     });
     try {
-      final responseFromApi = await http.post(
-          _baseUrl + "plan-package-master/wrapperApi",
+      var responseFromApi = await ApiServices.post(
+          _baseUrl + 'plan-package-master/wrapperApi',
           headers: headers,
           body: params);
 
-      final dataArray = await json.decode(responseFromApi.body);
-      List<dynamic> data = dataArray['result'];
-      List<Reminder> reminders = [];
+      var dataArray = await json.decode(responseFromApi.body);
+      final List<dynamic> data = dataArray['result'];
+      var reminders = <Reminder>[];
       data.forEach((element) {
-        final newData = Reminder.fromMap(element);
-        print(newData.estart);
-        reminders.add(newData);
+        var newData = Reminder.fromMap(element);
+        if (!newData?.evDisabled) {
+          reminders.add(newData);
+        }
       });
-      updateReminderswithLocal(reminders);
+      await updateReminderswithLocal(reminders);
     } catch (e) {
       print(e.toString());
     }
   }
 
   static Future<bool> addReminder(Reminder data) {
-    final reminderMap = data.toMap();
+    var reminderMap = data.toMap();
     if (Platform.isIOS) {
       reminderMethodChannel.invokeMethod(addReminderMethod, [reminderMap]);
     } else {
@@ -60,16 +63,16 @@ class QurPlanReminders {
 
   static Future<bool> saveRemindersLocally(
       List<Reminder> notificationToSave) async {
-    final String directory = Platform.isIOS
-        ? await FHBUtils.createFolderInAppDocDirForIOS("reminders")
+    final directory = Platform.isIOS
+        ? await FHBUtils.createFolderInAppDocDirForIOS('reminders')
         : await FHBUtils.abstractUserData();
-    final File file = Platform.isIOS
+    final file = Platform.isIOS
         ? File(directory + 'notificationList.json')
         : File(directory + '/notificationList.json');
-    final dataTosave = notificationToSave.map((e) => e.toJson()).toList();
+    var dataTosave = notificationToSave.map((e) => e.toJson()).toList();
     try {
-      final dataToSave = {"reminders": dataTosave};
-      final dataToJson = json.encode(dataToSave);
+      var dataToSave = {'reminders': dataTosave};
+      var dataToJson = json.encode(dataToSave);
       await file.writeAsString(dataToJson);
       return true;
     } catch (e) {
@@ -79,8 +82,8 @@ class QurPlanReminders {
   }
 
   static Future<bool> updateRemindersLocally(Reminder data) async {
-    List<Reminder> reminders = await getLocalReminder();
-    Reminder foundTheMatched = null;
+    final reminders = await getLocalReminder();
+    Reminder foundTheMatched;
     for (var i = 0; i < reminders.length; i++) {
       if (reminders[i].eid == data.eid) {
         foundTheMatched = reminders.removeAt(i);
@@ -89,10 +92,10 @@ class QurPlanReminders {
 
       if (foundTheMatched != null) {
         if (Platform.isIOS) {
-          reminderMethodChannel
+          await reminderMethodChannel
               .invokeMethod(removeReminderMethod, [foundTheMatched.eid]);
         } else {
-          reminderMethodChannelAndroid.invokeMethod(
+          await reminderMethodChannelAndroid.invokeMethod(
               removeReminderMethod, {'data': foundTheMatched.eid});
         }
       }
@@ -101,32 +104,32 @@ class QurPlanReminders {
   }
 
   static Future<bool> updateReminderswithLocal(List<Reminder> data) async {
-    List<Reminder> localReminders = await getLocalReminder();
+    var localReminders = await getLocalReminder();
 
     for (var i = 0; i < data.length; i++) {
-      final apiReminder = data[i];
-      bool found = false;
+      var apiReminder = data[i];
+      var found = false;
       for (var j = 0; j < localReminders.length; j++) {
-        final localReminder = localReminders[j];
+        var localReminder = localReminders[j];
         if (apiReminder.eid == localReminder.eid) {
           found = true;
           if (apiReminder == localReminder) {
             if (Platform.isIOS) {
               apiReminder.alreadyScheduled = true;
-              reminderMethodChannel
+              await reminderMethodChannel
                   .invokeMethod(addReminderMethod, [apiReminder.toMap()]);
             }
             break;
           } else {
             if (Platform.isIOS) {
-              reminderMethodChannel
+              await reminderMethodChannel
                   .invokeMethod(removeReminderMethod, [localReminder.eid]);
-              reminderMethodChannel
+              await reminderMethodChannel
                   .invokeMethod(addReminderMethod, [apiReminder.toMap()]);
             } else {
-              reminderMethodChannelAndroid.invokeMethod(
+              await reminderMethodChannelAndroid.invokeMethod(
                   removeReminderMethod, {'data': localReminder.eid});
-              reminderMethodChannelAndroid.invokeMethod(
+              await reminderMethodChannelAndroid.invokeMethod(
                   addReminderMethod, {'data': jsonEncode(apiReminder.toMap())});
             }
           }
@@ -134,35 +137,35 @@ class QurPlanReminders {
       }
       if (!found) {
         if (Platform.isIOS) {
-          reminderMethodChannel
+          await reminderMethodChannel
               .invokeMethod(addReminderMethod, [apiReminder.toMap()]);
         } else {
-          reminderMethodChannelAndroid.invokeMethod(
+          await reminderMethodChannelAndroid.invokeMethod(
               addReminderMethod, {'data': jsonEncode(apiReminder.toMap())});
         }
       }
     }
 
     for (var i = 0; i < localReminders.length; i++) {
-      final localReminder = localReminders[i];
+      var localReminder = localReminders[i];
       if (!data.contains(localReminder)) {
         if (Platform.isIOS) {
-          reminderMethodChannel
+          await reminderMethodChannel
               .invokeMethod(removeReminderMethod, [localReminder.eid]);
         } else {
-          reminderMethodChannelAndroid
+          await reminderMethodChannelAndroid
               .invokeMethod(removeReminderMethod, {'data': localReminder.eid});
         }
       }
     }
-    saveRemindersLocally(data);
+    await saveRemindersLocally(data);
   }
 
   static Future<bool> deleteReminderLocally(Reminder data) async {
-    List<Reminder> reminders = await getLocalReminder();
-    Reminder foundTheMatched = null;
+    final reminders = await getLocalReminder();
+    Reminder foundTheMatched;
 
-    if (reminders.length == 0) {
+    if (reminders.isEmpty) {
       return false;
     }
     for (var i = 0; i < reminders.length; i++) {
@@ -173,10 +176,10 @@ class QurPlanReminders {
 
       if (foundTheMatched != null) {
         if (Platform.isIOS) {
-          reminderMethodChannel
+          await reminderMethodChannel
               .invokeMethod(removeReminderMethod, [foundTheMatched.eid]);
         } else {
-          reminderMethodChannelAndroid.invokeMethod(
+          await reminderMethodChannelAndroid.invokeMethod(
               removeReminderMethod, {'data': foundTheMatched.eid});
         }
         return true;
@@ -188,21 +191,21 @@ class QurPlanReminders {
 
   static Future<List<Reminder>> getLocalReminder() async {
     try {
-      final directory = Platform.isIOS
-          ? await FHBUtils.createFolderInAppDocDirForIOS("reminders")
+      var directory = Platform.isIOS
+          ? await FHBUtils.createFolderInAppDocDirForIOS('reminders')
           : await FHBUtils.abstractUserData();
 
-      final file = Platform.isIOS
+      var file = Platform.isIOS
           ? File('$directory$reminderLocalFile')
           : File('$directory/$reminderLocalFile');
-      final data = await file.readAsString();
-      final decodedData = await json.decode(data);
+      var data = await file.readAsString();
+      var decodedData = await json.decode(data);
 
-      List<dynamic> myJson = decodedData['reminders'];
+      final List<dynamic> myJson = decodedData['reminders'];
 
-      var notifications = <Reminder>[];
+      final notifications = <Reminder>[];
       for (var i = 0; i < myJson.length; i++) {
-        Reminder val = Reminder.fromJson(myJson[i]);
+        var val = Reminder.fromJson(myJson[i]);
         //final newData = Reminder.fromMap(val);
         notifications.add(val);
       }
@@ -215,14 +218,14 @@ class QurPlanReminders {
 
   static deleteAllLocalReminders() async {
     if (Platform.isIOS) {
-      reminderMethodChannel.invokeMethod(removeAllReminderMethod);
+      await reminderMethodChannel.invokeMethod(removeAllReminderMethod);
     } else {
-      List<Reminder> reminders = await getLocalReminder();
-      for (Reminder r in reminders) {
-        reminderMethodChannelAndroid
+      var reminders = await getLocalReminder();
+      for (var r in reminders) {
+        await reminderMethodChannelAndroid
             .invokeMethod(removeReminderMethod, {'data': r.eid});
       }
     }
-    saveRemindersLocally([]);
+    await saveRemindersLocally([]);
   }
 }

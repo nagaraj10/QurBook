@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
@@ -17,70 +17,70 @@ import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
-import 'package:http/http.dart' as http;
+import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments.dart';
-import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
-import 'package:myfhb/add_providers/bloc/update_providers_bloc.dart';
-import 'package:myfhb/authentication/constants/constants.dart';
-import 'package:myfhb/authentication/model/logged_in_success.dart';
-import 'package:myfhb/authentication/view/login_screen.dart';
-import 'package:myfhb/bookmark_record/bloc/bookmarkRecordBloc.dart';
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/fhb_parameters.dart';
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/constants/responseModel.dart';
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
-import 'package:myfhb/device_integration/viewModel/deviceDataHelper.dart';
-import 'package:myfhb/global_search/model/Data.dart';
-import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
-import 'package:myfhb/my_family/models/LinkedData.dart';
-import 'package:myfhb/my_family/models/ProfileData.dart';
-import 'package:myfhb/my_family/models/Sharedbyme.dart';
-import 'package:myfhb/my_providers/models/User.dart';
-import 'package:myfhb/myfhb_weview/myfhb_webview.dart';
-import 'package:myfhb/plan_dashboard/viewModel/subscribeViewModel.dart';
-import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
-import 'package:myfhb/refer_friend/view/invite_contacts_screen.dart';
-import 'package:myfhb/refer_friend/viewmodel/referafriend_vm.dart';
-import 'package:myfhb/reminders/QurPlanReminders.dart';
-import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
-import 'package:myfhb/src/blocs/Media/MediaTypeBlock.dart';
-import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
-import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
-import 'package:myfhb/src/model/Authentication/DeviceInfoSucess.dart';
-import 'package:myfhb/src/model/Category/CategoryData.dart';
-import 'package:myfhb/src/model/Category/catergory_data_list.dart';
-import 'package:myfhb/src/model/Category/catergory_result.dart';
-import 'package:myfhb/src/model/Health/CategoryInfo.dart';
-import 'package:myfhb/src/model/Health/MediaMasterIds.dart';
-import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
-import 'package:myfhb/src/model/Health/MediaTypeInfo.dart';
-import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
-import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
-import 'package:myfhb/src/model/Media/DeviceModel.dart';
-import 'package:myfhb/src/model/Media/media_result.dart';
-import 'package:myfhb/src/model/sceretLoader.dart';
-import 'package:myfhb/src/model/secretmodel.dart';
-import 'package:myfhb/src/model/user/MyProfileModel.dart';
-import 'package:myfhb/src/model/user/MyProfileResult.dart';
-import 'package:myfhb/src/model/user/UserAddressCollection.dart';
-import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
-import 'package:myfhb/src/resources/repository/CategoryRepository/CategoryResponseListRepository.dart';
-import 'package:myfhb/src/ui/MyRecord.dart';
-import 'package:myfhb/src/ui/MyRecordsArguments.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
-import 'package:myfhb/telehealth/features/Payment/PaymentPage.dart';
-import 'package:myfhb/telehealth/features/chat/view/BadgeIcon.dart';
-import 'package:myfhb/telehealth/features/chat/view/pdfiosViewer.dart';
+import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
+import 'package:open_file/open_file.dart';
+import '../add_family_user_info/models/add_family_user_info_arguments.dart';
+import '../add_family_user_info/services/add_family_user_info_repository.dart';
+import '../add_providers/bloc/update_providers_bloc.dart';
+import '../authentication/model/logged_in_success.dart';
+import '../authentication/view/login_screen.dart';
+import '../bookmark_record/bloc/bookmarkRecordBloc.dart';
+import 'CommonConstants.dart';
+import 'PreferenceUtil.dart';
+import '../constants/fhb_constants.dart' as Constants;
+import '../constants/fhb_constants.dart';
+import '../constants/fhb_parameters.dart';
+import '../constants/fhb_parameters.dart' as parameters;
+import '../constants/responseModel.dart';
+import '../constants/router_variable.dart' as router;
+import '../constants/variable_constant.dart' as variable;
+import '../device_integration/view/screens/Device_Data.dart';
+import '../device_integration/viewModel/deviceDataHelper.dart';
+import '../global_search/model/Data.dart';
+import '../my_family/bloc/FamilyListBloc.dart';
+import '../my_family/models/LinkedData.dart';
+import '../my_family/models/ProfileData.dart';
+import '../my_family/models/Sharedbyme.dart';
+import '../my_providers/models/User.dart';
+import '../myfhb_weview/myfhb_webview.dart';
+import '../plan_dashboard/viewModel/subscribeViewModel.dart';
+import '../refer_friend/view/invite_contacts_screen.dart';
+import '../refer_friend/viewmodel/referafriend_vm.dart';
+import '../regiment/view_model/regiment_view_model.dart';
+import '../reminders/QurPlanReminders.dart';
+import '../src/blocs/Authentication/LoginBloc.dart';
+import '../src/blocs/Media/MediaTypeBlock.dart';
+import '../src/blocs/User/MyProfileBloc.dart';
+import '../src/blocs/health/HealthReportListForUserBlock.dart';
+import '../src/model/Authentication/DeviceInfoSucess.dart';
+import '../src/model/Category/CategoryData.dart';
+import '../src/model/Category/catergory_data_list.dart';
+import '../src/model/Category/catergory_result.dart';
+import '../src/model/Health/CategoryInfo.dart';
+import '../src/model/Health/MediaMasterIds.dart';
+import '../src/model/Health/MediaMetaInfo.dart';
+import '../src/model/Health/MediaTypeInfo.dart';
+import '../src/model/Health/asgard/health_record_collection.dart';
+import '../src/model/Health/asgard/health_record_list.dart';
+import '../src/model/Media/DeviceModel.dart';
+import '../src/model/Media/media_result.dart';
+import '../src/model/sceretLoader.dart';
+import '../src/model/secretmodel.dart';
+import '../src/model/user/MyProfileModel.dart';
+import '../src/model/user/MyProfileResult.dart';
+import '../src/model/user/UserAddressCollection.dart';
+import '../src/resources/network/ApiBaseHelper.dart';
+import '../src/resources/repository/CategoryRepository/CategoryResponseListRepository.dart';
+import '../src/ui/MyRecord.dart';
+import '../src/ui/MyRecordsArguments.dart';
+import '../src/utils/FHBUtils.dart';
+import '../src/utils/colors_utils.dart';
+import '../src/utils/screenutils/size_extensions.dart';
+import '../telehealth/features/Notifications/view/notification_main.dart';
+import '../telehealth/features/Payment/PaymentPage.dart';
+import '../telehealth/features/chat/view/BadgeIcon.dart';
 import 'package:package_info/package_info.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -88,33 +88,40 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:showcaseview/showcase.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'package:myfhb/telehealth/features/chat/view/PDFModel.dart';
+import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
+import 'package:myfhb/telehealth/features/chat/view/PDFView.dart';
+import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
+import '../../authentication/constants/constants.dart';
+import 'package:myfhb/widgets/checkout_page.dart';
+
 class CommonUtil {
-  static String SHEELA_URL = "";
-  static String FAQ_URL = "";
-  static String GOOGLE_MAP_URL = "";
-  static String GOOGLE_PLACE_API_KEY = "";
-  static String GOOGLE_MAP_PLACE_DETAIL_URL = "";
-  static String GOOGLE_ADDRESS_FROM__LOCATION_URL = "";
-  static String GOOGLE_STATIC_MAP_URL = "";
-  static String BASE_URL_FROM_RES = "";
+  static String SHEELA_URL = '';
+  static String FAQ_URL = '';
+  static String GOOGLE_MAP_URL = '';
+  static String GOOGLE_PLACE_API_KEY = '';
+  static String GOOGLE_MAP_PLACE_DETAIL_URL = '';
+  static String GOOGLE_ADDRESS_FROM__LOCATION_URL = '';
+  static String GOOGLE_STATIC_MAP_URL = '';
+  static String BASE_URL_FROM_RES = '';
   static String BASEURL_DEVICE_READINGS = '';
   static String FIREBASE_CHAT_NOTIFY_TOKEN = '';
   static const bgColor = 0xFFe3e2e2;
-
+  static bool isRenewDialogOpened = false;
   static const secondaryGrey = 0xFF545454;
 
-  CategoryResult categoryDataObjClone = new CategoryResult();
+  CategoryResult categoryDataObjClone = CategoryResult();
   CategoryResponseListRepository _categoryResponseListRepository;
-  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+  final GlobalKey<State> _keyLoader = GlobalKey<State>();
 
   static bool audioPage = false;
 
-  static List<String> recordIds = new List();
-  static List<String> notesId = new List();
-  static List<String> voiceIds = new List();
+  static List<String> recordIds = [];
+  static List<String> notesId = [];
+  static List<String> voiceIds = [];
   MyProfileModel myProfile;
   AddFamilyUserInfoRepository addFamilyUserInfoRepository =
       AddFamilyUserInfoRepository();
@@ -129,25 +136,24 @@ class CommonUtil {
   final String CONTENT_RENEW_PACKAGE = 'Are you sure you want to renew?';
 
   static Future<dynamic> getResourceLoader() async {
-    final Future<Secret> secret =
-        SecretLoader(secretPath: "secrets.json").load();
-    var valueFromRes = await secret;
+    final secret = SecretLoader(secretPath: 'secrets.json').load();
+    final valueFromRes = await secret;
     return valueFromRes.myScerets;
   }
 
   List<HealthResult> getDataForParticularCategoryDescription(
       HealthRecordList completeData, String categoryDescription) {
-    List<HealthResult> mediaMetaInfoObj = new List();
-    List<HealthResult> bookMarkedData = new List();
-    List<HealthResult> unBookMarkedData = new List();
-    for (HealthResult mediaMetaInfo in completeData.result) {
+    final List<HealthResult> mediaMetaInfoObj = [];
+    final List<HealthResult> bookMarkedData = [];
+    final List<HealthResult> unBookMarkedData = [];
+    for (final mediaMetaInfo in completeData.result) {
       try {
         if (mediaMetaInfo.metadata.healthRecordType.description
             .contains(categoryDescription)) {
           if (categoryDescription ==
               CommonConstants.categoryDescriptionDevice) {
             if (mediaMetaInfo.metadata.deviceReadings != null &&
-                mediaMetaInfo.metadata.deviceReadings.length > 0)
+                mediaMetaInfo.metadata.deviceReadings.isNotEmpty)
             // &&
             // mediaMetaInfo.metadata.fileName != null)
             {
@@ -160,14 +166,14 @@ class CommonUtil {
       } catch (e) {}
     }
 
-    if (mediaMetaInfoObj.length > 0) {
+    if (mediaMetaInfoObj.isNotEmpty) {
       mediaMetaInfoObj.sort((mediaMetaInfoObjCopy, mediaMetaInfoObjClone) {
         return mediaMetaInfoObjCopy.dateTimeValue
             .compareTo(mediaMetaInfoObjClone.dateTimeValue);
       });
 
       //NOTE show the bookmarked data as first
-      for (HealthResult mmi in mediaMetaInfoObj) {
+      for (var mmi in mediaMetaInfoObj) {
         if (mmi.isBookmarked == true) {
           bookMarkedData.add(mmi);
         } else {
@@ -184,9 +190,9 @@ class CommonUtil {
 
   List<HealthResult> getDataForInsurance(HealthRecordList completeData,
       String categoryDescription, String mediaTypeDescription) {
-    List<HealthResult> mediaMetaInfoObj = new List();
+    final List<HealthResult> mediaMetaInfoObj = [];
 
-    for (HealthResult mediaMetaInfo in completeData.result) {
+    for (final mediaMetaInfo in completeData.result) {
       if (mediaMetaInfo.metadata.healthRecordCategory != null) {
         if (mediaMetaInfo.metadata.healthRecordCategory.categoryDescription ==
                 categoryDescription &&
@@ -206,9 +212,9 @@ class CommonUtil {
 
   List<HealthResult> getDataForHospitals(HealthRecordList completeData,
       String categoryDescription, String mediaTypeDescription) {
-    List<HealthResult> mediaMetaInfoObj = new List();
+    var mediaMetaInfoObj = List<HealthResult>();
 
-    for (HealthResult mediaMetaInfo in completeData.result) {
+    for (var mediaMetaInfo in completeData.result) {
       if (mediaMetaInfo.metadata.healthRecordCategory != null) {
         if (mediaMetaInfo.metadata.healthRecordCategory.categoryDescription ==
                 categoryDescription &&
@@ -228,18 +234,18 @@ class CommonUtil {
 
   MediaResult getMediaTypeInfoForParticularLabel(
       String mediaId, List<MediaResult> mediaDataList, String categoryName) {
-    MediaResult mediaDataObj = new MediaResult();
+    var mediaDataObj = MediaResult();
     MediaResult selectedMediaData;
     try {
       selectedMediaData = PreferenceUtil.getMediaData(Constants.KEY_MEDIADATA);
     } catch (e) {}
 
-    for (MediaResult mediaData in mediaDataList) {
+    for (var mediaData in mediaDataList) {
       if (categoryName == Constants.STR_IDDOCS) {
         if (mediaData.healthRecordCategory.id == mediaId &&
             mediaData.id == selectedMediaData.id) {
           mediaDataObj = mediaData;
-          (mediaDataObj.name + ' for ' + mediaDataObj.toString());
+          mediaDataObj.name + ' for ' + mediaDataObj.toString();
 
           // break;
         }
@@ -255,8 +261,8 @@ class CommonUtil {
 
   CategoryResult getCategoryObjForSelectedLabel(
       String categoryId, List<CategoryResult> categoryList) {
-    CategoryResult categoryObj = new CategoryResult();
-    for (CategoryResult categoryData in categoryList) {
+    var categoryObj = CategoryResult();
+    for (final categoryData in categoryList) {
       if (categoryData.id == categoryId) {
         categoryObj = categoryData;
       }
@@ -266,24 +272,24 @@ class CommonUtil {
   }
 
   String getMetaMasterId(MediaMetaInfo data) {
-    List<MediaMasterIds> mediaMasterIdsList = new List();
-    if (data.mediaMasterIds.length > 0) {
-      for (MediaMasterIds mediaMasterIds in data.mediaMasterIds) {
+    var mediaMasterIdsList = List<MediaMasterIds>();
+    if (data.mediaMasterIds.isNotEmpty) {
+      for (var mediaMasterIds in data.mediaMasterIds) {
         mediaMasterIdsList.add(mediaMasterIds);
       }
     } else {}
 
-    return mediaMasterIdsList.length > 0 ? mediaMasterIdsList[0].id : '0';
+    return mediaMasterIdsList.isNotEmpty ? mediaMasterIdsList[0].id : '0';
   }
 
   String getCurrentDate() {
-    var now = new DateTime.now();
-    return new DateFormat(variable.strDateFormatDay).format(now);
+    final now = DateTime.now();
+    return DateFormat(variable.strDateFormatDay).format(now);
   }
 
   Future<DateTime> _selectDate(BuildContext context) async {
     DateTime date;
-    final DateTime picked = await showDatePicker(
+    final picked = await showDatePicker(
         context: context,
         initialDate: date,
         firstDate: DateTime(2015, 8),
@@ -293,15 +299,14 @@ class CommonUtil {
 
   getDocumentImageWidget(HealthResult data) async {
     HealthReportListForUserBlock _healthReportListForUserBlock;
-    _healthReportListForUserBlock = new HealthReportListForUserBlock();
+    _healthReportListForUserBlock = HealthReportListForUserBlock();
 
-    List<dynamic> imageList = new List();
+    var imageList = List<dynamic>();
     if (data.healthRecordCollection.isNotEmpty) {
-      List<HealthRecordCollection> mediMasterId =
-          new CommonUtil().getMetaMasterIdList(data);
-      int k = 0;
-      for (int i = 0; i < mediMasterId.length; i++) {
-        _healthReportListForUserBlock
+      var mediMasterId = CommonUtil().getMetaMasterIdList(data);
+      var k = 0;
+      for (var i = 0; i < mediMasterId.length; i++) {
+        await _healthReportListForUserBlock
             .getDocumentImage(mediMasterId[i].id)
             .then((snapshot) {
           if (snapshot != null && k < mediMasterId.length) {
@@ -314,18 +319,18 @@ class CommonUtil {
         return imageList;
       }
     } else {
-      return new List();
+      return [];
     }
   }
 
   List<DeviceModel> getAllDevices(List<MediaResult> mediaList) {
-    List<DeviceModel> deviceList = new List();
+    final deviceList = List<DeviceModel>();
 
-    for (MediaResult mediaMetaInfo in mediaList) {
+    for (var mediaMetaInfo in mediaList) {
       if (mediaMetaInfo.description
-          .split("_")
+          .split('_')
           .contains(CommonConstants.categoryDescriptionDevice)) {
-        deviceList.add(new DeviceModel(mediaMetaInfo.name, mediaMetaInfo.logo));
+        deviceList.add(DeviceModel(mediaMetaInfo.name, mediaMetaInfo.logo));
       }
     }
     return deviceList;
@@ -333,8 +338,8 @@ class CommonUtil {
 
   MediaResult getMediaTypeInfoForParticularDevice(
       String deviceName, List<MediaResult> mediaDataList) {
-    MediaResult mediaDataObj = new MediaResult();
-    for (MediaResult mediaData in mediaDataList) {
+    var mediaDataObj = MediaResult();
+    for (final mediaData in mediaDataList) {
       if (mediaData.name == deviceName) {
         mediaDataObj = mediaData;
 
@@ -349,8 +354,8 @@ class CommonUtil {
     return showDialog<void>(
         context: context,
         barrierDismissible: false,
-        builder: (BuildContext context) {
-          return new WillPopScope(
+        builder: (context) {
+          return WillPopScope(
               onWillPop: () async => true,
               child: SimpleDialog(
                   key: key,
@@ -376,28 +381,28 @@ class CommonUtil {
   }
 
   List<HealthRecordCollection> getMetaMasterIdList(HealthResult data) {
-    List<HealthRecordCollection> mediaMasterIdsList = new List();
+    final List<HealthRecordCollection> mediaMasterIdsList = [];
     try {
       if (data.healthRecordCollection != null &&
-          data.healthRecordCollection.length > 0) {
-        for (HealthRecordCollection mediaMasterIds
-            in data.healthRecordCollection) {
-          if (mediaMasterIds.fileType == ".jpg" ||
-              mediaMasterIds.fileType == ".png" ||
-              mediaMasterIds.fileType == ".jpeg")
+          data.healthRecordCollection.isNotEmpty) {
+        for (final mediaMasterIds in data.healthRecordCollection) {
+          if (mediaMasterIds.fileType == '.jpg' ||
+              mediaMasterIds.fileType == '.png' ||
+              mediaMasterIds.fileType == '.jpeg') {
             mediaMasterIdsList.add(mediaMasterIds);
+          }
         }
       }
     } catch (e) {}
 
-    return mediaMasterIdsList.length > 0 ? mediaMasterIdsList : new List();
+    return mediaMasterIdsList.isNotEmpty ? mediaMasterIdsList : List();
   }
 
   MediaMasterIds getMediaMasterIDForPdfType(
       List<MediaMasterIds> mediaMasterIdsList) {
-    MediaMasterIds mediaMasterId = new MediaMasterIds();
+    var mediaMasterId = MediaMasterIds();
 
-    for (MediaMasterIds mediaMasterIdsObj in mediaMasterIdsList) {
+    for (final mediaMasterIdsObj in mediaMasterIdsList) {
       if (mediaMasterIdsObj.fileType == 'application/pdf') {
         mediaMasterId = mediaMasterIdsObj;
       }
@@ -410,7 +415,7 @@ class CommonUtil {
       List<HealthRecordCollection> mediaMasterIdsList) {
     HealthRecordCollection mediaMasterId;
 
-    for (HealthRecordCollection mediaMasterIdsObj in mediaMasterIdsList) {
+    for (final mediaMasterIdsObj in mediaMasterIdsList) {
       if (mediaMasterIdsObj.fileType == '.pdf') {
         mediaMasterId = mediaMasterIdsObj;
       }
@@ -420,18 +425,17 @@ class CommonUtil {
   }
 
   bookMarkRecord(HealthResult data, Function _refresh) {
-    BookmarkRecordBloc _bookmarkRecordBloc = new BookmarkRecordBloc();
+    var _bookmarkRecordBloc = BookmarkRecordBloc();
 
-    List<String> mediaIds = [];
+    var mediaIds = <String>[];
     mediaIds.add(data.id);
-    bool _isRecordBookmarked = data.isBookmarked;
+    var _isRecordBookmarked = data.isBookmarked;
     if (_isRecordBookmarked) {
       _isRecordBookmarked = false;
     } else {
       _isRecordBookmarked = true;
     }
-    HealthReportListForUserBlock _healthReportListForUserBlock =
-        new HealthReportListForUserBlock();
+    final _healthReportListForUserBlock = HealthReportListForUserBlock();
     _bookmarkRecordBloc
         .bookMarcRecord(mediaIds, _isRecordBookmarked)
         .then((bookmarkRecordResponse) {
@@ -447,19 +451,18 @@ class CommonUtil {
   }
 
   void logout(Function() moveToLoginPage) async {
-    LoginBloc loginBloc = new LoginBloc();
+    final loginBloc = LoginBloc();
 
     //loginBloc.logout().then((signOutResponse) {
     // moveToLoginPage(signOutResponse);
     QurPlanReminders.deleteAllLocalReminders();
-    // FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+    // FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
     // final token = await _firebaseMessaging.getToken();
     try {
-      MyProfileModel myProfile =
-          PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
-      MyProfileResult profileResult = myProfile.result;
+      var myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+      final profileResult = myProfile.result;
 
-      CommonUtil()
+      await CommonUtil()
           .sendDeviceToken(
               PreferenceUtil.getStringValue(Constants.KEY_USERID),
               profileResult.userContactCollection3[0].email,
@@ -483,27 +486,25 @@ class CommonUtil {
   }
 
   Sharedbyme getProfileDetails() {
-    MyProfileModel myProfile =
-        PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
-    MyProfileResult myProfileResult = myProfile.result;
+    var myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+    var myProfileResult = myProfile.result;
 
-    LinkedData linkedData =
-        new LinkedData(roleName: variable.Self, nickName: variable.Self);
+    var linkedData =
+        LinkedData(roleName: variable.Self, nickName: variable.Self);
 
-    String fullName =
-        myProfileResult.firstName + ' ' + myProfileResult.lastName;
-    ProfileData profileData = new ProfileData(
+    final fullName = myProfileResult.firstName + ' ' + myProfileResult.lastName;
+    final profileData = ProfileData(
         id: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),
         userId: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),
         name: fullName ?? '',
-        email: myProfileResult.userContactCollection3.length > 0
+        email: myProfileResult.userContactCollection3.isNotEmpty
             ? myProfileResult.userContactCollection3[0].email
             : '',
         dateOfBirth: myProfileResult.dateOfBirth,
         gender: myProfileResult.gender,
         bloodGroup: myProfileResult.bloodGroup,
         isVirtualUser: myProfileResult.isVirtualUser,
-        phoneNumber: myProfileResult.userContactCollection3.length > 0
+        phoneNumber: myProfileResult.userContactCollection3.isNotEmpty
             ? myProfileResult.userContactCollection3[0].phoneNumber
             : '',
         //createdOn: myProfileResult.createdOn,
@@ -512,7 +513,7 @@ class CommonUtil {
         isTempUser: myProfileResult.isTempUser,
         profilePicThumbnailURL: myProfileResult.profilePicThumbnailUrl);
 
-    return new Sharedbyme(profileData: profileData, linkedData: linkedData);
+    return Sharedbyme(profileData: profileData, linkedData: linkedData);
   }
 
   Future<void> getMedicalPreference({Function callBackToRefresh}) async {
@@ -598,30 +599,24 @@ class CommonUtil {
   }
 
   int getThemeColor() {
-    return PreferenceUtil.getSavedTheme(Constants.keyTheme) != null
-        ? PreferenceUtil.getSavedTheme(Constants.keyTheme)
-        : 0xff0a72e8;
+    return PreferenceUtil.getSavedTheme(Constants.keyTheme) ?? 0xff0a72e8;
   }
 
   int getMyPrimaryColor() {
-    return PreferenceUtil.getSavedTheme(Constants.keyPriColor) != null
-        ? PreferenceUtil.getSavedTheme(Constants.keyPriColor)
-        : 0xff5f0cf9;
+    return PreferenceUtil.getSavedTheme(Constants.keyPriColor) ?? 0xff5f0cf9;
   }
 
   int getMyGredientColor() {
-    return PreferenceUtil.getSavedTheme(Constants.keyGreyColor) != null
-        ? PreferenceUtil.getSavedTheme(Constants.keyGreyColor)
-        : 0xff9929ea;
+    return PreferenceUtil.getSavedTheme(Constants.keyGreyColor) ?? 0xff9929ea;
   }
 
   List<CategoryData> getAllCategoryList(List<Data> data) {
-    List<CategoryData> categoryDataList = new List();
+    final List<CategoryData> categoryDataList = [];
 
-    for (Data dataObj in data) {
-      CategoryInfo categoryInfo = dataObj.metaInfo.categoryInfo;
+    for (final dataObj in data) {
+      var categoryInfo = dataObj.metaInfo.categoryInfo;
 
-      categoryDataList.add(new CategoryData(
+      categoryDataList.add(CategoryData(
         id: categoryInfo.id,
         categoryDescription: categoryInfo.categoryDescription,
         categoryName: categoryInfo.categoryName,
@@ -641,18 +636,18 @@ class CommonUtil {
 
   HealthRecordList getMediaTypeInfo(List<Data> data) {
     HealthRecordList completeData;
-    List<MediaMetaInfo> mediaMetaInfoList = new List();
+    final List<MediaMetaInfo> mediaMetaInfoList = [];
 
-    for (Data dataObj in data) {
-      List<MediaMasterIds> mediaMasterIdsList = new List();
-      if (dataObj.mediaMasterIds != null && dataObj.mediaMasterIds.length > 0) {
-        for (MediaMasterIds mediaMasterIds in dataObj.mediaMasterIds) {
-          mediaMasterIdsList.add(new MediaMasterIds(
+    for (var dataObj in data) {
+      final List<MediaMasterIds> mediaMasterIdsList = [];
+      if (dataObj.mediaMasterIds != null && dataObj.mediaMasterIds.isNotEmpty) {
+        for (final mediaMasterIds in dataObj.mediaMasterIds) {
+          mediaMasterIdsList.add(MediaMasterIds(
               id: mediaMasterIds.id, fileType: mediaMasterIds.fileType));
         }
       }
 
-      CategoryInfo categoryInfo = new CategoryInfo(
+      var categoryInfo = CategoryInfo(
           id: dataObj.metaInfo.categoryInfo.id,
           isActive: true,
           categoryDescription:
@@ -666,7 +661,7 @@ class CommonUtil {
           logo: dataObj.metaInfo.categoryInfo.logo,
           url: Constants.BASE_URL + dataObj.metaInfo.categoryInfo.logo);
 
-      MediaTypeInfo mediaTypeInfo = new MediaTypeInfo(
+      final mediaTypeInfo = MediaTypeInfo(
           categoryId: dataObj.metaInfo.mediaTypeInfo.categoryId,
           createdOn: dataObj.metaInfo.mediaTypeInfo.createdOn,
           description: dataObj.metaInfo.mediaTypeInfo.description,
@@ -687,7 +682,7 @@ class CommonUtil {
 
       Doctor doctor;
       if (dataObj.metaInfo.doctor != null) {
-        doctor = new Doctor(
+        doctor = Doctor(
           doctorId: dataObj.metaInfo.doctor.id,
           //city: dataObj.metaInfo.doctor.city,
           //description: dataObj.metaInfo.doctor.description,
@@ -802,13 +797,13 @@ class CommonUtil {
   }
 
   List<CategoryData> removeDuplicatevalues(List<CategoryData> items) {
-    List<CategoryData> categoryDataList = new List();
-    for (CategoryData categoryDataObj in items) {
-      if (categoryDataList.length == 0) {
+    final categoryDataList = List<CategoryData>();
+    for (final categoryDataObj in items) {
+      if (categoryDataList.isEmpty) {
         categoryDataList.add(categoryDataObj);
       } else {
-        bool condition = false;
-        for (CategoryData categoryDataObjInner in categoryDataList) {
+        var condition = false;
+        for (var categoryDataObjInner in categoryDataList) {
           if (categoryDataObjInner.categoryName ==
               categoryDataObj.categoryName) {
             condition = true;
@@ -827,7 +822,7 @@ class CommonUtil {
       List<HealthRecordCollection> mediaMasterIdsList) {
     HealthRecordCollection mediaMasterId;
 
-    for (HealthRecordCollection mediaMasterIdsObj in mediaMasterIdsList) {
+    for (final mediaMasterIdsObj in mediaMasterIdsList) {
       if (mediaMasterIdsObj.fileType == Constants.audioFileType ||
           mediaMasterIdsObj.fileType == Constants.audioFileAACType ||
           mediaMasterIdsObj.fileType == Constants.audioFileTypeAppStream) {
@@ -867,7 +862,6 @@ class CommonUtil {
             SizedBox(width: 20.0.w),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Center(
                   child: Text(
@@ -904,20 +898,19 @@ class CommonUtil {
       Container(
         constraints: BoxConstraints(maxHeight: 120.0.h),
         child: Card(
-          elevation: 10.0,
+          elevation: 10,
           //margin: EdgeInsets.only(left: 3.0,right: 3.0),
           color: Colors.white,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(20.0),
-                  topLeft: Radius.circular(20.0))),
+                  topRight: Radius.circular(20), topLeft: Radius.circular(20))),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               ImageIcon(
                 AssetImage(variable.icon_wifi),
                 color: Color(CommonUtil().getMyPrimaryColor()),
-                size: 50.0,
+                size: 50,
               ),
               Text(
                 variable.strNoInternet,
@@ -942,7 +935,6 @@ class CommonUtil {
       color: isOffline ? Colors.green : Colors.red,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Icon(isOffline ? Icons.flash_on : Icons.flash_off),
           SizedBox(
@@ -958,13 +950,13 @@ class CommonUtil {
   }
 
   String conCatenateBloodGroup(String bloodGroup) {
-    String bloodGroupClone = '';
+    var bloodGroupClone = '';
     if (bloodGroup != null && bloodGroup != '') {
-      var bloodGroupSplitName = bloodGroup.split('_');
+      final bloodGroupSplitName = bloodGroup.split('_');
       if (bloodGroupSplitName.length > 1) {
         bloodGroupClone = bloodGroupSplitName[0] + bloodGroupSplitName[1];
       } else {
-        var bloodGroupSplitName = bloodGroup.split(' ');
+        final bloodGroupSplitName = bloodGroup.split(' ');
         if (bloodGroupSplitName.length > 1) {
           bloodGroupClone = bloodGroupSplitName[0] + bloodGroupSplitName[1];
         }
@@ -981,7 +973,7 @@ class CommonUtil {
   String getIdForDescription(
       List<CategoryResult> categoryData, String categoryName) {
     String categoryId;
-    for (CategoryResult categoryDataObj in categoryData) {
+    for (var categoryDataObj in categoryData) {
       if (categoryDataObj.categoryName == categoryName) {
         categoryId = categoryDataObj.id;
       }
@@ -990,7 +982,7 @@ class CommonUtil {
   }
 
   titleCase(str) {
-    var splitStr = str.toLowerCase().split(' ');
+    final splitStr = str.toLowerCase().split(' ');
     for (var i = 0; i < splitStr.length; i++) {
       // You do not need to check if i is larger than splitStr length, as your for does that for you
       // Assign it back to the array
@@ -1003,7 +995,7 @@ class CommonUtil {
   }
 
   Future<void> getAllCustomRoles() async {
-    FamilyListBloc _familyListBloc = new FamilyListBloc();
+    final _familyListBloc = FamilyListBloc();
     try {
       if (PreferenceUtil.getFamilyRelationship(Constants.keyFamily) != null) {
       } else {
@@ -1021,16 +1013,16 @@ class CommonUtil {
   }
 
   Future<void> syncDevices() async {
-    DeviceDataHelper _deviceDataHelper = DeviceDataHelper();
+    final _deviceDataHelper = DeviceDataHelper();
 
     if (PreferenceUtil.getStringValue(Constants.activateGF) ==
             variable.strtrue &&
         PreferenceUtil.getStringValue(Constants.isFirstTym) ==
             variable.strFalse) {
-      _deviceDataHelper.syncGoogleFit();
+      await _deviceDataHelper.syncGoogleFit();
     } else if (PreferenceUtil.getStringValue(Constants.activateHK) ==
         variable.strtrue) {
-      _deviceDataHelper.syncHealthKit();
+      await _deviceDataHelper.syncHealthKit();
     }
   }
 
@@ -1039,18 +1031,19 @@ class CommonUtil {
       // PageNavigator.goToPermanent(context,router.rt_SignIn);
       Navigator.pushAndRemoveUntil(
           Get.context,
-          MaterialPageRoute(
-              builder: (BuildContext context) => PatientSignInScreen()),
+          MaterialPageRoute(builder: (context) => PatientSignInScreen()),
           (route) => false);
     });
   }
 
   Future<MyProfileModel> getUserProfileData() async {
-    MyProfileBloc _myProfileBloc = new MyProfileBloc();
+    final _myProfileBloc = MyProfileBloc();
 
-    MyProfileModel myProfileModel = new MyProfileModel();
+    var myProfileModel = MyProfileModel();
 
-    _myProfileBloc.getMyProfileData(Constants.KEY_USERID).then((profileData) {
+    await _myProfileBloc
+        .getMyProfileData(Constants.KEY_USERID)
+        .then((profileData) {
       if (profileData != null &&
           (profileData.isSuccess ?? false) &&
           profileData.result != null) {
@@ -1077,7 +1070,7 @@ class CommonUtil {
       //return profileData;
     });
 
-    _myProfileBloc
+    await _myProfileBloc
         .getMyProfileData(Constants.KEY_USERID_MAIN)
         .then((profileData) {
       if (profileData != null &&
@@ -1146,8 +1139,8 @@ class CommonUtil {
           value1: 'OS',
           value2: '',
           color: [
-            Color(new CommonUtil().getMyPrimaryColor()),
-            Color(new CommonUtil().getMyGredientColor())
+            Color(CommonUtil().getMyPrimaryColor()),
+            Color(CommonUtil().getMyGredientColor())
           ]);
     }
 
@@ -1188,19 +1181,19 @@ class CommonUtil {
   }
 
   Future<void> getMediaTypes() async {
-    MediaTypeBlock _mediaTypeBlock = new MediaTypeBlock();
+    var _mediaTypeBlock = MediaTypeBlock();
     try {
       if (PreferenceUtil.getMediaType() != null) {
       } else {
-        _mediaTypeBlock.getMediTypesList().then((value) {});
+        await _mediaTypeBlock.getMediTypesList().then((value) {});
       }
     } catch (e) {
-      _mediaTypeBlock.getMediTypesList().then((value) {});
+      await _mediaTypeBlock.getMediTypesList().then((value) {});
     }
   }
 
   String checkIfStringIsEmpty(String value) {
-    return value != null ? value : '';
+    return value ?? '';
   }
 
   bool checkIfStringisNull(String value) {
@@ -1208,8 +1201,8 @@ class CommonUtil {
   }
 
   dateConversion(DateTime dateTime) {
-    var newFormat = DateFormat("EEE ,MMMM d,yyyy");
-    String updatedDate = newFormat.format(dateTime);
+    final newFormat = DateFormat('EEE ,MMMM d,yyyy');
+    var updatedDate = newFormat.format(dateTime);
 
     return updatedDate;
   }
@@ -1220,17 +1213,17 @@ class CommonUtil {
     bool isLanding = false,
   }) {
     DateFormat newFormat;
-    String updatedDate = '';
-    DateTime currentTime = DateTime.now();
+    var updatedDate = '';
+    final currentTime = DateTime.now();
     if (newDateTime.day == currentTime.day &&
         newDateTime.month == currentTime.month &&
         newDateTime.year == currentTime.year) {
       if (isAck) {
-        newFormat = DateFormat("hh:mm a");
+        newFormat = DateFormat('hh:mm a');
       } else if (isLanding) {
-        newFormat = DateFormat("HH:mm");
+        newFormat = DateFormat('HH:mm');
       } else {
-        newFormat = DateFormat("MMM d, yyyy");
+        newFormat = DateFormat('MMM d, yyyy');
       }
       if (isAck) {
         updatedDate = 'Today at ';
@@ -1241,9 +1234,9 @@ class CommonUtil {
       if (isAck) {
         newFormat = DateFormat("MMM d, yyyy hh:mm a");
       } else if (isLanding) {
-        newFormat = DateFormat("MMM d, HH:mm");
+        newFormat = DateFormat('MMM d, HH:mm');
       } else {
-        newFormat = DateFormat("EEE, MMM d, yyyy");
+        newFormat = DateFormat('EEE, MMM d, yyyy');
       }
     }
     updatedDate = updatedDate + newFormat.format(newDateTime);
@@ -1252,8 +1245,8 @@ class CommonUtil {
 
   dateTimeString(DateTime dateTime) {
     if (dateTime != null && (dateTime?.toString()?.isNotEmpty ?? false)) {
-      var newFormat = DateFormat('MMM d, yyyy hh:mm a');
-      String updatedDate = newFormat.format(dateTime);
+      final newFormat = DateFormat('MMM d, yyyy hh:mm a');
+      final updatedDate = newFormat.format(dateTime);
       return updatedDate;
     } else {
       return '';
@@ -1261,54 +1254,54 @@ class CommonUtil {
   }
 
   dateConversionToDayMonthDate(DateTime dateTime) {
-    var newFormat = DateFormat('EEEE, MMMM d');
-    String updatedDate = newFormat.format(dateTime);
+    final newFormat = DateFormat('EEEE, MMMM d');
+    var updatedDate = newFormat.format(dateTime);
 
     return updatedDate;
   }
 
   dateConversionToDayMonthYear(DateTime dateTime) {
-    var newFormat = DateFormat('d MMM, ' 'yyyy');
-    String updatedDate = newFormat.format(dateTime);
+    final newFormat = DateFormat('d MMM, ' 'yyyy');
+    final updatedDate = newFormat.format(dateTime);
 
     return updatedDate;
   }
 
   dateConversionToTime(DateTime dateTime) {
-    var newFormat = DateFormat('h:mm a');
-    String updatedDate = newFormat.format(dateTime);
+    final newFormat = DateFormat('h:mm a');
+    var updatedDate = newFormat.format(dateTime);
 
     return updatedDate;
   }
 
   stringToDateTime(String string) {
-    DateTime dateTime = DateTime.parse(string);
+    var dateTime = DateTime.parse(string);
 
     return dateTime;
   }
 
   removeLastThreeDigits(String string) {
-    String removedString = '';
+    var removedString = '';
     removedString = string.substring(0, string.length - 3);
 
     return removedString;
   }
 
   dateConversionToApiFormat(DateTime dateTime) {
-    var newFormat = DateFormat('yyyy-MM-dd');
-    String updatedDate = newFormat.format(dateTime);
+    final newFormat = DateFormat('yyyy-MM-dd');
+    var updatedDate = newFormat.format(dateTime);
     return updatedDate;
   }
 
   dateConversionToApiFormatClone(DateTime dateTime) {
-    var newFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
-    String updatedDate = newFormat.format(dateTime);
+    final newFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
+    var updatedDate = newFormat.format(dateTime);
     return updatedDate;
   }
 
   List<CategoryResult> fliterCategories(List<CategoryResult> data) {
-    List<CategoryResult> filteredCategoryData = new List();
-    for (CategoryResult dataObj in data) {
+    final filteredCategoryData = List<CategoryResult>();
+    for (final dataObj in data) {
       if (dataObj.isDisplay &&
           dataObj.categoryName != Constants.STR_FEEDBACK &&
           dataObj.categoryName != Constants.STR_CLAIMSRECORD &&
@@ -1319,8 +1312,8 @@ class CommonUtil {
       }
     }
 
-    int i = 0;
-    for (CategoryResult categoryDataObj in filteredCategoryData) {
+    var i = 0;
+    for (final categoryDataObj in filteredCategoryData) {
       if (categoryDataObj.categoryDescription ==
           CommonConstants.categoryDescriptionOthers) {
         categoryDataObjClone = categoryDataObj;
@@ -1340,7 +1333,7 @@ class CommonUtil {
   }
 
   CategoryResult getCatgeoryLabel(List<CategoryResult> filteredCategoryData) {
-    for (CategoryResult categoryDataObj in filteredCategoryData) {
+    for (final categoryDataObj in filteredCategoryData) {
       if (categoryDataObj.categoryDescription ==
           CommonConstants.categoryDescriptionOthers) {
         categoryDataObjClone = categoryDataObj;
@@ -1349,13 +1342,13 @@ class CommonUtil {
     return categoryDataObjClone;
   }
 
-  static Future<void> askPermissionForCameraAndMic() async {
+  static Future<bool> askPermissionForCameraAndMic() async {
 //    await PermissionHandler().requestPermissions(
 //      [PermissionGroup.camera, PermissionGroup.microphone],
 //    );
 
-    PermissionStatus status = await Permission.microphone.request();
-    PermissionStatus cameraStatus = await Permission.camera.request();
+    final status = await Permission.microphone.request();
+    final cameraStatus = await Permission.camera.request();
 
     if (status == PermissionStatus.granted &&
         cameraStatus == PermissionStatus.granted) {
@@ -1372,16 +1365,16 @@ class CommonUtil {
   ) {
     if (cameraPermissionStatus == PermissionStatus.denied &&
         microphonePermissionStatus == PermissionStatus.denied) {
-      throw new PlatformException(
-          code: "PERMISSION_DENIED",
-          message: "Access to camera and microphone denied",
-          details: null);
+      // throw PlatformException(
+      //     code: 'PERMISSION_DENIED',
+      //     message: 'Access to camera and microphone denied');
+      print("Access to camera and microphone denied");
     } else if (cameraPermissionStatus == PermissionStatus.permanentlyDenied &&
         microphonePermissionStatus == PermissionStatus.permanentlyDenied) {
-      throw new PlatformException(
-          code: "PERMISSION_DISABLED",
-          message: "Location data is not available on device",
-          details: null);
+      // throw PlatformException(
+      //     code: 'PERMISSION_DISABLED',
+      //     message: 'Location data is not available on device');
+      print("Access to camera and microphone denied permanently");
     }
   }
 
@@ -1394,7 +1387,7 @@ class CommonUtil {
         fit: BoxFit.cover,
       );
     } else {
-      return new SizedBox(
+      return SizedBox(
         width: 50.0.h,
         height: 50.0.h,
         child:
@@ -1406,18 +1399,28 @@ class CommonUtil {
   }
 
   Future<void> validateToken() async {
-    var localToken = PreferenceUtil.getStringValue(Constants.STR_PUSH_TOKEN);
-    final currentToken = await FirebaseMessaging().getToken();
+    final localToken = PreferenceUtil.getStringValue(Constants.STR_PUSH_TOKEN);
+    var currentToken = await FirebaseMessaging.instance.getToken();
     if (localToken != currentToken) {
       await saveTokenToDatabase(currentToken);
     }
   }
 
+  ListenForTokenUpdate() {
+    FirebaseMessaging.instance.onTokenRefresh.listen((currentToken) {
+      final localToken =
+          PreferenceUtil.getStringValue(Constants.STR_PUSH_TOKEN);
+      if (localToken != currentToken) {
+        saveTokenToDatabase(currentToken);
+      }
+    });
+  }
+
   Future<void> saveTokenToDatabase(String token) async {
     try {
-      MyProfileModel myProfile =
+      final myProfile =
           PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
-      MyProfileResult profileResult = myProfile.result;
+      final profileResult = myProfile.result;
 
       await CommonUtil().sendDeviceToken(
         PreferenceUtil.getStringValue(Constants.KEY_USERID),
@@ -1430,20 +1433,20 @@ class CommonUtil {
   }
 
   Future<DeviceInfoSucess> sendDeviceToken(String userId, String email,
-      String user_mobile_no, String deviceId, bool isActive) async {
+      String userMobileNo, String deviceId, bool isActive) async {
     var jsonParam;
-    FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-    ApiBaseHelper apiBaseHelper = new ApiBaseHelper();
+    final _firebaseMessaging = FirebaseMessaging.instance;
+    final apiBaseHelper = ApiBaseHelper();
 
-    final token = await _firebaseMessaging.getToken();
-    PreferenceUtil.saveString(Constants.STR_PUSH_TOKEN, token);
-    Map<String, dynamic> deviceInfo = new Map();
-    Map<String, dynamic> user = new Map();
-    Map<String, dynamic> jsonData = new Map();
+    var token = await _firebaseMessaging.getToken();
+    await PreferenceUtil.saveString(Constants.STR_PUSH_TOKEN, token);
+    var deviceInfo = Map<String, dynamic>();
+    var user = Map<String, dynamic>();
+    var jsonData = Map<String, dynamic>();
 
     user['id'] = userId;
     deviceInfo['user'] = user;
-    deviceInfo['phoneNumber'] = user_mobile_no;
+    deviceInfo['phoneNumber'] = userMobileNo;
     deviceInfo['email'] = email;
     deviceInfo['isActive'] = isActive;
     deviceInfo['deviceTokenId'] = token;
@@ -1454,17 +1457,19 @@ class CommonUtil {
       jsonData['deviceTypeCode'] = 'IPHONE';
     } else {
       jsonData['platformCode'] = 'ANDPLT';
-      jsonData["deviceTypeCode"] = 'ANDROID';
+      jsonData['deviceTypeCode'] = 'ANDROID';
     }
 
-    var params = json.encode(jsonData);
+    final params = json.encode(jsonData);
 
-    final response =
+    var response =
         await apiBaseHelper.postDeviceId('device-info', params, isActive);
     if (isActive) {
-      PreferenceUtil.saveString(Constants.KEY_DEVICEINFO, variable.strtrue);
+      await PreferenceUtil.saveString(
+          Constants.KEY_DEVICEINFO, variable.strtrue);
     } else {
-      PreferenceUtil.saveString(Constants.KEY_DEVICEINFO, variable.strFalse);
+      await PreferenceUtil.saveString(
+          Constants.KEY_DEVICEINFO, variable.strFalse);
     }
 
     getLoggedIDetails();
@@ -1473,13 +1478,13 @@ class CommonUtil {
 
   static Future<File> downloadFile(String url, String extension) async {
     try {
-      http.Client _client = new http.Client();
-      var req = await _client.get(Uri.parse(url));
-      var bytes = req.bodyBytes;
-      String dir = Platform.isIOS
-          ? await FHBUtils.createFolderInAppDocDirForIOS("images")
+      final req = await ApiServices.get(url);
+      final bytes = req.bodyBytes;
+      final dir = Platform.isIOS
+          ? await FHBUtils.createFolderInAppDocDirForIOS('images')
           : await FHBUtils.createFolderInAppDocDir('images');
-      File file = new File('$dir/${basename(url)}$extension');
+
+      var file = File('$dir/${basename(url)}$extension');
       await file.writeAsBytes(bytes);
       return file;
     } catch (e) {
@@ -1488,15 +1493,15 @@ class CommonUtil {
   }
 
   static void downloadMultipleFile(List images, BuildContext context) async {
-    for (var currentImage in images) {
+    for (final currentImage in images) {
       try {
-        var _currentImage =
+        final _currentImage =
             '${currentImage.response.data.fileContent}${currentImage.response.data.fileType}';
-        var dir = await FHBUtils.createFolderInAppDocDir('images');
-        var response = await Dio().get(currentImage.response.data.fileContent,
+        final dir = await FHBUtils.createFolderInAppDocDir('images');
+        final response = await Dio().get(currentImage.response.data.fileContent,
             options: Options(responseType: ResponseType.bytes));
-        File file = File('$dir/${basename(_currentImage)}');
-        var raf = file.openSync(mode: FileMode.write);
+        var file = File('$dir/${basename(_currentImage)}');
+        final raf = file.openSync(mode: FileMode.write);
         raf.writeFromSync(response.data);
         await raf.close();
 
@@ -1505,7 +1510,7 @@ class CommonUtil {
         // currentImage =
         //     '${basename(currentImage.response.data.fileContent)}${currentImage.response.data.fileType}';
         // var req =
-        //     await http.get(Uri.parse(currentImage.response.data.fileContent));
+        //     await ApiServices.get(Uri.parse(currentImage.response.data.fileContent));
         // var bytes = req.bodyBytes;
         // String dir = (await getTemporaryDirectory()).path;
         // File file = new File(
@@ -1527,22 +1532,22 @@ class CommonUtil {
   }
 
   List<HealthRecordCollection> getMetaMasterIdListNew(HealthResult data) {
-    List<HealthRecordCollection> mediaMasterIdsList = new List();
+    final List<HealthRecordCollection> mediaMasterIdsList = [];
     try {
       if (data.healthRecordCollection != null &&
-          data.healthRecordCollection.length > 0) {
-        for (HealthRecordCollection mediaMasterIds
-            in data.healthRecordCollection) {
-          if (mediaMasterIds.fileType == ".jpg" ||
-              mediaMasterIds.fileType == ".png" ||
-              mediaMasterIds.fileType == ".pdf" ||
-              mediaMasterIds.fileType == ".jpeg")
+          data.healthRecordCollection.isNotEmpty) {
+        for (var mediaMasterIds in data.healthRecordCollection) {
+          if (mediaMasterIds.fileType == '.jpg' ||
+              mediaMasterIds.fileType == '.png' ||
+              mediaMasterIds.fileType == '.pdf' ||
+              mediaMasterIds.fileType == '.jpeg') {
             mediaMasterIdsList.add(mediaMasterIds);
+          }
         }
       }
     } catch (e) {}
 
-    return mediaMasterIdsList.length > 0 ? mediaMasterIdsList : new List();
+    return mediaMasterIdsList.isNotEmpty ? mediaMasterIdsList : [];
   }
 
   void openWebViewNew(String title, String url, bool isLocal) {
@@ -1554,13 +1559,13 @@ class CommonUtil {
       SnackBar(
         content: Text(message),
         backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-        elevation: 5.0,
+        elevation: 5,
         action: SnackBarAction(
             label: actionName,
             onPressed: () async {
-              MyProfileModel myProfile = await fetchUserProfileInfo();
+              final myProfile = await fetchUserProfileInfo();
               if (myProfile?.result != null) {
-                Navigator.pushNamed(context, router.rt_AddFamilyUserInfo,
+                await Navigator.pushNamed(context, router.rt_AddFamilyUserInfo,
                     arguments: AddFamilyUserInfoArguments(
                         myProfileResult: myProfile?.result,
                         fromClass: CommonConstants.user_update));
@@ -1575,17 +1580,17 @@ class CommonUtil {
   }
 
   Future<MyProfileModel> fetchUserProfileInfo() async {
-    var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    MyProfileModel myProfile =
+    final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    var myProfile =
         await AddFamilyUserInfoRepository().getMyProfileInfoNew(userid);
     return myProfile;
   }
 
   void getLoggedIDetails() async {
-    ApiBaseHelper apiBaseHelper = new ApiBaseHelper();
+    var apiBaseHelper = ApiBaseHelper();
 
-    final response = await apiBaseHelper.getLoginDetails();
-    LoginDetails loginDetails = LoginDetails.fromJson(response);
+    var response = await apiBaseHelper.getLoginDetails();
+    final loginDetails = LoginDetails.fromJson(response);
 
     await PreferenceUtil.save(
         Constants.KEY_LASTLOGGEDTIME, loginDetails.result.lastLoggedIn);
@@ -1596,21 +1601,22 @@ class CommonUtil {
     Color color,
   }) {
     try {
-      int count = 0;
-      String targetID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-      return StreamBuilder<DocumentSnapshot>(
-          stream: Firestore.instance
+      var count = 0;
+      var targetID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+          stream: FirebaseFirestore.instance
               .collection('unreadNotifications')
-              .document(targetID)
+              .doc(targetID)
               .snapshots(),
-          builder:
-              (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          builder: (context,
+              AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot) {
             if (snapshot.hasData) {
               count = 0;
-              if (snapshot.data.data != null) {
-                if (snapshot.data['count'] != null &&
-                    snapshot.data['count'] != '') {
-                  count = snapshot.data['count'];
+
+              if (snapshot.data.data() != null) {
+                if (snapshot.data.data()['count'] != null &&
+                    snapshot.data.data()['count'] != '') {
+                  count = snapshot.data.data()['count'];
                 } else {
                   count = 0;
                 }
@@ -1648,8 +1654,7 @@ class CommonUtil {
                       color: color ?? Colors.white,
                       size: 30.0.sp,
                     ),
-                    badgeColor: ColorUtils.countColor,
-                    badgeCount: 0),
+                    badgeColor: ColorUtils.countColor),
               );
             }
           });
@@ -1667,43 +1672,41 @@ class CommonUtil {
               color: color ?? Colors.white,
               size: 30.0.sp,
             ),
-            badgeColor: ColorUtils.countColor,
-            badgeCount: 0),
+            badgeColor: ColorUtils.countColor),
       );
     }
   }
 
   versionCheck(context) async {
     //Get Current installed version of app
-    final PackageInfo info = await PackageInfo.fromPlatform();
-    double currentVersion =
-        double.parse(info.version.trim().replaceAll(".", ""));
+    final info = await PackageInfo.fromPlatform();
+    var currentVersion = double.parse(info.version.trim().replaceAll('.', ''));
 
     //Get Latest version info from firebase config
-    final RemoteConfig remoteConfig = await RemoteConfig.instance;
+    final remoteConfig = RemoteConfig.instance;
 
     try {
       // Using default duration to force fetching from remote server.
-      await remoteConfig.fetch(expiration: const Duration(seconds: 0));
-      await remoteConfig.activateFetched();
+      await remoteConfig.fetch();
+      await remoteConfig.activate();
       remoteConfig.getString(Platform.isIOS
           ? STR_FIREBASE_REMOTE_KEY_IOS
           : STR_FIREBASE_REMOTE_KEY);
       remoteConfig.getBool(Platform.isIOS ? STR_IS_FORCE_IOS : STR_IS_FORCE);
-      double newVersion = double.parse(remoteConfig
+      final newVersion = double.parse(remoteConfig
           .getString(Platform.isIOS
               ? STR_FIREBASE_REMOTE_KEY_IOS
               : STR_FIREBASE_REMOTE_KEY)
           .trim()
-          .replaceAll(".", ""));
+          .replaceAll('.', ''));
 
-      bool isForceUpdate = remoteConfig
+      var isForceUpdate = remoteConfig
           .getBool(Platform.isIOS ? STR_IS_FORCE_IOS : STR_IS_FORCE);
 
       if (newVersion > currentVersion) {
         _showVersionDialog(context, isForceUpdate);
       }
-    } on FetchThrottledException catch (exception) {
+    } on FirebaseException catch (exception) {
       // Fetch throttled.
       print(exception);
     } catch (exception) {
@@ -1716,13 +1719,13 @@ class CommonUtil {
     await showDialog<String>(
       context: context,
       barrierDismissible: false,
-      builder: (BuildContext context) {
-        String title = STR_UPDATE_AVAIL;
-        String message = STR_UPDATE_CONTENT;
-        String btnLabel = STR_UPDATE_NOW;
-        String btnLabelCancel = STR_LATER;
+      builder: (context) {
+        var title = STR_UPDATE_AVAIL;
+        var message = STR_UPDATE_CONTENT;
+        final btnLabel = STR_UPDATE_NOW;
+        final btnLabelCancel = STR_LATER;
         return Platform.isIOS
-            ? new CupertinoAlertDialog(
+            ? CupertinoAlertDialog(
                 title: Text(
                   title,
                   style: TextStyle(fontSize: 16),
@@ -1733,28 +1736,29 @@ class CommonUtil {
                 ),
                 actions: <Widget>[
                   FlatButton(
+                    onPressed: () => launchURL(APP_STORE_URL),
                     child: Text(
                       btnLabel,
                       style: TextStyle(
                         color: Color(getMyPrimaryColor()),
                       ),
                     ),
-                    onPressed: () => launchURL(APP_STORE_URL),
                   ),
-                  !isForceUpdate
-                      ? FlatButton(
-                          child: Text(
-                            btnLabelCancel,
-                            style: TextStyle(
-                              color: Color(getMyPrimaryColor()),
-                            ),
-                          ),
-                          onPressed: () => Navigator.pop(context),
-                        )
-                      : SizedBox.shrink(),
+                  if (!isForceUpdate)
+                    FlatButton(
+                      child: Text(
+                        btnLabelCancel,
+                        style: TextStyle(
+                          color: Color(getMyPrimaryColor()),
+                        ),
+                      ),
+                      onPressed: () => Navigator.pop(context),
+                    )
+                  else
+                    SizedBox.shrink(),
                 ],
               )
-            : new AlertDialog(
+            : AlertDialog(
                 title: Text(
                   title,
                   style: TextStyle(fontSize: 16),
@@ -1765,25 +1769,26 @@ class CommonUtil {
                 ),
                 actions: <Widget>[
                   FlatButton(
+                    onPressed: () => launchURL(PLAY_STORE_URL),
                     child: Text(
                       btnLabel,
                       style: TextStyle(
                         color: Color(getMyPrimaryColor()),
                       ),
                     ),
-                    onPressed: () => launchURL(PLAY_STORE_URL),
                   ),
-                  !isForceUpdate
-                      ? FlatButton(
-                          child: Text(
-                            btnLabelCancel,
-                            style: TextStyle(
-                              color: Color(getMyPrimaryColor()),
-                            ),
-                          ),
-                          onPressed: () => Navigator.pop(context),
-                        )
-                      : SizedBox.shrink(),
+                  if (!isForceUpdate)
+                    FlatButton(
+                      child: Text(
+                        btnLabelCancel,
+                        style: TextStyle(
+                          color: Color(getMyPrimaryColor()),
+                        ),
+                      ),
+                      onPressed: () => Navigator.pop(context),
+                    )
+                  else
+                    SizedBox.shrink(),
                 ],
               );
       },
@@ -1799,15 +1804,15 @@ class CommonUtil {
   }
 
   Future<int> getCategoryListPos(String categoryName) async {
-    int position = 0;
+    var position = 0;
     _categoryResponseListRepository = CategoryResponseListRepository();
-    List<CategoryResult> filteredCategoryData = new List();
-    if (filteredCategoryData == null || filteredCategoryData.length == 0) {
+    var filteredCategoryData = List<CategoryResult>();
+    if (filteredCategoryData == null || filteredCategoryData.isEmpty) {
       try {
-        CategoryDataList categoryResponseList =
+        var categoryResponseList =
             await _categoryResponseListRepository.getCategoryLists();
         filteredCategoryData = fliterCategories(categoryResponseList.result);
-        for (int i = 0;
+        for (var i = 0;
             i <
                 (filteredCategoryData == null
                     ? 0
@@ -1825,7 +1830,7 @@ class CommonUtil {
             categoryName == Constants.STR_HOS_ID ||
             categoryName == Constants.STR_OTHER_ID ||
             categoryName == Constants.STR_INSURE_ID) {
-          var pos = filteredCategoryData
+          final pos = filteredCategoryData
               .indexWhere((data) => data.categoryName == Constants.STR_IDDOCS);
           return pos > 0 ? pos : 0;
         } else {
@@ -1838,15 +1843,14 @@ class CommonUtil {
   }
 
   void navigateToMyRecordsCategory(
-      dynamic categoryType, List<String> hrmId, bool isTerminate) async {
-    final value = await getCategoryListPos(categoryType);
+      categoryType, List<String> hrmId, bool isTerminate) async {
+    var value = await getCategoryListPos(categoryType);
     if (value != null) {
       goToMyRecordsScreen(value, hrmId, isTerminate);
     }
   }
 
-  void goToMyRecordsScreen(
-      dynamic position, List<String> hrmId, bool isTerminate) {
+  void goToMyRecordsScreen(position, List<String> hrmId, bool isTerminate) {
     if (isTerminate) {
       Get.toNamed(router.rt_MyRecords,
               arguments: MyRecordsArgument(
@@ -1860,8 +1864,8 @@ class CommonUtil {
                   isAssociateOrChat: false,
                   fromAppointments: false,
                   fromClass: 'notification'))
-          .then((value) => Get.offNamedUntil(
-              router.rt_Landing, (Route<dynamic> route) => false));
+          .then((value) =>
+              Get.offNamedUntil(router.rt_Landing, (route) => false));
     } else {
       Get.to(
         MyRecords(
@@ -1920,9 +1924,9 @@ class CommonUtil {
   }
 
   String dateFormatConversion(String datetime) {
-    String formattedDate = '';
+    var formattedDate = '';
     if (datetime != null && datetime != '') {
-      DateTime dateTimeStamp = DateTime.parse(datetime);
+      final dateTimeStamp = DateTime.parse(datetime);
       formattedDate = DateFormat('MMM dd yyyy').format(dateTimeStamp);
     } else {
       formattedDate = '';
@@ -1937,8 +1941,8 @@ class CommonUtil {
       String isFrom,
       bool feeZero,
       Function() refresh}) async {
-    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    showLoadingDialog(context, _keyLoader, variable.Please_Wait);
+    final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    await showLoadingDialog(context, _keyLoader, variable.Please_Wait);
     await addFamilyUserInfoRepository.getMyProfileInfoNew(userId).then((value) {
       Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
       myProfile = value;
@@ -1974,7 +1978,7 @@ class CommonUtil {
               if (myProfile.result.additionalInfo != null) {
                 if (isFrom == strIsFromSubscibe) {
                   if (myProfile.result.userAddressCollection3 != null) {
-                    if (myProfile.result.userAddressCollection3.length > 0) {
+                    if (myProfile.result.userAddressCollection3.isNotEmpty) {
                       patientAddressCheck(
                           myProfile.result.userAddressCollection3[0], context,
                           packageId: packageId,
@@ -2008,8 +2012,8 @@ class CommonUtil {
                     if (myProfile.result.additionalInfo.weight != null &&
                         myProfile.result.additionalInfo.weight.isNotEmpty) {
                       if (myProfile.result.userAddressCollection3 != null) {
-                        if (myProfile.result.userAddressCollection3.length >
-                            0) {
+                        if (myProfile
+                            .result.userAddressCollection3.isNotEmpty) {
                           patientAddressCheck(
                               myProfile.result.userAddressCollection3[0],
                               context,
@@ -2118,22 +2122,16 @@ class CommonUtil {
       String providerId,
       bool feeZero,
       Function() refresh}) {
-    String address1 = userAddressCollection.addressLine1 != null
-        ? userAddressCollection.addressLine1
-        : '';
+    var address1 = userAddressCollection.addressLine1 ?? '';
     if (userAddressCollection.city != null) {
-      String city = userAddressCollection.city.name != null
-          ? userAddressCollection.city.name
-          : '';
-      String state = userAddressCollection.state.name != null
-          ? userAddressCollection.state.name
-          : '';
+      var city = userAddressCollection.city.name ?? '';
+      final state = userAddressCollection.state.name ?? '';
 
       if (address1 != '' && city != '' && state != '') {
         //check if its subcribed we need not to show disclimer alert
         if (isSubscribed == '1') {
           if (isSubscribed == '0') {
-            String userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+            var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
             updateProvidersBloc
                 .mappingHealthOrg(providerId, userId)
                 .then((value) {
@@ -2147,15 +2145,12 @@ class CommonUtil {
                             Get.back(result: 'refreshUI');
                           } else {
                             FlutterToast().getToast(
-                                value.result.message != null
-                                    ? value.result.message
-                                    : 'Subscribe Failed',
+                                value.result.message ?? 'Subscribe Failed',
                                 Colors.red);
                           }
                         }
                       } else {
-                        FlutterToast()
-                          ..getToast('Subscribe Failed', Colors.red);
+                        FlutterToast().getToast('Subscribe Failed', Colors.red);
                       }
                     }
                   });
@@ -2208,12 +2203,12 @@ class CommonUtil {
       bool feeZero,
       Function() refresh,
       String providerId}) async {
-    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    showDialog<void>(
+    final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    await showDialog<void>(
         context: context,
         barrierDismissible: false,
-        builder: (BuildContext context) {
-          return new WillPopScope(
+        builder: (context) {
+          return WillPopScope(
             onWillPop: () async => false,
             child: SimpleDialog(children: <Widget>[
               Container(
@@ -2236,9 +2231,17 @@ class CommonUtil {
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         OutlineButton(
+                          onPressed: () async {
+                            // open profile page
+                            Navigator.of(context).pop();
+                          },
+                          borderSide: BorderSide(
+                            color: Color(
+                              getMyPrimaryColor(),
+                            ),
+                          ),
                           child: Text(
                             'cancel'.toUpperCase(),
                             style: TextStyle(
@@ -2248,36 +2251,17 @@ class CommonUtil {
                               fontSize: 10,
                             ),
                           ),
-                          onPressed: () async {
-                            // open profile page
-                            Navigator.of(context).pop();
-                          },
-                          borderSide: BorderSide(
-                            color: Color(
-                              getMyPrimaryColor(),
-                            ),
-                            style: BorderStyle.solid,
-                            width: 1,
-                          ),
                         ),
                         SizedBox(
                           width: 10.0.h,
                         ),
                         OutlineButton(
                           //hoverColor: Color(getMyPrimaryColor()),
-                          child: Text(
-                            'complete profile'.toUpperCase(),
-                            style: TextStyle(
-                              color: Color(getMyPrimaryColor()),
-                              fontSize: 10,
-                            ),
-                          ),
                           onPressed: () async {
                             // open profile page
                             Navigator.of(context).pop();
-                            MyProfileModel myProfile =
-                                await fetchUserProfileInfo();
-                            Get.toNamed(router.rt_AddFamilyUserInfo,
+                            var myProfile = await fetchUserProfileInfo();
+                            await Get.toNamed(router.rt_AddFamilyUserInfo,
                                 arguments: AddFamilyUserInfoArguments(
                                     myProfileResult: myProfile?.result,
                                     fromClass: CommonConstants.user_update,
@@ -2292,8 +2276,14 @@ class CommonUtil {
                             color: Color(
                               getMyPrimaryColor(),
                             ),
-                            style: BorderStyle.solid,
-                            width: 1,
+                          ),
+                          //hoverColor: Color(getMyPrimaryColor()),
+                          child: Text(
+                            'complete profile'.toUpperCase(),
+                            style: TextStyle(
+                              color: Color(getMyPrimaryColor()),
+                              fontSize: 10,
+                            ),
                           ),
                         ),
                       ],
@@ -2315,12 +2305,12 @@ class CommonUtil {
     Function() refresh,
     bool fromDetail = false,
   }) async {
-    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    showDialog<void>(
+    final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    await showDialog<void>(
         context: context,
         barrierDismissible: false,
-        builder: (BuildContext context) {
-          return new WillPopScope(
+        builder: (context) {
+          return WillPopScope(
             onWillPop: () async => false,
             child: SimpleDialog(children: <Widget>[
               Container(
@@ -2343,9 +2333,17 @@ class CommonUtil {
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         OutlineButton(
+                          onPressed: () async {
+                            // open profile page
+                            Navigator.of(context).pop();
+                          },
+                          borderSide: BorderSide(
+                            color: Color(
+                              getMyPrimaryColor(),
+                            ),
+                          ),
                           child: Text(
                             'no'.toUpperCase(),
                             style: TextStyle(
@@ -2355,34 +2353,16 @@ class CommonUtil {
                               fontSize: 10,
                             ),
                           ),
-                          onPressed: () async {
-                            // open profile page
-                            Navigator.of(context).pop();
-                          },
-                          borderSide: BorderSide(
-                            color: Color(
-                              getMyPrimaryColor(),
-                            ),
-                            style: BorderStyle.solid,
-                            width: 1,
-                          ),
                         ),
                         SizedBox(
                           width: 10.0.h,
                         ),
                         OutlineButton(
                           //hoverColor: Color(getMyPrimaryColor()),
-                          child: Text(
-                            'yes'.toUpperCase(),
-                            style: TextStyle(
-                              color: Color(getMyPrimaryColor()),
-                              fontSize: 10,
-                            ),
-                          ),
                           onPressed: () async {
                             CommonUtil.showLoadingDialog(
                                 context, _keyLoader, variable.Please_Wait);
-                            subscribeViewModel.UnsubScribePlan(packageId)
+                            await subscribeViewModel.UnsubScribePlan(packageId)
                                 .then((value) {
                               if (value != null) {
                                 if (value.isSuccess) {
@@ -2403,9 +2383,8 @@ class CommonUtil {
                                           .pop();
                                       Get.back();
                                       FlutterToast().getToast(
-                                          value.result.message != null
-                                              ? value.result.message
-                                              : 'UnSubscribe Failed',
+                                          value.result.message ??
+                                              'UnSubscribe Failed',
                                           Colors.red);
                                     }
                                   }
@@ -2424,8 +2403,14 @@ class CommonUtil {
                             color: Color(
                               getMyPrimaryColor(),
                             ),
-                            style: BorderStyle.solid,
-                            width: 1,
+                          ),
+                          //hoverColor: Color(getMyPrimaryColor()),
+                          child: Text(
+                            'yes'.toUpperCase(),
+                            style: TextStyle(
+                              color: Color(getMyPrimaryColor()),
+                              fontSize: 10,
+                            ),
                           ),
                         ),
                       ],
@@ -2451,7 +2436,6 @@ class CommonUtil {
       AlertDialog(
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Spacer(),
             Text(
@@ -2473,7 +2457,6 @@ class CommonUtil {
         content: SingleChildScrollView(
           child: Column(
               //mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Container(
                   //color: Colors.blue,
@@ -2494,26 +2477,18 @@ class CommonUtil {
             width: MediaQuery.of(context).size.width,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 OutlineButton(
                   //hoverColor: Color(getMyPrimaryColor()),
-                  child: Text(
-                    'accept'.toUpperCase(),
-                    style: TextStyle(
-                      color: Color(CommonUtil().getMyPrimaryColor()),
-                      fontSize: 13,
-                    ),
-                  ),
                   onPressed: () async {
                     // open profile page
                     if (feeZero) {
                       Navigator.pop(context);
                       CommonUtil.showLoadingDialog(
                           context, _keyLoader, variable.Please_Wait);
-                      String userId =
+                      final userId =
                           PreferenceUtil.getStringValue(Constants.KEY_USERID);
-                      updateProvidersBloc
+                      await updateProvidersBloc
                           .mappingHealthOrg(providerId, userId)
                           .then((value) {
                         if (value != null) {
@@ -2529,14 +2504,23 @@ class CommonUtil {
                                               rootNavigator: true)
                                           .pop();
                                       refresh();
+
+                                      //TODO: to confirm
+                                      /*
+                                      Provider.of<RegimentViewModel>(
+                                        context,
+                                        listen: false,
+                                      ).updateTabIndex(currentIndex: 3);
+                                      Get.offNamedUntil(
+                                          router.rt_MyPlans, (route) => false);
+                                          */
                                     } else {
                                       Navigator.of(_keyLoader.currentContext,
                                               rootNavigator: true)
                                           .pop();
                                       FlutterToast().getToast(
-                                          value.result.message != null
-                                              ? value.result.message
-                                              : 'Subscribe Failed',
+                                          value.result.message ??
+                                              'Subscribe Failed',
                                           Colors.red);
                                     }
                                   }
@@ -2545,7 +2529,7 @@ class CommonUtil {
                                           rootNavigator: true)
                                       .pop();
                                   FlutterToast()
-                                    ..getToast('Subscribe Failed', Colors.red);
+                                      .getToast('Subscribe Failed', Colors.red);
                                 }
                               }
                             });
@@ -2589,9 +2573,8 @@ class CommonUtil {
                                       .pop();
                                   Get.back(result: 'refreshUI');
                                   FlutterToast().getToast(
-                                      value.result.message != null
-                                          ? value.result.message
-                                          : 'UnSubscribe Failed',
+                                      value.result.message ??
+                                          'UnSubscribe Failed',
                                       Colors.red);
                                 }
                               }
@@ -2611,23 +2594,20 @@ class CommonUtil {
                     color: Color(
                       CommonUtil().getMyPrimaryColor(),
                     ),
-                    style: BorderStyle.solid,
-                    width: 1,
+                  ),
+                  //hoverColor: Color(getMyPrimaryColor()),
+                  child: Text(
+                    'accept'.toUpperCase(),
+                    style: TextStyle(
+                      color: Color(CommonUtil().getMyPrimaryColor()),
+                      fontSize: 13,
+                    ),
                   ),
                 ),
                 SizedBox(
                   width: 10,
                 ),
                 OutlineButton(
-                  child: Text(
-                    'Reject'.toUpperCase(),
-                    style: TextStyle(
-                      color: Color(
-                        CommonUtil().getMyPrimaryColor(),
-                      ),
-                      fontSize: 13,
-                    ),
-                  ),
                   onPressed: () async {
                     // open profile page
                     Get.back();
@@ -2637,8 +2617,15 @@ class CommonUtil {
                     color: Color(
                       CommonUtil().getMyPrimaryColor(),
                     ),
-                    style: BorderStyle.solid,
-                    width: 1,
+                  ),
+                  child: Text(
+                    'Reject'.toUpperCase(),
+                    style: TextStyle(
+                      color: Color(
+                        CommonUtil().getMyPrimaryColor(),
+                      ),
+                      fontSize: 13,
+                    ),
                   ),
                 ),
               ],
@@ -2657,13 +2644,15 @@ class CommonUtil {
       String isSubscribed,
       bool IsExtendable,
       String price,
-      Function() refresh}) async {
-    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    showDialog<void>(
+      Function() refresh,
+      bool moveToCart = false,
+      dynamic nsBody}) async {
+    final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    await showDialog<void>(
         context: context,
         barrierDismissible: false,
-        builder: (BuildContext context) {
-          return new WillPopScope(
+        builder: (context) {
+          return WillPopScope(
             onWillPop: () async => false,
             child: SimpleDialog(children: <Widget>[
               Container(
@@ -2686,9 +2675,18 @@ class CommonUtil {
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         OutlineButton(
+                          onPressed: () async {
+                            // open profile page
+                            isRenewDialogOpened = false;
+                            Navigator.of(context).pop();
+                          },
+                          borderSide: BorderSide(
+                            color: Color(
+                              getMyPrimaryColor(),
+                            ),
+                          ),
                           child: Text(
                             'no'.toUpperCase(),
                             style: TextStyle(
@@ -2698,44 +2696,46 @@ class CommonUtil {
                               fontSize: 10,
                             ),
                           ),
-                          onPressed: () async {
-                            // open profile page
-                            Navigator.of(context).pop();
-                          },
-                          borderSide: BorderSide(
-                            color: Color(
-                              getMyPrimaryColor(),
-                            ),
-                            style: BorderStyle.solid,
-                            width: 1,
-                          ),
                         ),
                         SizedBox(
                           width: 10.0.h,
                         ),
                         OutlineButton(
                           //hoverColor: Color(getMyPrimaryColor()),
-                          child: Text(
-                            'yes'.toUpperCase(),
-                            style: TextStyle(
-                              color: Color(getMyPrimaryColor()),
-                              fontSize: 10,
-                            ),
-                          ),
                           onPressed: () async {
-                            //Navigator.pop(context);
+                            Navigator.pop(context);
                             /*_dialogForSubscribePayment(
                                 context, '', packageId, true, () {
                               refresh();
                             });*/
+                            isRenewDialogOpened = false;
+                            if (moveToCart && nsBody != null) {
+                              try {
+                                FetchNotificationService()
+                                    .updateNsActionStatus(nsBody);
+                              } catch (e) {}
+                            }
+
                             if (IsExtendable) {
-                              await Provider.of<PlanWizardViewModel>(context,
-                                      listen: false)
-                                  ?.addToCartItem(
-                                      packageId: packageId,
-                                      price: price,
-                                      isRenew: true,
-                                      isFromAdd: strMyPlan);
+                              var response =
+                                  await Provider.of<PlanWizardViewModel>(
+                                          context,
+                                          listen: false)
+                                      ?.addToCartItem(
+                                          packageId: packageId,
+                                          price: price,
+                                          isRenew: true,
+                                          isFromAdd: strMyPlan);
+
+                              refresh();
+                              if (moveToCart) {
+                                if ((response.message?.toLowerCase() ==
+                                        'Product already exists in cart'
+                                            .toLowerCase()) ||
+                                    response.isSuccess) {
+                                  Get.to(CheckoutPage());
+                                }
+                              }
                             } else {
                               FlutterToast().getToast(
                                   'Renewal limit reached for this plan. Please try after few days',
@@ -2746,8 +2746,14 @@ class CommonUtil {
                             color: Color(
                               getMyPrimaryColor(),
                             ),
-                            style: BorderStyle.solid,
-                            width: 1,
+                          ),
+                          //hoverColor: Color(getMyPrimaryColor()),
+                          child: Text(
+                            'yes'.toUpperCase(),
+                            style: TextStyle(
+                              color: Color(getMyPrimaryColor()),
+                              fontSize: 10,
+                            ),
                           ),
                         ),
                       ],
@@ -2779,21 +2785,14 @@ class CommonUtil {
                       width: 50,
                       child: SvgPicture.network(
                         iconApi,
-                        placeholderBuilder: (BuildContext context) =>
-                            new CircularProgressIndicator(
-                                strokeWidth: 1.5,
-                                backgroundColor: Color(
-                                    new CommonUtil().getMyPrimaryColor())),
+                        placeholderBuilder: (context) =>
+                            CommonCircularIndicator(),
                       ),
                     ),
                   )
                 : CachedNetworkImage(
                     imageUrl: iconApi,
-                    placeholder: (context, url) =>
-                        new CircularProgressIndicator(
-                            strokeWidth: 1.5,
-                            backgroundColor:
-                                Color(new CommonUtil().getMyPrimaryColor())),
+                    placeholder: (context, url) => CommonCircularIndicator(),
                     errorWidget: (context, url, error) =>
                         defaultWidget ??
                         ClipOval(
@@ -2803,8 +2802,8 @@ class CommonUtil {
                           backgroundColor: Colors.transparent,
                         )),
                     imageBuilder: (context, imageProvider) => Container(
-                      width: 80.0,
-                      height: 80.0,
+                      width: 80,
+                      height: 80,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
@@ -2816,19 +2815,13 @@ class CommonUtil {
                 ? iconApi.toString().toLowerCase()?.contains('.svg')
                     ? SvgPicture.network(
                         iconApi,
-                        placeholderBuilder: (BuildContext context) =>
-                            new CircularProgressIndicator(
-                                strokeWidth: 1.5,
-                                backgroundColor: Color(
-                                    new CommonUtil().getMyPrimaryColor())),
+                        placeholderBuilder: (context) =>
+                            CommonCircularIndicator(),
                       )
                     : CachedNetworkImage(
                         imageUrl: iconApi,
                         placeholder: (context, url) =>
-                            new CircularProgressIndicator(
-                                strokeWidth: 1.5,
-                                backgroundColor: Color(
-                                    new CommonUtil().getMyPrimaryColor())),
+                            CommonCircularIndicator(),
                         errorWidget: (context, url, error) =>
                             defaultWidget ??
                             ClipOval(
@@ -2838,8 +2831,8 @@ class CommonUtil {
                               backgroundColor: Colors.transparent,
                             )),
                         imageBuilder: (context, imageProvider) => Container(
-                          width: 80.0,
-                          height: 80.0,
+                          width: 80,
+                          height: 80,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             image: DecorationImage(
@@ -2859,21 +2852,21 @@ class CommonUtil {
   }
 
   Future<void> isFirstTime() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool firstTime = prefs.getBool('first_time');
+    var prefs = await SharedPreferences.getInstance();
+    var firstTime = prefs.getBool('first_time');
     if (firstTime != null && !firstTime) {
       // Not first time
 
     } else {
       // First time
-      prefs.setBool('first_time', false);
-      _deleteCacheDir();
-      _deleteAppDir();
+      await prefs.setBool('first_time', false);
+      await _deleteCacheDir();
+      await _deleteAppDir();
     }
   }
 
   Future<void> _deleteCacheDir() async {
-    final cacheDir = await getTemporaryDirectory();
+    var cacheDir = await getTemporaryDirectory();
 
     if (cacheDir.existsSync()) {
       cacheDir.deleteSync(recursive: true);
@@ -2881,7 +2874,7 @@ class CommonUtil {
   }
 
   Future<void> _deleteAppDir() async {
-    final appDir = await getApplicationSupportDirectory();
+    var appDir = await getApplicationSupportDirectory();
 
     if (appDir.existsSync()) {
       appDir.deleteSync(recursive: true);
@@ -2902,33 +2895,39 @@ class CommonUtil {
   List<String> getFileNameAndUrl(String url) {
     String updatedUrl;
     String fileName;
-    List<String> response = [];
-    final File file = File(url);
-    final fileExention = extension(file.path);
-    if (fileExention == '.htm')
+    final response = <String>[];
+    final file = File(url);
+    var fileExention = extension(file.path);
+    if (fileExention == '.htm') {
       updatedUrl = url.replaceAll('.htm', '.pdf');
-    else if (fileExention == '.html')
+    } else if (fileExention == '.html') {
       updatedUrl = url.replaceAll('.html', '.pdf');
-    else if (fileExention == '.pdf') updatedUrl = url;
+    } else if (fileExention == '.pdf') updatedUrl = url;
     if (updatedUrl != null) {
-      final File fileupdated = File(updatedUrl);
+      final fileupdated = File(updatedUrl);
       fileName = basename(fileupdated.path);
     }
-    if (updatedUrl != null && fileName != null)
+    if (updatedUrl != null && fileName != null) {
       response.addAll([updatedUrl, fileName]);
+    }
     return response;
   }
 
   Future<ResultFromResponse> loadPdf({String url, String fileName}) async {
     try {
-      final response = await http.get(url);
-      final responseJson = response.bodyBytes;
-      final directory = await getApplicationDocumentsDirectory();
-      String path = directory.path;
-      final file = File('$path/$fileName');
-      file.writeAsBytes(responseJson);
-      path = url;
-      return ResultFromResponse(true, path);
+      var response = await ApiServices.get(url);
+      if (response?.statusCode == 200) {
+        var responseJson = response.bodyBytes;
+        var directory = await getApplicationDocumentsDirectory();
+        var path =
+            Platform.isIOS ? directory.path : '/storage/emulated/0/Download';
+        var file = File('$path/$fileName');
+        await file.writeAsBytes(responseJson);
+        path = file.path;
+        return ResultFromResponse(true, path);
+      } else {
+        return ResultFromResponse(false, 'Requested file not found');
+      }
     } catch (e) {
       print(e.toString());
       return ResultFromResponse(false, 'Failed to download the file');
@@ -2938,28 +2937,37 @@ class CommonUtil {
   showStatusToUser(
       ResultFromResponse response, GlobalKey<ScaffoldState> scaffoldKey) {
     if (response.status) {
-      scaffoldKey.currentState.showSnackBar(SnackBar(
-        backgroundColor: Colors.green,
-        content: Text('Downloaded'),
-        action: SnackBarAction(
-          label: 'Open',
-          onPressed: () {
-            Get.to(PDFiOSViewer(
-              url: response.result,
-            ));
-          },
+      scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.green,
+          content: Text('Downloaded'),
+          action: SnackBarAction(
+            label: 'Open',
+            onPressed: () async {
+              await OpenFile.open(
+                response.result,
+              );
+              // final controller = Get.find<PDFViewController>();
+              // final data =
+              //     OpenPDF(type: PDFLocation.Path, path: response.result);
+              // controller.data = data;
+              // Get.to(() => PDFView());
+            },
+          ),
         ),
-      ));
+      );
     } else {
-      scaffoldKey.currentState.showSnackBar(SnackBar(
-        backgroundColor: Colors.red,
-        content: Text(response.result),
-      ));
+      scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(response.result),
+        ),
+      );
     }
   }
 
   String getDoctorName(User user) {
-    String doctorName = '';
+    var doctorName = '';
 
     if (user.firstName != null && user.firstName != '') {
       doctorName = user.firstName + ' ' + user.lastName;
@@ -2970,7 +2978,7 @@ class CommonUtil {
   }
 
   accessContactsDialog() async {
-    final PermissionStatus permissionStatus = await Permission.contacts.status;
+    final permissionStatus = await Permission.contacts.status;
     if (permissionStatus == PermissionStatus.granted) {
       navigateInviteContact();
     } else {
@@ -2987,12 +2995,10 @@ class CommonUtil {
   }
 
   Future<PermissionStatus> getPermission() async {
-    final PermissionStatus permission = await Permission.contacts.status;
-    if ((permission != PermissionStatus.granted)) {
-      final Map<Permission, PermissionStatus> permissionStatus =
-          await [Permission.contacts].request();
-      return permissionStatus[Permission.contacts] ??
-          PermissionStatus.undetermined;
+    final permission = await Permission.contacts.status;
+    if (permission != PermissionStatus.granted) {
+      final permissionStatus = await [Permission.contacts].request();
+      return permissionStatus[Permission.contacts] ?? PermissionStatus.denied;
     } else {
       return permission;
     }
@@ -3025,18 +3031,18 @@ class CommonUtil {
             backgroundColor: Colors.transparent,
             content: Container(
               width: double.maxFinite,
-              height: 250.0,
+              height: 250,
               child: Column(
                 children: <Widget>[
                   Column(
                     children: <Widget>[
                       Card(
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4.0),
+                          borderRadius: BorderRadius.circular(4),
                         ),
                         child: Container(
                           height: 160,
-                          padding: EdgeInsets.all(8.0),
+                          padding: EdgeInsets.all(8),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: <Widget>[
@@ -3060,14 +3066,14 @@ class CommonUtil {
                                     child: FlatButton(
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
-                                              BorderRadius.circular(12.0),
+                                              BorderRadius.circular(12),
                                           side: BorderSide(
-                                              color: Color(new CommonUtil()
+                                              color: Color(CommonUtil()
                                                   .getMyPrimaryColor()))),
                                       color: Colors.transparent,
                                       textColor: Color(
-                                          new CommonUtil().getMyPrimaryColor()),
-                                      padding: EdgeInsets.all(8.0),
+                                          CommonUtil().getMyPrimaryColor()),
+                                      padding: EdgeInsets.all(8),
                                       onPressed: () {
                                         Navigator.pop(context);
                                       },
@@ -3083,19 +3089,19 @@ class CommonUtil {
                                     child: FlatButton(
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
-                                              BorderRadius.circular(12.0),
+                                              BorderRadius.circular(12),
                                           side: BorderSide(
-                                              color: Color(new CommonUtil()
+                                              color: Color(CommonUtil()
                                                   .getMyPrimaryColor()))),
                                       color: Colors.transparent,
                                       textColor: Color(
-                                          new CommonUtil().getMyPrimaryColor()),
-                                      padding: EdgeInsets.all(8.0),
+                                          CommonUtil().getMyPrimaryColor()),
+                                      padding: EdgeInsets.all(8),
                                       onPressed: () {
                                         Navigator.pop(context);
                                         CommonUtil.showLoadingDialog(context,
                                             _keyLoader, variable.Please_Wait);
-                                        String userId =
+                                        var userId =
                                             PreferenceUtil.getStringValue(
                                                 Constants.KEY_USERID);
                                         if (isFromRenew) {
@@ -3164,10 +3170,9 @@ class CommonUtil {
                                                               rootNavigator:
                                                                   true)
                                                           .pop();
-                                                      FlutterToast()
-                                                        ..getToast(
-                                                            'Renew Failed',
-                                                            Colors.red);
+                                                      FlutterToast().getToast(
+                                                          'Renew Failed',
+                                                          Colors.red);
                                                     }
                                                   } else {
                                                     Navigator.of(
@@ -3175,9 +3180,9 @@ class CommonUtil {
                                                                 .currentContext,
                                                             rootNavigator: true)
                                                         .pop();
-                                                    FlutterToast()
-                                                      ..getToast('Renew Failed',
-                                                          Colors.red);
+                                                    FlutterToast().getToast(
+                                                        'Renew Failed',
+                                                        Colors.red);
                                                   }
                                                 }
                                               } else {
@@ -3186,9 +3191,8 @@ class CommonUtil {
                                                             .currentContext,
                                                         rootNavigator: true)
                                                     .pop();
-                                                FlutterToast()
-                                                  ..getToast('Renew Failed',
-                                                      Colors.red);
+                                                FlutterToast().getToast(
+                                                    'Renew Failed', Colors.red);
                                               }
                                             }
                                           });
@@ -3259,10 +3263,10 @@ class CommonUtil {
                                                                             true)
                                                                     .pop();
                                                                 FlutterToast()
-                                                                  ..getToast(
-                                                                      'Subscribe Failed',
-                                                                      Colors
-                                                                          .red);
+                                                                    .getToast(
+                                                                        'Subscribe Failed',
+                                                                        Colors
+                                                                            .red);
                                                               }
                                                             }
                                                           } else {
@@ -3272,10 +3276,9 @@ class CommonUtil {
                                                                     rootNavigator:
                                                                         true)
                                                                 .pop();
-                                                            FlutterToast()
-                                                              ..getToast(
-                                                                  'Subscribe Failed',
-                                                                  Colors.red);
+                                                            FlutterToast().getToast(
+                                                                'Subscribe Failed',
+                                                                Colors.red);
                                                           }
                                                         } else {
                                                           Navigator.of(
@@ -3284,10 +3287,9 @@ class CommonUtil {
                                                                   rootNavigator:
                                                                       true)
                                                               .pop();
-                                                          FlutterToast()
-                                                            ..getToast(
-                                                                'Subscribe Failed',
-                                                                Colors.red);
+                                                          FlutterToast().getToast(
+                                                              'Subscribe Failed',
+                                                              Colors.red);
                                                         }
                                                       }
                                                     } else {
@@ -3297,10 +3299,9 @@ class CommonUtil {
                                                               rootNavigator:
                                                                   true)
                                                           .pop();
-                                                      FlutterToast()
-                                                        ..getToast(
-                                                            'Subscribe Failed',
-                                                            Colors.red);
+                                                      FlutterToast().getToast(
+                                                          'Subscribe Failed',
+                                                          Colors.red);
                                                     }
                                                   }
                                                 });
@@ -3354,11 +3355,11 @@ class CommonUtil {
 
 extension CapExtension on String {
   String get inCaps =>
-      this.length > 0 ? '${this[0].toUpperCase()}${this.substring(1)}' : '';
+      this.isNotEmpty ? '${this[0].toUpperCase()}${substring(1)}' : '';
 
   String get allInCaps => toUpperCase();
 
-  String get capitalizeFirstofEach => this != null && this.isNotEmpty
+  String get capitalizeFirstofEach => this != null && isNotEmpty
       ? trim().toLowerCase().split(' ').map((str) => str.inCaps).join(' ')
       : '';
 }

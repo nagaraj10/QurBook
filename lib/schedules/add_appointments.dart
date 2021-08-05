@@ -1,19 +1,19 @@
 import 'dart:core';
 import 'package:flutter/material.dart';
-import 'package:myfhb/src/model/AppointmentModel.dart';
-import 'package:myfhb/src/model/ReminderModel.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'package:myfhb/widgets/RaisedGradientButton.dart';
+import '../src/model/AppointmentModel.dart';
+import '../src/model/ReminderModel.dart';
+import '../src/utils/FHBUtils.dart';
+import '../widgets/GradientAppBar.dart';
+import '../widgets/RaisedGradientButton.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import '../common/CommonUtil.dart';
+import '../constants/fhb_constants.dart' as Constants;
+import '../src/utils/screenutils/size_extensions.dart';
 
 class AddAppointments extends StatefulWidget {
   final ReminderModel model;
 
-  AddAppointments({this.model});
+  const AddAppointments({this.model});
 
   @override
   _AddAppointmentState createState() => _AddAppointmentState();
@@ -43,8 +43,8 @@ class _AddAppointmentState extends State<AddAppointments> {
 
   SharedPreferences prefs;
   dynamic detailsList =
-      new List(); // our default setting is to login, and we should switch to creating an account when the user chooses to
-  dynamic reverseDetailsList = new List();
+      List(); // our default setting is to login, and we should switch to creating an account when the user chooses to
+  dynamic reverseDetailsList = [];
 
   @override
   Widget build(BuildContext context) {
@@ -94,6 +94,7 @@ class _AddAppointmentState extends State<AddAppointments> {
                                   : null),
                         ),
                         Padding(
+                          padding: EdgeInsets.only(top: 20),
                           child: Text(
                             Constants.AppointmentDateTime,
                             textAlign: TextAlign.start,
@@ -102,7 +103,6 @@ class _AddAppointmentState extends State<AddAppointments> {
                               fontSize: 16.0.sp,
                             ),
                           ),
-                          padding: EdgeInsets.only(top: 20),
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -170,10 +170,13 @@ class _AddAppointmentState extends State<AddAppointments> {
               ),
               RaisedGradientButton(
                 gradient: LinearGradient(colors: [
-                  Color(new CommonUtil().getMyPrimaryColor()),
-                  Color(new CommonUtil().getMyGredientColor()),
+                  Color(CommonUtil().getMyPrimaryColor()),
+                  Color(CommonUtil().getMyGredientColor()),
                 ]),
                 width: 200.0.w,
+                onPressed: () {
+                  NewAppointment();
+                },
                 child: Text(
                   Constants.Save,
                   style: TextStyle(
@@ -181,9 +184,6 @@ class _AddAppointmentState extends State<AddAppointments> {
                     fontSize: 16.0.sp,
                   ),
                 ),
-                onPressed: () {
-                  NewAppointment();
-                },
               )
             ]),
       ),
@@ -191,16 +191,17 @@ class _AddAppointmentState extends State<AddAppointments> {
   }
 
   Future<Null> _selectDate(BuildContext context) async {
-    final DateTime pickedDate = await showDatePicker(
+    final pickedDate = await showDatePicker(
         context: context,
         initialDate: selectedDate,
         firstDate: DateTime.now().subtract(Duration(days: 1)),
         lastDate: DateTime(2100));
 
-    if (pickedDate != null && pickedDate != selectedDate)
+    if (pickedDate != null && pickedDate != selectedDate) {
       setState(() {
         selectedDate = pickedDate;
       });
+    }
 
     if (FHBUtils().checkdate(selectedDate)) {
       setState(() {
@@ -220,10 +221,10 @@ class _AddAppointmentState extends State<AddAppointments> {
   }
 
   Future<Null> _selectTime(BuildContext context) async {
-    final TimeOfDay pickedTime = await showTimePicker(
+    final pickedTime = await showTimePicker(
       context: context,
       initialTime: selectedTime,
-      builder: (BuildContext context, Widget child) {
+      builder: (context, child) {
         return MediaQuery(
           data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
           child: child,
@@ -231,10 +232,11 @@ class _AddAppointmentState extends State<AddAppointments> {
       },
     );
 
-    if (pickedTime != null && pickedTime != selectedTime)
+    if (pickedTime != null && pickedTime != selectedTime) {
       setState(() {
         selectedTime = pickedTime;
       });
+    }
 
     if (!FHBUtils().checkdate(selectedDate)) {
       if (FHBUtils().checkTime(selectedTime)) {
@@ -260,7 +262,7 @@ class _AddAppointmentState extends State<AddAppointments> {
     } else if (!_isTimeAfter) {
       //do nothing
     } else {
-      AppointmentModel model = new AppointmentModel(
+      final model = AppointmentModel(
           id: DateTime.now().millisecondsSinceEpoch.toString(),
           hName: hosContoller.text,
           dName: docNameController.text,

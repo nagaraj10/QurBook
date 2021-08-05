@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/authentication/constants/constants.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
+import '../constants/constants.dart';
 
 class OrDivider extends StatelessWidget {
   @override

@@ -4,29 +4,28 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'package:myfhb/authentication/model/patientlogin_model.dart';
-import 'package:myfhb/authentication/constants/constants.dart';
-import 'package:myfhb/authentication/view/authentication_validator.dart';
-import 'package:myfhb/authentication/view/forgotpassword_screen.dart';
-import 'package:myfhb/authentication/view/signup_screen.dart';
-import 'package:myfhb/authentication/view/verify_arguments.dart';
-import 'package:myfhb/authentication/view/verifypatient_screen.dart';
-import 'package:myfhb/authentication/view_model/patientauth_view_model.dart';
-import 'package:myfhb/authentication/model/patientlogin_model.dart'
-    as loginModel;
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/authentication/widgets/country_code_picker.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/FHBBasicWidget.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:myfhb/constants/variable_constant.dart';
-import 'package:myfhb/src/model/Authentication/UserModel.dart';
-import 'package:myfhb/src/ui/loader_class.dart';
-import 'package:myfhb/src/utils/PageNavigator.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import '../model/patientlogin_model.dart';
+import '../constants/constants.dart';
+import 'authentication_validator.dart';
+import 'forgotpassword_screen.dart';
+import 'signup_screen.dart';
+import 'verify_arguments.dart';
+import 'verifypatient_screen.dart';
+import '../view_model/patientauth_view_model.dart';
+import '../model/patientlogin_model.dart' as loginModel;
+import '../../constants/fhb_constants.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
+import '../widgets/country_code_picker.dart';
+import '../../common/CommonUtil.dart';
+import '../../common/FHBBasicWidget.dart';
+import '../../common/PreferenceUtil.dart';
+import '../../constants/fhb_parameters.dart' as parameters;
+import '../../constants/router_variable.dart' as router;
+import '../../constants/variable_constant.dart';
+import '../../src/model/Authentication/UserModel.dart';
+import '../../src/ui/loader_class.dart';
+import '../../src/utils/PageNavigator.dart';
+import '../../constants/fhb_constants.dart' as Constants;
 
 class PatientSignInScreen extends StatefulWidget {
   @override
@@ -39,10 +38,10 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
   final numberController = TextEditingController();
   final passwordController = TextEditingController();
   var isLoading = false;
-  var _loginKey = GlobalKey<FormState>();
+  final _loginKey = GlobalKey<FormState>();
   bool _autoValidateBool = false;
   AuthViewModel authViewModel;
-  FlutterToast toast = new FlutterToast();
+  FlutterToast toast = FlutterToast();
   String decodesstring;
   UserModel saveuser = UserModel();
   String user_mobile_no;
@@ -55,7 +54,7 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
   void initState() {
     mInitialTime = DateTime.now();
     super.initState();
-    authViewModel = new AuthViewModel();
+    authViewModel = AuthViewModel();
     /* try {
       commonUtil.versionCheck(context);
     } catch (e) {
@@ -75,12 +74,16 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final height = 1.sh;
+    var height = 1.sh;
     return Scaffold(
       body: Form(
         key: _loginKey,
         child: Theme(
-          data: Theme.of(context).copyWith(primaryColor: Color(CommonUtil().getMyPrimaryColor(),),),
+          data: Theme.of(context).copyWith(
+            primaryColor: Color(
+              CommonUtil().getMyPrimaryColor(),
+            ),
+          ),
           child: Container(
             height: height,
             child: Stack(
@@ -89,7 +92,6 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                   padding: EdgeInsets.symmetric(horizontal: 20),
                   child: SingleChildScrollView(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         SizedBox(height: height * .1),
@@ -122,23 +124,22 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                                     constraints: BoxConstraints(
                                         maxWidth: 100.0.w, minWidth: 50.0.w),
                                     child: CountryCodePickerPage(
-                                        onValuePicked: (Country country) =>
-                                            setState(() =>
-                                                _selectedDialogCountry =
-                                                    country),
+                                        onValuePicked: (country) => setState(
+                                            () => _selectedDialogCountry =
+                                                country),
                                         selectedDialogCountry:
                                             _selectedDialogCountry),
                                   ),
                                   hintText: strNewPhoneHint,
                                   labelText: strNumberHint,
                                   focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
+                                      borderRadius: BorderRadius.circular(10),
                                       borderSide: BorderSide(
                                         color: Color(
                                             CommonUtil().getMyPrimaryColor()),
                                       )),
                                   border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
+                                      borderRadius: BorderRadius.circular(10),
                                       borderSide: BorderSide(
                                         color: Color(
                                             CommonUtil().getMyPrimaryColor()),
@@ -175,13 +176,13 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                                     ),
                                   ),
                                   focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
+                                      borderRadius: BorderRadius.circular(10),
                                       borderSide: BorderSide(
                                         color: Color(
                                             CommonUtil().getMyPrimaryColor()),
                                       )),
                                   border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderRadius: BorderRadius.circular(10),
                                     borderSide: BorderSide(
                                       color: Color(
                                           CommonUtil().getMyPrimaryColor()),
@@ -280,14 +281,14 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
     if (_loginKey.currentState.validate()) {
       _loginKey.currentState.save();
       LoaderClass.showLoadingDialog(context);
-      PatientLogIn logInModel = new PatientLogIn(
+      var logInModel = PatientLogIn(
         userName:
-            '${strPlusSymbol}${_selectedDialogCountry.phoneCode}${numberController.text}',
+            '$strPlusSymbol${_selectedDialogCountry.phoneCode}${numberController.text}',
         password: passwordController.text,
         source: strSource,
       );
-      Map<String, dynamic> map = logInModel.toJson();
-      loginModel.PatientLogIn response = await authViewModel.loginPatient(map);
+      final map = logInModel.toJson();
+      final response = await authViewModel.loginPatient(map);
       //print(response.toString());
       dataForResendOtp = map;
       //_checkResponse(response);
@@ -307,7 +308,7 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
           MaterialPageRoute(
               builder: (context) => VerifyPatient(
                     PhoneNumber:
-                        '${strPlusSymbol}${_selectedDialogCountry.phoneCode}${numberController.text}',
+                        '$strPlusSymbol${_selectedDialogCountry.phoneCode}${numberController.text}',
                     from: strFromLogin,
                     userConfirm: false,
                     dataForResendOtp: dataForResendOtp,
@@ -361,15 +362,12 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                       blurRadius: 5,
                       spreadRadius: 2)
                 ],
-                gradient: LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                    colors: [
+                gradient: LinearGradient(end: Alignment.centerRight, colors: [
 //                  Color(0xff138fcf),
 //                  Color(0xff138fcf),
-                      Color(new CommonUtil().getMyPrimaryColor()),
-                      Color(new CommonUtil().getMyGredientColor())
-                    ])),
+                  Color(CommonUtil().getMyPrimaryColor()),
+                  Color(CommonUtil().getMyGredientColor())
+                ])),
             child: Text(
               strSignInText,
               style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
@@ -382,45 +380,46 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
 
   void _checkifItsGuest(PatientLogIn response) async {
     if (response.isSuccess) {
-      decodesstring =
-          await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+      decodesstring = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
       saveuser.auth_token = decodesstring;
-      bool isSkipMFA = parseJwtPayLoad(decodesstring)[strToken][strIsSkipMFA];
+      final bool isSkipMFA =
+          parseJwtPayLoad(decodesstring)[strToken][strIsSkipMFA];
       print(isSkipMFA);
       if (isSkipMFA) {
-        String userId = parseJwtPayLoad(decodesstring)[strToken][strUserId];
+        final String userId =
+            parseJwtPayLoad(decodesstring)[strToken][strUserId];
         saveuser.userId = userId;
         id_token_string = parseJwtPayLoad(decodesstring)[strToken]
             [strProviderPayLoad][strIdToken];
-        var id_tokens = parseJwtPayLoad(id_token_string);
-        print(id_tokens);
-        user_mobile_no = id_tokens[strphonenumber];
-        print(id_tokens[strphonenumber]);
-        saveuser.family_name = id_tokens[strFamilyName];
-        print(id_tokens[strFamilyName]);
-        saveuser.phone_number = id_tokens[strphonenumber];
-        String ph = id_tokens[strphonenumber];
-        print(id_tokens[strphonenumber]);
-        saveuser.given_name = id_tokens[strGivenName];
-        print(id_tokens[strGivenName]);
-        saveuser.email = id_tokens[stremail];
-        print(id_tokens[stremail]);
-        PreferenceUtil.saveString(Constants.MOB_NUM, user_mobile_no)
+        final idTokens = parseJwtPayLoad(id_token_string);
+        print(idTokens);
+        user_mobile_no = idTokens[strphonenumber];
+        print(idTokens[strphonenumber]);
+        saveuser.family_name = idTokens[strFamilyName];
+        print(idTokens[strFamilyName]);
+        saveuser.phone_number = idTokens[strphonenumber];
+        final String ph = idTokens[strphonenumber];
+        print(idTokens[strphonenumber]);
+        saveuser.given_name = idTokens[strGivenName];
+        print(idTokens[strGivenName]);
+        saveuser.email = idTokens[stremail];
+        print(idTokens[stremail]);
+        await PreferenceUtil.saveString(Constants.MOB_NUM, user_mobile_no)
             .then((onValue) {});
-        PreferenceUtil.saveString(Constants.KEY_EMAIL, saveuser.email)
+        await PreferenceUtil.saveString(Constants.KEY_EMAIL, saveuser.email)
             .then((onValue) {});
-        PreferenceUtil.saveString(Constants.KEY_AUTHTOKEN, decodesstring)
+        await PreferenceUtil.saveString(Constants.KEY_AUTHTOKEN, decodesstring)
             .then((onValue) {});
         print(decodesstring);
-        PreferenceUtil.saveString(Constants.KEY_USERID_MAIN, userId)
+        await PreferenceUtil.saveString(Constants.KEY_USERID_MAIN, userId)
             .then((onValue) {});
-        PreferenceUtil.saveString(Constants.KEY_USERID, userId)
+        await PreferenceUtil.saveString(Constants.KEY_USERID, userId)
             .then((onValue) {});
         PreferenceUtil.save(strUserDetails, saveuser);
         authToken = decodesstring;
-        FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-        final token = await _firebaseMessaging.getToken();
-        CommonUtil()
+        final _firebaseMessaging = FirebaseMessaging.instance;
+        var token = await _firebaseMessaging.getToken();
+        await CommonUtil()
             .sendDeviceToken(
                 userId, saveuser.email, user_mobile_no, token, true)
             .then((value) {
@@ -430,7 +429,7 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
               PageNavigator.goToPermanent(context, router.rt_Landing);
             });
           } else {
-            new FHBBasicWidget().showDialogWithTwoButtons(context, () {
+            FHBBasicWidget().showDialogWithTwoButtons(context, () {
               PageNavigator.goToPermanent(context, router.rt_Landing);
             }, value.message, strConfirmDialog);
           }

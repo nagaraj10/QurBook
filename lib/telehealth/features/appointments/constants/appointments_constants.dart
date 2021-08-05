@@ -15,6 +15,7 @@ const String Appointments_notes = 'Notes';
 const String Appointments_records = 'Records';
 const String Appointments_receipt = 'Receipt';
 const String Appointments_reshedule = 'Reschedule';
+const String Plan_renew = 'Renew';
 const String Appointments_cancel = 'Cancel';
 const String Appointments_new = 'New Appointment';
 const String Appointments_followUpStatus = 'Next follow up on';

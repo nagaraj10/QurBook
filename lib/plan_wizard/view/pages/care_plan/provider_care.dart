@@ -1,46 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
+import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
-import 'package:myfhb/plan_wizard/models/DietPlanModel.dart';
-import 'package:myfhb/plan_wizard/view/widgets/PlansDietListView.dart';
+import 'package:myfhb/plan_wizard/view/widgets/care_plan_card.dart';
 import 'package:myfhb/plan_wizard/view/widgets/next_button.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
-import 'package:myfhb/widgets/checkout_page.dart';
 import 'package:provider/provider.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 
-class DietPlanPage extends StatefulWidget {
+class ProviderCarePlans extends StatefulWidget {
   @override
-  _DietPlanPageState createState() => _DietPlanPageState();
+  _ProviderCarePlans createState() => _ProviderCarePlans();
 }
 
-class _DietPlanPageState extends State<DietPlanPage> {
-  Future<DietPlanModel> planListModel;
+class _ProviderCarePlans extends State<ProviderCarePlans> {
+  Future<PlanListModel> planListModel;
 
-  DietPlanModel myPlanListModel;
-
-  PlanWizardViewModel planWizardViewModel = new PlanWizardViewModel();
+  PlanListModel myPlanListModel;
 
   bool isSearch = false;
 
-  List<List<DietPlanResult>> planSearchList = List();
+  List<PlanListResult> planSearchList = List();
 
   String _selectedView = popUpChoiceDefault;
 
-  List<String> listCategories = ['Recommended Plans', 'All Plans'];
-
-  int dietPlanListLength = 0;
+  int carePlanListLength = 0;
 
   PlanWizardViewModel planListProvider;
-
-  bool isSwitched = false;
 
   List sortType = ['Default', 'Price', 'Duration'];
   ValueNotifier<String> _selectedItem = new ValueNotifier<String>('Default');
@@ -48,15 +41,15 @@ class _DietPlanPageState extends State<DietPlanPage> {
   @override
   void initState() {
     Provider.of<PlanWizardViewModel>(context, listen: false)
-        .currentPackageIdDiet = '';
+        .currentPackageProviderCareId = '';
 
-    planListModel = planWizardViewModel.getDietPlanList();
+    planListModel = Provider.of<PlanWizardViewModel>(context, listen: false)
+        .getCarePlanList(strProviderCare);
   }
 
   @override
   Widget build(BuildContext context) {
     planListProvider = Provider.of<PlanWizardViewModel>(context);
-
     return Scaffold(
         body: Column(
           children: [
@@ -85,26 +78,6 @@ class _DietPlanPageState extends State<DietPlanPage> {
                 SizedBox(width: 20.w)
               ],
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Switch(
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  onChanged: toggleSwitch,
-                  value: isSwitched,
-                  activeColor: Color(new CommonUtil().getMyPrimaryColor()),
-                ),
-                SizedBox(width: 2.w),
-                Text(
-                  'VEG ONLY',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.blueGrey,
-                      fontSize: 16.sp),
-                ),
-                SizedBox(width: 15.w),
-              ],
-            ),
             Expanded(
               child: getCarePlanList(),
             ),
@@ -112,11 +85,13 @@ class _DietPlanPageState extends State<DietPlanPage> {
         ),
         floatingActionButton: NextButton(
           onPressed: () {
-            if (dietPlanListLength > 0 &&
-                (planListProvider?.currentPackageIdDiet ?? '').isEmpty) {
+            if (carePlanListLength > 0 &&
+                (planListProvider?.currentPackageProviderCareId ?? '')
+                    .isEmpty &&
+                (planListProvider?.currentPackageFreeCareId ?? '').isEmpty) {
               _alertForUncheckPlan();
             } else {
-              Get.to(CheckoutPage());
+              planListProvider.changeCurrentPage(2);
             }
           },
         ));
@@ -126,24 +101,23 @@ class _DietPlanPageState extends State<DietPlanPage> {
     planSearchList.clear();
     if (filterBy == popUpChoicePrice) {
       planSearchList =
-          await planWizardViewModel.filterDietSorting(popUpChoicePrice);
+          await planListProvider.filterSortingForProvider(popUpChoicePrice);
     } else if (filterBy == popUpChoiceDura) {
       planSearchList =
-          await planWizardViewModel.filterDietSorting(popUpChoiceDura);
+          await planListProvider.filterSortingForProvider(popUpChoiceDura);
     } else if (filterBy == popUpChoiceDefault) {
       planSearchList =
-          await planWizardViewModel.filterDietSorting(popUpChoiceDefault);
+          await planListProvider.filterSortingForProvider(popUpChoiceDefault);
     } else if (filterBy == 'localSearch') {
       if (title != null) {
-        planSearchList =
-            await planWizardViewModel.filterPlanNameProviderDiet(title);
+        planSearchList = await planListProvider.filterPlanNameProvider(title);
       }
     }
     setState(() {});
   }
 
   Widget getCarePlanList() {
-    return new FutureBuilder<DietPlanModel>(
+    return new FutureBuilder<PlanListModel>(
       future: planListModel,
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -154,9 +128,7 @@ class _DietPlanPageState extends State<DietPlanPage> {
                 child: SizedBox(
                   width: 30.0.h,
                   height: 30.0.h,
-                  child: new CircularProgressIndicator(
-                      backgroundColor:
-                          Color(new CommonUtil().getMyPrimaryColor())),
+                  child: CommonCircularIndicator(),
                 ),
               ),
             ),
@@ -164,21 +136,14 @@ class _DietPlanPageState extends State<DietPlanPage> {
         } else if (snapshot.hasError) {
           return ErrorsWidget();
         } else {
-          int totalListCount = 0;
-          totalListCount = (snapshot?.data?.result?.length ?? 0) > 0
-              ? snapshot?.data?.result?.length
-              : 0;
-          if (totalListCount > 0) {
-            totalListCount = 0;
-            snapshot?.data?.result?.forEach((element) {
-              totalListCount += element?.length ?? 0;
-            });
-          }
-          if (totalListCount > 0) {
-            dietPlanListLength =
-                isSearch ? planSearchList.length : totalListCount ?? 0;
+          if (snapshot?.hasData &&
+              snapshot?.data?.result != null &&
+              snapshot?.data?.result?.length > 0) {
+            carePlanListLength = isSearch
+                ? planSearchList.length
+                : snapshot?.data?.result?.length ?? 0;
             return carePlanList(
-                isSearch ? planSearchList : snapshot?.data?.result ?? []);
+                isSearch ? planSearchList : snapshot?.data?.result);
           } else {
             return SafeArea(
               child: SizedBox(
@@ -195,15 +160,19 @@ class _DietPlanPageState extends State<DietPlanPage> {
     );
   }
 
-  Widget carePlanList(List<List<DietPlanResult>> planList) {
+  Widget carePlanList(List<PlanListResult> planList) {
     return (planList != null && planList.length > 0)
-        ? SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.only(bottom: 50.0.h),
-              child: Column(
-                children: getDiePLansWidget(planList),
-              ),
+        ? ListView.builder(
+            shrinkWrap: true,
+            padding: EdgeInsets.only(
+              bottom: 50.0.h,
             ),
+            itemBuilder: (BuildContext ctx, int i) => CarePlanCard(
+              planList: isSearch ? planSearchList[i] : planList[i],
+              onClick: () {},
+              isFrom: strProviderCare,
+            ),
+            itemCount: isSearch ? planSearchList.length : planList.length,
           )
         : SafeArea(
             child: SizedBox(
@@ -216,25 +185,13 @@ class _DietPlanPageState extends State<DietPlanPage> {
           );
   }
 
-  List<Widget> getDiePLansWidget(List<List<DietPlanResult>> planResult) {
-    var planCategories = <Widget>[];
-    for (int i = 0; i < planResult.length; i++) {
-      planCategories.add(PlanDietListView(
-        title: toBeginningOfSentenceCase(listCategories[i]),
-        planList: planResult[i],
-      ));
-    }
-
-    return planCategories;
-  }
-
   Future<bool> _alertForUncheckPlan() {
     return showDialog(
           context: context,
           builder: (context) => AlertDialog(
             title: Text('Are you sure?'),
             content: Text(
-                'You’ve not chosen any diet plan. Are you sure you want to continue'),
+                'You’ve not chosen any care plan. Are you sure you want to continue'),
             actions: <Widget>[
               FlatButton(
                 onPressed: () => Navigator.pop(context),
@@ -243,7 +200,8 @@ class _DietPlanPageState extends State<DietPlanPage> {
               FlatButton(
                 onPressed: () {
                   Navigator.pop(context);
-                  Get.to(CheckoutPage());
+                  Provider.of<PlanWizardViewModel>(context, listen: false)
+                      .changeCurrentPage(2);
                 },
                 child: Text('Yes'),
               ),
@@ -365,19 +323,5 @@ class _DietPlanPageState extends State<DietPlanPage> {
         return menuItems;
       },
     );
-  }
-
-  void toggleSwitch(bool value) {
-    if (isSwitched == false) {
-      setState(() {
-        isSwitched = true;
-        planListModel = planWizardViewModel.getDietPlanList(isVeg: true);
-      });
-    } else {
-      setState(() {
-        isSwitched = false;
-        planListModel = planWizardViewModel.getDietPlanList();
-      });
-    }
   }
 }

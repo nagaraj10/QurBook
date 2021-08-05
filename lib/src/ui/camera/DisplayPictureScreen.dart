@@ -30,6 +30,7 @@ import 'package:myfhb/src/model/Media/media_result.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/widgets/RaisedGradientButton.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 
 class DisplayPictureScreen extends StatefulWidget {
   final List<String> imagePath;
@@ -109,7 +110,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  CarouselSlider carouselSlider;
+  CarouselController carouselSlider;
   int _current = 0;
 
   @override
@@ -365,10 +366,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Container(
-                      width: 25,
-                      height: 25,
-                      child: CircularProgressIndicator(
-                          backgroundColor: Colors.white)),
+                      width: 25, height: 25, child: CommonCircularIndicator()),
                   SizedBox(width: 10),
                   Flexible(
                     child: Text(CommonConstants.reading_digits,
@@ -700,9 +698,10 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     }
 
     categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
-    deviceName = PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME) == null
-        ? Constants.IS_CATEGORYNAME_DEVICES
-        : PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME);
+    deviceName =
+        (PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME) ?? '') == ''
+            ? Constants.IS_CATEGORYNAME_DEVICES
+            : PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME);
   }
 
   Widget getToggleButton() {
@@ -763,19 +762,22 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Expanded(
-            child: carouselSlider = CarouselSlider(
-              height: 1.sh,
-              initialPage: 0,
-              enlargeCenterPage: true,
-              reverse: false,
-              enableInfiniteScroll: false,
-              pauseAutoPlayOnTouch: Duration(seconds: 10),
-              scrollDirection: Axis.horizontal,
-              onPageChanged: (index) {
-                setState(() {
-                  _current = index;
-                });
-              },
+            child: CarouselSlider(
+              carouselController: carouselSlider,
+              options: CarouselOptions(
+                height: 1.sh,
+                initialPage: 0,
+                enlargeCenterPage: true,
+                reverse: false,
+                enableInfiniteScroll: false,
+                // pauseAutoPlayOnTouch: Duration(seconds: 10),
+                scrollDirection: Axis.horizontal,
+                onPageChanged: (index, carouselPageChangedReason) {
+                  setState(() {
+                    _current = index;
+                  });
+                },
+              ),
               items: widget.imagePath.map((imgUrl) {
                 return Builder(
                   builder: (BuildContext context) {

@@ -7,18 +7,18 @@ class ReferAFriendResponse {
   ReferAFriendResponse.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['result'] != null) {
-      result = new List<Result>();
+      result = List<Result>();
       json['result'].forEach((v) {
-        result.add(new Result.fromJson(v));
+        result.add(Result.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['isSuccess'] = this.isSuccess;
-    if (this.result != null) {
-      data['result'] = this.result.map((v) => v.toJson()).toList();
+    final data = <String, dynamic>{};
+    data['isSuccess'] = isSuccess;
+    if (result != null) {
+      data['result'] = result.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -40,11 +40,11 @@ class Result {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['phoneNumber'] = this.phoneNumber;
-    data['name'] = this.name;
-    data['isExistingUser'] = this.isExistingUser;
-    data['message'] = this.message;
+    final data = <String, dynamic>{};
+    data['phoneNumber'] = phoneNumber;
+    data['name'] = name;
+    data['isExistingUser'] = isExistingUser;
+    data['message'] = message;
     return data;
   }
 }

@@ -1,35 +1,35 @@
 import 'dart:convert';
 
-import 'package:http/http.dart' as http;
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/HeaderRequest.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/fhb_query.dart' as variable;
-import 'package:myfhb/regiment/models/field_response_model.dart';
-import 'package:myfhb/regiment/models/profile_response_model.dart';
-import 'package:myfhb/regiment/models/regiment_response_model.dart';
-import 'package:myfhb/regiment/models/save_response_model.dart';
+import 'package:intl/intl.dart';
+
+import '../../common/PreferenceUtil.dart';
+import '../../constants/HeaderRequest.dart';
+import 'package:myfhb/src/resources/network/api_services.dart';
+import '../../constants/fhb_constants.dart' as Constants;
+import '../../constants/fhb_query.dart' as variable;
+import '../models/regiment_response_model.dart';
+import '../models/save_response_model.dart';
+import '../models/field_response_model.dart';
+import '../models/profile_response_model.dart';
+import '../../common/CommonUtil.dart';
+import 'package:myfhb/src/resources/network/api_services.dart';
 
 class RegimentService {
-  static Future<RegimentResponseModel> getRegimentData({
-    String dateSelected,
-    bool isSymptoms = false,
-  }) async {
-    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    final urlForRegiment = Constants.BASE_URL + variable.regiment;
+  static Future<RegimentResponseModel> getRegimentData(
+      {String dateSelected, bool isSymptoms = false}) async {
+    final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    var urlForRegiment = Constants.BASE_URL + variable.regiment;
     try {
-      final headerRequest =
-          await HeaderRequest().getRequestHeadersAuthContent();
-      String currentLanguage = '';
-      final lan = CommonUtil.getCurrentLanCode();
-      if (lan != "undef") {
-        final langCode = lan.split("-").first;
+      var headerRequest = await HeaderRequest().getRequestHeadersAuthContent();
+      var currentLanguage = '';
+      var lan = CommonUtil.getCurrentLanCode();
+      if (lan != 'undef') {
+        var langCode = lan.split('-').first;
         currentLanguage = langCode;
       } else {
         currentLanguage = 'en';
       }
-      final response = await http.post(
+      var response = await ApiServices.post(
         urlForRegiment,
         headers: headerRequest,
         body: json.encode(
@@ -56,18 +56,17 @@ class RegimentService {
 
   static Future<SaveResponseModel> saveFormData(
       {String eid, String events}) async {
-    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    final urlForRegiment = Constants.BASE_URL + variable.regiment;
+    final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    var urlForRegiment = Constants.BASE_URL + variable.regiment;
     try {
-      final headerRequest =
-          await HeaderRequest().getRequestHeadersAuthContent();
-      final response = await http.post(
+      var headerRequest = await HeaderRequest().getRequestHeadersAuthContent();
+      var response = await ApiServices.post(
         urlForRegiment,
         headers: headerRequest,
         body: json.encode(
           {
-            "method": "post",
-            "data":
+            'method': 'post',
+            'data':
                 "Action=SaveFormForEvent&eid=$eid${events ?? ''}${variable.qr_patientEqaul}$userId",
           },
         ),
@@ -87,19 +86,49 @@ class RegimentService {
     }
   }
 
-  static Future<FieldsResponseModel> getFormData({String eid}) async {
-    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    final urlForRegiment = Constants.BASE_URL + variable.regiment;
+  static Future<SaveResponseModel> deleteMedia({String eid}) async {
+    final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    var urlForRegiment = Constants.BASE_URL + variable.regiment;
     try {
-      final headerRequest =
-          await HeaderRequest().getRequestHeadersAuthContent();
-      final response = await http.post(
+      var headerRequest = await HeaderRequest().getRequestHeadersAuthContent();
+      var response = await ApiServices.post(
         urlForRegiment,
         headers: headerRequest,
         body: json.encode(
           {
-            "method": "get",
-            "data":
+            'method': 'post',
+            'data':
+                "Action=ResetOtherData&eid=$eid&dataname=PHOTO${variable.qr_patientEqaul}$userId",
+          },
+        ),
+      );
+      if (response != null && response.statusCode == 200) {
+        print(response.body);
+        return SaveResponseModel.fromJson(json.decode(response.body));
+      } else {
+        return SaveResponseModel(
+          result: SaveResultModel(),
+          isSuccess: false,
+        );
+      }
+    } catch (e) {
+      print(e);
+      throw Exception('$e was thrown');
+    }
+  }
+
+  static Future<FieldsResponseModel> getFormData({String eid}) async {
+    final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    var urlForRegiment = Constants.BASE_URL + variable.regiment;
+    try {
+      var headerRequest = await HeaderRequest().getRequestHeadersAuthContent();
+      var response = await ApiServices.post(
+        urlForRegiment,
+        headers: headerRequest,
+        body: json.encode(
+          {
+            'method': 'get',
+            'data':
                 "Action=GetFormForEvent&eid=$eid${variable.qr_patientEqaul}$userId",
           },
         ),
@@ -120,18 +149,17 @@ class RegimentService {
   }
 
   static Future<ProfileResponseModel> getProfile() async {
-    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    final urlForRegiment = Constants.BASE_URL + variable.regiment;
+    final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    var urlForRegiment = Constants.BASE_URL + variable.regiment;
     try {
-      final headerRequest =
-          await HeaderRequest().getRequestHeadersAuthContent();
-      final response = await http.post(
+      var headerRequest = await HeaderRequest().getRequestHeadersAuthContent();
+      var response = await ApiServices.post(
         urlForRegiment,
         headers: headerRequest,
         body: json.encode(
           {
-            "method": "get",
-            "data": "&Action=GetProfile${variable.qr_patientEqaul}$userId",
+            'method': 'get',
+            'data': "&Action=GetProfile${variable.qr_patientEqaul}$userId",
           },
         ),
       );
@@ -151,18 +179,17 @@ class RegimentService {
   }
 
   static Future<SaveResponseModel> saveProfile({String schedules}) async {
-    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    final urlForRegiment = Constants.BASE_URL + variable.regiment;
+    final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    var urlForRegiment = Constants.BASE_URL + variable.regiment;
     try {
-      final headerRequest =
-          await HeaderRequest().getRequestHeadersAuthContent();
-      final response = await http.post(
+      var headerRequest = await HeaderRequest().getRequestHeadersAuthContent();
+      var response = await ApiServices.post(
         urlForRegiment,
         headers: headerRequest,
         body: json.encode(
           {
-            "method": "post",
-            "data":
+            'method': 'post',
+            'data':
                 "Action=SetProfile$schedules${variable.qr_patientEqaul}$userId",
           },
         ),
@@ -183,18 +210,56 @@ class RegimentService {
   }
 
   static Future<SaveResponseModel> undoSaveFormData({String eid}) async {
-    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    final urlForRegiment = Constants.BASE_URL + variable.regiment;
+    final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    var urlForRegiment = Constants.BASE_URL + variable.regiment;
     try {
-      final headerRequest =
-          await HeaderRequest().getRequestHeadersAuthContent();
-      final response = await http.post(
+      var headerRequest = await HeaderRequest().getRequestHeadersAuthContent();
+      var response = await ApiServices.post(
         urlForRegiment,
         headers: headerRequest,
         body: json.encode(
           {
-            "method": "post",
-            "data": "Action=UnDO&eid=$eid${variable.qr_patientEqaul}$userId",
+            'method': 'post',
+            'data': "Action=UnDO&eid=$eid${variable.qr_patientEqaul}$userId",
+          },
+        ),
+      );
+      if (response != null && response.statusCode == 200) {
+        print(response.body);
+        return SaveResponseModel.fromJson(json.decode(response.body));
+      } else {
+        return SaveResponseModel(
+          result: SaveResultModel(),
+          isSuccess: false,
+        );
+      }
+    } catch (e) {
+      print(e);
+      throw Exception('$e was thrown');
+    }
+  }
+
+  static Future<SaveResponseModel> enableDisableActivity({
+    String eidUser,
+    DateTime startTime,
+    bool isDisable = true,
+  }) async {
+    final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    var urlForRegiment = Constants.BASE_URL + variable.regiment;
+    try {
+      var headerRequest = await HeaderRequest().getRequestHeadersAuthContent();
+      var hh = DateFormat('HH').format(startTime);
+      var mm = DateFormat('mm').format(startTime);
+      var date = '${CommonUtil().dateConversionToApiFormat(startTime)}';
+      var hide = isDisable ? '1' : '0';
+      var response = await ApiServices.post(
+        urlForRegiment,
+        headers: headerRequest,
+        body: json.encode(
+          {
+            'method': 'post',
+            'data':
+                "Action=ShowHideEvent&teid_user=$eidUser&hh=$hh&mm=$mm&hide=$hide&edate=$date${variable.qr_patientEqaul}$userId",
           },
         ),
       );

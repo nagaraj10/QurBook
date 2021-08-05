@@ -29,21 +29,21 @@ class UserContactCollection3 {
     lastModifiedOn = json['lastModifiedOn'];
     email = json['email'];
     phoneNumberType = json['phoneNumberType'] != null
-        ? new PhoneNumberType.fromJson(json['phoneNumberType'])
+        ? PhoneNumberType.fromJson(json['phoneNumberType'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['phoneNumber'] = this.phoneNumber;
-    data['isPrimary'] = this.isPrimary;
-    data['isActive'] = this.isActive;
-    data['createdOn'] = this.createdOn;
-    data['lastModifiedOn'] = this.lastModifiedOn;
-    data['email'] = this.email;
-    if (this.phoneNumberType != null) {
-      data['phoneNumberType'] = this.phoneNumberType.toJson();
+    final data = <String, dynamic>{};
+    data['id'] = id;
+    data['phoneNumber'] = phoneNumber;
+    data['isPrimary'] = isPrimary;
+    data['isActive'] = isActive;
+    data['createdOn'] = createdOn;
+    data['lastModifiedOn'] = lastModifiedOn;
+    data['email'] = email;
+    if (phoneNumberType != null) {
+      data['phoneNumberType'] = phoneNumberType.toJson();
     }
     return data;
   }

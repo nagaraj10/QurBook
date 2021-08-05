@@ -7,18 +7,18 @@ class LanguageModel {
   LanguageModel.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['result'] != null) {
-      result = new List<LanguageResult>();
+      result = List<LanguageResult>();
       json['result'].forEach((v) {
-        result.add(new LanguageResult.fromJson(v));
+        result.add(LanguageResult.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['isSuccess'] = this.isSuccess;
-    if (this.result != null) {
-      data['result'] = this.result.map((v) => v.toJson()).toList();
+    final data = <String, dynamic>{};
+    data['isSuccess'] = isSuccess;
+    if (result != null) {
+      data['result'] = result.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -56,26 +56,26 @@ class LanguageResult {
     createdOn = json['createdOn'];
     lastModifiedOn = json['lastModifiedOn'];
     if (json['referenceValueCollection'] != null) {
-      referenceValueCollection = new List<ReferenceValueCollection>();
+      referenceValueCollection = List<ReferenceValueCollection>();
       json['referenceValueCollection'].forEach((v) {
-        referenceValueCollection.add(new ReferenceValueCollection.fromJson(v));
+        referenceValueCollection.add(ReferenceValueCollection.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['code'] = this.code;
-    data['name'] = this.name;
-    data['description'] = this.description;
-    data['isActive'] = this.isActive;
-    data['createdBy'] = this.createdBy;
-    data['createdOn'] = this.createdOn;
-    data['lastModifiedOn'] = this.lastModifiedOn;
-    if (this.referenceValueCollection != null) {
+    final data = Map<String, dynamic>();
+    data['id'] = id;
+    data['code'] = code;
+    data['name'] = name;
+    data['description'] = description;
+    data['isActive'] = isActive;
+    data['createdBy'] = createdBy;
+    data['createdOn'] = createdOn;
+    data['lastModifiedOn'] = lastModifiedOn;
+    if (referenceValueCollection != null) {
       data['referenceValueCollection'] =
-          this.referenceValueCollection.map((v) => v.toJson()).toList();
+          referenceValueCollection.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -116,16 +116,16 @@ class ReferenceValueCollection {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['code'] = this.code;
-    data['name'] = this.name;
-    data['description'] = this.description;
-    data['sortOrder'] = this.sortOrder;
-    data['isActive'] = this.isActive;
-    data['createdBy'] = this.createdBy;
-    data['createdOn'] = this.createdOn;
-    data['lastModifiedOn'] = this.lastModifiedOn;
+    final data = <String, dynamic>{};
+    data['id'] = id;
+    data['code'] = code;
+    data['name'] = name;
+    data['description'] = description;
+    data['sortOrder'] = sortOrder;
+    data['isActive'] = isActive;
+    data['createdBy'] = createdBy;
+    data['createdOn'] = createdOn;
+    data['lastModifiedOn'] = lastModifiedOn;
     return data;
   }
 }

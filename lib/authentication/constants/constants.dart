@@ -29,7 +29,7 @@ const String strFromSignUp = 'AfterSignup';
 const String strFromVerifyFamilyMember = 'VerifyFamilyMember';
 
 //Strings used in VerifyPatient
-const String strSource = "myFHBMobile";
+const String strSource = 'myFHBMobile';
 const String strVerify = 'Verify';
 const String strOtp = 'OTP';
 const String strOtpHint = 'OTP Here';
@@ -41,7 +41,7 @@ const String mobileNumber = "'s mobile number ";
 //Strings used in VerifyPatient
 const String strAccount = 'Already have an account ?';
 const String strSignIn = 'Sign in';
-const String strPhoneType = "df61aa82-6bbf-4f09-a48a-b535ae579960";
+const String strPhoneType = 'df61aa82-6bbf-4f09-a48a-b535ae579960';
 const String strSignup = 'Sign up';
 const String strPassword = 'Password';
 const String strEmailValidText = 'Please Enter Valid Email';
@@ -101,11 +101,11 @@ const String strSignEndpoint = 'login';
 const String strUserVerifyEndpoint = 'confirm-user';
 const String strOtpVerifyEndpoint = 'auth/verify-otp';
 const String strUserOtpVerifyEndpoint = 'user-relationship/verify-otp';
-const String qr_refer_friend = "/user/refer-friend";
-const String strResult = "result";
-const String strmessage = "message";
+const String qr_refer_friend = '/user/refer-friend';
+const String strResult = 'result';
+const String strmessage = 'message';
 const String strIsSuccess = 'isSuccess';
-const String strStatus = "status";
+const String strStatus = 'status';
 const String strBearer = 'Bearer';
 const String strWentWrong = 'Something went Wrong';
 const String strResendConfirmCode = 'resend-confirm-code';
@@ -130,13 +130,13 @@ const String strKeyVerifyOtpService = 'verify_otpservice';
 const String strKeyForgotPassword = 'forgot-password';
 const String strKeyConfirmForgotPassword = 'confirm-forgot-password';
 const String strKeyVerifyFamilyMemberEP = 'user-relationship/verify-otp';
-final Pattern patternPhone = r'^(?:[+0][19])?[0-9]{10,11}$';
-final Pattern patternPhoneNew = r'(^[0-9]{10}$)';
-final Pattern patternOtp = r'(^[0-9]{6}$)';
-final Pattern patternChar = r'^[a-zA-Z_ ]+$';
-final Pattern patternPassword =
+const Pattern patternPhone = r'^(?:[+0][19])?[0-9]{10,11}$';
+const Pattern patternPhoneNew = r'(^[0-9]{10}$)';
+const Pattern patternOtp = r'(^[0-9]{6}$)';
+const Pattern patternChar = r'^[a-zA-Z_ ]+$';
+const Pattern patternPassword =
     r'^((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,20})';
-final Pattern patternEmail =
+const Pattern patternEmail =
     r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
 
 //Strings used in OtpScreenVerify
@@ -147,12 +147,12 @@ const String strProviderPayLoad = 'providerPayload';
 const String strIdToken = 'IdToken';
 const String strphonenumber = 'phone_number';
 const String strConfirmDialog = 'Confirmation Dialog';
-const String strUserDetails = "user_details";
-const String strAuthToken = "auth_token";
-const String struserID = "userID";
+const String strUserDetails = 'user_details';
+const String strAuthToken = 'auth_token';
+const String struserID = 'userID';
 const String strFamilyName = 'family_name';
 const String strGivenName = 'given_name';
-const String strUser = "user";
+const String strUser = 'user';
 const String strFirebaseToken = 'Firebase Token from Login Page';
 const String strNetworkIssue = 'Please Check Network Connection';
 const String strresendOtp = 'Resend OTP';
@@ -173,6 +173,15 @@ const String strCare = 'Care';
 const String strDiet = 'Diet';
 const String strMyPlan = 'MyPlan';
 
+const String strProviderCare = 'ProviderCare';
+const String strFreeCare = 'FreeCare';
+
+const String strProviderDiet = 'ProviderDiet';
+const String strFreeDiet = 'FreeDiet';
+
+const String strAddPlan = 'Add Plan';
+
+
 //labels for country code picker page
 const String strinitialMobileLabel = '91';
 const String strPlusSymbol = '+';
@@ -188,13 +197,13 @@ const String strsupportEmail =
 const String strEmptyWebView = 'Plan summary will be available soon';
 
 void openEmail({String sub = 'App Feedback', String body = ''}) async {
-  final Uri params = Uri(
+  final params = Uri(
     scheme: 'mailto',
     path: 'support@qurhealth.in',
     query: 'subject=$sub&body=$body', //add subject and body here
   );
 
-  var url = params.toString();
+  final url = params.toString();
   if (await canLaunch(url)) {
     await launch(url);
   } else {

@@ -13,6 +13,7 @@ const String rt_AddAppointments = '/add-appointments';
 const String rt_AddRemainder = '/add-reminders';
 const String rt_Dashboard = '/dashboard-screen';
 const String rt_Landing = '/landing-screen';
+const String rt_ManageActivitiesScreen = '/manage-activities-screen';
 const String rt_Regimen = '/regimen-screen';
 const String rt_MyPlans = '/my-plans-screen';
 const String rt_Plans = '/plans-screen';
@@ -23,7 +24,6 @@ const String rt_TakePictureForDevices = '/take-picture-screen-for-devices';
 const String rt_TakePictureScreen = '/take-picture-screen';
 const String rt_TelehealthProvider = '/telehealth-providers';
 const String rt_Signinscreen = '/sign-in-screen';
-const String rt_IntroSlider = '/intro-slider';
 const String rt_ConfirmLocation = '/confirm-location';
 const String rt_AddReminders = '/add-reminders';
 const String rt_FeedbackSucess = '/feedbacks-success';
@@ -42,6 +42,7 @@ const String rt_ShowDevice = '/showDevice';
 const String rt_deviceDashboard = '/deviceDashboard';
 const String rt_Sheela = '/sheela';
 const String rt_PlanWizard = '/plan-wizard';
+const String rt_AddProviderPlan = '/add-provider-plan';
 
 const String cn_AddProvider = 'add_providers';
 

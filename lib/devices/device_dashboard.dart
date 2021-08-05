@@ -1,33 +1,33 @@
 import 'dart:convert';
 import 'package:get/get.dart';
-import 'package:myfhb/constants/router_variable.dart';
-import 'package:myfhb/src/ui/bot/view/sheela_arguments.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import '../constants/router_variable.dart';
+import '../src/ui/bot/view/sheela_arguments.dart';
+import '../src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/FHBBasicWidget.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/common/customized_checkbox.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/devices/device_dashboard_arguments.dart';
-import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
-import 'package:myfhb/src/blocs/Media/MediaTypeBlock.dart';
-import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
-import 'package:myfhb/src/model/Category/catergory_result.dart';
-import 'package:myfhb/src/model/Media/media_data_list.dart';
-import 'package:myfhb/src/model/Media/media_result.dart';
-import 'package:myfhb/src/ui/bot/view/ChatScreen.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
+import '../common/CommonConstants.dart';
+import '../common/CommonUtil.dart';
+import '../common/FHBBasicWidget.dart';
+import '../common/PreferenceUtil.dart';
+import '../common/customized_checkbox.dart';
+import '../constants/fhb_constants.dart';
+import 'device_dashboard_arguments.dart';
+import '../src/blocs/Category/CategoryListBlock.dart';
+import '../src/blocs/Media/MediaTypeBlock.dart';
+import '../src/blocs/health/HealthReportListForUserBlock.dart';
+import '../src/model/Category/catergory_result.dart';
+import '../src/model/Media/media_data_list.dart';
+import '../src/model/Media/media_result.dart';
+import '../src/ui/bot/view/ChatScreen.dart';
+import '../src/utils/FHBUtils.dart';
+import '../widgets/GradientAppBar.dart';
+import '../constants/variable_constant.dart' as variable;
+import '../constants/fhb_constants.dart' as Constants;
+import '../colors/fhb_colors.dart' as fhbColors;
+import '../constants/fhb_parameters.dart' as parameters;
+import '../constants/variable_constant.dart' as variable;
 
 class Devicedashboard extends StatefulWidget {
   DeviceDashboardArguments arguments;
@@ -37,37 +37,37 @@ class Devicedashboard extends StatefulWidget {
 }
 
 class _DevicedashboardScreenState extends State<Devicedashboard> {
-  GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
-  TextEditingController deviceController = new TextEditingController(text: '');
-  TextEditingController pulse = new TextEditingController(text: '');
-  TextEditingController memoController = new TextEditingController(text: '');
-  TextEditingController diaStolicPressure = new TextEditingController(text: '');
+  GlobalKey<ScaffoldState> scaffold_state = GlobalKey<ScaffoldState>();
+  TextEditingController deviceController = TextEditingController(text: '');
+  TextEditingController pulse = TextEditingController(text: '');
+  TextEditingController memoController = TextEditingController(text: '');
+  TextEditingController diaStolicPressure = TextEditingController(text: '');
 
   String validationMsg;
-  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
-  CategoryResult categoryDataObj = new CategoryResult();
-  MediaResult mediaDataObj = new MediaResult();
+  final GlobalKey<State> _keyLoader = GlobalKey<State>();
+  CategoryResult categoryDataObj = CategoryResult();
+  MediaResult mediaDataObj = MediaResult();
   String categoryName = Constants.STR_DEVICES;
   String categoryID = '14c3f2a1-70d3-49dd-a922-6bee255eed26';
-  HealthReportListForUserBlock _healthReportListForUserBlock =
-      new HealthReportListForUserBlock();
+  final HealthReportListForUserBlock _healthReportListForUserBlock =
+      HealthReportListForUserBlock();
 
-  List<String> imagePathMain = new List();
-  FlutterToast toast = new FlutterToast();
-  var commonConstants = new CommonConstants();
+  List<String> imagePathMain = List();
+  FlutterToast toast = FlutterToast();
+  var commonConstants = CommonConstants();
   bool _value;
-  List<bool> isSelected = new List(2);
+  List<bool> isSelected = List(2);
 
   String deviceName = Constants.STR_WEIGHING_SCALE;
 
   String errorMsg = '';
-  FHBBasicWidget fhbBasicWidget = new FHBBasicWidget();
+  FHBBasicWidget fhbBasicWidget = FHBBasicWidget();
   bool onOkClicked = false;
 
-  CategoryListBlock _categoryListBlock = new CategoryListBlock();
-  List<CategoryResult> catgoryDataList = new List();
-  MediaTypeBlock _mediaTypeBlock = new MediaTypeBlock();
-  MediaDataList mediaTypesResponse = new MediaDataList();
+  final CategoryListBlock _categoryListBlock = CategoryListBlock();
+  List<CategoryResult> catgoryDataList = [];
+  final MediaTypeBlock _mediaTypeBlock = MediaTypeBlock();
+  MediaDataList mediaTypesResponse = MediaDataList();
 
   @override
   void initState() {
@@ -124,12 +124,11 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                 height: 20.0.h,
               ),
               Text(errorMsg),
-              new Container(
+              Container(
                 child: Padding(
                   padding: const EdgeInsets.only(
-                      left: 8.0, top: 4.0, right: 8.0, bottom: 0.0),
+                      left: 8, top: 4, right: 8, bottom: 0),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       SizedBox(width: 50),
@@ -139,12 +138,12 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                             : () async {
                                 onOkClicked = true;
 
-                                new FHBUtils().check().then((intenet) {
+                                await FHBUtils().check().then((intenet) {
                                   if (intenet != null && intenet) {
                                     createDeviceRecords(deviceName);
                                   } else {
                                     onOkClicked = false;
-                                    new FHBBasicWidget().showInSnackBar(
+                                    FHBBasicWidget().showInSnackBar(
                                         Constants.STR_NO_CONNECTIVITY,
                                         scaffold_state);
                                   }
@@ -160,13 +159,13 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                       });
                     }*/
                         ,
-                        child: Text('OK'),
                         textColor: Color(CommonUtil().getMyPrimaryColor()),
                         color: Colors.transparent,
                         borderSide: BorderSide(
                             color: Color(CommonUtil().getMyPrimaryColor())),
                         shape: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10)),
+                        child: Text('OK'),
                       ),
                       //submitButton(_otpVerifyBloc)
                       MaterialButton(
@@ -257,7 +256,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
   Widget getCardForBPMonitor(String deviceName) {
     return Container(
         //height: 70.0.h,
-        padding: EdgeInsets.all(10.0),
+        padding: EdgeInsets.all(10),
         margin: EdgeInsets.only(left: 15, right: 15, top: 10),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -265,8 +264,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
           boxShadow: [
             BoxShadow(
               color: const Color(fhbColors.cardShadowColor),
-              blurRadius: 16, // has the effect of softening the shadow
-              spreadRadius: 0, // has the effect of extending the shadow
+              blurRadius: 16, // has the effect of extending the shadow
             )
           ],
         ),
@@ -297,7 +295,6 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                 ),
                 Expanded(
                   child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SizedBox(
@@ -305,33 +302,32 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                       ),
                       Expanded(
                           child: Padding(
-                            padding: EdgeInsets.all(5),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Text(
-                                  'Sys',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 14.0.sp,
-                                      color:
-                                          Color(CommonConstants.bplightColor)),
-                                  softWrap: true,
-                                ),
-                                fhbBasicWidget.getErrorMsgForUnitEntered(
-                                    context,
-                                    CommonConstants.strSystolicPressure,
-                                    commonConstants.bpDPUNIT,
-                                    deviceController, (errorValue) {
-                                  setState(() {
-                                    errorMsg = errorValue;
-                                  });
-                                }, errorMsg, variable.strbpunit, deviceName)
-                              ],
+                        padding: EdgeInsets.all(5),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              'Sys',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14.0.sp,
+                                  color: Color(CommonConstants.bplightColor)),
+                              softWrap: true,
                             ),
-                          ),
-                          flex: 1),
+                            fhbBasicWidget.getErrorMsgForUnitEntered(
+                                context,
+                                CommonConstants.strSystolicPressure,
+                                commonConstants.bpDPUNIT,
+                                deviceController, (errorValue) {
+                              setState(() {
+                                errorMsg = errorValue;
+                              });
+                            }, errorMsg, variable.strbpunit, deviceName)
+                          ],
+                        ),
+                      )),
                       Expanded(
+                          flex: 1,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
@@ -353,36 +349,32 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                                 });
                               }, errorMsg, variable.strbpunit, deviceName)
                             ],
-                          ),
-                          flex: 1),
+                          )),
                       Expanded(
                           child: Padding(
-                            padding: EdgeInsets.all(5),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  'Pul',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 14.0.sp,
-                                      color:
-                                          Color(CommonConstants.bplightColor)),
-                                  softWrap: true,
-                                ),
-                                fhbBasicWidget.getErrorMsgForUnitEntered(
-                                    context,
-                                    CommonConstants.strPulse,
-                                    commonConstants.bpPulseUNIT,
-                                    pulse, (errorValue) {
-                                  setState(() {
-                                    errorMsg = errorValue;
-                                  });
-                                }, errorMsg, variable.strpulse, deviceName),
-                              ],
+                        padding: EdgeInsets.all(5),
+                        child: Column(
+                          children: <Widget>[
+                            Text(
+                              'Pul',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14.0.sp,
+                                  color: Color(CommonConstants.bplightColor)),
+                              softWrap: true,
                             ),
-                          ),
-                          flex: 1),
+                            fhbBasicWidget.getErrorMsgForUnitEntered(
+                                context,
+                                CommonConstants.strPulse,
+                                commonConstants.bpPulseUNIT,
+                                pulse, (errorValue) {
+                              setState(() {
+                                errorMsg = errorValue;
+                              });
+                            }, errorMsg, variable.strpulse, deviceName),
+                          ],
+                        ),
+                      )),
                       SizedBox(
                         width: 15.0.w,
                       ),
@@ -422,21 +414,21 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
     if (doValidation(deviceName)) {
       CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
 
-      Map<String, dynamic> postMainData = new Map();
-      Map<String, dynamic> postMediaData = new Map();
+      final Map<String, dynamic> postMainData = {};
+      final postMediaData = Map<String, dynamic>();
 
-      String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      var userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
       try {
         catgoryDataList = PreferenceUtil.getCategoryType();
-        categoryDataObj = new CommonUtil()
+        categoryDataObj = CommonUtil()
             .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
         postMediaData[parameters.strhealthRecordCategory] =
             categoryDataObj.toJson();
       } catch (e) {
         if (catgoryDataList == null) {
-          _categoryListBlock.getCategoryLists().then((value) {
+          await _categoryListBlock.getCategoryLists().then((value) {
             catgoryDataList = value.result;
-            categoryDataObj = new CommonUtil()
+            categoryDataObj = CommonUtil()
                 .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
             postMediaData[parameters.strhealthRecordCategory] =
                 categoryDataObj.toJson();
@@ -444,17 +436,17 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
         }
       }
 
-      List<MediaResult> metaDataFromSharedPrefernce = new List();
+      var metaDataFromSharedPrefernce = List<MediaResult>();
       if (mediaTypesResponse != null &&
           mediaTypesResponse.result != null &&
-          mediaTypesResponse.result.length > 0) {
+          mediaTypesResponse.result.isNotEmpty) {
         metaDataFromSharedPrefernce = mediaTypesResponse.result;
       } else {
         mediaTypesResponse = await _mediaTypeBlock.getMediTypesList();
 
         metaDataFromSharedPrefernce = mediaTypesResponse.result;
       }
-      mediaDataObj = new CommonUtil().getMediaTypeInfoForParticularDevice(
+      mediaDataObj = CommonUtil().getMediaTypeInfoForParticularDevice(
           deviceName, metaDataFromSharedPrefernce);
 
       postMediaData[parameters.strhealthRecordType] = mediaDataObj.toJson();
@@ -465,16 +457,16 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
 
       postMediaData[parameters.strSourceName] = CommonConstants.strTridentValue;
       postMediaData[parameters.strmemoTextRaw] = memoController.text;
-      DateTime dateTime = DateTime.now();
+      final dateTime = DateTime.now();
       postMediaData[parameters.strStartDate] = dateTime.toUtc().toString();
       postMediaData[parameters.strEndDate] = dateTime.toUtc().toString();
-      var commonConstants = new CommonConstants();
+      final commonConstants = CommonConstants();
 
       if (categoryName == CommonConstants.strDevice) {
-        List<Map<String, dynamic>> postDeviceData = new List();
-        Map<String, dynamic> postDeviceValues = new Map();
-        Map<String, dynamic> postDeviceValuesExtra = new Map();
-        Map<String, dynamic> postDeviceValuesExtraClone = new Map();
+        var postDeviceData = List<Map<String, dynamic>>();
+        final Map<String, dynamic> postDeviceValues = {};
+        final Map<String, dynamic> postDeviceValuesExtra = {};
+        final postDeviceValuesExtraClone = Map<String, dynamic>();
 
         if (deviceName == Constants.STR_GLUCOMETER) {
           postDeviceValues[parameters.strParameters] =
@@ -547,16 +539,16 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
         postMediaData[parameters.strdeviceReadings] = postDeviceData;
         postMediaData[parameters.strfileName] =
             deviceName + '_${DateTime.now().toUtc().millisecondsSinceEpoch}';
-        DateTime dateTime = DateTime.now();
+        final dateTime = DateTime.now();
 
         postMediaData[parameters.strdateOfVisit] =
-            new FHBUtils().getFormattedDateOnly(dateTime.toString());
+            FHBUtils().getFormattedDateOnly(dateTime.toString());
 
         postMainData[parameters.strmetaInfo] = postMediaData;
 
-        var params = json.encode(postMediaData);
+        final params = json.encode(postMediaData);
 
-        _healthReportListForUserBlock
+        await _healthReportListForUserBlock
             .createHealtRecords(params.toString(), imagePathMain, '')
             .then((value) {
           if (value != null && value.isSuccess) {
@@ -589,17 +581,17 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
     } else {
       onOkClicked = false;
 
-      showDialog(
+      await showDialog(
           context: context,
-          child: new AlertDialog(
-            title: new Text(variable.strAPP_NAME),
-            content: new Text(validationMsg),
-          ));
+          builder: (context) => AlertDialog(
+                title: Text(variable.strAPP_NAME),
+                content: Text(validationMsg),
+              ));
     }
   }
 
   bool doValidation(String deviceName) {
-    bool validationConditon = false;
+    var validationConditon = false;
     if (categoryName == Constants.STR_DEVICES) {
       if (deviceName == Constants.STR_GLUCOMETER) {
         if (deviceController.text == '' || deviceController.text == null) {
@@ -658,7 +650,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
   Widget getCardForThermometer(String deviceName) {
     return Container(
         //height: 70.0.h,
-        padding: EdgeInsets.all(10.0),
+        padding: EdgeInsets.all(10),
         margin: EdgeInsets.only(left: 15, right: 15, top: 10),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -666,8 +658,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
           boxShadow: [
             BoxShadow(
               color: const Color(fhbColors.cardShadowColor),
-              blurRadius: 16, // has the effect of softening the shadow
-              spreadRadius: 0, // has the effect of extending the shadow
+              blurRadius: 16, // has the effect of extending the shadow
             )
           ],
         ),
@@ -692,19 +683,15 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                   ),
                 ],
               ),
-              flex: 1,
             ),
             SizedBox(
               width: 5.0.w,
             ),
             Expanded(
-              flex: 1,
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       Text(
                         'Temp',
@@ -752,7 +739,6 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                     ],
                   ),
                   Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       Text(
                         '',
@@ -786,7 +772,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
   Widget getCardForWeighingScale(String deviceName) {
     return Container(
         //height: 70.0.h,
-        padding: EdgeInsets.all(10.0),
+        padding: EdgeInsets.all(10),
         margin: EdgeInsets.only(left: 15, right: 15, top: 10),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -794,14 +780,14 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
           boxShadow: [
             BoxShadow(
               color: const Color(fhbColors.cardShadowColor),
-              blurRadius: 16, // has the effect of softening the shadow
-              spreadRadius: 0, // has the effect of extending the shadow
+              blurRadius: 16, // has the effect of extending the shadow
             )
           ],
         ),
         child: Row(
           children: [
             Expanded(
+              flex: 1,
               child: Column(
                 children: [
                   Image.asset(
@@ -820,19 +806,15 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                   ),
                 ],
               ),
-              flex: 1,
             ),
             SizedBox(
               width: 5.0.w,
             ),
             Expanded(
-              flex: 1,
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       Text(
                         'Kg',
@@ -863,7 +845,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
   Widget getCardForPulseOxidometer(String deviceName) {
     return Container(
         //height: 70.0.h,
-        padding: EdgeInsets.all(10.0),
+        padding: EdgeInsets.all(10),
         margin: EdgeInsets.only(left: 15, right: 15, top: 10),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -871,8 +853,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
           boxShadow: [
             BoxShadow(
               color: const Color(fhbColors.cardShadowColor),
-              blurRadius: 16, // has the effect of softening the shadow
-              spreadRadius: 0, // has the effect of extending the shadow
+              blurRadius: 16, // has the effect of extending the shadow
             )
           ],
         ),
@@ -900,55 +881,48 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                   ),
                 ],
               ),
-              flex: 1,
             ),
             SizedBox(
               width: 5.0.w,
             ),
             Expanded(
-              flex: 1,
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Expanded(
-                      flex: 1,
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            'SPO2',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14.0.sp,
-                                color: Color(CommonConstants.pulselightColor)),
-                            softWrap: true,
-                          ),
-                          fhbBasicWidget.getErrorMsgForUnitEntered(
-                              context,
-                              CommonConstants.strOxygenSaturation,
-                              commonConstants.poOxySatUNIT,
-                              deviceController, (errorValue) {
-                            setState(() {
-                              errorMsg = errorValue;
-                            });
-                          }, errorMsg, variable.strpulseUnit, deviceName),
-                        ],
-                      )),
+                    children: <Widget>[
+                      Text(
+                        'SPO2',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14.0.sp,
+                            color: Color(CommonConstants.pulselightColor)),
+                        softWrap: true,
+                      ),
+                      fhbBasicWidget.getErrorMsgForUnitEntered(
+                          context,
+                          CommonConstants.strOxygenSaturation,
+                          commonConstants.poOxySatUNIT,
+                          deviceController, (errorValue) {
+                        setState(() {
+                          errorMsg = errorValue;
+                        });
+                      }, errorMsg, variable.strpulseUnit, deviceName),
+                    ],
+                  )),
                   Expanded(
-                      flex: 1,
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            'PRBpm',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14.0.sp,
-                                color: Color(CommonConstants.pulselightColor)),
-                            softWrap: true,
-                          ),
-                          /* Container(
+                    children: <Widget>[
+                      Text(
+                        'PRBpm',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14.0.sp,
+                            color: Color(CommonConstants.pulselightColor)),
+                        softWrap: true,
+                      ),
+                      /* Container(
                             width: 50,
                             constraints: BoxConstraints(maxWidth: 100),
                             child: TextFormField(
@@ -976,17 +950,17 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                                 cursorWidth: 0.5,
                                 onSaved: (input) => setState(() {})),
                           ),*/
-                          fhbBasicWidget.getErrorMsgForUnitEntered(
-                              context,
-                              CommonConstants.strPulse,
-                              commonConstants.poPulseUNIT,
-                              pulse, (errorValue) {
-                            setState(() {
-                              errorMsg = errorValue;
-                            });
-                          }, errorMsg, variable.strpulse, deviceName),
-                        ],
-                      ))
+                      fhbBasicWidget.getErrorMsgForUnitEntered(
+                          context,
+                          CommonConstants.strPulse,
+                          commonConstants.poPulseUNIT,
+                          pulse, (errorValue) {
+                        setState(() {
+                          errorMsg = errorValue;
+                        });
+                      }, errorMsg, variable.strpulse, deviceName),
+                    ],
+                  ))
                 ],
               ),
             ),
@@ -997,7 +971,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
   Widget getCardForGlucometer(String deviceName) {
     return Container(
         //height: 70.0.h,
-        padding: EdgeInsets.all(10.0),
+        padding: EdgeInsets.all(10),
         margin: EdgeInsets.only(left: 15, right: 15, top: 10),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -1005,8 +979,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
           boxShadow: [
             BoxShadow(
               color: const Color(fhbColors.cardShadowColor),
-              blurRadius: 16, // has the effect of softening the shadow
-              spreadRadius: 0, // has the effect of extending the shadow
+              blurRadius: 16, // has the effect of extending the shadow
             )
           ],
         ),
@@ -1034,99 +1007,90 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                   ),
                 ],
               ),
-              flex: 1,
             ),
             SizedBox(
               width: 5.0.w,
             ),
             Expanded(
-                flex: 1,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      'mg/dl',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14.0.sp,
-                          color: Color(CommonConstants.GlucolightColor)),
-                      softWrap: true,
-                    ),
-                    fhbBasicWidget.getErrorMsgForUnitEntered(
-                        context,
-                        CommonConstants.strValue,
-                        commonConstants.glucometerUNIT,
-                        deviceController, (errorValue) {
-                      setState(() {
-                        errorMsg = errorValue;
-                      });
-                    }, errorMsg, variable.strGlucUnit, deviceName)
-                  ],
-                )),
+              children: <Widget>[
+                Text(
+                  'mg/dl',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 14.0.sp,
+                      color: Color(CommonConstants.GlucolightColor)),
+                  softWrap: true,
+                ),
+                fhbBasicWidget.getErrorMsgForUnitEntered(
+                    context,
+                    CommonConstants.strValue,
+                    commonConstants.glucometerUNIT,
+                    deviceController, (errorValue) {
+                  setState(() {
+                    errorMsg = errorValue;
+                  });
+                }, errorMsg, variable.strGlucUnit, deviceName)
+              ],
+            )),
             SizedBox(
               width: 5.0.w,
             ),
             Expanded(
-              flex: 1,
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Expanded(
-                      flex: 1,
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            'Fasting',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14.0.sp,
-                                color: Colors.grey),
-                            softWrap: true,
-                          ),
-                          Container(
-                              width: 50.0.w,
-                              constraints: BoxConstraints(maxWidth: 100.0.w),
-                              child: MyCheckbox(
-                                  value: isSelected[0],
-                                  onChanged: (value) {
-                                    setState(() {
-                                      isSelected[0] = value;
-                                      isSelected[1] = null;
-                                    });
-                                  })),
-                        ],
-                      )),
+                    children: <Widget>[
+                      Text(
+                        'Fasting',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14.0.sp,
+                            color: Colors.grey),
+                        softWrap: true,
+                      ),
+                      Container(
+                          width: 50.0.w,
+                          constraints: BoxConstraints(maxWidth: 100.0.w),
+                          child: MyCheckbox(
+                              value: isSelected[0],
+                              onChanged: (value) {
+                                setState(() {
+                                  isSelected[0] = value;
+                                  isSelected[1] = null;
+                                });
+                              })),
+                    ],
+                  )),
                   SizedBox(
                     width: 5.0.w,
                   ),
                   Expanded(
-                      flex: 1,
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            'PP',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14.0.sp,
-                                color: Colors.grey),
-                            softWrap: true,
-                          ),
-                          Container(
-                              width: 50.0.w,
-                              constraints: BoxConstraints(maxWidth: 100.0.w),
-                              child: MyCheckbox(
-                                  value: isSelected[1],
-                                  onChanged: (value) {
-                                    setState(() {
-                                      isSelected[1] = value;
-                                      isSelected[0] = null;
-                                    });
-                                  })),
-                        ],
-                      ))
+                    children: <Widget>[
+                      Text(
+                        'PP',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14.0.sp,
+                            color: Colors.grey),
+                        softWrap: true,
+                      ),
+                      Container(
+                          width: 50.0.w,
+                          constraints: BoxConstraints(maxWidth: 100.0.w),
+                          child: MyCheckbox(
+                              value: isSelected[1],
+                              onChanged: (value) {
+                                setState(() {
+                                  isSelected[1] = value;
+                                  isSelected[0] = null;
+                                });
+                              })),
+                    ],
+                  ))
                 ],
               ),
             ),

@@ -1,4 +1,4 @@
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import '../../constants/fhb_parameters.dart' as parameters;
 
 class DeleteRecord {
   List<String> mediaMetaIds;
@@ -12,9 +12,9 @@ class DeleteRecord {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[parameters.strMediaMetaIds] = this.mediaMetaIds;
-    data[parameters.strmediaMasterIds]=this.mediaMasterIds;
+    final data = <String, dynamic>{};
+    data[parameters.strMediaMetaIds] = mediaMetaIds;
+    data[parameters.strmediaMasterIds]=mediaMasterIds;
     return data;
   }
 }

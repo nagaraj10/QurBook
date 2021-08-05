@@ -1,6 +1,6 @@
-import 'package:myfhb/constants/fhb_parameters.dart';
-import 'package:myfhb/device_integration/model/googleFitValues.dart';
-import 'package:myfhb/device_integration/model/googleFitEnumvalues.dart';
+import '../../constants/fhb_parameters.dart';
+import 'googleFitValues.dart';
+import 'googleFitEnumvalues.dart';
 
 class Point {
   Point({
@@ -37,4 +37,4 @@ class Point {
 enum DataTypeName { COM_GOOGLE_BLOOD_PRESSURE }
 
 final dataTypeNameValues = EnumValues(
-    {"com.google.blood_pressure": DataTypeName.COM_GOOGLE_BLOOD_PRESSURE});
+    {'com.google.blood_pressure': DataTypeName.COM_GOOGLE_BLOOD_PRESSURE});

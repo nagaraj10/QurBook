@@ -1,11 +1,11 @@
 import 'dart:async';
 
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/search_providers/models/labs_list_response.dart';
-import 'package:myfhb/search_providers/models/labs_list_response_new.dart';
-import 'package:myfhb/search_providers/services/labs_list_repository.dart';
-import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
-import 'package:myfhb/src/resources/network/ApiResponse.dart';
+import '../../constants/variable_constant.dart' as variable;
+import '../models/labs_list_response.dart';
+import '../models/labs_list_response_new.dart';
+import '../services/labs_list_repository.dart';
+import '../../src/blocs/Authentication/LoginBloc.dart';
+import '../../src/resources/network/ApiResponse.dart';
 
 class LabsListBlock implements BaseBloc {
   LabsListRepository _labsListRepository;
@@ -33,13 +33,13 @@ class LabsListBlock implements BaseBloc {
     _labsListNewController =
         StreamController<ApiResponse<LabsSearchListResponse>>();
 
-    _labsListRepository = new LabsListRepository();
+    _labsListRepository = LabsListRepository();
   }
 
   getLabsList(String param) async {
     labListSink.add(ApiResponse.loading(variable.strGetLabList));
     try {
-      LabsListResponse labsListResponse =
+      final labsListResponse =
           await _labsListRepository.getLabsFromSearch(param);
       labListSink.add(ApiResponse.completed(labsListResponse));
     } catch (e) {
@@ -50,7 +50,7 @@ class LabsListBlock implements BaseBloc {
   getLabsListNew(String param) async {
     labListNewSink.add(ApiResponse.loading(variable.strGetLabList));
     try {
-      LabsSearchListResponse labsListResponse =
+      final labsListResponse =
           await _labsListRepository.getLabsFromSearchNew(param);
       labListNewSink.add(ApiResponse.completed(labsListResponse));
     } catch (e) {
@@ -73,8 +73,8 @@ class LabsListBlock implements BaseBloc {
   getExistingLabsListNew(String param) async {
     labListNewSink.add(ApiResponse.loading(variable.strGetLabList));
     try {
-      LabsSearchListResponse labsListResponse =
-      await _labsListRepository.getExistingLabsFromSearchNew(param);
+      var labsListResponse =
+          await _labsListRepository.getExistingLabsFromSearchNew(param);
       labListNewSink.add(ApiResponse.completed(labsListResponse));
     } catch (e) {
       labListNewSink.add(ApiResponse.error(e.toString()));

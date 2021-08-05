@@ -1,27 +1,38 @@
-
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
+import '../../constants/fhb_constants.dart';
 
 class PickImageController {
   static PickImageController get instance => PickImageController();
   File croppedFile;
 
-  Future<File> cropImageFromFile(String isFrom) async{
+  Future<File> cropImageFromFile(String isFrom) async {
     // TakeImage from user's photo
-    //File imageFileFromLibrary = await ImagePicker.pickImage(source:ImageSource.gallery);
-    File file = await FilePicker.getFile(
-      type: isFrom==strGallery?FileType.image:isFrom==strVideo?FileType.video:isFrom==strFiles?FileType.any:isFrom==strAudio?FileType.audio:FileType.any,
+    //File imageFileFromLibrary = await ImagePicker.platform.pickImage(source:ImageSource.gallery);
+    final FilePickerResult filePickerResult =
+        await FilePicker.platform.pickFiles(
+      type: isFrom == strGallery
+          ? FileType.image
+          : isFrom == strVideo
+              ? FileType.video
+              : isFrom == strFiles
+                  ? FileType.any
+                  : isFrom == strAudio
+                      ? FileType.audio
+                      : FileType.any,
       /*allowedExtensions: [strJpg, strPdf, strPng],*/
     );
+    File file = (filePickerResult?.files?.length ?? 0) > 0
+        ? File(filePickerResult.files[0]?.path)
+        : null;
     // Start crop iamge then take the file.
-    if ((file.path.toString().toLowerCase().contains(strJpgDot)) ||
-        (file.path.toString().toLowerCase().contains(strJpegDot)) ||
-        (file.path.toString().toLowerCase().contains(strPngDot))) {
-
-       croppedFile = await ImageCropper.cropImage(
+    if (file != null &&
+        ((file.path.toString().toLowerCase().contains(strJpgDot)) ||
+            (file.path.toString().toLowerCase().contains(strJpegDot)) ||
+            (file.path.toString().toLowerCase().contains(strPngDot)))) {
+      croppedFile = await ImageCropper.cropImage(
           sourcePath: file.path,
           aspectRatioPresets: [
             CropAspectRatioPreset.square,
@@ -37,17 +48,12 @@ class PickImageController {
               initAspectRatio: CropAspectRatioPreset.original,
               lockAspectRatio: false),
           iosUiSettings: IOSUiSettings(
-            minimumAspectRatio: 1.0,
-          )
-      );
-
-    }
-    else
-      {
+            minimumAspectRatio: 1,
+          ));
+    } else {
       croppedFile = file;
     }
 
-
-    return croppedFile != null ? croppedFile : null;
+    return croppedFile ?? null;
   }
 }

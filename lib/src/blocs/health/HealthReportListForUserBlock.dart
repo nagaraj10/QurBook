@@ -1,24 +1,24 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:myfhb/record_detail/model/DoctorImageResponse.dart';
-import 'package:myfhb/record_detail/model/ImageDocumentResponse.dart';
-import 'package:myfhb/record_detail/model/MetaDataMovedResponse.dart';
-import 'package:myfhb/record_detail/model/UpdateMediaResponse.dart';
-import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
-import 'package:myfhb/src/model/Health/DigitRecogResponse.dart';
-import 'package:myfhb/src/model/Health/MediaMasterIds.dart';
-import 'package:myfhb/src/model/Health/PostImageResponse.dart';
-import 'package:myfhb/src/model/Health/SavedMetaDataResponse.dart';
-import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
-import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
-import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
-import 'package:myfhb/src/model/Health/asgard/health_record_success.dart';
+import '../../../record_detail/model/DoctorImageResponse.dart';
+import '../../../record_detail/model/ImageDocumentResponse.dart';
+import '../../../record_detail/model/MetaDataMovedResponse.dart';
+import '../../../record_detail/model/UpdateMediaResponse.dart';
+import '../Authentication/LoginBloc.dart';
+import '../../model/Health/DigitRecogResponse.dart';
+import '../../model/Health/MediaMasterIds.dart';
+import '../../model/Health/PostImageResponse.dart';
+import '../../model/Health/SavedMetaDataResponse.dart';
+import '../../model/Health/MediaMetaInfo.dart';
+import '../../model/Health/UserHealthResponseList.dart';
+import '../../model/Health/asgard/health_record_list.dart';
+import '../../model/Health/asgard/health_record_success.dart';
 
-import 'package:myfhb/src/resources/network/ApiResponse.dart';
-import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
+import '../../resources/network/ApiResponse.dart';
+import '../../resources/repository/health/HealthReportListForUserRepository.dart';
 
-import 'package:myfhb/constants/variable_constant.dart' as variable;
+import '../../../constants/variable_constant.dart' as variable;
 
 class HealthReportListForUserBlock implements BaseBloc {
   HealthReportListForUserRepository _healthReportListForUserRepository;
@@ -145,7 +145,7 @@ class HealthReportListForUserBlock implements BaseBloc {
 
   Future<DoctorImageResponse> getProfilePic(String doctorsId) async {
     try {
-      DoctorImageResponse userHealthResponseList =
+      var userHealthResponseList =
           await _healthReportListForUserRepository.getDoctorProfile(doctorsId);
       return userHealthResponseList;
     } catch (e) {}
@@ -153,7 +153,7 @@ class HealthReportListForUserBlock implements BaseBloc {
 
   Future<ImageDocumentResponse> getDocumentImage(String metaMasterId) async {
     try {
-      ImageDocumentResponse userHealthResponseList =
+      final userHealthResponseList =
           await _healthReportListForUserRepository
               .getDocumentImage(metaMasterId);
       return userHealthResponseList;

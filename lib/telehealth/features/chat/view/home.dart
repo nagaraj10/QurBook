@@ -19,7 +19,7 @@ import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:myfhb/telehealth/features/chat/view/chat.dart';
-import 'package:myfhb/telehealth/features/chat/view/loading.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
@@ -46,7 +46,7 @@ class ChatHomeScreen extends StatefulWidget {
 class HomeScreenState extends State<ChatHomeScreen> {
   HomeScreenState({Key key});
 
-  final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
+  final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
@@ -89,28 +89,30 @@ class HomeScreenState extends State<ChatHomeScreen> {
   }
 
   void registerNotification() {
-    firebaseMessaging.requestNotificationPermissions();
+    firebaseMessaging.requestPermission();
 
-    firebaseMessaging.configure(onMessage: (Map<String, dynamic> message) {
-      Platform.isAndroid
-          ? showNotification(message['notification'])
-          : showNotification(message['aps']['alert']);
-      return;
-    }, onResume: (Map<String, dynamic> message) {
-      print('onResume: $message');
-      return;
-    }, onLaunch: (Map<String, dynamic> message) {
-      print('onLaunch: $message');
-      return;
-    });
+    FirebaseMessaging.onMessage.listen(
+      (RemoteMessage message) {
+        Platform.isAndroid
+            ? showNotification(message.notification)
+            : showNotification(message.data['aps']['alert']);
+        return;
+      },
+    );
+    FirebaseMessaging.onMessageOpenedApp.listen(
+      (RemoteMessage message) {
+        print('onResume: $message');
+        return;
+      },
+    );
 
     firebaseMessaging.getToken().then((token) {
       print('FCMToken: ' + token);
 
-      Firestore.instance
+      FirebaseFirestore.instance
           .collection(STR_USERS)
-          .document(patientId)
-          .updateData({STR_PUSH_TOKEN: token});
+          .doc(patientId)
+          .update({STR_PUSH_TOKEN: token});
     }).catchError((err) {
       Fluttertoast.showToast(msg: err.message.toString());
     });
@@ -302,7 +304,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return new Scaffold(
-            body: Center(child: new CircularProgressIndicator()),
+            body: CommonCircularIndicator(),
           );
         } else if (snapshot.hasError) {
           return ErrorsWidget();
@@ -322,9 +324,9 @@ class HomeScreenState extends State<ChatHomeScreen> {
       widget.careGiversList?.forEach((careGiver) {
         careGiverIds.add(careGiver.doctorId);
       });
-      stream = Firestore.instance
+      stream = FirebaseFirestore.instance
           .collection(STR_CHAT_LIST)
-          .document(patientId)
+          .doc(patientId)
           .collection(STR_USER_LIST)
           .where(
             'id',
@@ -333,9 +335,9 @@ class HomeScreenState extends State<ChatHomeScreen> {
           .orderBy(STR_CREATED_AT, descending: true)
           .snapshots();
     } else {
-      stream = Firestore.instance
+      stream = FirebaseFirestore.instance
           .collection(STR_CHAT_LIST)
-          .document(patientId)
+          .doc(patientId)
           .collection(STR_USER_LIST)
           .orderBy(STR_CREATED_AT, descending: true)
           .snapshots();
@@ -344,22 +346,19 @@ class HomeScreenState extends State<ChatHomeScreen> {
       children: <Widget>[
         // List
         Container(
-          child: StreamBuilder<QuerySnapshot>(
+          child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
             stream: stream,
-            builder: (context, snapshot) {
+            builder: (context,
+                AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
               if (!snapshot.hasData) {
-                return Center(
-                  child: CircularProgressIndicator(
-                      backgroundColor:
-                          Color(new CommonUtil().getMyPrimaryColor())),
-                );
+                return CommonCircularIndicator();
               } else {
                 return countChatListUsers(patientId, snapshot) > 0
                     ? ListView.builder(
                         padding: EdgeInsets.all(10.0),
                         itemBuilder: (context, index) => buildItem(context,
-                            snapshot.data.documents[index], snapshot, index),
-                        itemCount: snapshot.data.documents.length,
+                            snapshot.data.docs[index], snapshot, index),
+                        itemCount: snapshot.data.docs.length,
                       )
                     : Container(
                         child: Center(
@@ -382,7 +381,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
 
         // Loading
         Positioned(
-          child: isLoading ? const Loading() : Container(),
+          child: isLoading ? CommonCircularIndicator() : Container(),
         )
       ],
     );
@@ -391,9 +390,9 @@ class HomeScreenState extends State<ChatHomeScreen> {
   Widget buildItem(BuildContext context, DocumentSnapshot document,
       chatListSnapshot, int index) {
     return StreamBuilder(
-      stream: Firestore.instance
+      stream: FirebaseFirestore.instance
           .collection(STR_USERS)
-          .document(document.documentID)
+          .doc(document.id)
           .snapshots(),
       builder: (context, AsyncSnapshot<DocumentSnapshot> snapshotUser) {
         if (snapshotUser.hasData) {
@@ -409,7 +408,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => Chat(
-                                  peerId: document.documentID,
+                                  peerId: document.id,
                                   peerAvatar: document[STR_PHOTO_URL],
                                   peerName:
                                       snapshotUser?.data[STR_NICK_NAME] != ''
@@ -441,12 +440,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                           placeholder: (context, url) =>
                                               Container(
                                                 child:
-                                                    CircularProgressIndicator(
-                                                  strokeWidth: 1.0,
-                                                  valueColor:
-                                                      AlwaysStoppedAnimation<
-                                                          Color>(themeColor),
-                                                ),
+                                                CommonCircularIndicator(),
                                                 width: 50.0,
                                                 height: 50.0,
                                                 padding: EdgeInsets.all(15.0),
@@ -593,27 +587,25 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                   padding:
                                       const EdgeInsets.fromLTRB(0, 8, 4, 4),
                                   child: (chatListSnapshot.hasData &&
-                                          chatListSnapshot.data.documents.length >
-                                              0)
+                                          chatListSnapshot.data.docs.length > 0)
                                       ? StreamBuilder<QuerySnapshot>(
-                                          stream: Firestore.instance
+                                          stream: FirebaseFirestore.instance
                                               .collection('messages')
-                                              .document(
-                                                  chatViewModel.createGroupId(
-                                                      patientId,
-                                                      chatListSnapshot.data
-                                                              .documents[index]
-                                                          ['id']))
+                                              .doc(chatViewModel.createGroupId(
+                                                  patientId,
+                                                  chatListSnapshot
+                                                      .data.docs[index]['id']))
                                               .collection(
                                                   chatViewModel.createGroupId(
                                                       patientId,
                                                       chatListSnapshot.data
-                                                              .documents[index]
-                                                          ['id']))
-                                              .where('idTo', isEqualTo: patientId)
+                                                          .docs[index]['id']))
+                                              .where('idTo',
+                                                  isEqualTo: patientId)
                                               .where('isread', isEqualTo: false)
                                               .snapshots(),
-                                          builder: (context, notReadMSGSnapshot) {
+                                          builder:
+                                              (context, notReadMSGSnapshot) {
                                             return Container(
                                               width: 60,
                                               height: 50,
@@ -629,17 +621,17 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                                                       .hasData &&
                                                                   chatListSnapshot
                                                                           .data
-                                                                          .documents
+                                                                          .docs
                                                                           .length >
                                                                       0)
                                                               ? ((notReadMSGSnapshot
                                                                           .hasData &&
                                                                       notReadMSGSnapshot
                                                                               .data
-                                                                              .documents
+                                                                              .docs
                                                                               .length >
                                                                           0)
-                                                                  ? '${notReadMSGSnapshot.data.documents.length}'
+                                                                  ? '${notReadMSGSnapshot.data.docs.length}'
                                                                   : '')
                                                               : '',
                                                           style: TextStyle(
@@ -649,14 +641,14 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                                         backgroundColor: (notReadMSGSnapshot.hasData &&
                                                                 notReadMSGSnapshot
                                                                         .data
-                                                                        .documents
+                                                                        .docs
                                                                         .length >
                                                                     0 &&
                                                                 notReadMSGSnapshot
                                                                     .hasData &&
                                                                 notReadMSGSnapshot
                                                                         .data
-                                                                        .documents
+                                                                        .docs
                                                                         .length >
                                                                     0)
                                                             ? Color(CommonUtil()
@@ -687,7 +679,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
             );
           }
         } else {
-          return new CircularProgressIndicator();
+          return new SizedBox.shrink();
         }
       },
     );
@@ -700,8 +692,8 @@ class HomeScreenState extends State<ChatHomeScreen> {
   }
 
   int countChatListUsers(myID, snapshot) {
-    int resultInt = snapshot.data.documents.length;
-    for (var data in snapshot.data.documents) {
+    int resultInt = snapshot.data.docs.length;
+    for (var data in snapshot.data.docs) {
       if (data[STR_ID] == myID) {
         resultInt--;
       }

@@ -1,5 +1,5 @@
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/src/model/Category/catergory_result.dart';
+import '../../../constants/fhb_parameters.dart' as parameters;
+import 'catergory_result.dart';
 
 class CategoryDataList {
   bool isSuccess;
@@ -10,18 +10,18 @@ class CategoryDataList {
   CategoryDataList.fromJson(Map<String, dynamic> json) {
     isSuccess = json[parameters.strIsSuccess];
     if (json[parameters.strResult] != null) {
-      result = new List<CategoryResult>();
+      result = <CategoryResult>[];
       json[parameters.strResult].forEach((v) {
-        result.add(new CategoryResult.fromJson(v));
+        result.add(CategoryResult.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[parameters.strIsSuccess] = this.isSuccess;
-    if (this.result != null) {
-      data[parameters.strResult] = this.result.map((v) => v.toJson()).toList();
+    final data = Map<String, dynamic>();
+    data[parameters.strIsSuccess] = isSuccess;
+    if (result != null) {
+      data[parameters.strResult] = result.map((v) => v.toJson()).toList();
     }
     return data;
   }

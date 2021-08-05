@@ -1,34 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/FHBBasicWidget.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:myfhb/my_family_detail_view/bloc/my_family_detail_view_boc.dart';
-import 'package:myfhb/my_family_detail_view/models/my_family_detail_view_arguments.dart';
-import 'package:myfhb/my_family_detail_view/screens/my_family_detail_view_hospital.dart';
-import 'package:myfhb/my_family_detail_view/screens/my_family_detail_view_insurance.dart';
-import 'package:myfhb/src/model/Category/CategoryData.dart';
-import 'package:myfhb/src/model/Category/catergory_data_list.dart';
-import 'package:myfhb/src/model/Health/CompleteData.dart';
-import 'package:myfhb/src/model/Category/CategoryResponseList.dart';
-import 'package:myfhb/src/model/Category/catergory_result.dart';
-import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
-import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
-import 'package:myfhb/src/resources/network/ApiResponse.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import '../../common/CommonConstants.dart';
+import '../../common/CommonUtil.dart';
+import '../../common/FHBBasicWidget.dart';
+import '../../common/PreferenceUtil.dart';
+import '../../constants/fhb_constants.dart' as Constants;
+import '../../constants/fhb_constants.dart';
+import '../../constants/router_variable.dart' as router;
+import '../bloc/my_family_detail_view_boc.dart';
+import '../models/my_family_detail_view_arguments.dart';
+import 'my_family_detail_view_hospital.dart';
+import 'my_family_detail_view_insurance.dart';
+import '../../src/model/Category/CategoryData.dart';
+import '../../src/model/Category/catergory_data_list.dart';
+import '../../src/model/Health/CompleteData.dart';
+import '../../src/model/Category/CategoryResponseList.dart';
+import '../../src/model/Category/catergory_result.dart';
+import '../../src/model/Health/UserHealthResponseList.dart';
+import '../../src/model/Health/asgard/health_record_list.dart';
+import '../../src/resources/network/ApiResponse.dart';
+import '../../src/utils/FHBUtils.dart';
+import '../../src/utils/colors_utils.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
 
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/FHBBasicWidget.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:myfhb/src/model/Health/CompleteData.dart';
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:myfhb/constants/fhb_query.dart' as query;
-import 'package:myfhb/common/errors_widget.dart';
+import '../../common/CommonUtil.dart';
+import '../../common/FHBBasicWidget.dart';
+import '../../src/utils/FHBUtils.dart';
+import '../../src/model/Health/CompleteData.dart';
+import '../../constants/router_variable.dart' as router;
+import '../../constants/fhb_query.dart' as query;
+import '../../common/errors_widget.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 
 class MyFamilyDetailView extends StatefulWidget {
   MyFamilyDetailViewArguments arguments;
@@ -47,20 +48,20 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
   int activeTabIndex = 0;
   MyFamilyDetailViewBloc myFamilyDetailViewBloc;
   List<CategoryResult> categoryData;
-  GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
+  GlobalKey<ScaffoldState> scaffold_state = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     mInitialTime = DateTime.now();
     super.initState();
 
-    tabController = new TabController(length: 2, vsync: this);
+    tabController = TabController(length: 2, vsync: this);
     activeTabIndex = widget.arguments.index;
 
     tabController.addListener(_setActiveTabIndex);
     tabController.animateTo(activeTabIndex);
 
-    myFamilyDetailViewBloc = new MyFamilyDetailViewBloc();
+    myFamilyDetailViewBloc = MyFamilyDetailViewBloc();
     //getCategories();
 
     myFamilyDetailViewBloc.userId = widget.arguments.sharedbyme.child.id;
@@ -118,17 +119,12 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
           controller: tabController,
           labelColor: Colors.white,
           indicatorSize: TabBarIndicatorSize.label,
-          indicatorColor: Color(new CommonUtil().getMyPrimaryColor()),
-          indicatorWeight: 2,
+          indicatorColor: Color(CommonUtil().getMyPrimaryColor()),
         ),
       ),
       floatingActionButton: FloatingActionButton(
-          child: Icon(
-            Icons.add,
-            size: 24.0.sp,
-          ),
           onPressed: () {
-            new FHBUtils().check().then((intenet) {
+            FHBUtils().check().then((intenet) {
               if (intenet != null && intenet) {
                 if (activeTabIndex == 0) {
                   PreferenceUtil.saveString(Constants.KEY_IDDOCSCATEGORYTYPE,
@@ -138,10 +134,10 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
                       CommonConstants.CAT_JSON_HOSPITAL);
                 }
 
-                for (var e in categoryData) {
+                for (final e in categoryData) {
                   if (e.categoryDescription ==
                       CommonConstants.categoryDescriptionIDDocs) {
-                    PreferenceUtil.saveString(Constants.KEY_DEVICENAME, null)
+                    PreferenceUtil.saveString(Constants.KEY_DEVICENAME, '')
                         .then((onValue) {
                       PreferenceUtil.saveString(
                               Constants.KEY_CATEGORYNAME, e.categoryName)
@@ -165,24 +161,26 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
                   }
                 }
               } else {
-                new FHBBasicWidget().showInSnackBar(
+                FHBBasicWidget().showInSnackBar(
                     Constants.STR_NO_CONNECTIVITY, scaffold_state);
               }
             });
-          }),
+          },
+          child: Icon(
+            Icons.add,
+            size: 24.0.sp,
+          )),
       body: getResponseFromApiWidget(),
     );
   }
 
   Widget getValuesFromSharedPrefernce() {
-    return new FutureBuilder<List<CategoryResult>>(
+    return FutureBuilder<List<CategoryResult>>(
       future: getCategories(),
-      builder: (BuildContext context, snapshot) {
+      builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return new Center(
-            child: new CircularProgressIndicator(
-              backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-            ),
+          return Center(
+            child: CommonCircularIndicator(),
           );
         } else if (snapshot.hasError) {
           return ErrorsWidget();
@@ -194,15 +192,14 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
   }
 
   Widget getHealthReportToDisplayInBody() {
-    myFamilyDetailViewBloc = new MyFamilyDetailViewBloc();
+    myFamilyDetailViewBloc = MyFamilyDetailViewBloc();
     myFamilyDetailViewBloc.userId = widget.arguments.sharedbyme.child.id;
     //getCategories();
     myFamilyDetailViewBloc.getHelthReportLists(myFamilyDetailViewBloc.userId);
 
     return StreamBuilder<ApiResponse<HealthRecordList>>(
       stream: myFamilyDetailViewBloc.healthReportStreams,
-      builder:
-          (context, AsyncSnapshot<ApiResponse<HealthRecordList>> snapshot) {
+      builder: (context, snapshot) {
         if (snapshot.hasData) {
           switch (snapshot.data.status) {
             case Status.LOADING:
@@ -210,9 +207,9 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
                 backgroundColor: Colors.white,
                 body: Center(
                     child: SizedBox(
-                  child: CircularProgressIndicator(),
                   width: 30.0.h,
                   height: 30.0.h,
+                  child: CommonCircularIndicator(),
                 )),
               );
               break;
@@ -257,28 +254,25 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
   }
 
   Future<List<CategoryResult>> getCategories() async {
-    var categoryDatalist = await myFamilyDetailViewBloc.getCategoryLists();
+    final categoryDatalist = await myFamilyDetailViewBloc.getCategoryLists();
     categoryData = categoryDatalist.result;
     return categoryData;
   }
 
   Widget getResponseFromApiWidget() {
-    myFamilyDetailViewBloc = new MyFamilyDetailViewBloc();
+    myFamilyDetailViewBloc = MyFamilyDetailViewBloc();
 
     myFamilyDetailViewBloc.getCategoryLists();
 
     return StreamBuilder<ApiResponse<CategoryDataList>>(
       stream: myFamilyDetailViewBloc.categoryListStreams,
-      builder:
-          (context, AsyncSnapshot<ApiResponse<CategoryDataList>> snapshot) {
+      builder: (context, snapshot) {
         if (snapshot.hasData) {
           switch (snapshot.data.status) {
             case Status.LOADING:
               return Center(
                   child: SizedBox(
-                child: CircularProgressIndicator(
-                  backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
-                ),
+                child: CommonCircularIndicator(),
                 width: 30.0.h,
                 height: 30.0.h,
               ));
@@ -293,7 +287,7 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
 
             case Status.COMPLETED:
               if (snapshot.data.data.result != null &&
-                  snapshot.data.data.result.length > 0) {
+                  snapshot.data.data.result.isNotEmpty) {
                 categoryData = snapshot.data.data.result;
                 return getHealthReportToDisplayInBody();
               } else {

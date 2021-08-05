@@ -3,15 +3,19 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/add_new_plan/view/AddNewPlan.dart';
+import 'package:myfhb/add_provider_plan/view/AddProviderPlan.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/plan_wizard/view/pages/care_plan_page.dart';
-import 'package:myfhb/plan_wizard/view/pages/diet_plan_page.dart';
+import 'package:myfhb/plan_wizard/view/pages/care_plan/care_plan_page.dart';
+import 'package:myfhb/plan_wizard/view/pages/diet_plan/diet_plan_page.dart';
+import 'package:myfhb/plan_wizard/view/pages/diet_plan/tab_diet_main.dart';
 import 'package:myfhb/plan_wizard/view/pages/health_condition_page.dart';
+import 'package:myfhb/plan_wizard/view/widgets/plan_header.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
+import 'pages/care_plan/tab_care_main.dart';
 import 'widgets/plan_navigation_widget.dart';
 
 class PlanWizardScreen extends StatefulWidget {
@@ -21,7 +25,8 @@ class PlanWizardScreen extends StatefulWidget {
 
 class _PlanWizardScreenState extends State<PlanWizardScreen> {
   String feedbackCode = "MissingCondition";
-  String titleName = "Missing condition";
+  String titleName = "Missing Health Condition";
+  String hintText = "Missing condition";
 
   @override
   void initState() {
@@ -90,8 +95,8 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
                     },
                     children: [
                       HealthConditionPage(),
-                      CarePlanPage(),
-                      DietPlanPage(),
+                      TabCareMain(),
+                      TabDietMain(),
                     ],
                   ),
                 ),
@@ -113,7 +118,10 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
                             10.0.sp,
                           ),
                           child: Text(
-                            _getBottomText(planWizardViewModel.currentPage),
+                            _getBottomText(
+                                planWizardViewModel.currentPage,
+                                planWizardViewModel.currentTab,
+                                planWizardViewModel.currentTabDiet),
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 16.0.sp,
@@ -128,23 +136,32 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
                           ),
                         ),
                         onPressed: () {
-                          new AddNewPlan().addNewPlan(
-                              context, feedbackCode, titleName, (bool) {
-                            FlutterToast toast = new FlutterToast();
-                            if (bool) {
-                              toast.getToast(
-                                  "We've received your request and get back to you soon",
-                                  Colors.green);
-                            } else {
-                              toast.getToast("Please try again ", Colors.red);
-                            }
-                          });
+                          if(planWizardViewModel.currentPage==1 || planWizardViewModel.currentPage==2) {
+                            Get.to(AddProviderPlan());
+                          }else {
+                            new AddNewPlan().addNewPlan(
+                                context, feedbackCode, titleName, hintText,
+                                    (bool) {
+                                  FlutterToast toast = new FlutterToast();
+                                  if (bool) {
+                                    toast.getToast(
+                                        "We've received your request and get back to you soon",
+                                        Colors.green);
+                                  } else {
+                                    toast.getToast(
+                                        "Please try again ", Colors.red);
+                                  }
+                                });
+                          }
                         },
                         borderSide: BorderSide(color: Colors.white),
                         color: Colors.white,
                         textColor: Colors.white,
                         child: Text(
-                          _getBottomButtonText(planWizardViewModel.currentPage),
+                          _getBottomButtonText(
+                              planWizardViewModel.currentPage,
+                              planWizardViewModel.currentTab,
+                              planWizardViewModel.currentTabDiet),
                         ),
                       ),
                     ],
@@ -158,38 +175,40 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
     );
   }
 
-  String _getBottomText(int currentPage) {
+  String _getBottomText(int currentPage, int currentTab, int currentTabDiet) {
     switch (currentPage) {
       case 0:
         return strDontCondition;
         break;
       case 1:
-        return strDontPlan;
+        return currentTab == 0 ? strDontProvider : strDontProvider;
         break;
       case 2:
-        return strDontDietPlan;
+        return currentTabDiet == 0 ? strDontProvider : strDontProvider;
         break;
     }
   }
 
-  String _getBottomButtonText(int currentPage) {
+  String _getBottomButtonText(
+      int currentPage, int currentTab, int currentTabDiet) {
     switch (currentPage) {
       case 0:
         feedbackCode = "MissingCondition";
-        titleName = "Missing condition";
-        return strLetsAdd;
+        titleName = strDontCondition;
+        hintText = strHintHealth;
+        return strTellToUs;
         break;
       case 1:
         feedbackCode = "MissingCarePlan";
-        titleName = "Missing care plan";
-
-        return strTellToUs;
+        titleName = strDontPlan;
+        hintText = strHintCarePlan;
+        return currentTab == 0 ? strAdd : strTellToUs;
         break;
       case 2:
-        titleName = "Missing diet plan";
-
         feedbackCode = "MissingDietPlan";
-        return strTellToUs;
+        titleName = strDontDietPlan;
+        hintText = strHintDietPlan;
+        return currentTabDiet == 0 ? strAdd : strTellToUs;
         break;
     }
   }

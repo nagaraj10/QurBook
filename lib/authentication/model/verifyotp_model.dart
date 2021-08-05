@@ -10,9 +10,9 @@ class VerifyOTPModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['verificationCode'] = this.verificationCode;
-    data['phoneNumber'] = this.phoneNumber;
+    final data = <String, dynamic>{};
+    data['verificationCode'] = verificationCode;
+    data['phoneNumber'] = phoneNumber;
     return data;
   }
 }

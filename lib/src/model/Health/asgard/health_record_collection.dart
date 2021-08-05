@@ -23,13 +23,13 @@ class HealthRecordCollection {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['fileType'] = this.fileType;
-    data['healthRecordUrl'] = this.healthRecordUrl;
-    data['isActive'] = this.isActive;
-    data['createdOn'] = this.createdOn;
-    data['createdBy'] = this.createdBy;
+    final data = Map<String, dynamic>();
+    data['id'] = id;
+    data['fileType'] = fileType;
+    data['healthRecordUrl'] = healthRecordUrl;
+    data['isActive'] = isActive;
+    data['createdOn'] = createdOn;
+    data['createdBy'] = createdBy;
     return data;
   }
 }

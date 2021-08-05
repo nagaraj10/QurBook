@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
+import '../src/utils/FHBUtils.dart';
+import '../widgets/GradientAppBar.dart';
 
-import 'package:myfhb/constants/variable_constant.dart' as variable;
+import '../constants/variable_constant.dart' as variable;
 
 
 class MyFhbNotifications extends StatefulWidget {

@@ -1,6 +1,6 @@
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/src/model/bot/button_model.dart';
-import 'package:myfhb/src/model/bot/video_links.dart';
+import '../../../constants/fhb_parameters.dart' as parameters;
+import 'button_model.dart';
+import 'video_links.dart';
 
 class SpeechModelResponse {
   String recipientId;
@@ -39,15 +39,15 @@ class SpeechModelResponse {
     searchURL = json[parameters.strSearchUrl];
     lang = json[parameters.strLanguage];
     if (json[parameters.strButtons] != null) {
-      buttons = new List<Buttons>();
+      buttons = List<Buttons>();
       json[parameters.strButtons].forEach((v) {
-        buttons.add(new Buttons.fromJson(v));
+        buttons.add(Buttons.fromJson(v));
       });
     }
     if (json[parameters.strVideoLinks] != null) {
-      videoLinks = new List<VideoLinks>();
+      videoLinks = <VideoLinks>[];
       json[parameters.strVideoLinks].forEach((v) {
-        videoLinks.add(new VideoLinks.fromJson(v));
+        videoLinks.add(VideoLinks.fromJson(v));
       });
     }
     redirect = json[parameters.strRedirect];
@@ -57,20 +57,19 @@ class SpeechModelResponse {
 
   //getter
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[parameters.strReceiptId] = this.recipientId;
-    data[parameters.strText] = this.text;
-    data[parameters.strEndOfConv] = this.endOfConv;
-    data[parameters.strSpeechImageURL] = this.imageURL;
-    data[parameters.strSearchUrl] = this.searchURL;
-    data[parameters.strLanguage] = this.lang;
-    if (this.buttons != null) {
-      data[parameters.strButtons] =
-          this.buttons.map((v) => v.toJson()).toList();
+    final data = <String, dynamic>{};
+    data[parameters.strReceiptId] = recipientId;
+    data[parameters.strText] = text;
+    data[parameters.strEndOfConv] = endOfConv;
+    data[parameters.strSpeechImageURL] = imageURL;
+    data[parameters.strSearchUrl] = searchURL;
+    data[parameters.strLanguage] = lang;
+    if (buttons != null) {
+      data[parameters.strButtons] = buttons.map((v) => v.toJson()).toList();
     }
-    if (this.videoLinks != null) {
+    if (videoLinks != null) {
       data[parameters.strVideoLinks] =
-          this.videoLinks.map((v) => v.toJson()).toList();
+          videoLinks.map((v) => v.toJson()).toList();
     }
     data[parameters.strRedirect] = this.redirect;
     data[parameters.strEnableMic] = this.enableMic;

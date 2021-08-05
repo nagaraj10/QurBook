@@ -380,6 +380,7 @@ class MainActivity : FlutterActivity() {
         patPic = intent.getStringExtra(getString(R.string.pat_pic))
         val message = intent.getStringExtra(getString(R.string.message))
         var externalLink = intent.getStringExtra(Constants.PROB_EXTERNAL_LINK)
+        var planId = intent.getStringExtra(Constants.PROP_PLANID)
         if (sharedValue != null && sharedValue == "chat") {
             sharedValue = "$sharedValue"
         } else if (externalLink != null && externalLink != "") {
@@ -404,25 +405,34 @@ class MainActivity : FlutterActivity() {
                 sharedValue = "$sharedValue&${providerReqId}&${"rejected"}"
             }
         } else if (data != null && ((data == "DoctorPatientAssociation") || (data == "QurplanCargiverPatientAssociation"))) {
-            sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${"$doctorID|$docName|$docPic|$patId|$patName|$patPic|$message"}"
+            sharedValue =
+                "${Constants.PROP_ACK}&${redirect_to!!}&${"$doctorID|$docName|$docPic|$patId|$patName|$patPic|$message"}"
         } else if (data != null && data == "MissingActivitiesReminder") {
             sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${EVEId}"
+        } else if ((planId != null && planId != "") && (templateName != null && templateName != "")) {
+            if (sharedValue == Constants.PROP_RENEW) {
+                sharedValue = "$sharedValue&${planId}&${"$templateName"}"
+            }
         } else {
             if (HRMId != null && HRMId != "") {
                 sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${HRMId}"
             } else if (data != null) {
                 sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${data!!}"
             } else {
-                if (redirect_to.contains("sheela")) {
-                    var redirectArray = redirect_to.split("|")
-                    if (redirectArray.size > 1 && redirectArray[1] == "pushMessage") {
-                        sharedValue = "${Constants.PROP_ACK}&${"sheela"}&${"$rawTitle|$rawBody"}"
-                    }else{
+                if (redirect_to != null) {
+                    if (redirect_to.contains("sheela")) {
+                        var redirectArray = redirect_to.split("|")
+                        if (redirectArray.size > 1 && redirectArray[1] == "pushMessage") {
+                            sharedValue =
+                                "${Constants.PROP_ACK}&${"sheela"}&${"$rawTitle|$rawBody"}"
+                        } else {
+                            sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${""}"
+                        }
+                    } else {
                         sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${""}"
                     }
-                } else {
-                    sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${""}"
                 }
+
 
             }
 

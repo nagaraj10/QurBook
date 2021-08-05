@@ -28,6 +28,7 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'dart:convert' as convert;
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/common/CommonConstants.dart';
 
 class TelehealthProviders extends StatefulWidget {
   static _TelehealthProvidersState of(BuildContext context) =>
@@ -91,10 +92,15 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
   @override
   Widget build(BuildContext context) {
     if (_selectedIndex == 0 && _isCancelDialogShouldShown) {
-      Future.delayed(Duration(seconds: 5), () {
-        //* show cancel app. dialog
-        showCanelAppointmentPromptToUser(context);
-      });
+      if(CommonConstants.showNotificationdialog) {
+        CommonConstants.showNotificationdialog=false;
+
+            Future.delayed(Duration(seconds: 5), () {
+          //* show cancel app. dialog
+
+          showCanelAppointmentPromptToUser(context);
+        });
+      }
     }
     return Scaffold(
       backgroundColor: const Color(0xFFf7f6f5),
@@ -198,19 +204,19 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
   Widget getChatIcon(String icon) {
     int count = 0;
     String targetID = PreferenceUtil.getStringValue(KEY_USERID);
-    return StreamBuilder<QuerySnapshot>(
-        stream: Firestore.instance
+    return StreamBuilder<QuerySnapshot<Map<dynamic, dynamic>>>(
+        stream: FirebaseFirestore.instance
             .collection(STR_CHAT_LIST)
-            .document(targetID)
+            .doc(targetID)
             .collection(STR_USER_LIST)
             .snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        builder: (BuildContext context, snapshot) {
           if (snapshot.hasData) {
             count = 0;
-            snapshot.data.documents.toList().forEach((element) {
-              if (element.data[STR_IS_READ_COUNT] != null &&
-                  element.data[STR_IS_READ_COUNT] != '') {
-                count = count + element.data[STR_IS_READ_COUNT];
+            snapshot.data.docs.forEach((element) {
+              if (element.data()[STR_IS_READ_COUNT] != null &&
+                  element.data()[STR_IS_READ_COUNT] != '') {
+                count = count + element.data()[STR_IS_READ_COUNT];
               }
             });
             return BadgeIcon(
@@ -276,6 +282,7 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
                       child: Text(parameters.Yes),
                       onPressed: () async {
                         //call the appointment cancel api
+                        CommonConstants.showNotificationdialog=true;
                         FlutterToast toast = new FlutterToast();
                         _isCancelDialogShouldShown = false;
                         Navigator.of(context).pop(true);
@@ -294,6 +301,9 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
                               .updateNsActionStatus(body)
                               .then((data) {
                             if (data != null && data['isSuccess']) {
+                              setState(() {
+
+                              });
                             } else {}
                           });
                         } else {
@@ -305,6 +315,7 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
                     FlatButton(
                         child: Text(parameters.No),
                         onPressed: () {
+                          CommonConstants.showNotificationdialog=true;
                           _isCancelDialogShouldShown = false;
                           Navigator.of(context).pop(false);
                         }),

@@ -1,4 +1,4 @@
-import 'package:myfhb/add_address/models/place.dart';
+import '../../add_address/models/place.dart';
 
 class ConfirmLocationArguments {
   Place place;

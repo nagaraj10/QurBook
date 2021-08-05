@@ -7,35 +7,36 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
-import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
-import 'package:myfhb/authentication/view/login_screen.dart';
-import 'package:myfhb/colors/fhb_colors.dart';
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/common/CommonDialogBox.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/common/SwitchProfile.dart';
-import 'package:myfhb/common/errors_widget.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as constants;
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/landing/view/landing_arguments.dart';
-import 'package:myfhb/landing/view_model/landing_view_model.dart';
-import 'package:myfhb/reminders/QurPlanReminders.dart';
-import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
-import 'package:myfhb/src/model/user/MyProfileModel.dart';
-import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
-import 'package:myfhb/src/ui/MyRecord.dart';
-import 'package:myfhb/src/ui/MyRecordsArguments.dart';
-import 'package:myfhb/src/ui/bot/SuperMaya.dart';
-import 'package:myfhb/src/ui/bot/common/botutils.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/telehealth/features/appointments/view/appointmentsMain.dart';
-import 'package:myfhb/telehealth/features/chat/view/BadgeIcon.dart';
-import 'package:myfhb/telehealth/features/chat/view/home.dart';
-import 'package:myfhb/video_call/model/NotificationModel.dart';
+import '../../add_family_user_info/bloc/add_family_user_info_bloc.dart';
+import '../../add_family_user_info/services/add_family_user_info_repository.dart';
+import '../../authentication/view/login_screen.dart';
+import '../../colors/fhb_colors.dart';
+import '../../common/CommonConstants.dart';
+import '../../common/CommonDialogBox.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
+import '../../common/CommonUtil.dart';
+import '../../common/PreferenceUtil.dart';
+import '../../common/SwitchProfile.dart';
+import '../../common/errors_widget.dart';
+import '../../constants/fhb_constants.dart' as constants;
+import '../../constants/fhb_constants.dart' as Constants;
+import '../../constants/variable_constant.dart' as variable;
+import 'landing_arguments.dart';
+import '../view_model/landing_view_model.dart';
+import '../../reminders/QurPlanReminders.dart';
+import '../../src/model/GetDeviceSelectionModel.dart';
+import '../../src/model/user/MyProfileModel.dart';
+import '../../src/resources/repository/health/HealthReportListForUserRepository.dart';
+import '../../src/ui/MyRecord.dart';
+import '../../src/ui/MyRecordsArguments.dart';
+import '../../src/ui/bot/SuperMaya.dart';
+import '../../src/ui/bot/common/botutils.dart';
+import '../../src/utils/colors_utils.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
+import '../../telehealth/features/appointments/view/appointmentsMain.dart';
+import '../../telehealth/features/chat/view/BadgeIcon.dart';
+import '../../telehealth/features/chat/view/home.dart';
+import '../../video_call/model/NotificationModel.dart';
 import 'package:provider/provider.dart';
 
 import 'widgets/home_widget.dart';
@@ -45,7 +46,7 @@ class LandingScreen extends StatefulWidget {
   static _LandingScreenState of(BuildContext context) =>
       context.findAncestorStateOfType<State<LandingScreen>>();
 
-  LandingScreen({
+  const LandingScreen({
     this.landingArguments,
   });
 
@@ -64,7 +65,7 @@ class _LandingScreenState extends State<LandingScreen> {
   Future profileData;
   File imageURIProfile;
   LandingViewModel landingViewModel;
-  CommonUtil commonUtil = new CommonUtil();
+  CommonUtil commonUtil = CommonUtil();
 
   HealthReportListForUserRepository healthReportListForUserRepository =
       HealthReportListForUserRepository();
@@ -83,7 +84,7 @@ class _LandingScreenState extends State<LandingScreen> {
     QurPlanReminders.getTheRemindersFromAPI();
     callImportantsMethod();
 
-    String profilebanner =
+    var profilebanner =
         PreferenceUtil.getStringValue(constants.KEY_DASHBOARD_BANNER);
     if (profilebanner != null) {
       imageURIProfile = File(profilebanner);
@@ -111,14 +112,44 @@ class _LandingScreenState extends State<LandingScreen> {
 
   changeTabToAppointments() async {
     try {
-      NotificationModel notificationData =
-          await PreferenceUtil.getNotifiationData();
+      var notificationData = await PreferenceUtil.getNotifiationData();
       if (notificationData.redirect == 'appointmentList') {
         landingViewModel.updateTabIndex(3);
         await PreferenceUtil.removeNotificationData();
       }
     } catch (e) {
       print(e.toString());
+    }
+  }
+
+  Future<bool> _onBackPressed() {
+    if (landingViewModel.currentTabIndex != 0) {
+      landingViewModel.updateTabIndex(0);
+      return Future.value(false);
+    } else {
+      return showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                content: Text('Do you want to exit for now?'),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text('CANCEL'),
+                    onPressed: () {
+                      Navigator.of(context).pop(false);
+                    },
+                  ),
+                  FlatButton(
+                    child: Text('OK'),
+                    onPressed: () {
+                      Navigator.of(context).pop(true);
+                    },
+                  )
+                ],
+              );
+            },
+          ) ??
+          false;
     }
   }
 
@@ -136,112 +167,111 @@ class _LandingScreenState extends State<LandingScreen> {
     }
     return FutureBuilder<MyProfileModel>(
       future: profileData,
-      builder: (BuildContext context, snapshot) {
+      builder: (context, snapshot) {
         return Scaffold(
           key: _scaffoldKey,
           backgroundColor: const Color(bgColorContainer),
-          body: Stack(
-            fit: StackFit.expand,
-            children: [
-              Column(
-                children: [
-                  Visibility(
-                    visible: !landingViewModel.isSearchVisible,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.centerLeft,
-                          end: Alignment.centerRight,
-                          colors: <Color>[
-                            Color(CommonUtil().getMyPrimaryColor()),
-                            Color(CommonUtil().getMyGredientColor()),
-                          ],
-                          stops: [0.3, 1.0],
+          body: WillPopScope(
+            onWillPop: _onBackPressed,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                Column(
+                  children: [
+                    Visibility(
+                      visible: !landingViewModel.isSearchVisible,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                            colors: <Color>[
+                              Color(CommonUtil().getMyPrimaryColor()),
+                              Color(CommonUtil().getMyGredientColor()),
+                            ],
+                            stops: [0.3, 1.0],
+                          ),
+                          // color: Colors.white,
                         ),
-                        // color: Colors.white,
-                      ),
-                      child: SafeArea(
-                        child: Row(
-                          children: <Widget>[
-                            Material(
-                              color: Colors.transparent,
-                              child: IconButton(
-                                icon: const Icon(
-                                  Icons.menu_rounded,
-                                ),
-                                color: Colors.white,
-                                iconSize: 24.0.sp,
-                                onPressed: () {
-                                  _scaffoldKey.currentState.openDrawer();
-                                },
-                              ),
-                            ),
-                            Expanded(
-                              child: getAppBarTitle(),
-                            ),
-                            Visibility(
-                              visible: landingViewModel.currentTabIndex == 4,
-                              child: Padding(
-                                padding: EdgeInsets.only(
-                                  right: 5.0.w,
-                                ),
-                                child: IconWidget(
-                                  icon: Icons.search,
-                                  colors: Colors.white,
-                                  size: 30.0.sp,
-                                  onTap: () {
-                                    landingViewModel?.changeSearchBar(
-                                      isEnabled: true,
-                                    );
+                        child: SafeArea(
+                          child: Row(
+                            children: <Widget>[
+                              Material(
+                                color: Colors.transparent,
+                                child: IconButton(
+                                  icon: const Icon(
+                                    Icons.menu_rounded,
+                                  ),
+                                  color: Colors.white,
+                                  iconSize: 24.0.sp,
+                                  onPressed: () {
+                                    _scaffoldKey.currentState.openDrawer();
                                   },
                                 ),
                               ),
-                            ),
-                            Center(
-                              child: CommonUtil().getNotificationIcon(
-                                context,
-                                color: Colors.white,
+                              Expanded(
+                                child: getAppBarTitle(),
                               ),
-                            ),
-                            SwitchProfile().buildActions(
-                              context,
-                              _key,
-                              () {
-                                profileData = getMyProfile();
-                                landingViewModel.getQurPlanDashBoard(
-                                    needNotify: true);
-                                setState(() {});
-                                (context as Element).markNeedsBuild();
-                              },
-                              true,
-                            ),
-                          ],
+                              Visibility(
+                                visible: landingViewModel.currentTabIndex == 4,
+                                child: Padding(
+                                  padding: EdgeInsets.only(
+                                    right: 5.0.w,
+                                  ),
+                                  child: IconWidget(
+                                    icon: Icons.search,
+                                    colors: Colors.white,
+                                    size: 30.0.sp,
+                                    onTap: () {
+                                      landingViewModel?.changeSearchBar(
+                                        isEnabled: true,
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                              Center(
+                                child: CommonUtil().getNotificationIcon(
+                                  context,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              SwitchProfile().buildActions(
+                                context,
+                                _key,
+                                () {
+                                  profileData = getMyProfile();
+                                  landingViewModel.getQurPlanDashBoard(
+                                      needNotify: true);
+                                  setState(() {});
+                                  (context as Element).markNeedsBuild();
+                                },
+                                true,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: (snapshot.connectionState == ConnectionState.waiting)
-                        ? Center(
-                            child: CircularProgressIndicator(
-                              backgroundColor:
-                                  Color(CommonUtil().getMyPrimaryColor()),
-                            ),
-                          )
-                        : (snapshot.hasError)
-                            ? Center(
-                                child: ErrorsWidget(),
-                              )
-                            : getCurrentTab(),
-                  ),
-                ],
-              ),
-            ],
+                    Expanded(
+                      child:
+                          (snapshot.connectionState == ConnectionState.waiting)
+                              ? CommonCircularIndicator()
+                              : (snapshot.hasError)
+                                  ? Center(
+                                      child: ErrorsWidget(),
+                                    )
+                                  : getCurrentTab(),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
           drawer: NavigationDrawer(
             myProfile: myProfile,
             moveToLoginPage: moveToLoginPage,
-            refresh: (bool userChanged) => refresh(
+            refresh: (userChanged) => refresh(
               userChanged: userChanged,
             ),
           ),
@@ -353,20 +383,20 @@ class _LandingScreenState extends State<LandingScreen> {
 
   Widget getChatIcon() {
     var count = 0;
-    final targetID = PreferenceUtil.getStringValue(constants.KEY_USERID);
-    return StreamBuilder<QuerySnapshot>(
-      stream: Firestore.instance
+    var targetID = PreferenceUtil.getStringValue(constants.KEY_USERID);
+    return StreamBuilder<QuerySnapshot<Map<dynamic, dynamic>>>(
+      stream: FirebaseFirestore.instance
           .collection(constants.STR_CHAT_LIST)
-          .document(targetID)
+          .doc(targetID)
           .collection(constants.STR_USER_LIST)
           .snapshots(),
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+      builder: (context, snapshot) {
         if (snapshot.hasData) {
           count = 0;
-          snapshot.data.documents.toList().forEach((element) {
-            if (element.data[constants.STR_IS_READ_COUNT] != null &&
-                element.data[constants.STR_IS_READ_COUNT] != '') {
-              count = count + element.data[constants.STR_IS_READ_COUNT];
+          snapshot.data.docs.forEach((element) {
+            if (element.data()[constants.STR_IS_READ_COUNT] != null &&
+                element.data()[constants.STR_IS_READ_COUNT] != '') {
+              count = count + element.data()[constants.STR_IS_READ_COUNT];
             }
           });
           return BadgeIcon(
@@ -400,7 +430,7 @@ class _LandingScreenState extends State<LandingScreen> {
   }
 
   Widget getCurrentTab() {
-    Function onBackPressed = () {
+    final Function onBackPressed = () {
       landingViewModel.updateTabIndex(0);
     };
     Widget landingTab;
@@ -426,13 +456,13 @@ class _LandingScreenState extends State<LandingScreen> {
       case 4:
         landingTab = MyRecords(
           isHome: true,
-          argument: MyRecordsArgument(),
+          argument: MyRecordsArgument(fromClass: 'landing'),
           onBackPressed: onBackPressed,
         );
         break;
       default:
         landingTab = HomeWidget(
-          refresh: (bool userChanged) => refresh(
+          refresh: (userChanged) => refresh(
             userChanged: userChanged,
           ),
         );
@@ -489,7 +519,7 @@ class _LandingScreenState extends State<LandingScreen> {
   }
 
   Future<MyProfileModel> getMyProfile() async {
-    var userId = PreferenceUtil.getStringValue(constants.KEY_USERID);
+    final userId = PreferenceUtil.getStringValue(constants.KEY_USERID);
     if (userId != null && userId.isNotEmpty) {
       await addFamilyUserInfoRepository
           .getMyProfileInfoNew(userId)
@@ -508,7 +538,7 @@ class _LandingScreenState extends State<LandingScreen> {
         Navigator.pushAndRemoveUntil(
           Get.context,
           MaterialPageRoute(
-            builder: (BuildContext context) => PatientSignInScreen(),
+            builder: (context) => PatientSignInScreen(),
           ),
           (route) => false,
         );
@@ -526,7 +556,7 @@ class _LandingScreenState extends State<LandingScreen> {
   }
 
   void dbInitialize() {
-    var commonConstants = new CommonConstants();
+    final commonConstants = CommonConstants();
     commonConstants.getCountryMetrics();
   }
 
@@ -541,20 +571,20 @@ class _LandingScreenState extends State<LandingScreen> {
     } catch (e) {}
 
     try {
-      await new CommonUtil().getMedicalPreference();
+      await CommonUtil().getMedicalPreference();
     } catch (e) {}
 
     try {
-      new CommonDialogBox().getCategoryList();
+      CommonDialogBox().getCategoryList();
       getFamilyRelationAndMediaType();
     } catch (e) {}
 
     try {
-      AddFamilyUserInfoBloc addFamilyUserInfoBloc = new AddFamilyUserInfoBloc();
-      addFamilyUserInfoBloc.getDeviceSelectionValues().then((value) {});
+      final addFamilyUserInfoBloc = AddFamilyUserInfoBloc();
+      await addFamilyUserInfoBloc.getDeviceSelectionValues().then((value) {});
     } catch (e) {}
     try {
-      getDeviceSelectionValues().then((value) => {});
+      await getDeviceSelectionValues().then((value) => {});
     } catch (e) {}
   }
 
@@ -592,11 +622,11 @@ class _LandingScreenState extends State<LandingScreen> {
           if (selectionResult.result[0].profileSetting != null) {
             if (selectionResult.result[0].profileSetting.preferred_language !=
                 null) {
-              String preferredLanguage =
+              final preferredLanguage =
                   selectionResult.result[0].profileSetting.preferred_language;
-              String currentLanguage = '';
-              if (preferredLanguage != "undef") {
-                currentLanguage = preferredLanguage.split("-").first;
+              var currentLanguage = '';
+              if (preferredLanguage != 'undef') {
+                currentLanguage = preferredLanguage.split('-').first;
               } else {
                 currentLanguage = 'en';
               }
@@ -614,26 +644,22 @@ class _LandingScreenState extends State<LandingScreen> {
             } else {
               PreferenceUtil.saveTheme(
                   Constants.keyPriColor,
-                  PreferenceUtil.getSavedTheme(Constants.keyPriColor) != null
-                      ? PreferenceUtil.getSavedTheme(Constants.keyPriColor)
-                      : 0xff5f0cf9);
+                  PreferenceUtil.getSavedTheme(Constants.keyPriColor) ??
+                      0xff5f0cf9);
               PreferenceUtil.saveTheme(
                   Constants.keyGreyColor,
-                  PreferenceUtil.getSavedTheme(Constants.keyGreyColor) != null
-                      ? PreferenceUtil.getSavedTheme(Constants.keyGreyColor)
-                      : 0xff9929ea);
+                  PreferenceUtil.getSavedTheme(Constants.keyGreyColor) ??
+                      0xff9929ea);
             }
           } else {
             PreferenceUtil.saveTheme(
                 Constants.keyPriColor,
-                PreferenceUtil.getSavedTheme(Constants.keyPriColor) != null
-                    ? PreferenceUtil.getSavedTheme(Constants.keyPriColor)
-                    : 0xff5f0cf9);
+                PreferenceUtil.getSavedTheme(Constants.keyPriColor) ??
+                    0xff5f0cf9);
             PreferenceUtil.saveTheme(
                 Constants.keyGreyColor,
-                PreferenceUtil.getSavedTheme(Constants.keyGreyColor) != null
-                    ? PreferenceUtil.getSavedTheme(Constants.keyGreyColor)
-                    : 0xff9929ea);
+                PreferenceUtil.getSavedTheme(Constants.keyGreyColor) ??
+                    0xff9929ea);
           }
         } else {
           bpMonitor = true;
@@ -655,16 +681,16 @@ class _LandingScreenState extends State<LandingScreen> {
 
   void getFamilyRelationAndMediaType() async {
     try {
-      await new CommonUtil().getAllCustomRoles();
+      await CommonUtil().getAllCustomRoles();
     } catch (e) {}
     try {
-      await new CommonUtil().getMediaTypes();
+      await CommonUtil().getMediaTypes();
     } catch (e) {}
   }
 
   void getProfileData() async {
     try {
-      await new CommonUtil().getUserProfileData();
+      await CommonUtil().getUserProfileData();
     } catch (e) {}
   }
 }

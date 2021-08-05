@@ -1,7 +1,7 @@
 library fhb_constants;
 
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:myfhb/common/CommonUtil.dart';
+import '../common/CommonUtil.dart';
 
 String BASE_URL = CommonUtil.BASE_URL_FROM_RES;
 
@@ -196,8 +196,9 @@ const String Subscribe = 'Subscribe';
 const String GoToRegimentDescription =
     'Tap here to see your updated Regimen for each Plan’s subscription';
 const String SymptomsDescription = 'Tap here to view Symptoms list';
-const String DailyScheduleDescription = 'Tap here to set your Daily Schedule';
+const String DailyScheduleDescription = 'Tap here to make changes to the order of activities';
 const String Schedule = 'Schedule';
+const String RegimenSettings = 'Settings';
 const String LogActivity = 'Log Activity';
 const String CardTap =
     'Tap on the card or Tick mark on it to mark your activity accomplishment';
@@ -278,10 +279,10 @@ const String preferred_descrip =
     'We allow only one preferred provider for a user. To remove your preference, please set another Provider as Preferred.';
 
 //ICONS LINK
-const String NOTES_ICON_LINK = "assets/icons/notes.png";
-const String RECORDS_ICON_LINK = "assets/navicons/my_records.png";
-const String VOICE_ICON_LINK = "assets/icons/voice-notes.png";
-const String DEVICE_ICON_LINK = "assets/navicons/reading.png";
+const String NOTES_ICON_LINK = 'assets/icons/notes.png';
+const String RECORDS_ICON_LINK = 'assets/navicons/my_records.png';
+const String VOICE_ICON_LINK = 'assets/icons/voice-notes.png';
+const String DEVICE_ICON_LINK = 'assets/navicons/reading.png';
 
 const String AddAppointment = 'Add Appointment';
 const String HospitalName = 'Hospital Name';
@@ -330,16 +331,16 @@ const String KEY_EMAIL = 'email';
 //For Google Fit Integration
 const String asgurduserID = '49cdc4be-afd9-419e-b3f9-1bd35207c74f';
 
-const String activateGF = "activateGF"; // activate googleFit
-const String activateHK = "activateHK"; // activate appleHealth
-const String isFirstTym = "FirsTym";
+const String activateGF = 'activateGF'; // activate googleFit
+const String activateHK = 'activateHK'; // activate appleHealth
+const String isFirstTym = 'FirsTym';
 const String isHealthFirstTime =
-    "HealthFirstTime"; // Activating HealthKit For First Time
-const String bpMon = "bpMon";
-const String glMon = "GLMon";
-const String oxyMon = "OxyMon";
-const String thMon = "THMon";
-const String wsMon = "WSMon";
+    'HealthFirstTime'; // Activating HealthKit For First Time
+const String bpMon = 'bpMon';
+const String glMon = 'GLMon';
+const String oxyMon = 'OxyMon';
+const String thMon = 'THMon';
+const String wsMon = 'WSMon';
 
 //// Check Internet connectivity
 const String failed_wifi = "Failed to get Wifi Name";
@@ -447,8 +448,6 @@ const PLAY_STORE_URL =
 const String STR_HOS_ID = 'Hospital IDs';
 const String STR_OTHER_ID = 'Other IDs';
 const String STR_INSURE_ID = 'Insurance IDs';
-const String noRegimentData =
-    'No Regiments data available for the selected date';
 const String noRegimentScheduleData =
     'No Activities data available for the selected date';
 const String noRegimentSymptomsData =
@@ -518,25 +517,36 @@ const String strSheelaG = 'Sheela';
 const String strAppointment = 'Appointments';
 const String strNiceDay = 'Have a nice day';
 const String strRegimen = 'Regimen';
+const String strManageActivities = 'Enable / Disable Activities';
 const String strDevices = 'Devices';
 const String strHospitals = 'Hospitals';
 const String strMyPlans = 'My Care Plans';
 const String strCarePlans = 'Care Plans';
-const String strHealthcon = 'Health Condition';
+const String strHealthcon = 'Health Conditions';
+const String strCarePlansLine = 'Care\nPlans';
+const String strHealthconLine = 'Health\nConditions';
+const String strDietPlanLine = 'Diet\nPlans';
 const String strPlans = 'Plans';
 const String strSelectHealth = 'Select your Health Conditions';
 const String strSelectCare = 'Select your Care Plan';
 const String strSelectTherapeutic = 'Select your Therapeutic Diet';
 const String strDontCondition = 'Don\'t find your condition?';
-const String strDontPlan = 'Don\'t find your plan?';
+const String strDontPlan = 'Don\'t find your care plan?';
 const String strDontDietPlan = 'Don\'t find your diet plan?';
 const String strSearchHealth = 'Search health condition';
 const String strPlanHospitalDiet = 'Search Plan/Hospital';
 const String strSearchDietPlan = 'Search Diet Plan';
 const String strLetsAdd = 'Let\'s add it';
-const String strTellToUs = 'Tell to us';
+const String strTellToUs = 'Tell us';
 const String strDietPlan = 'Diet Plans';
 const String strNoHealthConditions = 'No Health Conditions Available';
+const String strHintHealth = 'Tell us more about your health condition';
+const String strHintCarePlan = 'Tell us more about your care plan';
+const String strHintDietPlan = 'Tell us more about your diet plan';
+
+const String strDontProvider = 'Don\'t find your provider?';
+
+const String strAdd = 'Add';
 
 const strUploading = 'Uploading...';
 const strSubscribe = 'Subscribe';
@@ -575,7 +585,6 @@ const String strInviteErrorMsg = 'Invite sending failed. Please try again';
 
 const String STR_NOTES_HINT =
     "Provide details on existing illness, allergies, history of the disease and medication taken";
-const String STR_HINT_PLAN = "Tell us more about your expectations";
 
 const String STR_YES = 'yes';
 const String STR_NO = 'no';
@@ -583,7 +592,7 @@ const String STR_NO = 'no';
 FirebaseAnalytics _firebaseAnalytics = FirebaseAnalytics();
 var mInitialTime;
 
-Future<void> fbaLog({String eveName, dynamic eveParams}) async {
+Future<void> fbaLog({String eveName, eveParams}) async {
   try {
     await _firebaseAnalytics.logEvent(
         name: eveName ?? 'qurbook_ns_event',

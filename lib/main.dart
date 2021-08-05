@@ -1,9 +1,22 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io' show Platform;
-
-import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
+import 'package:agora_rtc_engine/rtc_engine.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:myfhb/myPlan/view/myPlanDetail.dart';
+import 'package:myfhb/video_call/utils/rtc_engine.dart';
+import 'package:myfhb/widgets/checkout_page.dart';
+import 'IntroScreens/IntroductionScreen.dart';
+import 'add_provider_plan/service/PlanProviderViewModel.dart';
+import 'regiment/models/regiment_arguments.dart';
+//import 'package:myfhb/QurPlan/WelcomeScreens/qurplan_welcome_screen.dart';
+// import 'package:awesome_notifications/awesome_notifications.dart';
+import 'regiment/view_model/regiment_view_model.dart';
+import 'constants/fhb_parameters.dart' as parameters;
 import 'package:camera/camera.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -62,6 +75,49 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart' as provider;
 import 'package:provider/provider.dart';
 
+import 'authentication/service/authservice.dart';
+import 'common/DatabseUtil.dart';
+import 'common/PreferenceUtil.dart';
+import 'constants/fhb_constants.dart' as Constants;
+import 'constants/fhb_constants.dart';
+import 'constants/fhb_router.dart' as router;
+import 'constants/router_variable.dart' as routervariable;
+import 'constants/variable_constant.dart' as variable;
+import 'schedules/add_reminders.dart';
+import 'src/blocs/Category/CategoryListBlock.dart';
+import 'src/model/Category/catergory_result.dart';
+import 'src/model/home_screen_arguments.dart';
+import 'src/resources/network/ApiBaseHelper.dart';
+import 'src/ui/Dashboard.dart';
+import 'src/ui/MyRecord.dart';
+import 'src/ui/MyRecordsArguments.dart';
+import 'src/ui/SplashScreen.dart';
+import 'src/ui/NetworkScreen.dart';
+import 'src/ui/bot/view/ChatScreen.dart' as bot;
+import 'src/ui/bot/view/sheela_arguments.dart';
+import 'src/ui/bot/viewmodel/chatscreen_vm.dart';
+import 'src/utils/FHBUtils.dart';
+import 'src/utils/PageNavigator.dart';
+import 'telehealth/features/MyProvider/view/TelehealthProviders.dart';
+import 'telehealth/features/Notifications/services/notification_services.dart';
+import 'telehealth/features/Notifications/view/notification_main.dart';
+import 'telehealth/features/appointments/model/fetchAppointments/doctor.dart'
+    as doc;
+import 'telehealth/features/appointments/view/resheduleMain.dart';
+import 'telehealth/features/chat/view/chat.dart';
+import 'telehealth/features/chat/view/home.dart';
+import 'telehealth/features/chat/viewModel/ChatViewModel.dart';
+import 'telehealth/features/chat/viewModel/notificationController.dart';
+import 'video_call/pages/callmain.dart';
+import 'video_call/services/iOS_Notification_Handler.dart';
+import 'video_call/utils/callstatus.dart';
+import 'video_call/utils/hideprovider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart' as provider;
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'src/ui/bot/SuperMaya.dart';
+import 'constants/router_variable.dart' as router;
 import 'common/CommonConstants.dart';
 import 'common/CommonUtil.dart';
 import 'my_family/viewmodel/my_family_view_model.dart';
@@ -69,6 +125,11 @@ import 'src/ui/SplashScreen.dart';
 import 'src/ui/connectivity_bloc.dart';
 import 'telehealth/features/appointments/model/fetchAppointments/city.dart';
 import 'telehealth/features/appointments/model/fetchAppointments/past.dart';
+import 'src/utils/screenutils/screenutil.dart';
+import 'package:appsflyer_sdk/appsflyer_sdk.dart';
+import 'src/model/user/user_accounts_arguments.dart';
+import 'authentication/view_model/otp_view_model.dart';
+import 'landing/view_model/landing_view_model.dart';
 
 var firstCamera;
 List<CameraDescription> listOfCameras;
@@ -78,7 +139,8 @@ var routes;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final cameras = await availableCameras();
+  await Firebase.initializeApp();
+  var cameras = await availableCameras();
   listOfCameras = cameras;
 
   // Get a specific camera from the list of available cameras.
@@ -86,9 +148,9 @@ Future<void> main() async {
   routes = await router.setRouter(listOfCameras);
 
   //get secret from resource
-  List<dynamic> resList = [];
+  final resList = <dynamic>[];
   await CommonUtil.getResourceLoader().then((value) {
-    Map mSecretMap = value;
+    final Map mSecretMap = value;
     mSecretMap.values.forEach((element) {
       resList.add(element);
     });
@@ -117,21 +179,21 @@ Future<void> main() async {
   Map appsFlyerOptions;
   if (Platform.isIOS) {
     appsFlyerOptions = {
-      "afDevKey": 'wAZtv6sqho7WqLGgTAAqFV',
-      "afAppId": '1526444520',
-      "isDebug": true
+      'afDevKey': 'wAZtv6sqho7WqLGgTAAqFV',
+      'afAppId': '1526444520',
+      'isDebug': true
     };
   } else {
     appsFlyerOptions = {
-      "afDevKey": 'UJdqFKHff633D3TcaZ5d55',
-      "afAppId": '',
-      "isDebug": true
+      'afDevKey': 'UJdqFKHff633D3TcaZ5d55',
+      'afAppId': '',
+      'isDebug': true
     };
   }
 
-  AppsflyerSdk appsflyerSdk = AppsflyerSdk(appsFlyerOptions);
+  final appsflyerSdk = AppsflyerSdk(appsFlyerOptions);
 
-  appsflyerSdk.initSdk(
+  await appsflyerSdk.initSdk(
     registerConversionDataCallback: true,
     registerOnAppOpenAttributionCallback: true,
   );
@@ -144,8 +206,13 @@ Future<void> main() async {
   }
 
   // check if the app install on first time
-  CommonUtil().isFirstTime();
-
+  await CommonUtil().isFirstTime();
+  // SystemChrome.setSystemUIOverlayStyle(
+  //   const SystemUiOverlayStyle(
+  //     statusBarIconBrightness: Brightness.light,
+  //     statusBarBrightness: Brightness.light,
+  //   ),
+  // );
   runApp(
     provider.MultiProvider(
       providers: [
@@ -158,6 +225,12 @@ Future<void> main() async {
         provider.ChangeNotifierProvider<PlanWizardViewModel>(
           create: (_) => PlanWizardViewModel(),
         ),
+        provider.ChangeNotifierProvider<RTCEngineProvider>(
+          create: (_) => RTCEngineProvider(),
+        ),
+        provider.ChangeNotifierProvider<PlanProviderViewModel>(
+          create: (_) => PlanProviderViewModel(),
+        ),
       ],
       child: MyFHB(),
     ),
@@ -168,7 +241,7 @@ Future<void> main() async {
 }
 
 void saveToPreference() async {
-  PreferenceUtil.saveString(Constants.KEY_USERID_MAIN, Constants.userID)
+  await PreferenceUtil.saveString(Constants.KEY_USERID_MAIN, Constants.userID)
       .then((onValue) {
     PreferenceUtil.saveString(Constants.KEY_USERID, Constants.userID)
         .then((onValue) {
@@ -205,8 +278,8 @@ Widget buildError(BuildContext context, FlutterErrorDetails error) {
   return Scaffold(
     body: Center(
       child: Text(
-        "${error.library}",
-        style: Theme.of(context).textTheme.title,
+        '${error.library}',
+        style: Theme.of(context).textTheme.headline6,
       ),
     ),
   );
@@ -218,31 +291,30 @@ class MyFHB extends StatefulWidget {
 }
 
 class _MyFHBState extends State<MyFHB> {
-  int myPrimaryColor = new CommonUtil().getMyPrimaryColor();
+  int myPrimaryColor = CommonUtil().getMyPrimaryColor();
   static const platform = variable.version_platform;
   String _responseFromNative = variable.strWaitLoading;
   final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   static const secure_platform = variable.security;
-  static const nav_platform = const MethodChannel('navigation.channel');
+  static const nav_platform = MethodChannel('navigation.channel');
   String navRoute = '';
   bool isAlreadyLoaded = false;
   final Connectivity _connectivity = Connectivity();
   StreamSubscription<ConnectivityResult> _connectivitySubscription;
   bool _internetconnection = true;
-  var _connectionStatus = '';
-  FlutterToast toast = new FlutterToast();
+  FlutterToast toast = FlutterToast();
 
   /// event channel for listening ns
   static const stream =
-      const EventChannel('com.example.agoraflutterquickstart/stream');
-  StreamSubscription _timerSubscription = null;
-  String _msg = 'waiting for message';
-  ValueNotifier<String> _msgListener = ValueNotifier('');
+      EventChannel('com.example.agoraflutterquickstart/stream');
+  StreamSubscription _timerSubscription;
+  final String _msg = 'waiting for message';
+  final ValueNotifier<String> _msgListener = ValueNotifier('');
 
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   var globalContext;
   AuthService authService = AuthService();
-  ChatViewModel chatViewModel = new ChatViewModel();
+  ChatViewModel chatViewModel = ChatViewModel();
   bool isFirstTime;
   @override
   void initState() {
@@ -257,16 +329,17 @@ class _MyFHBState extends State<MyFHB> {
     getMyRoute();
     _enableTimer();
 
-    ApiBaseHelper apiBaseHelper = new ApiBaseHelper();
-    var res = apiBaseHelper.updateLastVisited();
+    var apiBaseHelper = ApiBaseHelper();
+    final res = apiBaseHelper.updateLastVisited();
     isAlreadyLoaded = true;
     if (Platform.isIOS) {
       // Push Notifications
-      final provider = IosNotificationHandler();
+      var provider = IosNotificationHandler();
       provider.setUpListerForTheNotification();
       provider.isAlreadyLoaded = true;
     }
-    FirebaseMessaging().onTokenRefresh.listen(CommonUtil().saveTokenToDatabase);
+    FirebaseMessaging.instance.onTokenRefresh
+        .listen(CommonUtil().saveTokenToDatabase);
 
     //gettingResponseFromNative();
     ///un comment this while on production mode for enabling security.
@@ -279,8 +352,7 @@ class _MyFHBState extends State<MyFHB> {
 
   CheckForShowingTheIntroScreens() async {
     try {
-      isFirstTime =
-          await PreferenceUtil.isKeyValid(Constants.KeyShowIntroScreens);
+      isFirstTime = PreferenceUtil.isKeyValid(Constants.KeyShowIntroScreens);
     } catch (e) {
       isFirstTime = false;
     }
@@ -293,9 +365,7 @@ class _MyFHBState extends State<MyFHB> {
   }
 
   void _enableTimer() {
-    if (_timerSubscription == null) {
-      _timerSubscription = stream.receiveBroadcastStream().listen(_updateTimer);
-    }
+    _timerSubscription ??= stream.receiveBroadcastStream().listen(_updateTimer);
   }
 
   void _disableTimer() {
@@ -309,9 +379,9 @@ class _MyFHBState extends State<MyFHB> {
     var doctorPic = '';
     var patientPic = '';
     _msgListener.value = _msg;
-    final String c_msg = msg as String;
-    if (c_msg.isNotEmpty || c_msg != null) {
-      if (c_msg == 'chat') {
+    final cMsg = msg as String;
+    if (cMsg.isNotEmpty || cMsg != null) {
+      if (cMsg == 'chat') {
         fbaLog(eveParams: {
           'eventTime': '${DateTime.now()}',
           'ns_type': 'chat',
@@ -319,14 +389,14 @@ class _MyFHBState extends State<MyFHB> {
         });
         Get.to(ChatHomeScreen());
       }
-      var passedValArr = c_msg.split('&');
+      final passedValArr = cMsg.split('&');
       if (passedValArr[0] == 'ack') {
-        var temp = passedValArr[1].split('|');
+        final temp = passedValArr[1].split('|');
         if (temp[0] == 'myRecords') {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
             'ns_type': 'myRecords',
-            'navigationPage': '${temp[1]}',
+            'navigationPage': temp[1],
           });
           CommonUtil()
               .navigateToMyRecordsCategory(temp[1], [passedValArr[2]], false);
@@ -337,9 +407,9 @@ class _MyFHBState extends State<MyFHB> {
             'navigationPage': 'Sheela Start Page',
           });
           if (passedValArr[2] != null && passedValArr[2].isNotEmpty) {
-            var rawTitle = passedValArr[2]?.split('|')[0];
-            var rawBody = passedValArr[2]?.split('|')[1];
-            String sheela_lang =
+            final rawTitle = passedValArr[2]?.split('|')[0];
+            final rawBody = passedValArr[2]?.split('|')[1];
+            var sheelaLang =
                 PreferenceUtil.getStringValue(Constants.SHEELA_LANG);
             if ((Provider.of<ChatScreenViewModel>(context, listen: false)
                         ?.conversations
@@ -348,12 +418,12 @@ class _MyFHBState extends State<MyFHB> {
                 0) {
               Provider.of<ChatScreenViewModel>(context, listen: false)
                   ?.startMayaAutomatically(message: rawBody);
-            } else if (sheela_lang != null && sheela_lang != '') {
+            } else if (sheelaLang != null && sheelaLang != '') {
               Get.toNamed(
                 routervariable.rt_Sheela,
                 arguments: SheelaArgument(
                   isSheelaAskForLang: false,
-                  langCode: sheela_lang,
+                  langCode: sheelaLang,
                   rawMessage: rawBody,
                 ),
               );
@@ -503,7 +573,7 @@ class _MyFHBState extends State<MyFHB> {
             'ns_type': 'initiate screen',
             'navigationPage': 'Chat Screen',
           });
-          var chatParsedData = passedValArr[2]?.split('|');
+          final chatParsedData = passedValArr[2]?.split('|');
           Get.to(Chat(
             peerId: chatParsedData[0],
             peerName: chatParsedData[1],
@@ -514,6 +584,14 @@ class _MyFHBState extends State<MyFHB> {
             isFromVideoCall: false,
             message: chatParsedData[6],
           )).then((value) =>
+              PageNavigator.goToPermanent(context, router.rt_Landing));
+        } else if (passedValArr[1] == 'mycart') {
+          fbaLog(eveParams: {
+            'eventTime': '${DateTime.now()}',
+            'ns_type': 'my cart',
+            'navigationPage': 'My Cart',
+          });
+          Get.to(CheckoutPage(isFromNotification: true)).then((value) =>
               PageNavigator.goToPermanent(context, router.rt_Landing));
         } else {
           fbaLog(eveParams: {
@@ -548,7 +626,7 @@ class _MyFHBState extends State<MyFHB> {
           'ns_type': 'DoctorRescheduling',
           'navigationPage': 'Reschedule screen',
         });
-        var body = {};
+        final body = {};
         body['templateName'] = passedValArr[5] ?? '';
         body['contextId'] = passedValArr[2] ?? '';
         Get.to(ResheduleMain(
@@ -580,17 +658,32 @@ class _MyFHBState extends State<MyFHB> {
               templateName: passedValArr[3] ?? ''),
         ));
       } else if (passedValArr[0] == 'accept' || passedValArr[0] == 'decline') {
-        var jsonInput = {};
+        final jsonInput = {};
         jsonInput['providerRequestId'] = passedValArr[1];
         jsonInput['action'] = passedValArr[2];
       } else if (passedValArr[0] == 'openurl') {
-        var urlInfo = passedValArr[1];
+        final urlInfo = passedValArr[1];
         fbaLog(eveParams: {
           'eventTime': '${DateTime.now()}',
           'ns_type': 'openurl',
           'navigationPage': 'Browser page',
         });
         CommonUtil().launchURL(urlInfo);
+      } else if (passedValArr[0] == 'Renew') {
+        final planid = passedValArr[1];
+        final template = passedValArr[2];
+        fbaLog(eveParams: {
+          'eventTime': '${DateTime.now()}',
+          'ns_type': 'myplan_deatails',
+          'navigationPage': 'My Plan Details',
+        });
+        Get.to(
+          MyPlanDetail(
+            packageId: planid,
+            showRenew: true,
+            templateName: template,
+          ),
+        );
       } else if (passedValArr[4] == 'call') {
         try {
           doctorPic = passedValArr[3];
@@ -627,7 +720,7 @@ class _MyFHBState extends State<MyFHB> {
   }
 
   getMyRoute() async {
-    var route = await nav_platform.invokeMethod("getMyRoute");
+    final route = await nav_platform.invokeMethod('getMyRoute');
     if (route != null) {
       setState(() {
         navRoute = route;
@@ -637,20 +730,20 @@ class _MyFHBState extends State<MyFHB> {
 
   void getProfileData() async {
     try {
-      await new CommonUtil().getUserProfileData();
+      await CommonUtil().getUserProfileData();
     } catch (e) {}
   }
 
   @override
   Widget build(BuildContext context) {
-    var nsSettingsForAndroid =
-        new AndroidInitializationSettings(variable.strLauncher);
-    var nsSettingsForIOS = new IOSInitializationSettings();
-    var platform = new InitializationSettings(
+    final nsSettingsForAndroid =
+        AndroidInitializationSettings(variable.strLauncher);
+    final nsSettingsForIOS = IOSInitializationSettings();
+    final platform = InitializationSettings(
         android: nsSettingsForAndroid, iOS: nsSettingsForIOS);
 
     Future notificationAction(String payload) async {
-      Navigator.push(
+      await Navigator.push(
           context, MaterialPageRoute(builder: (context) => AddReminder()));
     }
 
@@ -681,22 +774,21 @@ class _MyFHBState extends State<MyFHB> {
         ),
         provider.ChangeNotifierProvider<LandingViewModel>(
           create: (_) => LandingViewModel(),
-        ),provider.ChangeNotifierProvider<ShoppingCardProvider>(
+        ),
+        provider.ChangeNotifierProvider<ShoppingCardProvider>(
           create: (_) => ShoppingCardProvider(),
-        ),provider.ChangeNotifierProvider<CheckoutPageProvider>(
+        ),
+        provider.ChangeNotifierProvider<CheckoutPageProvider>(
           create: (_) => CheckoutPageProvider(),
         )
       ],
-      child: LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) {
-        return OrientationBuilder(
-            builder: (BuildContext context, Orientation orientation) {
+      child: LayoutBuilder(builder: (context, constraints) {
+        return OrientationBuilder(builder: (context, orientation) {
           ScreenUtil.init(
             constraints,
             designSize: orientation == Orientation.portrait
                 ? Size(411.4, 822.9)
                 : Size(822.9, 411.4),
-            allowFontScaling: false,
           );
           return MaterialApp(
             title: Constants.APP_NAME,
@@ -704,6 +796,9 @@ class _MyFHBState extends State<MyFHB> {
               fontFamily: variable.font_poppins,
               primaryColor: Color(myPrimaryColor),
               accentColor: Colors.white,
+              appBarTheme: Theme.of(context).appBarTheme.copyWith(
+                    brightness: Brightness.dark,
+                  ),
             ),
             //home: navRoute.isEmpty ? SplashScreen() : StartTheCall(),
             home: findHomeWidget(navRoute),
@@ -729,7 +824,7 @@ class _MyFHBState extends State<MyFHB> {
       return SplashScreen();
     } else {
       try {
-        var parsedData = navRoute.split('&');
+        final parsedData = navRoute.split('&');
         if (navRoute == 'chat') {
           return SplashScreen(nsRoute: 'chat');
         } else if (parsedData[1] == 'appointmentList' ||
@@ -738,7 +833,7 @@ class _MyFHBState extends State<MyFHB> {
             nsRoute: parsedData[1],
           );
         } else if (parsedData[0] == 'ack') {
-          var temp = parsedData[1].split('|');
+          final temp = parsedData[1].split('|');
           if (temp[0] == 'myRecords') {
             return SplashScreen(
               nsRoute: 'myRecords',
@@ -813,6 +908,12 @@ class _MyFHBState extends State<MyFHB> {
               nsRoute: 'chat',
               bundle: parsedData[2],
             );
+          } else if (parsedData[1] == 'mycart') {
+            //this need to be navigte to My Plans screen
+            return SplashScreen(
+              nsRoute: 'mycart',
+              bundle: parsedData[2],
+            );
           } else {
             return SplashScreen(
               nsRoute: '',
@@ -835,7 +936,7 @@ class _MyFHBState extends State<MyFHB> {
           );
         } else if (navRoute.split('&')[0] == 'accept' ||
             navRoute.split('&')[0] == 'decline') {
-          var jsonInput = {};
+          final jsonInput = {};
           jsonInput['providerRequestId'] = navRoute.split('&')[1];
           jsonInput['action'] = navRoute.split('&')[2];
           // var body = {
@@ -848,6 +949,14 @@ class _MyFHBState extends State<MyFHB> {
             nsRoute: 'openurl',
             bundle: navRoute.split('&')[1],
           );
+        } else if (navRoute.split('&')[0] == 'Renew') {
+          return SplashScreen(
+            nsRoute: 'renew',
+            bundle: {
+              'planid': '${navRoute.split('&')[1]}',
+              'template': '${navRoute.split('&')[2]}'
+            },
+          );
         } else {
           return StartTheCall();
         }
@@ -856,10 +965,9 @@ class _MyFHBState extends State<MyFHB> {
   }
 
   Future<void> gettingResponseFromNative() async {
-    String res = '';
+    var res = '';
     try {
-      final String result =
-          await platform.invokeMethod(variable.strGetAppVersion);
+      final result = await platform.invokeMethod(variable.strGetAppVersion);
       res = result;
     } on PlatformException catch (e) {
       res = variable.strFailed + "'${e.message}'.";
@@ -873,8 +981,7 @@ class _MyFHBState extends State<MyFHB> {
 
   Future<void> showSecurityWall() async {
     try {
-      final int RESULT_CODE =
-          await secure_platform.invokeMethod(variable.strSecure);
+      final RESULTCODE = await secure_platform.invokeMethod(variable.strSecure);
     } on PlatformException catch (e, s) {}
   }
 
@@ -900,69 +1007,12 @@ class _MyFHBState extends State<MyFHB> {
   Future<void> _updateConnectionStatus(ConnectivityResult result) async {
     switch (result) {
       case ConnectivityResult.wifi:
-        String wifiName, wifiBSSID, wifiIP;
-
         if (!_internetconnection) {
           Navigator.pop(Get.context);
         }
 
-        try {
-          if (!kIsWeb && Platform.isIOS) {
-            LocationAuthorizationStatus status =
-                await _connectivity.getLocationServiceAuthorization();
-            if (status == LocationAuthorizationStatus.notDetermined) {
-              status =
-                  await _connectivity.requestLocationServiceAuthorization();
-            }
-            if (status == LocationAuthorizationStatus.authorizedAlways ||
-                status == LocationAuthorizationStatus.authorizedWhenInUse) {
-              wifiName = await _connectivity.getWifiName();
-            } else {
-              wifiName = await _connectivity.getWifiName();
-            }
-          } else {
-            wifiName = await _connectivity.getWifiName();
-          }
-        } on PlatformException catch (e) {
-          //print(e.toString());
-          wifiName = failed_wifi;
-        }
-
-        try {
-          if (!kIsWeb && Platform.isIOS) {
-            LocationAuthorizationStatus status =
-                await _connectivity.getLocationServiceAuthorization();
-            if (status == LocationAuthorizationStatus.notDetermined) {
-              status =
-                  await _connectivity.requestLocationServiceAuthorization();
-            }
-            if (status == LocationAuthorizationStatus.authorizedAlways ||
-                status == LocationAuthorizationStatus.authorizedWhenInUse) {
-              wifiBSSID = await _connectivity.getWifiBSSID();
-            } else {
-              wifiBSSID = await _connectivity.getWifiBSSID();
-            }
-          } else {
-            wifiBSSID = await _connectivity.getWifiBSSID();
-          }
-        } on PlatformException catch (e) {
-          //print(e.toString());
-          wifiBSSID = failed_wifi_bssid;
-        }
-
-        try {
-          wifiIP = await _connectivity.getWifiIP();
-        } on PlatformException catch (e) {
-          //print(e.toString());
-          wifiIP = failed_wifi_ip;
-        }
-
         setState(() {
           _internetconnection = true;
-          _connectionStatus = '$result\n'
-              'Wifi Name: $wifiName\n'
-              'Wifi BSSID: $wifiBSSID\n'
-              'Wifi IP: $wifiIP\n';
           // toast.getToast(wifi_connected, Colors.green);
         });
         break;
@@ -976,17 +1026,15 @@ class _MyFHBState extends State<MyFHB> {
         });
         break;
       case ConnectivityResult.none:
-        Get.to(NetworkScreen());
+        await Get.to(NetworkScreen());
         setState(() {
           _internetconnection = false;
-          _connectionStatus = no_internet_conn;
           // toast.getToast(no_internet_conn, Colors.red);
         });
         break;
       default:
         setState(() {
           _internetconnection = false;
-          _connectionStatus = failed_get_conn;
           toast.getToast(failed_get_connectivity, Colors.red);
         });
         break;
@@ -1025,9 +1073,9 @@ class _MyFHBState extends State<MyFHB> {
         patientPicUrl: patPic);
   }
 
-  void onBoardNSAcknowledge(dynamic data, dynamic body) {
-    var jsonString = jsonEncode(data);
-    FlutterToast toast = new FlutterToast();
+  void onBoardNSAcknowledge(data, body) {
+    final jsonString = jsonEncode(data);
+    var toast = FlutterToast();
     authService.addDoctorAsProvider(jsonString).then((response) {
       if (response['isSuccess']) {
         toast.getToast(response['message'], Colors.green);
@@ -1041,8 +1089,8 @@ class _MyFHBState extends State<MyFHB> {
   }
 
   void navigateToMyRecordsCategory(
-      dynamic categoryType, List<String> hrmId, bool isTerminate) async {
-    CommonUtil().getCategoryListPos(categoryType).then(
+      categoryType, List<String> hrmId, bool isTerminate) async {
+    await CommonUtil().getCategoryListPos(categoryType).then(
         (value) => CommonUtil().goToMyRecordsScreen(value, hrmId, isTerminate));
   }
 }

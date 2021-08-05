@@ -2,13 +2,15 @@ import 'dart:async';
 import 'dart:convert' as convert;
 import 'dart:typed_data';
 import 'dart:ui' as ui;
-import 'package:myfhb/add_providers/widgets/dropdown_with_categories.dart';
-import 'package:myfhb/add_providers/widgets/sample_dropdown.dart';
-import 'package:myfhb/src/blocs/Media/MediaTypeBlock.dart';
-import 'package:myfhb/src/model/Media/media_data_list.dart';
-import 'package:myfhb/src/model/Media/media_result.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
+
+import '../widgets/dropdown_with_categories.dart';
+import '../widgets/sample_dropdown.dart';
+import '../../src/blocs/Media/MediaTypeBlock.dart';
+import '../../src/model/Media/media_data_list.dart';
+import '../../src/model/Media/media_result.dart';
+import '../../constants/fhb_constants.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geocoder/geocoder.dart';
@@ -16,42 +18,42 @@ import 'package:geolocator/geolocator.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/add_address/models/AddAddressArguments.dart';
-import 'package:myfhb/add_providers/bloc/add_providers_bloc.dart';
-import 'package:myfhb/add_providers/bloc/update_providers_bloc.dart';
-import 'package:myfhb/add_providers/models/add_doctors_providers_id.dart';
-import 'package:myfhb/add_providers/models/add_hospitals_providers_id.dart';
-import 'package:myfhb/add_providers/models/add_labs_providers_id.dart';
-import 'package:myfhb/add_providers/models/add_providers_arguments.dart';
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
-import 'package:myfhb/my_family/models/FamilyData.dart';
-import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
-import 'package:myfhb/my_family/screens/FamilyListView.dart';
-import 'package:myfhb/my_providers/models/DoctorModel.dart';
-import 'package:myfhb/my_providers/models/Doctors.dart';
-import 'package:myfhb/my_providers/models/HospitalModel.dart';
-import 'package:myfhb/my_providers/models/LaborartoryModel.dart';
-import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
-import 'package:myfhb/search_providers/bloc/doctors_list_block.dart';
-import 'package:myfhb/search_providers/bloc/hospital_list_block.dart';
-import 'package:myfhb/search_providers/bloc/labs_list_block.dart';
-import 'package:myfhb/search_providers/models/doctors_data.dart';
-import 'package:myfhb/search_providers/models/hospital_data.dart';
-import 'package:myfhb/search_providers/models/lab_data.dart';
-import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
-import 'package:myfhb/src/model/user/MyProfileModel.dart';
-import 'package:myfhb/src/model/user/ProfilePicThumbnail.dart';
-import 'package:myfhb/src/resources/network/ApiResponse.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
-import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
-import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
+import '../../add_address/models/AddAddressArguments.dart';
+import '../bloc/add_providers_bloc.dart';
+import '../bloc/update_providers_bloc.dart';
+import '../models/add_doctors_providers_id.dart';
+import '../models/add_hospitals_providers_id.dart';
+import '../models/add_labs_providers_id.dart';
+import '../models/add_providers_arguments.dart';
+import '../../colors/fhb_colors.dart' as fhbColors;
+import '../../common/CommonConstants.dart';
+import '../../common/CommonUtil.dart';
+import '../../common/PreferenceUtil.dart';
+import '../../constants/fhb_constants.dart' as Constants;
+import '../../constants/router_variable.dart' as router;
+import '../../constants/variable_constant.dart' as variable;
+import '../../my_family/bloc/FamilyListBloc.dart';
+import '../../my_family/models/FamilyData.dart';
+import '../../my_family/models/FamilyMembersRes.dart';
+import '../../my_family/screens/FamilyListView.dart';
+import '../../my_providers/models/DoctorModel.dart';
+import '../../my_providers/models/Doctors.dart';
+import '../../my_providers/models/HospitalModel.dart';
+import '../../my_providers/models/LaborartoryModel.dart';
+import '../../my_providers/models/MyProviderResponseNew.dart';
+import '../../search_providers/bloc/doctors_list_block.dart';
+import '../../search_providers/bloc/hospital_list_block.dart';
+import '../../search_providers/bloc/labs_list_block.dart';
+import '../../search_providers/models/doctors_data.dart';
+import '../../search_providers/models/hospital_data.dart';
+import '../../search_providers/models/lab_data.dart';
+import '../../src/blocs/User/MyProfileBloc.dart';
+import '../../src/model/user/MyProfileModel.dart';
+import '../../src/model/user/ProfilePicThumbnail.dart';
+import '../../src/resources/network/ApiResponse.dart';
+import '../../src/utils/colors_utils.dart';
+import '../../telehealth/features/MyProvider/view/CommonWidgets.dart';
+import '../../telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
 
 class AddProviders extends StatefulWidget {
   DoctorsData data;
@@ -99,10 +101,10 @@ class AddProvidersState extends State<AddProviders> {
   BitmapDescriptor markerIcon;
 
   GoogleMapController googleMapControll;
-  List<Marker> _markers = [];
+  final List<Marker> _markers = [];
 
-  double latitude = 0.0;
-  double longtiude = 0.0;
+  double latitude = 0;
+  double longtiude = 0;
 
   String addressLine1 = '';
   String addressLine2 = '';
@@ -110,7 +112,7 @@ class AddProvidersState extends State<AddProviders> {
   LatLng center = LatLng(0, 0);
   LatLng lastMapPosition;
 
-  CommonWidgets commonWidgets = new CommonWidgets();
+  CommonWidgets commonWidgets = CommonWidgets();
 
   CameraPosition kGooglePlex = CameraPosition(
     target: LatLng(12.861693, 80.227242),
@@ -132,9 +134,9 @@ class AddProvidersState extends State<AddProviders> {
   HospitalListBlock _hospitalListBlock;
   LabsListBlock _labsListBlock;
 
-  FlutterToast toast = new FlutterToast();
+  FlutterToast toast = FlutterToast();
 
-  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+  final GlobalKey<State> _keyLoader = GlobalKey<State>();
   MyProviderViewModel providerViewModel;
   bool teleHealthAlertShown = false;
   String USERID, switchedUserId;
@@ -142,7 +144,7 @@ class AddProvidersState extends State<AddProviders> {
   String updatedProfilePic;
   MediaTypeBlock _mediaTypeBlock;
 
-  List<String> selectedCategories = new List();
+  List<String> selectedCategories = [];
 
   @override
   void initState() {
@@ -152,20 +154,20 @@ class AddProvidersState extends State<AddProviders> {
     addProvidersBloc = AddProvidersBloc();
     updateProvidersBloc = UpdateProvidersBloc();
 
-    _familyListBloc = new FamilyListBloc();
+    _familyListBloc = FamilyListBloc();
     _familyListBloc.getFamilyMembersListNew();
 
-    _myProfileBloc = new MyProfileBloc();
-    _doctorsListBlock = new DoctorsListBlock();
-    _hospitalListBlock = new HospitalListBlock();
-    _labsListBlock = new LabsListBlock();
-    providerViewModel = new MyProviderViewModel();
+    _myProfileBloc = MyProfileBloc();
+    _doctorsListBlock = DoctorsListBlock();
+    _hospitalListBlock = HospitalListBlock();
+    _labsListBlock = LabsListBlock();
+    providerViewModel = MyProviderViewModel();
     if (widget?.arguments?.data?.isTelehealthEnabled != null) {
       teleHealthAlertShown = widget.arguments.data.isTelehealthEnabled;
     }
 
     if (_mediaTypeBlock == null) {
-      _mediaTypeBlock = new MediaTypeBlock();
+      _mediaTypeBlock = MediaTypeBlock();
       _mediaTypeBlock.getMediTypesList();
     }
 
@@ -212,7 +214,8 @@ class AddProvidersState extends State<AddProviders> {
                       ? variable.Update
                       : variable.Add) +
                   ' ' +
-                  '${widget.arguments.searchKeyWord.substring(0, widget.arguments.searchKeyWord.length - 1)}'
+                  widget.arguments.searchKeyWord
+                      .substring(0, widget.arguments.searchKeyWord.length - 1)
               : '',
           style: TextStyle(
             fontSize: 18.0.sp,
@@ -243,7 +246,7 @@ class AddProvidersState extends State<AddProviders> {
                                       ? variable.Update
                                       : variable.Add) +
                                   ' ' +
-                                  '${widget.arguments.searchKeyWord}'
+                                  widget.arguments.searchKeyWord
                               : '',
                           style: TextStyle(
                               fontSize: 18.0.sp,
@@ -298,14 +301,13 @@ class AddProvidersState extends State<AddProviders> {
                         ),
                       ],
                     ),
-                    isPreferred
-                        ? (widget.arguments.searchKeyWord ==
-                                CommonConstants.labs)
-                            ? Container()
-                            : getDropDownWithCategoriesdrop()
-                        : Container(),
+                    if (isPreferred)
+                      (widget.arguments.searchKeyWord == CommonConstants.labs)
+                          ? Container()
+                          : getDropDownWithCategoriesdrop()
+                    else
+                      Container(),
                     Visibility(
-                      visible: true,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
@@ -337,7 +339,7 @@ class AddProvidersState extends State<AddProviders> {
   }
 
   buildUI() async {
-    USERID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    USERID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     switchedUserId = USERID;
     if (widget.arguments.fromClass != router.rt_myprovider) {
       if (widget.arguments.hasData) {
@@ -351,11 +353,12 @@ class AddProvidersState extends State<AddProviders> {
         } else if (widget.arguments.searchKeyWord ==
             CommonConstants.hospitals) {
           doctorController.text = widget
-                      .arguments.hospitalData.healthOrganizationName !=
+                      .arguments.hospitalData.name !=
                   null
-              ? widget?.arguments?.hospitalData?.healthOrganizationName
+              ? widget?.arguments?.hospitalData?.name
                   ?.capitalizeFirstofEach //toBeginningOfSentenceCase(widget.arguments.hospitalData.healthOrganizationName)
-              : '';
+              : widget
+              .arguments.hospitalData.healthOrganizationName;
 //          isPreferred = widget.arguments.hospitalData.isUserDefined ?? false;
           isPreferred = false;
           // latitude = widget.arguments.hospitalData.latitude == null
@@ -464,16 +467,15 @@ class AddProvidersState extends State<AddProviders> {
 
         if (googleMapControll != null) {
           googleMapControll.animateCamera(CameraUpdate.newCameraPosition(
-              CameraPosition(
-                  target: center, zoom: 12.0, bearing: 45.0, tilt: 45.0)));
+              CameraPosition(target: center, zoom: 12, bearing: 45, tilt: 45)));
         }
       });
     } catch (e) {}
   }
 
   getCurrentLocation() async {
-    var currentLocation = await Geolocator()
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
+    final currentLocation = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.best);
     setState(() {
       latitude = currentLocation.latitude;
       longtiude = currentLocation.longitude;
@@ -491,24 +493,22 @@ class AddProvidersState extends State<AddProviders> {
 
       if (googleMapControll != null) {
         googleMapControll.animateCamera(CameraUpdate.newCameraPosition(
-            CameraPosition(
-                target: center, zoom: 12.0, bearing: 45.0, tilt: 45.0)));
+            CameraPosition(target: center, zoom: 12, bearing: 45, tilt: 45)));
       }
     });
   }
 
   getAddressesFromCoordinates() async {
-    final coordinates = new Coordinates(
+    var coordinates = Coordinates(
         widget.arguments.placeDetail.lat, widget.arguments.placeDetail.lng);
-    var addresses =
+    final addresses =
         await Geocoder.local.findAddressesFromCoordinates(coordinates);
     address = addresses.first;
   }
 
   Future addMarker() async {
-    final Uint8List markerIcon =
-        await getBytesFromAsset(ImageUrlUtils.markerImg, 50);
-    BitmapDescriptor descriptor = BitmapDescriptor.fromBytes(markerIcon);
+    final markerIcon = await getBytesFromAsset(ImageUrlUtils.markerImg, 50);
+    final descriptor = BitmapDescriptor.fromBytes(markerIcon);
 
     _markers.clear();
 
@@ -518,8 +518,8 @@ class AddProvidersState extends State<AddProviders> {
         markerId: MarkerId(center.toString()),
         position: center,
         infoWindow: InfoWindow(
-          title: addressLine1 != null ? addressLine1 : '',
-          snippet: addressLine2 != null ? addressLine2 : '',
+          title: addressLine1 ?? '',
+          snippet: addressLine2 ?? '',
         ),
         icon: descriptor,
       ));
@@ -527,10 +527,10 @@ class AddProvidersState extends State<AddProviders> {
   }
 
   Future<Uint8List> getBytesFromAsset(String path, int width) async {
-    ByteData data = await rootBundle.load(path);
-    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
+    var data = await rootBundle.load(path);
+    var codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
         targetWidth: width);
-    ui.FrameInfo fi = await codec.getNextFrame();
+    var fi = await codec.getNextFrame();
     return (await fi.image.toByteData(format: ui.ImageByteFormat.png))
         .buffer
         .asUint8List();
@@ -550,7 +550,7 @@ class AddProvidersState extends State<AddProviders> {
 
           if (_familyListBloc != null) {
             _familyListBloc = null;
-            _familyListBloc = new FamilyListBloc();
+            _familyListBloc = FamilyListBloc();
           }
           _familyListBloc.getFamilyMembersListNew().then((familyMembersList) {
             // Hide Loading
@@ -569,7 +569,7 @@ class AddProvidersState extends State<AddProviders> {
           alignment: Alignment.topLeft,
           child: UnconstrainedBox(
               child: Container(
-            padding: EdgeInsets.all(5.0),
+            padding: EdgeInsets.all(5),
             decoration: BoxDecoration(
               color: Color.fromARGB(255, 246, 246, 246),
               border: Border.all(
@@ -624,9 +624,7 @@ class AddProvidersState extends State<AddProviders> {
                                   child: Text(
                                     selectedFamilyMemberName == null
                                         ? myProfile.result != null
-                                            ? myProfile.result.lastName != null
-                                                ? myProfile.result.lastName
-                                                : ''
+                                            ? myProfile.result.lastName ?? ''
                                             : ''
                                         : selectedFamilyMemberName[0]
                                             .toUpperCase(),
@@ -673,11 +671,10 @@ class AddProvidersState extends State<AddProviders> {
 
   Widget _ShowDoctorTextField() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
       child: TextField(
-        cursorColor: Color(new CommonUtil().getMyPrimaryColor()),
+        cursorColor: Color(CommonUtil().getMyPrimaryColor()),
         controller: doctorController,
-        maxLines: 1,
         keyboardType: TextInputType.emailAddress,
         //focusNode: _doctorFocus,
         textInputAction: TextInputAction.done,
@@ -687,7 +684,7 @@ class AddProvidersState extends State<AddProviders> {
         onSubmitted: (term) {
           _doctorFocus.unfocus();
         },
-        style: new TextStyle(
+        style: TextStyle(
             fontWeight: FontWeight.w500,
             fontSize: 16.0.sp,
             color: Color(CommonUtil().getMyPrimaryColor())),
@@ -704,20 +701,20 @@ class AddProvidersState extends State<AddProviders> {
             hintStyle: TextStyle(
               color: ColorUtils.greycolor1,
             ),
-            border: new UnderlineInputBorder(borderSide: BorderSide.none)),
+            border: UnderlineInputBorder(borderSide: BorderSide.none)),
       ),
     );
   }
 
   Widget _showAddButton() {
-    final GestureDetector addButtonWithGesture = new GestureDetector(
+    final addButtonWithGesture = GestureDetector(
       onTap: _addBtnTapped,
-      child: new Container(
+      child: Container(
         width: 100.0.w,
         height: 40.0.h,
-        decoration: new BoxDecoration(
+        decoration: BoxDecoration(
           color: Color(CommonUtil().getMyPrimaryColor()),
-          borderRadius: new BorderRadius.all(Radius.circular(25.0)),
+          borderRadius: BorderRadius.all(Radius.circular(25)),
           boxShadow: <BoxShadow>[
             BoxShadow(
               color: Color.fromARGB(15, 0, 0, 0),
@@ -726,12 +723,12 @@ class AddProvidersState extends State<AddProviders> {
             ),
           ],
         ),
-        child: new Center(
-          child: new Text(
+        child: Center(
+          child: Text(
             widget.arguments.fromClass == router.rt_myprovider
                 ? variable.Update
                 : variable.Add,
-            style: new TextStyle(
+            style: TextStyle(
               color: Colors.white,
               fontSize: 16.0.sp,
               fontWeight: FontWeight.w500,
@@ -741,20 +738,20 @@ class AddProvidersState extends State<AddProviders> {
       ),
     );
 
-    return new Padding(
-        padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 30.0),
+    return Padding(
+        padding: EdgeInsets.only(left: 20, right: 20, top: 30),
         child: addButtonWithGesture);
   }
 
   Widget _showCancelButton() {
-    final GestureDetector loginButtonWithGesture = new GestureDetector(
+    final loginButtonWithGesture = GestureDetector(
       onTap: _cancelBtnTapped,
-      child: new Container(
+      child: Container(
         width: 100.0.w,
         height: 40.0.h,
-        decoration: new BoxDecoration(
+        decoration: BoxDecoration(
           color: ColorUtils.greycolor,
-          borderRadius: new BorderRadius.all(Radius.circular(25.0)),
+          borderRadius: BorderRadius.all(Radius.circular(25)),
           boxShadow: <BoxShadow>[
             BoxShadow(
               color: ColorUtils.greycolor.withOpacity(0.2),
@@ -763,10 +760,10 @@ class AddProvidersState extends State<AddProviders> {
             ),
           ],
         ),
-        child: new Center(
-          child: new Text(
+        child: Center(
+          child: Text(
             variable.Cancel,
-            style: new TextStyle(
+            style: TextStyle(
               color: ColorUtils.blackcolor,
               fontSize: 16.0.sp,
               fontWeight: FontWeight.w500,
@@ -776,16 +773,15 @@ class AddProvidersState extends State<AddProviders> {
       ),
     );
 
-    return new Padding(
-        padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 30.0),
+    return Padding(
+        padding: EdgeInsets.only(left: 20, right: 20, top: 30),
         child: loginButtonWithGesture);
   }
 
   Widget callAddDoctorProvidersStreamBuilder(AddProvidersBloc bloc) {
     return StreamBuilder(
         stream: addProvidersBloc.doctorsStream,
-        builder: (context,
-            AsyncSnapshot<ApiResponse<AddDoctorsProvidersId>> snapshot) {
+        builder: (context, snapshot) {
           if (!snapshot.hasData) return Container();
 
           if (snapshot.data.status == Status.COMPLETED) {
@@ -794,7 +790,7 @@ class AddProvidersState extends State<AddProviders> {
                 snapshot.data.data.response.data.id;
             updateDoctorsIdWithUserDetails();
 
-            new CommonUtil().getMedicalPreference();
+            CommonUtil().getMedicalPreference();
 
             return Container();
           } else {
@@ -806,8 +802,7 @@ class AddProvidersState extends State<AddProviders> {
   Widget callAddHospitalProvidersStreamBuilder(AddProvidersBloc bloc) {
     return StreamBuilder(
         stream: addProvidersBloc.hospitalsStream,
-        builder: (context,
-            AsyncSnapshot<ApiResponse<AddHospitalsProvidersId>> snapshot) {
+        builder: (context, snapshot) {
           if (!snapshot.hasData) return Container();
 
           if (snapshot.data.status == Status.COMPLETED) {
@@ -816,7 +811,7 @@ class AddProvidersState extends State<AddProviders> {
                 snapshot.data.data.response.data.id;
             updateHospitalsIdWithUserDetails();
 
-            new CommonUtil().getMedicalPreference();
+            CommonUtil().getMedicalPreference();
 
             return Container();
           } else {
@@ -828,8 +823,7 @@ class AddProvidersState extends State<AddProviders> {
   Widget callAddLabProvidersStreamBuilder(AddProvidersBloc bloc) {
     return StreamBuilder(
         stream: addProvidersBloc.labsStream,
-        builder:
-            (context, AsyncSnapshot<ApiResponse<AddLabsProvidersId>> snapshot) {
+        builder: (context, snapshot) {
           if (!snapshot.hasData) return Container();
 
           if (snapshot.data.status == Status.COMPLETED) {
@@ -838,7 +832,7 @@ class AddProvidersState extends State<AddProviders> {
                 snapshot.data.data.response.data.id;
             updateLabsIdWithUserDetails();
 
-            new CommonUtil().getMedicalPreference();
+            CommonUtil().getMedicalPreference();
 
             return Container();
           } else {
@@ -858,8 +852,8 @@ class AddProvidersState extends State<AddProviders> {
         routeClassName = router.rt_TelehealthProvider;
       }
 
-      Navigator.popUntil(context, (Route<dynamic> route) {
-        bool shouldPop = false;
+      Navigator.popUntil(context, (route) {
+        var shouldPop = false;
         if (route.settings.name == routeClassName || route.settings == null) {
           shouldPop = true;
         }
@@ -879,8 +873,8 @@ class AddProvidersState extends State<AddProviders> {
         routeClassName = router.rt_TelehealthProvider;
       }
 
-      Navigator.popUntil(context, (Route<dynamic> route) {
-        bool shouldPop = false;
+      Navigator.popUntil(context, (route) {
+        var shouldPop = false;
         if (route.settings.name == routeClassName) {
           shouldPop = true;
         }
@@ -900,8 +894,8 @@ class AddProvidersState extends State<AddProviders> {
         routeClassName = router.rt_TelehealthProvider;
       }
 
-      Navigator.popUntil(context, (Route<dynamic> route) {
-        bool shouldPop = false;
+      Navigator.popUntil(context, (route) {
+        var shouldPop = false;
         if (route.settings.name == routeClassName) {
           shouldPop = true;
         }
@@ -928,7 +922,7 @@ class AddProvidersState extends State<AddProviders> {
 
         updateProvidersBloc.isPreferred = isPreferred;
         updateProvidersBloc.selectedCategories = isPreferred
-            ? selectedCategories != null && selectedCategories.length > 0
+            ? selectedCategories != null && selectedCategories.isNotEmpty
                 ? selectedCategories
                 : null
             : null;
@@ -1060,13 +1054,13 @@ class AddProvidersState extends State<AddProviders> {
         }
       }
     } else {
-      var signInData = {};
+      final signInData = {};
 
       if (widget.arguments.searchKeyWord == CommonConstants.doctors) {
         if (address == null || widget.arguments.placeDetail == null) {
           showDialog(
               context: context,
-              builder: (BuildContext context) {
+              builder: (context) {
                 return AlertDialog(
                   title: Text(variable.strError),
                   content: Text(variable.choose_address),
@@ -1089,31 +1083,23 @@ class AddProvidersState extends State<AddProviders> {
           signInData[variable.strName] = doctorController.text.toString();
           signInData[variable.strSpecialization] = '';
           signInData[variable.strDescription] = '';
-          signInData[variable.strCity] = address == null
-              ? ''
-              : address.locality == null ? '' : address.locality;
-          signInData[variable.strState] = address == null
-              ? ''
-              : address.adminArea == null ? '' : address.adminArea;
+          signInData[variable.strCity] =
+              address == null ? '' : address.locality ?? '';
+          signInData[variable.strState] =
+              address == null ? '' : address.adminArea ?? '';
           signInData[variable.strPhoneNumbers] =
               widget.arguments.placeDetail == null
                   ? ''
-                  : widget.arguments.placeDetail.formattedPhoneNumber == null
-                      ? ''
-                      : widget.arguments.placeDetail.formattedPhoneNumber;
+                  : widget.arguments.placeDetail.formattedPhoneNumber ?? '';
           signInData[variable.strEmail] = '';
           signInData[variable.strIsUserDefined] = true;
           signInData[variable.strLatitude] =
-              widget.arguments.placeDetail.lat == null
-                  ? 0.0
-                  : widget.arguments.placeDetail.lat;
+              widget.arguments.placeDetail.lat ?? 0.0;
 
           signInData[variable.strLongitute] =
-              widget.arguments.placeDetail.lng == null
-                  ? 0.0
-                  : widget.arguments.placeDetail.lng;
+              widget.arguments.placeDetail.lng ?? 0.0;
           signInData['sharedCategories'] = selectedCategories;
-          var jsonString = convert.jsonEncode(signInData);
+          final jsonString = convert.jsonEncode(signInData);
 
           addProvidersBloc.doctorsJsonString = jsonString;
           addProvidersBloc.addDoctors();
@@ -1122,7 +1108,7 @@ class AddProvidersState extends State<AddProviders> {
         if (address == null || widget.arguments.placeDetail == null) {
           showDialog(
               context: context,
-              builder: (BuildContext context) {
+              builder: (context) {
                 return AlertDialog(
                   title: Text(variable.strError),
                   content: Text(variable.choose_address),
@@ -1146,41 +1132,29 @@ class AddProvidersState extends State<AddProviders> {
           signInData[variable.strPhoneNumbers] =
               widget.arguments.placeDetail == null
                   ? ''
-                  : widget.arguments.placeDetail.formattedPhoneNumber == null
-                      ? ''
-                      : widget.arguments.placeDetail.formattedPhoneNumber;
+                  : widget.arguments.placeDetail.formattedPhoneNumber ?? '';
           signInData[variable.strDescription] = 'Cancer Speciality Hospital';
           signInData[variable.strEmail] = 'apollo@sample.com';
           signInData[variable.straddressLine1] =
               widget.arguments.confirmAddressDescription == null
                   ? ''
-                  : widget.arguments.confirmAddressDescription == null
-                      ? ''
-                      : widget.arguments.confirmAddressDescription;
-          signInData[variable.straddressLine2] =
-              address.addressLine == null ? '' : address.addressLine;
-          signInData[variable.strCity] =
-              address.locality == null ? '' : address.locality;
-          signInData[variable.strState] =
-              address.adminArea == null ? '' : address.adminArea;
-          signInData[variable.strzipCode] =
-              address.postalCode == null ? '' : address.postalCode;
+                  : widget.arguments.confirmAddressDescription ?? '';
+          signInData[variable.straddressLine2] = address.addressLine ?? '';
+          signInData[variable.strCity] = address.locality ?? '';
+          signInData[variable.strState] = address.adminArea ?? '';
+          signInData[variable.strzipCode] = address.postalCode ?? '';
           signInData[variable.strbranch] = '';
           signInData[variable.strIsUserDefined] = true;
           signInData[variable.strLatitude] =
-              widget.arguments.placeDetail.lat == null
-                  ? 0.0
-                  : widget.arguments.placeDetail.lat;
+              widget.arguments.placeDetail.lat ?? 0.0;
           signInData[variable.strLongitute] =
-              widget.arguments.placeDetail.lng == null
-                  ? 0.0
-                  : widget.arguments.placeDetail.lng;
+              widget.arguments.placeDetail.lng ?? 0.0;
           signInData[variable.strwebsite] =
               widget.arguments.placeDetail.website;
           signInData[variable.strgoogleMapUrl] =
               widget.arguments.placeDetail.url;
 
-          var jsonString = convert.jsonEncode(signInData);
+          final jsonString = convert.jsonEncode(signInData);
 
           addProvidersBloc.hospitalsJsonString = jsonString;
           addProvidersBloc.addHospitals();
@@ -1189,7 +1163,7 @@ class AddProvidersState extends State<AddProviders> {
         if (address == null || widget.arguments.placeDetail == null) {
           showDialog(
               context: context,
-              builder: (BuildContext context) {
+              builder: (context) {
                 return AlertDialog(
                   title: Text(variable.strError),
                   content: Text(variable.choose_address),
@@ -1213,46 +1187,32 @@ class AddProvidersState extends State<AddProviders> {
           signInData[variable.strPhoneNumbers] =
               widget.arguments.placeDetail == null
                   ? ''
-                  : widget.arguments.placeDetail.formattedPhoneNumber == null
-                      ? ''
-                      : widget.arguments.placeDetail.formattedPhoneNumber;
+                  : widget.arguments.placeDetail.formattedPhoneNumber ?? '';
           signInData[variable.strDescription] = 'Cancer Speciality Hospital';
           signInData[variable.strEmail] = 'apollo@sample.com';
           signInData[variable.straddressLine1] =
               widget.arguments.confirmAddressDescription == null
                   ? ''
-                  : widget.arguments.confirmAddressDescription == null
-                      ? ''
-                      : widget.arguments.confirmAddressDescription;
-          signInData[variable.straddressLine2] = address == null
-              ? ''
-              : address.addressLine == null ? '' : address.addressLine;
-          signInData[variable.strCity] = address == null
-              ? ''
-              : address.locality == null ? '' : address.locality;
-          signInData[variable.strState] = address == null
-              ? ''
-              : address.adminArea == null ? '' : address.adminArea;
-          signInData[variable.strzipCode] = address == null
-              ? ''
-              : address.postalCode == null ? '' : address.postalCode;
+                  : widget.arguments.confirmAddressDescription ?? '';
+          signInData[variable.straddressLine2] =
+              address == null ? '' : address.addressLine ?? '';
+          signInData[variable.strCity] =
+              address == null ? '' : address.locality ?? '';
+          signInData[variable.strState] =
+              address == null ? '' : address.adminArea ?? '';
+          signInData[variable.strzipCode] =
+              address == null ? '' : address.postalCode ?? '';
           signInData[variable.strbranch] = '';
           signInData[variable.strIsUserDefined] = true;
           signInData[variable.strLatitude] =
-              widget.arguments.placeDetail.lat == null
-                  ? 0.0
-                  : widget.arguments.placeDetail.lat;
+              widget.arguments.placeDetail.lat ?? 0.0;
           signInData[variable.strLongitute] =
-              widget.arguments.placeDetail.lng == null
-                  ? 0.0
-                  : widget.arguments.placeDetail.lng;
+              widget.arguments.placeDetail.lng ?? 0.0;
           signInData[variable.strwebsite] = widget.arguments.placeDetail == null
               ? ''
-              : widget.arguments.placeDetail.website == null
-                  ? ''
-                  : widget.arguments.placeDetail.website;
+              : widget.arguments.placeDetail.website ?? '';
 
-          var jsonString = convert.jsonEncode(signInData);
+          final jsonString = convert.jsonEncode(signInData);
           addProvidersBloc.labsJsonString = jsonString;
           addProvidersBloc.addLabs();
         }
@@ -1266,7 +1226,7 @@ class AddProvidersState extends State<AddProviders> {
 
   Future<Widget> getDialogBoxWithFamilyMemberScrap(
       FamilyMemberResult familyData) {
-    return new FamilyListView(familyData)
+    return FamilyListView(familyData)
         .getDialogBoxWithFamilyMember(familyData, context, _keyLoader,
             (context, userId, userName, profilePic) {
       switchedUserId = userId;
@@ -1287,17 +1247,17 @@ class AddProvidersState extends State<AddProviders> {
   }
 
   getUserProfileData() async {
-    MyProfileBloc _myProfileBloc = new MyProfileBloc();
+    var _myProfileBloc = MyProfileBloc();
 
-    _myProfileBloc
+    await _myProfileBloc
         .getMyProfileData(Constants.KEY_USERID_MAIN)
         .then((profileData) {
       PreferenceUtil.saveProfileData(Constants.KEY_PROFILE_MAIN, profileData)
           .then((value) {
         Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
 
-        Navigator.popUntil(context, (Route<dynamic> route) {
-          bool shouldPop = false;
+        Navigator.popUntil(context, (route) {
+          var shouldPop = false;
           if (route.settings.name == router.rt_UserAccounts) {
             shouldPop = true;
           }
@@ -1308,14 +1268,14 @@ class AddProvidersState extends State<AddProviders> {
   }
 
   void getUserProfileWithId() {
-    MyProfileBloc _myProfileBloc = new MyProfileBloc();
+    final _myProfileBloc = MyProfileBloc();
 
     _myProfileBloc.getMyProfileData(Constants.KEY_USERID).then((profileData) {
       Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
 
       PreferenceUtil.saveProfileData(Constants.KEY_PROFILE, profileData)
           .then((value) {
-        new CommonUtil().getMedicalPreference();
+        CommonUtil().getMedicalPreference();
 
         setState(() {
           selectedFamilyMemberName = profileData.result.firstName;
@@ -1340,8 +1300,8 @@ class AddProvidersState extends State<AddProviders> {
   }
 
   navigateToRefresh() {
-    Navigator.popUntil(context, (Route<dynamic> route) {
-      bool shouldPop = false;
+    Navigator.popUntil(context, (route) {
+      var shouldPop = false;
       var routeClassName = '';
       routeClassName = router.rt_UserAccounts;
       if (route.settings.name == routeClassName) {
@@ -1355,7 +1315,7 @@ class AddProvidersState extends State<AddProviders> {
   void showDialogForDoctor() {
     showDialog(
         context: context,
-        builder: (BuildContext context) {
+        builder: (context) {
           return AlertDialog(
             content: Text(variable.strDisableTeleconsulting),
             actions: <Widget>[
@@ -1376,20 +1336,15 @@ class AddProvidersState extends State<AddProviders> {
         future: _mediaTypeBlock.getMediTypesList(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return new Center(
-              child: new CircularProgressIndicator(
-                backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
-              ),
-            );
+            return CommonCircularIndicator();
           }
-          MediaDataList mediaType = snapshot.data;
+          final MediaDataList mediaType = snapshot.data;
+          mediaType.result
+              .insert(0, MediaResult(name: 'ALL', isChecked: false, id: '1'));
           mediaType.result.insert(
-              0, new MediaResult(name: 'ALL', isChecked: false, id: '1'));
-          mediaType.result.insert(
-              1, new MediaResult(name: 'Devices', isChecked: false, id: '2'));
+              1, MediaResult(name: 'Devices', isChecked: false, id: '2'));
 
-          List<MediaResult> mediaResultFiltered =
-              removeUnwantedCategories(mediaType);
+          final mediaResultFiltered = removeUnwantedCategories(mediaType);
 
           setTheValuesForDropdown(mediaResultFiltered);
           return DropdownWithCategories(
@@ -1402,8 +1357,8 @@ class AddProvidersState extends State<AddProviders> {
   }
 
   void setTheValuesForDropdown(List<MediaResult> result) {
-    if (selectedCategories != null && selectedCategories.length > 0) {
-      for (MediaResult mediaResultObj in result) {
+    if (selectedCategories != null && selectedCategories.isNotEmpty) {
+      for (var mediaResultObj in result) {
         if (selectedCategories.contains(mediaResultObj.id)) {
           mediaResultObj.isChecked = true;
         }
@@ -1412,8 +1367,8 @@ class AddProvidersState extends State<AddProviders> {
   }
 
   void addSelectedcategoriesToList(List<MediaResult> result) {
-    selectedCategories = new List();
-    for (MediaResult mediaResultObj in result) {
+    selectedCategories = [];
+    for (final mediaResultObj in result) {
       if (!selectedCategories.contains(mediaResultObj.id) &&
           mediaResultObj.isChecked) {
         selectedCategories.add(mediaResultObj.id);
@@ -1422,8 +1377,8 @@ class AddProvidersState extends State<AddProviders> {
   }
 
   List<MediaResult> removeUnwantedCategories(MediaDataList mediaType) {
-    List<MediaResult> mediaResultDuplicate = new List();
-    for (int i = 0; i < mediaType.result.length; i++) {
+    final mediaResultDuplicate = List<MediaResult>();
+    for (var i = 0; i < mediaType.result.length; i++) {
       if (mediaType.result[i].name != Constants.STR_FEEDBACK &&
           mediaType.result[i].name != Constants.STR_CLAIMSRECORD &&
           mediaType.result[i].name != Constants.STR_WEARABLES &&

@@ -6,6 +6,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/OverLayCategoryDialog.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/widgets/RaisedGradientButton.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -32,7 +33,7 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
 
   String categoryName, categoryNameClone;
   String categoryID;
-  CarouselSlider carouselSlider;
+  CarouselController carouselSlider;
   int _current = 0;
 
   String currentImagePath;
@@ -105,21 +106,24 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Expanded(
-            child: carouselSlider = CarouselSlider(
-              height: 1.sh,
-              initialPage: 0,
-              enlargeCenterPage: true,
-              reverse: false,
-              enableInfiniteScroll: false,
-              pauseAutoPlayOnTouch: Duration(seconds: 10),
-              scrollDirection: Axis.horizontal,
-              onPageChanged: (index) {
-                setState(() {
-                  _current = index;
+            child: CarouselSlider(
+              carouselController: carouselSlider,
+              options: CarouselOptions(
+                height: 1.sh,
+                initialPage: 0,
+                enlargeCenterPage: true,
+                reverse: false,
+                enableInfiniteScroll: false,
+                // pauseAutoPlayOnTouch: Duration(seconds: 10),
+                scrollDirection: Axis.horizontal,
+                onPageChanged: (index, carouselPageChangedReason) {
+                  setState(() {
+                    _current = index;
 
-                  currentImagePath = widget.imagePath[_current];
-                });
-              },
+                    currentImagePath = widget.imagePath[_current];
+                  });
+                },
+              ),
               items: widget.imagePath.map((imgUrl) {
                 return Builder(
                   builder: (BuildContext context) {
@@ -209,7 +213,7 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
     ).then((value) {
       categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
 
-      if (value) {
+      if (value ?? false) {
         Navigator.of(context).pop(true);
       }
     });
@@ -268,28 +272,25 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
     return showDialog(
         context: context,
         barrierDismissible: false,
-        child: Material(
-          color: Colors.transparent,
-          child: Container(
-            height: double.infinity,
-            width: double.infinity,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                CircularProgressIndicator(
-                  strokeWidth: 2.0.sp,
-                  valueColor: AlwaysStoppedAnimation(primaryColor),
+        builder: (context) => Material(
+              color: Colors.transparent,
+              child: Container(
+                height: double.infinity,
+                width: double.infinity,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    CommonCircularIndicator(),
+                    SizedBox(
+                      width: 10.0.w,
+                    ),
+                    Text(
+                      variable.strCropping,
+                      style: TextStyle(color: primaryColor),
+                    )
+                  ],
                 ),
-                SizedBox(
-                  width: 10.0.w,
-                ),
-                Text(
-                  variable.strCropping,
-                  style: TextStyle(color: primaryColor),
-                )
-              ],
-            ),
-          ),
-        ));
+              ),
+            ));
   }
 }
