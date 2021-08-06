@@ -126,13 +126,16 @@ class RegimentDataModel {
         providername: json['providername'],
         hasform: (json['hasform'] ?? 0) == 1,
         saytext: json['saytext'],
-        doseMeal: ((json['dosemeal'] ?? 0).toString() == '64') &&
+        doseMeal: (((json['dosemeal'] ?? 0).toString() == '64') ||
+                ((json['dosemeal'] ?? 0).toString() == '128')) &&
             (activitynameValues.map[json['activityname']] ==
                 Activityname.SYMPTOM),
-        asNeeded: ((json['dosemeal'] ?? 0).toString() == '64') &&
+        asNeeded: (((json['dosemeal'] ?? 0).toString() == '64') ||
+                ((json['dosemeal'] ?? 0).toString() == '128')) &&
             (activitynameValues.map[json['activityname']] !=
                 Activityname.SYMPTOM),
-        scheduled: ((json['dosemeal'] ?? 0).toString() != '64'),
+        scheduled: ((json['dosemeal'] ?? 0).toString() != '64') &&
+            ((json['dosemeal'] ?? 0).toString() != '128'),
         doseRepeat: json['doserepeat'],
         metadata: json['metadata'] is List
             ? Metadata()
