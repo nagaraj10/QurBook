@@ -75,12 +75,14 @@ class RegimentViewModel extends ChangeNotifier {
         initialShowIndex = 0;
       } else {
         for (final event in regimentsScheduledList) {
-          if (event.estart.isAfter(DateTime.now()) ||
-              event.estart.isAtSameMomentAs(DateTime.now())) {
-            initialShowIndex = index;
-            break;
-          } else {
-            index++;
+          if (event?.scheduled ?? false) {
+            if (event.estart.isAfter(DateTime.now()) ||
+                event.estart.isAtSameMomentAs(DateTime.now())) {
+              initialShowIndex = index;
+              break;
+            } else {
+              index++;
+            }
           }
         }
       }
