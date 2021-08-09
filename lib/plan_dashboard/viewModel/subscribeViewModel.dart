@@ -1,4 +1,7 @@
 import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
+import 'package:myfhb/user_plans/view_model/user_plans_view_model.dart';
+import 'package:provider/provider.dart';
 import '../../common/PreferenceUtil.dart';
 import '../../myPlan/model/myPlanDetailModel.dart';
 import '../../myPlan/model/myPlanListModel.dart';
@@ -18,6 +21,8 @@ class SubscribeViewModel extends ChangeNotifier {
     try {
       var myPlanListModel =
           await myPlanService.subscribePlan(packageId, userid);
+      await Provider.of<UserPlansViewModel>(Get.context, listen: false)
+          ?.getUserPlanInfo();
       return myPlanListModel;
     } catch (e) {}
   }
@@ -27,6 +32,8 @@ class SubscribeViewModel extends ChangeNotifier {
     try {
       var myPlanListModel =
           await myPlanService.UnsubscribePlan(packageId, userid);
+      await Provider.of<UserPlansViewModel>(Get.context, listen: false)
+          ?.getUserPlanInfo();
       return myPlanListModel;
     } catch (e) {}
   }

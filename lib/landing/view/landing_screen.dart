@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/user_plans/view_model/user_plans_view_model.dart';
 import '../../add_family_user_info/bloc/add_family_user_info_bloc.dart';
 import '../../add_family_user_info/services/add_family_user_info_repository.dart';
 import '../../authentication/view/login_screen.dart';
@@ -562,6 +563,8 @@ class _LandingScreenState extends State<LandingScreen> {
 
   void callImportantsMethod() async {
     await CommonUtil().validateToken();
+    await Provider.of<UserPlansViewModel>(context, listen: false)
+        ?.getUserPlanInfoLocal();
 
     try {
       getFamilyRelationAndMediaType();
