@@ -2860,24 +2860,30 @@ class CommonUtil {
     } else {
       // First time
       await prefs.setBool('first_time', false);
-      await _deleteCacheDir();
       await _deleteAppDir();
+      await _deleteCacheDir();
     }
   }
 
   Future<void> _deleteCacheDir() async {
-    var cacheDir = await getTemporaryDirectory();
-
-    if (cacheDir.existsSync()) {
-      cacheDir.deleteSync(recursive: true);
+    try {
+      var cacheDir = await getTemporaryDirectory();
+      if (cacheDir.existsSync()) {
+        cacheDir.deleteSync(recursive: true);
+      }
+    } catch (e) {
+      print("Failed to delete the Temp dir : ${e.toString()}");
     }
   }
 
   Future<void> _deleteAppDir() async {
-    var appDir = await getApplicationSupportDirectory();
-
-    if (appDir.existsSync()) {
-      appDir.deleteSync(recursive: true);
+    try {
+      var appDir = await getApplicationSupportDirectory();
+      if (appDir.existsSync()) {
+        appDir.deleteSync(recursive: true);
+      }
+    } catch (e) {
+      print("Failed to delete the support dir : ${e.toString()}");
     }
   }
 
