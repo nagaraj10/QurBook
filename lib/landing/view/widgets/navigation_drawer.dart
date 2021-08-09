@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Orders/View/OrdersView.dart';
+import 'package:myfhb/user_plans/view/user_profile_image.dart';
 import '../../../colors/fhb_colors.dart';
 import '../../../common/CommonUtil.dart';
 import '../../../common/FHBBasicWidget.dart';
@@ -61,19 +62,16 @@ class NavigationDrawer extends StatelessWidget {
                             Row(
                               children: [
                                 Container(
-                                  height: 50.0.h,
-                                  width: 50.0.h,
+                                  height: 70.0.h,
+                                  width: 70.0.h,
                                   decoration: const BoxDecoration(
                                     shape: BoxShape.circle,
                                   ),
-                                  child: ClipOval(
-                                    child: FHBBasicWidget()
-                                        .getProfilePicWidgeUsingUrlForProfile(
-                                      myProfile,
-                                      textColor: Color(
-                                          CommonUtil().getMyPrimaryColor()),
-                                      circleColor: Color(bgColorContainer),
-                                    ),
+                                  child: UserProfileImage(
+                                    myProfile,
+                                    textColor:
+                                        Color(CommonUtil().getMyPrimaryColor()),
+                                    circleColor: Color(bgColorContainer),
                                   ),
                                 ),
                                 SizedBox(

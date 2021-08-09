@@ -261,51 +261,6 @@ class FHBBasicWidget {
     }
   }
 
-  Widget getProfilePicWidgeUsingUrlForProfile(
-    MyProfileModel myProfile, {
-    Color textColor,
-    Color circleColor,
-  }) {
-    if (myProfile != null && myProfile.result != null) {
-      if (myProfile.result.profilePicThumbnailUrl != '') {
-        return Image.network(
-          myProfile.result.profilePicThumbnailUrl,
-          height: 50.0.h,
-          width: 50.0.h,
-          fit: BoxFit.cover,
-          headers: {HttpHeaders.authorizationHeader: authToken},
-          errorBuilder: (context, exception, stackTrace) {
-            return Container(
-              height: 50.0.h,
-              width: 50.0.h,
-              color: circleColor ?? Color(CommonUtil().getMyPrimaryColor()),
-              child: Center(
-                child: getFirstLastNameTextForProfile(
-                  myProfile,
-                  textColor: textColor,
-                ),
-              ),
-            );
-          },
-        );
-      } else {
-        return Container(
-          color: Color(fhbColors.bgColorContainer),
-          height: 50.0.h,
-          width: 50.0.h,
-        );
-      }
-    } else {
-      return Container(
-        color: Color(fhbColors.bgColorContainer),
-        height: 50.0.h,
-        width: 50.0.h,
-      );
-    }
-
-    /* });*/
-  }
-
   Future<String> setAuthToken() async {
     authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     return authToken;

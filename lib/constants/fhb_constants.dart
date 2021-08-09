@@ -53,6 +53,8 @@ const String STR_FEEDBACK = 'Feedback';
 const String STR_WEARABLES = 'Wearable';
 const String STR_TELEHEALTH = 'Telehealth';
 const String STR_HOSPITALDOCUMENT = 'Hospital Documents';
+const String KEY_MEMBERSHIP = 'membership';
+const String GOLD_MEMBERSHIP = 'CORPGOLDQURHL';
 
 const String KEY_LANGUAGE = 'languageList';
 
@@ -252,6 +254,7 @@ const String planDownload = 'assets/icons/planDownload.png';
 const String sendIcon = 'assets/send.svg';
 const String ic_cart_delete = 'assets/icons/cart_delete_red.svg';
 const String ic_empty_cart = 'assets/icons/empty_cart.svg';
+const String ic_gold_member = 'assets/user/gold-member.png';
 
 const String enterFirstName = 'Enter First Name';
 const String enterLastName = 'Enter Last Name';
