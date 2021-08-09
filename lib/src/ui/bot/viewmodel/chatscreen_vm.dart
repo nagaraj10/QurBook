@@ -32,7 +32,7 @@ class ChatScreenViewModel extends ChangeNotifier {
   static var uuid = Uuid().v1();
   var user_id;
   var user_name;
-  var auth_token = PreferenceUtil.getStringValue(constants.KEY_AUTHTOKEN);
+  var auth_token ;
   var isMayaSpeaks = -1;
   var userMappingId = '';
   bool _isdigitRecognition = true;
@@ -405,6 +405,7 @@ class ChatScreenViewModel extends ChangeNotifier {
 
   sendToMaya(String msg, {String screen, String providerMsg}) async {
     prof = await PreferenceUtil.getProfileData(constants.KEY_PROFILE);
+    auth_token = await PreferenceUtil.getStringValue(constants.KEY_AUTHTOKEN);
     user_name = prof.result != null
         ? prof.result.firstName + ' ' + prof.result.lastName
         : '';

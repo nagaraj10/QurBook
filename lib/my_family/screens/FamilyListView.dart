@@ -364,10 +364,11 @@ class FamilyListView {
 
   List<SharedByUsers> removeDuplicates(List<SharedByUsers> SharedbymeList) {
     final List<SharedByUsers> sharedByMeClone = [];
+    String userId=PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
-    for (var sharedbymeObj in SharedbymeList) {
-      if (!sharedByMeClone.contains(sharedbymeObj)) {
-        sharedByMeClone.add(sharedbymeObj);
+    for (int i=0;i<SharedbymeList.length;i++) {
+      if (!sharedByMeClone.contains(SharedbymeList[i]) && userId!=SharedbymeList[i].id) {
+        sharedByMeClone.add(SharedbymeList[i]);
       }
     }
     return sharedByMeClone;

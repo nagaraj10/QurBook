@@ -97,6 +97,7 @@ import 'package:myfhb/telehealth/features/chat/view/PDFView.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import '../../authentication/constants/constants.dart';
 import 'package:myfhb/widgets/checkout_page.dart';
+import '../../colors/fhb_colors.dart' as fhbColors;
 
 class CommonUtil {
   static String SHEELA_URL = '';
@@ -1378,13 +1379,24 @@ class CommonUtil {
     }
   }
 
-  getDoctorProfileImageWidget(String doctorUrl) {
+  getDoctorProfileImageWidget(String doctorUrl, Doctor doctor) {
+    String name=doctor?.firstName?.capitalizeFirstofEach??" "+doctor?.lastName?.capitalizeFirstofEach??" ";
     if (doctorUrl != null && doctorUrl != '') {
       return Image.network(
         doctorUrl,
         height: 50.0.h,
         width: 50.0.h,
         fit: BoxFit.cover,
+        errorBuilder: (context,exception, stackTrace){
+          return Container(
+            height: 50.0.h,
+            width: 50.0.h,
+            color: Color(CommonUtil().getMyPrimaryColor()),
+            child: Center(
+              child: getFirstLastNameText(doctor),
+            ),
+          );
+        },
       );
     } else {
       return SizedBox(
@@ -1396,6 +1408,40 @@ class CommonUtil {
     }
 
     ///load until snapshot.hasData resolves to true
+  }
+
+  Widget getFirstLastNameText(Doctor doctor) {
+    if (doctor != null &&
+        doctor.firstName != null &&
+        doctor.lastName != null) {
+      return Text(
+        doctor.firstName[0].toUpperCase() +
+            doctor.lastName[0].toUpperCase(),
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 22.0.sp,
+          fontWeight: FontWeight.w400,
+        ),
+      );
+    } else if (doctor != null && doctor.firstName != null) {
+      return Text(
+        doctor.firstName[0].toUpperCase(),
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 22.0.sp,
+          fontWeight: FontWeight.w400,
+        ),
+      );
+    } else {
+      return Text(
+        '',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 22.0.sp,
+          fontWeight: FontWeight.w200,
+        ),
+      );
+    }
   }
 
   Future<void> validateToken() async {
