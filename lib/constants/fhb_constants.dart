@@ -196,7 +196,8 @@ const String Subscribe = 'Subscribe';
 const String GoToRegimentDescription =
     'Tap here to see your updated Regimen for each Plan’s subscription';
 const String SymptomsDescription = 'Tap here to view Symptoms list';
-const String DailyScheduleDescription = 'Tap here to make changes to the order of activities';
+const String DailyScheduleDescription =
+    'Tap here to make changes to the order of activities';
 const String Schedule = 'Schedule';
 const String RegimenSettings = 'Settings';
 const String LogActivity = 'Log Activity';
@@ -451,7 +452,7 @@ const String STR_INSURE_ID = 'Insurance IDs';
 const String noRegimentScheduleData =
     'No Activities data available for the selected date';
 const String noRegimentSymptomsData =
-    'No Symptoms data available for the selected date';
+    'No Symptoms associated with your active plans';
 const String plansForFamily =
     'Regimen plans are not available for family members';
 const String mplansForFamily = 'Plans are not available for family members';
