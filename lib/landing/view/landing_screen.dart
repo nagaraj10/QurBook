@@ -564,7 +564,7 @@ class _LandingScreenState extends State<LandingScreen> {
   void callImportantsMethod() async {
     await CommonUtil().validateToken();
     await Provider.of<UserPlansViewModel>(context, listen: false)
-        ?.getUserPlanInfo();
+        ?.getUserPlanInfoLocal();
 
     try {
       getFamilyRelationAndMediaType();
