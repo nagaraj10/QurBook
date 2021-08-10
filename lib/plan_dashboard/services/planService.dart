@@ -16,4 +16,13 @@ class PlanService {
     var response = await _helper.getPlanList(qr_plan_list,jsonString);
     return PlanListModel.fromJson(response);
   }
+
+  Future<PlanListModel> getPlanDetailById(String patientId,String packageId) async {
+    final body = {};
+    body['method'] = qr_get;
+    body['data'] = qr_getPack_details+packageId+qr_patientEqaul+patientId;
+    final jsonString = convert.jsonEncode(body);
+    var response = await _helper.getPlanList(qr_plan_list,jsonString);
+    return PlanListModel.fromJson(response);
+  }
 }

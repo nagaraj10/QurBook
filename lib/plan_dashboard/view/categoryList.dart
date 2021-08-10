@@ -440,26 +440,26 @@ class _CategoryState extends State<CategoryList> {
             context,
             MaterialPageRoute(
                 builder: (context) => MyPlanDetailView(
-                      title: planListResult[inx.index]?.title,
-                      providerName: planListResult[inx.index]?.providerName,
-                      description: planListResult[inx.index]?.description,
-                      issubscription: planListResult[inx.index]?.isSubscribed,
+                      // title: planListResult[inx.index]?.title,
+                      // providerName: planListResult[inx.index]?.providerName,
+                      // description: planListResult[inx.index]?.description,
+                      // issubscription: planListResult[inx.index]?.isSubscribed,
                       packageId: planListResult[inx.index]?.packageid,
-                      price: planListResult[inx.index]?.price,
-                      packageDuration:
-                          planListResult[inx.index]?.packageDuration,
-                      providerId: planListResult[inx.index]?.plinkid,
-                      isDisable: planListResult[inx.index]?.catselecttype == '1'
-                          ? (planListResult[inx.index]?.isSubscribed == '1' ||
-                              (isSelectedMap[
-                                      planListResult[inx.index]?.packcatid] ??
-                                  false))
-                          : (planListResult[inx.index]?.isSubscribed == '1'),
-                      hosIcon:
-                          planListResult[inx.index]?.providerMetadata?.icon,
-                      iconApi: planListResult[inx.index]?.metadata?.icon,
-                      catIcon: planListResult[inx.index]?.catmetadata?.icon,
-                      metaDataForURL: planListResult[inx.index]?.metadata,
+                      // price: planListResult[inx.index]?.price,
+                      // packageDuration:
+                      //     planListResult[inx.index]?.packageDuration,
+                      // providerId: planListResult[inx.index]?.plinkid,
+                      // isDisable: planListResult[inx.index]?.catselecttype == '1'
+                      //     ? (planListResult[inx.index]?.isSubscribed == '1' ||
+                      //         (isSelectedMap[
+                      //                 planListResult[inx.index]?.packcatid] ??
+                      //             false))
+                      //     : (planListResult[inx.index]?.isSubscribed == '1'),
+                      // hosIcon:
+                      //     planListResult[inx.index]?.providerMetadata?.icon,
+                      // iconApi: planListResult[inx.index]?.metadata?.icon,
+                      // catIcon: planListResult[inx.index]?.catmetadata?.icon,
+                      // metaDataForURL: planListResult[inx.index]?.metadata,
                     )),
           ).then((value) {
             if (value == 'refreshUI') {

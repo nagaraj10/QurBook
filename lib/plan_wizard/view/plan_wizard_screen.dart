@@ -5,6 +5,8 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/add_new_plan/view/AddNewPlan.dart';
 import 'package:myfhb/add_provider_plan/view/AddProviderPlan.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/constants/router_variable.dart';
+import 'package:myfhb/landing/view/landing_arguments.dart';
 import 'package:myfhb/plan_wizard/view/pages/care_plan/care_plan_page.dart';
 import 'package:myfhb/plan_wizard/view/pages/diet_plan/diet_plan_page.dart';
 import 'package:myfhb/plan_wizard/view/pages/diet_plan/tab_diet_main.dart';
@@ -31,7 +33,19 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
   @override
   void initState() {
     super.initState();
-    Provider.of<PlanWizardViewModel>(context, listen: false)?.currentPage = 0;
+    if (!(Provider.of<PlanWizardViewModel>(context, listen: false)
+            ?.isDynamicLink ??
+        false)) {
+      Provider.of<PlanWizardViewModel>(context, listen: false)?.currentPage = 0;
+    } else {
+      Future.delayed(Duration(), () {
+        Provider.of<PlanWizardViewModel>(context, listen: false)
+            ?.changeCurrentPage(
+          Provider.of<PlanWizardViewModel>(context, listen: false)
+              ?.dynamicLinkPage,
+        );
+      });
+    }
     Provider.of<PlanWizardViewModel>(context, listen: false)?.fetchCartItem();
     Provider.of<PlanWizardViewModel>(context, listen: false)
         ?.isPlanWizardActive = true;
@@ -49,13 +63,8 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
     var planWizardViewModel = Provider.of<PlanWizardViewModel>(context);
     return WillPopScope(
       onWillPop: () {
-        if (planWizardViewModel.currentPage == 0) {
-          return Future.value(true);
-        } else {
-          planWizardViewModel
-              .changeCurrentPage(planWizardViewModel.currentPage - 1);
-          return Future.value(false);
-        }
+        onBackPressed(context);
+        return Future.value(false);
       },
       child: Scaffold(
         appBar: AppBar(
@@ -68,12 +77,7 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
             colors: Colors.white,
             size: 24.0.sp,
             onTap: () {
-              if (planWizardViewModel.currentPage == 0) {
-                Get.back();
-              } else {
-                planWizardViewModel
-                    .changeCurrentPage(planWizardViewModel.currentPage - 1);
-              }
+              onBackPressed(context);
             },
           ),
         ),
@@ -224,6 +228,36 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
       case 2:
         return strDietPlan;
         break;
+    }
+  }
+
+  onBackPressed(BuildContext context) {
+    var planWizardViewModel =
+        Provider.of<PlanWizardViewModel>(context, listen: false);
+    if (planWizardViewModel?.currentPage == 0) {
+      planWizardViewModel?.isDynamicLink = false;
+      planWizardViewModel?.dynamicLinkSearchText = '';
+      if (Navigator.canPop(context)) {
+        Get.back();
+      } else {
+        Get.offAllNamed(
+          rt_Landing,
+          arguments: const LandingArguments(
+            needFreshLoad: false,
+          ),
+        );
+      }
+    } else {
+      var newPage = 0;
+      if(planWizardViewModel?.isDynamicLink ?? false){
+        planWizardViewModel?.isDynamicLink = false;
+        planWizardViewModel?.dynamicLinkSearchText = '';
+        newPage = 0;
+      }else{
+        newPage = planWizardViewModel?.currentPage - 1;
+      }
+      planWizardViewModel
+          ?.changeCurrentPage(newPage);
     }
   }
 }
