@@ -1725,78 +1725,72 @@ class CommonUtil {
         final btnLabel = STR_UPDATE_NOW;
         final btnLabelCancel = STR_LATER;
         return Platform.isIOS
-            ? WillPopScope(
-          onWillPop: () async => false,
-              child: CupertinoAlertDialog(
-                  title: Text(
-                    title,
-                    style: TextStyle(fontSize: 16),
+            ? CupertinoAlertDialog(
+                title: Text(
+                  title,
+                  style: TextStyle(fontSize: 16),
+                ),
+                content: Text(
+                  message,
+                  style: TextStyle(fontSize: 14),
+                ),
+                actions: <Widget>[
+                  FlatButton(
+                    onPressed: () => launchURL(APP_STORE_URL),
+                    child: Text(
+                      btnLabel,
+                      style: TextStyle(
+                        color: Color(getMyPrimaryColor()),
+                      ),
+                    ),
                   ),
-                  content: Text(
-                    message,
-                    style: TextStyle(fontSize: 14),
-                  ),
-                  actions: <Widget>[
+                  if (!isForceUpdate)
                     FlatButton(
-                      onPressed: () => launchURL(APP_STORE_URL),
                       child: Text(
-                        btnLabel,
+                        btnLabelCancel,
                         style: TextStyle(
                           color: Color(getMyPrimaryColor()),
                         ),
                       ),
-                    ),
-                    if (!isForceUpdate)
-                      FlatButton(
-                        child: Text(
-                          btnLabelCancel,
-                          style: TextStyle(
-                            color: Color(getMyPrimaryColor()),
-                          ),
-                        ),
-                        onPressed: () => Navigator.pop(context),
-                      )
-                    /*else
-                      SizedBox.shrink(),*/
-                  ],
+                      onPressed: () => Navigator.pop(context),
+                    )
+                  /*else
+                    SizedBox.shrink(),*/
+                ],
+              )
+            : AlertDialog(
+                title: Text(
+                  title,
+                  style: TextStyle(fontSize: 16),
                 ),
-            )
-            : WillPopScope(
-          onWillPop: () async => false,
-              child: AlertDialog(
-                  title: Text(
-                    title,
-                    style: TextStyle(fontSize: 16),
+                content: Text(
+                  message,
+                  style: TextStyle(fontSize: 14),
+                ),
+                actions: <Widget>[
+                  FlatButton(
+                    onPressed: () => launchURL(PLAY_STORE_URL),
+                    child: Text(
+                      btnLabel,
+                      style: TextStyle(
+                        color: Color(getMyPrimaryColor()),
+                      ),
+                    ),
                   ),
-                  content: Text(
-                    message,
-                    style: TextStyle(fontSize: 14),
-                  ),
-                  actions: <Widget>[
+                  if (!isForceUpdate)
                     FlatButton(
-                      onPressed: () => launchURL(PLAY_STORE_URL),
                       child: Text(
-                        btnLabel,
+                        btnLabelCancel,
                         style: TextStyle(
                           color: Color(getMyPrimaryColor()),
                         ),
                       ),
-                    ),
-                    if (!isForceUpdate)
-                      FlatButton(
-                        child: Text(
-                          btnLabelCancel,
-                          style: TextStyle(
-                            color: Color(getMyPrimaryColor()),
-                          ),
-                        ),
-                        onPressed: () => Navigator.pop(context),
-                      )
-                    /*else
-                      SizedBox.shrink(),*/
-                  ],
-                ),
-            );
+                      onPressed: () => Navigator.pop(context),
+                    )
+                  /*else
+                    SizedBox.shrink(),*/
+                ],
+              );
       },
     );
   }
