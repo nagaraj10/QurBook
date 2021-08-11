@@ -144,6 +144,7 @@ class IosNotificationHandler {
               patientName: model.patientName,
               patientPicture: model.patientPicture,
               isFromVideoCall: false,
+              isCareGiver: false,
             ),
           );
         } else {

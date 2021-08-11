@@ -60,6 +60,7 @@ class Chat extends StatefulWidget {
   final String patientPicture;
   final bool isFromVideoCall;
   final String message;
+  final bool isCareGiver;
 
   Chat(
       {Key key,
@@ -71,7 +72,8 @@ class Chat extends StatefulWidget {
       @required this.patientName,
       @required this.patientPicture,
       @required this.isFromVideoCall,
-      this.message})
+      this.message,
+      this.isCareGiver})
       : super(key: key);
 
   @override
@@ -92,6 +94,7 @@ class ChatState extends State<Chat> {
         patientPicture: widget.patientPicture,
         isFromVideoCall: widget.isFromVideoCall,
         message: widget?.message,
+        isCareGiver: widget?.isCareGiver,
       ),
     );
   }
@@ -113,6 +116,7 @@ class ChatScreen extends StatefulWidget {
   final String patientPicture;
   final bool isFromVideoCall;
   final String message;
+  final bool isCareGiver;
 
   ChatScreen(
       {Key key,
@@ -124,7 +128,8 @@ class ChatScreen extends StatefulWidget {
       @required this.patientName,
       @required this.patientPicture,
       @required this.isFromVideoCall,
-      this.message})
+      this.message,
+      this.isCareGiver})
       : super(key: key);
 
   @override
@@ -206,6 +211,8 @@ class ChatScreenState extends State<ChatScreen> {
   String patientDeviceToken = '';
   String currentPlayedVoiceURL = '';
 
+  bool isCareGiver = false;
+
   @override
   void initState() {
     mInitialTime = DateTime.now();
@@ -222,6 +229,7 @@ class ChatScreenState extends State<ChatScreen> {
     patientName = widget.patientName;
     patientPicUrl = widget.patientPicture;
     isFromVideoCall = widget.isFromVideoCall;
+    isCareGiver = widget.isCareGiver;
 
     getPatientDetails();
     set_up_audios();
@@ -449,7 +457,7 @@ class ChatScreenState extends State<ChatScreen> {
       () {
         print("completed ***************");
         setState(() {
-          isPlaying=false;
+          isPlaying = false;
         });
       },
     );
@@ -1545,34 +1553,41 @@ class ChatScreenState extends State<ChatScreen> {
                             fontFamily: variable.font_poppins,
                             fontSize: 16.0.sp,
                             color: Colors.white)),
-                    Text('Booking Id: ' + bookingId,
-                        textAlign: TextAlign.left,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        style: TextStyle(
-                            fontFamily: variable.font_poppins,
-                            fontSize: 12.0.sp,
-                            color: Colors.white)),
-                    Text(
-                        'Next Appointment: ' +
-                            getFormattedDateTimeAppbar(nextAppointmentDate),
-                        textAlign: TextAlign.left,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        style: TextStyle(
-                            fontFamily: variable.font_poppins,
-                            fontSize: 12.0.sp,
-                            color: Colors.white)),
-                    Text(
-                        toBeginningOfSentenceCase('Last Appointment: ' +
-                            getFormattedDateTimeAppbar(lastAppointmentDate)),
-                        textAlign: TextAlign.left,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        style: TextStyle(
-                            fontFamily: variable.font_poppins,
-                            fontSize: 12.0.sp,
-                            color: Colors.white)),
+                    !isCareGiver
+                        ? Text('Booking Id: ' + bookingId,
+                            textAlign: TextAlign.left,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: TextStyle(
+                                fontFamily: variable.font_poppins,
+                                fontSize: 12.0.sp,
+                                color: Colors.white))
+                        : SizedBox.shrink(),
+                    !isCareGiver
+                        ? Text(
+                            'Next Appointment: ' +
+                                getFormattedDateTimeAppbar(nextAppointmentDate),
+                            textAlign: TextAlign.left,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: TextStyle(
+                                fontFamily: variable.font_poppins,
+                                fontSize: 12.0.sp,
+                                color: Colors.white))
+                        : SizedBox.shrink(),
+                    !isCareGiver
+                        ? Text(
+                            toBeginningOfSentenceCase('Last Appointment: ' +
+                                getFormattedDateTimeAppbar(
+                                    lastAppointmentDate)),
+                            textAlign: TextAlign.left,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: TextStyle(
+                                fontFamily: variable.font_poppins,
+                                fontSize: 12.0.sp,
+                                color: Colors.white))
+                        : SizedBox.shrink(),
                     Text(
                       widget.lastDate != null
                           ? LAST_RECEIVED + widget.lastDate
@@ -1583,7 +1598,7 @@ class ChatScreenState extends State<ChatScreen> {
                           fontFamily: variable.font_poppins,
                           fontSize: 12.0.sp,
                           color: Colors.white),
-                    ),
+                    )
                   ],
                 ),
               ))

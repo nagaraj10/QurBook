@@ -585,6 +585,7 @@ class _MyFHBState extends State<MyFHB> {
             patientPicture: chatParsedData[5],
             isFromVideoCall: false,
             message: chatParsedData[6],
+            isCareGiver: false,
           )).then((value) =>
               PageNavigator.goToPermanent(context, router.rt_Landing));
         } else if (passedValArr[1] == 'mycart') {
