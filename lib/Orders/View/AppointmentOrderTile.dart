@@ -40,18 +40,18 @@ class AppointmentOrderTile extends StatelessWidget {
             const SizedBox(
               height: 4,
             ),
-            order.doctorFirstName.isNotEmpty
+            order.patientFirstName.isNotEmpty
                 ? Text(
-                    "Doctor name : ${order.doctorFirstName} ${order.doctorLastName} ",
+                    "Patient name : ${order.patientFirstName} ${order.patientLastName} ",
                     style: Theme.of(context).textTheme.bodyText2,
                   )
                 : Container(),
             const SizedBox(
               height: 4,
             ),
-            order.patientFirstName.isNotEmpty
+            order.doctorFirstName.isNotEmpty
                 ? Text(
-                    "Patient name : ${order.patientFirstName} ${order.patientLastName} ",
+                    "Doctor name : ${order.doctorFirstName} ${order.doctorLastName} ",
                     style: Theme.of(context).textTheme.bodyText2,
                   )
                 : Container(),
