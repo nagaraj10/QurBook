@@ -366,6 +366,19 @@ class RegimentViewModel extends ChangeNotifier {
     return await RegimentService.deleteMedia(eid: eid);
   }
 
+  Future<SaveResponseModel> updatePhoto({String eid, String url}) async {
+    LoaderClass.showLoadingDialog(
+      Get.context,
+      canDismiss: false,
+    );
+    var response = await RegimentService.updatePhoto(
+      eid: eid,
+      url: url,
+    );
+    LoaderClass.hideLoadingDialog(Get.context);
+    return response;
+  }
+
   Future<FieldsResponseModel> getFormData({
     String eid,
   }) async {

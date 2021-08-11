@@ -137,6 +137,11 @@ const String strCallLab = 'laboratories/';
 
 //ForIcons
 
+const String icon_camera_image = 'assets/icons/camera_image.png';
+const String icon_delete_image = 'assets/icons/delete_image.png';
+const String icon_edit_image = 'assets/icons/edit.png';
+const String icon_photo_image = 'assets/icons/photo_image.png';
+const String icon_save_image = 'assets/icons/save_image.png';
 const String icon_qurplan = 'assets/launcher/qurplan.png';
 const String icon_languageIntro = 'assets/IntroScreensImages/Intro01.png';
 const String icon_qurplanIntro = 'assets/IntroScreensImages/Intro03.png';
