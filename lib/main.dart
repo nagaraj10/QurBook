@@ -9,7 +9,10 @@ import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myfhb/myPlan/view/myPlanDetail.dart';
 import 'package:myfhb/src/utils/dynamic_links.dart';
+import 'package:myfhb/video_call/utils/audiocall_provider.dart';
 import 'package:myfhb/video_call/utils/rtc_engine.dart';
+import 'package:myfhb/video_call/utils/videoicon_provider.dart';
+import 'package:myfhb/video_call/utils/videorequest_provider.dart';
 import 'package:myfhb/widgets/checkout_page.dart';
 import 'IntroScreens/IntroductionScreen.dart';
 import 'add_provider_plan/service/PlanProviderViewModel.dart';
@@ -706,6 +709,9 @@ class _MyFHBState extends State<MyFHB> {
           'ns_type': 'call',
           'navigationPage': 'TeleHelath Call screen',
         });
+        //! this should be dynamic from firebase db
+        Provider.of<AudioCallProvider>(Get.context, listen: false)
+            .enableAudioCall();
         Get.to(CallMain(
           doctorName: passedValArr[1],
           doctorId: passedValArr[2],
@@ -782,7 +788,16 @@ class _MyFHBState extends State<MyFHB> {
         ),
         provider.ChangeNotifierProvider<CheckoutPageProvider>(
           create: (_) => CheckoutPageProvider(),
-        )
+        ),
+        provider.ChangeNotifierProvider<AudioCallProvider>(
+          create: (_) => AudioCallProvider(),
+        ),
+        provider.ChangeNotifierProvider<VideoIconProvider>(
+          create: (_) => VideoIconProvider(),
+        ),
+        provider.ChangeNotifierProvider<VideoRequestProvider>(
+          create: (_) => VideoRequestProvider(),
+        ),
       ],
       child: LayoutBuilder(builder: (context, constraints) {
         return OrientationBuilder(builder: (context, orientation) {
@@ -1063,6 +1078,9 @@ class _MyFHBState extends State<MyFHB> {
       'ns_type': 'call',
       'navigationPage': 'TeleHelath Call screen',
     });
+    //! this should be dynamic from firebase db
+    Provider.of<AudioCallProvider>(Get.context, listen: false)
+        .enableAudioCall();
     return CallMain(
         isAppExists: false,
         role: ClientRole.Broadcaster,

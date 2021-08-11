@@ -118,6 +118,8 @@ class CommonUtil {
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
 
   static bool audioPage = false;
+  static bool isRemoteUserOnPause = false;
+  static bool isVideoRequestSent = false;
 
   static List<String> recordIds = [];
   static List<String> notesId = [];

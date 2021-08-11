@@ -7,9 +7,12 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
+import 'package:myfhb/video_call/utils/audiocall_provider.dart';
 import 'package:myfhb/video_call/utils/callstatus.dart';
 import 'package:myfhb/video_call/utils/hideprovider.dart';
 import 'package:myfhb/video_call/utils/rtc_engine.dart';
+import 'package:myfhb/video_call/utils/videoicon_provider.dart';
+import 'package:myfhb/video_call/utils/videorequest_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
@@ -28,6 +31,7 @@ class MyControllers extends StatefulWidget {
   String patientName;
   String patientPicUrl;
   RtcEngine rtcEngine;
+  String channelName;
 
   MyControllers(
       this.rtcEngine,
@@ -42,7 +46,8 @@ class MyControllers extends StatefulWidget {
       this.doctorPicUrl,
       this.patientId,
       this.patientName,
-      this.patientPicUrl);
+      this.patientPicUrl,
+      this.channelName);
 
   @override
   _MyControllersState createState() => _MyControllersState();
@@ -54,6 +59,100 @@ class _MyControllersState extends State<MyControllers> {
   String patientId;
   String patientName;
   String patientPicUrl;
+
+  final audioCallStatus =
+      Provider.of<AudioCallProvider>(Get.context, listen: false);
+  final videoIconStatus =
+      Provider.of<VideoIconProvider>(Get.context, listen: false);
+  final videoRequestStatus =
+      Provider.of<VideoRequestProvider>(Get.context, listen: false);
+  //final myDB = Firestore.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    //acknowledgeForVideoCallRequest();
+  }
+
+  /* acknowledgeForVideoCallRequest() {
+    myDB
+        .collection('call_log')
+        .document('${widget.channelName}') //! call must be updat here
+        .snapshots()
+        .listen((DocumentSnapshot documentSnapshot) {
+      Map<String, dynamic> firestoreInfo = documentSnapshot.data;
+
+      if (firestoreInfo['PatientRequestForVideoCall'] == 'request') {
+        showDialog(
+            context: Get.context,
+            barrierDismissible: false,
+            builder: (context) {
+              return AlertDialog(
+                title: Center(
+                  child: Text(
+                    'Alert!',
+                    style: TextStyle(
+                        fontSize: 20.0.sp,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black.withOpacity(0.8)),
+                  ),
+                ),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      child: Text(
+                        'Do you want Switch to Video call?',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 20.0.sp,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black.withOpacity(0.5)),
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        FlatButton(
+                            child: Text('Yes'),
+                            onPressed: () async {
+                              try {
+                                await myDB
+                                    .collection("call_log")
+                                    .document("${widget.channelName}")
+                                    .setData({
+                                  "PatientRequestForVideoCall": "accept"
+                                });
+                              } catch (e) {}
+                              Provider?.of<HideProvider>(context, listen: false)
+                                  ?.swithToVideo();
+                              Provider.of<AudioCallProvider>(context,
+                                      listen: false)
+                                  ?.disableAudioCall();
+                              Navigator.of(context).pop(true);
+                            }),
+                        FlatButton(
+                            child: Text('No'),
+                            onPressed: () async {
+                              try {
+                                await myDB
+                                    .collection("call_log")
+                                    .document("${widget.channelName}")
+                                    .setData({
+                                  "PatientRequestForVideoCall": "decline"
+                                });
+                              } catch (e) {}
+                              Navigator.of(context).pop(false);
+                            }),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            });
+      }
+    }).onError((e) {});
+  } */
 
   @override
   void dispose() {
@@ -122,7 +221,9 @@ class _MyControllersState extends State<MyControllers> {
       alignment: Alignment.bottomCenter,
       child: Container(
         decoration: BoxDecoration(
-          color: Color(CommonUtil().getMyPrimaryColor()).withOpacity(0.3),
+          color: audioCallStatus?.isAudioCall
+              ? Colors.white.withOpacity(0.5)
+              : Color(CommonUtil().getMyPrimaryColor()).withOpacity(0.3),
           borderRadius: BorderRadius.all(Radius.circular(8)),
         ),
         //color:Colors.red,
@@ -135,17 +236,14 @@ class _MyControllersState extends State<MyControllers> {
                 padding: const EdgeInsets.all(8.0),
                 child: IconButton(
                   onPressed: _onToggleVideo,
-                  // icon: Icon(
-                  // widget._isHideMyVideo ? Icons.videocam_off : Icons.videocam,
-                  //   color: Colors.white,
-                  //   size: 20.0,
-                  // ),
-                  icon: widget._isHideMyVideo
-                      ? Image.asset(
-                          'assets/icons/ic_vc_off_white.png') //? video call off icon
-                      : Image.asset('assets/icons/ic_vc_white.png'),
-                  //color: Colors.white,
-                  //iconSize: 15.0,
+                  icon: Consumer<VideoIconProvider>(
+                    builder: (context, status, child) {
+                      return status.isVideoOn
+                          ? Image.asset(
+                              'assets/icons/ic_vc_white.png')
+                          : Image.asset('assets/icons/ic_vc_off_white.png');
+                    },
+                  ),
                 ),
               ),
               Padding(
@@ -228,11 +326,95 @@ class _MyControllersState extends State<MyControllers> {
   }
 
   void _onToggleVideo() {
-    setState(() {
-      widget._isHideMyVideo = !widget._isHideMyVideo;
-    });
-    Provider.of<RTCEngineProvider>(Get.context, listen: false)?.changeLocalVideoStatus(widget?._isHideMyVideo);
-    widget.controllerState(widget.muted, widget._isHideMyVideo);
-    widget.rtcEngine.muteLocalVideoStream(widget._isHideMyVideo);
+    // setState(() {
+    //   widget._isHideMyVideo = !widget._isHideMyVideo;
+    // });
+    // Provider.of<RTCEngineProvider>(Get.context, listen: false)
+    //     ?.changeLocalVideoStatus(widget?._isHideMyVideo);
+    // widget.controllerState(widget.muted, widget._isHideMyVideo);
+    // widget.rtcEngine.muteLocalVideoStream(widget._isHideMyVideo);
+
+    //* this need to uncomment and check
+    if (audioCallStatus?.isAudioCall) {
+      //if it's a audio call want switch to video call, request remote user
+      // open request dialog for requesting
+      widget.rtcEngine.muteLocalVideoStream(true);
+      widget.rtcEngine.muteLocalVideoStream(false);
+      requestingDialog();
+    } else {
+      if (CommonUtil.isRemoteUserOnPause) {
+        Provider.of<AudioCallProvider>(context, listen: false)
+            .enableAudioCall();
+        videoIconStatus?.swapVideo();
+        widget.controllerState(widget.muted, videoIconStatus?.isVideoOn);
+        widget.rtcEngine.muteLocalVideoStream(true);
+      } else {
+        videoIconStatus?.swapVideo();
+        widget.controllerState(widget.muted, videoIconStatus?.isVideoOn);
+        widget.rtcEngine.muteLocalVideoStream(videoIconStatus?.isVideoOn);
+      }
+    }
+  }
+
+  Future<void> requestingDialog() async {
+    CommonUtil.isVideoRequestSent = true;
+    try {
+      showDialog(
+          context: Get.context,
+          barrierDismissible: false,
+          builder: (context) {
+            return AlertDialog(
+              title: Center(
+                child: Text(
+                  'Alert!',
+                  style: TextStyle(
+                      fontSize: 20.0.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black.withOpacity(0.8)),
+                ),
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 40.0.w,
+                    ),
+                    child: LinearProgressIndicator(
+                      backgroundColor: Color(CommonUtil.secondaryGrey),
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                          Color(CommonUtil().getMyPrimaryColor())),
+                      //value: progressValue[currentProgressValue],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    child: Text(
+                      'Requesting to switch to video call',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 20.0.sp,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black.withOpacity(0.5)),
+                    ),
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      FlatButton(
+                          child: Text('Cancel'),
+                          onPressed: () {
+                            Navigator.of(context).pop(false);
+                          }),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          });
+    } catch (e) {}
   }
 }
