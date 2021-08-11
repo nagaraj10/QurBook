@@ -2,10 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io' show Platform;
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
-import 'package:agora_rtc_engine/rtc_engine.dart';
+import 'package:agora_rtc_engine/rtc_engine.dart' as rtc;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:flutter_logs/flutter_logs.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myfhb/myPlan/view/myPlanDetail.dart';
 import 'package:myfhb/src/utils/dynamic_links.dart';
@@ -139,103 +140,129 @@ List<CameraDescription> listOfCameras;
 var routes;
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  var cameras = await availableCameras();
-  listOfCameras = cameras;
+  await runZonedGuarded<Future<void>>(() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp();
+    var cameras = await availableCameras();
+    listOfCameras = cameras;
 
-  // Get a specific camera from the list of available cameras.
-  firstCamera = cameras[0];
-  routes = await router.setRouter(listOfCameras);
+    // Get a specific camera from the list of available cameras.
+    firstCamera = cameras[0];
+    routes = await router.setRouter(listOfCameras);
 
-  //get secret from resource
-  final resList = <dynamic>[];
-  await CommonUtil.getResourceLoader().then((value) {
-    final Map mSecretMap = value;
-    mSecretMap.values.forEach((element) {
-      resList.add(element);
+    //get secret from resource
+    final resList = <dynamic>[];
+    await CommonUtil.getResourceLoader().then((value) {
+      final Map mSecretMap = value;
+      mSecretMap.values.forEach((element) {
+        resList.add(element);
+      });
+      setValues(resList);
     });
-    setValues(resList);
-  });
 
-  PreferenceUtil.init();
+    PreferenceUtil.init();
 
-  await DatabaseUtil.getDBLength().then((length) {
-    if (length == 0) {
-      DatabaseUtil.insertCountryMetricsData();
+    await DatabaseUtil.getDBLength().then((length) {
+      if (length == 0) {
+        DatabaseUtil.insertCountryMetricsData();
+      }
+    });
+
+    await DatabaseUtil.getDBLengthUnit().then((length) {
+      if (length == 0) {
+        DatabaseUtil.insertUnitsForDevices();
+      }
+    });
+
+    await FHBUtils.instance.initPlatformState();
+    await FHBUtils.instance.getDb();
+
+    await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+    Map appsFlyerOptions;
+    if (Platform.isIOS) {
+      appsFlyerOptions = {
+        'afDevKey': 'wAZtv6sqho7WqLGgTAAqFV',
+        'afAppId': '1526444520',
+        'isDebug': true
+      };
+    } else {
+      appsFlyerOptions = {
+        'afDevKey': 'UJdqFKHff633D3TcaZ5d55',
+        'afAppId': '',
+        'isDebug': true
+      };
     }
-  });
 
-  await DatabaseUtil.getDBLengthUnit().then((length) {
-    if (length == 0) {
-      DatabaseUtil.insertUnitsForDevices();
+    final appsflyerSdk = AppsflyerSdk(appsFlyerOptions);
+
+    await appsflyerSdk.initSdk(
+      registerConversionDataCallback: true,
+      registerOnAppOpenAttributionCallback: true,
+    );
+
+    if (Platform.isAndroid) {
+      await FlutterDownloader.initialize(
+          debug: true // optional: set false to disable printing logs to console
+          );
+      await Permission.storage.request();
     }
-  });
 
-  await FHBUtils.instance.initPlatformState();
-  await FHBUtils.instance.getDb();
+    // check if the app install on first time
+    await CommonUtil().isFirstTime();
+    // SystemChrome.setSystemUIOverlayStyle(
+    //   const SystemUiOverlayStyle(
+    //     statusBarIconBrightness: Brightness.light,
+    //     statusBarBrightness: Brightness.light,
+    //   ),
+    // );
 
-  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-
-  Map appsFlyerOptions;
-  if (Platform.isIOS) {
-    appsFlyerOptions = {
-      'afDevKey': 'wAZtv6sqho7WqLGgTAAqFV',
-      'afAppId': '1526444520',
-      'isDebug': true
-    };
-  } else {
-    appsFlyerOptions = {
-      'afDevKey': 'UJdqFKHff633D3TcaZ5d55',
-      'afAppId': '',
-      'isDebug': true
-    };
-  }
-
-  final appsflyerSdk = AppsflyerSdk(appsFlyerOptions);
-
-  await appsflyerSdk.initSdk(
-    registerConversionDataCallback: true,
-    registerOnAppOpenAttributionCallback: true,
-  );
-
-  if (Platform.isAndroid) {
-    await FlutterDownloader.initialize(
-        debug: true // optional: set false to disable printing logs to console
-        );
-    await Permission.storage.request();
-  }
-
-  // check if the app install on first time
-  await CommonUtil().isFirstTime();
-  // SystemChrome.setSystemUIOverlayStyle(
-  //   const SystemUiOverlayStyle(
-  //     statusBarIconBrightness: Brightness.light,
-  //     statusBarBrightness: Brightness.light,
-  //   ),
-  // );
-  runApp(
-    provider.MultiProvider(
-      providers: [
-        provider.ChangeNotifierProvider<ChatScreenViewModel>(
-          create: (_) => ChatScreenViewModel(),
-        ),
-        provider.ChangeNotifierProvider<RegimentViewModel>(
-          create: (_) => RegimentViewModel(),
-        ),
-        provider.ChangeNotifierProvider<PlanWizardViewModel>(
-          create: (_) => PlanWizardViewModel(),
-        ),
-        provider.ChangeNotifierProvider<RTCEngineProvider>(
-          create: (_) => RTCEngineProvider(),
-        ),
-        provider.ChangeNotifierProvider<PlanProviderViewModel>(
-          create: (_) => PlanProviderViewModel(),
-        ),
+    await FlutterLogs.initLogs(
+      logLevelsEnabled: [
+        LogLevel.INFO,
+        LogLevel.WARNING,
+        LogLevel.ERROR,
+        LogLevel.SEVERE,
       ],
-      child: MyFHB(),
-    ),
-  );
+      timeStampFormat: TimeStampFormat.TIME_FORMAT_READABLE,
+      directoryStructure: DirectoryStructure.SINGLE_FILE_FOR_DAY,
+      logTypesEnabled: ['device', 'network', 'errors'],
+      logFileExtension: LogFileExtension.TXT,
+      logsWriteDirectoryName: 'Logs',
+      logsExportDirectoryName: 'Shared',
+      debugFileOperations: true,
+      isDebuggable: true,
+      singleLogFileSize: 10,
+    );
+
+    runApp(
+      provider.MultiProvider(
+        providers: [
+          provider.ChangeNotifierProvider<ChatScreenViewModel>(
+            create: (_) => ChatScreenViewModel(),
+          ),
+          provider.ChangeNotifierProvider<RegimentViewModel>(
+            create: (_) => RegimentViewModel(),
+          ),
+          provider.ChangeNotifierProvider<PlanWizardViewModel>(
+            create: (_) => PlanWizardViewModel(),
+          ),
+          provider.ChangeNotifierProvider<RTCEngineProvider>(
+            create: (_) => RTCEngineProvider(),
+          ),
+          provider.ChangeNotifierProvider<PlanProviderViewModel>(
+            create: (_) => PlanProviderViewModel(),
+          ),
+        ],
+        child: MyFHB(),
+      ),
+    );
+  }, (Object error, StackTrace stack) async {
+    await CommonUtil.saveLog(
+      isError: true,
+      message: 'RunZonedGuarded Error - $error \nStackTrace - ${stack}',
+    );
+  });
 
   // await saveToPreference();
   //await PreferenceUtil.saveString(Constants.KEY_AUTHTOKEN, Constants.AuthToken);
@@ -714,7 +741,7 @@ class _MyFHBState extends State<MyFHB> {
           patientName: passedValArr[6],
           patientPicUrl: patientPic,
           channelName: passedValArr[0],
-          role: ClientRole.Broadcaster,
+          role: rtc.ClientRole.Broadcaster,
           isAppExists: true,
         ));
       }
@@ -1065,7 +1092,7 @@ class _MyFHBState extends State<MyFHB> {
     });
     return CallMain(
         isAppExists: false,
-        role: ClientRole.Broadcaster,
+        role: rtc.ClientRole.Broadcaster,
         channelName: navRoute.split('&')[0],
         doctorName: navRoute.split('&')[1] ?? 'Test',
         doctorId: navRoute.split('&')[2] ?? 'Doctor',

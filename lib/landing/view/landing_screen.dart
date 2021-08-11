@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -212,6 +213,15 @@ class _LandingScreenState extends State<LandingScreen> {
                               Expanded(
                                 child: getAppBarTitle(),
                               ),
+                              //TODO: Delete this - Added for Test
+                              if (kDebugMode)
+                                IconButton(
+                                  icon: Icon(Icons.cloud_upload),
+                                  onPressed: () {
+                                    CommonUtil.sendLogToServer();
+                                  },
+                                ),
+
                               Visibility(
                                 visible: landingViewModel.currentTabIndex == 4,
                                 child: Padding(

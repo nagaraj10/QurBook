@@ -609,7 +609,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     } else {
       ApiBaseHelper().makePayment(body).then((value) {
         if (value != null) {
-          if (value?.isSuccess) {
+          if ((value?.isSuccess ?? false) && value?.result != null) {
             Get.off(
               PaymentResultPage(
                 refNo: value?.result?.orderId,

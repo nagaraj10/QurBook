@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter_logs/flutter_logs.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -2849,6 +2850,38 @@ class CommonUtil {
                     )),
       ),
     );
+  }
+
+  static Future<void> saveLog({
+    String message,
+    bool isError = false,
+  }) {
+    var userIdMain = PreferenceUtil.getStringValue(KEY_USERID_MAIN);
+    var userIdCurrent = PreferenceUtil.getStringValue(KEY_USERID);
+    if (isError) {
+      FlutterLogs.logError(
+        'MainUser- $userIdMain',
+        'CurrentUser- $userIdCurrent',
+        '$message',
+      );
+    } else {
+      FlutterLogs.logInfo(
+        'MainUser- $userIdMain',
+        'CurrentUser- $userIdCurrent',
+        '$message',
+      );
+    }
+  }
+
+  static Future<void> sendLogToServer() async {
+    FlutterLogs.exportLogs(
+      exportType: ExportType.ALL,
+    );
+
+    // FlutterLogs.exportAllFileLogs();
+    //
+    // FlutterLogs.exportFileLogForName();
+    //TODO: SendToServer From Here
   }
 
   Future<void> isFirstTime() async {
