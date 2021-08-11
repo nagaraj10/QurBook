@@ -1715,6 +1715,26 @@ class CommonUtil {
     }
   }
 
+  static showFamilyMemberPlanExpiryDialog(String pateintName) async {
+    await Get.defaultDialog(
+      title: "Switch Profile",
+      content: Text(
+        "Switch to $pateintName profile in Home screen and Tap on the Renew button again from the Notifications list",
+      ),
+      confirm: FlatButton(
+        child: Text(
+          variable.strOK,
+          style: TextStyle(
+            color: Colors.black,
+          ),
+        ),
+      ),
+      onConfirm: () {
+        Get.back();
+      },
+    );
+  }
+
   _showVersionDialog(context, bool isForceUpdate) async {
     await showDialog<String>(
       context: context,
