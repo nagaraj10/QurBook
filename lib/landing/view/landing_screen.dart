@@ -165,9 +165,8 @@ class _LandingScreenState extends State<LandingScreen> {
       });
     }
     return FutureBuilder<MyProfileModel>(
-      future: getMyProfile(),
+      future: profileData,
       builder: (context, snapshot) {
-        if(snapshot.data!=null) {
           return Scaffold(
             key: _scaffoldKey,
             backgroundColor: const Color(bgColorContainer),
@@ -379,10 +378,8 @@ class _LandingScreenState extends State<LandingScreen> {
               ),
             ),
           );
-        }else if(!snapshot.hasData){
-          return Scaffold(body: Center(child: CircularProgressIndicator(),),);
         }
-      },
+
     );
   }
 
