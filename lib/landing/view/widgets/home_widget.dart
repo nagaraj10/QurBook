@@ -30,23 +30,6 @@ class HomeWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: EdgeInsets.only(
-                left: 20.0.w,
-                right: 20.0.w,
-                top: 10.0.h,
-              ),
-              child: Text(
-                constants.strMyDashboard,
-                style: TextStyle(
-                  fontSize: 18.0.sp,
-                  color: Colors.black,
-                  fontWeight: FontWeight.w500,
-                ),
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-              ),
-            ),
             Expanded(
               child: Consumer<LandingViewModel>(
                 builder: (context, landingViewModel, child) {
