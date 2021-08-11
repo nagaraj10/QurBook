@@ -329,9 +329,14 @@ class _CallPageState extends State<CallPage> {
 
     rtcEngineEventHandler.userEnableVideo = (uid, isEnabled) {
       FlutterToast().getToast('Doctor Video status - $isEnabled', Colors.green);
+      // if (isEnabled) {
+      //   CommonUtil.isRemoteUserOnPause = false;
+      // } else {
+      //   CommonUtil.isRemoteUserOnPause = true;
+      // }
       if (isEnabled && audioStatus?.isAudioCall) {
         //show switch to video call dialog
-        /* if (CommonUtil.isVideoRequestSent) {
+        if (CommonUtil.isVideoRequestSent) {
           CommonUtil.isVideoRequestSent = false;
           Get.back();
           Provider?.of<HideProvider>(context, listen: false)?.swithToVideo();
@@ -339,68 +344,69 @@ class _CallPageState extends State<CallPage> {
               ?.disableAudioCall();
           Provider?.of<VideoIconProvider>(context, listen: false)
               ?.turnOnVideo();
-        } else { */
-        showDialog(
-            context: Get.context,
-            barrierDismissible: false,
-            builder: (context) {
-              return AlertDialog(
-                title: Center(
-                  child: Text(
-                    'Alert!',
-                    style: TextStyle(
-                        fontSize: 20.0.sp,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black.withOpacity(0.8)),
+        } else {
+          showDialog(
+              context: Get.context,
+              barrierDismissible: false,
+              builder: (context) {
+                return AlertDialog(
+                  title: Center(
+                    child: Text(
+                      'Alert!',
+                      style: TextStyle(
+                          fontSize: 20.0.sp,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black.withOpacity(0.8)),
+                    ),
                   ),
-                ),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      child: Text(
-                        'Do you want Switch to Video call?',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 20.0.sp,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black.withOpacity(0.5)),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        child: Text(
+                          'Do you want Switch to Video call?',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 20.0.sp,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black.withOpacity(0.5)),
+                        ),
                       ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        FlatButton(
-                            child: Text(parameters.Yes),
-                            onPressed: () async {
-                              await widget?.rtcEngine?.enableVideo();
-                              await widget?.rtcEngine?.enableLocalVideo(true);
-                              await widget?.rtcEngine
-                                  ?.muteLocalVideoStream(false);
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          FlatButton(
+                              child: Text(parameters.Yes),
+                              onPressed: () async {
+                                await widget?.rtcEngine?.enableVideo();
+                                await widget?.rtcEngine?.enableLocalVideo(true);
+                                await widget?.rtcEngine
+                                    ?.muteLocalVideoStream(false);
 
-                              Provider?.of<HideProvider>(context, listen: false)
-                                  ?.swithToVideo();
-                              Provider.of<AudioCallProvider>(context,
-                                      listen: false)
-                                  ?.disableAudioCall();
-                              Provider?.of<VideoIconProvider>(context,
-                                      listen: false)
-                                  ?.turnOnVideo();
-                              Navigator.of(context).pop(true);
-                            }),
-                        FlatButton(
-                            child: Text(parameters.No),
-                            onPressed: () async {
-                              widget?.rtcEngine?.muteLocalVideoStream(true);
-                              Navigator.of(context).pop(false);
-                            }),
-                      ],
-                    ),
-                  ],
-                ),
-              );
-            });
-        //}
+                                Provider?.of<HideProvider>(context,
+                                        listen: false)
+                                    ?.swithToVideo();
+                                Provider.of<AudioCallProvider>(context,
+                                        listen: false)
+                                    ?.disableAudioCall();
+                                Provider?.of<VideoIconProvider>(context,
+                                        listen: false)
+                                    ?.turnOnVideo();
+                                Navigator.of(context).pop(true);
+                              }),
+                          FlatButton(
+                              child: Text(parameters.No),
+                              onPressed: () async {
+                                widget?.rtcEngine?.muteLocalVideoStream(true);
+                                Navigator.of(context).pop(false);
+                              }),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              });
+        }
       } else {
         videoPauseResumeState = 0;
       }
@@ -411,9 +417,11 @@ class _CallPageState extends State<CallPage> {
       if (reason == VideoRemoteStateReason.Internal) {
         //FlutterToast().getToast('Remote User Went to OFFLINE', Colors.yellow);
       } else if (reason == VideoRemoteStateReason.RemoteUnmuted) {
+        //CommonUtil.isRemoteUserOnPause = false;
         FlutterToast().getToast('Doctor Video is resumed', Colors.green);
         videoPauseResumeState = 1;
       } else if (reason == VideoRemoteStateReason.RemoteMuted) {
+        //CommonUtil.isRemoteUserOnPause = true;
         FlutterToast().getToast('Doctor Video is paused', Colors.red);
         videoPauseResumeState = 2;
       }

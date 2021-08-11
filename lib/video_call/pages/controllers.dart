@@ -239,8 +239,7 @@ class _MyControllersState extends State<MyControllers> {
                   icon: Consumer<VideoIconProvider>(
                     builder: (context, status, child) {
                       return status.isVideoOn
-                          ? Image.asset(
-                              'assets/icons/ic_vc_white.png')
+                          ? Image.asset('assets/icons/ic_vc_white.png')
                           : Image.asset('assets/icons/ic_vc_off_white.png');
                     },
                   ),
@@ -325,33 +324,30 @@ class _MyControllersState extends State<MyControllers> {
     widget.rtcEngine.muteLocalAudioStream(widget.muted);
   }
 
-  void _onToggleVideo() {
-    // setState(() {
-    //   widget._isHideMyVideo = !widget._isHideMyVideo;
-    // });
-    // Provider.of<RTCEngineProvider>(Get.context, listen: false)
-    //     ?.changeLocalVideoStatus(widget?._isHideMyVideo);
-    // widget.controllerState(widget.muted, widget._isHideMyVideo);
-    // widget.rtcEngine.muteLocalVideoStream(widget._isHideMyVideo);
-
+  void _onToggleVideo() async {
     //* this need to uncomment and check
     if (audioCallStatus?.isAudioCall) {
       //if it's a audio call want switch to video call, request remote user
       // open request dialog for requesting
-      widget.rtcEngine.muteLocalVideoStream(true);
-      widget.rtcEngine.muteLocalVideoStream(false);
+      await widget?.rtcEngine?.enableVideo();
+      await widget?.rtcEngine?.enableLocalVideo(true);
+      await widget?.rtcEngine?.muteLocalVideoStream(false);
       requestingDialog();
     } else {
       if (CommonUtil.isRemoteUserOnPause) {
+        await widget?.rtcEngine?.disableVideo();
+        await widget?.rtcEngine?.enableLocalVideo(false);
+        await widget?.rtcEngine?.muteLocalVideoStream(true);
+
+        Provider?.of<HideProvider>(context, listen: false)?.swithToAudio();
         Provider.of<AudioCallProvider>(context, listen: false)
-            .enableAudioCall();
-        videoIconStatus?.swapVideo();
-        widget.controllerState(widget.muted, videoIconStatus?.isVideoOn);
-        widget.rtcEngine.muteLocalVideoStream(true);
+            ?.enableAudioCall();
+        Provider?.of<VideoIconProvider>(context, listen: false)?.turnOffVideo();
       } else {
+        widget.rtcEngine.muteLocalVideoStream(videoIconStatus?.isVideoOn);
+        Provider.of<RTCEngineProvider>(context, listen: false)?.changeLocalVideoStatus(videoIconStatus?.isVideoOn);
         videoIconStatus?.swapVideo();
         widget.controllerState(widget.muted, videoIconStatus?.isVideoOn);
-        widget.rtcEngine.muteLocalVideoStream(videoIconStatus?.isVideoOn);
       }
     }
   }
