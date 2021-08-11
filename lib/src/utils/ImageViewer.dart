@@ -13,6 +13,7 @@ import 'package:myfhb/regiment/view_model/pickImageController.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
+import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import 'package:get/get.dart';
@@ -37,23 +38,18 @@ class _ImageViewerState extends State<ImageViewer> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Color(
-          CommonUtil().getMyPrimaryColor(),
-        ),
         appBar: AppBar(
+          centerTitle: true,
           elevation: 0.0,
-          backgroundColor: Color(
-            CommonUtil().getMyPrimaryColor(),
-          ),
-          title: Center(
-            child: RichText(
-              text: TextSpan(
-                text: 'Image',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 24.0.sp,
-                ),
+          flexibleSpace: GradientAppBar(),
+          title: RichText(
+            textAlign: TextAlign.center,
+            text: TextSpan(
+              text: 'Image',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w500,
+                fontSize: 24.0.sp,
               ),
             ),
           ),
@@ -114,7 +110,9 @@ class _ImageViewerState extends State<ImageViewer> {
                         ],
                       ),
                     )
-                  : Container(),
+                  : SizedBox(
+                      height: 100,
+                    ),
               Expanded(
                 flex: 1,
                 child: Container(
