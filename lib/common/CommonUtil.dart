@@ -1749,7 +1749,9 @@ class CommonUtil {
                       child: Text(
                         btnLabelCancel,
                         style: TextStyle(
-                          color: Color(getMyPrimaryColor()),
+                          color: Color(
+                            getMyPrimaryColor(),
+                          ),
                         ),
                       ),
                       onPressed: () => Navigator.pop(context),
