@@ -122,7 +122,7 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
                             10.0.sp,
                           ),
                           child: Text(
-                            _getBottomText(
+                              _getBottomText(
                                 planWizardViewModel.currentPage,
                                 planWizardViewModel.currentTab,
                                 planWizardViewModel.currentTabDiet),
@@ -133,7 +133,7 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
                           ),
                         ),
                       ),
-                      OutlineButton(
+                      ( (planWizardViewModel.currentPage==1 && planWizardViewModel.currentTab==0)|| (planWizardViewModel.currentTabDiet==0 && planWizardViewModel.currentPage==2)) ? OutlineButton(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(
                             10.0.sp,
@@ -142,7 +142,7 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
                         onPressed: () {
                           if (planWizardViewModel.currentPage == 1 ||
                               planWizardViewModel.currentPage == 2) {
-                            Get.to(AddProviderPlan());
+                            Get.to(AddProviderPlan(planWizardViewModel.selectedTag));
                           } else {
                             new AddNewPlan().addNewPlan(
                                 context, feedbackCode, titleName, hintText,
@@ -167,7 +167,7 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
                               planWizardViewModel.currentTab,
                               planWizardViewModel.currentTabDiet),
                         ),
-                      ),
+                      ):SizedBox(),
                     ],
                   ),
                 ),
@@ -180,16 +180,18 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
   }
 
   String _getBottomText(int currentPage, int currentTab, int currentTabDiet) {
-    switch (currentPage) {
-      case 0:
-        return strDontCondition;
-        break;
-      case 1:
-        return currentTab == 0 ? strDontProvider : strDontProvider;
-        break;
-      case 2:
-        return currentTabDiet == 0 ? strDontProvider : strDontProvider;
-        break;
+
+      switch (currentPage) {
+        case 0:
+          return strDontCondition;
+          break;
+        case 1:
+          return currentTab == 0 ? strDontProvider : "";
+          break;
+        case 2:
+          return currentTabDiet == 0 ? strDontProvider : "";
+          break;
+
     }
   }
 

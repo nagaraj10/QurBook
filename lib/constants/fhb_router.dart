@@ -124,7 +124,7 @@ setRouter(List<CameraDescription> listOfCameras) async {
     router.rt_AudioScreen: (BuildContext context) =>
         AudioRecorder(arguments: ModalRoute.of(context).settings.arguments),
     router.rt_PlanWizard: (BuildContext context) => PlanWizardScreen(),
-    router.rt_AddProviderPlan: (BuildContext context) => AddProviderPlan(),
+    router.rt_AddProviderPlan: (BuildContext context) => AddProviderPlan(""),
   };
 
   return fhbRouter;

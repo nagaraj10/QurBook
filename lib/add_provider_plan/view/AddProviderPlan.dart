@@ -15,6 +15,9 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 
 class AddProviderPlan extends StatefulWidget {
+  String selectedTag;
+  AddProviderPlan(this.selectedTag);
+
   @override
   AddProviderPlanState createState() => AddProviderPlanState();
 }
@@ -37,7 +40,7 @@ class AddProviderPlanState extends State<AddProviderPlan> {
     // TODO: implement initState
     providerOrganizationResult =
         Provider.of<PlanProviderViewModel>(context, listen: false)
-            .getCarePlanList();
+            .getCarePlanList(widget.selectedTag);
     //Provider.of<PlanProviderViewModel>(context, listen: false).hasSelectAllData=false;
   }
 
