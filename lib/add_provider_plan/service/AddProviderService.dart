@@ -8,10 +8,10 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 class AddProviderService{
   ApiBaseHelper _helper = ApiBaseHelper();
 
-  Future<ProviderOrganisationResponse> getUnassociatedProvider(String patientId) async {
+  Future<ProviderOrganisationResponse> getUnassociatedProvider(String patientId,String selectedTag) async {
     String userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
-    String url="provider-mapping/unassociated-providers/"+userID;
+    String url="provider-mapping/unassociated-providers/"+userID+"?condition="+selectedTag;
     final response = await _helper.getProviderPlan(url);
     return ProviderOrganisationResponse.fromJson(response);
   }

@@ -37,12 +37,13 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
 
   List sortType = ['Default', 'Price', 'Duration'];
   ValueNotifier<String> _selectedItem = new ValueNotifier<String>('Default');
-
+String conditionChosen;
   @override
   void initState() {
     Provider.of<PlanWizardViewModel>(context, listen: false)
         .currentPackageProviderCareId = '';
-
+    conditionChosen= Provider.of<PlanWizardViewModel>(context, listen: false)
+        .selectedTag;
     planListModel = Provider.of<PlanWizardViewModel>(context, listen: false)
         .getCarePlanList(strProviderCare);
   }

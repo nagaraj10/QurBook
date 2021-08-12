@@ -23,11 +23,11 @@ class PlanProviderViewModel extends ChangeNotifier {
 
     });
   }
-  Future<ProviderOrganisationResponse> getCarePlanList() async {
+  Future<ProviderOrganisationResponse> getCarePlanList(String selectedTag) async {
     try {
       var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
       ProviderOrganisationResponse myPlanListModel =
-          await _addProviderService.getUnassociatedProvider(userId);
+          await _addProviderService.getUnassociatedProvider(userId,selectedTag);
       if (myPlanListModel.isSuccess) {
         providerPlanResult = myPlanListModel.result;
       } else {
