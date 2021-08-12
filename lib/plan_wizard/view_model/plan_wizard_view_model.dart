@@ -40,6 +40,10 @@ class PlanWizardViewModel extends ChangeNotifier {
   Map<String, List<MenuItem>> healthConditions = {};
   Map<String, List<MenuItem>> filteredHealthConditions = {};
   bool isHealthSearch = false;
+  bool isDynamicLink = false;
+  int dynamicLinkPage = 0;
+  String dynamicLinkSearchText = '';
+  int dynamicLinkTabIndex = 0;
 
   List<ProductList> cartList = [];
 
@@ -483,24 +487,22 @@ class PlanWizardViewModel extends ChangeNotifier {
     return filterSearchAll;
   }*/
 
-  String getTag(String isFromAdd){
-
+  String getTag(String isFromAdd) {
     String tag = '';
 
-    if(isFromAdd == strProviderCare){
+    if (isFromAdd == strProviderCare) {
       tag = selectedTag + ',' + strProviderCare;
-    }else if(isFromAdd == strFreeCare){
+    } else if (isFromAdd == strFreeCare) {
       tag = selectedTag + ',' + strFreeCare;
-    }else if (isFromAdd == strProviderDiet){
+    } else if (isFromAdd == strProviderDiet) {
       tag = selectedTag + ',' + strProviderDiet;
-    }else if(isFromAdd == strFreeDiet){
+    } else if (isFromAdd == strFreeDiet) {
       tag = selectedTag + ',' + strFreeDiet;
-    }else {
+    } else {
       tag = '';
     }
 
     return tag;
-
   }
 
   Future<AddToCartModel> addToCartItem(
@@ -566,10 +568,10 @@ class PlanWizardViewModel extends ChangeNotifier {
       } else if (isFrom == strFreeCare) {
         updateSingleSelectionFree('');
         updateProviderId('');
-      }else if (isFrom == strProviderDiet) {
+      } else if (isFrom == strProviderDiet) {
         updateSingleSelectionProviderDiet('');
         updateProviderId('');
-      }else if (isFrom == strFreeDiet) {
+      } else if (isFrom == strFreeDiet) {
         updateSingleSelectionFreeDiet('');
         updateProviderId('');
       }

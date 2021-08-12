@@ -32,26 +32,26 @@ class DietPlanCard extends StatelessWidget {
           context,
           MaterialPageRoute(
               builder: (context) => MyPlanDetailView(
-                    title: planList?.title,
-                    providerName: planList?.providerName,
-                    description: planList?.description,
-                    issubscription: planList?.isSubscribed,
+                    // title: planList?.title,
+                    // providerName: planList?.providerName,
+                    // description: planList?.description,
+                    // issubscription: planList?.isSubscribed,
                     packageId: planList?.packageid,
-                    price: planList?.price,
-                    packageDuration: planList?.packageDuration,
-                    providerId: planList?.plinkid,
-                    isDisable: false,
-                    hosIcon: planList?.providerMetadata?.icon,
-                    iconApi: planList?.metadata?.icon,
-                    catIcon: planList?.catmetadata?.icon,
-                    metaDataForURL: planList?.metadata,
+                    // price: planList?.price,
+                    // packageDuration: planList?.packageDuration,
+                    // providerId: planList?.plinkid,
+                    // isDisable: false,
+                    // hosIcon: planList?.providerMetadata?.icon,
+                    // iconApi: planList?.metadata?.icon,
+                    // catIcon: planList?.catmetadata?.icon,
+                    // metaDataForURL: planList?.metadata,
                     isFrom: isFrom,
-                    isExtendable: planList.isSubscribed == '1'
-                        ? planList?.isExtendable == '1'
-                            ? true
-                            : false
-                        : true,
-                    isRenew: planList?.isexpired == '1' ? true : false,
+                    // isExtendable: planList.isSubscribed == '1'
+                    //     ? planList?.isExtendable == '1'
+                    //         ? true
+                    //         : false
+                    //     : true,
+                    // isRenew: planList?.isexpired == '1' ? true : false,
                   )),
         );
       },
