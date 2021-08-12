@@ -694,8 +694,7 @@ class _MyFHBState extends State<MyFHB> {
         try {
           doctorPic = passedValArr[3];
           patientPic = passedValArr[7];
-          //callType = passedValArr[8]; //TODO this should be uncomment
-          callType = 'audio';
+          callType = passedValArr[8];
           if (doctorPic.isNotEmpty) {
             doctorPic = json.decode(doctorPic);
           } else {
@@ -1069,8 +1068,7 @@ class _MyFHBState extends State<MyFHB> {
   Widget StartTheCall() {
     var docPic = navRoute.split('&')[3];
     var patPic = navRoute.split('&')[7];
-    //var callType = navRoute.split('&')[8]; //TODO this should be uncomment
-    var callType = 'audio';
+    var callType = navRoute.split('&')[8];
     try {
       if (docPic.isNotEmpty) {
         docPic = json.decode(navRoute.split('&')[3]);

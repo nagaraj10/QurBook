@@ -120,6 +120,7 @@ class CommonUtil {
   static bool audioPage = false;
   static bool isRemoteUserOnPause = false;
   static bool isVideoRequestSent = false;
+  static bool isLocalUserOnPause = false;
 
   static List<String> recordIds = [];
   static List<String> notesId = [];

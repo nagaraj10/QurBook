@@ -1,23 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 
 class AudioCallScreen extends StatelessWidget {
   final String avatar;
-  AudioCallScreen(
-      {this.avatar =
-          'https://qurbook.com/wp-content/uploads/2021/02/qurbook-logo-1.png'});
+  String patName;
+  AudioCallScreen({this.avatar, this.patName});
 
   @override
   Widget build(BuildContext context) {
+    patName = patName?.toUpperCase()?.split(' ')[0][0] +
+        patName?.toUpperCase()?.split(' ')[1][0];
     return Container(
-      color: Color(CommonUtil().getMyPrimaryColor()),
+      color: Colors.black45,
       child: Center(
-        child: Container(
-          height: 400,
-          width: MediaQuery.of(context).size.width,
-          child: (avatar != null && avatar != '')
-              ? Image.network(avatar)
-              : Image.asset('assets/user/profile_pic_ph.png'),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              height: 120,
+              width: 120,
+              decoration: BoxDecoration(
+                color: Color(CommonUtil.secondaryGrey),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(100),
+                ),
+              ),
+              child: Center(
+                child: Text(
+                  '$patName',
+                  style: TextStyle(color: Colors.white, fontSize: 50),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 100,
+              width: 100,
+              child: Lottie.asset('assets/loading_wave.json'),
+            )
+          ],
         ),
       ),
     );

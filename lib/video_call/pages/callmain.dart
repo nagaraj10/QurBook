@@ -134,6 +134,7 @@ class _CallMainState extends State<CallMain> {
                         channelName: widget.channelName,
                         arguments: widget.arguments,
                         isAppExists: widget.isAppExists,
+                        doctorName: widget.doctorName,
                       ),
                       Consumer<AudioCallProvider>(
                           builder: (context, status, child) {

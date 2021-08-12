@@ -21,6 +21,7 @@ import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.da
 import 'package:myfhb/video_call/model/CallArguments.dart';
 import 'package:myfhb/video_call/utils/audiocall_provider.dart';
 import 'package:myfhb/video_call/utils/hideprovider.dart';
+import 'package:myfhb/video_call/utils/rtc_engine.dart';
 import 'package:myfhb/video_call/utils/videoicon_provider.dart';
 import 'package:myfhb/video_call/widgets/audiocall_screen.dart';
 import 'package:provider/provider.dart';
@@ -40,15 +41,16 @@ class CallPage extends StatefulWidget {
   ///check call is made from NS
   bool isAppExists;
   RtcEngine rtcEngine;
+  String doctorName;
 
   /// Creates a call page with given channel name.
-  CallPage({
-    this.channelName,
-    this.role,
-    this.arguments,
-    this.isAppExists,
-    this.rtcEngine,
-  });
+  CallPage(
+      {this.channelName,
+      this.role,
+      this.arguments,
+      this.isAppExists,
+      this.rtcEngine,
+      this.doctorName});
 
   @override
   _CallPageState createState() => _CallPageState();
@@ -328,12 +330,6 @@ class _CallPageState extends State<CallPage> {
     };
 
     rtcEngineEventHandler.userEnableVideo = (uid, isEnabled) {
-      FlutterToast().getToast('Doctor Video status - $isEnabled', Colors.green);
-      // if (isEnabled) {
-      //   CommonUtil.isRemoteUserOnPause = false;
-      // } else {
-      //   CommonUtil.isRemoteUserOnPause = true;
-      // }
       if (isEnabled && audioStatus?.isAudioCall) {
         //show switch to video call dialog
         if (CommonUtil.isVideoRequestSent) {
@@ -344,27 +340,29 @@ class _CallPageState extends State<CallPage> {
               ?.disableAudioCall();
           Provider?.of<VideoIconProvider>(context, listen: false)
               ?.turnOnVideo();
+          Provider.of<RTCEngineProvider>(context, listen: false)
+              ?.isVideoPaused = false;
         } else {
           showDialog(
               context: Get.context,
               barrierDismissible: false,
               builder: (context) {
                 return AlertDialog(
-                  title: Center(
-                    child: Text(
-                      'Alert!',
-                      style: TextStyle(
-                          fontSize: 20.0.sp,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black.withOpacity(0.8)),
-                    ),
-                  ),
+                  // title: Center(
+                  //   child: Text(
+                  //     'Alert!',
+                  //     style: TextStyle(
+                  //         fontSize: 20.0.sp,
+                  //         fontWeight: FontWeight.bold,
+                  //         color: Colors.black.withOpacity(0.8)),
+                  //   ),
+                  // ),
                   content: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Container(
                         child: Text(
-                          'Do you want Switch to Video call?',
+                          '${widget?.doctorName} requesting to switch to video call',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               fontSize: 20.0.sp,
@@ -376,7 +374,13 @@ class _CallPageState extends State<CallPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           FlatButton(
-                              child: Text(parameters.Yes),
+                              child: Text(parameters.btn_decline),
+                              onPressed: () async {
+                                widget?.rtcEngine?.muteLocalVideoStream(true);
+                                Navigator.of(context).pop(false);
+                              }),
+                          FlatButton(
+                              child: Text(parameters.btn_switch),
                               onPressed: () async {
                                 await widget?.rtcEngine?.enableVideo();
                                 await widget?.rtcEngine?.enableLocalVideo(true);
@@ -392,13 +396,10 @@ class _CallPageState extends State<CallPage> {
                                 Provider?.of<VideoIconProvider>(context,
                                         listen: false)
                                     ?.turnOnVideo();
+                                Provider.of<RTCEngineProvider>(context,
+                                        listen: false)
+                                    ?.isVideoPaused = false;
                                 Navigator.of(context).pop(true);
-                              }),
-                          FlatButton(
-                              child: Text(parameters.No),
-                              onPressed: () async {
-                                widget?.rtcEngine?.muteLocalVideoStream(true);
-                                Navigator.of(context).pop(false);
                               }),
                         ],
                       ),
@@ -413,17 +414,33 @@ class _CallPageState extends State<CallPage> {
     };
 
     rtcEngineEventHandler.remoteVideoStateChanged =
-        (uid, state, reason, elapsed) {
+        (uid, state, reason, elapsed) async {
       if (reason == VideoRemoteStateReason.Internal) {
         //FlutterToast().getToast('Remote User Went to OFFLINE', Colors.yellow);
+        CommonUtil.isRemoteUserOnPause = false;
       } else if (reason == VideoRemoteStateReason.RemoteUnmuted) {
-        //CommonUtil.isRemoteUserOnPause = false;
+        CommonUtil.isRemoteUserOnPause = false;
         FlutterToast().getToast('Doctor Video is resumed', Colors.green);
         videoPauseResumeState = 1;
       } else if (reason == VideoRemoteStateReason.RemoteMuted) {
-        //CommonUtil.isRemoteUserOnPause = true;
-        FlutterToast().getToast('Doctor Video is paused', Colors.red);
-        videoPauseResumeState = 2;
+        CommonUtil.isRemoteUserOnPause = true;
+        if (CommonUtil.isLocalUserOnPause) {
+          CommonUtil.isLocalUserOnPause = false;
+          await widget?.rtcEngine?.disableVideo();
+          await widget?.rtcEngine?.enableLocalVideo(false);
+          await widget?.rtcEngine?.muteLocalVideoStream(true);
+
+          Provider?.of<HideProvider>(context, listen: false)?.swithToAudio();
+          Provider.of<AudioCallProvider>(context, listen: false)
+              ?.enableAudioCall();
+          Provider?.of<VideoIconProvider>(context, listen: false)
+              ?.turnOffVideo();
+        } else {
+          FlutterToast().getToast('Patient Video is paused', Colors.red);
+          videoPauseResumeState = 2;
+        }
+      } else {
+        CommonUtil.isRemoteUserOnPause = false;
       }
     };
 
@@ -743,7 +760,9 @@ class _CallPageState extends State<CallPage> {
         : Consumer<AudioCallProvider>(builder: (context, status, child) {
             if (status.isAudioCall) {
               return InkWell(
-                child: AudioCallScreen(),
+                child: AudioCallScreen(
+                  patName: widget.doctorName,
+                ),
               );
             } else {
               return _viewRows();

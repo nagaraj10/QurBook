@@ -345,7 +345,9 @@ class _MyControllersState extends State<MyControllers> {
         Provider?.of<VideoIconProvider>(context, listen: false)?.turnOffVideo();
       } else {
         widget.rtcEngine.muteLocalVideoStream(videoIconStatus?.isVideoOn);
-        Provider.of<RTCEngineProvider>(context, listen: false)?.changeLocalVideoStatus(videoIconStatus?.isVideoOn);
+        Provider.of<RTCEngineProvider>(context, listen: false)
+            ?.changeLocalVideoStatus(videoIconStatus?.isVideoOn);
+        CommonUtil.isLocalUserOnPause = videoIconStatus?.isVideoOn;
         videoIconStatus?.swapVideo();
         widget.controllerState(widget.muted, videoIconStatus?.isVideoOn);
       }
