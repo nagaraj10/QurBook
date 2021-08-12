@@ -18,6 +18,7 @@ import '../../widgets/GradientAppBar.dart';
 class MyPlanDetail extends StatefulWidget {
   final String packageId;
   final String templateName;
+
   /*  final String title;
   final String providerName;
   final String docName;
@@ -32,6 +33,7 @@ class MyPlanDetail extends StatefulWidget {
   final String price;
   final String isExtendable; */
   bool showRenew;
+
   MyPlanDetail(
       {Key key,
       @required this.packageId,
@@ -90,8 +92,9 @@ class PlanDetail extends State<MyPlanDetail> {
   void setValues(MyPlanListResult planList) {
     title = planList?.title ?? '';
     providerName = planList?.providerName ?? '';
-    docName = planList?.docNick ?? '';
+    docName = planList?.metadata?.doctorName ?? '';
     startDate = planList?.startdate ?? '';
+    endDate = planList?.enddate ?? '';
     endDate = planList?.enddate ?? '';
     packageId = planList?.packageid ?? '';
     isExpired = planList?.isexpired ?? '';
@@ -231,11 +234,25 @@ class PlanDetail extends State<MyPlanDetail> {
                           SizedBox(
                             height: 3.h,
                           ),
-                          Text(
-                              docName != null && docName != ''
-                                  ? toBeginningOfSentenceCase(docName)
-                                  : '-',
-                              style: TextStyle(fontSize: 16.sp)),
+                          docName != null && docName != ''
+                              ? Row(
+                                children: [
+                                  Text(
+                                      'Plan approved by:',
+                                      style: TextStyle(fontSize: 16.sp,color: Colors.grey[600])),
+                                  SizedBox(width: 4.w),
+                                  Flexible(
+                                    child: Container(
+                                      child: Text(
+                                          toBeginningOfSentenceCase(docName),
+                                          textAlign: TextAlign.start,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(fontSize: 16.sp)),
+                                    ),
+                                  ),
+                                ],
+                              )
+                              : SizedBox.shrink(),
                           SizedBox(
                             height: 3.h,
                           ),
