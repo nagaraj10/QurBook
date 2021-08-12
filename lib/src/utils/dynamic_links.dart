@@ -1,5 +1,6 @@
+import 'dart:convert';
+
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -14,72 +15,75 @@ class DynamicLinks {
     FirebaseDynamicLinks.instance.onLink(
       onSuccess: (PendingDynamicLinkData dynamicLink) async {
         final Uri deepLink = dynamicLink?.link;
-        if ((PreferenceUtil.getStringValue(KEY_USERID) ?? '').isNotEmpty) {
-          if ((deepLink?.queryParameters?.length ?? 0) > 0 &&
-              (deepLink?.queryParameters['module'] ?? '').isNotEmpty) {
-            switch (deepLink?.queryParameters['module']) {
-              case 'qurplan':
-                var planWizardViewModel = Provider.of<PlanWizardViewModel>(
-                    Get.context,
-                    listen: false);
-                int currentPage;
-                if ((deepLink?.queryParameters['packageId'] ?? '').isNotEmpty) {
-                  Get.offAll(
-                    MyPlanDetailView(
-                      packageId: deepLink?.queryParameters['packageId'],
-                      isFrom: strDeepLink,
-                    ),
-                  );
-                } else {
-                  if ((deepLink?.queryParameters['planType'] ?? '')
-                      .isNotEmpty) {
-                    if (deepLink?.queryParameters['planType'] == 'Care') {
-                      currentPage = 1;
-                    } else if (deepLink?.queryParameters['planType'] ==
-                        'Diet') {
-                      currentPage = 2;
-                    }
-                  }
-
-                  if ((deepLink?.queryParameters['freePlans'] ?? '')
-                      .isNotEmpty) {
-                    if (deepLink?.queryParameters['freePlans'] == '1') {
-                      planWizardViewModel?.dynamicLinkTabIndex = 1;
-                    } else {
-                      planWizardViewModel?.dynamicLinkTabIndex = 0;
-                    }
-                  }
-
-                  if ((deepLink?.queryParameters['provider'] ?? '')
-                      .isNotEmpty) {
-                    planWizardViewModel?.dynamicLinkSearchText =
-                        deepLink?.queryParameters['provider'];
-                  }
-
-                  if ((deepLink?.queryParameters['plan'] ?? '').isNotEmpty) {
-                    planWizardViewModel?.dynamicLinkSearchText =
-                        deepLink?.queryParameters['plan'];
-                  }
-
-                  if ((deepLink?.queryParameters['diseaseCondition'] ?? '')
-                      .isNotEmpty) {
-                    planWizardViewModel?.selectedTag =
-                        deepLink?.queryParameters['diseaseCondition'];
-                  }
-
-                  planWizardViewModel.isDynamicLink = true;
-                  planWizardViewModel?.dynamicLinkPage = currentPage ?? 0;
-                  Get.offAllNamed(rt_PlanWizard);
-                }
-                break;
-            }
-          }
-        }
+        await processDynamicLink(deepLink);
       },
       onError: (OnLinkErrorException e) async {
         print('onLinkError');
         print(e.message);
       },
     );
+  }
+
+  static Future<void> processDynamicLink(Uri deepLink) async {
+    if ((PreferenceUtil.getStringValue(KEY_USERID) ?? '').isNotEmpty) {
+      await PreferenceUtil.saveString(KEY_DYNAMIC_URL, '');
+      if ((deepLink?.queryParameters?.length ?? 0) > 0 &&
+          (deepLink?.queryParameters['module'] ?? '').isNotEmpty) {
+        switch (deepLink?.queryParameters['module']) {
+          case 'qurplan':
+            var planWizardViewModel =
+                Provider.of<PlanWizardViewModel>(Get.context, listen: false);
+            int currentPage;
+            if ((deepLink?.queryParameters['packageId'] ?? '').isNotEmpty) {
+              Get.offAll(
+                MyPlanDetailView(
+                  packageId: deepLink?.queryParameters['packageId'],
+                  isFrom: strDeepLink,
+                ),
+              );
+            } else {
+              if ((deepLink?.queryParameters['planType'] ?? '').isNotEmpty) {
+                if (deepLink?.queryParameters['planType'] == 'Care') {
+                  currentPage = 1;
+                } else if (deepLink?.queryParameters['planType'] == 'Diet') {
+                  currentPage = 2;
+                }
+              }
+
+              if ((deepLink?.queryParameters['freePlans'] ?? '').isNotEmpty) {
+                if (deepLink?.queryParameters['freePlans'] == '1') {
+                  planWizardViewModel?.dynamicLinkTabIndex = 1;
+                } else {
+                  planWizardViewModel?.dynamicLinkTabIndex = 0;
+                }
+              }
+
+              if ((deepLink?.queryParameters['provider'] ?? '').isNotEmpty) {
+                planWizardViewModel?.dynamicLinkSearchText =
+                    deepLink?.queryParameters['provider'];
+              }
+
+              if ((deepLink?.queryParameters['plan'] ?? '').isNotEmpty) {
+                planWizardViewModel?.dynamicLinkSearchText =
+                    deepLink?.queryParameters['plan'];
+              }
+
+              if ((deepLink?.queryParameters['diseaseCondition'] ?? '')
+                  .isNotEmpty) {
+                planWizardViewModel?.selectedTag =
+                    deepLink?.queryParameters['diseaseCondition'];
+              }
+
+              planWizardViewModel.isDynamicLink = true;
+              planWizardViewModel?.dynamicLinkPage = currentPage ?? 0;
+              Get.offAllNamed(rt_PlanWizard);
+            }
+            break;
+        }
+      }
+    } else {
+      await PreferenceUtil.saveString(
+          KEY_DYNAMIC_URL, jsonEncode(deepLink?.toString() ?? ''));
+    }
   }
 }

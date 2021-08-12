@@ -55,6 +55,7 @@ const String STR_TELEHEALTH = 'Telehealth';
 const String STR_HOSPITALDOCUMENT = 'Hospital Documents';
 const String KEY_MEMBERSHIP = 'membership';
 const String GOLD_MEMBERSHIP = 'CORPGOLDQURHL';
+const String KEY_DYNAMIC_URL = 'dynamicURL';
 
 const String KEY_LANGUAGE = 'languageList';
 
