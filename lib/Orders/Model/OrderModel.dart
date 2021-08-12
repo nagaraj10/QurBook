@@ -9,6 +9,15 @@ class OrderModel {
   List<String> plans;
   String paymentReferenceId;
   String paymentStatus;
+  bool isAppointment = false;
+  String patientFirstName;
+  String patientLastName;
+  String doctorFirstName;
+  String doctorLastName;
+  String paymentMode;
+  String hospitalName;
+  DateTime appointmentDateTime;
+
   OrderModel({
     this.orderId,
     this.date,
@@ -16,6 +25,14 @@ class OrderModel {
     this.plans,
     this.paymentReferenceId,
     this.paymentStatus,
+    this.isAppointment,
+    this.patientFirstName,
+    this.patientLastName,
+    this.doctorLastName,
+    this.doctorFirstName,
+    this.paymentMode,
+    this.hospitalName,
+    this.appointmentDateTime,
   });
 
   Map<String, dynamic> toMap() {
@@ -41,6 +58,18 @@ class OrderModel {
         ..removeWhere((element) => element == null),
       paymentReferenceId: map['paymentReferenceId'] ?? '',
       paymentStatus: map['paymentStatus'] ?? '',
+      isAppointment: map['isAppointment'] ?? false,
+      patientFirstName: map['patientFirstName'] ?? '',
+      patientLastName: map['patientLastName'] ?? '',
+      doctorLastName: map['doctorLastName'] ?? '',
+      doctorFirstName: map['doctorFirstName'] ?? '',
+      paymentMode: map['paymentMode'] ?? '',
+      hospitalName: map['HospitalName'] ?? '',
+      appointmentDateTime: map['appointmentDateTime'] != null
+          ? DateTime.tryParse(
+              map['appointmentDateTime'],
+            ).toLocal()
+          : null,
     );
   }
 

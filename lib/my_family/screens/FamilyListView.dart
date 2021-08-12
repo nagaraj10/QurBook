@@ -319,7 +319,7 @@ class FamilyListView {
                           ),
                         ),
                         onTap: () {
-                          if (index == 0) {
+                          if (index == 0 && sharedByMe[index].nickName == variable.Self) {
                             onTextFieldtap(
                                 context,
                                 sharedByMe[index].id,
@@ -364,10 +364,17 @@ class FamilyListView {
 
   List<SharedByUsers> removeDuplicates(List<SharedByUsers> SharedbymeList) {
     final List<SharedByUsers> sharedByMeClone = [];
+    String userId=PreferenceUtil.getStringValue(Constants.KEY_USERID);
+String familyID;
+    for (int i=0;i<SharedbymeList.length;i++) {
+      if(SharedbymeList[i].nickName == variable.Self){
+        familyID=SharedbymeList[i].id;
+      }else{
+        familyID=SharedbymeList[i]?.child?.id;
 
-    for (var sharedbymeObj in SharedbymeList) {
-      if (!sharedByMeClone.contains(sharedbymeObj)) {
-        sharedByMeClone.add(sharedbymeObj);
+      }
+      if (!sharedByMeClone.contains(SharedbymeList[i]) && (userId!=familyID)) {
+        sharedByMeClone.add(SharedbymeList[i]);
       }
     }
     return sharedByMeClone;
