@@ -945,7 +945,14 @@ class PlanDetail extends State<MyPlanDetailView> {
   String getText() {
     String text = '';
 
-    if (isFrom == strProviderCare) {
+    if (isFrom == strDeepLink) {
+      if (issubscription == '0') {
+        text = strAddToCart;
+      } else {
+        text = strSubscribed;
+      }
+    }
+    else if (isFrom == strProviderCare) {
       text = getAddCartText();
     } else if (isFrom == strFreeCare) {
       text = getAddCartTextFreeCare();
@@ -954,13 +961,7 @@ class PlanDetail extends State<MyPlanDetailView> {
     } else if (isFrom == strFreeDiet) {
       text = getAddCartTextFreeDiet();
     }
-    if (isFrom == strDeepLink) {
-      if (issubscription == '0') {
-        text = strAddToCart;
-      } else {
-        text = strSubscribed;
-      }
-    } else {
+     else {
       text = '';
     }
 

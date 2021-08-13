@@ -26,6 +26,11 @@ class _HealthConditionPageState extends State<HealthConditionPage> {
         false;
     healthConditions = Provider.of<PlanWizardViewModel>(context, listen: false)
         .getHealthConditions();
+
+    Provider.of<PlanWizardViewModel>(context, listen: false)?.currentTab = 0;
+    Provider.of<PlanWizardViewModel>(context, listen: false)?.currentPage = 0;
+    Provider.of<PlanWizardViewModel>(context, listen: false)?.isListEmpty = false;
+
   }
 
   @override

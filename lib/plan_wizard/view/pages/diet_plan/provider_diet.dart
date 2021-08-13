@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
@@ -48,6 +49,9 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
 
     planListModel = Provider.of<PlanWizardViewModel>(context, listen: false)
         .getDietPlanListNew(isFrom: strProviderDiet);
+
+    Provider.of<PlanWizardViewModel>(context, listen: false)?.isDietListEmpty =
+    false;
   }
 
   @override
@@ -182,6 +186,19 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
                     ?.isDynamicLink = false;
               });
             }
+
+            Future.delayed(Duration(milliseconds: 100), () {
+              bool needReload =
+                  Provider.of<PlanWizardViewModel>(context, listen: false)
+                      ?.isDietListEmpty !=
+                      (snapshot?.data?.result.length > 0 ? true : false);
+
+              Provider.of<PlanWizardViewModel>(context, listen: false)
+                  ?.updateBottonLayoutEmptyDietList(
+                  snapshot?.data?.result.length > 0 ? true : false,
+                  needReload: needReload);
+            });
+
             return dietPlanList(
                 isSearch ? planSearchList : snapshot?.data?.result);
           } else {
@@ -189,8 +206,9 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
               child: SizedBox(
                 height: 1.sh / 1.3,
                 child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 8.0),
                     child: Center(
-                  child: Text(variable.strNoPackages),
+                  child: clickText(),
                 )),
               ),
             );
@@ -218,8 +236,9 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
             child: SizedBox(
               height: 1.sh / 1.3,
               child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0),
                   child: Center(
-                child: Text(variable.strNoPlans),
+                child: clickText(),
               )),
             ),
           );
@@ -327,5 +346,26 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
             planListProvider.getDietPlanListNew(isFrom: strProviderDiet);
       });
     }
+  }
+
+  Widget clickText() {
+    TextStyle defaultStyle = TextStyle(color: Colors.grey);
+    TextStyle linkStyle = TextStyle(
+        color: Color(CommonUtil().getMyPrimaryColor()), fontSize: 18.sp);
+    return RichText(
+      textAlign: TextAlign.center,
+      text: TextSpan(
+        style: defaultStyle,
+        children: <TextSpan>[
+          TextSpan(text: 'You\'ve no providers added to your list.'),
+          TextSpan(
+              text: 'Tap here',
+              style: linkStyle,
+              recognizer: TapGestureRecognizer()..onTap = () {}),
+          TextSpan(
+              text: ' to add a provider and see plans recommended by them'),
+        ],
+      ),
+    );
   }
 }

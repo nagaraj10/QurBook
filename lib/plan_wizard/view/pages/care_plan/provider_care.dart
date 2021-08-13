@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
@@ -37,15 +38,19 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
 
   List sortType = ['Default', 'Price', 'Duration'];
   ValueNotifier<String> _selectedItem = new ValueNotifier<String>('Default');
-String conditionChosen;
+  String conditionChosen;
+
   @override
   void initState() {
     Provider.of<PlanWizardViewModel>(context, listen: false)
         .currentPackageProviderCareId = '';
-    conditionChosen= Provider.of<PlanWizardViewModel>(context, listen: false)
-        .selectedTag;
+    conditionChosen =
+        Provider.of<PlanWizardViewModel>(context, listen: false).selectedTag;
     planListModel = Provider.of<PlanWizardViewModel>(context, listen: false)
         .getCarePlanList(strProviderCare);
+
+    Provider.of<PlanWizardViewModel>(context, listen: false)?.isListEmpty =
+    false;
   }
 
   @override
@@ -159,6 +164,19 @@ String conditionChosen;
                     ?.isDynamicLink = false;
               });
             }
+
+            Future.delayed(Duration(milliseconds: 100), () {
+              bool needReload =
+                  Provider.of<PlanWizardViewModel>(context, listen: false)
+                          ?.isListEmpty !=
+                      (snapshot?.data?.result.length > 0 ? true : false);
+
+              Provider.of<PlanWizardViewModel>(context, listen: false)
+                  ?.updateBottonLayoutEmptyList(
+                      snapshot?.data?.result.length > 0 ? true : false,
+                      needReload: needReload);
+            });
+
             return carePlanList(
                 isSearch ? planSearchList : snapshot?.data?.result);
           } else {
@@ -166,9 +184,10 @@ String conditionChosen;
               child: SizedBox(
                 height: 1.sh / 1.3,
                 child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 8.0),
                     child: Center(
-                  child: Text(variable.strNoPackages),
-                )),
+                      child: clickText(),
+                    )),
               ),
             );
           }
@@ -195,11 +214,33 @@ String conditionChosen;
             child: SizedBox(
               height: 1.sh / 1.3,
               child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0),
                   child: Center(
-                child: Text(variable.strNoPlans),
-              )),
+                    child: clickText(),
+                  )),
             ),
           );
+  }
+
+  Widget clickText() {
+    TextStyle defaultStyle = TextStyle(color: Colors.grey);
+    TextStyle linkStyle = TextStyle(
+        color: Color(CommonUtil().getMyPrimaryColor()), fontSize: 18.sp);
+    return RichText(
+      textAlign: TextAlign.center,
+      text: TextSpan(
+        style: defaultStyle,
+        children: <TextSpan>[
+          TextSpan(text: 'You\'ve no providers added to your list.'),
+          TextSpan(
+              text: 'Tap here',
+              style: linkStyle,
+              recognizer: TapGestureRecognizer()..onTap = () {}),
+          TextSpan(
+              text: ' to add a provider and see plans recommended by them'),
+        ],
+      ),
+    );
   }
 
   Future<bool> _alertForUncheckPlan() {

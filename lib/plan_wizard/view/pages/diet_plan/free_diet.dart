@@ -189,7 +189,7 @@ class _FreeDietPlans extends State<FreeDietPlans> {
                 height: 1.sh / 1.3,
                 child: Container(
                     child: Center(
-                  child: Text(variable.strNoPackages),
+                  child: Text(variable.strNoPlans),
                 )),
               ),
             );
