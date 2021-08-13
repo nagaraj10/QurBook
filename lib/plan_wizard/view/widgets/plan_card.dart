@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/plan_wizard/models/health_condition_response_model.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
+import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:provider/provider.dart';
 
@@ -20,7 +21,10 @@ class PlanCard extends StatelessWidget {
             10.0.sp,
           ),
           elevation: 5.0.sp,
-          color: Colors.white,
+          color: HexColor((healthCondition?.metadata?.color?.length == 7
+                  ? healthCondition?.metadata?.color
+                  : 'FFFFFF') ??
+              'FFFFFF'),
           child: InkWell(
             onTap: () {
               Provider.of<PlanWizardViewModel>(context, listen: false)
