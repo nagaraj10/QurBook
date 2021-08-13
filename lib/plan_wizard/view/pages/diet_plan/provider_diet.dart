@@ -166,6 +166,22 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
             carePlanListLength = isSearch
                 ? planSearchList.length
                 : snapshot?.data?.result?.length ?? 0;
+            if (((Provider.of<PlanWizardViewModel>(context, listen: false)
+                    ?.isDynamicLink) ??
+                false)) {
+              Future.delayed(Duration(), () {
+                var searchText =
+                    Provider.of<PlanWizardViewModel>(context, listen: false)
+                            ?.dynamicLinkSearchText ??
+                        '';
+                if (searchText?.isNotEmpty ?? false) {
+                  isSearch = true;
+                  onSearched(searchText, 'localSearch');
+                }
+                Provider.of<PlanWizardViewModel>(context, listen: false)
+                    ?.isDynamicLink = false;
+              });
+            }
             return dietPlanList(
                 isSearch ? planSearchList : snapshot?.data?.result);
           } else {

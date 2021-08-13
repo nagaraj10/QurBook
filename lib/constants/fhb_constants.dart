@@ -55,6 +55,7 @@ const String STR_TELEHEALTH = 'Telehealth';
 const String STR_HOSPITALDOCUMENT = 'Hospital Documents';
 const String KEY_MEMBERSHIP = 'membership';
 const String GOLD_MEMBERSHIP = 'CORPGOLDQURHL';
+const String KEY_DYNAMIC_URL = 'dynamicURL';
 
 const String KEY_LANGUAGE = 'languageList';
 
@@ -198,7 +199,8 @@ const String Subscribe = 'Subscribe';
 const String GoToRegimentDescription =
     'Tap here to see your updated Regimen for each Plan’s subscription';
 const String SymptomsDescription = 'Tap here to view Symptoms list';
-const String DailyScheduleDescription = 'Tap here to make changes to the order of activities';
+const String DailyScheduleDescription =
+    'Tap here to make changes to the order of activities';
 const String Schedule = 'Schedule';
 const String RegimenSettings = 'Settings';
 const String LogActivity = 'Log Activity';
@@ -525,24 +527,24 @@ const String strDevices = 'Devices';
 const String strHospitals = 'Hospitals';
 const String strMyPlans = 'My Care Plans';
 const String strCarePlans = 'Care Plans';
-const String strHealthcon = 'Health Conditions';
+const String strHealthcon = 'Category';
 const String strCarePlansLine = 'Care\nPlans';
-const String strHealthconLine = 'Health\nConditions';
+const String strHealthconLine = 'Category';
 const String strDietPlanLine = 'Diet\nPlans';
 const String strPlans = 'Plans';
-const String strSelectHealth = 'Select your Health Conditions';
+const String strSelectHealth = 'Select Category';
 const String strSelectCare = 'Select your Care Plan';
 const String strSelectTherapeutic = 'Select your Therapeutic Diet';
 const String strDontCondition = 'Don\'t find your condition?';
 const String strDontPlan = 'Don\'t find your care plan?';
 const String strDontDietPlan = 'Don\'t find your diet plan?';
-const String strSearchHealth = 'Search health condition';
+const String strSearchHealth = 'Search Category';
 const String strPlanHospitalDiet = 'Search Plan/Hospital';
 const String strSearchDietPlan = 'Search Diet Plan';
 const String strLetsAdd = 'Let\'s add it';
 const String strTellToUs = 'Tell us';
 const String strDietPlan = 'Diet Plans';
-const String strNoHealthConditions = 'No Health Conditions Available';
+const String strNoHealthConditions = 'No Categories Available';
 const String strHintHealth = 'Tell us more about your health condition';
 const String strHintCarePlan = 'Tell us more about your care plan';
 const String strHintDietPlan = 'Tell us more about your diet plan';

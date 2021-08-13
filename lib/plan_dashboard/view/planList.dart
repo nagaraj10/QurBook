@@ -35,8 +35,8 @@ class PlanList extends StatefulWidget {
 
   final List<PlanListResult> planListResult;
 
-  const PlanList(this.categoryId, this.planListResult, this.hosIcon, this.catIcon,
-      this.diseases);
+  const PlanList(this.categoryId, this.planListResult, this.hosIcon,
+      this.catIcon, this.diseases);
 }
 
 class _MyPlanState extends State<PlanList> {
@@ -242,22 +242,22 @@ class _MyPlanState extends State<PlanList> {
           context,
           MaterialPageRoute(
               builder: (context) => MyPlanDetailView(
-                    title: planList[i].title,
-                    providerName: planList[i].providerName,
-                    description: planList[i].description,
-                    issubscription: planList[i].isSubscribed,
+                    // title: planList[i].title,
+                    // providerName: planList[i].providerName,
+                    // description: planList[i].description,
+                    // issubscription: planList[i].isSubscribed,
                     packageId: planList[i].packageid,
-                    price: planList[i].price,
-                    packageDuration: planList[i].packageDuration,
-                    providerId: planList[i].plinkid,
-                    isDisable: planList[i].catselecttype == '1' &&
-                        planList[i].isSubscribed == '0' &&
-                        isSelected,
-                    hosIcon: hosIcon,
-                    iconApi: planList[i]?.metadata?.icon,
-                    catIcon: catIcon,
-                    metaDataForURL: planList[i]?.metadata,
-                    isRenew: planList[i]?.isexpired == '1' ? true : false,
+                    // price: planList[i].price,
+                    // packageDuration: planList[i].packageDuration,
+                    // providerId: planList[i].plinkid,
+                    // isDisable: planList[i].catselecttype == '1' &&
+                    //     planList[i].isSubscribed == '0' &&
+                    //     isSelected,
+                    // hosIcon: hosIcon,
+                    // iconApi: planList[i]?.metadata?.icon,
+                    // catIcon: catIcon,
+                    // metaDataForURL: planList[i]?.metadata,
+                    // isRenew: planList[i]?.isexpired == '1' ? true : false,
                   )),
         ).then((value) {
           if (value == 'refreshUI') {
@@ -335,13 +335,16 @@ class _MyPlanState extends State<PlanList> {
                                       fontSize: 10.0.sp,
                                       fontWeight: FontWeight.w400),
                                 ),
-                                if (planList[i].packageDuration != null) Text(
-                                        planList[i].packageDuration + ' days',
-                                        maxLines: 1,
-                                        style: TextStyle(
-                                            fontSize: 10.0.sp,
-                                            fontWeight: FontWeight.w600),
-                                      ) else Container()
+                                if (planList[i].packageDuration != null)
+                                  Text(
+                                    planList[i].packageDuration + ' days',
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                        fontSize: 10.0.sp,
+                                        fontWeight: FontWeight.w600),
+                                  )
+                                else
+                                  Container()
                               ],
                             ),
                           ],
@@ -350,21 +353,30 @@ class _MyPlanState extends State<PlanList> {
                           children: [
                             Row(
                               children: [
-                                if (planList[i].isSubscribed == '1') Text(
-                                        'Start Date: ',
-                                        style: TextStyle(
-                                            fontSize: 10.0.sp,
-                                            fontWeight: FontWeight.w400),
-                                      ) else SizedBox(width: 55.w),
-                                if (planList[i].isSubscribed == '1') Text(
-                                        new CommonUtil().dateFormatConversion(
-                                            planList[i].startDate),
-                                        maxLines: 1,
-                                        style: TextStyle(
-                                            fontSize: 10.0.sp,
-                                            fontWeight: FontWeight.w600),
-                                      ) else SizedBox(width: 55.w),
-                                if (planList[i].isSubscribed == '0') SizedBox(width: 60.w) else SizedBox(width: 55.w),
+                                if (planList[i].isSubscribed == '1')
+                                  Text(
+                                    'Start Date: ',
+                                    style: TextStyle(
+                                        fontSize: 10.0.sp,
+                                        fontWeight: FontWeight.w400),
+                                  )
+                                else
+                                  SizedBox(width: 55.w),
+                                if (planList[i].isSubscribed == '1')
+                                  Text(
+                                    new CommonUtil().dateFormatConversion(
+                                        planList[i].startDate),
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                        fontSize: 10.0.sp,
+                                        fontWeight: FontWeight.w600),
+                                  )
+                                else
+                                  SizedBox(width: 55.w),
+                                if (planList[i].isSubscribed == '0')
+                                  SizedBox(width: 60.w)
+                                else
+                                  SizedBox(width: 55.w),
                               ],
                             )
                           ],
@@ -376,22 +388,25 @@ class _MyPlanState extends State<PlanList> {
                     children: [
                       Column(
                         children: [
-                          if (planList[i].price != null) Visibility(
-                                  visible: planList[i].price.isNotEmpty &&
-                                      planList[i].price != '0',
-                                  child: TextWidget(
-                                      text: INR + planList[i].price,
-                                      fontsize: 16.0.sp,
-                                      fontWeight: FontWeight.w500,
-                                      colors: Color(new CommonUtil()
-                                          .getMyPrimaryColor())),
-                                  replacement: TextWidget(
-                                      text: FREE,
-                                      fontsize: 16.0.sp,
-                                      fontWeight: FontWeight.w500,
-                                      colors: Color(new CommonUtil()
-                                          .getMyPrimaryColor())),
-                                ) else Container(),
+                          if (planList[i].price != null)
+                            Visibility(
+                              visible: planList[i].price.isNotEmpty &&
+                                  planList[i].price != '0',
+                              child: TextWidget(
+                                  text: INR + planList[i].price,
+                                  fontsize: 16.0.sp,
+                                  fontWeight: FontWeight.w500,
+                                  colors: Color(
+                                      new CommonUtil().getMyPrimaryColor())),
+                              replacement: TextWidget(
+                                  text: FREE,
+                                  fontsize: 16.0.sp,
+                                  fontWeight: FontWeight.w500,
+                                  colors: Color(
+                                      new CommonUtil().getMyPrimaryColor())),
+                            )
+                          else
+                            Container(),
                           SizedBox(height: 8.h),
                           Align(
                               child: i != 0

@@ -11,6 +11,7 @@ import 'package:myfhb/plan_wizard/models/DietPlanModel.dart';
 import 'package:myfhb/plan_wizard/models/health_condition_response_model.dart';
 import 'package:myfhb/plan_wizard/services/PlanWizardService.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
+import 'package:myfhb/widgets/checkout_page.dart';
 import 'package:myfhb/widgets/checkout_page_provider.dart';
 import 'package:myfhb/widgets/fetching_cart_items_model.dart';
 import 'package:provider/provider.dart';
@@ -40,6 +41,10 @@ class PlanWizardViewModel extends ChangeNotifier {
   Map<String, List<MenuItem>> healthConditions = {};
   Map<String, List<MenuItem>> filteredHealthConditions = {};
   bool isHealthSearch = false;
+  bool isDynamicLink = false;
+  int dynamicLinkPage = 0;
+  String dynamicLinkSearchText = '';
+  int dynamicLinkTabIndex = 0;
 
   List<ProductList> cartList = [];
 
@@ -98,11 +103,15 @@ class PlanWizardViewModel extends ChangeNotifier {
 
   void changeCurrentPage(int newPage) {
     FocusManager.instance.primaryFocus.unfocus();
-    if (pageController?.hasClients) {
-      pageController.animateToPage(newPage,
-          duration: Duration(milliseconds: 100), curve: Curves.easeIn);
+    if (newPage == 2 && checkCartForBundle()) {
+      Get.to(CheckoutPage());
+    } else {
+      if (pageController?.hasClients) {
+        pageController.animateToPage(newPage,
+            duration: Duration(milliseconds: 100), curve: Curves.easeIn);
+      }
+      currentPage = newPage;
     }
-    currentPage = newPage;
     notifyListeners();
   }
 
@@ -483,24 +492,22 @@ class PlanWizardViewModel extends ChangeNotifier {
     return filterSearchAll;
   }*/
 
-  String getTag(String isFromAdd){
-
+  String getTag(String isFromAdd) {
     String tag = '';
 
-    if(isFromAdd == strProviderCare){
+    if (isFromAdd == strProviderCare) {
       tag = selectedTag + ',' + strProviderCare;
-    }else if(isFromAdd == strFreeCare){
+    } else if (isFromAdd == strFreeCare) {
       tag = selectedTag + ',' + strFreeCare;
-    }else if (isFromAdd == strProviderDiet){
+    } else if (isFromAdd == strProviderDiet) {
       tag = selectedTag + ',' + strProviderDiet;
-    }else if(isFromAdd == strFreeDiet){
+    } else if (isFromAdd == strFreeDiet) {
       tag = selectedTag + ',' + strFreeDiet;
-    }else {
+    } else {
       tag = '';
     }
 
     return tag;
-
   }
 
   Future<AddToCartModel> addToCartItem(
@@ -566,10 +573,10 @@ class PlanWizardViewModel extends ChangeNotifier {
       } else if (isFrom == strFreeCare) {
         updateSingleSelectionFree('');
         updateProviderId('');
-      }else if (isFrom == strProviderDiet) {
+      } else if (isFrom == strProviderDiet) {
         updateSingleSelectionProviderDiet('');
         updateProviderId('');
-      }else if (isFrom == strFreeDiet) {
+      } else if (isFrom == strFreeDiet) {
         updateSingleSelectionFreeDiet('');
         updateProviderId('');
       }
@@ -715,5 +722,61 @@ class PlanWizardViewModel extends ChangeNotifier {
     }
 
     return isCarePlanInCart;
+  }
+
+  bool checkCartForBundle() {
+    bool isBundlePlanInCart = false;
+    cartList.forEach((cartItem) {
+      if (('${cartItem?.additionalInfo?.tag ?? ''}').contains(strMembership)) {
+        isBundlePlanInCart = true;
+      }
+    });
+    return isBundlePlanInCart;
+  }
+
+  Future<bool> handleBundlePlans() async {
+    var canProceed = true;
+
+    var isBundlePlan = (selectedTag == strMembership);
+
+    var isCartEmpty = (cartList?.length ?? 0) == 0;
+
+    if (!isCartEmpty) {
+      var isBundlePlanInCart = checkCartForBundle();
+
+      if ((isBundlePlanInCart && !isBundlePlan) ||
+          (isBundlePlan && !isBundlePlanInCart)) {
+        await showDialog(
+          context: Get.context,
+          builder: (context) => AlertDialog(
+            title: Text('Are you sure?'),
+            content: Text(
+                'Membership plans cannot be subscribed together with other plans. Clear cart to proceed?'),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () {
+                  canProceed = false;
+                  Navigator.pop(context);
+                },
+                child: Text('Cancel'),
+              ),
+              FlatButton(
+                onPressed: () async {
+                  canProceed = true;
+                  await Provider.of<CheckoutPageProvider>(Get.context,
+                          listen: false)
+                      .clearCartItem();
+                  await fetchCartItem();
+                  Navigator.pop(context);
+                },
+                child: Text('Clear Cart'),
+              ),
+            ],
+          ),
+        );
+      }
+    }
+
+    return canProceed;
   }
 }
