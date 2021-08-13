@@ -31,13 +31,13 @@ class _HealthConditionPageState extends State<HealthConditionPage> {
   @override
   Widget build(BuildContext context) => Column(
         children: [
-          SearchWidget(
-            hintText: strSearchHealth,
-            onChanged: (value) {
-              Provider.of<PlanWizardViewModel>(context, listen: false)
-                  .getFilteredHealthConditions(value);
-            },
-          ),
+          // SearchWidget(
+          //   hintText: strSearchHealth,
+          //   onChanged: (value) {
+          //     Provider.of<PlanWizardViewModel>(context, listen: false)
+          //         .getFilteredHealthConditions(value);
+          //   },
+          // ),
           Expanded(
             child: FutureBuilder<Map<String, List<MenuItem>>>(
                 future: healthConditions,

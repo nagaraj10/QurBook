@@ -737,7 +737,7 @@ class PlanWizardViewModel extends ChangeNotifier {
   Future<bool> handleBundlePlans() async {
     var canProceed = true;
 
-    var isBundlePlan = (selectedTag == strMembership);
+    var isBundlePlan = (selectedTag?.contains(strMembership) ?? false);
 
     var isCartEmpty = (cartList?.length ?? 0) == 0;
 
