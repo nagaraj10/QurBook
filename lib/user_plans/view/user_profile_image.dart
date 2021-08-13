@@ -23,82 +23,87 @@ class UserProfileImage extends StatelessWidget {
   final Color circleColor;
 
   @override
-  Widget build(BuildContext context) => LayoutBuilder(
-      builder: (context, constraints) => Stack(
-            children: [
-              LayoutBuilder(
-                builder: (context, constraints) => Container(
-                  height: constraints.maxHeight - (constraints.maxHeight / 6),
-                  width: constraints.maxHeight - (constraints.maxHeight / 6),
-                  decoration: BoxDecoration(
-                    gradient: (Provider.of<UserPlansViewModel>(context)
-                                ?.isGoldMember ??
-                            false)
-                        ? const LinearGradient(
-                            begin: Alignment.bottomCenter,
-                            end: Alignment.topCenter,
-                            colors: [
-                              Color(0xffb07515),
-                              Color(0xffedcc73),
-                              Color(0xfffffdd4),
-                            ],
-                          )
-                        : null,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(constraints.maxHeight / 20),
-                    child: ClipOval(
-                      child: (myProfile?.result != null &&
-                              myProfile?.result?.profilePicThumbnailUrl != '')
-                          ? Image.network(
-                              myProfile.result.profilePicThumbnailUrl,
+  Widget build(BuildContext context) =>
+      LayoutBuilder(builder: (context, constraints) {
+        var isGoldMember =
+            Provider.of<UserPlansViewModel>(context)?.isGoldMember ?? false;
+        return Stack(
+          children: [
+            LayoutBuilder(
+              builder: (context, constraints) => Container(
+                height: isGoldMember
+                    ? constraints.maxHeight - (constraints.maxHeight / 6)
+                    : constraints.maxHeight,
+                width: isGoldMember
+                    ? constraints.maxHeight - (constraints.maxHeight / 6)
+                    : constraints.maxHeight,
+                decoration: BoxDecoration(
+                  gradient: isGoldMember
+                      ? const LinearGradient(
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.topCenter,
+                          colors: [
+                            Color(0xffb07515),
+                            Color(0xffedcc73),
+                            Color(0xfffffdd4),
+                          ],
+                        )
+                      : null,
+                  shape: BoxShape.circle,
+                ),
+                child: Padding(
+                  padding: EdgeInsets.all(
+                      isGoldMember ? constraints.maxHeight / 20 : 0),
+                  child: ClipOval(
+                    child: (myProfile?.result != null &&
+                            myProfile?.result?.profilePicThumbnailUrl != '')
+                        ? Image.network(
+                            myProfile.result.profilePicThumbnailUrl,
+                            height: 50.0.h,
+                            width: 50.0.h,
+                            fit: BoxFit.cover,
+                            headers: {
+                              HttpHeaders.authorizationHeader:
+                                  PreferenceUtil.getStringValue(KEY_AUTHTOKEN)
+                            },
+                            errorBuilder: (context, exception, stackTrace) =>
+                                Container(
                               height: 50.0.h,
                               width: 50.0.h,
-                              fit: BoxFit.cover,
-                              headers: {
-                                HttpHeaders.authorizationHeader:
-                                    PreferenceUtil.getStringValue(KEY_AUTHTOKEN)
-                              },
-                              errorBuilder: (context, exception, stackTrace) =>
-                                  Container(
-                                height: 50.0.h,
-                                width: 50.0.h,
-                                color: circleColor ??
-                                    Color(CommonUtil().getMyPrimaryColor()),
-                                child: Center(
-                                  child: getFirstLastNameTextForProfile(
-                                    myProfile,
-                                    textColor: textColor,
-                                  ),
+                              color: circleColor ??
+                                  Color(CommonUtil().getMyPrimaryColor()),
+                              child: Center(
+                                child: getFirstLastNameTextForProfile(
+                                  myProfile,
+                                  textColor: textColor,
                                 ),
                               ),
-                            )
-                          : Container(
-                              color: Color(bgColorContainer),
-                              height: 50.0.h,
-                              width: 50.0.h,
                             ),
-                    ),
+                          )
+                        : Container(
+                            color: Color(bgColorContainer),
+                            height: 50.0.h,
+                            width: 50.0.h,
+                          ),
                   ),
                 ),
               ),
-              Visibility(
-                visible:
-                    Provider.of<UserPlansViewModel>(context)?.isGoldMember ??
-                        false,
-                child: Positioned(
-                  bottom: -(constraints.maxHeight / 6),
-                  left: constraints.maxHeight / 4,
-                  child: Center(
-                    child: Image.asset(
-                      ic_gold_member,
-                      height: constraints.maxHeight / 1.5,
-                      width: constraints.maxHeight / 1.5,
-                    ),
+            ),
+            Visibility(
+              visible: isGoldMember,
+              child: Positioned(
+                bottom: -(constraints.maxHeight / 6),
+                left: constraints.maxHeight / 4,
+                child: Center(
+                  child: Image.asset(
+                    ic_gold_member,
+                    height: constraints.maxHeight / 1.5,
+                    width: constraints.maxHeight / 1.5,
                   ),
                 ),
               ),
-            ],
-          ));
+            ),
+          ],
+        );
+      });
 }

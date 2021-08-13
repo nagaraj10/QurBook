@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/landing/view/landing_arguments.dart';
+import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:myfhb/regiment/models/regiment_arguments.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
@@ -171,32 +172,38 @@ class _ResultPage extends State<PaymentResultPage> {
                       ),
                       SizedBox(height: 20.0.h),
                       status
-                          ? FlatButton(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  side: BorderSide(color: Colors.white)),
-                              color:
-                                  Color(new CommonUtil().getMyPrimaryColor()),
-                              textColor: Colors.white,
-                              padding: EdgeInsets.all(12.0),
-                              onPressed: () async {
-                                Provider.of<CheckoutPageProvider>(context,
-                                        listen: false)
-                                    .loader(false, isNeedRelod: true);
-                                Provider.of<RegimentViewModel>(
-                                  Get.context,
-                                  listen: false,
-                                ).regimentMode = RegimentMode.Schedule;
-                                Provider.of<RegimentViewModel>(
-                                  Get.context,
-                                  listen: false,
-                                ).regimentFilter = RegimentFilter.Scheduled;
-                                await Get.offAllNamed(router.rt_Regimen);
-                              },
-                              child: Text(
-                                STR_REGIMENT.toUpperCase(),
-                                style: TextStyle(
-                                  fontSize: 16.0.sp,
+                          ? Visibility(
+                              visible: !(Provider.of<CheckoutPageProvider>(
+                                          context,
+                                          listen: false)
+                                      .isMembershipCart),
+                              child: FlatButton(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    side: BorderSide(color: Colors.white)),
+                                color:
+                                    Color(new CommonUtil().getMyPrimaryColor()),
+                                textColor: Colors.white,
+                                padding: EdgeInsets.all(12.0),
+                                onPressed: () async {
+                                  Provider.of<CheckoutPageProvider>(context,
+                                          listen: false)
+                                      .loader(false, isNeedRelod: true);
+                                  Provider.of<RegimentViewModel>(
+                                    Get.context,
+                                    listen: false,
+                                  ).regimentMode = RegimentMode.Schedule;
+                                  Provider.of<RegimentViewModel>(
+                                    Get.context,
+                                    listen: false,
+                                  ).regimentFilter = RegimentFilter.Scheduled;
+                                  await Get.offAllNamed(router.rt_Regimen);
+                                },
+                                child: Text(
+                                  STR_REGIMENT.toUpperCase(),
+                                  style: TextStyle(
+                                    fontSize: 16.0.sp,
+                                  ),
                                 ),
                               ),
                             )
