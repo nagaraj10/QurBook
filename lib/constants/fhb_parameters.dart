@@ -594,6 +594,7 @@ const String appointment = 'appointment';
 const String ack = 'ack';
 const String alert = 'alert';
 const String title = 'title';
+const String callType = 'callType';
 const String body = 'body';
 const String sound = 'sound';
 const String PROP_EVEID = 'eventId';

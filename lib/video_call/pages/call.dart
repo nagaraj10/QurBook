@@ -105,6 +105,7 @@ class _CallPageState extends State<CallPage> {
       widget.channelName = widget.arguments.channelName;
       widget.role = widget.arguments.role;
       widget.isAppExists = widget.arguments.isAppExists;
+      widget.doctorName = widget.arguments.userName;
     }
 
     // initialize agora sdk
@@ -194,7 +195,7 @@ class _CallPageState extends State<CallPage> {
       await widget?.rtcEngine?.enableVideo();
     } else {
       //* audio call
-      
+
     }
     await widget?.rtcEngine?.setEnableSpeakerphone(true);
     await widget?.rtcEngine?.setChannelProfile(ChannelProfile.LiveBroadcasting);
