@@ -583,15 +583,15 @@ class PlanDetail extends State<MyPlanDetailView> {
                                 )
                               : Container(),
                         ),
-                        Row(
+                        /*Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             OutlineButton(
                               //hoverColor: Color(getMyPrimaryColor()),
                               onPressed:
-                                  /*isDisable
+                                  *//*isDisable
                           ? null
-                          :*/
+                          :*//*
                                   () async {
                                 if (issubscription == '0') {
                                   if (isFrom == strProviderCare) {
@@ -866,12 +866,12 @@ class PlanDetail extends State<MyPlanDetailView> {
                                     }
                                   }
                                 }
-                                /*else {
+                                *//*else {
                                 CommonUtil().unSubcribeAlertDialog(context,
                                     packageId: packageId, refresh: () {
                                   Navigator.of(context).pop();
                                 });
-                                }*/
+                                }*//*
                               },
                               borderSide: BorderSide(
                                 color: issubscription == '0'
@@ -923,7 +923,7 @@ class PlanDetail extends State<MyPlanDetailView> {
                               ),
                             ),
                           ],
-                        ),
+                        ),*/
                       ],
                     ),
                   ),
