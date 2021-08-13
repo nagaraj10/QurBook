@@ -243,7 +243,7 @@ class NavigationDrawer extends StatelessWidget {
             color: Colors.black,
             fontSize: 18.0.sp,
           ),
-          children: (phoneNumber?.isNotEmpty ?? '')
+          children: ((phoneNumber != null && phoneNumber != ''))
               ? [
                   TextSpan(
                     text: '\n$phoneNumber',
