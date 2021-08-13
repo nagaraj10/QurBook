@@ -448,19 +448,27 @@ class _SplashScreenState extends State<SplashScreen> {
                       } else if (widget.nsRoute == 'renew') {
                         final planid = widget?.bundle['planid'];
                         final template = widget?.bundle['template'];
-                        fbaLog(eveParams: {
-                          'eventTime': '${DateTime.now()}',
-                          'ns_type': 'myplan_deatails',
-                          'navigationPage': 'My Plan Details',
-                        });
-                        Get.to(
-                          MyPlanDetail(
-                            packageId: planid,
-                            showRenew: true,
-                            templateName: template,
-                          ),
-                        ).then((value) => PageNavigator.goToPermanent(
-                            context, router.rt_Landing));
+                        final userId = widget?.bundle['userId'];
+                        final patName = widget?.bundle['patName'];
+                        final currentUserId =
+                            PreferenceUtil.getStringValue(KEY_USERID);
+                        if (currentUserId == userId) {
+                          fbaLog(eveParams: {
+                            'eventTime': '${DateTime.now()}',
+                            'ns_type': 'myplan_deatails',
+                            'navigationPage': 'My Plan Details',
+                          });
+                          Get.to(
+                            MyPlanDetail(
+                              packageId: planid,
+                              showRenew: true,
+                              templateName: template,
+                            ),
+                          ).then((value) => PageNavigator.goToPermanent(
+                              context, router.rt_Landing));
+                        } else {
+                          CommonUtil.showFamilyMemberPlanExpiryDialog(patName);
+                        }
                       } else {
                         fbaLog(eveParams: {
                           'eventTime': '${DateTime.now()}',

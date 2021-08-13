@@ -222,20 +222,25 @@ class IosNotificationHandler {
             ));
     } else if (model.redirect == parameters.myCartDetails &&
         (model.planId ?? '').isNotEmpty) {
-      isAlreadyLoaded
-          ? Get.to(
-              () => MyPlanDetail(
-                  packageId: model.planId,
-                  showRenew: renewAction,
-                  templateName: model.templateName),
-            ).then((value) {
-              renewAction = false;
-            })
-          : Get.to(SplashScreen(
-              nsRoute: 'regiment_screen',
-            )).then((value) {
-              renewAction = false;
-            });
+      final userId = PreferenceUtil.getStringValue(KEY_USERID);
+      if (model.userId == userId) {
+        isAlreadyLoaded
+            ? Get.to(
+                () => MyPlanDetail(
+                    packageId: model.planId,
+                    showRenew: renewAction,
+                    templateName: model.templateName),
+              ).then((value) {
+                renewAction = false;
+              })
+            : Get.to(SplashScreen(
+                nsRoute: 'regiment_screen',
+              )).then((value) {
+                renewAction = false;
+              });
+      } else {
+        CommonUtil.showFamilyMemberPlanExpiryDialog(model.patientName);
+      }
     } else if (model.redirect == 'googlefit') {
       fbaLog(eveParams: {
         'eventTime': '${DateTime.now()}',

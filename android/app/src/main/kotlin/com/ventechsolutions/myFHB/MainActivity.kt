@@ -381,6 +381,7 @@ class MainActivity : FlutterActivity() {
         val message = intent.getStringExtra(getString(R.string.message))
         var externalLink = intent.getStringExtra(Constants.PROB_EXTERNAL_LINK)
         var planId = intent.getStringExtra(Constants.PROP_PLANID)
+        var userId = intent.getStringExtra(Constants.PROB_USER_ID)
         if (sharedValue != null && sharedValue == "chat") {
             sharedValue = "$sharedValue"
         } else if (externalLink != null && externalLink != "") {
@@ -409,9 +410,9 @@ class MainActivity : FlutterActivity() {
                 "${Constants.PROP_ACK}&${redirect_to!!}&${"$doctorID|$docName|$docPic|$patId|$patName|$patPic|$message"}"
         } else if (data != null && data == "MissingActivitiesReminder") {
             sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${EVEId}"
-        } else if ((planId != null && planId != "") && (templateName != null && templateName != "")) {
+        } else if ((planId != null && planId != "") && (templateName != null && templateName != "") && (userId != null && userId != "") && (patName != null && patName != "")) {
             if (sharedValue == Constants.PROP_RENEW) {
-                sharedValue = "$sharedValue&${planId}&${"$templateName"}"
+                sharedValue = "$sharedValue&${planId}&${"$templateName"}&${userId}&${patName}"
             }
         } else {
             if (HRMId != null && HRMId != "") {

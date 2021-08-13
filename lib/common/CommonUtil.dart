@@ -1761,6 +1761,61 @@ class CommonUtil {
     }
   }
 
+  static showFamilyMemberPlanExpiryDialog(String pateintName) async {
+    await Get.defaultDialog(
+      content: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: 16,
+        ),
+        child: Text(
+          "Switch to $pateintName profile in Home screen and Tap on the Renew button again from the Notifications list",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 14,
+          ),
+        ),
+      ),
+      confirm: OutlineButton(
+        onPressed: () {
+          Get.back();
+        },
+        borderSide: BorderSide(color: Color(CommonUtil().getMyPrimaryColor())),
+        child: Text(
+          variable.strOK,
+          style: TextStyle(
+            color: Color(CommonUtil().getMyPrimaryColor()),
+          ),
+        ),
+      ),
+      onConfirm: () {
+        Get.back();
+      },
+      // AlertDialog(
+      //   title: Text(
+      //     "Switch Profile",
+      //     style: TextStyle(fontSize: 16),
+      //   ),
+      //   content: Text(
+      //     "Switch to $pateintName profile in Home screen and Tap on the Renew button again from the Notifications list",
+      //     style: TextStyle(fontSize: 14),
+      //   ),
+      //   actions: <Widget>[
+      //     FlatButton(
+      //       onPressed: () {
+      //         Get.back();
+      //       },
+      //       child: Text(
+      //         "ok",
+      //         // style: TextStyle(
+      //         //   color: Color(getMyPrimaryColor()),
+      //         // ),
+      //       ),
+      //     ),
+      //   ],
+      // ),
+    );
+  }
+
   _showVersionDialog(context, bool isForceUpdate) async {
     await showDialog<String>(
       context: context,

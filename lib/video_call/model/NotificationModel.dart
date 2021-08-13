@@ -158,6 +158,9 @@ class NotificationModel {
         if (message[parameters.patientName] != null) {
           patientName = message[parameters.patientName];
         }
+        if (message[parameters.gcmpatientName] != null) {
+          patientName = message[parameters.gcmpatientName];
+        }
         if (message[parameters.patientPicture] != null) {
           patientPicture = message[parameters.patientPicture];
         }
@@ -170,7 +173,7 @@ class NotificationModel {
         if (message[parameters.gcmExternalLink] != null) {
           externalLink = message[parameters.gcmExternalLink];
         }
-        
+
         if (message[parameters.gcmplanId] != null) {
           planId = message[parameters.gcmplanId];
         }
@@ -277,13 +280,16 @@ class NotificationModel {
       planId = message[parameters.planId];
     }
     if (message[parameters.gcmplanId] != null) {
-          planId = message[parameters.gcmplanId];
-        }
+      planId = message[parameters.gcmplanId];
+    }
     if (message[parameters.externalLink] != null) {
       externalLink = message[parameters.externalLink];
     }
     if (message[parameters.gcmExternalLink] != null) {
       externalLink = message[parameters.gcmExternalLink];
+    }
+    if (message[parameters.gcmpatientName] != null) {
+      patientName = message[parameters.gcmpatientName];
     }
   }
 }

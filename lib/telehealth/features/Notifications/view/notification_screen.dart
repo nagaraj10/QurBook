@@ -954,16 +954,25 @@ class _NotificationScreen extends State<NotificationScreen> {
               OutlineButton(
                 onPressed: !notification?.isActionDone
                     ? () {
-                        Get.to(
-                          MyPlanDetail(
-                            packageId:
-                                notification?.messageDetails?.payload?.planId,
-                            templateName: notification
-                                ?.messageDetails?.payload?.templateName,
-                            showRenew: true,
-                          ),
-                        ).then((value) => PageNavigator.goToPermanent(
-                            context, router.rt_Landing));
+                        final currentUserId =
+                            PreferenceUtil.getStringValue(KEY_USERID);
+                        if (currentUserId ==
+                            notification?.messageDetails?.payload?.userId) {
+                          Get.to(
+                            MyPlanDetail(
+                              packageId:
+                                  notification?.messageDetails?.payload?.planId,
+                              templateName: notification
+                                  ?.messageDetails?.payload?.templateName,
+                              showRenew: true,
+                            ),
+                          ).then((value) => PageNavigator.goToPermanent(
+                              context, router.rt_Landing));
+                        } else {
+                          CommonUtil.showFamilyMemberPlanExpiryDialog(
+                              notification
+                                  ?.messageDetails?.payload?.patientName);
+                        }
                         //readUnreadAction(result);
 
                         /* if (notification?.isUnread != null &&
