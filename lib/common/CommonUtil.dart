@@ -1716,22 +1716,45 @@ class CommonUtil {
   }
 
   static showFamilyMemberPlanExpiryDialog(String pateintName) async {
-    await Get.defaultDialog(
-      title: "Switch Profile",
-      content: Text(
-        "Switch to $pateintName profile in Home screen and Tap on the Renew button again from the Notifications list",
-      ),
-      confirm: FlatButton(
-        child: Text(
-          variable.strOK,
-          style: TextStyle(
-            color: Colors.black,
-          ),
+    await Get.dialog(
+      //   title: "Switch Profile",
+      //   content: Text(
+      //     "Switch to $pateintName profile in Home screen and Tap on the Renew button again from the Notifications list",
+      //   ),
+      //   confirm: FlatButton(
+      //     child: Text(
+      //       variable.strOK,
+      //       style: TextStyle(
+      //         color: Colors.black,
+      //       ),
+      //     ),
+      //   ),
+      //   onConfirm: () {
+      //     Get.back();
+      //   },
+      AlertDialog(
+        title: Text(
+          "Switch Profile",
+          style: TextStyle(fontSize: 16),
         ),
+        content: Text(
+          "Switch to $pateintName profile in Home screen and Tap on the Renew button again from the Notifications list",
+          style: TextStyle(fontSize: 14),
+        ),
+        actions: <Widget>[
+          FlatButton(
+            onPressed: () {
+              Get.back();
+            },
+            child: Text(
+              "ok",
+              // style: TextStyle(
+              //   color: Color(getMyPrimaryColor()),
+              // ),
+            ),
+          ),
+        ],
       ),
-      onConfirm: () {
-        Get.back();
-      },
     );
   }
 

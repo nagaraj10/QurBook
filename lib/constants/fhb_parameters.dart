@@ -579,6 +579,7 @@ const String GCMUserId = 'gcm.notification.userId';
 const String strgcmAppointmentId = 'gcm.notification.appointmentId';
 const String gcmExternalLink = 'gcm.notification.externalLink';
 const String gcmplanId = 'gcm.notification.planId';
+const String gcmpatientName = 'gcm.notification.patientName';
 
 const String gcmredirectTo = 'gcm.notification.redirectTo';
 const String externalLink = 'externalLink';
