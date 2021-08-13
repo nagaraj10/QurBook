@@ -136,13 +136,7 @@ class _CallMainState extends State<CallMain> {
                         isAppExists: widget.isAppExists,
                         doctorName: widget.doctorName,
                       ),
-                      Consumer<AudioCallProvider>(
-                          builder: (context, status, child) {
-                        return Visibility(
-                          child: LocalPreview(),
-                          visible: status.isAudioCall ? false : true,
-                        );
-                      }),
+                      LocalPreview(),
                       CustomAppBar(Platform.isIOS
                           ? widget.arguments.userName
                           : widget.doctorName),

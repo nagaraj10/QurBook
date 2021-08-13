@@ -191,14 +191,12 @@ class _CallPageState extends State<CallPage> {
       configuration.frameRate = VideoFrameRate.Fps15;
       configuration.bitrate = 200;
       await widget?.rtcEngine?.setVideoEncoderConfiguration(configuration);
-
-      // if video call means, enable audio and put on speaker by default
-      await widget?.rtcEngine?.setEnableSpeakerphone(false);
       await widget?.rtcEngine?.enableVideo();
     } else {
       //* audio call
-      await widget?.rtcEngine?.setEnableSpeakerphone(true);
+      
     }
+    await widget?.rtcEngine?.setEnableSpeakerphone(true);
     await widget?.rtcEngine?.setChannelProfile(ChannelProfile.LiveBroadcasting);
     await widget?.rtcEngine?.setClientRole(widget.role);
   }
