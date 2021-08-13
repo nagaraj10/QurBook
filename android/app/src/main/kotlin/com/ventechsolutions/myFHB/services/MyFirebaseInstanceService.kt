@@ -126,6 +126,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             .putExtra(getString(R.string.pat_id), PAT_ID)
             .putExtra(getString(R.string.pat_name), PAT_NAME)
             .putExtra(getString(R.string.pat_pic), PAT_PIC)
+            .putExtra(getString(R.string.callType), CallType)
         val fullScreenPendingIntent = PendingIntent.getActivity(
             this, 0,
             fullScreenIntent, PendingIntent.FLAG_UPDATE_CURRENT

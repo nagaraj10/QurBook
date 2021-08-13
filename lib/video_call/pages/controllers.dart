@@ -357,20 +357,7 @@ class _MyControllersState extends State<MyControllers> {
   Future<void> requestingDialog() async {
     CommonUtil.isVideoRequestSent = true;
     try {
-      showDialog(
-          context: Get.context,
-          barrierDismissible: false,
-          builder: (context) {
-            return AlertDialog(
-              title: Center(
-                child: Text(
-                  'Alert!',
-                  style: TextStyle(
-                      fontSize: 20.0.sp,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black.withOpacity(0.8)),
-                ),
-              ),
+      await Get.dialog(AlertDialog(
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -404,15 +391,19 @@ class _MyControllersState extends State<MyControllers> {
                     children: [
                       FlatButton(
                           child: Text('Cancel'),
-                          onPressed: () {
-                            Navigator.of(context).pop(false);
+                          onPressed: () async {
+                            CommonUtil.isVideoRequestSent = false;
+                            await widget?.rtcEngine?.disableVideo();
+                            await widget?.rtcEngine?.enableLocalVideo(false);
+                            await widget?.rtcEngine?.muteLocalVideoStream(true);
+                            Get.back();
                           }),
                     ],
                   ),
                 ],
               ),
-            );
-          });
+            ),
+            barrierDismissible: false,);
     } catch (e) {}
   }
 }

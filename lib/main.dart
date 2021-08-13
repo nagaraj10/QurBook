@@ -814,8 +814,9 @@ class _MyFHBState extends State<MyFHB> {
                 ? Size(411.4, 822.9)
                 : Size(822.9, 411.4),
           );
-          return MaterialApp(
+          return GetMaterialApp(
             title: Constants.APP_NAME,
+            themeMode: ThemeMode.light,
             theme: ThemeData(
               fontFamily: variable.font_poppins,
               primaryColor: Color(myPrimaryColor),
