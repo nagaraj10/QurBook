@@ -41,6 +41,8 @@ class PlanWizardViewModel extends ChangeNotifier {
   Map<String, List<MenuItem>> filteredHealthConditions = {};
   bool isHealthSearch = false;
   bool isDynamicLink = false;
+  bool isListEmpty = false;
+  bool isDietListEmpty = false;
   int dynamicLinkPage = 0;
   String dynamicLinkSearchText = '';
   int dynamicLinkTabIndex = 0;
@@ -113,6 +115,21 @@ class PlanWizardViewModel extends ChangeNotifier {
   void changeCurrentTab(int newPage) {
     currentTab = newPage;
     notifyListeners();
+  }
+  void updateBottonLayoutEmptyList(bool isEmptyList,{bool needReload = true}) {
+    isListEmpty = isEmptyList;
+    if(needReload){
+      notifyListeners();
+    }
+
+  }
+
+  void updateBottonLayoutEmptyDietList(bool isEmptyList,{bool needReload = true}) {
+    isDietListEmpty = isEmptyList;
+    if(needReload){
+      notifyListeners();
+    }
+
   }
 
   void changeCurrentTabDiet(int newPage) {

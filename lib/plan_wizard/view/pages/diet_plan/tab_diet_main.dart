@@ -25,6 +25,11 @@ class _TabDietMainState extends State<TabDietMain>
 
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(_setActiveTabIndex);
+
+    Provider.of<PlanWizardViewModel>(context, listen: false)?.currentTabDiet = 0;
+    Provider.of<PlanWizardViewModel>(context, listen: false)?.currentPage = 2;
+    Provider.of<PlanWizardViewModel>(context, listen: false)?.isDietListEmpty = false;
+
     if ((Provider.of<PlanWizardViewModel>(context, listen: false)
             ?.isDynamicLink) ??
         false) {
