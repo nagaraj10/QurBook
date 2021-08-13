@@ -327,6 +327,7 @@ class _MyFHBState extends State<MyFHB> {
 
     /*NotificationController.instance.takeFCMTokenWhenAppLaunch();
     NotificationController.instance.initLocalNotification();*/
+    PreferenceUtil.saveString(KEY_DYNAMIC_URL, '');
     DynamicLinks.initDynamicLinks();
     CheckForShowingTheIntroScreens();
     chatViewModel.setCurrentChatRoomID('none');
