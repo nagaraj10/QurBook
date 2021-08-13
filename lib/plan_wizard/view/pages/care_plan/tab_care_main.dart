@@ -31,6 +31,7 @@ class _TabCareMainState extends State<TabCareMain>
     Provider.of<PlanWizardViewModel>(context, listen: false)?.currentTab = 0;
     Provider.of<PlanWizardViewModel>(context, listen: false)?.currentPage = 1;
     Provider.of<PlanWizardViewModel>(context, listen: false)?.isListEmpty = false;
+    Provider.of<PlanWizardViewModel>(context, listen: false)?.isDietListEmpty = false;
 
     if ((Provider.of<PlanWizardViewModel>(context, listen: false)
             ?.isDynamicLink) ??

@@ -43,6 +43,7 @@ class PlanWizardViewModel extends ChangeNotifier {
   bool isDynamicLink = false;
   bool isListEmpty = false;
   bool isDietListEmpty = false;
+  int providerHosCount = 0;
   int dynamicLinkPage = 0;
   String dynamicLinkSearchText = '';
   int dynamicLinkTabIndex = 0;
@@ -116,20 +117,25 @@ class PlanWizardViewModel extends ChangeNotifier {
     currentTab = newPage;
     notifyListeners();
   }
-  void updateBottonLayoutEmptyList(bool isEmptyList,{bool needReload = true}) {
+
+  void updateBottonLayoutEmptyList(bool isEmptyList, {bool needReload = true}) {
     isListEmpty = isEmptyList;
-    if(needReload){
+    if (needReload) {
       notifyListeners();
     }
-
   }
 
-  void updateBottonLayoutEmptyDietList(bool isEmptyList,{bool needReload = true}) {
+  void updateBottonLayoutEmptyDietList(bool isEmptyList,
+      {bool needReload = true}) {
     isDietListEmpty = isEmptyList;
-    if(needReload){
+    if (needReload) {
       notifyListeners();
     }
+  }
 
+  void updateProviderHosCount(int count) {
+    providerHosCount = count;
+    notifyListeners();
   }
 
   void changeCurrentTabDiet(int newPage) {

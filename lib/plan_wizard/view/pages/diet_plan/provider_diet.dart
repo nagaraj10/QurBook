@@ -6,11 +6,13 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
 import 'package:myfhb/plan_wizard/view/widgets/diet_plan_card.dart';
 import 'package:myfhb/plan_wizard/view/widgets/next_button.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
+import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
@@ -51,7 +53,7 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
         .getDietPlanListNew(isFrom: strProviderDiet);
 
     Provider.of<PlanWizardViewModel>(context, listen: false)?.isDietListEmpty =
-    false;
+        false;
   }
 
   @override
@@ -190,13 +192,13 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
             Future.delayed(Duration(milliseconds: 100), () {
               bool needReload =
                   Provider.of<PlanWizardViewModel>(context, listen: false)
-                      ?.isDietListEmpty !=
+                          ?.isDietListEmpty !=
                       (snapshot?.data?.result.length > 0 ? true : false);
 
               Provider.of<PlanWizardViewModel>(context, listen: false)
                   ?.updateBottonLayoutEmptyDietList(
-                  snapshot?.data?.result.length > 0 ? true : false,
-                  needReload: needReload);
+                      snapshot?.data?.result.length > 0 ? true : false,
+                      needReload: needReload);
             });
 
             return dietPlanList(
@@ -208,8 +210,13 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
                 child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 8.0),
                     child: Center(
-                  child: clickText(),
-                )),
+                      child: Provider.of<PlanWizardViewModel>(context,
+                                      listen: false)
+                                  ?.providerHosCount ==
+                              0
+                          ? clickTextProviderEmpty()
+                          : clickTextNoPlans(),
+                    )),
               ),
             );
           }
@@ -238,8 +245,13 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
               child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 8.0),
                   child: Center(
-                child: clickText(),
-              )),
+                    child:
+                        Provider.of<PlanWizardViewModel>(context, listen: false)
+                                    ?.providerHosCount ==
+                                0
+                            ? clickTextProviderEmpty()
+                            : clickTextNoPlans(),
+                  )),
             ),
           );
   }
@@ -348,7 +360,31 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
     }
   }
 
-  Widget clickText() {
+  Widget clickTextNoPlans() {
+    TextStyle defaultStyle = TextStyle(color: Colors.grey);
+    TextStyle linkStyle = TextStyle(
+        color: Color(CommonUtil().getMyPrimaryColor()), fontSize: 18.sp);
+    return RichText(
+      textAlign: TextAlign.center,
+      text: TextSpan(
+        style: defaultStyle,
+        children: <TextSpan>[
+          TextSpan(
+              text:
+                  'Your providers do not offer diet plans yet for Healthcondition.'),
+          TextSpan(
+              text: 'Tap here',
+              style: linkStyle,
+              recognizer: TapGestureRecognizer()..onTap = () {
+                callMyProviderPage();
+              }),
+          TextSpan(text: ' to add a new provider that offers a plan'),
+        ],
+      ),
+    );
+  }
+
+  Widget clickTextProviderEmpty() {
     TextStyle defaultStyle = TextStyle(color: Colors.grey);
     TextStyle linkStyle = TextStyle(
         color: Color(CommonUtil().getMyPrimaryColor()), fontSize: 18.sp);
@@ -361,11 +397,26 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
           TextSpan(
               text: 'Tap here',
               style: linkStyle,
-              recognizer: TapGestureRecognizer()..onTap = () {}),
+              recognizer: TapGestureRecognizer()..onTap = () {
+                callMyProviderPage();
+              }),
           TextSpan(
               text: ' to add a provider and see plans recommended by them'),
         ],
       ),
     );
+  }
+
+  void callMyProviderPage(){
+    Navigator.pushNamed(
+      Get.context,
+      rt_UserAccounts,
+      arguments: UserAccountsArguments(
+        selectedIndex: 2,
+      ),
+    ).then((value) =>  setState(() {
+      planListModel = Provider.of<PlanWizardViewModel>(context, listen: false)
+          .getDietPlanListNew(isFrom: strProviderDiet);
+    }));
   }
 }
