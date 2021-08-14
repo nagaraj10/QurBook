@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:agora_rtc_engine/rtc_engine.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
@@ -328,11 +330,24 @@ class _MyControllersState extends State<MyControllers> {
     //* this need to uncomment and check
     if (audioCallStatus?.isAudioCall) {
       //if it's a audio call want switch to video call, request remote user
-      // open request dialog for requesting
-      await widget?.rtcEngine?.enableVideo();
-      await widget?.rtcEngine?.enableLocalVideo(true);
-      await widget?.rtcEngine?.muteLocalVideoStream(false);
-      requestingDialog();
+      //check for camera permission
+      var permissionStatus =
+          await CommonUtil.askPermissionForCameraAndMic(isAudioCall: false);
+      if (!permissionStatus) {
+        FlutterToast().getToast(
+            'Could not request video due to permission issue', Colors.orange);
+        return;
+      } else {
+        // open request dialog for requesting
+        await widget?.rtcEngine?.enableVideo();
+        await widget?.rtcEngine?.enableLocalVideo(true);
+        await widget?.rtcEngine?.muteLocalVideoStream(false);
+        requestingDialog();
+        FirebaseFirestore.instance
+          ..collection("call_log")
+              .doc("${widget.channelName}")
+              .set({"video_request_sent": "sent"});
+      }
     } else {
       if (CommonUtil.isRemoteUserOnPause) {
         await widget?.rtcEngine?.disableVideo();
@@ -357,53 +372,55 @@ class _MyControllersState extends State<MyControllers> {
   Future<void> requestingDialog() async {
     CommonUtil.isVideoRequestSent = true;
     try {
-      await Get.dialog(AlertDialog(
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
+      await Get.dialog(
+        AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 40.0.w,
+                ),
+                child: LinearProgressIndicator(
+                  backgroundColor: Color(CommonUtil.secondaryGrey),
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                      Color(CommonUtil().getMyPrimaryColor())),
+                  //value: progressValue[currentProgressValue],
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Container(
+                child: Text(
+                  'Requesting to switch to video call',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 20.0.sp,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black.withOpacity(0.5)),
+                ),
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 40.0.w,
-                    ),
-                    child: LinearProgressIndicator(
-                      backgroundColor: Color(CommonUtil.secondaryGrey),
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                          Color(CommonUtil().getMyPrimaryColor())),
-                      //value: progressValue[currentProgressValue],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    child: Text(
-                      'Requesting to switch to video call',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 20.0.sp,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black.withOpacity(0.5)),
-                    ),
-                  ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      FlatButton(
-                          child: Text('Cancel'),
-                          onPressed: () async {
-                            CommonUtil.isVideoRequestSent = false;
-                            await widget?.rtcEngine?.disableVideo();
-                            await widget?.rtcEngine?.enableLocalVideo(false);
-                            await widget?.rtcEngine?.muteLocalVideoStream(true);
-                            Get.back();
-                          }),
-                    ],
-                  ),
+                  FlatButton(
+                      child: Text('Cancel'),
+                      onPressed: () async {
+                        CommonUtil.isVideoRequestSent = false;
+                        await widget?.rtcEngine?.disableVideo();
+                        await widget?.rtcEngine?.enableLocalVideo(false);
+                        await widget?.rtcEngine?.muteLocalVideoStream(true);
+                        Get.back();
+                      }),
                 ],
               ),
-            ),
-            barrierDismissible: false,);
+            ],
+          ),
+        ),
+        barrierDismissible: false,
+      );
     } catch (e) {}
   }
 }

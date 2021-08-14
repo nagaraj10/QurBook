@@ -329,7 +329,7 @@ class _CallPageState extends State<CallPage> {
       }
     };
 
-    rtcEngineEventHandler.userEnableVideo = (uid, isEnabled) async {
+       rtcEngineEventHandler.userEnableVideo = (uid, isEnabled) async {
       if (isEnabled && audioStatus?.isAudioCall) {
         //show switch to video call dialog
         if (CommonUtil.isVideoRequestSent) {
@@ -364,9 +364,6 @@ class _CallPageState extends State<CallPage> {
                       FlatButton(
                           child: Text(parameters.btn_decline),
                           onPressed: () async {
-                            await widget?.rtcEngine?.disableVideo();
-                            await widget?.rtcEngine?.enableLocalVideo(false);
-                            await widget?.rtcEngine?.muteLocalVideoStream(true);
                             Get.back();
                             FirebaseFirestore.instance
                               ..collection("call_log")
@@ -376,23 +373,38 @@ class _CallPageState extends State<CallPage> {
                       FlatButton(
                           child: Text(parameters.btn_switch),
                           onPressed: () async {
-                            await widget?.rtcEngine?.enableVideo();
-                            await widget?.rtcEngine?.enableLocalVideo(true);
-                            await widget?.rtcEngine
-                                ?.muteLocalVideoStream(false);
+                            var permissionStatus =
+                                await CommonUtil.askPermissionForCameraAndMic(
+                                    isAudioCall: false);
+                            if (!permissionStatus) {
+                              FlutterToast().getToast(
+                                  'Could not switch to video due to permission issue',
+                                  Colors.orange);
+                              Get.back();
+                              FirebaseFirestore.instance
+                                ..collection("call_log")
+                                    .doc("${widget.channelName}")
+                                    .set({"video_request_sent": "decline"});
+                              return;
+                            } else {
+                              await widget?.rtcEngine?.enableVideo();
+                              await widget?.rtcEngine?.enableLocalVideo(true);
+                              await widget?.rtcEngine
+                                  ?.muteLocalVideoStream(false);
 
-                            Provider?.of<HideProvider>(context, listen: false)
-                                ?.swithToVideo();
-                            Provider.of<AudioCallProvider>(context,
-                                    listen: false)
-                                ?.disableAudioCall();
-                            Provider?.of<VideoIconProvider>(context,
-                                    listen: false)
-                                ?.turnOnVideo();
-                            Provider.of<RTCEngineProvider>(context,
-                                    listen: false)
-                                ?.isVideoPaused = false;
-                            Get.back();
+                              Provider?.of<HideProvider>(context, listen: false)
+                                  ?.swithToVideo();
+                              Provider.of<AudioCallProvider>(context,
+                                      listen: false)
+                                  ?.disableAudioCall();
+                              Provider?.of<VideoIconProvider>(context,
+                                      listen: false)
+                                  ?.turnOnVideo();
+                              Provider.of<RTCEngineProvider>(context,
+                                      listen: false)
+                                  ?.isVideoPaused = false;
+                              Get.back();
+                            }
                           }),
                     ],
                   ),
@@ -405,8 +417,19 @@ class _CallPageState extends State<CallPage> {
       } else {
         if (Get.isDialogOpen) {
           Get.back();
-          FlutterToast()
-              .getToast('Video call request canceled by doctor', Colors.green);
+          Get.rawSnackbar(
+              messageText: Center(
+                child: Text(
+                  'Request Canceled',
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.w500),
+                ),
+              ),
+              snackPosition: SnackPosition.BOTTOM,
+              snackStyle: SnackStyle.GROUNDED,
+              duration: Duration(seconds: 3),
+              backgroundColor: Colors.red.shade400);
+          //FlutterToast().getToast('Request Canceled', Colors.green);
         }
 
         /* if (CommonUtil.isVideoRequestSent) {
@@ -779,8 +802,18 @@ class _CallPageState extends State<CallPage> {
             if (Get.isDialogOpen) {
               CommonUtil.isVideoRequestSent = false;
               Get.back();
-              FlutterToast().getToast(
-                  'Video call request Declined by doctor', Colors.red);
+              Get.rawSnackbar(
+                  messageText: Center(
+                    child: Text(
+                      'Request Declined',
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                  snackPosition: SnackPosition.BOTTOM,
+                  snackStyle: SnackStyle.GROUNDED,
+                  duration: Duration(seconds: 3),
+                  backgroundColor: Colors.red.shade400);
               await widget?.rtcEngine?.disableVideo();
               await widget?.rtcEngine?.enableLocalVideo(false);
               await widget?.rtcEngine?.muteLocalVideoStream(true);

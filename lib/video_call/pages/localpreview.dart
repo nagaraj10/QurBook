@@ -54,25 +54,25 @@ class _LocalPreviewState extends State<LocalPreview> {
                   margin: EdgeInsets.symmetric(vertical: 120, horizontal: 10),
                   child: Stack(
                     children: [
-                      Visibility(
-                        child: RtcLocalView.SurfaceView(),
-                        visible: !(Provider.of<RTCEngineProvider>(context,
-                                    listen: false)
-                                ?.isVideoPaused ??
-                            false),
-                        replacement: Container(
-                          color: Colors.grey.withOpacity(0.2),
-                          child: Center(
-                            child: Text(
-                              'Video Paused',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 12.0.sp,
+                      Consumer<RTCEngineProvider>(
+                          builder: (context, status, child) {
+                        return Visibility(
+                          child: RtcLocalView.SurfaceView(),
+                          visible: !(status.isVideoPaused),
+                          replacement: Container(
+                            color: Colors.grey.withOpacity(0.2),
+                            child: Center(
+                              child: Text(
+                                'Video Paused',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12.0.sp,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
+                        );
+                      }),
                       Align(
                           alignment: FractionalOffset.topRight,
                           child: IconButton(
