@@ -14,6 +14,7 @@ class MyRecordsArgument {
   String userID;
   bool fromAppointments;
   String fromClass;
+  bool isFromVideoCall;
 
   MyRecordsArgument(
       {this.categoryPosition,
@@ -28,5 +29,6 @@ class MyRecordsArgument {
       this.isFromBills,
       this.userID,
       this.fromAppointments,
-      this.fromClass});
+      this.fromClass,
+      this.isFromVideoCall=false});
 }
