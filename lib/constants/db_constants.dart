@@ -5,12 +5,12 @@ import 'package:flutter/cupertino.dart';
 const String CT_COUNTRY_METRICS =
     'CREATE TABLE CountryMetrics(countryCode INTEGER PRIMARY KEY, name TEXT, bpSPUnit TEXT, bpDPUnit TEXT,bpPulseUnit TEXT, glucometerUnit TEXT, poOxySatUnit TEXT,poPulseUnit TEXT, tempUnit TEXT, weightUnit TEXT)';
 const String CT_UNITS =
-    'CREATE TABLE UnitsTable (id INTEGER PRIMARY KEY, units TEXT,minValue INTEGER,maxValue INTEGER)';
+    'CREATE TABLE UnitsTable (id INTEGER PRIMARY KEY, units TEXT,minValue INTEGER,maxValue INTEGER,range TEXT)';
 const String DB_NAME = 'main.db';
 const String UT_NAME = 'UnitsTable';
 const String CM_NAME = 'CountryMetrics';
 const String UT_QUERY = 'SELECT * FROM UnitsTable';
-const String UT_QUERY_BY_UN = 'SELECT * FROM UnitsTable WHERE units=? ';
+const String UT_QUERY_BY_UN = 'SELECT * FROM UnitsTable WHERE units=? and range=?';
 const String CM_QUERY = 'SELECT * FROM CountryMetrics';
 const String CM_QUERY_BY_CC =
     'SELECT * FROM CountryMetrics WHERE countryCode = ';
@@ -20,6 +20,7 @@ const String PRO_COUNTRY_CODE = 'countryCode';
 const String PRO_NAME = 'name';
 const String PRO_BPSP = 'bpSPUnit';
 const String PRO_BPDP = 'bpDPUnit';
+const String PRO_RANGE = 'range';
 const String PRO_BPPULSE = 'bpPulseUnit';
 const String PRO_GLUCO = 'glucometerUnit';
 const String PRO_PO_OXY = 'poOxySatUnit';

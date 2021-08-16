@@ -232,28 +232,35 @@ class DatabaseUtil {
   static void insertUnitsForDevices() async {
     final db = DatabaseHelper();
 
-    final faren = UnitsMesurements(1, 'F', 95, 99);
+    final faren = UnitsMesurements(1, 'F', 97.8, 99.1,"");
     await db.saveUnitMeasurements(faren);
 
-    final thermo = UnitsMesurements(2, 'C', 35, 38);
+    final thermo = UnitsMesurements(2, 'C', 36.5, 37.5,"");
     await db.saveUnitMeasurements(thermo);
 
-    final gluco = UnitsMesurements(3, 'mgdl', 60, 160);
+    final gluco = UnitsMesurements(3, 'mgdl', 70, 120,"Fast");
     await db.saveUnitMeasurements(gluco);
-    final bp = UnitsMesurements(4, 'mmHg', 90, 130);
+
+    final bp = UnitsMesurements(4, 'mmHg', 90, 130,"Dia");
     await db.saveUnitMeasurements(bp);
-    final pul = UnitsMesurements(5, '%spo2', 90, 100);
+    final pul = UnitsMesurements(5, '%spo2', 95, 100,"");
     await db.saveUnitMeasurements(pul);
-    final pr = UnitsMesurements(6, 'PR bpm', 70, 120);
+    final pr = UnitsMesurements(6, 'PR bpm', 70, 120,"");
     await db.saveUnitMeasurements(pr);
-    final kg = UnitsMesurements(7, 'kgs', 0, 250);
+    final kg = UnitsMesurements(7, 'kgs', 0, 250,"");
     await db.saveUnitMeasurements(kg);
-    final gram = UnitsMesurements(8, 'g', 0, 25000);
+    final gram = UnitsMesurements(8, 'g', 0, 25000,"");
     await db.saveUnitMeasurements(gram);
-    final dp = UnitsMesurements(9, 'dp', 60, 80);
+    final dp = UnitsMesurements(9, 'dp', 60, 80,"");
     await db.saveUnitMeasurements(dp);
-    final pulse = UnitsMesurements(10, 'pulse', 60, 100);
+    final pulse = UnitsMesurements(10, 'pulse', 60, 100,"");
     await db.saveUnitMeasurements(pulse);
+    final glucoPP = UnitsMesurements(11, 'mgdl', 70, 140,"PP");
+    await db.saveUnitMeasurements(glucoPP);
+    final glucoRandom = UnitsMesurements(12, 'mgdl', 70, 200,"Random");
+    await db.saveUnitMeasurements(glucoRandom);
+    final sp = UnitsMesurements(13, 'mmHg', 60, 90,"Sys");
+    await db.saveUnitMeasurements(sp);
   }
 
   static Future<int> getDBLength() async {

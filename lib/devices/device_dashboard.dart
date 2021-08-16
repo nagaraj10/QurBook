@@ -60,7 +60,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
 
   String deviceName = Constants.STR_WEIGHING_SCALE;
 
-  String errorMsg = '';
+  String errorMsg = '',errorMsgDia='',errorMsgSys='';
   FHBBasicWidget fhbBasicWidget = FHBBasicWidget();
   bool onOkClicked = false;
 
@@ -320,9 +320,10 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                                 commonConstants.bpDPUNIT,
                                 deviceController, (errorValue) {
                               setState(() {
-                                errorMsg = errorValue;
+                                errorMsgSys = errorValue;
+                                errorMsg=errorMsgSys;
                               });
-                            }, errorMsg, variable.strbpunit, deviceName)
+                            }, errorMsgSys, variable.strbpunit, deviceName,range: "Sys")
                           ],
                         ),
                       )),
@@ -345,9 +346,9 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                                   commonConstants.bpDPUNIT,
                                   diaStolicPressure, (errorValue) {
                                 setState(() {
-                                  errorMsg = errorValue;
-                                });
-                              }, errorMsg, variable.strbpunit, deviceName)
+                                  errorMsgDia = errorValue;
+                                  errorMsg=errorMsgDia;                                });
+                              }, errorMsgDia, variable.strbpunit, deviceName,range:"Dia")
                             ],
                           )),
                       Expanded(
@@ -735,7 +736,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                         setState(() {
                           errorMsg = errorValue;
                         });
-                      }, errorMsg, commonConstants.tempUNIT, deviceName)
+                      }, errorMsg, commonConstants.tempUNIT, deviceName,range: "",device:"Temp")
                     ],
                   ),
                   Column(

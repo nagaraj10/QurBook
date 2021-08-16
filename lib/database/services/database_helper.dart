@@ -54,11 +54,11 @@ class DatabaseHelper {
   }
 
   Future<UnitsMesurements> getMeasurementsBasedOnUnits(
-      String unitsMeasure) async {
+      String unitsMeasure,String range) async {
     final dbClient = await db;
 
     final results =
-        await dbClient.rawQuery(DBConstants.UT_QUERY_BY_UN, [unitsMeasure]);
+        await dbClient.rawQuery(DBConstants.UT_QUERY_BY_UN, [unitsMeasure,range]);
 
     if (results.isNotEmpty) {
       return UnitsMesurements.map(results.first);
@@ -157,6 +157,7 @@ class DatabaseHelper {
         list[i][DBConstants.PRO_NAME],
         list[i][DBConstants.PRO_BPSP],
         list[i][DBConstants.PRO_BPDP],
+        list[i][DBConstants.PRO_RANGE],
       );
       unitsList.add(unitObj);
     }
