@@ -197,6 +197,11 @@ const String strsupportEmail =
 
 const String strEmptyWebView = 'Plan summary will be available soon';
 
+const String strNoPlansCheckFree = 'No plans found. Please check All Free Plans tab';
+
+
+
+
 void openEmail({String sub = 'App Feedback', String body = ''}) async {
   final params = Uri(
     scheme: 'mailto',

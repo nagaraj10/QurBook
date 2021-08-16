@@ -21,6 +21,9 @@ class PlanWizardViewModel extends ChangeNotifier {
   int currentPage = 0;
   int currentTab = 0;
   int currentTabDiet = 0;
+
+  int planWizardProviderCount = 0;
+
   List<List<DietPlanResult>> dietPlanList = [];
 
   String currentPackageProviderCareId = '';
@@ -52,6 +55,7 @@ class PlanWizardViewModel extends ChangeNotifier {
 
   var selectedTag = '';
   var providerId = '';
+  var healthTitle = '';
 
   var currentCartProviderCarePackageId = '';
   var currentCartFreeCarePackageId = '';
