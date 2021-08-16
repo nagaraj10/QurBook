@@ -601,6 +601,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
   void planSubLogic(CheckoutPageProvider value) {
     Provider.of<CheckoutPageProvider>(context, listen: false).loader(true);
 
+    Provider.of<CheckoutPageProvider>(context, listen: false).isMembershipCart =
+        Provider.of<PlanWizardViewModel>(context, listen: false)
+            .checkCartForBundle();
+
     var mCartTotal =
         value?.fetchingCartItemsModel?.result?.totalCartAmount ?? 0;
     var body = {"cartId": "${value?.fetchingCartItemsModel?.result?.cart?.id}"};

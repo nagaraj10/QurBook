@@ -25,6 +25,9 @@ import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/user_plans/view/user_profile_image.dart';
+import 'package:myfhb/user_plans/view_model/user_plans_view_model.dart';
+import 'package:provider/provider.dart';
 
 class MyProfilePage extends StatefulWidget {
   @override
@@ -306,22 +309,23 @@ class _MyProfilePageState extends State<MyProfilePage> {
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Container(
-                        height: 100.0.h,
-                        width: 100.0.h,
+                        height: 120.0.h,
+                        width: 120.0.h,
                         decoration: ShapeDecoration(
                           shape: CircleBorder(
                               side: BorderSide(
                                   width: 1.5.w,
-                                  color: Color(
-                                      new CommonUtil().getMyPrimaryColor()))),
+                                  color:
+                                      (Provider.of<UserPlansViewModel>(context)
+                                                  ?.isGoldMember ??
+                                              false)
+                                          ? Colors.transparent
+                                          : Color(new CommonUtil()
+                                              .getMyPrimaryColor()))),
                         ),
-                        child: ClipOval(
-                          child: data.profilePicThumbnailUrl != null
-                              ? FHBBasicWidget()
-                                  .getProfilePicWidgeUsingUrlForProfile(
-                                      myProfile)
-                              : Container(),
-                        ),
+                        child: data.profilePicThumbnailUrl != null
+                            ? UserProfileImage(myProfile)
+                            : Container(),
                       ),
                     ),
                     IconButton(
