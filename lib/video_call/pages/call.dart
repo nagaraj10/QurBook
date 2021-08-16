@@ -378,8 +378,8 @@ class _CallPageState extends State<CallPage> {
                                     isAudioCall: false);
                             if (!permissionStatus) {
                               FlutterToast().getToast(
-                                  'Could not switch to video due to permission issue',
-                                  Colors.orange);
+                                  'Could not switch on video due to permission settings',
+                                  Colors.black);
                               Get.back();
                               FirebaseFirestore.instance
                                 ..collection("call_log")

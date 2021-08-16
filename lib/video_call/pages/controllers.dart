@@ -335,7 +335,7 @@ class _MyControllersState extends State<MyControllers> {
           await CommonUtil.askPermissionForCameraAndMic(isAudioCall: false);
       if (!permissionStatus) {
         FlutterToast().getToast(
-            'Could not request video due to permission issue', Colors.orange);
+            'Could not request video due to permission settings', Colors.black);
         return;
       } else {
         // open request dialog for requesting
