@@ -63,6 +63,7 @@ const String strweightUnit = 'weightUnit';
 const String strUnits = 'units';
 const String strminValue = 'minValue';
 const String strmaxValue = 'maxValue';
+const String strRange = 'range';
 
 const String strmediaMasterIds = 'mediaMasterIds';
 
