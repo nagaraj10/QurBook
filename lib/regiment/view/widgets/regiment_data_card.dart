@@ -231,8 +231,8 @@ class RegimentDataCard extends StatelessWidget {
                     Provider.of<RegimentViewModel>(context, listen: false)
                         .startRegimenTTS(
                       index,
-                      staticText: regimentData?.title,
-                      dynamicText: regimentData?.sayTextDynamic,
+                      staticText: regimentData?.title ?? '',
+                      dynamicText: regimentData?.sayTextDynamic ?? '',
                     );
                   }
                 },
