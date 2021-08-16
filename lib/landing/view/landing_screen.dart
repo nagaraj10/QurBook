@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,6 +8,8 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/src/utils/dynamic_links.dart';
+import 'package:myfhb/user_plans/view_model/user_plans_view_model.dart';
 import '../../add_family_user_info/bloc/add_family_user_info_bloc.dart';
 import '../../add_family_user_info/services/add_family_user_info_repository.dart';
 import '../../authentication/view/login_screen.dart';
@@ -82,6 +85,13 @@ class _LandingScreenState extends State<LandingScreen> {
     super.initState();
     dbInitialize();
     QurPlanReminders.getTheRemindersFromAPI();
+    var url = (PreferenceUtil.getStringValue(constants.KEY_DYNAMIC_URL) ?? '');
+    if (url?.isNotEmpty ?? false) {
+      try {
+        Uri deepLink = Uri.parse(jsonDecode(url));
+        DynamicLinks.processDynamicLink(deepLink);
+      } catch (e) {}
+    }
     callImportantsMethod();
 
     var profilebanner =
@@ -564,6 +574,8 @@ class _LandingScreenState extends State<LandingScreen> {
 
   void callImportantsMethod() async {
     await CommonUtil().validateToken();
+    await Provider.of<UserPlansViewModel>(context, listen: false)
+        ?.getUserPlanInfoLocal();
 
     try {
       getFamilyRelationAndMediaType();

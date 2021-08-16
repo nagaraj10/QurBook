@@ -9,6 +9,7 @@ import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myfhb/myPlan/view/myPlanDetail.dart';
 import 'package:myfhb/src/utils/dynamic_links.dart';
+import 'package:myfhb/user_plans/view_model/user_plans_view_model.dart';
 import 'package:myfhb/video_call/utils/rtc_engine.dart';
 import 'package:myfhb/widgets/checkout_page.dart';
 import 'IntroScreens/IntroductionScreen.dart';
@@ -232,6 +233,9 @@ Future<void> main() async {
         provider.ChangeNotifierProvider<PlanProviderViewModel>(
           create: (_) => PlanProviderViewModel(),
         ),
+        provider.ChangeNotifierProvider<UserPlansViewModel>(
+          create: (_) => UserPlansViewModel(),
+        ),
       ],
       child: MyFHB(),
     ),
@@ -323,6 +327,7 @@ class _MyFHBState extends State<MyFHB> {
 
     /*NotificationController.instance.takeFCMTokenWhenAppLaunch();
     NotificationController.instance.initLocalNotification();*/
+    PreferenceUtil.saveString(KEY_DYNAMIC_URL, '');
     DynamicLinks.initDynamicLinks();
     CheckForShowingTheIntroScreens();
     chatViewModel.setCurrentChatRoomID('none');
