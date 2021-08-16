@@ -229,7 +229,11 @@ class RegimentDataCard extends StatelessWidget {
                     stopRegimenTTS();
                   } else {
                     Provider.of<RegimentViewModel>(context, listen: false)
-                        .startRegimenTTS(index, regimentData.saytext);
+                        .startRegimenTTS(
+                      index,
+                      staticText: regimentData?.title ?? '',
+                      dynamicText: regimentData?.sayTextDynamic ?? '',
+                    );
                   }
                 },
                 child: Icon(

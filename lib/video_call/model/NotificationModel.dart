@@ -168,6 +168,9 @@ class NotificationModel {
         if (message[parameters.patientName] != null) {
           patientName = message[parameters.patientName];
         }
+        if (message[parameters.gcmpatientName] != null) {
+          patientName = message[parameters.gcmpatientName];
+        }
         if (message[parameters.patientPicture] != null) {
           patientPicture = message[parameters.patientPicture];
         }
@@ -298,6 +301,9 @@ class NotificationModel {
     }
     if (message[parameters.callType] != null) {
       callType = message[parameters.callType];
+    }
+    if (message[parameters.gcmpatientName] != null) {
+      patientName = message[parameters.gcmpatientName];
     }
   }
 }

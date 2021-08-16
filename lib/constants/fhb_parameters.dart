@@ -191,6 +191,7 @@ const String isAudioFile = 'isAudioFile';
 const String MP3 = 'MP3';
 
 const String regimentInput = 'q';
+const String regimentToTranslateInput = 'toTranslateContent';
 const String regimentSource = 'source';
 const String regimentTarget = 'target';
 const String regimentFormat = 'format';
@@ -581,6 +582,7 @@ const String GCMUserId = 'gcm.notification.userId';
 const String strgcmAppointmentId = 'gcm.notification.appointmentId';
 const String gcmExternalLink = 'gcm.notification.externalLink';
 const String gcmplanId = 'gcm.notification.planId';
+const String gcmpatientName = 'gcm.notification.patientName';
 
 const String gcmredirectTo = 'gcm.notification.redirectTo';
 const String externalLink = 'externalLink';

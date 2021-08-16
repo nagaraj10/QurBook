@@ -257,6 +257,7 @@ class ApiBaseHelper {
     }
     return responseJson;
   }
+
   /// The below method helps to get categroy list from server using the get method,
   /// it contains one parameter which describ ethe URL  type
   /// Created by Parvathi M on 7th Jan 2020
@@ -489,7 +490,7 @@ class ApiBaseHelper {
         if (forDoctorSearch) {
           final responseJson = convert.jsonDecode(response.body.toString());
           return responseJson;
-        }else {
+        } else {
           exitFromApp();
         }
         break;
@@ -1341,7 +1342,8 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> uploadUserProfilePicToServer(String url, File image) async {
-    var authToken = await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    var authToken =
+        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     //String userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var filename = image.path.split('/').last;
     final fileType = filename.split('.')[1];
@@ -1649,7 +1651,7 @@ class ApiBaseHelper {
               _baseUrl + 'user/update-last-visited-details',
               body: json.encode(jsobBodyMap),
               headers: await headerRequest.getRequestHeadersAuthContent());
-          
+
           responseJson = _returnResponse(response);
         } on SocketException {
           throw FetchDataException(variable.strNoInternet);
@@ -1669,7 +1671,8 @@ class ApiBaseHelper {
 
       if (userID != null && userID != "" && ((createBy ?? '').isNotEmpty)) {
         Map<String, String> jsobBodyMap = new Map();
-        jsobBodyMap['userId'] = ((cartUserId ?? '').isNotEmpty) ? cartUserId : userID;
+        jsobBodyMap['userId'] =
+            ((cartUserId ?? '').isNotEmpty) ? cartUserId : userID;
         jsobBodyMap['createdBy'] = createBy;
         try {
           final response = await ApiServices.post(
@@ -1726,7 +1729,8 @@ class ApiBaseHelper {
         body['userId'] = userID;
         body['createdBy'] = createBy;
         try {
-          final response = await ApiServices.post(_baseUrl + "cart/remove-product",
+          final response = await ApiServices.post(
+              _baseUrl + "cart/remove-product",
               body: json.encode(body),
               headers: await headerRequest.getRequestHeadersAuthContent());
           //responseJson = _returnResponse(response);
@@ -1799,18 +1803,18 @@ class ApiBaseHelper {
       UpdatePaymentResponse responseJson;
 
       //if (userID != null && userID != "" && ((createBy ?? '').isNotEmpty)) {
-        try {
-          final response = await ApiServices.post(
-              _baseUrl + "payment/plan-subscription-update-payment-status",
-              body: json.encode(body),
-              headers: await headerRequest.getRequestHeadersAuthContent());
-          //responseJson = _returnResponse(response);
-          responseJson = UpdatePaymentResponse.fromJson(
-              json.decode(response.body.toString()));
-        } on SocketException {
-          throw FetchDataException(variable.strNoInternet);
-        }
-        return responseJson;
+      try {
+        final response = await ApiServices.post(
+            _baseUrl + "payment/plan-subscription-update-payment-status",
+            body: json.encode(body),
+            headers: await headerRequest.getRequestHeadersAuthContent());
+        //responseJson = _returnResponse(response);
+        responseJson = UpdatePaymentResponse.fromJson(
+            json.decode(response.body.toString()));
+      } on SocketException {
+        throw FetchDataException(variable.strNoInternet);
+      }
+      return responseJson;
       //}
     } catch (e) {}
   }
@@ -1831,6 +1835,19 @@ class ApiBaseHelper {
     return responseJson;
   }
 
+  Future<dynamic> getUserPlanInfo(String url) async {
+    var responseJson;
+    try {
+      var response = await ApiServices.get(
+        _baseUrl + url,
+        headers: await headerRequest.getRequestHeadersTimeSlot(),
+      );
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
 }
 
 void exitFromApp() async {

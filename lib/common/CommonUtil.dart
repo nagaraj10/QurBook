@@ -97,6 +97,7 @@ import 'package:myfhb/telehealth/features/chat/view/PDFView.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import '../../authentication/constants/constants.dart';
 import 'package:myfhb/widgets/checkout_page.dart';
+import '../../colors/fhb_colors.dart' as fhbColors;
 
 class CommonUtil {
   static String SHEELA_URL = '';
@@ -1391,13 +1392,24 @@ class CommonUtil {
     }
   }
 
-  getDoctorProfileImageWidget(String doctorUrl) {
+  getDoctorProfileImageWidget(String doctorUrl, Doctor doctor) {
+    String name=doctor?.firstName?.capitalizeFirstofEach??" "+doctor?.lastName?.capitalizeFirstofEach??" ";
     if (doctorUrl != null && doctorUrl != '') {
       return Image.network(
         doctorUrl,
         height: 50.0.h,
         width: 50.0.h,
         fit: BoxFit.cover,
+        errorBuilder: (context,exception, stackTrace){
+          return Container(
+            height: 50.0.h,
+            width: 50.0.h,
+            color: Color(CommonUtil().getMyPrimaryColor()),
+            child: Center(
+              child: getFirstLastNameText(doctor),
+            ),
+          );
+        },
       );
     } else {
       return SizedBox(
@@ -1409,6 +1421,40 @@ class CommonUtil {
     }
 
     ///load until snapshot.hasData resolves to true
+  }
+
+  Widget getFirstLastNameText(Doctor doctor) {
+    if (doctor != null &&
+        doctor.firstName != null &&
+        doctor.lastName != null) {
+      return Text(
+        doctor.firstName[0].toUpperCase() +
+            doctor.lastName[0].toUpperCase(),
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 22.0.sp,
+          fontWeight: FontWeight.w400,
+        ),
+      );
+    } else if (doctor != null && doctor.firstName != null) {
+      return Text(
+        doctor.firstName[0].toUpperCase(),
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 22.0.sp,
+          fontWeight: FontWeight.w400,
+        ),
+      );
+    } else {
+      return Text(
+        '',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 22.0.sp,
+          fontWeight: FontWeight.w200,
+        ),
+      );
+    }
   }
 
   Future<void> validateToken() async {
@@ -1728,6 +1774,61 @@ class CommonUtil {
     }
   }
 
+  static showFamilyMemberPlanExpiryDialog(String pateintName) async {
+    await Get.defaultDialog(
+      content: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: 16,
+        ),
+        child: Text(
+          "Switch to $pateintName profile in Home screen and Tap on the Renew button again from the Notifications list",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 14,
+          ),
+        ),
+      ),
+      confirm: OutlineButton(
+        onPressed: () {
+          Get.back();
+        },
+        borderSide: BorderSide(color: Color(CommonUtil().getMyPrimaryColor())),
+        child: Text(
+          variable.strOK,
+          style: TextStyle(
+            color: Color(CommonUtil().getMyPrimaryColor()),
+          ),
+        ),
+      ),
+      onConfirm: () {
+        Get.back();
+      },
+      // AlertDialog(
+      //   title: Text(
+      //     "Switch Profile",
+      //     style: TextStyle(fontSize: 16),
+      //   ),
+      //   content: Text(
+      //     "Switch to $pateintName profile in Home screen and Tap on the Renew button again from the Notifications list",
+      //     style: TextStyle(fontSize: 14),
+      //   ),
+      //   actions: <Widget>[
+      //     FlatButton(
+      //       onPressed: () {
+      //         Get.back();
+      //       },
+      //       child: Text(
+      //         "ok",
+      //         // style: TextStyle(
+      //         //   color: Color(getMyPrimaryColor()),
+      //         // ),
+      //       ),
+      //     ),
+      //   ],
+      // ),
+    );
+  }
+
   _showVersionDialog(context, bool isForceUpdate) async {
     await showDialog<String>(
       context: context,
@@ -1762,13 +1863,15 @@ class CommonUtil {
                       child: Text(
                         btnLabelCancel,
                         style: TextStyle(
-                          color: Color(getMyPrimaryColor()),
+                          color: Color(
+                            getMyPrimaryColor(),
+                          ),
                         ),
                       ),
                       onPressed: () => Navigator.pop(context),
                     )
-                  else
-                    SizedBox.shrink(),
+                  /*else
+                    SizedBox.shrink(),*/
                 ],
               )
             : AlertDialog(
@@ -1800,8 +1903,8 @@ class CommonUtil {
                       ),
                       onPressed: () => Navigator.pop(context),
                     )
-                  else
-                    SizedBox.shrink(),
+                  /*else
+                    SizedBox.shrink(),*/
                 ],
               );
       },

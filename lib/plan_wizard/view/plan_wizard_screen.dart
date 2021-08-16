@@ -104,73 +104,82 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
                     ],
                   ),
                 ),
-                Container(
-                  color: Color(CommonUtil().getMyPrimaryColor()),
-                  margin: EdgeInsets.only(
-                    top: 10.0.h,
-                  ),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 10.0.sp,
-                    vertical: 5.0.sp,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Flexible(
-                        child: Padding(
-                          padding: EdgeInsets.all(
-                            10.0.sp,
-                          ),
-                          child: Text(
-                            _getBottomText(
-                                planWizardViewModel.currentPage,
-                                planWizardViewModel.currentTab,
-                                planWizardViewModel.currentTabDiet),
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16.0.sp,
+                ((planWizardViewModel.currentPage == 1 &&
+                            planWizardViewModel.currentTab == 0 && planWizardViewModel.isListEmpty) ||
+                        (planWizardViewModel.currentTabDiet == 0 && planWizardViewModel.isDietListEmpty &&
+                            planWizardViewModel.currentPage == 2))
+                    ? Container(
+                        color: Color(CommonUtil().getMyPrimaryColor()),
+                        margin: EdgeInsets.only(
+                          top: 10.0.h,
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 10.0.sp,
+                          vertical: 5.0.sp,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Flexible(
+                              child: Padding(
+                                padding: EdgeInsets.all(
+                                  10.0.sp,
+                                ),
+                                child: Text(
+                                  _getBottomText(
+                                      planWizardViewModel.currentPage,
+                                      planWizardViewModel.currentTab,
+                                      planWizardViewModel.currentTabDiet),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16.0.sp,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
+                            OutlineButton(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                  10.0.sp,
+                                ),
+                              ),
+                              onPressed: () {
+                                if (planWizardViewModel.currentPage == 1 ||
+                                    planWizardViewModel.currentPage == 2) {
+                                  Get.to(AddProviderPlan(
+                                      planWizardViewModel.selectedTag));
+                                } else {
+                                  new AddNewPlan().addNewPlan(
+                                      context,
+                                      feedbackCode,
+                                      titleName,
+                                      hintText, (bool) {
+                                    FlutterToast toast = new FlutterToast();
+                                    if (bool) {
+                                      toast.getToast(
+                                          "We've received your request and get back to you soon",
+                                          Colors.green);
+                                    } else {
+                                      toast.getToast(
+                                          "Please try again ", Colors.red);
+                                    }
+                                  });
+                                }
+                              },
+                              borderSide: BorderSide(color: Colors.white),
+                              color: Colors.white,
+                              textColor: Colors.white,
+                              child: Text(
+                                _getBottomButtonText(
+                                    planWizardViewModel.currentPage,
+                                    planWizardViewModel.currentTab,
+                                    planWizardViewModel.currentTabDiet),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      OutlineButton(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                            10.0.sp,
-                          ),
-                        ),
-                        onPressed: () {
-                          if (planWizardViewModel.currentPage == 1 ||
-                              planWizardViewModel.currentPage == 2) {
-                            Get.to(AddProviderPlan());
-                          } else {
-                            new AddNewPlan().addNewPlan(
-                                context, feedbackCode, titleName, hintText,
-                                (bool) {
-                              FlutterToast toast = new FlutterToast();
-                              if (bool) {
-                                toast.getToast(
-                                    "We've received your request and get back to you soon",
-                                    Colors.green);
-                              } else {
-                                toast.getToast("Please try again ", Colors.red);
-                              }
-                            });
-                          }
-                        },
-                        borderSide: BorderSide(color: Colors.white),
-                        color: Colors.white,
-                        textColor: Colors.white,
-                        child: Text(
-                          _getBottomButtonText(
-                              planWizardViewModel.currentPage,
-                              planWizardViewModel.currentTab,
-                              planWizardViewModel.currentTabDiet),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                      )
+                    : SizedBox.shrink(),
               ],
             ),
           ],
@@ -185,10 +194,10 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
         return strDontCondition;
         break;
       case 1:
-        return currentTab == 0 ? strDontProvider : strDontProvider;
+        return currentTab == 0 ? strDontProvider : "";
         break;
       case 2:
-        return currentTabDiet == 0 ? strDontProvider : strDontProvider;
+        return currentTabDiet == 0 ? strDontProvider : "";
         break;
     }
   }
@@ -249,15 +258,14 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
       }
     } else {
       var newPage = 0;
-      if(planWizardViewModel?.isDynamicLink ?? false){
+      if (planWizardViewModel?.isDynamicLink ?? false) {
         planWizardViewModel?.isDynamicLink = false;
         planWizardViewModel?.dynamicLinkSearchText = '';
         newPage = 0;
-      }else{
+      } else {
         newPage = planWizardViewModel?.currentPage - 1;
       }
-      planWizardViewModel
-          ?.changeCurrentPage(newPage);
+      planWizardViewModel?.changeCurrentPage(newPage);
     }
   }
 }

@@ -53,7 +53,7 @@ class IntroWidget extends StatelessWidget {
         return '150+ Personalized Health Care Plans \n from Trusted Doctors & Hospitals';
         break;
       case icon_SheelaIntro:
-        return 'Use Sheela G to Record Vitals, \nTrack Symptoms, and Disease Education';
+        return 'Use Sheela to Record Vitals, \nTrack Symptoms, and Disease Education';
         break;
       case icon_qurplanIntro:
         return 'One Call or Chat with Your Caregiver \n for all Medical Assistance';

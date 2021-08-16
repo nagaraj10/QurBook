@@ -32,7 +32,7 @@ class ChatScreenViewModel extends ChangeNotifier {
   static var uuid = Uuid().v1();
   var user_id;
   var user_name;
-  var auth_token = PreferenceUtil.getStringValue(constants.KEY_AUTHTOKEN);
+  var auth_token;
   var isMayaSpeaks = -1;
   var userMappingId = '';
   bool _isdigitRecognition = true;
@@ -181,6 +181,7 @@ class ChatScreenViewModel extends ChangeNotifier {
     bool isRegiment: false,
     bool isButtonText: false,
     Function onStop,
+    String dynamicText,
   }) async {
     if (stopPrevious) {
       stopTTSEngine();
@@ -250,8 +251,9 @@ class ChatScreenViewModel extends ChangeNotifier {
           });
           if (isRegiment) {
             await getGoogleTTSRegiment(
-              textToSpeak,
-              languageForTTS != null ? languageForTTS : "en",
+              staticText: textToSpeak,
+              dynamicText: dynamicText,
+              langCode: languageForTTS != null ? languageForTTS : "en",
             );
           } else {
             await getGoogleTTSResponse(textToSpeak,
@@ -311,8 +313,9 @@ class ChatScreenViewModel extends ChangeNotifier {
           });
           if (isRegiment) {
             await getGoogleTTSRegiment(
-              textToSpeak,
-              languageForTTS != null ? languageForTTS : "en",
+              staticText: textToSpeak,
+              dynamicText: dynamicText,
+              langCode: languageForTTS != null ? languageForTTS : "en",
             );
           } else {
             await getGoogleTTSResponse(textToSpeak,
@@ -405,6 +408,7 @@ class ChatScreenViewModel extends ChangeNotifier {
 
   sendToMaya(String msg, {String screen, String providerMsg}) async {
     prof = await PreferenceUtil.getProfileData(constants.KEY_PROFILE);
+    auth_token = await PreferenceUtil.getStringValue(constants.KEY_AUTHTOKEN);
     user_name = prof.result != null
         ? prof.result.firstName + ' ' + prof.result.lastName
         : '';
@@ -992,9 +996,11 @@ class ChatScreenViewModel extends ChangeNotifier {
     );
   }
 
-  getGoogleTTSRegiment(String dataForVoice, String langCode) async {
+  getGoogleTTSRegiment(
+      {String staticText, String dynamicText, String langCode}) async {
     Map<String, dynamic> reqJson = {};
-    reqJson[parameters.regimentInput] = dataForVoice;
+    reqJson[parameters.regimentInput] = staticText;
+    reqJson[parameters.regimentToTranslateInput] = dynamicText;
     reqJson[parameters.regimentSource] = 'en';
     reqJson[parameters.regimentTarget] = langCode;
     reqJson[parameters.regimentFormat] = 'text';

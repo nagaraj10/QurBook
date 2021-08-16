@@ -158,8 +158,7 @@ const String strNetworkIssue = 'Please Check Network Connection';
 const String strresendOtp = 'Resend OTP';
 const String strVerifyCall = 'Confirm via Call';
 const String strOrText = 'OR';
-const String strOtpNotReceived =
-    'Didn\'t receive the OTP ? Retry in ';
+const String strOtpNotReceived = 'Didn\'t receive the OTP ? Retry in ';
 const String strCallDirect =
     'Please call from your registered mobile number to a phone number below. Thank you for your understanding';
 const String primaryNumber = 'Primary Number';
@@ -172,6 +171,8 @@ const String strOldPassword = 'oldPassword';
 const String strCare = 'Care';
 const String strDiet = 'Diet';
 const String strMyPlan = 'MyPlan';
+const String strBundle = 'BUND';
+const String strMembership = 'MEMB';
 
 const String strProviderCare = 'ProviderCare';
 const String strFreeCare = 'FreeCare';
@@ -181,7 +182,6 @@ const String strProviderDiet = 'ProviderDiet';
 const String strFreeDiet = 'FreeDiet';
 
 const String strAddPlan = 'Add Plan';
-
 
 //labels for country code picker page
 const String strinitialMobileLabel = '91';
@@ -196,6 +196,11 @@ const String strsupportEmail =
     'If OTP is not received within 5mins, please contact to support at support@qurhealth.in';
 
 const String strEmptyWebView = 'Plan summary will be available soon';
+
+const String strNoPlansCheckFree = 'No plans found. Please check All Free Plans tab';
+
+
+
 
 void openEmail({String sub = 'App Feedback', String body = ''}) async {
   final params = Uri(

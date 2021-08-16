@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:myfhb/telehealth/features/chat/view/home.dart';
 import '../../../common/CommonConstants.dart';
 import '../../../common/CommonUtil.dart';
@@ -30,23 +31,6 @@ class HomeWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: EdgeInsets.only(
-                left: 20.0.w,
-                right: 20.0.w,
-                top: 10.0.h,
-              ),
-              child: Text(
-                constants.strMyDashboard,
-                style: TextStyle(
-                  fontSize: 18.0.sp,
-                  color: Colors.black,
-                  fontWeight: FontWeight.w500,
-                ),
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-              ),
-            ),
             Expanded(
               child: Consumer<LandingViewModel>(
                 builder: (context, landingViewModel, child) {
@@ -67,6 +51,13 @@ class HomeWidget extends StatelessWidget {
                         (dashboardData?.providers?.doctor ?? 0) +
                             (dashboardData?.providers?.hospital ?? 0) +
                             (dashboardData?.providers?.lab ?? 0);
+
+                    Future.delayed(Duration(milliseconds: 100), () {
+                      Provider.of<PlanWizardViewModel>(context, listen: false)
+                          ?.updateProviderHosCount(
+                              dashboardData?.providers?.hospital ?? 0);
+                    });
+
                     final availableVideos =
                         dashboardData?.helperVideos?.length ?? 0;
                     final availableCareProvider =

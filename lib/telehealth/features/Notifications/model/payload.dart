@@ -1,21 +1,24 @@
 class Payload {
-  Payload(
-      {this.type,
-      this.meetingId,
-      this.priority,
-      this.appointmentDate,
-      this.userName,
-      this.doctorId,
-      this.payloadMeetingId,
-      this.templateName,
-      this.providerRequestId,
-      this.doctorSessionId,
-      this.bookingId,
-      this.healthOrganizationId,
-      this.plannedStartDateTime,
-      this.redirectTo,
-      this.healthRecordMetaIds,
-      this.planId});
+  Payload({
+    this.type,
+    this.meetingId,
+    this.priority,
+    this.appointmentDate,
+    this.userName,
+    this.doctorId,
+    this.payloadMeetingId,
+    this.templateName,
+    this.providerRequestId,
+    this.doctorSessionId,
+    this.bookingId,
+    this.healthOrganizationId,
+    this.plannedStartDateTime,
+    this.redirectTo,
+    this.healthRecordMetaIds,
+    this.planId,
+    this.userId,
+    this.patientName,
+  });
 
   String type;
   String meetingId;
@@ -33,6 +36,8 @@ class Payload {
   String redirectTo;
   String healthRecordMetaIds;
   String planId;
+  String userId;
+  String patientName;
 
   Payload.fromJson(Map<String, dynamic> json) {
     type = json["type"];
@@ -61,6 +66,8 @@ class Payload {
     healthRecordMetaIds = json["healthRecordMetaIds"] == null
         ? null
         : json["healthRecordMetaIds"];
+    patientName = json["patientName"] == null ? null : json["patientName"];
+    userId = json["userId"] == null ? null : json["userId"];
     if (json["planId"] != null) {
       var plan = json["planId"];
       if (plan.runtimeType == String) {

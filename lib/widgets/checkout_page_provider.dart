@@ -21,6 +21,8 @@ class CheckoutPageProvider extends ChangeNotifier {
   ApiBaseHelper helper = ApiBaseHelper();
   FetchingCartItemsModel fetchingCartItemsModel;
 
+  bool isMembershipCart = false;
+
   int _cartCount = 0;
 
   bool isLoading = false;

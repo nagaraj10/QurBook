@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import '../../../common/CommonUtil.dart';
 import '../../../constants/fhb_constants.dart';
@@ -59,12 +61,21 @@ class _RegimentWebViewState extends State<RegimentWebView> {
         body: Stack(
           children: <Widget>[
             Html(
-              data: widget.selectedUrl.replaceAll('src="//', 'src="'),
-              onLinkTap: (linkUrl,
-                   context,
-                   attributes,
-                   element) {
-                CommonUtil().openWebViewNew(widget.title, linkUrl, false);
+              data: Platform.isIOS
+                  ? widget.selectedUrl.replaceAll(
+                      'src="//',
+                      'src="https://',
+                    )
+                  : widget.selectedUrl.replaceAll(
+                      'src="//',
+                      'src="',
+                    ),
+              onLinkTap: (linkUrl, context, attributes, element) {
+                CommonUtil().openWebViewNew(
+                  widget.title,
+                  linkUrl,
+                  false,
+                );
                 print(linkUrl);
               },
             ),

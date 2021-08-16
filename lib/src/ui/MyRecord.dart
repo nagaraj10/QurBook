@@ -421,6 +421,7 @@ class _MyRecordsState extends State<MyRecords> {
       userID: widget.argument.userID ?? '',
       fromAppointments: widget.argument.fromAppointments ?? false,
       fromClass: widget.argument.fromClass,
+      isFromVideoCall: widget.argument?.isFromVideoCall ?? false,
     );
   }
 
@@ -623,6 +624,7 @@ class CustomTabView extends StatefulWidget {
   bool fromAppointments;
   String fromClass;
   MyRecordsArgument argument;
+  bool isFromVideoCall = false;
   CustomTabView(
       {@required this.itemCount,
       this.tabBuilder,
@@ -651,7 +653,8 @@ class CustomTabView extends StatefulWidget {
       this.userID,
       this.fromAppointments,
       this.fromClass,
-      this.argument});
+      this.argument,
+      this.isFromVideoCall});
 
   @override
   _CustomTabsState createState() => _CustomTabsState();
@@ -834,14 +837,21 @@ class _CustomTabsState extends State<CustomTabView>
                   FHBBasicWidget.customShowCase(
                       widget.cameraKey,
                       Constants.CAMERA_DESC,
-                      IconButton(
-                        icon: Icon(
-                          Icons.camera_alt,
-                          color: Colors.white,
+                      Tooltip(
+                        message: 'Camera disabled',
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.camera_alt,
+                            color: widget?.isFromVideoCall
+                                ? Colors.black38
+                                : Colors.white,
+                          ),
+                          onPressed: widget?.isFromVideoCall
+                              ? null
+                              : () {
+                                  onCameraClicked();
+                                },
                         ),
-                        onPressed: () {
-                          onCameraClicked();
-                        },
                       ),
                       Constants.CAMERA_TITLE),
                   Container(
@@ -852,14 +862,21 @@ class _CustomTabsState extends State<CustomTabView>
                   FHBBasicWidget.customShowCase(
                       widget.voiceKey,
                       Constants.VOICE_DESC,
-                      IconButton(
-                        icon: Icon(
-                          Icons.mic,
-                          color: Colors.white,
+                      Tooltip(
+                        message: 'Microphone disabled',
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.mic,
+                            color: widget?.isFromVideoCall
+                                ? Colors.black38
+                                : Colors.white,
+                          ),
+                          onPressed: widget?.isFromVideoCall
+                              ? null
+                              : () {
+                                  onVoiceRecordClicked();
+                                },
                         ),
-                        onPressed: () {
-                          onVoiceRecordClicked();
-                        },
                       ),
                       Constants.VOICE_TITLE),
                 ],

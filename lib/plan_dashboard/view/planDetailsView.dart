@@ -8,6 +8,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/router_variable.dart';
@@ -38,6 +39,7 @@ class MyPlanDetailView extends StatefulWidget {
   // final String price;
   // final String issubscription;
   final String packageId;
+
   // final String providerName;
   // final String packageDuration;
   // final String providerId;
@@ -47,6 +49,7 @@ class MyPlanDetailView extends StatefulWidget {
   // final String catIcon;
   // final bool isRenew;
   final String isFrom;
+
   // final bool isExtendable;
   // final MetaDataForURL metaDataForURL;
 
@@ -84,6 +87,7 @@ class PlanDetail extends State<MyPlanDetailView> {
   String packageId;
   String providerName;
   String packageDuration;
+  String docName;
   String providerId;
   bool isDisable;
   String hosIcon = '';
@@ -113,6 +117,7 @@ class PlanDetail extends State<MyPlanDetailView> {
     packageId = planList?.packageid;
     providerName = planList?.providerName;
     packageDuration = planList?.packageDuration;
+    docName = planList?.metadata?.doctorName ?? '';
     providerId = planList?.plinkid;
     isDisable = false;
     hosIcon = planList?.providerMetadata?.icon;
@@ -346,6 +351,28 @@ class PlanDetail extends State<MyPlanDetailView> {
                                   SizedBox(
                                     height: 5.h,
                                   ),
+                                  docName != null && docName != ''
+                                      ? Row(
+                                    children: [
+                                      Text(
+                                          'Plan approved by :',
+                                          style: TextStyle(fontSize: 16.sp,color: Colors.grey[600])),
+                                      SizedBox(width: 4.w),
+                                      Flexible(
+                                        child: Container(
+                                          child: Text(
+                                              toBeginningOfSentenceCase(docName),
+                                              textAlign: TextAlign.start,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(fontSize: 16.sp)),
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                      : SizedBox.shrink(),
+                                  SizedBox(
+                                    height: 3.h,
+                                  ),
                                   Row(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -556,15 +583,15 @@ class PlanDetail extends State<MyPlanDetailView> {
                                 )
                               : Container(),
                         ),
-                        Row(
+                        /*Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             OutlineButton(
                               //hoverColor: Color(getMyPrimaryColor()),
                               onPressed:
-                                  /*isDisable
+                                  *//*isDisable
                           ? null
-                          :*/
+                          :*//*
                                   () async {
                                 if (issubscription == '0') {
                                   if (isFrom == strProviderCare) {
@@ -839,12 +866,12 @@ class PlanDetail extends State<MyPlanDetailView> {
                                     }
                                   }
                                 }
-                                /*else {
+                                *//*else {
                                 CommonUtil().unSubcribeAlertDialog(context,
                                     packageId: packageId, refresh: () {
                                   Navigator.of(context).pop();
                                 });
-                                }*/
+                                }*//*
                               },
                               borderSide: BorderSide(
                                 color: issubscription == '0'
@@ -896,7 +923,7 @@ class PlanDetail extends State<MyPlanDetailView> {
                               ),
                             ),
                           ],
-                        ),
+                        ),*/
                       ],
                     ),
                   ),
@@ -918,7 +945,14 @@ class PlanDetail extends State<MyPlanDetailView> {
   String getText() {
     String text = '';
 
-    if (isFrom == strProviderCare) {
+    if (isFrom == strDeepLink) {
+      if (issubscription == '0') {
+        text = strAddToCart;
+      } else {
+        text = strSubscribed;
+      }
+    }
+    else if (isFrom == strProviderCare) {
       text = getAddCartText();
     } else if (isFrom == strFreeCare) {
       text = getAddCartTextFreeCare();
@@ -927,13 +961,7 @@ class PlanDetail extends State<MyPlanDetailView> {
     } else if (isFrom == strFreeDiet) {
       text = getAddCartTextFreeDiet();
     }
-    if (isFrom == strDeepLink) {
-      if (issubscription == '0') {
-        text = strAddToCart;
-      } else {
-        text = strSubscribed;
-      }
-    } else {
+     else {
       text = '';
     }
 

@@ -16,6 +16,8 @@ class Renew:BroadcastReceiver() {
         val value = p1?.getStringExtra(Intent.EXTRA_TEXT)
         val data = p1?.getStringExtra(Constants.PROP_PLANID)
         val templateName = p1?.getStringExtra(Constants.PROP_TEMP_NAME)
+        val userId = p1?.getStringExtra(Constants.PROB_USER_ID)
+        val patientName = p1?.getStringExtra(p0?.getString(R.string.pat_name))
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(p0!!)
         nsManager.cancel(notificationId!! as Int)
 //        p0.sendBroadcast(Intent(p0.getString(R.string.intaction_accept_call))
@@ -29,6 +31,8 @@ class Renew:BroadcastReceiver() {
         launchIntent?.putExtra(Intent.EXTRA_TEXT,value)
         launchIntent?.putExtra(Constants.PROP_PLANID,data)
         launchIntent?.putExtra(Constants.PROP_TEMP_NAME,templateName)
+        launchIntent?.putExtra(Constants.PROB_USER_ID,userId)
+        launchIntent?.putExtra(p0.getString(R.string.pat_name), patientName)
         p0.startActivity(launchIntent)
     }
 }

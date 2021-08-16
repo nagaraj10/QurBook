@@ -26,18 +26,23 @@ class _HealthConditionPageState extends State<HealthConditionPage> {
         false;
     healthConditions = Provider.of<PlanWizardViewModel>(context, listen: false)
         .getHealthConditions();
+
+    Provider.of<PlanWizardViewModel>(context, listen: false)?.currentTab = 0;
+    Provider.of<PlanWizardViewModel>(context, listen: false)?.currentPage = 0;
+    Provider.of<PlanWizardViewModel>(context, listen: false)?.isListEmpty = false;
+
   }
 
   @override
   Widget build(BuildContext context) => Column(
         children: [
-          SearchWidget(
-            hintText: strSearchHealth,
-            onChanged: (value) {
-              Provider.of<PlanWizardViewModel>(context, listen: false)
-                  .getFilteredHealthConditions(value);
-            },
-          ),
+          // SearchWidget(
+          //   hintText: strSearchHealth,
+          //   onChanged: (value) {
+          //     Provider.of<PlanWizardViewModel>(context, listen: false)
+          //         .getFilteredHealthConditions(value);
+          //   },
+          // ),
           Expanded(
             child: FutureBuilder<Map<String, List<MenuItem>>>(
                 future: healthConditions,

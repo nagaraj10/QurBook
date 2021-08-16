@@ -39,6 +39,15 @@ class OrderTile extends StatelessWidget {
             const SizedBox(
               height: 4,
             ),
+            order.patientFirstName.isNotEmpty
+                ? Text(
+                    "Patient name : ${order.patientFirstName} ${order.patientLastName} ",
+                    style: Theme.of(context).textTheme.bodyText2,
+                  )
+                : Container(),
+            const SizedBox(
+              height: 4,
+            ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: getPlans(context),
