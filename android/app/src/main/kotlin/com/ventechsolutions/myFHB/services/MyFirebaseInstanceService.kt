@@ -83,6 +83,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         val PAT_ID = data[getString(R.string.pat_id)]
         val PAT_NAME = data[getString(R.string.pat_name)]
         val PAT_PIC = data[getString(R.string.pat_pic)]
+        val CallType = data[getString(R.string.callType)]
         val NS_TIMEOUT = 30 * 1000L
         val _sound: Uri =
             Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.helium)
@@ -108,6 +109,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         acceptIntent.putExtra(getString(R.string.pat_id), "$PAT_ID")
         acceptIntent.putExtra(getString(R.string.pat_name), "$PAT_NAME")
         acceptIntent.putExtra(getString(R.string.pat_pic), "$PAT_PIC")
+        acceptIntent.putExtra(getString(R.string.callType), "$CallType")
         val acceptPendingIntent = PendingIntent.getBroadcast(
             applicationContext,
             0,
@@ -124,6 +126,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             .putExtra(getString(R.string.pat_id), PAT_ID)
             .putExtra(getString(R.string.pat_name), PAT_NAME)
             .putExtra(getString(R.string.pat_pic), PAT_PIC)
+            .putExtra(getString(R.string.callType), CallType)
         val fullScreenPendingIntent = PendingIntent.getActivity(
             this, 0,
             fullScreenIntent, PendingIntent.FLAG_UPDATE_CURRENT

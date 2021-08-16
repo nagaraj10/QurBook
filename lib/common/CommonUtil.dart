@@ -119,6 +119,9 @@ class CommonUtil {
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
 
   static bool audioPage = false;
+  static bool isRemoteUserOnPause = false;
+  static bool isVideoRequestSent = false;
+  static bool isLocalUserOnPause = false;
 
   static List<String> recordIds = [];
   static List<String> notesId = [];
@@ -1343,20 +1346,30 @@ class CommonUtil {
     return categoryDataObjClone;
   }
 
-  static Future<bool> askPermissionForCameraAndMic() async {
+  static Future<bool> askPermissionForCameraAndMic(
+      {bool isAudioCall = false}) async {
 //    await PermissionHandler().requestPermissions(
 //      [PermissionGroup.camera, PermissionGroup.microphone],
 //    );
 
-    final status = await Permission.microphone.request();
-    final cameraStatus = await Permission.camera.request();
-
-    if (status == PermissionStatus.granted &&
-        cameraStatus == PermissionStatus.granted) {
-      return true;
+    if (isAudioCall) {
+      PermissionStatus micStatus = await Permission.microphone.request();
+      if (micStatus == PermissionStatus.granted) {
+        return true;
+      } else {
+        return false;
+      }
     } else {
-      _handleInvalidPermissions(cameraStatus, status);
-      return false;
+      final status = await Permission.microphone.request();
+      final cameraStatus = await Permission.camera.request();
+
+      if (status == PermissionStatus.granted &&
+          cameraStatus == PermissionStatus.granted) {
+        return true;
+      } else {
+        _handleInvalidPermissions(cameraStatus, status);
+        return false;
+      }
     }
   }
 

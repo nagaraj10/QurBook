@@ -23,6 +23,7 @@ class AcceptReceiver:BroadcastReceiver() {
         val patId = p1?.getStringExtra(p0?.getString(R.string.pat_id))
         val patName = p1?.getStringExtra(p0?.getString(R.string.pat_name))
         val patPic = p1?.getStringExtra(p0?.getString(R.string.pat_pic))
+        val callType = p1?.getStringExtra(p0?.getString(R.string.callType))
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(p0!!)
         MyApp.isMissedNSShown=false
         MyApp().updateStatus(true)
@@ -43,6 +44,7 @@ class AcceptReceiver:BroadcastReceiver() {
         launchIntent?.putExtra(p0.getString(R.string.pat_id),patId)
         launchIntent?.putExtra(p0.getString(R.string.pat_name),patName)
         launchIntent?.putExtra(p0.getString(R.string.pat_pic),patPic)
+        launchIntent?.putExtra(p0.getString(R.string.callType),callType)
         p0.startActivity(launchIntent)
     }
 }

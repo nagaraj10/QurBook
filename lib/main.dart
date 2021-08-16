@@ -9,8 +9,11 @@ import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myfhb/myPlan/view/myPlanDetail.dart';
 import 'package:myfhb/src/utils/dynamic_links.dart';
+import 'package:myfhb/video_call/utils/audiocall_provider.dart';
 import 'package:myfhb/user_plans/view_model/user_plans_view_model.dart';
 import 'package:myfhb/video_call/utils/rtc_engine.dart';
+import 'package:myfhb/video_call/utils/videoicon_provider.dart';
+import 'package:myfhb/video_call/utils/videorequest_provider.dart';
 import 'package:myfhb/widgets/checkout_page.dart';
 import 'IntroScreens/IntroductionScreen.dart';
 import 'add_provider_plan/service/PlanProviderViewModel.dart';
@@ -385,6 +388,7 @@ class _MyFHBState extends State<MyFHB> {
   void _updateTimer(msg) {
     var doctorPic = '';
     var patientPic = '';
+    var callType = '';
     _msgListener.value = _msg;
     final cMsg = msg as String;
     if (cMsg.isNotEmpty || cMsg != null) {
@@ -703,6 +707,7 @@ class _MyFHBState extends State<MyFHB> {
         try {
           doctorPic = passedValArr[3];
           patientPic = passedValArr[7];
+          callType = passedValArr[8];
           if (doctorPic.isNotEmpty) {
             doctorPic = json.decode(doctorPic);
           } else {
@@ -719,6 +724,14 @@ class _MyFHBState extends State<MyFHB> {
           'ns_type': 'call',
           'navigationPage': 'TeleHelath Call screen',
         });
+        if (callType.toLowerCase() == 'audio') {
+          Provider.of<AudioCallProvider>(Get.context, listen: false)
+              .enableAudioCall();
+        } else if (callType.toLowerCase() == 'video') {
+          Provider.of<AudioCallProvider>(Get.context, listen: false)
+              .disableAudioCall();
+        }
+
         Get.to(CallMain(
           doctorName: passedValArr[1],
           doctorId: passedValArr[2],
@@ -795,7 +808,16 @@ class _MyFHBState extends State<MyFHB> {
         ),
         provider.ChangeNotifierProvider<CheckoutPageProvider>(
           create: (_) => CheckoutPageProvider(),
-        )
+        ),
+        provider.ChangeNotifierProvider<AudioCallProvider>(
+          create: (_) => AudioCallProvider(),
+        ),
+        provider.ChangeNotifierProvider<VideoIconProvider>(
+          create: (_) => VideoIconProvider(),
+        ),
+        provider.ChangeNotifierProvider<VideoRequestProvider>(
+          create: (_) => VideoRequestProvider(),
+        ),
       ],
       child: LayoutBuilder(builder: (context, constraints) {
         return OrientationBuilder(builder: (context, orientation) {
@@ -805,8 +827,9 @@ class _MyFHBState extends State<MyFHB> {
                 ? Size(411.4, 822.9)
                 : Size(822.9, 411.4),
           );
-          return MaterialApp(
+          return GetMaterialApp(
             title: Constants.APP_NAME,
+            themeMode: ThemeMode.light,
             theme: ThemeData(
               fontFamily: variable.font_poppins,
               primaryColor: Color(myPrimaryColor),
@@ -1061,6 +1084,7 @@ class _MyFHBState extends State<MyFHB> {
   Widget StartTheCall() {
     var docPic = navRoute.split('&')[3];
     var patPic = navRoute.split('&')[7];
+    var callType = navRoute.split('&')[8];
     try {
       if (docPic.isNotEmpty) {
         docPic = json.decode(navRoute.split('&')[3]);
@@ -1078,6 +1102,14 @@ class _MyFHBState extends State<MyFHB> {
       'ns_type': 'call',
       'navigationPage': 'TeleHelath Call screen',
     });
+
+    if (callType.toLowerCase() == 'audio') {
+      Provider.of<AudioCallProvider>(Get.context, listen: false)
+          .enableAudioCall();
+    } else  if (callType.toLowerCase() == 'video') {
+      Provider.of<AudioCallProvider>(Get.context, listen: false)
+          .disableAudioCall();
+    }
     return CallMain(
         isAppExists: false,
         role: ClientRole.Broadcaster,

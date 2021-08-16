@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/video_call/widgets/custom_timer.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
@@ -28,7 +29,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
           alignment: Alignment.topLeft,
           padding: const EdgeInsets.symmetric(vertical: 40),
           child: Container(
-            color: Colors.black.withOpacity(0.5),
+            color: Color(CommonUtil().getMyPrimaryColor()),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -65,16 +66,9 @@ class _CustomAppBarState extends State<CustomAppBar> {
                         isRaised: false,
                         tracetime: (time) {},
                       ),
-                      // TikTikTimer(
-                      //   backgroundColor: Colors.transparent,
-                      //   initialDate: DateTime.now(),
-                      //   running: _isTimerRun,
-                      //   width: 50.0.w,
-                      //   timerTextStyle:
-                      //       TextStyle(color: Colors.white, fontSize: 14.0.sp,),
-                      //   isRaised: false,
-                      //   tracetime: (time) {},
-                      // ),
+                      SizedBox(
+                        height: 10,
+                      )
                     ],
                   ),
                 ),
@@ -84,5 +78,116 @@ class _CustomAppBarState extends State<CustomAppBar> {
         )
       ],
     );
+
+    /* return Consumer<AudioCallProvider>(builder: (context, status, child) {
++      return status?.isAudioCall
++          ? Wrap(
++              children: [
++                Container(
++                  alignment: Alignment.center,
++                  padding: const EdgeInsets.symmetric(vertical: 40),
++                  child: Container(
++                    //color: Colors.black.withOpacity(0.5),
++                    child: Row(
++                      mainAxisAlignment: MainAxisAlignment.center,
++                      crossAxisAlignment: CrossAxisAlignment.center,
++                      children: <Widget>[
++                        Container(
++                          margin: EdgeInsets.only(left: 10),
++                          child: Column(
++                            mainAxisSize: MainAxisSize.min,
++                            crossAxisAlignment: CrossAxisAlignment.center,
++                            mainAxisAlignment: MainAxisAlignment.center,
++                            children: [
++                              Row(
++                                children: [
++                                  Text(
++                                    (widget.userName.isEmpty ||
++                                            widget.userName != null)
++                                        ? widget.userName
++                                        : '',
++                                    style: TextStyle(
++                                      color: Colors.white,
++                                      fontSize: 20.0.sp,
++                                    ),
++                                  ),
++                                  //todo this has to be uncomment in future
++                                ],
++                              ),
++                              CustomTimer(
++                                backgroundColor: Colors.transparent,
++                                initialDate: DateTime.now(),
++                                running: _isTimerRun,
++                                width: 50.0.w,
++                                timerTextStyle: TextStyle(
++                                  color: Colors.white,
++                                  fontSize: 14.0.sp,
++                                ),
++                                isRaised: false,
++                                tracetime: (time) {},
++                              ),
++                            ],
++                          ),
++                        ),
++                      ],
++                    ),
++                  ),
++                )
++              ],
++            )
++          : Wrap(
++              children: [
++                Container(
++                  alignment: Alignment.topLeft,
++                  padding: const EdgeInsets.symmetric(vertical: 40),
++                  child: Container(
++                    color: Colors.black.withOpacity(0.5),
++                    child: Row(
++                      mainAxisAlignment: MainAxisAlignment.start,
++                      crossAxisAlignment: CrossAxisAlignment.center,
++                      children: <Widget>[
++                        Container(
++                          margin: EdgeInsets.only(left: 10),
++                          child: Column(
++                            mainAxisSize: MainAxisSize.min,
++                            crossAxisAlignment: CrossAxisAlignment.start,
++                            children: [
++                              Row(
++                                children: [
++                                  Text(
++                                    (widget.userName.isEmpty ||
++                                            widget.userName != null)
++                                        ? widget.userName
++                                        : '',
++                                    style: TextStyle(
++                                      color: Colors.white,
++                                      fontSize: 20.0.sp,
++                                    ),
++                                  ),
++                                  //todo this has to be uncomment in future
++                                ],
++                              ),
++                              CustomTimer(
++                                backgroundColor: Colors.transparent,
++                                initialDate: DateTime.now(),
++                                running: _isTimerRun,
++                                width: 50.0.w,
++                                timerTextStyle: TextStyle(
++                                  color: Colors.white,
++                                  fontSize: 14.0.sp,
++                                ),
++                                isRaised: false,
++                                tracetime: (time) {},
++                              ),
++                            ],
++                          ),
++                        ),
++                      ],
++                    ),
++                  ),
++                )
++              ],
++            );
++    }); */
   }
 }
