@@ -1,6 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myfhb/add_provider_plan/model/ProviderOrganizationResponse.dart';
+import 'package:myfhb/add_provider_plan/service/PlanProviderViewModel.dart';
+import 'package:myfhb/add_provider_plan/view/AddProviderPlan.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/errors_widget.dart';
@@ -36,28 +39,49 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
 
   int carePlanListLength = 0;
 
+  int planWizardProviderLength = 0;
+
   PlanWizardViewModel planListProvider;
 
   List sortType = ['Default', 'Price', 'Duration'];
   ValueNotifier<String> _selectedItem = new ValueNotifier<String>('Default');
   String conditionChosen;
 
+  Future<ProviderOrganisationResponse> providerOrganizationResult;
+
   @override
   void initState() {
+    Provider.of<PlanWizardViewModel>(context, listen: false)
+        ?.planWizardProviderCount = 0;
     Provider.of<PlanWizardViewModel>(context, listen: false)
         .currentPackageProviderCareId = '';
     conditionChosen =
         Provider.of<PlanWizardViewModel>(context, listen: false).selectedTag;
+
+    providerOrganizationResult =
+        Provider.of<PlanProviderViewModel>(context, listen: false)
+            .getCarePlanList(conditionChosen);
+
     planListModel = Provider.of<PlanWizardViewModel>(context, listen: false)
         .getCarePlanList(strProviderCare);
 
     Provider.of<PlanWizardViewModel>(context, listen: false)?.isListEmpty =
         false;
+
+    providerOrganizationResult.then((value) {
+      if (value?.result?.length ?? 0 > 0) {
+        planWizardProviderLength = value?.result?.length ?? 0;
+
+        Provider.of<PlanWizardViewModel>(context, listen: false)
+            ?.planWizardProviderCount = planWizardProviderLength;
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     planListProvider = Provider.of<PlanWizardViewModel>(context);
+
     return Scaffold(
         body: Column(
           children: [
@@ -188,12 +212,7 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
                 child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 8.0),
                     child: Center(
-                      child: Provider.of<PlanWizardViewModel>(context,
-                                      listen: false)
-                                  ?.providerHosCount ==
-                              0
-                          ? clickTextProviderEmpty()
-                          : clickTextNoPlans(),
+                      child: clickTextAllEmpty(),
                     )),
               ),
             );
@@ -222,67 +241,102 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
               height: 1.sh / 1.3,
               child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Center(
-                    child:
-                        Provider.of<PlanWizardViewModel>(context, listen: false)
-                                    ?.providerHosCount ==
-                                0
-                            ? clickTextProviderEmpty()
-                            : clickTextNoPlans(),
-                  )),
+                  child: Center(child: clickTextAllEmpty())),
             ),
           );
   }
 
-  Widget clickTextNoPlans() {
+  Widget clickTextAllEmpty() {
     TextStyle defaultStyle = TextStyle(color: Colors.grey);
     TextStyle linkStyle = TextStyle(
         color: Color(CommonUtil().getMyPrimaryColor()), fontSize: 18.sp);
-    return RichText(
-      textAlign: TextAlign.center,
-      text: TextSpan(
-        style: defaultStyle,
-        children: <TextSpan>[
-          TextSpan(
-              text:
-                  'Your providers do not offer care plans yet for Healthcondition.'),
-          TextSpan(
-              text: 'Tap here',
-              style: linkStyle,
-              recognizer: TapGestureRecognizer()..onTap = () {
-                callMyProviderPage();
-              }),
-          TextSpan(text: ' to add a new provider that offers a plan'),
-        ],
-      ),
-    );
+
+    if (Provider.of<PlanWizardViewModel>(context, listen: false)
+                ?.providerHosCount ==
+            0 &&
+        planWizardProviderLength == 0) {
+      return RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+          style: defaultStyle,
+          children: <TextSpan>[
+            TextSpan(text: strNoPlansCheckFree),
+          ],
+        ),
+      );
+    } else if (planWizardProviderLength == 0) {
+      return RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+          style: defaultStyle,
+          children: <TextSpan>[
+            TextSpan(text: strNoPlansCheckFree),
+          ],
+        ),
+      );
+    } else if (planWizardProviderLength != 0) {
+      return RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+          style: defaultStyle,
+          children: <TextSpan>[
+            TextSpan(
+                text: 'Your providers do not offer care plans yet for ' +
+                        planListProvider?.healthTitle ??
+                    ''),
+            TextSpan(
+                text: 'Tap here',
+                style: linkStyle,
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () {
+                    callMyProviderPage();
+                  }),
+            TextSpan(text: ' to add a new provider that offers a plan'),
+          ],
+        ),
+      );
+    } else if (Provider.of<PlanWizardViewModel>(context, listen: false)
+            ?.providerHosCount ==
+        0) {
+      return RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+          style: defaultStyle,
+          children: <TextSpan>[
+            TextSpan(text: 'You\'ve no providers added to your list.'),
+            TextSpan(
+                text: 'Tap here',
+                style: linkStyle,
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () {
+                    callMyProviderPage();
+                  }),
+            TextSpan(
+                text: ' to add a provider and see plans recommended by them'),
+          ],
+        ),
+      );
+    } else {
+      return RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+          style: defaultStyle,
+          children: <TextSpan>[
+            TextSpan(text: strNoPlansCheckFree),
+          ],
+        ),
+      );
+    }
   }
 
-  Widget clickTextProviderEmpty() {
-    TextStyle defaultStyle = TextStyle(color: Colors.grey);
-    TextStyle linkStyle = TextStyle(
-        color: Color(CommonUtil().getMyPrimaryColor()), fontSize: 18.sp);
-    return RichText(
-      textAlign: TextAlign.center,
-      text: TextSpan(
-        style: defaultStyle,
-        children: <TextSpan>[
-          TextSpan(text: 'You\'ve no providers added to your list.'),
-          TextSpan(
-              text: 'Tap here',
-              style: linkStyle,
-              recognizer: TapGestureRecognizer()..onTap = () {
-                callMyProviderPage();
-              }),
-          TextSpan(
-              text: ' to add a provider and see plans recommended by them'),
-        ],
-      ),
-    );
-  }
-
-  void callMyProviderPage(){
-    Navigator.pushNamed(
+  void callMyProviderPage() {
+    Get.to(AddProviderPlan(planListProvider.selectedTag))
+        .then((value) => setState(() {
+              planListModel =
+                  Provider.of<PlanWizardViewModel>(context, listen: false)
+                      .getCarePlanList(strProviderCare);
+            }));
+    /*Navigator.pushNamed(
       Get.context,
       rt_UserAccounts,
       arguments: UserAccountsArguments(
@@ -291,7 +345,7 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
     ).then((value) =>  setState(() {
       planListModel = Provider.of<PlanWizardViewModel>(context, listen: false)
           .getCarePlanList(strProviderCare);
-    }));
+    }));*/
   }
 
   Future<bool> _alertForUncheckPlan() {

@@ -30,6 +30,8 @@ class PlanCard extends StatelessWidget {
               Provider.of<PlanWizardViewModel>(context, listen: false)
                   .selectedTag = healthCondition?.tags ?? '';
               Provider.of<PlanWizardViewModel>(context, listen: false)
+                  .healthTitle = healthCondition?.title ?? '';
+              Provider.of<PlanWizardViewModel>(context, listen: false)
                   .changeCurrentPage(1);
             },
             child: Container(

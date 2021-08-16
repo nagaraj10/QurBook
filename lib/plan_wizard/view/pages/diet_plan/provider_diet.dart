@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myfhb/add_provider_plan/view/AddProviderPlan.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
@@ -210,12 +211,7 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
                 child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 8.0),
                     child: Center(
-                      child: Provider.of<PlanWizardViewModel>(context,
-                                      listen: false)
-                                  ?.providerHosCount ==
-                              0
-                          ? clickTextProviderEmpty()
-                          : clickTextNoPlans(),
+                      child: clickTextAllEmpty(),
                     )),
               ),
             );
@@ -245,12 +241,7 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
               child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 8.0),
                   child: Center(
-                    child:
-                        Provider.of<PlanWizardViewModel>(context, listen: false)
-                                    ?.providerHosCount ==
-                                0
-                            ? clickTextProviderEmpty()
-                            : clickTextNoPlans(),
+                    child: clickTextAllEmpty(),
                   )),
             ),
           );
@@ -360,55 +351,105 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
     }
   }
 
-  Widget clickTextNoPlans() {
-    TextStyle defaultStyle = TextStyle(color: Colors.grey);
-    TextStyle linkStyle = TextStyle(
-        color: Color(CommonUtil().getMyPrimaryColor()), fontSize: 18.sp);
-    return RichText(
-      textAlign: TextAlign.center,
-      text: TextSpan(
-        style: defaultStyle,
-        children: <TextSpan>[
-          TextSpan(
-              text:
-                  'Your providers do not offer diet plans yet for Healthcondition.'),
-          TextSpan(
-              text: 'Tap here',
-              style: linkStyle,
-              recognizer: TapGestureRecognizer()..onTap = () {
-                callMyProviderPage();
-              }),
-          TextSpan(text: ' to add a new provider that offers a plan'),
-        ],
-      ),
-    );
-  }
 
-  Widget clickTextProviderEmpty() {
+  Widget clickTextAllEmpty() {
     TextStyle defaultStyle = TextStyle(color: Colors.grey);
     TextStyle linkStyle = TextStyle(
         color: Color(CommonUtil().getMyPrimaryColor()), fontSize: 18.sp);
-    return RichText(
-      textAlign: TextAlign.center,
-      text: TextSpan(
-        style: defaultStyle,
-        children: <TextSpan>[
-          TextSpan(text: 'You\'ve no providers added to your list.'),
-          TextSpan(
-              text: 'Tap here',
-              style: linkStyle,
-              recognizer: TapGestureRecognizer()..onTap = () {
-                callMyProviderPage();
-              }),
-          TextSpan(
-              text: ' to add a provider and see plans recommended by them'),
-        ],
-      ),
-    );
+
+    if (Provider.of<PlanWizardViewModel>(context, listen: false)
+        ?.providerHosCount ==
+        0 &&
+        Provider.of<PlanWizardViewModel>(context, listen: false)
+            ?.planWizardProviderCount ==
+            0) {
+      return RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+          style: defaultStyle,
+          children: <TextSpan>[
+            TextSpan(text: strNoPlansCheckFree),
+          ],
+        ),
+      );
+    } else if (Provider.of<PlanWizardViewModel>(context, listen: false)
+        ?.planWizardProviderCount ==
+        0) {
+      return RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+          style: defaultStyle,
+          children: <TextSpan>[
+            TextSpan(text: strNoPlansCheckFree),
+          ],
+        ),
+      );
+    } else if (Provider.of<PlanWizardViewModel>(context, listen: false)
+        ?.planWizardProviderCount !=
+        0) {
+      return RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+          style: defaultStyle,
+          children: <TextSpan>[
+            TextSpan(
+                text: 'Your providers do not offer diet plans yet for ' +
+                    planListProvider?.healthTitle ??
+                    ''),
+            TextSpan(
+                text: 'Tap here',
+                style: linkStyle,
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () {
+                    callMyProviderPage();
+                  }),
+            TextSpan(text: ' to add a new provider that offers a plan'),
+          ],
+        ),
+      );
+    } else if (Provider.of<PlanWizardViewModel>(context, listen: false)
+        ?.providerHosCount ==
+        0) {
+      return RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+          style: defaultStyle,
+          children: <TextSpan>[
+            TextSpan(text: 'You\'ve no providers added to your list.'),
+            TextSpan(
+                text: 'Tap here',
+                style: linkStyle,
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () {
+                    callMyProviderPage();
+                  }),
+            TextSpan(
+                text: ' to add a provider and see plans recommended by them'),
+          ],
+        ),
+      );
+    } else {
+      return RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+          style: defaultStyle,
+          children: <TextSpan>[
+            TextSpan(text: strNoPlansCheckFree),
+          ],
+        ),
+      );
+    }
   }
 
   void callMyProviderPage(){
-    Navigator.pushNamed(
+
+    Get.to(AddProviderPlan(
+        planListProvider.selectedTag)).then((value) =>  setState(() {
+      planListModel = Provider.of<PlanWizardViewModel>(context, listen: false)
+          .getDietPlanListNew(isFrom: strProviderDiet);
+    }));
+
+    /*Navigator.pushNamed(
       Get.context,
       rt_UserAccounts,
       arguments: UserAccountsArguments(
@@ -417,6 +458,6 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
     ).then((value) =>  setState(() {
       planListModel = Provider.of<PlanWizardViewModel>(context, listen: false)
           .getDietPlanListNew(isFrom: strProviderDiet);
-    }));
+    }));*/
   }
 }
