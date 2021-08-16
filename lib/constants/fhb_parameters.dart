@@ -191,6 +191,7 @@ const String isAudioFile = 'isAudioFile';
 const String MP3 = 'MP3';
 
 const String regimentInput = 'q';
+const String regimentToTranslateInput = 'toTranslateContent';
 const String regimentSource = 'source';
 const String regimentTarget = 'target';
 const String regimentFormat = 'format';

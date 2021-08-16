@@ -200,7 +200,7 @@ class RegimentViewModel extends ChangeNotifier {
     return filteredRegimenList;
   }
 
-  void startRegimenTTS(int index, String saytext) {
+  void startRegimenTTS(int index, {String staticText, String dynamicText}) {
     stopRegimenTTS();
     if (index < regimentsList.length) {
       Future.delayed(
@@ -213,7 +213,8 @@ class RegimentViewModel extends ChangeNotifier {
     }
     Provider.of<ChatScreenViewModel>(Get.context, listen: false)
         ?.startTTSEngine(
-      textToSpeak: saytext,
+      textToSpeak: staticText,
+      dynamicText: dynamicText,
       isRegiment: true,
       onStop: () {
         stopRegimenTTS();
