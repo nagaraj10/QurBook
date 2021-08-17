@@ -9,8 +9,15 @@ class AudioCallScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    patName = patName?.toUpperCase()?.split(' ')[0][0] +
-        patName?.toUpperCase()?.split(' ')[1][0];
+    if (patName != null && patName != '') {
+      if (patName?.toUpperCase()?.split(' ').length == 2) {
+        patName = patName?.toUpperCase()?.split(' ')[0][0] +
+            patName?.toUpperCase()?.split(' ')[1][0];
+      } else {
+        patName = patName?.toUpperCase()?.split(' ')[0][0];
+      }
+    }
+
     return Container(
       color: Colors.black45,
       child: Center(

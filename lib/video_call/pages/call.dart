@@ -836,7 +836,7 @@ class _CallPageState extends State<CallPage> {
             if (status.isAudioCall) {
               return InkWell(
                 child: AudioCallScreen(
-                  patName: widget.doctorName,
+                  patName: widget?.doctorName,
                 ),
               );
             } else {
