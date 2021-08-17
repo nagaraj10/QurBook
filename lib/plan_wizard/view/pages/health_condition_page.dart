@@ -24,6 +24,10 @@ class _HealthConditionPageState extends State<HealthConditionPage> {
     super.initState();
     Provider.of<PlanWizardViewModel>(context, listen: false)?.isHealthSearch =
         false;
+
+    Provider.of<PlanWizardViewModel>(context, listen: false)?.isListEmpty =
+    false;
+
     healthConditions = Provider.of<PlanWizardViewModel>(context, listen: false)
         .getHealthConditions();
 
