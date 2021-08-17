@@ -386,6 +386,8 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
       );
     } else if (Provider.of<PlanWizardViewModel>(context, listen: false)
         ?.planWizardProviderCount !=
+        0 && Provider.of<PlanWizardViewModel>(context, listen: false)
+        ?.providerHosCount !=
         0) {
       return RichText(
         textAlign: TextAlign.center,
@@ -397,7 +399,7 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
                     planListProvider?.healthTitle ??
                     ''),
             TextSpan(
-                text: 'Tap here',
+                text: ' Tap here',
                 style: linkStyle,
                 recognizer: TapGestureRecognizer()
                   ..onTap = () {
@@ -409,6 +411,8 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
       );
     } else if (Provider.of<PlanWizardViewModel>(context, listen: false)
         ?.providerHosCount ==
+        0 && Provider.of<PlanWizardViewModel>(context, listen: false)
+        ?.planWizardProviderCount !=
         0) {
       return RichText(
         textAlign: TextAlign.center,
