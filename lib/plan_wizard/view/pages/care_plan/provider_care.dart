@@ -39,15 +39,13 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
 
   int carePlanListLength = 0;
 
-  int planWizardProviderLength = 0;
-
   PlanWizardViewModel planListProvider;
 
   List sortType = ['Default', 'Price', 'Duration'];
   ValueNotifier<String> _selectedItem = new ValueNotifier<String>('Default');
   String conditionChosen;
 
-  Future<ProviderOrganisationResponse> providerOrganizationResult;
+  ProviderOrganisationResponse providerOrganizationResult;
 
   @override
   void initState() {
@@ -55,27 +53,16 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
         ?.planWizardProviderCount = 0;
     Provider.of<PlanWizardViewModel>(context, listen: false)
         .currentPackageProviderCareId = '';
-    conditionChosen =
-        Provider.of<PlanWizardViewModel>(context, listen: false).selectedTag;
-
-    providerOrganizationResult =
-        Provider.of<PlanProviderViewModel>(context, listen: false)
-            .getCarePlanList(conditionChosen);
-
-    planListModel = Provider.of<PlanWizardViewModel>(context, listen: false)
-        .getCarePlanList(strProviderCare);
 
     Provider.of<PlanWizardViewModel>(context, listen: false)?.isListEmpty =
         false;
 
-    providerOrganizationResult.then((value) {
-      if (value?.result?.length ?? 0 > 0) {
-        planWizardProviderLength = value?.result?.length ?? 0;
+    conditionChosen =
+        Provider.of<PlanWizardViewModel>(context, listen: false).selectedTag;
 
-        Provider.of<PlanWizardViewModel>(context, listen: false)
-            ?.planWizardProviderCount = planWizardProviderLength;
-      }
-    });
+
+    planListModel = Provider.of<PlanWizardViewModel>(context, listen: false)
+        .getCarePlanList(strProviderCare,conditionChosen: conditionChosen);
   }
 
   @override
@@ -247,6 +234,10 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
   }
 
   Widget clickTextAllEmpty() {
+
+    int planWizardProviderLength =  Provider.of<PlanWizardViewModel>(Get.context, listen: false)
+        .planWizardProviderCount;
+
     TextStyle defaultStyle = TextStyle(color: Colors.grey);
     TextStyle linkStyle = TextStyle(
         color: Color(CommonUtil().getMyPrimaryColor()), fontSize: 18.sp);
@@ -274,7 +265,8 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
           ],
         ),
       );
-    } else if (planWizardProviderLength != 0) {
+    } else if (planWizardProviderLength != 0 && Provider.of<PlanWizardViewModel>(context, listen: false)
+        ?.providerHosCount!=0) {
       return RichText(
         textAlign: TextAlign.center,
         text: TextSpan(
@@ -285,7 +277,7 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
                         planListProvider?.healthTitle ??
                     ''),
             TextSpan(
-                text: 'Tap here',
+                text: '. Tap here',
                 style: linkStyle,
                 recognizer: TapGestureRecognizer()
                   ..onTap = () {
@@ -297,7 +289,7 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
       );
     } else if (Provider.of<PlanWizardViewModel>(context, listen: false)
             ?.providerHosCount ==
-        0) {
+        0 && planWizardProviderLength != 0) {
       return RichText(
         textAlign: TextAlign.center,
         text: TextSpan(
@@ -305,7 +297,7 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
           children: <TextSpan>[
             TextSpan(text: 'You\'ve no providers added to your list.'),
             TextSpan(
-                text: 'Tap here',
+                text: ' Tap here',
                 style: linkStyle,
                 recognizer: TapGestureRecognizer()
                   ..onTap = () {
@@ -334,7 +326,7 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
         .then((value) => setState(() {
               planListModel =
                   Provider.of<PlanWizardViewModel>(context, listen: false)
-                      .getCarePlanList(strProviderCare);
+                      .getCarePlanList(strProviderCare,conditionChosen: conditionChosen);
             }));
     /*Navigator.pushNamed(
       Get.context,

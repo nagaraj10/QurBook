@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/add_provider_plan/model/ProviderOrganizationResponse.dart';
+import 'package:myfhb/add_provider_plan/service/PlanProviderViewModel.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
@@ -152,11 +154,23 @@ class PlanWizardViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<PlanListModel> getCarePlanList(String isFrom) async {
+  Future<PlanListModel> getCarePlanList(String isFrom,{String conditionChosen}) async {
+    ProviderOrganisationResponse providerOrganizationResult;
     try {
       var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+
+      if(isFrom==strProviderCare){
+        providerOrganizationResult =
+        await Provider.of<PlanProviderViewModel>(Get.context, listen: false)
+            .getCarePlanList(conditionChosen);
+
+        planWizardProviderCount = providerOrganizationResult?.result?.length ?? 0;
+
+      }
+
       PlanListModel myPlanListModel =
           await planWizardService.getPlanList(userId, isFrom);
+
       if (myPlanListModel.isSuccess) {
         providerPlanListResult = myPlanListModel.result;
         freePlanListResult = myPlanListModel.result;
