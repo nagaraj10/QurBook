@@ -240,7 +240,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                 controller: emailController,
                                 validator: (value) {
                                   return AuthenticationValidator()
-                                      .emailValidation(value, patternEmail,
+                                      .emailValidation(value, patternEmailAdress,
                                           strEmailValidText);
                                 },
                                 onSaved: (value) {},

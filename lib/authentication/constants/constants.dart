@@ -138,7 +138,7 @@ const Pattern patternPassword =
     r'^((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,20})';
 const Pattern patternEmail =
     r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-
+const Pattern patternEmailAdress='[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+(?!.*?\.\.)[^@]+';
 //Strings used in OtpScreenVerify
 const String strToken = 'token';
 const String strUserId = 'userId';
