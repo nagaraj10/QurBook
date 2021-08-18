@@ -95,7 +95,7 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
                     scrollDirection: Axis.horizontal,
                     physics: const NeverScrollableScrollPhysics(),
                     onPageChanged: (int pageNumber) {
-                      planWizardViewModel.changeCurrentPage(pageNumber);
+                      // planWizardViewModel.changeCurrentPage(pageNumber);
                     },
                     children: [
                       HealthConditionPage(),
@@ -105,8 +105,10 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
                   ),
                 ),
                 ((planWizardViewModel.currentPage == 1 &&
-                            planWizardViewModel.currentTab == 0 && planWizardViewModel.isListEmpty) ||
-                        (planWizardViewModel.currentTabDiet == 0 && planWizardViewModel.isDietListEmpty &&
+                            planWizardViewModel.currentTab == 0 &&
+                            planWizardViewModel.isListEmpty) ||
+                        (planWizardViewModel.currentTabDiet == 0 &&
+                            planWizardViewModel.isDietListEmpty &&
                             planWizardViewModel.currentPage == 2))
                     ? Container(
                         color: Color(CommonUtil().getMyPrimaryColor()),
