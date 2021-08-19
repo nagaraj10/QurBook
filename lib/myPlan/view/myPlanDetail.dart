@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/myPlan/model/myPlanListModel.dart';
+import 'package:myfhb/plan_dashboard/view/plan_pdf_viewer.dart';
 import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
 import '../../authentication/constants/constants.dart';
 import '../../common/CommonUtil.dart';
@@ -287,94 +288,16 @@ class PlanDetail extends State<MyPlanDetail> {
                 ),
               ),
             ),
-            descriptionURL != null
-                ? Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        OutlineButton.icon(
-                          icon: ImageIcon(
-                            AssetImage(planDownload),
-                            color: Color(CommonUtil().getMyPrimaryColor()),
-                          ),
-                          label: Text(
-                            'Download Plan',
-                            style: TextStyle(
-                              fontSize: 14.0.sp,
-                              fontWeight: FontWeight.w500,
-                              decoration: TextDecoration.underline,
-                              color: Color(CommonUtil().getMyPrimaryColor()),
-                            ),
-                          ),
-                          onPressed: () async {
-                            var common = CommonUtil();
-                            var updatedData =
-                                common.getFileNameAndUrl(descriptionURL);
-                            if (updatedData.isEmpty) {
-                              common.showStatusToUser(
-                                  ResultFromResponse(false,
-                                      'incorrect url, Failed to download'),
-                                  _scaffoldKey);
-                            } else {
-                              if (Platform.isIOS) {
-                                downloadFileForIos(updatedData);
-                              } else {
-                                await downloadFileForIos(updatedData);
-                                // await common.downloader(updatedData.first);
-                              }
-                            }
-                          },
-                          borderSide: BorderSide(
-                            color: Color(
-                              CommonUtil().getMyPrimaryColor(),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                : Container(),
             Expanded(
               child: descriptionURL != null && descriptionURL != ''
                   ? Container(
                       padding:
                           EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                       height: 0.65.sh,
-                      child: InAppWebView(
-                          initialUrlRequest: URLRequest(
-                            url: Uri.parse(descriptionURL ?? ''),
-                            headers: {},
-                          ),
-                          initialOptions: InAppWebViewGroupOptions(
-                            crossPlatform: InAppWebViewOptions(
-                                // debuggingEnabled: true,
-                                useOnDownloadStart: true),
-                          ),
-                          onWebViewCreated: (controller) {
-                            webView = controller;
-                          },
-                          onLoadStart: (controller, url) {},
-                          onLoadStop: (controller, url) {},
-                          onDownloadStart: (controller, url) async {
-                            var common = CommonUtil();
-                            //TODO: Check if any error in Inappwebview
-                            var updatedData =
-                                common.getFileNameAndUrl(url.path);
-                            if (updatedData.isEmpty) {
-                              common.showStatusToUser(
-                                  ResultFromResponse(false,
-                                      'incorrect url, Failed to download'),
-                                  _scaffoldKey);
-                            } else {
-                              if (Platform.isIOS) {
-                                downloadFileForIos(updatedData);
-                              } else {
-                                await downloadFileForIos(updatedData);
-                                // await common.downloader(updatedData.first);
-                              }
-                            }
-                          }),
+                      child: PlanPdfViewer(
+                        url: descriptionURL,
+                        scaffoldKey: _scaffoldKey,
+                      ),
                       //),
                     )
                   : Column(

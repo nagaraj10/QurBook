@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
@@ -14,6 +15,7 @@ import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
+import 'package:myfhb/plan_dashboard/view/plan_pdf_viewer.dart';
 import '../../common/CommonUtil.dart';
 import '../../constants/fhb_constants.dart';
 import '../../constants/fhb_parameters.dart';
@@ -353,22 +355,26 @@ class PlanDetail extends State<MyPlanDetailView> {
                                   ),
                                   docName != null && docName != ''
                                       ? Row(
-                                    children: [
-                                      Text(
-                                          'Plan approved by :',
-                                          style: TextStyle(fontSize: 16.sp,color: Colors.grey[600])),
-                                      SizedBox(width: 4.w),
-                                      Flexible(
-                                        child: Container(
-                                          child: Text(
-                                              toBeginningOfSentenceCase(docName),
-                                              textAlign: TextAlign.start,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(fontSize: 16.sp)),
-                                        ),
-                                      ),
-                                    ],
-                                  )
+                                          children: [
+                                            Text('Plan approved by :',
+                                                style: TextStyle(
+                                                    fontSize: 16.sp,
+                                                    color: Colors.grey[600])),
+                                            SizedBox(width: 4.w),
+                                            Flexible(
+                                              child: Container(
+                                                child: Text(
+                                                    toBeginningOfSentenceCase(
+                                                        docName),
+                                                    textAlign: TextAlign.start,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                        fontSize: 16.sp)),
+                                              ),
+                                            ),
+                                          ],
+                                        )
                                       : SizedBox.shrink(),
                                   SizedBox(
                                     height: 3.h,
@@ -462,123 +468,16 @@ class PlanDetail extends State<MyPlanDetailView> {
                             ),
                           ),
                         ),
-                        metaDataForURL?.descriptionURL != null
-                            ? Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 8),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    OutlineButton.icon(
-                                      icon: ImageIcon(
-                                        AssetImage(planDownload),
-                                        color: Color(
-                                            CommonUtil().getMyPrimaryColor()),
-                                      ),
-                                      label: Text(
-                                        'Download Plan',
-                                        style: TextStyle(
-                                          fontSize: 14.0.sp,
-                                          fontWeight: FontWeight.w500,
-                                          decoration: TextDecoration.underline,
-                                          color: Color(
-                                              CommonUtil().getMyPrimaryColor()),
-                                        ),
-                                      ),
-                                      onPressed: () async {
-                                        var common = CommonUtil();
-                                        var updatedData =
-                                            common.getFileNameAndUrl(
-                                                metaDataForURL?.descriptionURL);
-                                        if (updatedData.isEmpty) {
-                                          common.showStatusToUser(
-                                              ResultFromResponse(false,
-                                                  'incorrect url, Failed to download'),
-                                              _scaffoldKey);
-                                        } else {
-                                          if (Platform.isIOS) {
-                                            downloadFileForIos(updatedData);
-                                          } else {
-                                            // await common.downloader(updatedData.first);
-                                            await downloadFileForIos(
-                                                updatedData);
-                                          }
-                                        }
-                                      },
-                                      borderSide: BorderSide(
-                                        color: Color(
-                                          CommonUtil().getMyPrimaryColor(),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            : Container(),
-                        SizedBox(
-                          height: 10.h,
-                        ),
-                        /* Container(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 10),
-                      height: 0.55.sh,
-                      child: SingleChildScrollView(
-                        child: Html(
-                          data: description.replaceAll('src="//', 'src="'),
-                          shrinkWrap: true,
-                          onLinkTap: (linkUrl,
-                     context,
-                     attributes,
-                     element) {
-                            CommonUtil()
-                                .openWebViewNew(widget.title, linkUrl, false);
-                          },
-                        ),
-                      ),
-                    ) */
                         Expanded(
                           child: metaDataForURL?.descriptionURL != null &&
                                   metaDataForURL?.descriptionURL != ''
                               ? Container(
                                   padding: EdgeInsets.symmetric(
                                       horizontal: 10, vertical: 10),
-                                  child: InAppWebView(
-                                      initialUrlRequest: URLRequest(
-                                        url: Uri.parse(
-                                            metaDataForURL?.descriptionURL ??
-                                                ''),
-                                        headers: {},
-                                      ),
-                                      initialOptions: InAppWebViewGroupOptions(
-                                        crossPlatform: InAppWebViewOptions(
-                                            // debuggingEnabled: true,
-                                            useOnDownloadStart: true),
-                                      ),
-                                      onWebViewCreated: (controller) {
-                                        webView = controller;
-                                      },
-                                      onLoadStart: (controller, url) {},
-                                      onLoadStop: (controller, url) {},
-                                      onDownloadStart: (controller, url) async {
-                                        var common = CommonUtil();
-                                        //TODO: Check if any error in Inappwebview
-                                        var updatedData =
-                                            common.getFileNameAndUrl(url.path);
-                                        if (updatedData.isEmpty) {
-                                          common.showStatusToUser(
-                                              ResultFromResponse(false,
-                                                  'incorrect url, Failed to download'),
-                                              _scaffoldKey);
-                                        } else {
-                                          if (Platform.isIOS) {
-                                            downloadFileForIos(updatedData);
-                                          } else {
-                                            await downloadFileForIos(
-                                                updatedData);
-                                            // await common.downloader(updatedData.first);
-                                          }
-                                        }
-                                      }),
+                                  child: PlanPdfViewer(
+                                    url: metaDataForURL?.descriptionURL,
+                                    scaffoldKey: _scaffoldKey,
+                                  ),
                                   //),
                                 )
                               : Container(),
@@ -589,9 +488,9 @@ class PlanDetail extends State<MyPlanDetailView> {
                             OutlineButton(
                               //hoverColor: Color(getMyPrimaryColor()),
                               onPressed:
-                                  *//*isDisable
+                                  */ /*isDisable
                           ? null
-                          :*//*
+                          :*/ /*
                                   () async {
                                 if (issubscription == '0') {
                                   if (isFrom == strProviderCare) {
@@ -866,12 +765,12 @@ class PlanDetail extends State<MyPlanDetailView> {
                                     }
                                   }
                                 }
-                                *//*else {
+                                */ /*else {
                                 CommonUtil().unSubcribeAlertDialog(context,
                                     packageId: packageId, refresh: () {
                                   Navigator.of(context).pop();
                                 });
-                                }*//*
+                                }*/ /*
                               },
                               borderSide: BorderSide(
                                 color: issubscription == '0'
@@ -951,8 +850,7 @@ class PlanDetail extends State<MyPlanDetailView> {
       } else {
         text = strSubscribed;
       }
-    }
-    else if (isFrom == strProviderCare) {
+    } else if (isFrom == strProviderCare) {
       text = getAddCartText();
     } else if (isFrom == strFreeCare) {
       text = getAddCartTextFreeCare();
@@ -960,8 +858,7 @@ class PlanDetail extends State<MyPlanDetailView> {
       text = getAddCartTextProviderDiet();
     } else if (isFrom == strFreeDiet) {
       text = getAddCartTextFreeDiet();
-    }
-     else {
+    } else {
       text = '';
     }
 
