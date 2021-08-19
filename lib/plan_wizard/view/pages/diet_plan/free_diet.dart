@@ -165,6 +165,22 @@ class _FreeDietPlans extends State<FreeDietPlans> {
             carePlanListLength = isSearch
                 ? planSearchList.length
                 : snapshot?.data?.result?.length ?? 0;
+            if (((Provider.of<PlanWizardViewModel>(context, listen: false)
+                    ?.isDynamicLink) ??
+                false)) {
+              Future.delayed(Duration(), () {
+                var searchText =
+                    Provider.of<PlanWizardViewModel>(context, listen: false)
+                            ?.dynamicLinkSearchText ??
+                        '';
+                if (searchText?.isNotEmpty ?? false) {
+                  isSearch = true;
+                  onSearched(searchText, 'localSearch');
+                }
+                Provider.of<PlanWizardViewModel>(context, listen: false)
+                    ?.isDynamicLink = false;
+              });
+            }
             return dietPlanList(
                 isSearch ? planSearchList : snapshot?.data?.result);
           } else {
@@ -173,7 +189,8 @@ class _FreeDietPlans extends State<FreeDietPlans> {
                 height: 1.sh / 1.3,
                 child: Container(
                     child: Center(
-                  child: Text(variable.strNoPackages),
+                  child: Text(variable.strNoPlans,
+                      style: TextStyle(color: Colors.grey)),
                 )),
               ),
             );
@@ -202,7 +219,8 @@ class _FreeDietPlans extends State<FreeDietPlans> {
               height: 1.sh / 1.3,
               child: Container(
                   child: Center(
-                child: Text(variable.strNoPlans),
+                child: Text(variable.strNoPlans,
+                    style: TextStyle(color: Colors.grey)),
               )),
             ),
           );

@@ -16,7 +16,7 @@ class PrescriptionModule extends StatelessWidget {
             child: Column(
               children: [
                 SizedBox(
-                  height: 80.0.h,
+                  height: 100.0.h,
                 ),
                 Visibility(
                   //visible: (appntId != null && appntId != '') ? true : false,
@@ -72,18 +72,21 @@ class PrescriptionModule extends StatelessWidget {
 
   void FetchRecords(int position, bool allowSelect, bool isAudioSelect,
       bool isNotesSelect, List<String> mediaIds, BuildContext context) async {
+    //NOTE: since we are already in video call, we are diable the camer and mic actions on My record - FHB-3869
     await Navigator.of(context)
         .push(MaterialPageRoute(
       builder: (context) => MyRecords(
           argument: MyRecordsArgument(
-              categoryPosition: position,
-              allowSelect: allowSelect,
-              isAudioSelect: isAudioSelect,
-              isNotesSelect: isNotesSelect,
-              selectedMedias: mediaIds,
-              isFromChat: false,
-              isAssociateOrChat: false,
-              fromClass: 'appointments')),
+        categoryPosition: position,
+        allowSelect: allowSelect,
+        isAudioSelect: isAudioSelect,
+        isNotesSelect: isNotesSelect,
+        selectedMedias: mediaIds,
+        isFromChat: false,
+        isAssociateOrChat: false,
+        fromClass: 'appointments',
+        isFromVideoCall: true,
+      )),
     ))
         .then((results) {
       if (results != null) {

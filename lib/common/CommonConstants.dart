@@ -219,6 +219,7 @@ class CommonConstants {
 
   static String specialization = 'Specialization';
   static String hospitalName = 'Hospital Name';
+
   //===========================================//
 
   static String strOperationSignUp = 'signUp';
@@ -278,7 +279,7 @@ class CommonConstants {
 
   factory CommonConstants() => _instance;
 
-  static bool showNotificationdialog=true;
+  static bool showNotificationdialog = true;
 
   Future<CountryMetrics> getCountryMetrics() async {
     if (countryMetrics != null) return countryMetrics;
@@ -296,21 +297,28 @@ class CommonConstants {
     return countryMetrics;
   }
 
-  Future<UnitsMesurements> getValuesForUnit(String units) async {
+  Future<UnitsMesurements> getValuesForUnit(String units, String range) async {
     final db = DatabaseHelper();
 
-    unitsMeasurements = await db.getMeasurementsBasedOnUnits(units);
-
+    unitsMeasurements = await db.getMeasurementsBasedOnUnits(units, range);
+   //print(unitsMeasurements.maxValue.toString()+"MAX"+unitsMeasurements.minValue.toString()+" MIN"+ "unitsMeasurements*************");
     return unitsMeasurements;
   }
 
   String get bpSPUNIT => countryMetrics.bpSPUnit;
+
   String get bpDPUNIT => countryMetrics.bpDPUnit;
+
   String get bpPulseUNIT => countryMetrics.bpPulseUnit;
+
   String get glucometerUNIT => countryMetrics.glucometerUnit;
+
   String get poOxySatUNIT => countryMetrics.poOxySatUnit;
+
   String get poPulseUNIT => countryMetrics.poPulseUnit;
+
   String get tempUNIT => countryMetrics.tempUnit;
+
   String get weightUNIT => countryMetrics.weightUnit;
 
   static const String strId = 'id';

@@ -44,6 +44,7 @@ class RegimentDataModel {
     this.scheduled = false,
     this.asNeeded = false,
     this.isEventDisabled = false,
+    this.sayTextDynamic,
   });
 
   final String eid;
@@ -86,6 +87,7 @@ class RegimentDataModel {
   final bool scheduled;
   final bool asNeeded;
   final bool isEventDisabled;
+  final String sayTextDynamic;
 
   factory RegimentDataModel.fromJson(Map<String, dynamic> json) =>
       RegimentDataModel(
@@ -126,18 +128,22 @@ class RegimentDataModel {
         providername: json['providername'],
         hasform: (json['hasform'] ?? 0) == 1,
         saytext: json['saytext'],
-        doseMeal: ((json['dosemeal'] ?? 0).toString() == '64') &&
+        doseMeal: (((json['dosemeal'] ?? 0).toString() == '64') ||
+                ((json['dosemeal'] ?? 0).toString() == '128')) &&
             (activitynameValues.map[json['activityname']] ==
                 Activityname.SYMPTOM),
-        asNeeded: ((json['dosemeal'] ?? 0).toString() == '64') &&
+        asNeeded: (((json['dosemeal'] ?? 0).toString() == '64') ||
+                ((json['dosemeal'] ?? 0).toString() == '128')) &&
             (activitynameValues.map[json['activityname']] !=
                 Activityname.SYMPTOM),
-        scheduled: ((json['dosemeal'] ?? 0).toString() != '64'),
+        scheduled: ((json['dosemeal'] ?? 0).toString() != '64') &&
+            ((json['dosemeal'] ?? 0).toString() != '128'),
         doseRepeat: json['doserepeat'],
         metadata: json['metadata'] is List
             ? Metadata()
             : Metadata.fromJson(json['metadata'] ?? {}),
         isEventDisabled: (json['ev_disabled'] ?? '0') == '1',
+        sayTextDynamic : json['saytext_dyn'] ?? '',
       );
 
   Map<String, dynamic> toJson() => {
@@ -178,6 +184,7 @@ class RegimentDataModel {
         'doserepeat': doseRepeat,
         'metadata': metadata.toJson(),
         'ev_disabled': isEventDisabled ? '1' : '0',
+    'saytext_dyn': sayTextDynamic,
       };
 }
 

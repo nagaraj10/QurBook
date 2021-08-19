@@ -113,6 +113,7 @@ class ChatViewModel extends ChangeNotifier {
                   patientName: patientName,
                   patientPicture: patientPicUrl,
                   isFromVideoCall: isFromVideoCall,
+                  isCareGiver: false,
                 )));
   }
 

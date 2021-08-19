@@ -117,6 +117,37 @@ class RegimentService {
     }
   }
 
+  static Future<SaveResponseModel> updatePhoto({String eid, String url}) async {
+    final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    var urlForRegiment = Constants.BASE_URL + variable.regiment;
+    try {
+      var headerRequest = await HeaderRequest().getRequestHeadersAuthContent();
+      var response = await ApiServices.post(
+        urlForRegiment,
+        headers: headerRequest,
+        body: json.encode(
+          {
+            'method': 'post',
+            'data':
+                "Action=SetOtherData&eid=$eid&dataname=PHOTO&name=&url=$url",
+          },
+        ),
+      );
+      if (response != null && response.statusCode == 200) {
+        print(response.body);
+        return SaveResponseModel.fromJson(json.decode(response.body));
+      } else {
+        return SaveResponseModel(
+          result: SaveResultModel(),
+          isSuccess: false,
+        );
+      }
+    } catch (e) {
+      print(e);
+      throw Exception('$e was thrown');
+    }
+  }
+
   static Future<FieldsResponseModel> getFormData({String eid}) async {
     final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var urlForRegiment = Constants.BASE_URL + variable.regiment;

@@ -356,8 +356,12 @@ class HomeScreenState extends State<ChatHomeScreen> {
                 return countChatListUsers(patientId, snapshot) > 0
                     ? ListView.builder(
                         padding: EdgeInsets.all(10.0),
-                        itemBuilder: (context, index) => buildItem(context,
-                            snapshot.data.docs[index], snapshot, index),
+                        itemBuilder: (context, index) => buildItem(
+                            context,
+                            snapshot.data.docs[index],
+                            snapshot,
+                            index,
+                            careGiverIds),
                         itemCount: snapshot.data.docs.length,
                       )
                     : Container(
@@ -388,7 +392,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
   }
 
   Widget buildItem(BuildContext context, DocumentSnapshot document,
-      chatListSnapshot, int index) {
+      chatListSnapshot, int index, List careGiverIds) {
     return StreamBuilder(
       stream: FirebaseFirestore.instance
           .collection(STR_USERS)
@@ -422,6 +426,8 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                   patientName: '',
                                   patientPicture: '',
                                   isFromVideoCall: false,
+                                  isCareGiver:
+                                      careGiverIds.length > 0 ? true : false,
                                 )));
                   },
                   child: Container(
@@ -440,7 +446,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                           placeholder: (context, url) =>
                                               Container(
                                                 child:
-                                                CommonCircularIndicator(),
+                                                    CommonCircularIndicator(),
                                                 width: 50.0,
                                                 height: 50.0,
                                                 padding: EdgeInsets.all(15.0),

@@ -5,6 +5,8 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/add_new_plan/view/AddNewPlan.dart';
 import 'package:myfhb/add_provider_plan/view/AddProviderPlan.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/constants/router_variable.dart';
+import 'package:myfhb/landing/view/landing_arguments.dart';
 import 'package:myfhb/plan_wizard/view/pages/care_plan/care_plan_page.dart';
 import 'package:myfhb/plan_wizard/view/pages/diet_plan/diet_plan_page.dart';
 import 'package:myfhb/plan_wizard/view/pages/diet_plan/tab_diet_main.dart';
@@ -31,7 +33,19 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
   @override
   void initState() {
     super.initState();
-    Provider.of<PlanWizardViewModel>(context, listen: false)?.currentPage = 0;
+    if (!(Provider.of<PlanWizardViewModel>(context, listen: false)
+            ?.isDynamicLink ??
+        false)) {
+      Provider.of<PlanWizardViewModel>(context, listen: false)?.currentPage = 0;
+    } else {
+      Future.delayed(Duration(), () {
+        Provider.of<PlanWizardViewModel>(context, listen: false)
+            ?.changeCurrentPage(
+          Provider.of<PlanWizardViewModel>(context, listen: false)
+              ?.dynamicLinkPage,
+        );
+      });
+    }
     Provider.of<PlanWizardViewModel>(context, listen: false)?.fetchCartItem();
     Provider.of<PlanWizardViewModel>(context, listen: false)
         ?.isPlanWizardActive = true;
@@ -49,13 +63,8 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
     var planWizardViewModel = Provider.of<PlanWizardViewModel>(context);
     return WillPopScope(
       onWillPop: () {
-        if (planWizardViewModel.currentPage == 0) {
-          return Future.value(true);
-        } else {
-          planWizardViewModel
-              .changeCurrentPage(planWizardViewModel.currentPage - 1);
-          return Future.value(false);
-        }
+        onBackPressed(context);
+        return Future.value(false);
       },
       child: Scaffold(
         appBar: AppBar(
@@ -68,12 +77,7 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
             colors: Colors.white,
             size: 24.0.sp,
             onTap: () {
-              if (planWizardViewModel.currentPage == 0) {
-                Get.back();
-              } else {
-                planWizardViewModel
-                    .changeCurrentPage(planWizardViewModel.currentPage - 1);
-              }
+              onBackPressed(context);
             },
           ),
         ),
@@ -91,7 +95,7 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
                     scrollDirection: Axis.horizontal,
                     physics: const NeverScrollableScrollPhysics(),
                     onPageChanged: (int pageNumber) {
-                      planWizardViewModel.changeCurrentPage(pageNumber);
+                      // planWizardViewModel.changeCurrentPage(pageNumber);
                     },
                     children: [
                       HealthConditionPage(),
@@ -100,73 +104,84 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
                     ],
                   ),
                 ),
-                Container(
-                  color: Color(CommonUtil().getMyPrimaryColor()),
-                  margin: EdgeInsets.only(
-                    top: 10.0.h,
-                  ),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 10.0.sp,
-                    vertical: 5.0.sp,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Flexible(
-                        child: Padding(
-                          padding: EdgeInsets.all(
-                            10.0.sp,
-                          ),
-                          child: Text(
-                            _getBottomText(
-                                planWizardViewModel.currentPage,
-                                planWizardViewModel.currentTab,
-                                planWizardViewModel.currentTabDiet),
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16.0.sp,
+                ((planWizardViewModel.currentPage == 1 &&
+                            planWizardViewModel.currentTab == 0 &&
+                            planWizardViewModel.isListEmpty) ||
+                        (planWizardViewModel.currentTabDiet == 0 &&
+                            planWizardViewModel.isDietListEmpty &&
+                            planWizardViewModel.currentPage == 2))
+                    ? Container(
+                        color: Color(CommonUtil().getMyPrimaryColor()),
+                        margin: EdgeInsets.only(
+                          top: 10.0.h,
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 10.0.sp,
+                          vertical: 5.0.sp,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Flexible(
+                              child: Padding(
+                                padding: EdgeInsets.all(
+                                  10.0.sp,
+                                ),
+                                child: Text(
+                                  _getBottomText(
+                                      planWizardViewModel.currentPage,
+                                      planWizardViewModel.currentTab,
+                                      planWizardViewModel.currentTabDiet),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16.0.sp,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
+                            OutlineButton(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                  10.0.sp,
+                                ),
+                              ),
+                              onPressed: () {
+                                if (planWizardViewModel.currentPage == 1 ||
+                                    planWizardViewModel.currentPage == 2) {
+                                  Get.to(AddProviderPlan(
+                                      planWizardViewModel.selectedTag));
+                                } else {
+                                  new AddNewPlan().addNewPlan(
+                                      context,
+                                      feedbackCode,
+                                      titleName,
+                                      hintText, (bool) {
+                                    FlutterToast toast = new FlutterToast();
+                                    if (bool) {
+                                      toast.getToast(
+                                          "We've received your request and get back to you soon",
+                                          Colors.green);
+                                    } else {
+                                      toast.getToast(
+                                          "Please try again ", Colors.red);
+                                    }
+                                  });
+                                }
+                              },
+                              borderSide: BorderSide(color: Colors.white),
+                              color: Colors.white,
+                              textColor: Colors.white,
+                              child: Text(
+                                _getBottomButtonText(
+                                    planWizardViewModel.currentPage,
+                                    planWizardViewModel.currentTab,
+                                    planWizardViewModel.currentTabDiet),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      OutlineButton(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                            10.0.sp,
-                          ),
-                        ),
-                        onPressed: () {
-                          if(planWizardViewModel.currentPage==1 || planWizardViewModel.currentPage==2) {
-                            Get.to(AddProviderPlan());
-                          }else {
-                            new AddNewPlan().addNewPlan(
-                                context, feedbackCode, titleName, hintText,
-                                    (bool) {
-                                  FlutterToast toast = new FlutterToast();
-                                  if (bool) {
-                                    toast.getToast(
-                                        "We've received your request and get back to you soon",
-                                        Colors.green);
-                                  } else {
-                                    toast.getToast(
-                                        "Please try again ", Colors.red);
-                                  }
-                                });
-                          }
-                        },
-                        borderSide: BorderSide(color: Colors.white),
-                        color: Colors.white,
-                        textColor: Colors.white,
-                        child: Text(
-                          _getBottomButtonText(
-                              planWizardViewModel.currentPage,
-                              planWizardViewModel.currentTab,
-                              planWizardViewModel.currentTabDiet),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                      )
+                    : SizedBox.shrink(),
               ],
             ),
           ],
@@ -181,10 +196,10 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
         return strDontCondition;
         break;
       case 1:
-        return currentTab == 0 ? strDontProvider : strDontProvider;
+        return currentTab == 0 ? strDontProvider : "";
         break;
       case 2:
-        return currentTabDiet == 0 ? strDontProvider : strDontProvider;
+        return currentTabDiet == 0 ? strDontProvider : "";
         break;
     }
   }
@@ -202,13 +217,13 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
         feedbackCode = "MissingCarePlan";
         titleName = strDontPlan;
         hintText = strHintCarePlan;
-        return currentTab == 0 ? strAdd : strTellToUs;
+        return strAdd;
         break;
       case 2:
         feedbackCode = "MissingDietPlan";
         titleName = strDontDietPlan;
         hintText = strHintDietPlan;
-        return currentTabDiet == 0 ? strAdd : strTellToUs;
+        return strAdd;
         break;
     }
   }
@@ -224,6 +239,35 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
       case 2:
         return strDietPlan;
         break;
+    }
+  }
+
+  onBackPressed(BuildContext context) {
+    var planWizardViewModel =
+        Provider.of<PlanWizardViewModel>(context, listen: false);
+    if (planWizardViewModel?.currentPage == 0) {
+      planWizardViewModel?.isDynamicLink = false;
+      planWizardViewModel?.dynamicLinkSearchText = '';
+      if (Navigator.canPop(context)) {
+        Get.back();
+      } else {
+        Get.offAllNamed(
+          rt_Landing,
+          arguments: const LandingArguments(
+            needFreshLoad: false,
+          ),
+        );
+      }
+    } else {
+      var newPage = 0;
+      if (planWizardViewModel?.isDynamicLink ?? false) {
+        planWizardViewModel?.isDynamicLink = false;
+        planWizardViewModel?.dynamicLinkSearchText = '';
+        newPage = 0;
+      } else {
+        newPage = planWizardViewModel?.currentPage - 1;
+      }
+      planWizardViewModel?.changeCurrentPage(newPage);
     }
   }
 }

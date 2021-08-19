@@ -23,6 +23,8 @@ import 'package:myfhb/telehealth/features/chat/view/home.dart';
 import 'package:myfhb/video_call/model/NotificationModel.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/src/utils/PageNavigator.dart';
+import 'package:myfhb/video_call/utils/audiocall_provider.dart';
+import 'package:provider/provider.dart';
 
 class IosNotificationHandler {
   final myDB = FirebaseFirestore.instance;
@@ -80,8 +82,17 @@ class IosNotificationHandler {
         'ns_type': 'call',
         'navigationPage': 'TeleHelath Call screen',
       });
-      Get.key.currentState
-          .pushNamed(router.rt_CallMain, arguments: model.callArguments);
+      if (model.callType.toLowerCase() == 'audio') {
+        Provider.of<AudioCallProvider>(Get.context, listen: false)
+            .enableAudioCall();
+      } else if (model.callType.toLowerCase() == 'video') {
+        Provider.of<AudioCallProvider>(Get.context, listen: false)
+            .disableAudioCall();
+      }
+      Get.key.currentState.pushNamed(
+        router.rt_CallMain,
+        arguments: model.callArguments,
+      );
     }
   }
 
@@ -144,6 +155,7 @@ class IosNotificationHandler {
               patientName: model.patientName,
               patientPicture: model.patientPicture,
               isFromVideoCall: false,
+              isCareGiver: false,
             ),
           );
         } else {
@@ -221,20 +233,25 @@ class IosNotificationHandler {
             ));
     } else if (model.redirect == parameters.myCartDetails &&
         (model.planId ?? '').isNotEmpty) {
-      isAlreadyLoaded
-          ? Get.to(
-              () => MyPlanDetail(
-                  packageId: model.planId,
-                  showRenew: renewAction,
-                  templateName: model.templateName),
-            ).then((value) {
-              renewAction = false;
-            })
-          : Get.to(SplashScreen(
-              nsRoute: 'regiment_screen',
-            )).then((value) {
-              renewAction = false;
-            });
+      final userId = PreferenceUtil.getStringValue(KEY_USERID);
+      if (model.userId == userId) {
+        isAlreadyLoaded
+            ? Get.to(
+                () => MyPlanDetail(
+                    packageId: model.planId,
+                    showRenew: renewAction,
+                    templateName: model.templateName),
+              ).then((value) {
+                renewAction = false;
+              })
+            : Get.to(SplashScreen(
+                nsRoute: 'regiment_screen',
+              )).then((value) {
+                renewAction = false;
+              });
+      } else {
+        CommonUtil.showFamilyMemberPlanExpiryDialog(model.patientName);
+      }
     } else if (model.redirect == 'googlefit') {
       fbaLog(eveParams: {
         'eventTime': '${DateTime.now()}',

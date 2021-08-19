@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:myfhb/Orders/Controller/OrderController.dart';
+import 'package:myfhb/Orders/Model/OrderModel.dart';
+import 'package:myfhb/Orders/View/AppointmentOrderTile.dart';
 import 'package:myfhb/Orders/View/OrderTile.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
@@ -78,9 +80,14 @@ class _OrdersViewState extends State<OrdersView> {
                 child: ListView.builder(
                   itemCount: controller.orders.value.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return OrderTile(
-                      order: controller.orders.value[index],
-                    );
+                    OrderModel currentOrder = controller.orders.value[index];
+                    return currentOrder.isAppointment
+                        ? AppointmentOrderTile(
+                            order: currentOrder,
+                          )
+                        : OrderTile(
+                            order: currentOrder,
+                          );
                   },
                 ),
               ),

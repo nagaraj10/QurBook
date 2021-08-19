@@ -265,6 +265,8 @@ const String prid = '&prid=';
 
 const String exact = '&exact=1';
 
+const String qr_user_plan = 'user-plans/';
+
 const String qr_list = 'list/';
 const String qr_doctorlist = 'doctorsList?';
 const String qr_halthOrganization = 'healthOrganizationTypeId=';

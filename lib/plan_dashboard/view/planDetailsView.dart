@@ -8,7 +8,12 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:intl/intl.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
+import 'package:myfhb/common/errors_widget.dart';
+import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/constants/variable_constant.dart';
+import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
 import '../../common/CommonUtil.dart';
 import '../../constants/fhb_constants.dart';
 import '../../constants/fhb_parameters.dart';
@@ -26,43 +31,46 @@ import '../../authentication/constants/constants.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 
 import 'package:provider/provider.dart';
+import '../viewModel/planViewModel.dart';
 
 class MyPlanDetailView extends StatefulWidget {
-  final String title;
-  final String description;
-  final String price;
-  final String issubscription;
+  // final String title;
+  // final String description;
+  // final String price;
+  // final String issubscription;
   final String packageId;
-  final String providerName;
-  final String packageDuration;
-  final String providerId;
-  final bool isDisable;
-  final String hosIcon;
-  final String iconApi;
-  final String catIcon;
-  final bool isRenew;
+
+  // final String providerName;
+  // final String packageDuration;
+  // final String providerId;
+  // final bool isDisable;
+  // final String hosIcon;
+  // final String iconApi;
+  // final String catIcon;
+  // final bool isRenew;
   final String isFrom;
-  final bool isExtendable;
-  final MetaDataForURL metaDataForURL;
+
+  // final bool isExtendable;
+  // final MetaDataForURL metaDataForURL;
 
   const MyPlanDetailView({
     Key key,
-    @required this.title,
-    @required this.description,
-    @required this.price,
-    @required this.issubscription,
+    // @required this.title,
+    // @required this.description,
+    // @required this.price,
+    // @required this.issubscription,
     @required this.packageId,
-    @required this.providerName,
-    @required this.packageDuration,
-    @required this.providerId,
-    @required this.isDisable,
-    @required this.hosIcon,
-    @required this.iconApi,
-    @required this.catIcon,
-    @required this.isRenew,
+    // @required this.providerName,
+    // @required this.packageDuration,
+    // @required this.providerId,
+    // @required this.isDisable,
+    // @required this.hosIcon,
+    // @required this.iconApi,
+    // @required this.catIcon,
+    // @required this.isRenew,
     @required this.isFrom,
-    @required this.isExtendable,
-    @required this.metaDataForURL,
+    // @required this.isExtendable,
+    // @required this.metaDataForURL,
   }) : super(key: key);
 
   @override
@@ -79,6 +87,7 @@ class PlanDetail extends State<MyPlanDetailView> {
   String packageId;
   String providerName;
   String packageDuration;
+  String docName;
   String providerId;
   bool isDisable;
   String hosIcon = '';
@@ -87,714 +96,847 @@ class PlanDetail extends State<MyPlanDetailView> {
   bool isExtendable = false;
   bool isRenew = false;
   String isFrom = '';
+  MetaDataForURL metaDataForURL;
   InAppWebViewController webView;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  Future<PlanListModel> planListModel;
 
   @override
   void initState() {
     super.initState();
-    setValues();
+    // setValues();
+    planListModel = PlanViewModel().getPlanDetail(widget?.packageId);
   }
 
-  void setValues() {
-    title = widget.title;
-    description = widget.description;
-    price = widget.price;
-    issubscription = widget.issubscription;
-    packageId = widget.packageId;
-    providerName = widget.providerName;
-    packageDuration = widget.packageDuration;
-    providerId = widget.providerId;
-    isDisable = widget.isDisable;
-    hosIcon = widget.hosIcon;
-    iconApi = widget.iconApi;
-    catIcon = widget.catIcon;
-    isRenew = widget.isRenew;
+  void setValues(PlanListResult planList) {
+    title = planList?.title;
+    description = planList?.description;
+    price = planList?.price;
+    issubscription = planList?.issubscription;
+    packageId = planList?.packageid;
+    providerName = planList?.providerName;
+    packageDuration = planList?.packageDuration;
+    docName = planList?.metadata?.doctorName ?? '';
+    providerId = planList?.plinkid;
+    isDisable = false;
+    hosIcon = planList?.providerMetadata?.icon;
+    iconApi = planList?.metadata?.icon;
+    catIcon = planList?.catmetadata?.icon;
+    metaDataForURL = planList?.metadata;
+    isRenew = planList?.isexpired == '1' ? true : false;
     isFrom = widget.isFrom;
-    isExtendable = widget.isExtendable;
+    isExtendable = planList?.isSubscribed == '1'
+        ? planList?.isExtendable == '1'
+            ? true
+            : false
+        : true;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: AppBar(
-        flexibleSpace: GradientAppBar(),
-        leading: GestureDetector(
-          onTap: Get.back,
-          child: Icon(
-            Icons.arrow_back_ios, // add custom icons also
-            size: 24,
+    return WillPopScope(
+      onWillPop: () {
+        if (widget?.isFrom == strDeepLink) {
+          Get.offAllNamed(rt_PlanWizard);
+          return Future.value(false);
+        } else {
+          return Future.value(true);
+        }
+      },
+      child: Scaffold(
+        key: _scaffoldKey,
+        appBar: AppBar(
+          flexibleSpace: GradientAppBar(),
+          leading: GestureDetector(
+            onTap: () {
+              if (widget?.isFrom == strDeepLink) {
+                Get.offAllNamed(rt_PlanWizard);
+              } else {
+                Get.back();
+              }
+            },
+            child: Icon(
+              Icons.arrow_back_ios, // add custom icons also
+              size: 24,
+            ),
+          ),
+          title: Text(
+            'Plans',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
-        title: Text(
-          'Plans',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ),
-      body: Builder(
-        builder: (contxt) => Container(
-          margin: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-          //alignment: Alignment.center,
-          height: 1.sh - AppBar().preferredSize.height,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: CircleAvatar(
-                        backgroundColor: Colors.grey[200],
-                        radius: 30,
-                        child: CommonUtil().customImage(getImage())),
-                    // child: ClipOval(
-                    //   // backgroundColor: Colors.grey[200],
-                    //   // radius: 35,
-                    //   child: Container(
-                    //     alignment: Alignment.center,
-                    //     height: 70,
-                    //     width: 70,
-                    //     decoration: BoxDecoration(
-                    //       shape: BoxShape.circle,
-                    //       color: Colors.transparent,
-                    //     ),
-                    //     child: iconApi != null && iconApi != ''
-                    //         ? iconApi
-                    //                 .toString()
-                    //                 .toLowerCase()
-                    //                 ?.contains('.svg')
-                    //             ? Center(
-                    //                 child: SizedBox(
-                    //                   height: 50,
-                    //                   width: 50,
-                    //                   child: SvgPicture.network(
-                    //                     iconApi,
-                    //                     placeholderBuilder: (BuildContext
-                    //                             context) =>
-                    //                         new CircularProgressIndicator(
-                    //                             strokeWidth: 1.5,
-                    //                             backgroundColor: Color(
-                    //                                 new CommonUtil()
-                    //                                     .getMyPrimaryColor())),
-                    //                   ),
-                    //                 ),
-                    //               )
-                    //             : CachedNetworkImage(
-                    //                 imageUrl: iconApi,
-                    //                 placeholder: (context, url) =>
-                    //                     new CircularProgressIndicator(
-                    //                         strokeWidth: 1.5,
-                    //                         backgroundColor: Color(
-                    //                             new CommonUtil()
-                    //                                 .getMyPrimaryColor())),
-                    //                 errorWidget: (context, url, error) =>
-                    //                     ClipOval(
-                    //                         child: CircleAvatar(
-                    //                   backgroundImage:
-                    //                       AssetImage(qurHealthLogo),
-                    //                   radius: 32,
-                    //                   backgroundColor: Colors.transparent,
-                    //                 )),
-                    //                 imageBuilder: (context, imageProvider) =>
-                    //                     Container(
-                    //                   width: 80.0,
-                    //                   height: 80.0,
-                    //                   decoration: BoxDecoration(
-                    //                     shape: BoxShape.circle,
-                    //                     image: DecorationImage(
-                    //                         image: imageProvider,
-                    //                         fit: BoxFit.fill),
-                    //                   ),
-                    //                 ),
-                    //               )
-                    //         : icon != null && icon != ''
-                    //             ? icon
-                    //                     .toString()
-                    //                     .toLowerCase()
-                    //                     ?.contains('.svg')
-                    //                 ? SvgPicture.network(
-                    //                     icon,
-                    //                     placeholderBuilder: (BuildContext
-                    //                             context) =>
-                    //                         new CircularProgressIndicator(
-                    //                             strokeWidth: 1.5,
-                    //                             backgroundColor: Color(
-                    //                                 new CommonUtil()
-                    //                                     .getMyPrimaryColor())),
-                    //                   )
-                    //                 : CachedNetworkImage(
-                    //                     imageUrl: icon,
-                    //                     placeholder: (context, url) =>
-                    //                         new CircularProgressIndicator(
-                    //                             strokeWidth: 1.5,
-                    //                             backgroundColor: Color(
-                    //                                 new CommonUtil()
-                    //                                     .getMyPrimaryColor())),
-                    //                     errorWidget: (context, url, error) =>
-                    //                         ClipOval(
-                    //                             child: CircleAvatar(
-                    //                       backgroundImage:
-                    //                           AssetImage(qurHealthLogo),
-                    //                       radius: 32,
-                    //                       backgroundColor: Colors.transparent,
-                    //                     )),
-                    //                     imageBuilder:
-                    //                         (context, imageProvider) =>
-                    //                             Container(
-                    //                       width: 80.0,
-                    //                       height: 80.0,
-                    //                       decoration: BoxDecoration(
-                    //                         shape: BoxShape.circle,
-                    //                         image: DecorationImage(
-                    //                             image: imageProvider,
-                    //                             fit: BoxFit.fill),
-                    //                       ),
-                    //                     ),
-                    //                   )
-                    //             : ClipOval(
-                    //                 child: CircleAvatar(
-                    //                 backgroundImage:
-                    //                     AssetImage(qurHealthLogo),
-                    //                 radius: 32,
-                    //                 backgroundColor: Colors.transparent,
-                    //               )),
-                    //   ),
-                    // ),
+        body: FutureBuilder<PlanListModel>(
+          future: planListModel,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return SafeArea(
+                child: SizedBox(
+                  height: 1.sh / 4.5,
+                  child: Center(
+                    child: SizedBox(
+                      width: 30.0.h,
+                      height: 30.0.h,
+                      child: CommonCircularIndicator(),
+                    ),
                   ),
-                  Expanded(
-                    flex: 2,
+                ),
+              );
+            } else if (snapshot.hasError) {
+              return ErrorsWidget();
+            } else {
+              if (snapshot?.hasData &&
+                  snapshot?.data?.result != null &&
+                  snapshot?.data?.result.isNotEmpty) {
+                PlanListResult planList =
+                    snapshot?.data?.result[0] as PlanListResult;
+                setValues(planList);
+                return Builder(
+                  builder: (contxt) => Container(
+                    margin: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                    //alignment: Alignment.center,
+                    height: 1.sh - AppBar().preferredSize.height,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          title != null && title != '' ? title.trim() : '-',
-                          style: TextStyle(
-                              fontSize: 18.sp, fontWeight: FontWeight.w500),
-                        ),
-                        SizedBox(
-                          height: 5.h,
-                        ),
-                        Text(
-                          providerName != null && providerName != ''
-                              ? providerName
-                              : '-',
-                          style: TextStyle(
-                              fontSize: 14.sp, color: Colors.grey[600]),
-                        ),
-                        SizedBox(
-                          height: 5.h,
-                        ),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              children: [
-                                Text(
-                                  'Duration: ',
-                                  style: TextStyle(
-                                      color: Colors.grey[600], fontSize: 14.sp),
+                            Expanded(
+                              child: CircleAvatar(
+                                  backgroundColor: Colors.grey[200],
+                                  radius: 30,
+                                  child: CommonUtil().customImage(getImage())),
+                              // child: ClipOval(
+                              //   // backgroundColor: Colors.grey[200],
+                              //   // radius: 35,
+                              //   child: Container(
+                              //     alignment: Alignment.center,
+                              //     height: 70,
+                              //     width: 70,
+                              //     decoration: BoxDecoration(
+                              //       shape: BoxShape.circle,
+                              //       color: Colors.transparent,
+                              //     ),
+                              //     child: iconApi != null && iconApi != ''
+                              //         ? iconApi
+                              //                 .toString()
+                              //                 .toLowerCase()
+                              //                 ?.contains('.svg')
+                              //             ? Center(
+                              //                 child: SizedBox(
+                              //                   height: 50,
+                              //                   width: 50,
+                              //                   child: SvgPicture.network(
+                              //                     iconApi,
+                              //                     placeholderBuilder: (BuildContext
+                              //                             context) =>
+                              //                         new CircularProgressIndicator(
+                              //                             strokeWidth: 1.5,
+                              //                             backgroundColor: Color(
+                              //                                 new CommonUtil()
+                              //                                     .getMyPrimaryColor())),
+                              //                   ),
+                              //                 ),
+                              //               )
+                              //             : CachedNetworkImage(
+                              //                 imageUrl: iconApi,
+                              //                 placeholder: (context, url) =>
+                              //                     new CircularProgressIndicator(
+                              //                         strokeWidth: 1.5,
+                              //                         backgroundColor: Color(
+                              //                             new CommonUtil()
+                              //                                 .getMyPrimaryColor())),
+                              //                 errorWidget: (context, url, error) =>
+                              //                     ClipOval(
+                              //                         child: CircleAvatar(
+                              //                   backgroundImage:
+                              //                       AssetImage(qurHealthLogo),
+                              //                   radius: 32,
+                              //                   backgroundColor: Colors.transparent,
+                              //                 )),
+                              //                 imageBuilder: (context, imageProvider) =>
+                              //                     Container(
+                              //                   width: 80.0,
+                              //                   height: 80.0,
+                              //                   decoration: BoxDecoration(
+                              //                     shape: BoxShape.circle,
+                              //                     image: DecorationImage(
+                              //                         image: imageProvider,
+                              //                         fit: BoxFit.fill),
+                              //                   ),
+                              //                 ),
+                              //               )
+                              //         : icon != null && icon != ''
+                              //             ? icon
+                              //                     .toString()
+                              //                     .toLowerCase()
+                              //                     ?.contains('.svg')
+                              //                 ? SvgPicture.network(
+                              //                     icon,
+                              //                     placeholderBuilder: (BuildContext
+                              //                             context) =>
+                              //                         new CircularProgressIndicator(
+                              //                             strokeWidth: 1.5,
+                              //                             backgroundColor: Color(
+                              //                                 new CommonUtil()
+                              //                                     .getMyPrimaryColor())),
+                              //                   )
+                              //                 : CachedNetworkImage(
+                              //                     imageUrl: icon,
+                              //                     placeholder: (context, url) =>
+                              //                         new CircularProgressIndicator(
+                              //                             strokeWidth: 1.5,
+                              //                             backgroundColor: Color(
+                              //                                 new CommonUtil()
+                              //                                     .getMyPrimaryColor())),
+                              //                     errorWidget: (context, url, error) =>
+                              //                         ClipOval(
+                              //                             child: CircleAvatar(
+                              //                       backgroundImage:
+                              //                           AssetImage(qurHealthLogo),
+                              //                       radius: 32,
+                              //                       backgroundColor: Colors.transparent,
+                              //                     )),
+                              //                     imageBuilder:
+                              //                         (context, imageProvider) =>
+                              //                             Container(
+                              //                       width: 80.0,
+                              //                       height: 80.0,
+                              //                       decoration: BoxDecoration(
+                              //                         shape: BoxShape.circle,
+                              //                         image: DecorationImage(
+                              //                             image: imageProvider,
+                              //                             fit: BoxFit.fill),
+                              //                       ),
+                              //                     ),
+                              //                   )
+                              //             : ClipOval(
+                              //                 child: CircleAvatar(
+                              //                 backgroundImage:
+                              //                     AssetImage(qurHealthLogo),
+                              //                 radius: 32,
+                              //                 backgroundColor: Colors.transparent,
+                              //               )),
+                              //   ),
+                              // ),
+                            ),
+                            Expanded(
+                              flex: 2,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    title != null && title != ''
+                                        ? title.trim()
+                                        : '-',
+                                    style: TextStyle(
+                                        fontSize: 18.sp,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                  SizedBox(
+                                    height: 5.h,
+                                  ),
+                                  Text(
+                                    providerName != null && providerName != ''
+                                        ? providerName
+                                        : '-',
+                                    style: TextStyle(
+                                        fontSize: 14.sp,
+                                        color: Colors.grey[600]),
+                                  ),
+                                  SizedBox(
+                                    height: 5.h,
+                                  ),
+                                  docName != null && docName != ''
+                                      ? Row(
+                                    children: [
+                                      Text(
+                                          'Plan approved by :',
+                                          style: TextStyle(fontSize: 16.sp,color: Colors.grey[600])),
+                                      SizedBox(width: 4.w),
+                                      Flexible(
+                                        child: Container(
+                                          child: Text(
+                                              toBeginningOfSentenceCase(docName),
+                                              textAlign: TextAlign.start,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(fontSize: 16.sp)),
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                      : SizedBox.shrink(),
+                                  SizedBox(
+                                    height: 3.h,
+                                  ),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(
+                                            'Duration: ',
+                                            style: TextStyle(
+                                                color: Colors.grey[600],
+                                                fontSize: 14.sp),
+                                          ),
+                                          Text(
+                                            packageDuration != null &&
+                                                    packageDuration != ''
+                                                ? '$packageDuration days'
+                                                : '-',
+                                            style: TextStyle(
+                                                color: Color(CommonUtil()
+                                                    .getMyPrimaryColor()),
+                                                fontSize: 16.sp,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            'Price: ',
+                                            style: TextStyle(
+                                                color: Colors.grey[600],
+                                                fontSize: 14.sp),
+                                          ),
+                                          Text(
+                                            price != null && price != ''
+                                                ? 'INR $price'
+                                                : '-',
+                                            style: TextStyle(
+                                                color: Color(CommonUtil()
+                                                    .getMyPrimaryColor()),
+                                                fontSize: 16.sp,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: 20.h,
+                        ),
+                        Visibility(
+                          visible: description != null && description != '',
+                          child: Container(
+                            width: 1.sw,
+                            constraints: BoxConstraints(
+                              maxHeight: 0.15.sh,
+                            ),
+                            decoration: BoxDecoration(
+                              border: Border(
+                                top: BorderSide(
+                                  width: 1.0.h,
+                                  color: Colors.grey,
                                 ),
-                                Text(
-                                  packageDuration != null &&
-                                          packageDuration != ''
-                                      ? '$packageDuration days'
+                              ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: SingleChildScrollView(
+                                child: Text(
+                                  description != null && description != ''
+                                      ? description.trim()
                                       : '-',
                                   style: TextStyle(
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
                                       fontSize: 16.sp,
-                                      fontWeight: FontWeight.w600),
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black),
                                 ),
-                              ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        metaDataForURL?.descriptionURL != null
+                            ? Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    OutlineButton.icon(
+                                      icon: ImageIcon(
+                                        AssetImage(planDownload),
+                                        color: Color(
+                                            CommonUtil().getMyPrimaryColor()),
+                                      ),
+                                      label: Text(
+                                        'Download Plan',
+                                        style: TextStyle(
+                                          fontSize: 14.0.sp,
+                                          fontWeight: FontWeight.w500,
+                                          decoration: TextDecoration.underline,
+                                          color: Color(
+                                              CommonUtil().getMyPrimaryColor()),
+                                        ),
+                                      ),
+                                      onPressed: () async {
+                                        var common = CommonUtil();
+                                        var updatedData =
+                                            common.getFileNameAndUrl(
+                                                metaDataForURL?.descriptionURL);
+                                        if (updatedData.isEmpty) {
+                                          common.showStatusToUser(
+                                              ResultFromResponse(false,
+                                                  'incorrect url, Failed to download'),
+                                              _scaffoldKey);
+                                        } else {
+                                          if (Platform.isIOS) {
+                                            downloadFileForIos(updatedData);
+                                          } else {
+                                            // await common.downloader(updatedData.first);
+                                            await downloadFileForIos(
+                                                updatedData);
+                                          }
+                                        }
+                                      },
+                                      borderSide: BorderSide(
+                                        color: Color(
+                                          CommonUtil().getMyPrimaryColor(),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : Container(),
+                        SizedBox(
+                          height: 10.h,
+                        ),
+                        /* Container(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 10),
+                      height: 0.55.sh,
+                      child: SingleChildScrollView(
+                        child: Html(
+                          data: description.replaceAll('src="//', 'src="'),
+                          shrinkWrap: true,
+                          onLinkTap: (linkUrl,
+                     context,
+                     attributes,
+                     element) {
+                            CommonUtil()
+                                .openWebViewNew(widget.title, linkUrl, false);
+                          },
+                        ),
+                      ),
+                    ) */
+                        Expanded(
+                          child: metaDataForURL?.descriptionURL != null &&
+                                  metaDataForURL?.descriptionURL != ''
+                              ? Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 10),
+                                  child: InAppWebView(
+                                      initialUrlRequest: URLRequest(
+                                        url: Uri.parse(
+                                            metaDataForURL?.descriptionURL ??
+                                                ''),
+                                        headers: {},
+                                      ),
+                                      initialOptions: InAppWebViewGroupOptions(
+                                        crossPlatform: InAppWebViewOptions(
+                                            // debuggingEnabled: true,
+                                            useOnDownloadStart: true),
+                                      ),
+                                      onWebViewCreated: (controller) {
+                                        webView = controller;
+                                      },
+                                      onLoadStart: (controller, url) {},
+                                      onLoadStop: (controller, url) {},
+                                      onDownloadStart: (controller, url) async {
+                                        var common = CommonUtil();
+                                        //TODO: Check if any error in Inappwebview
+                                        var updatedData =
+                                            common.getFileNameAndUrl(url.path);
+                                        if (updatedData.isEmpty) {
+                                          common.showStatusToUser(
+                                              ResultFromResponse(false,
+                                                  'incorrect url, Failed to download'),
+                                              _scaffoldKey);
+                                        } else {
+                                          if (Platform.isIOS) {
+                                            downloadFileForIos(updatedData);
+                                          } else {
+                                            await downloadFileForIos(
+                                                updatedData);
+                                            // await common.downloader(updatedData.first);
+                                          }
+                                        }
+                                      }),
+                                  //),
+                                )
+                              : Container(),
+                        ),
+                        /*Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            OutlineButton(
+                              //hoverColor: Color(getMyPrimaryColor()),
+                              onPressed:
+                                  *//*isDisable
+                          ? null
+                          :*//*
+                                  () async {
+                                if (issubscription == '0') {
+                                  if (isFrom == strProviderCare) {
+                                    var isSelected =
+                                        Provider.of<PlanWizardViewModel>(
+                                                context,
+                                                listen: false)
+                                            .checkItemInCart(packageId, isFrom,
+                                                providerId: providerId);
+                                    if (isSelected) {
+                                      await Provider.of<PlanWizardViewModel>(
+                                              context,
+                                              listen: false)
+                                          ?.removeCart(
+                                              packageId: packageId,
+                                              isFrom: isFrom);
+                                      Navigator.pop(context);
+                                    } else {
+                                      if (Provider.of<PlanWizardViewModel>(
+                                                  context,
+                                                  listen: false)
+                                              ?.currentPackageProviderCareId !=
+                                          '') {
+                                        await Provider.of<PlanWizardViewModel>(
+                                                context,
+                                                listen: false)
+                                            ?.removeCart(
+                                                packageId: Provider.of<
+                                                            PlanWizardViewModel>(
+                                                        context,
+                                                        listen: false)
+                                                    ?.currentPackageProviderCareId,
+                                                isFrom: isFrom);
+                                        Navigator.pop(context);
+                                      }
+
+                                      bool isItemInCart =
+                                          Provider.of<PlanWizardViewModel>(
+                                                  context,
+                                                  listen: false)
+                                              .checkAllItemsForProviderCare();
+                                      if (isItemInCart) {
+                                        await Provider.of<PlanWizardViewModel>(
+                                                context,
+                                                listen: false)
+                                            ?.removeCart(
+                                                packageId: Provider.of<
+                                                            PlanWizardViewModel>(
+                                                        context,
+                                                        listen: false)
+                                                    ?.currentCartProviderCarePackageId,
+                                                isFrom: isFrom);
+                                        Navigator.pop(context);
+                                      }
+
+                                      await Provider.of<PlanWizardViewModel>(
+                                              context,
+                                              listen: false)
+                                          ?.addToCartItem(
+                                              packageId: packageId,
+                                              price: price,
+                                              isRenew: isRenew,
+                                              providerId: providerId,
+                                              isFromAdd: isFrom)
+                                          .then((value) {
+                                        if (value.isSuccess) {
+                                          Navigator.pop(context);
+                                        }
+                                      });
+                                    }
+                                  } else if (isFrom == strFreeCare) {
+                                    var isSelected =
+                                        Provider.of<PlanWizardViewModel>(
+                                                context,
+                                                listen: false)
+                                            .checkItemInCart(packageId, isFrom,
+                                                providerId: providerId);
+                                    if (isSelected) {
+                                      await Provider.of<PlanWizardViewModel>(
+                                              context,
+                                              listen: false)
+                                          ?.removeCart(
+                                              packageId: packageId,
+                                              isFrom: isFrom);
+                                      Navigator.pop(context);
+                                    } else {
+                                      if (Provider.of<PlanWizardViewModel>(
+                                                  context,
+                                                  listen: false)
+                                              ?.currentPackageFreeCareId !=
+                                          '') {
+                                        await Provider.of<PlanWizardViewModel>(
+                                                context,
+                                                listen: false)
+                                            ?.removeCart(
+                                                packageId: Provider.of<
+                                                            PlanWizardViewModel>(
+                                                        context,
+                                                        listen: false)
+                                                    ?.currentPackageFreeCareId,
+                                                isFrom: isFrom);
+                                        Navigator.pop(context);
+                                      }
+
+                                      bool isItemInCart =
+                                          Provider.of<PlanWizardViewModel>(
+                                                  context,
+                                                  listen: false)
+                                              .checkAllItemsForFreeCare();
+                                      if (isItemInCart) {
+                                        await Provider.of<PlanWizardViewModel>(
+                                                context,
+                                                listen: false)
+                                            ?.removeCart(
+                                                packageId: Provider.of<
+                                                            PlanWizardViewModel>(
+                                                        context,
+                                                        listen: false)
+                                                    ?.currentCartFreeCarePackageId,
+                                                isFrom: isFrom);
+                                        Navigator.pop(context);
+                                      }
+
+                                      await Provider.of<PlanWizardViewModel>(
+                                              context,
+                                              listen: false)
+                                          ?.addToCartItem(
+                                              packageId: packageId,
+                                              price: price,
+                                              isRenew: isRenew,
+                                              providerId: providerId,
+                                              isFromAdd: isFrom)
+                                          .then((value) {
+                                        if (value.isSuccess) {
+                                          Navigator.pop(context);
+                                        }
+                                      });
+                                    }
+                                  } else if (isFrom == strProviderDiet) {
+                                    var isSelected =
+                                        Provider.of<PlanWizardViewModel>(
+                                                context,
+                                                listen: false)
+                                            .checkItemInCart(packageId, isFrom);
+                                    if (isSelected) {
+                                      await Provider.of<PlanWizardViewModel>(
+                                              context,
+                                              listen: false)
+                                          ?.removeCart(
+                                              packageId: packageId,
+                                              isFrom: isFrom);
+                                      Navigator.pop(context);
+                                    } else {
+                                      if (Provider.of<PlanWizardViewModel>(
+                                                  context,
+                                                  listen: false)
+                                              ?.currentPackageProviderDietId !=
+                                          '') {
+                                        await Provider.of<PlanWizardViewModel>(
+                                                context,
+                                                listen: false)
+                                            ?.removeCart(
+                                                packageId: Provider.of<
+                                                            PlanWizardViewModel>(
+                                                        context,
+                                                        listen: false)
+                                                    ?.currentPackageProviderDietId,
+                                                isFrom: isFrom);
+                                        Navigator.pop(context);
+                                      }
+
+                                      bool isItemInCart =
+                                          Provider.of<PlanWizardViewModel>(
+                                                  context,
+                                                  listen: false)
+                                              .checkAllItemsForProviderDiet();
+                                      if (isItemInCart) {
+                                        await Provider.of<PlanWizardViewModel>(
+                                                context,
+                                                listen: false)
+                                            ?.removeCart(
+                                                packageId: Provider.of<
+                                                            PlanWizardViewModel>(
+                                                        context,
+                                                        listen: false)
+                                                    ?.currentCartProviderDietPackageId,
+                                                isFrom: isFrom);
+                                        Navigator.pop(context);
+                                      }
+
+                                      await Provider.of<PlanWizardViewModel>(
+                                              context,
+                                              listen: false)
+                                          ?.addToCartItem(
+                                              packageId: packageId,
+                                              price: price,
+                                              isRenew: isRenew,
+                                              providerId: providerId,
+                                              isFromAdd: isFrom)
+                                          .then((value) {
+                                        if (value.isSuccess) {
+                                          Navigator.pop(context);
+                                        }
+                                      });
+                                    }
+                                  } else if (isFrom == strFreeDiet) {
+                                    var isSelected =
+                                        Provider.of<PlanWizardViewModel>(
+                                                context,
+                                                listen: false)
+                                            .checkItemInCart(packageId, isFrom);
+                                    if (isSelected) {
+                                      await Provider.of<PlanWizardViewModel>(
+                                              context,
+                                              listen: false)
+                                          ?.removeCart(
+                                              packageId: packageId,
+                                              isFrom: isFrom);
+                                      Navigator.pop(context);
+                                    } else {
+                                      if (Provider.of<PlanWizardViewModel>(
+                                                  context,
+                                                  listen: false)
+                                              ?.currentPackageFreeDietId !=
+                                          '') {
+                                        await Provider.of<PlanWizardViewModel>(
+                                                context,
+                                                listen: false)
+                                            ?.removeCart(
+                                                packageId: Provider.of<
+                                                            PlanWizardViewModel>(
+                                                        context,
+                                                        listen: false)
+                                                    ?.currentPackageFreeDietId,
+                                                isFrom: isFrom);
+                                        Navigator.pop(context);
+                                      }
+
+                                      bool isItemInCart =
+                                          Provider.of<PlanWizardViewModel>(
+                                                  context,
+                                                  listen: false)
+                                              .checkAllItemsForFreeDiet();
+                                      if (isItemInCart) {
+                                        await Provider.of<PlanWizardViewModel>(
+                                                context,
+                                                listen: false)
+                                            ?.removeCart(
+                                                packageId: Provider.of<
+                                                            PlanWizardViewModel>(
+                                                        context,
+                                                        listen: false)
+                                                    ?.currentCartFreeDietPackageId,
+                                                isFrom: isFrom);
+                                        Navigator.pop(context);
+                                      }
+
+                                      await Provider.of<PlanWizardViewModel>(
+                                              context,
+                                              listen: false)
+                                          ?.addToCartItem(
+                                              packageId: packageId,
+                                              price: price,
+                                              isRenew: isRenew,
+                                              providerId: providerId,
+                                              isFromAdd: isFrom)
+                                          .then((value) {
+                                        if (value.isSuccess) {
+                                          Navigator.pop(context);
+                                        }
+                                      });
+                                    }
+                                  }
+                                }
+                                *//*else {
+                                CommonUtil().unSubcribeAlertDialog(context,
+                                    packageId: packageId, refresh: () {
+                                  Navigator.of(context).pop();
+                                });
+                                }*//*
+                              },
+                              borderSide: BorderSide(
+                                color: issubscription == '0'
+                                    ? Color(
+                                        CommonUtil().getMyPrimaryColor(),
+                                      )
+                                    : Colors.grey,
+                              ),
+                              //hoverColor: Color(getMyPrimaryColor()),
+                              child: Text(
+                                getText(),
+                                style: TextStyle(
+                                  color:
+                                      getTextColor(isDisable, issubscription),
+                                  fontSize: 13.sp,
+                                ),
+                              ),
+                              // child: Text(
+                              //   issubscription == '0' ? strSubscribe : strSubscribed,
+                              //   style: TextStyle(
+                              //     color: getTextColor(isDisable, issubscription),
+                              //     fontSize: 13.sp,
+                              //   ),
+                              // ),
                             ),
                             SizedBox(
                               width: 10,
                             ),
-                            Row(
-                              children: [
-                                Text(
-                                  'Price: ',
-                                  style: TextStyle(
-                                      color: Colors.grey[600], fontSize: 14.sp),
+                            OutlineButton(
+                              //hoverColor: Color(getMyPrimaryColor()),
+                              onPressed: () async {
+                                // open profile page
+                                //Navigator.of(context).pop();
+                                Navigator.of(context).pop();
+                              },
+                              borderSide: BorderSide(
+                                color: Color(
+                                  CommonUtil().getMyPrimaryColor(),
                                 ),
-                                Text(
-                                  price != null && price != ''
-                                      ? 'INR $price'
-                                      : '-',
-                                  style: TextStyle(
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
-                                      fontSize: 16.sp,
-                                      fontWeight: FontWeight.w600),
+                              ),
+                              //hoverColor: Color(getMyPrimaryColor()),
+                              child: Text(
+                                'cancel'.toUpperCase(),
+                                style: TextStyle(
+                                  color:
+                                      Color(CommonUtil().getMyPrimaryColor()),
+                                  fontSize: 13.sp,
                                 ),
-                              ],
+                              ),
                             ),
                           ],
-                        ),
+                        ),*/
                       ],
                     ),
-                  )
-                ],
-              ),
-              SizedBox(
-                height: 20.h,
-              ),
-              Visibility(
-                visible: description != null && description != '',
-                child: Container(
-                  width: 1.sw,
-                  constraints: BoxConstraints(
-                    maxHeight: 0.15.sh,
                   ),
-                  decoration: BoxDecoration(
-                    border: Border(
-                      top: BorderSide(
-                        width: 1.0.h,
-                        color: Colors.grey,
-                      ),
-                    ),
+                );
+              } else {
+                return SafeArea(
+                  child: Center(
+                    child: Text('Plan information not available'),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: SingleChildScrollView(
-                      child: Text(
-                        description != null && description != ''
-                            ? description.trim()
-                            : '-',
-                        style: TextStyle(
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              widget?.metaDataForURL?.descriptionURL != null
-                  ? Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          OutlineButton.icon(
-                            icon: ImageIcon(
-                              AssetImage(planDownload),
-                              color: Color(CommonUtil().getMyPrimaryColor()),
-                            ),
-                            label: Text(
-                              'Download Plan',
-                              style: TextStyle(
-                                fontSize: 14.0.sp,
-                                fontWeight: FontWeight.w500,
-                                decoration: TextDecoration.underline,
-                                color: Color(CommonUtil().getMyPrimaryColor()),
-                              ),
-                            ),
-                            onPressed: () async {
-                              var common = CommonUtil();
-                              var updatedData = common.getFileNameAndUrl(
-                                  widget?.metaDataForURL?.descriptionURL);
-                              if (updatedData.isEmpty) {
-                                common.showStatusToUser(
-                                    ResultFromResponse(false,
-                                        'incorrect url, Failed to download'),
-                                    _scaffoldKey);
-                              } else {
-                                if (Platform.isIOS) {
-                                  downloadFileForIos(updatedData);
-                                } else {
-                                  // await common.downloader(updatedData.first);
-                                  await downloadFileForIos(updatedData);
-                                }
-                              }
-                            },
-                            borderSide: BorderSide(
-                              color: Color(
-                                CommonUtil().getMyPrimaryColor(),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  : Container(),
-              SizedBox(
-                height: 10.h,
-              ),
-              /* Container(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 10),
-                    height: 0.55.sh,
-                    child: SingleChildScrollView(
-                      child: Html(
-                        data: description.replaceAll('src="//', 'src="'),
-                        shrinkWrap: true,
-                        onLinkTap: (linkUrl,
-                   context,
-                   attributes,
-                   element) {
-                          CommonUtil()
-                              .openWebViewNew(widget.title, linkUrl, false);
-                        },
-                      ),
-                    ),
-                  ) */
-              Expanded(
-                child: widget?.metaDataForURL?.descriptionURL != null &&
-                        widget?.metaDataForURL?.descriptionURL != ''
-                    ? Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                        child: InAppWebView(
-                            initialUrlRequest: URLRequest(
-                              url: Uri.parse(
-                                  widget?.metaDataForURL?.descriptionURL ?? ''),
-                              headers: {},
-                            ),
-                            initialOptions: InAppWebViewGroupOptions(
-                              crossPlatform: InAppWebViewOptions(
-                                  // debuggingEnabled: true,
-                                  useOnDownloadStart: true),
-                            ),
-                            onWebViewCreated: (controller) {
-                              webView = controller;
-                            },
-                            onLoadStart: (controller, url) {},
-                            onLoadStop: (controller, url) {},
-                            onDownloadStart: (controller, url) async {
-                              var common = CommonUtil();
-                              //TODO: Check if any error in Inappwebview
-                              var updatedData =
-                                  common.getFileNameAndUrl(url.path);
-                              if (updatedData.isEmpty) {
-                                common.showStatusToUser(
-                                    ResultFromResponse(false,
-                                        'incorrect url, Failed to download'),
-                                    _scaffoldKey);
-                              } else {
-                                if (Platform.isIOS) {
-                                  downloadFileForIos(updatedData);
-                                } else {
-                                  await downloadFileForIos(updatedData);
-                                  // await common.downloader(updatedData.first);
-                                }
-                              }
-                            }),
-                        //),
-                      )
-                    : Container(),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  OutlineButton(
-                    //hoverColor: Color(getMyPrimaryColor()),
-                    onPressed:
-                        /*isDisable
-                        ? null
-                        :*/
-                        () async {
-                      if (issubscription == '0') {
-                        if (isFrom == strProviderCare) {
-                          var isSelected = Provider.of<PlanWizardViewModel>(
-                                  context,
-                                  listen: false)
-                              .checkItemInCart(packageId, isFrom,
-                                  providerId: providerId);
-                          if (isSelected) {
-                            await Provider.of<PlanWizardViewModel>(context,
-                                    listen: false)
-                                ?.removeCart(
-                                    packageId: packageId, isFrom: isFrom);
-                            Navigator.pop(context);
-                          } else {
-                            if (Provider.of<PlanWizardViewModel>(context,
-                                        listen: false)
-                                    ?.currentPackageProviderCareId !=
-                                '') {
-                              await Provider.of<PlanWizardViewModel>(context,
-                                      listen: false)
-                                  ?.removeCart(
-                                      packageId:
-                                          Provider.of<PlanWizardViewModel>(
-                                                  context,
-                                                  listen: false)
-                                              ?.currentPackageProviderCareId,
-                                      isFrom: isFrom);
-                              Navigator.pop(context);
-                            }
-
-                            bool isItemInCart =
-                                Provider.of<PlanWizardViewModel>(context,
-                                        listen: false)
-                                    .checkAllItemsForProviderCare();
-                            if (isItemInCart) {
-                              await Provider.of<PlanWizardViewModel>(context,
-                                      listen: false)
-                                  ?.removeCart(
-                                      packageId: Provider.of<
-                                                  PlanWizardViewModel>(context,
-                                              listen: false)
-                                          ?.currentCartProviderCarePackageId,
-                                      isFrom: isFrom);
-                              Navigator.pop(context);
-                            }
-
-                            await Provider.of<PlanWizardViewModel>(context,
-                                    listen: false)
-                                ?.addToCartItem(
-                                    packageId: packageId,
-                                    price: price,
-                                    isRenew: isRenew,
-                                    providerId: providerId,
-                                    isFromAdd: isFrom)
-                                .then((value) {
-                              if (value.isSuccess) {
-                                Navigator.pop(context);
-                              }
-                            });
-                          }
-                        } else if (isFrom == strFreeCare) {
-                          var isSelected = Provider.of<PlanWizardViewModel>(
-                                  context,
-                                  listen: false)
-                              .checkItemInCart(packageId, isFrom,
-                                  providerId: providerId);
-                          if (isSelected) {
-                            await Provider.of<PlanWizardViewModel>(context,
-                                    listen: false)
-                                ?.removeCart(
-                                    packageId: packageId, isFrom: isFrom);
-                            Navigator.pop(context);
-                          } else {
-                            if (Provider.of<PlanWizardViewModel>(context,
-                                        listen: false)
-                                    ?.currentPackageFreeCareId !=
-                                '') {
-                              await Provider.of<PlanWizardViewModel>(context,
-                                      listen: false)
-                                  ?.removeCart(
-                                      packageId:
-                                          Provider.of<PlanWizardViewModel>(
-                                                  context,
-                                                  listen: false)
-                                              ?.currentPackageFreeCareId,
-                                      isFrom: isFrom);
-                              Navigator.pop(context);
-                            }
-
-                            bool isItemInCart =
-                                Provider.of<PlanWizardViewModel>(context,
-                                        listen: false)
-                                    .checkAllItemsForFreeCare();
-                            if (isItemInCart) {
-                              await Provider.of<PlanWizardViewModel>(context,
-                                      listen: false)
-                                  ?.removeCart(
-                                      packageId:
-                                          Provider.of<PlanWizardViewModel>(
-                                                  context,
-                                                  listen: false)
-                                              ?.currentCartFreeCarePackageId,
-                                      isFrom: isFrom);
-                              Navigator.pop(context);
-                            }
-
-                            await Provider.of<PlanWizardViewModel>(context,
-                                    listen: false)
-                                ?.addToCartItem(
-                                    packageId: packageId,
-                                    price: price,
-                                    isRenew: isRenew,
-                                    providerId: providerId,
-                                    isFromAdd: isFrom)
-                                .then((value) {
-                              if (value.isSuccess) {
-                                Navigator.pop(context);
-                              }
-                            });
-                          }
-                        } else if (isFrom == strProviderDiet) {
-                          var isSelected = Provider.of<PlanWizardViewModel>(
-                                  context,
-                                  listen: false)
-                              .checkItemInCart(packageId, isFrom);
-                          if (isSelected) {
-                            await Provider.of<PlanWizardViewModel>(context,
-                                    listen: false)
-                                ?.removeCart(
-                                    packageId: packageId, isFrom: isFrom);
-                            Navigator.pop(context);
-                          } else {
-                            if (Provider.of<PlanWizardViewModel>(context,
-                                        listen: false)
-                                    ?.currentPackageProviderDietId !=
-                                '') {
-                              await Provider.of<PlanWizardViewModel>(context,
-                                      listen: false)
-                                  ?.removeCart(
-                                      packageId:
-                                          Provider.of<PlanWizardViewModel>(
-                                                  context,
-                                                  listen: false)
-                                              ?.currentPackageProviderDietId,
-                                      isFrom: isFrom);
-                              Navigator.pop(context);
-                            }
-
-                            bool isItemInCart =
-                                Provider.of<PlanWizardViewModel>(context,
-                                        listen: false)
-                                    .checkAllItemsForProviderDiet();
-                            if (isItemInCart) {
-                              await Provider.of<PlanWizardViewModel>(context,
-                                      listen: false)
-                                  ?.removeCart(
-                                      packageId: Provider.of<
-                                                  PlanWizardViewModel>(context,
-                                              listen: false)
-                                          ?.currentCartProviderDietPackageId,
-                                      isFrom: isFrom);
-                              Navigator.pop(context);
-                            }
-
-                            await Provider.of<PlanWizardViewModel>(context,
-                                    listen: false)
-                                ?.addToCartItem(
-                                    packageId: packageId,
-                                    price: price,
-                                    isRenew: isRenew,
-                                    providerId: providerId,
-                                    isFromAdd: isFrom)
-                                .then((value) {
-                              if (value.isSuccess) {
-                                Navigator.pop(context);
-                              }
-                            });
-                          }
-                        } else if (isFrom == strFreeDiet) {
-                          var isSelected = Provider.of<PlanWizardViewModel>(
-                                  context,
-                                  listen: false)
-                              .checkItemInCart(packageId, isFrom);
-                          if (isSelected) {
-                            await Provider.of<PlanWizardViewModel>(context,
-                                    listen: false)
-                                ?.removeCart(
-                                    packageId: packageId, isFrom: isFrom);
-                            Navigator.pop(context);
-                          } else {
-                            if (Provider.of<PlanWizardViewModel>(context,
-                                        listen: false)
-                                    ?.currentPackageFreeDietId !=
-                                '') {
-                              await Provider.of<PlanWizardViewModel>(context,
-                                      listen: false)
-                                  ?.removeCart(
-                                      packageId:
-                                          Provider.of<PlanWizardViewModel>(
-                                                  context,
-                                                  listen: false)
-                                              ?.currentPackageFreeDietId,
-                                      isFrom: isFrom);
-                              Navigator.pop(context);
-                            }
-
-                            bool isItemInCart =
-                                Provider.of<PlanWizardViewModel>(context,
-                                        listen: false)
-                                    .checkAllItemsForFreeDiet();
-                            if (isItemInCart) {
-                              await Provider.of<PlanWizardViewModel>(context,
-                                      listen: false)
-                                  ?.removeCart(
-                                      packageId:
-                                          Provider.of<PlanWizardViewModel>(
-                                                  context,
-                                                  listen: false)
-                                              ?.currentCartFreeDietPackageId,
-                                      isFrom: isFrom);
-                              Navigator.pop(context);
-                            }
-
-                            await Provider.of<PlanWizardViewModel>(context,
-                                    listen: false)
-                                ?.addToCartItem(
-                                    packageId: packageId,
-                                    price: price,
-                                    isRenew: isRenew,
-                                    providerId: providerId,
-                                    isFromAdd: isFrom)
-                                .then((value) {
-                              if (value.isSuccess) {
-                                Navigator.pop(context);
-                              }
-                            });
-                          }
-                        }
-                      }
-                      /*else {
-                              CommonUtil().unSubcribeAlertDialog(context,
-                                  packageId: packageId, refresh: () {
-                                Navigator.of(context).pop();
-                              });
-                              }*/
-                    },
-                    borderSide: BorderSide(
-                      color: issubscription == '0'
-                          ? Color(
-                              CommonUtil().getMyPrimaryColor(),
-                            )
-                          : Colors.grey,
-                    ),
-                    //hoverColor: Color(getMyPrimaryColor()),
-                    child: Text(
-                      getText(),
-                      style: TextStyle(
-                        color: getTextColor(isDisable, issubscription),
-                        fontSize: 13.sp,
-                      ),
-                    ),
-                    // child: Text(
-                    //   issubscription == '0' ? strSubscribe : strSubscribed,
-                    //   style: TextStyle(
-                    //     color: getTextColor(isDisable, issubscription),
-                    //     fontSize: 13.sp,
-                    //   ),
-                    // ),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  OutlineButton(
-                    //hoverColor: Color(getMyPrimaryColor()),
-                    onPressed: () async {
-                      // open profile page
-                      //Navigator.of(context).pop();
-                      Navigator.of(context).pop();
-                    },
-                    borderSide: BorderSide(
-                      color: Color(
-                        CommonUtil().getMyPrimaryColor(),
-                      ),
-                    ),
-                    //hoverColor: Color(getMyPrimaryColor()),
-                    child: Text(
-                      'cancel'.toUpperCase(),
-                      style: TextStyle(
-                        color: Color(CommonUtil().getMyPrimaryColor()),
-                        fontSize: 13.sp,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+                );
+              }
+            }
+          },
         ),
       ),
     );
@@ -803,7 +945,14 @@ class PlanDetail extends State<MyPlanDetailView> {
   String getText() {
     String text = '';
 
-    if (isFrom == strProviderCare) {
+    if (isFrom == strDeepLink) {
+      if (issubscription == '0') {
+        text = strAddToCart;
+      } else {
+        text = strSubscribed;
+      }
+    }
+    else if (isFrom == strProviderCare) {
       text = getAddCartText();
     } else if (isFrom == strFreeCare) {
       text = getAddCartTextFreeCare();
@@ -811,7 +960,8 @@ class PlanDetail extends State<MyPlanDetailView> {
       text = getAddCartTextProviderDiet();
     } else if (isFrom == strFreeDiet) {
       text = getAddCartTextFreeDiet();
-    } else {
+    }
+     else {
       text = '';
     }
 

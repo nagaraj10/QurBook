@@ -1,6 +1,7 @@
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/video_call/model/CallArguments.dart';
+import 'package:myfhb/video_call/utils/audiocall_provider.dart';
 
 class NotificationModel {
   String title;
@@ -28,29 +29,33 @@ class NotificationModel {
   String patientPicture;
   String externalLink;
   CallArguments callArguments;
+  String callType;
+
   Map<int, dynamic> redirectData;
   String planId;
 
-  NotificationModel(
-      {this.title,
-      this.body,
-      this.ringtone,
-      this.templateName,
-      this.userId,
-      this.idToHighlight,
-      this.redirect,
-      this.healthRecordMetaIds,
-      this.isCall,
-      this.needToHighlight,
-      this.meeting_id,
-      this.doctorId,
-      this.username,
-      this.type,
-      this.eventId,
-      this.rawTitle,
-      this.rawBody,
-      this.externalLink,
-      this.planId});
+  NotificationModel({
+    this.title,
+    this.body,
+    this.ringtone,
+    this.templateName,
+    this.userId,
+    this.idToHighlight,
+    this.redirect,
+    this.healthRecordMetaIds,
+    this.isCall,
+    this.needToHighlight,
+    this.meeting_id,
+    this.doctorId,
+    this.username,
+    this.type,
+    this.eventId,
+    this.rawTitle,
+    this.rawBody,
+    this.externalLink,
+    this.planId,
+    this.callType,
+  });
 
   Map<String, dynamic> toMap() {
     return {
@@ -69,7 +74,8 @@ class NotificationModel {
       'username': username,
       'type': type,
       'externalLink': externalLink,
-      'planId': planId
+      'planId': planId,
+      'callType': callType,
     };
   }
 
@@ -89,6 +95,7 @@ class NotificationModel {
     username = message['username'];
     type = message['type'];
     externalLink = message['externalLink'];
+    callType = message['callType'];
   }
 
   NotificationModel.fromMap(Map<String, dynamic> messageFromNative) {
@@ -100,6 +107,9 @@ class NotificationModel {
         final message = aps[parameters.alert];
         if (message[parameters.title] != null) {
           title = message[parameters.title];
+        }
+        if (message[parameters.callType] != null) {
+          callType = message[parameters.callType];
         }
         if (message[parameters.body] != null) {
           body = message[parameters.body];
@@ -158,6 +168,9 @@ class NotificationModel {
         if (message[parameters.patientName] != null) {
           patientName = message[parameters.patientName];
         }
+        if (message[parameters.gcmpatientName] != null) {
+          patientName = message[parameters.gcmpatientName];
+        }
         if (message[parameters.patientPicture] != null) {
           patientPicture = message[parameters.patientPicture];
         }
@@ -170,7 +183,7 @@ class NotificationModel {
         if (message[parameters.gcmExternalLink] != null) {
           externalLink = message[parameters.gcmExternalLink];
         }
-        
+
         if (message[parameters.gcmplanId] != null) {
           planId = message[parameters.gcmplanId];
         }
@@ -201,7 +214,8 @@ class NotificationModel {
           role: ClientRole.Broadcaster,
           channelName: meeting_id,
           userName: username,
-          doctorId: doctorId);
+          doctorId: doctorId,
+          doctorName:doctorName,);
     }
   }
 
@@ -277,13 +291,19 @@ class NotificationModel {
       planId = message[parameters.planId];
     }
     if (message[parameters.gcmplanId] != null) {
-          planId = message[parameters.gcmplanId];
-        }
+      planId = message[parameters.gcmplanId];
+    }
     if (message[parameters.externalLink] != null) {
       externalLink = message[parameters.externalLink];
     }
     if (message[parameters.gcmExternalLink] != null) {
       externalLink = message[parameters.gcmExternalLink];
+    }
+    if (message[parameters.callType] != null) {
+      callType = message[parameters.callType];
+    }
+    if (message[parameters.gcmpatientName] != null) {
+      patientName = message[parameters.gcmpatientName];
     }
   }
 }

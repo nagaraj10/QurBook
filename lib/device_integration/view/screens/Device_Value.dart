@@ -64,7 +64,7 @@ class EachDeviceValues extends StatefulWidget {
 class _EachDeviceValuesState extends State<EachDeviceValues> {
   GlobalKey<ScaffoldState> scaffold_state = GlobalKey<ScaffoldState>();
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
-  String errorMsg = '';
+  String errorMsg = '',errorMsgDia='',errorMsgSys='';
   bool onOkClicked = false;
   String categoryName = STR_DEVICES;
 
@@ -643,12 +643,14 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                   deviceController,
                                   (errorValue) {
                                     setState(() {
-                                      errorMsg = errorValue;
+                                      errorMsgSys = errorValue??"";
+                                      errorMsg=errorMsgSys;
+
                                     });
                                   },
-                                  errorMsg,
+                                    errorMsgSys,
                                   variable.strbpunit,
-                                  deviceName,
+                                  deviceName,range: "Sys"
                                 )
                               ],
                             ),
@@ -696,12 +698,13 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                             diaStolicPressure,
                             (errorValue) {
                               setState(() {
-                                errorMsg = errorValue;
+                                errorMsgDia = errorValue;
+                                errorMsg=errorMsgDia;
                               });
                             },
-                            errorMsg,
+                              errorMsgDia,
                             variable.strbpunit,
-                            deviceName,
+                            deviceName,range: "Dia"
                           )
                         ],
                       )),
@@ -760,7 +763,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                   },
                                   errorMsg,
                                   variable.strpulse,
-                                  deviceName,
+                                  deviceName,range:""
                                 ),
                               ],
                             ),
@@ -869,7 +872,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                         },
                         errorMsg,
                         'F',
-                        deviceName,
+                        deviceName,range: "",device:"Temp"
                       )
                     ],
                   ),
@@ -971,7 +974,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                         setState(() {
                           errorMsg = errorValue;
                         });
-                      }, errorMsg, variable.strpulseUnit, deviceName),
+                      }, errorMsg, variable.strpulseUnit, deviceName,range: ""),
                     ],
                   )),
                   Expanded(
@@ -1021,7 +1024,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                         setState(() {
                           errorMsg = errorValue;
                         });
-                      }, errorMsg, variable.strpulse, deviceName),
+                      }, errorMsg, variable.strpulse, deviceName,range: ""),
                     ],
                   ))
                 ],
@@ -1166,7 +1169,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                   setState(() {
                     errorMsg = errorValue;
                   });
-                }, errorMsg, variable.strGlucUnit, deviceName)
+                }, errorMsg, variable.strGlucUnit, deviceName,range:isSelected[0]==true?'Fast':'PP')
               ],
             )),
             SizedBox(

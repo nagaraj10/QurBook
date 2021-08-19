@@ -235,11 +235,35 @@
           }
         },
         {
+          "client_id": "588661578434-is2sdat8babreonacckd8o2lfj15ifr1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ventechsolutions.myFHB",
+            "certificate_hash": "02bcdcbfc88d952b8d5ad9d3e2e5205180796c32"
+          }
+        },
+        {
           "client_id": "588661578434-mqkfedgtg1enrvnsffmkvrjbi2uulssv.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.ventechsolutions.myFHB",
             "certificate_hash": "8bb397cb79c0b6a635111d263df4e5a315aba1e2"
+          }
+        },
+        {
+          "client_id": "588661578434-mvf7mdkj4cl18ff5o1rokt7nipd7c6rk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ventechsolutions.myFHB",
+            "certificate_hash": "361babfe70c16d9a228902e541b7960455c00b26"
+          }
+        },
+        {
+          "client_id": "588661578434-nvk3esukdqgsdig9iqtua474tc11barq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ventechsolutions.myFHB",
+            "certificate_hash": "711508af854c2384f5ca0449b5423ea7981b816f"
           }
         },
         {

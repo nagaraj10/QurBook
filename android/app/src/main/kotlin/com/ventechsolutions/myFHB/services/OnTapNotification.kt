@@ -31,6 +31,7 @@ class OnTapNotification:BroadcastReceiver() {
         val message = p1?.getStringExtra(p0?.getString(R.string.message))
         val raw_title = p1?.getStringExtra(Constants.PROP_RAWTITLE)
         val raw_body = p1?.getStringExtra(Constants.PROP_RAWBODY)
+        val user_id = p1?.getStringExtra(Constants.PROB_USER_ID)
 
         nsManager.cancel(notificationId!! as Int)
         p0.sendBroadcast(Intent(p0.getString(R.string.intaction_accept_call))
@@ -59,6 +60,7 @@ class OnTapNotification:BroadcastReceiver() {
         launchIntent?.putExtra(Constants.PROP_RAWTITLE, raw_title)
         launchIntent?.putExtra(Constants.PROP_TEMP_NAME,templateName)
         launchIntent?.putExtra(Constants.PROB_EXTERNAL_LINK,externalLink)
+        launchIntent?.putExtra(Constants.PROB_USER_ID,user_id)
         p0.startActivity(launchIntent)
     }
 }

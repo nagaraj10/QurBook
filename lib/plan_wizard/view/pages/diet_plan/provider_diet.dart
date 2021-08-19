@@ -1,15 +1,19 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myfhb/add_provider_plan/view/AddProviderPlan.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
 import 'package:myfhb/plan_wizard/view/widgets/diet_plan_card.dart';
 import 'package:myfhb/plan_wizard/view/widgets/next_button.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
+import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
@@ -48,6 +52,9 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
 
     planListModel = Provider.of<PlanWizardViewModel>(context, listen: false)
         .getDietPlanListNew(isFrom: strProviderDiet);
+
+    Provider.of<PlanWizardViewModel>(context, listen: false)?.isDietListEmpty =
+        false;
   }
 
   @override
@@ -166,6 +173,35 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
             carePlanListLength = isSearch
                 ? planSearchList.length
                 : snapshot?.data?.result?.length ?? 0;
+            if (((Provider.of<PlanWizardViewModel>(context, listen: false)
+                    ?.isDynamicLink) ??
+                false)) {
+              Future.delayed(Duration(), () {
+                var searchText =
+                    Provider.of<PlanWizardViewModel>(context, listen: false)
+                            ?.dynamicLinkSearchText ??
+                        '';
+                if (searchText?.isNotEmpty ?? false) {
+                  isSearch = true;
+                  onSearched(searchText, 'localSearch');
+                }
+                Provider.of<PlanWizardViewModel>(context, listen: false)
+                    ?.isDynamicLink = false;
+              });
+            }
+
+            Future.delayed(Duration(milliseconds: 100), () {
+              bool needReload =
+                  Provider.of<PlanWizardViewModel>(context, listen: false)
+                          ?.isDietListEmpty !=
+                      (snapshot?.data?.result.length > 0 ? true : false);
+
+              Provider.of<PlanWizardViewModel>(context, listen: false)
+                  ?.updateBottonLayoutEmptyDietList(
+                      snapshot?.data?.result.length > 0 ? true : false,
+                      needReload: needReload);
+            });
+
             return dietPlanList(
                 isSearch ? planSearchList : snapshot?.data?.result);
           } else {
@@ -173,9 +209,10 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
               child: SizedBox(
                 height: 1.sh / 1.3,
                 child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 8.0),
                     child: Center(
-                  child: Text(variable.strNoPackages),
-                )),
+                      child: clickTextAllEmpty(),
+                    )),
               ),
             );
           }
@@ -202,9 +239,10 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
             child: SizedBox(
               height: 1.sh / 1.3,
               child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0),
                   child: Center(
-                child: Text(variable.strNoPlans),
-              )),
+                    child: clickTextAllEmpty(),
+                  )),
             ),
           );
   }
@@ -311,5 +349,119 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
             planListProvider.getDietPlanListNew(isFrom: strProviderDiet);
       });
     }
+  }
+
+
+  Widget clickTextAllEmpty() {
+    TextStyle defaultStyle = TextStyle(color: Colors.grey);
+    TextStyle linkStyle = TextStyle(
+        color: Color(CommonUtil().getMyPrimaryColor()), fontSize: 18.sp);
+
+    if (Provider.of<PlanWizardViewModel>(context, listen: false)
+        ?.providerHosCount ==
+        0 &&
+        Provider.of<PlanWizardViewModel>(context, listen: false)
+            ?.planWizardProviderCount ==
+            0) {
+      return RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+          style: defaultStyle,
+          children: <TextSpan>[
+            TextSpan(text: strNoPlansCheckFree),
+          ],
+        ),
+      );
+    } else if (Provider.of<PlanWizardViewModel>(context, listen: false)
+        ?.planWizardProviderCount ==
+        0) {
+      return RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+          style: defaultStyle,
+          children: <TextSpan>[
+            TextSpan(text: strNoPlansCheckFree),
+          ],
+        ),
+      );
+    } else if (Provider.of<PlanWizardViewModel>(context, listen: false)
+        ?.planWizardProviderCount !=
+        0 && Provider.of<PlanWizardViewModel>(context, listen: false)
+        ?.providerHosCount !=
+        0) {
+      return RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+          style: defaultStyle,
+          children: <TextSpan>[
+            TextSpan(
+                text: 'Your providers do not offer diet plans yet for ' +
+                    planListProvider?.healthTitle ??
+                    ''),
+            TextSpan(
+                text: ' Tap here',
+                style: linkStyle,
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () {
+                    callMyProviderPage();
+                  }),
+            TextSpan(text: ' to add a new provider that offers a plan'),
+          ],
+        ),
+      );
+    } else if (Provider.of<PlanWizardViewModel>(context, listen: false)
+        ?.providerHosCount ==
+        0 && Provider.of<PlanWizardViewModel>(context, listen: false)
+        ?.planWizardProviderCount !=
+        0) {
+      return RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+          style: defaultStyle,
+          children: <TextSpan>[
+            TextSpan(text: 'You\'ve no providers added to your list.'),
+            TextSpan(
+                text: 'Tap here',
+                style: linkStyle,
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () {
+                    callMyProviderPage();
+                  }),
+            TextSpan(
+                text: ' to add a provider and see plans recommended by them'),
+          ],
+        ),
+      );
+    } else {
+      return RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+          style: defaultStyle,
+          children: <TextSpan>[
+            TextSpan(text: strNoPlansCheckFree),
+          ],
+        ),
+      );
+    }
+  }
+
+  void callMyProviderPage(){
+
+    Get.to(AddProviderPlan(
+        planListProvider.selectedTag)).then((value) =>  setState(() {
+      planListModel = Provider.of<PlanWizardViewModel>(context, listen: false)
+          .getDietPlanListNew(isFrom: strProviderDiet);
+    }));
+
+    /*Navigator.pushNamed(
+      Get.context,
+      rt_UserAccounts,
+      arguments: UserAccountsArguments(
+        selectedIndex: 2,
+      ),
+    ).then((value) =>  setState(() {
+      planListModel = Provider.of<PlanWizardViewModel>(context, listen: false)
+          .getDietPlanListNew(isFrom: strProviderDiet);
+    }));*/
   }
 }

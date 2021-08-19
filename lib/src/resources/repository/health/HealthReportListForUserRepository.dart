@@ -115,7 +115,7 @@ class HealthReportListForUserRepository {
     var signInData = {};
     signInData[parameters.strHealthRecordMetaId] = metaId;
     signInData[parameters.strDestinationUserId] = familyID;
-    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    String userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
     signInData[parameters.strSourceUserId] = userID;
     var jsonString = convert.jsonEncode(signInData);
 

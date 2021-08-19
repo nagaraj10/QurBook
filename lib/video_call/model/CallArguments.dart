@@ -6,16 +6,18 @@ class CallArguments {
   ClientRole role;
   String doctorId;
   bool isAppExists;
-
+  String doctorName;
   String doctorPicture;
   String meetingId;
 
-  CallArguments(
-      {this.channelName,
-      this.userName,
-      this.role,
-      this.doctorId,
-      this.isAppExists,
-      this.doctorPicture,
-      this.meetingId});
+  CallArguments({
+    this.channelName,
+    this.userName,
+    this.role,
+    this.doctorId,
+    this.isAppExists,
+    this.doctorPicture,
+    this.meetingId,
+    this.doctorName,
+  });
 }

@@ -26,6 +26,25 @@ class _TabCareMainState extends State<TabCareMain>
 
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(_setActiveTabIndex);
+
+    if ((Provider.of<PlanWizardViewModel>(context, listen: false)
+            ?.isDynamicLink) ??
+        false) {
+      Future.delayed(Duration(), () {
+        var tabIndex = Provider.of<PlanWizardViewModel>(context, listen: false)
+            ?.dynamicLinkTabIndex;
+        Provider.of<PlanWizardViewModel>(context, listen: false)
+            ?.changeCurrentTab(tabIndex);
+        _tabController.animateTo(tabIndex);
+      });
+    } else {
+      Provider.of<PlanWizardViewModel>(context, listen: false)?.currentTab = 0;
+      Provider.of<PlanWizardViewModel>(context, listen: false)?.currentPage = 1;
+    }
+    Provider.of<PlanWizardViewModel>(context, listen: false)?.isListEmpty =
+        false;
+    Provider.of<PlanWizardViewModel>(context, listen: false)?.isDietListEmpty =
+        false;
   }
 
   void _setActiveTabIndex() {

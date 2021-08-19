@@ -63,6 +63,7 @@ const String strweightUnit = 'weightUnit';
 const String strUnits = 'units';
 const String strminValue = 'minValue';
 const String strmaxValue = 'maxValue';
+const String strRange = 'range';
 
 const String strmediaMasterIds = 'mediaMasterIds';
 
@@ -191,6 +192,7 @@ const String isAudioFile = 'isAudioFile';
 const String MP3 = 'MP3';
 
 const String regimentInput = 'q';
+const String regimentToTranslateInput = 'toTranslateContent';
 const String regimentSource = 'source';
 const String regimentTarget = 'target';
 const String regimentFormat = 'format';
@@ -313,6 +315,8 @@ const String cancellationAppointmentConfirmation =
 const String ok = 'Ok';
 const String yes = 'Yes';
 const String no = 'No';
+const String btn_switch = 'Switch';
+const String btn_decline = 'Decline';
 const String appointmentCreatedMessage =
     'Created a new appointment successfully.';
 const String someWentWrong = 'Booking appointment failed.. Some went wrong!';
@@ -579,6 +583,7 @@ const String GCMUserId = 'gcm.notification.userId';
 const String strgcmAppointmentId = 'gcm.notification.appointmentId';
 const String gcmExternalLink = 'gcm.notification.externalLink';
 const String gcmplanId = 'gcm.notification.planId';
+const String gcmpatientName = 'gcm.notification.patientName';
 
 const String gcmredirectTo = 'gcm.notification.redirectTo';
 const String externalLink = 'externalLink';
@@ -592,6 +597,7 @@ const String appointment = 'appointment';
 const String ack = 'ack';
 const String alert = 'alert';
 const String title = 'title';
+const String callType = 'callType';
 const String body = 'body';
 const String sound = 'sound';
 const String PROP_EVEID = 'eventId';

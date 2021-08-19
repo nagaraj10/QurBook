@@ -46,7 +46,8 @@ class RecordInfoCard {
                     child: metaInfo.doctor != null
                         ? CommonUtil().getDoctorProfileImageWidget(metaInfo
                             .doctor
-                            .profilePicThumbnailUrl) //getDoctorProfileImageWidget(metaInfo)
+                            .profilePicThumbnailUrl,metaInfo
+                        .doctor) //getDoctorProfileImageWidget(metaInfo)
                         : Container(
                             width: 50.0.h,
                             height: 50.0.h,
@@ -95,7 +96,7 @@ class RecordInfoCard {
                             /* toBeginningOfSentenceCase(
                                     metaInfo.hospital.healthOrganizationName) */
                             metaInfo?.hospital?.healthOrganizationName
-                                ?.capitalizeFirstofEach,
+                                ?.capitalizeFirstofEach??"",
                             softWrap: false,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(

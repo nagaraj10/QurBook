@@ -39,9 +39,10 @@ class FHBBasicWidget {
   var plusIconSize = 14.0;
 
   UnitsMesurements unitsMesurements;
-  setValues(String unitsTosearch) {
+
+  setValues(String unitsTosearch, String range) {
     commonConstants
-        .getValuesForUnit(unitsTosearch)
+        .getValuesForUnit(unitsTosearch, range)
         .then((unitsMesurementsClone) {
       unitsMesurements = unitsMesurementsClone;
     });
@@ -261,51 +262,6 @@ class FHBBasicWidget {
     }
   }
 
-  Widget getProfilePicWidgeUsingUrlForProfile(
-    MyProfileModel myProfile, {
-    Color textColor,
-    Color circleColor,
-  }) {
-    if (myProfile != null && myProfile.result != null) {
-      if (myProfile.result.profilePicThumbnailUrl != '') {
-        return Image.network(
-          myProfile.result.profilePicThumbnailUrl,
-          height: 50.0.h,
-          width: 50.0.h,
-          fit: BoxFit.cover,
-          headers: {HttpHeaders.authorizationHeader: authToken},
-          errorBuilder: (context, exception, stackTrace) {
-            return Container(
-              height: 50.0.h,
-              width: 50.0.h,
-              color: circleColor ?? Color(CommonUtil().getMyPrimaryColor()),
-              child: Center(
-                child: getFirstLastNameTextForProfile(
-                  myProfile,
-                  textColor: textColor,
-                ),
-              ),
-            );
-          },
-        );
-      } else {
-        return Container(
-          color: Color(fhbColors.bgColorContainer),
-          height: 50.0.h,
-          width: 50.0.h,
-        );
-      }
-    } else {
-      return Container(
-        color: Color(fhbColors.bgColorContainer),
-        height: 50.0.h,
-        width: 50.0.h,
-      );
-    }
-
-    /* });*/
-  }
-
   Future<String> setAuthToken() async {
     authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     return authToken;
@@ -326,7 +282,9 @@ class FHBBasicWidget {
       TextEditingController controllerValue,
       Function(String) onTextChanged,
       String error,
-      String unitsTosearch) {
+      String unitsTosearch,
+      {String range,
+      String device}) {
     var errorValue = error;
     return Container(
         width: 1.sw - 60,
@@ -340,19 +298,30 @@ class FHBBasicWidget {
               errorMaxLines: 2),
           keyboardType: TextInputType.number,
           onChanged: (value) {
-            final number = int.parse(value);
-            if (number < unitsMesurements.minValue ||
-                number > unitsMesurements.maxValue) {
-              errorValue = CommonConstants.strErrorStringForDevices +
-                  ' ' +
-                  unitsMesurements.minValue.toString() +
-                  variable.strAnd +
-                  unitsMesurements.maxValue.toString();
+            commonConstants
+                .getValuesForUnit(unitsTosearch, range)
+                .then((unitsMesurementsClone) {
+              unitsMesurements = unitsMesurementsClone;
 
-              onTextChanged(errorValue);
-            } else {
-              onTextChanged('');
-            }
+              var number;
+              if (device == "Temp") {
+                number = double.parse(value);
+              } else {
+                number = int.parse(value);
+              }
+              if (number < unitsMesurements.minValue ||
+                  number > unitsMesurements.maxValue) {
+                errorValue = CommonConstants.strErrorStringForDevices +
+                    ' ' +
+                    unitsMesurements.minValue.toString() +
+                    variable.strAnd +
+                    unitsMesurements.maxValue.toString();
+
+                onTextChanged(errorValue);
+              } else {
+                onTextChanged('');
+              }
+            });
           },
         ));
   }
@@ -783,10 +752,12 @@ class FHBBasicWidget {
       Function(String) onTextChanged,
       String error,
       String unitsTosearch,
-      String deviceName) {
+      String deviceName,
+      {String range,
+      String device}) {
     var node = FocusScope.of(context);
 
-    setValues(unitsTosearch);
+    //setValues(unitsTosearch,range);
 
     var valueEnterd = '';
     var errorValue = error;
@@ -821,7 +792,8 @@ class FHBBasicWidget {
             } else {
               node.nextFocus();
             }
-          }, // Move focus to next
+          },
+          // Move focus to next
           decoration: InputDecoration(
               counterText: '',
               border: UnderlineInputBorder(
@@ -839,61 +811,80 @@ class FHBBasicWidget {
               : TextInputType.number,
           cursorWidth: 0.5.w,
           onChanged: (value) {
-            if (value.length < 4) {
-              valueEnterd = value;
-              final number = int.parse(value);
-              if (number < unitsMesurements.minValue ||
-                  number > unitsMesurements.maxValue) {
-                errorValue = CommonConstants.strErrorStringForDevices +
-                    ' ' +
-                    unitsMesurements.minValue.toString() +
-                    variable.strAnd +
-                    unitsMesurements.maxValue.toString();
+            //setValues(unitsTosearch,range);
+            commonConstants
+                .getValuesForUnit(unitsTosearch, range)
+                .then((unitsMesurementsClone) {
+              unitsMesurements = unitsMesurementsClone;
 
-                onTextChanged(errorValue);
-              } else {
-                onTextChanged('');
-                if (deviceName != Constants.STR_WEIGHING_SCALE) {
+              if (value.length < 4) {
+                valueEnterd = value;
+                var number;
+                if (device == "Temp") {
+                  number = double.parse(value);
+                } else {
+                  number = int.parse(value);
+                }
+                if (number < unitsMesurements.minValue ||
+                    number > unitsMesurements.maxValue) {
+                  errorValue = CommonConstants.strErrorStringForDevices +
+                      ' ' +
+                      unitsMesurements.minValue.toString() +
+                      variable.strAnd +
+                      unitsMesurements.maxValue.toString();
+
+                  onTextChanged(errorValue);
+                } else {
+                  onTextChanged('');
+                  if (deviceName != Constants.STR_WEIGHING_SCALE) {
+                    node.nextFocus();
+                  }
+                }
+              }
+              else if (deviceName == Constants.STR_THERMOMETER &&
+                  value.length < 5) {
+                valueEnterd = value;
+                var number;
+                if (device == "Temp") {
+                  number = double.parse(value);
+                } else {
+                  number = int.parse(value);
+                }
+                if (number < unitsMesurements.minValue ||
+                    number > unitsMesurements.maxValue) {
+                  errorValue = CommonConstants.strErrorStringForDevices +
+                      ' ' +
+                      unitsMesurements.minValue.toString() +
+                      variable.strAnd +
+                      unitsMesurements.maxValue.toString();
+
+                  onTextChanged(errorValue);
+                } else {
+                  onTextChanged('');
                   node.nextFocus();
                 }
               }
-            } else if (deviceName == Constants.STR_THERMOMETER &&
-                value.length < 5) {
-              valueEnterd = value;
-              final number = int.parse(value);
-              if (number < unitsMesurements.minValue ||
-                  number > unitsMesurements.maxValue) {
-                errorValue = CommonConstants.strErrorStringForDevices +
-                    ' ' +
-                    unitsMesurements.minValue.toString() +
-                    variable.strAnd +
-                    unitsMesurements.maxValue.toString();
-
-                onTextChanged(errorValue);
-              } else {
-                onTextChanged('');
-                node.nextFocus();
-              }
-            } else {
-              if (checkifValueisInRange(controllerValue.text, deviceName)) {
-                Alert.displayConfirmProceed(context,
-                    title: 'Confirmation',
-                    content: CommonConstants.strErrorStringForDevices +
-                        ' ' +
-                        unitsMesurements.minValue.toString() +
-                        variable.strAnd +
-                        unitsMesurements.maxValue.toString(),
-                    confirm: 'Confirm', onPressedConfirm: () {
-                  Navigator.pop(context);
+              else {
+                if (checkifValueisInRange(controllerValue.text, device ?? "")) {
+                  Alert.displayConfirmProceed(context,
+                      title: 'Confirmation',
+                      content: CommonConstants.strErrorStringForDevices +
+                          ' ' +
+                          unitsMesurements.minValue.toString() +
+                          variable.strAnd +
+                          unitsMesurements.maxValue.toString(),
+                      confirm: 'Confirm', onPressedConfirm: () {
+                    Navigator.pop(context);
+                    node.nextFocus();
+                  }, onPressedCancel: () {
+                    controllerValue.text = '';
+                    Navigator.pop(context);
+                  });
+                } else {
                   node.nextFocus();
-                }, onPressedCancel: () {
-                  controllerValue.text = '';
-                  Navigator.pop(context);
-                });
-              } else {
-                node.nextFocus();
+                }
               }
-            }
+            });
           },
         ));
   }
@@ -985,9 +976,14 @@ class FHBBasicWidget {
     }
   }
 
-  bool checkifValueisInRange(String text, String deviceName) {
+  bool checkifValueisInRange(String text, String device) {
     if (text != null && text != '') {
-      final number = int.parse(text);
+      var number;
+      if (device == "Temp") {
+        number = double.parse(text);
+      } else {
+        number = int.parse(text);
+      }
       if (number < unitsMesurements.minValue ||
           number > unitsMesurements.maxValue) {
         return true;

@@ -233,6 +233,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                             FlatButton(
                                                 onPressed: () {
                                                   showDialog(
+                                                      barrierDismissible: false,
                                                       context: Get.context,
                                                       builder: (context) {
                                                         return AlertDialog(
@@ -275,7 +276,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                             Center(
                                                                               child: Text(
                                                                                 CLEAR_CART_MSG,
-                                                                                style: TextStyle(fontSize: 16.0.sp, fontWeight: FontWeight.w500, color: Colors.grey[600]),
+                                                                                style: TextStyle(fontSize: 16.0.sp, fontWeight: FontWeight.w500),
                                                                                 textAlign: TextAlign.center,
                                                                               ),
                                                                             ),
@@ -600,6 +601,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
   void planSubLogic(CheckoutPageProvider value) {
     Provider.of<CheckoutPageProvider>(context, listen: false).loader(true);
 
+    Provider.of<CheckoutPageProvider>(context, listen: false).isMembershipCart =
+        Provider.of<PlanWizardViewModel>(context, listen: false)
+            .checkCartForBundle();
+
     var mCartTotal =
         value?.fetchingCartItemsModel?.result?.totalCartAmount ?? 0;
     var body = {"cartId": "${value?.fetchingCartItemsModel?.result?.cart?.id}"};
@@ -677,6 +682,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       ),
                       onPressed: () {
                         showDialog(
+                            barrierDismissible: false,
                             context: Get.context,
                             builder: (context) {
                               return AlertDialog(
@@ -717,23 +723,22 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                           fontSize: 16.0.sp,
                                                           fontWeight:
                                                               FontWeight.w500,
-                                                          color:
-                                                              Colors.grey[600],
+                                                          color: Colors.black,
                                                         ),
                                                         children: <TextSpan>[
                                                           TextSpan(
                                                             text:
                                                                 '${(item?.productDetail?.planName).toLowerCase()}',
                                                             style: TextStyle(
-                                                              fontSize: 18.0.sp,
+                                                              fontSize: 16.0.sp,
                                                               fontWeight:
                                                                   FontWeight
                                                                       .w500,
-                                                              fontStyle:
-                                                                  FontStyle
-                                                                      .italic,
-                                                              color: Colors
-                                                                  .grey[600],
+                                                              // fontStyle:
+                                                              //     FontStyle
+                                                              //         .italic,
+                                                              color:
+                                                                  Colors.black,
                                                             ),
                                                           ),
                                                           TextSpan(
@@ -743,8 +748,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                               fontWeight:
                                                                   FontWeight
                                                                       .w500,
-                                                              color: Colors
-                                                                  .grey[600],
+                                                              color:
+                                                                  Colors.black,
                                                             ),
                                                           )
                                                         ],

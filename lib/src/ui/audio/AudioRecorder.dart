@@ -167,7 +167,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
           },
           false,
           fileName,
-          fromClass: '',
+          fromClass: widget.arguments.fromClass??'',
         );
       } else {
         if (value != null && value != '')

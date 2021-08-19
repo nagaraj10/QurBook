@@ -97,6 +97,7 @@ import 'package:myfhb/telehealth/features/chat/view/PDFView.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import '../../authentication/constants/constants.dart';
 import 'package:myfhb/widgets/checkout_page.dart';
+import '../../colors/fhb_colors.dart' as fhbColors;
 
 class CommonUtil {
   static String SHEELA_URL = '';
@@ -118,6 +119,9 @@ class CommonUtil {
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
 
   static bool audioPage = false;
+  static bool isRemoteUserOnPause = false;
+  static bool isVideoRequestSent = false;
+  static bool isLocalUserOnPause = false;
 
   static List<String> recordIds = [];
   static List<String> notesId = [];
@@ -1342,20 +1346,30 @@ class CommonUtil {
     return categoryDataObjClone;
   }
 
-  static Future<bool> askPermissionForCameraAndMic() async {
+  static Future<bool> askPermissionForCameraAndMic(
+      {bool isAudioCall = false}) async {
 //    await PermissionHandler().requestPermissions(
 //      [PermissionGroup.camera, PermissionGroup.microphone],
 //    );
 
-    final status = await Permission.microphone.request();
-    final cameraStatus = await Permission.camera.request();
-
-    if (status == PermissionStatus.granted &&
-        cameraStatus == PermissionStatus.granted) {
-      return true;
+    if (isAudioCall) {
+      PermissionStatus micStatus = await Permission.microphone.request();
+      if (micStatus == PermissionStatus.granted) {
+        return true;
+      } else {
+        return false;
+      }
     } else {
-      _handleInvalidPermissions(cameraStatus, status);
-      return false;
+      final status = await Permission.microphone.request();
+      final cameraStatus = await Permission.camera.request();
+
+      if (status == PermissionStatus.granted &&
+          cameraStatus == PermissionStatus.granted) {
+        return true;
+      } else {
+        _handleInvalidPermissions(cameraStatus, status);
+        return false;
+      }
     }
   }
 
@@ -1378,13 +1392,24 @@ class CommonUtil {
     }
   }
 
-  getDoctorProfileImageWidget(String doctorUrl) {
+  getDoctorProfileImageWidget(String doctorUrl, Doctor doctor) {
+    String name=doctor?.firstName?.capitalizeFirstofEach??" "+doctor?.lastName?.capitalizeFirstofEach??" ";
     if (doctorUrl != null && doctorUrl != '') {
       return Image.network(
         doctorUrl,
         height: 50.0.h,
         width: 50.0.h,
         fit: BoxFit.cover,
+        errorBuilder: (context,exception, stackTrace){
+          return Container(
+            height: 50.0.h,
+            width: 50.0.h,
+            color: Color(CommonUtil().getMyPrimaryColor()),
+            child: Center(
+              child: getFirstLastNameText(doctor),
+            ),
+          );
+        },
       );
     } else {
       return SizedBox(
@@ -1396,6 +1421,40 @@ class CommonUtil {
     }
 
     ///load until snapshot.hasData resolves to true
+  }
+
+  Widget getFirstLastNameText(Doctor doctor) {
+    if (doctor != null &&
+        doctor.firstName != null &&
+        doctor.lastName != null) {
+      return Text(
+        doctor.firstName[0].toUpperCase() +
+            doctor.lastName[0].toUpperCase(),
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 22.0.sp,
+          fontWeight: FontWeight.w400,
+        ),
+      );
+    } else if (doctor != null && doctor.firstName != null) {
+      return Text(
+        doctor.firstName[0].toUpperCase(),
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 22.0.sp,
+          fontWeight: FontWeight.w400,
+        ),
+      );
+    } else {
+      return Text(
+        '',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 22.0.sp,
+          fontWeight: FontWeight.w200,
+        ),
+      );
+    }
   }
 
   Future<void> validateToken() async {
@@ -1715,6 +1774,61 @@ class CommonUtil {
     }
   }
 
+  static showFamilyMemberPlanExpiryDialog(String pateintName) async {
+    await Get.defaultDialog(
+      content: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: 16,
+        ),
+        child: Text(
+          "Switch to $pateintName profile in Home screen and Tap on the Renew button again from the Notifications list",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 14,
+          ),
+        ),
+      ),
+      confirm: OutlineButton(
+        onPressed: () {
+          Get.back();
+        },
+        borderSide: BorderSide(color: Color(CommonUtil().getMyPrimaryColor())),
+        child: Text(
+          variable.strOK,
+          style: TextStyle(
+            color: Color(CommonUtil().getMyPrimaryColor()),
+          ),
+        ),
+      ),
+      onConfirm: () {
+        Get.back();
+      },
+      // AlertDialog(
+      //   title: Text(
+      //     "Switch Profile",
+      //     style: TextStyle(fontSize: 16),
+      //   ),
+      //   content: Text(
+      //     "Switch to $pateintName profile in Home screen and Tap on the Renew button again from the Notifications list",
+      //     style: TextStyle(fontSize: 14),
+      //   ),
+      //   actions: <Widget>[
+      //     FlatButton(
+      //       onPressed: () {
+      //         Get.back();
+      //       },
+      //       child: Text(
+      //         "ok",
+      //         // style: TextStyle(
+      //         //   color: Color(getMyPrimaryColor()),
+      //         // ),
+      //       ),
+      //     ),
+      //   ],
+      // ),
+    );
+  }
+
   _showVersionDialog(context, bool isForceUpdate) async {
     await showDialog<String>(
       context: context,
@@ -1749,13 +1863,15 @@ class CommonUtil {
                       child: Text(
                         btnLabelCancel,
                         style: TextStyle(
-                          color: Color(getMyPrimaryColor()),
+                          color: Color(
+                            getMyPrimaryColor(),
+                          ),
                         ),
                       ),
                       onPressed: () => Navigator.pop(context),
                     )
-                  else
-                    SizedBox.shrink(),
+                  /*else
+                    SizedBox.shrink(),*/
                 ],
               )
             : AlertDialog(
@@ -1787,8 +1903,8 @@ class CommonUtil {
                       ),
                       onPressed: () => Navigator.pop(context),
                     )
-                  else
-                    SizedBox.shrink(),
+                  /*else
+                    SizedBox.shrink(),*/
                 ],
               );
       },
@@ -2860,24 +2976,30 @@ class CommonUtil {
     } else {
       // First time
       await prefs.setBool('first_time', false);
-      await _deleteCacheDir();
       await _deleteAppDir();
+      await _deleteCacheDir();
     }
   }
 
   Future<void> _deleteCacheDir() async {
-    var cacheDir = await getTemporaryDirectory();
-
-    if (cacheDir.existsSync()) {
-      cacheDir.deleteSync(recursive: true);
+    try {
+      var cacheDir = await getTemporaryDirectory();
+      if (cacheDir.existsSync()) {
+        cacheDir.deleteSync(recursive: true);
+      }
+    } catch (e) {
+      print("Failed to delete the Temp dir : ${e.toString()}");
     }
   }
 
   Future<void> _deleteAppDir() async {
-    var appDir = await getApplicationSupportDirectory();
-
-    if (appDir.existsSync()) {
-      appDir.deleteSync(recursive: true);
+    try {
+      var appDir = await getApplicationSupportDirectory();
+      if (appDir.existsSync()) {
+        appDir.deleteSync(recursive: true);
+      }
+    } catch (e) {
+      print("Failed to delete the support dir : ${e.toString()}");
     }
   }
 

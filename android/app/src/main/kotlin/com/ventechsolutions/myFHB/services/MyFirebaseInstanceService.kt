@@ -83,6 +83,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         val PAT_ID = data[getString(R.string.pat_id)]
         val PAT_NAME = data[getString(R.string.pat_name)]
         val PAT_PIC = data[getString(R.string.pat_pic)]
+        val CallType = data[getString(R.string.callType)]
         val NS_TIMEOUT = 30 * 1000L
         val _sound: Uri =
             Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.helium)
@@ -108,6 +109,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         acceptIntent.putExtra(getString(R.string.pat_id), "$PAT_ID")
         acceptIntent.putExtra(getString(R.string.pat_name), "$PAT_NAME")
         acceptIntent.putExtra(getString(R.string.pat_pic), "$PAT_PIC")
+        acceptIntent.putExtra(getString(R.string.callType), "$CallType")
         val acceptPendingIntent = PendingIntent.getBroadcast(
             applicationContext,
             0,
@@ -124,6 +126,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             .putExtra(getString(R.string.pat_id), PAT_ID)
             .putExtra(getString(R.string.pat_name), PAT_NAME)
             .putExtra(getString(R.string.pat_pic), PAT_PIC)
+            .putExtra(getString(R.string.callType), CallType)
         val fullScreenPendingIntent = PendingIntent.getActivity(
             this, 0,
             fullScreenIntent, PendingIntent.FLAG_UPDATE_CURRENT
@@ -243,6 +246,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             val NS_ID = System.currentTimeMillis().toInt()
             val MEETING_ID = data[getString(R.string.meetid)]
             val USER_NAME = data[getString(R.string.username)]
+            //val PAT_NAME = data[getString(R.string.pat_name)]
             val ack_sound: Uri =
                 Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.msg_tone)
 
@@ -271,6 +275,8 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             onTapNS.putExtra(Constants.PROP_HRMID, data[Constants.PROP_HRMID])
             onTapNS.putExtra(Constants.PROP_RAWBODY, data[Constants.PROP_RAWBODY])
             onTapNS.putExtra(Constants.PROP_RAWTITLE, data[Constants.PROP_RAWTITLE])
+//            onTapNS.putExtra(Constants.PROB_USER_ID, data[Constants.PROB_USER_ID])
+//            onTapNS.putExtra(getString(R.string.pat_name), PAT_NAME)
             val onTapPendingIntent = PendingIntent.getBroadcast(
                 applicationContext,
                 NS_ID,
@@ -692,6 +698,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
     private fun renewNotification(data: Map<String, String> = HashMap()) {
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
         val NS_ID = System.currentTimeMillis().toInt()
+        val PAT_NAME = data[getString(R.string.pat_name)]
         val ack_sound: Uri =
             Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.msg_tone)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -714,6 +721,8 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         renewIntent.putExtra(Intent.EXTRA_TEXT, Constants.PROP_RENEW)
         renewIntent.putExtra(Constants.PROP_PLANID, data[Constants.PROP_PLANID])
         renewIntent.putExtra(Constants.PROP_TEMP_NAME, data[Constants.PROP_TEMP_NAME])
+        renewIntent.putExtra(Constants.PROB_USER_ID, data[Constants.PROB_USER_ID])
+        renewIntent.putExtra(getString(R.string.pat_name), PAT_NAME)
         val renewPendingIntent = PendingIntent.getBroadcast(
             applicationContext,
             NS_ID,

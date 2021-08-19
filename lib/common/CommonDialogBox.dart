@@ -909,7 +909,7 @@ class CommonDialogBox {
                 setState(() {
                   errGluco = errorValue;
                 });
-              }, errGluco, variable.strGlucUnit),
+              }, errGluco, variable.strGlucUnit,range: isSelected[0]==true?'Fast':'PP'),
               SizedBox(
                 height: 15.0.h,
               ),
@@ -1073,7 +1073,7 @@ class CommonDialogBox {
               setState(() {
                 errTemp = errorValue;
               });
-            }, errTemp, commonConstants.tempUNIT),
+            }, errTemp, commonConstants.tempUNIT,range: "",device:"Temp"),
             SizedBox(
               height: 15.0.h,
             ),
@@ -1233,7 +1233,7 @@ class CommonDialogBox {
               setState(() {
                 errWeight = errorValue;
               });
-            }, errWeight, commonConstants.weightUNIT),
+            }, errWeight, commonConstants.weightUNIT,range: ""),
             SizedBox(
               height: 15.0.h,
             ),
@@ -1359,7 +1359,7 @@ class CommonDialogBox {
               setState(() {
                 errPoOs = errorValue;
               });
-            }, errPoOs, variable.strpulseUnit),
+            }, errPoOs, variable.strpulseUnit,range: ""),
             SizedBox(
               height: 15.0.h,
             ),
@@ -1371,7 +1371,7 @@ class CommonDialogBox {
               setState(() {
                 errPoPulse = errorValue;
               });
-            }, errPoPulse, variable.strpulse),
+            }, errPoPulse, variable.strpulse,range: ""),
             SizedBox(
               height: 15.0.h,
             ),
@@ -1491,7 +1491,7 @@ class CommonDialogBox {
               setState(() {
                 errForbpSp = errorValue;
               });
-            }, errForbpSp, variable.strbpunit),
+            }, errForbpSp, variable.strbpunit,range:"Sys"),
             SizedBox(
               height: 15.0.h,
             ),
@@ -1503,7 +1503,7 @@ class CommonDialogBox {
               setState(() {
                 errFForbpDp = errorValue;
               });
-            }, errFForbpDp, variable.strbpdp),
+            }, errFForbpDp, variable.strbpunit,range: "Dia"),
             SizedBox(
               height: 15.0.h,
             ),
@@ -1515,7 +1515,7 @@ class CommonDialogBox {
               setState(() {
                 errForbpPulse = errorValue;
               });
-            }, errForbpPulse, variable.strpulse),
+            }, errForbpPulse, variable.strpulse,range:""),
             SizedBox(
               height: 15.0.h,
             ),
