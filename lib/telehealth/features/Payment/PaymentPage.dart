@@ -91,41 +91,55 @@ class _WebViewExampleState extends State<PaymentPage> {
             NavigationControls(_controller.future),
           ],
         ),
-        body: Builder(builder: (BuildContext context) {
-          return WebView(
-            initialUrl: PAYMENT_URL,
-            javascriptMode: JavascriptMode.unrestricted,
-            onWebViewCreated: (WebViewController webViewController) {
-              _controller.complete(webViewController);
-            },
-            // ignore: prefer_collection_literals
-            javascriptChannels: <JavascriptChannel>[
-              _toasterJavascriptChannel(context),
-            ].toSet(),
-            navigationDelegate: (NavigationRequest request) {
-              String finalUrl = request.url.toString();
-              if (finalUrl.contains(CHECK_URL)) {
-                String paymentOrderId = '';
-                String paymentRequestId = '';
-                Uri uri = Uri.parse(finalUrl);
-                String paymentStatus = uri.queryParameters[PAYMENT_STATUS];
-                paymentOrderId = uri.queryParameters[PAYMENT_ID];
-                paymentRequestId = uri.queryParameters[PAYMENT_REQ_ID];
-                if (paymentStatus != null && paymentStatus == CREDIT) {
-                  if (isFromSubscribe) {
-                    updatePaymentSubscribe(
-                            paymentId, paymentOrderId, paymentRequestId)
-                        .then((value) {
-                      if (value?.isSuccess == true &&
-                          value?.result?.paymentStatus == PAYSUC) {
-                        paymentOrderIdSub = value?.result?.paymentOrderId ?? '';
-                        subscribeViewModel
-                            .subScribePlan(value?.result?.planPackage?.packageid
-                                .toString())
-                            .then((value) {
-                          if (value?.isSuccess) {
-                            if (value?.result?.result == 'Done') {
-                              callResultPage(true, paymentOrderIdSub);
+        body: SingleChildScrollView(
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height + 200,
+            child: WebView(
+              initialUrl: PAYMENT_URL,
+              javascriptMode: JavascriptMode.unrestricted,
+              onWebViewCreated: (WebViewController webViewController) {
+                _controller.complete(webViewController);
+              },
+              // ignore: prefer_collection_literals
+              javascriptChannels: <JavascriptChannel>[
+                _toasterJavascriptChannel(context),
+              ].toSet(),
+              navigationDelegate: (NavigationRequest request) {
+                String finalUrl = request.url.toString();
+                if (finalUrl.contains(CHECK_URL)) {
+                  String paymentOrderId = '';
+                  String paymentRequestId = '';
+                  Uri uri = Uri.parse(finalUrl);
+                  String paymentStatus = uri.queryParameters[PAYMENT_STATUS];
+                  paymentOrderId = uri.queryParameters[PAYMENT_ID];
+                  paymentRequestId = uri.queryParameters[PAYMENT_REQ_ID];
+                  if (paymentStatus != null && paymentStatus == CREDIT) {
+                    if (isFromSubscribe) {
+                      updatePaymentSubscribe(
+                              paymentId, paymentOrderId, paymentRequestId)
+                          .then((value) {
+                        if (value?.isSuccess == true &&
+                            value?.result?.paymentStatus == PAYSUC) {
+                          paymentOrderIdSub =
+                              value?.result?.paymentOrderId ?? '';
+                          subscribeViewModel
+                              .subScribePlan(value
+                                  ?.result?.planPackage?.packageid
+                                  .toString())
+                              .then((value) {
+                            if (value?.isSuccess) {
+                              if (value?.result?.result == 'Done') {
+                                callResultPage(true, paymentOrderIdSub);
+                              } else {
+                                FlutterToast().getToast(
+                                    value != null &&
+                                            value?.result?.message != null
+                                        ? value?.result?.message
+                                        : 'Subscribe Failed',
+                                    Colors.red);
+                                callResultPage(false, '');
+                              }
                             } else {
                               FlutterToast().getToast(
                                   value != null &&
@@ -135,49 +149,44 @@ class _WebViewExampleState extends State<PaymentPage> {
                                   Colors.red);
                               callResultPage(false, '');
                             }
-                          } else {
-                            FlutterToast().getToast(
-                                value != null && value?.result?.message != null
-                                    ? value?.result?.message
-                                    : 'Subscribe Failed',
-                                Colors.red);
-                            callResultPage(false, '');
-                          }
-                        });
-                      } else {
-                        callResultPage(false, '');
-                      }
-                    });
+                          });
+                        } else {
+                          callResultPage(false, '');
+                        }
+                      });
+                    } else {
+                      updatePayment(
+                          paymentId, paymentOrderId, paymentRequestId);
+                    }
                   } else {
-                    updatePayment(paymentId, paymentOrderId, paymentRequestId);
-                  }
-                } else {
-                  if (isFromSubscribe) {
-                    updatePaymentSubscribe(
-                            paymentId, paymentOrderId, paymentRequestId)
-                        .then((value) {
-                      if (value?.isSuccess == true) {
-                        callResultPage(false, '');
-                      } else {
-                        callResultPage(false, '');
-                      }
-                    });
-                  } else {
-                    updatePayment(paymentId, paymentOrderId, paymentRequestId);
+                    if (isFromSubscribe) {
+                      updatePaymentSubscribe(
+                              paymentId, paymentOrderId, paymentRequestId)
+                          .then((value) {
+                        if (value?.isSuccess == true) {
+                          callResultPage(false, '');
+                        } else {
+                          callResultPage(false, '');
+                        }
+                      });
+                    } else {
+                      updatePayment(
+                          paymentId, paymentOrderId, paymentRequestId);
+                    }
                   }
                 }
-              }
-              return NavigationDecision.navigate;
-            },
-            onPageStarted: (String url) {
-              //print('Page started loading: $url');
-            },
-            onPageFinished: (String url) {
-              //print('Page finished loading: $url');
-            },
-            gestureNavigationEnabled: true,
-          );
-        }),
+                return NavigationDecision.navigate;
+              },
+              onPageStarted: (String url) {
+                //print('Page started loading: $url');
+              },
+              onPageFinished: (String url) {
+                //print('Page finished loading: $url');
+              },
+              gestureNavigationEnabled: true,
+            ),
+          ),
+        ),
       ),
     );
   }
