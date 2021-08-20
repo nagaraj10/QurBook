@@ -5,6 +5,7 @@
 // ignore_for_file: public_member_api_docs
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -77,89 +78,156 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-        appBar: AppBar(
-          flexibleSpace: GradientAppBar(),
-          leading: new IconButton(
-            icon: new Icon(
-              Icons.arrow_back_ios,
-              size: 24.0.sp,
-            ),
-            onPressed: () {
-              _onWillPop();
-            },
-          ),
-          title: const Text(TITLE_BAR),
-          actions: <Widget>[
-            NavigationControls(_controller.future),
-          ],
-        ),
-        body: SingleChildScrollView(
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height + 200,
-            child: WebView(
-              initialUrl: PAYMENT_URL,
-              javascriptMode: JavascriptMode.unrestricted,
-              onWebViewCreated: (WebViewController webViewController) {
-                _controller.complete(webViewController);
+          appBar: AppBar(
+            flexibleSpace: GradientAppBar(),
+            leading: new IconButton(
+              icon: new Icon(
+                Icons.arrow_back_ios,
+                size: 24.0.sp,
+              ),
+              onPressed: () {
+                _onWillPop();
               },
-              // ignore: prefer_collection_literals
-              javascriptChannels: <JavascriptChannel>[
-                _toasterJavascriptChannel(context),
-              ].toSet(),
-              navigationDelegate: (NavigationRequest request) {
-                String finalUrl = request.url.toString();
-                if (finalUrl.contains(CHECK_URL)) {
-                  String paymentOrderId = '';
-                  String paymentRequestId = '';
-                  Uri uri = Uri.parse(finalUrl);
-                  String paymentStatus = uri.queryParameters[PAYMENT_STATUS];
-                  paymentOrderId = uri.queryParameters[PAYMENT_ID];
-                  paymentRequestId = uri.queryParameters[PAYMENT_REQ_ID];
-                  if (paymentStatus != null && paymentStatus == CREDIT) {
-                    updatePaymentSubscribe(
-                            widget.paymentId, paymentOrderId, paymentRequestId)
-                        .then((value) {
-                      if (value?.isSuccess == true &&
-                          value?.result?.paymentStatus == PAYCREDIT) {
-                        paymentOrderIdSub = value?.result?.paymentOrderId ?? '';
-                        gotoPaymentResultPage(true, paymentOrderIdSub);
-                      } else {
-                        gotoPaymentResultPage(
-                          false,
-                          value?.result?.paymentOrderId ?? '',
-                          cartUserId: value?.result?.cartUserId,
-                          isPaymentFails: true,
-                        );
-                      }
-                    });
+            ),
+            title: const Text(TITLE_BAR),
+            actions: <Widget>[
+              NavigationControls(_controller.future),
+            ],
+          ),
+          body: Platform.isAndroid ? androidWebview() : iosWebview()),
+    );
+  }
+
+  Widget androidWebview() {
+    return SingleChildScrollView(
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height + 200,
+        child: WebView(
+          initialUrl: PAYMENT_URL,
+          javascriptMode: JavascriptMode.unrestricted,
+          onWebViewCreated: (WebViewController webViewController) {
+            _controller.complete(webViewController);
+          },
+          // ignore: prefer_collection_literals
+          javascriptChannels: <JavascriptChannel>[
+            _toasterJavascriptChannel(context),
+          ].toSet(),
+          navigationDelegate: (NavigationRequest request) {
+            String finalUrl = request.url.toString();
+            if (finalUrl.contains(CHECK_URL)) {
+              String paymentOrderId = '';
+              String paymentRequestId = '';
+              Uri uri = Uri.parse(finalUrl);
+              String paymentStatus = uri.queryParameters[PAYMENT_STATUS];
+              paymentOrderId = uri.queryParameters[PAYMENT_ID];
+              paymentRequestId = uri.queryParameters[PAYMENT_REQ_ID];
+              if (paymentStatus != null && paymentStatus == CREDIT) {
+                updatePaymentSubscribe(
+                        widget.paymentId, paymentOrderId, paymentRequestId)
+                    .then((value) {
+                  if (value?.isSuccess == true &&
+                      value?.result?.paymentStatus == PAYCREDIT) {
+                    paymentOrderIdSub = value?.result?.paymentOrderId ?? '';
+                    gotoPaymentResultPage(true, paymentOrderIdSub);
                   } else {
-                    updatePaymentSubscribe(
-                            widget.paymentId, paymentOrderId, paymentRequestId)
-                        .then((value) {
-                      gotoPaymentResultPage(
-                        false,
-                        value?.result?.paymentOrderId ?? '',
-                        cartUserId: value?.result?.cartUserId,
-                        isPaymentFails: true,
-                      );
-                    });
+                    gotoPaymentResultPage(
+                      false,
+                      value?.result?.paymentOrderId ?? '',
+                      cartUserId: value?.result?.cartUserId,
+                      isPaymentFails: true,
+                    );
                   }
-                }
-                return NavigationDecision.navigate;
-              },
-              onPageStarted: (String url) {
-                //print('Page started loading: $url');
-              },
-              onPageFinished: (String url) {
-                //print('Page finished loading: $url');
-              },
-              gestureNavigationEnabled: true,
-            ),
-          ),
+                });
+              } else {
+                updatePaymentSubscribe(
+                        widget.paymentId, paymentOrderId, paymentRequestId)
+                    .then((value) {
+                  gotoPaymentResultPage(
+                    false,
+                    value?.result?.paymentOrderId ?? '',
+                    cartUserId: value?.result?.cartUserId,
+                    isPaymentFails: true,
+                  );
+                });
+              }
+            }
+            return NavigationDecision.navigate;
+          },
+          onPageStarted: (String url) {
+            //print('Page started loading: $url');
+          },
+          onPageFinished: (String url) {
+            //print('Page finished loading: $url');
+          },
+          gestureNavigationEnabled: true,
         ),
       ),
     );
+  }
+
+  Widget iosWebview() {
+    return Builder(builder: (BuildContext context) {
+      return WebView(
+        initialUrl: PAYMENT_URL,
+        javascriptMode: JavascriptMode.unrestricted,
+        onWebViewCreated: (WebViewController webViewController) {
+          _controller.complete(webViewController);
+        },
+        // ignore: prefer_collection_literals
+        javascriptChannels: <JavascriptChannel>[
+          _toasterJavascriptChannel(context),
+        ].toSet(),
+        navigationDelegate: (NavigationRequest request) {
+          String finalUrl = request.url.toString();
+          if (finalUrl.contains(CHECK_URL)) {
+            String paymentOrderId = '';
+            String paymentRequestId = '';
+            Uri uri = Uri.parse(finalUrl);
+            String paymentStatus = uri.queryParameters[PAYMENT_STATUS];
+            paymentOrderId = uri.queryParameters[PAYMENT_ID];
+            paymentRequestId = uri.queryParameters[PAYMENT_REQ_ID];
+            if (paymentStatus != null && paymentStatus == CREDIT) {
+              updatePaymentSubscribe(
+                      widget.paymentId, paymentOrderId, paymentRequestId)
+                  .then((value) {
+                if (value?.isSuccess == true &&
+                    value?.result?.paymentStatus == PAYCREDIT) {
+                  paymentOrderIdSub = value?.result?.paymentOrderId ?? '';
+                  gotoPaymentResultPage(true, paymentOrderIdSub);
+                } else {
+                  gotoPaymentResultPage(
+                    false,
+                    value?.result?.paymentOrderId ?? '',
+                    cartUserId: value?.result?.cartUserId,
+                    isPaymentFails: true,
+                  );
+                }
+              });
+            } else {
+              updatePaymentSubscribe(
+                      widget.paymentId, paymentOrderId, paymentRequestId)
+                  .then((value) {
+                gotoPaymentResultPage(
+                  false,
+                  value?.result?.paymentOrderId ?? '',
+                  cartUserId: value?.result?.cartUserId,
+                  isPaymentFails: true,
+                );
+              });
+            }
+          }
+          return NavigationDecision.navigate;
+        },
+        onPageStarted: (String url) {
+          //print('Page started loading: $url');
+        },
+        onPageFinished: (String url) {
+          //print('Page finished loading: $url');
+        },
+        gestureNavigationEnabled: true,
+      );
+    });
   }
 
   Future<bool> _onWillPop() {
@@ -176,7 +244,7 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
               FlatButton(
                 onPressed: () {
                   Provider.of<CheckoutPageProvider>(context, listen: false)
-                      .loader(false,isNeedRelod: true);
+                      .loader(false, isNeedRelod: true);
                   if (!isFromSubscribe) {
                     widget.closePage(STR_FAILED);
                     Navigator.pop(context);
