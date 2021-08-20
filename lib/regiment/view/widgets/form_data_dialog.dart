@@ -61,6 +61,7 @@ class FormDataDialogState extends State<FormDataDialog> {
 
   final ApiBaseHelper _helper = ApiBaseHelper();
   Map<String, dynamic> saveMap = {};
+  ValueNotifier isUploading = ValueNotifier(false);
 
   @override
   void initState() {
@@ -334,64 +335,79 @@ class FormDataDialogState extends State<FormDataDialog> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  RaisedButton(
-                    onPressed: widget.canEdit
-                        ? () async {
-                            if (widget.canEdit) {
-                              if (_formKey.currentState.validate()) {
-                                var events = '';
-                                saveMap.forEach((key, value) {
-                                  events += '&$key=$value';
-                                });
-                                LoaderClass.showLoadingDialog(
-                                  Get.context,
-                                  canDismiss: false,
-                                );
-                                final saveResponse =
-                                    await Provider.of<RegimentViewModel>(
-                                            context,
-                                            listen: false)
-                                        .saveFormData(
-                                  eid: eid,
-                                  events: events,
-                                );
-                                if (saveResponse?.isSuccess ?? false) {
-                                  LoaderClass.hideLoadingDialog(Get.context);
-                                  if (Provider.of<RegimentViewModel>(context,
-                                              listen: false)
-                                          .regimentStatus ==
-                                      RegimentStatus.DialogOpened) {
-                                    Navigator.pop(context, true);
+                  ValueListenableBuilder(
+                      valueListenable: isUploading,
+                      builder: (contxt, val, child) {
+                        return RaisedButton(
+                          onPressed: (!val)
+                              ? () async {
+                                  if (widget.canEdit) {
+                                    if (_formKey.currentState.validate()) {
+                                      var events = '';
+                                      saveMap.forEach((key, value) {
+                                        events += '&$key=$value';
+                                      });
+                                      LoaderClass.showLoadingDialog(
+                                        Get.context,
+                                        canDismiss: false,
+                                      );
+                                      final saveResponse =
+                                          await Provider.of<RegimentViewModel>(
+                                                  context,
+                                                  listen: false)
+                                              .saveFormData(
+                                        eid: eid,
+                                        events: events,
+                                      );
+                                      if (saveResponse?.isSuccess ?? false) {
+                                        LoaderClass.hideLoadingDialog(
+                                            Get.context);
+                                        if (Provider.of<RegimentViewModel>(
+                                                    context,
+                                                    listen: false)
+                                                .regimentStatus ==
+                                            RegimentStatus.DialogOpened) {
+                                          Navigator.pop(context, true);
+                                        }
+                                      }
+                                    }
+                                  } else {
+                                    FlutterToast().getToast(
+                                      (Provider.of<RegimentViewModel>(context,
+                                                      listen: false)
+                                                  .regimentMode ==
+                                              RegimentMode.Symptoms)
+                                          ? symptomsError
+                                          : activitiesError,
+                                      Colors.red,
+                                    );
                                   }
                                 }
-                              }
-                            } else {
-                              FlutterToast().getToast(
-                                (Provider.of<RegimentViewModel>(context,
-                                                listen: false)
-                                            .regimentMode ==
-                                        RegimentMode.Symptoms)
-                                    ? symptomsError
-                                    : activitiesError,
-                                Colors.red,
-                              );
-                            }
-                          }
-                        : null,
-                    color: Color(CommonUtil().getMyPrimaryColor()),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(
-                        5.0.sp,
-                      )),
-                    ),
-                    child: Text(
-                      saveButton,
-                      style: TextStyle(
-                        fontSize: 16.0.sp,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
+                              : null,
+                          color: Color(CommonUtil().getMyPrimaryColor()),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(
+                              5.0.sp,
+                            )),
+                          ),
+                          child: !val
+                              ? Text(
+                                  saveButton,
+                                  style: TextStyle(
+                                    fontSize: 16.0.sp,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 1,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                        );
+                      }),
                 ],
               ),
             ),
@@ -422,6 +438,7 @@ class FormDataDialogState extends State<FormDataDialog> {
       if (croppedFile != null) {
         setState(() {
           if (fromPath == strGallery) {
+            isUploading.value = true;
             imageFileName = strUploading;
           } else if (fromPath == strFiles) {
             docFileName = strUploading;
@@ -439,6 +456,7 @@ class FormDataDialogState extends State<FormDataDialog> {
               var file = File(croppedFile.path);
               setState(() {
                 if (fromPath == strGallery) {
+                  isUploading.value = false;
                   imageFileName = file.path.split('/').last;
                 } else if (fromPath == strFiles) {
                   docFileName = file.path.split('/').last;
@@ -459,6 +477,7 @@ class FormDataDialogState extends State<FormDataDialog> {
             } else {
               setState(() {
                 if (fromPath == strGallery) {
+                  isUploading.value = false;
                   imageFileName = 'Add Image';
                 } else if (fromPath == strFiles) {
                   docFileName = 'Add File';
@@ -481,6 +500,7 @@ class FormDataDialogState extends State<FormDataDialog> {
     var pickedFile = await picker.getImage(source: ImageSource.camera);
     setState(() {
       if (pickedFile != null) {
+        isUploading.value = true;
         imageFileName = strUploading;
         _image = File(pickedFile.path);
         imagePaths = _image.path;
@@ -489,6 +509,7 @@ class FormDataDialogState extends State<FormDataDialog> {
     if (imagePaths != null && imagePaths != '') {
       await saveMediaRegiment(imagePaths).then((value) {
         if (value.isSuccess) {
+          isUploading.value = false;
           setState(() {
             imageFileName = _image.path.split('/').last;
           });
@@ -501,6 +522,7 @@ class FormDataDialogState extends State<FormDataDialog> {
             saveMap[fromPath] = value.result.accessUrl;
           }
         } else {
+          isUploading.value = false;
           imageFileName = 'Add Image';
         }
       });
