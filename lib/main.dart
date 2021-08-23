@@ -280,6 +280,7 @@ void setValues(List<dynamic> values) {
   CommonUtil.BASE_URL_FROM_RES = values[7];
   CommonUtil.BASEURL_DEVICE_READINGS = values[8];
   CommonUtil.FIREBASE_CHAT_NOTIFY_TOKEN = values[9];
+  CommonUtil.REGION_CODE = values.length > 10 ? (values[10] ?? 'IN') : 'IN';
 }
 
 Widget buildError(BuildContext context, FlutterErrorDetails error) {
@@ -1106,7 +1107,7 @@ class _MyFHBState extends State<MyFHB> {
     if (callType.toLowerCase() == 'audio') {
       Provider.of<AudioCallProvider>(Get.context, listen: false)
           .enableAudioCall();
-    } else  if (callType.toLowerCase() == 'video') {
+    } else if (callType.toLowerCase() == 'video') {
       Provider.of<AudioCallProvider>(Get.context, listen: false)
           .disableAudioCall();
     }
