@@ -1230,6 +1230,47 @@ class ApiBaseHelper {
     }
   }
 
+  Future<dynamic> uploadLogData(String logPath, String fileName) {
+    final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    MultipartFile.fromFile(logPath, filename: fileName).then(
+      (value) async {
+        final dio = Dio();
+        dio.options.headers['authorization'] = authToken;
+        FormData formData = FormData.fromMap(
+          {
+            'folderName': 'logs',
+            'source': strSource,
+            'file': value,
+          },
+        );
+        var response;
+        try {
+          response = dio
+              .post(
+            _baseUrl + 'media-details/store-log',
+            data: formData,
+          )
+              .then(
+            (response) {
+              if (response.statusCode == 200) {
+                print(response.data.toString());
+                return response;
+              } else {
+                return response;
+              }
+            },
+          );
+        } on DioError catch (e) {
+          print(e.toString());
+          print(e);
+          return response;
+        } catch (e) {
+          print(e);
+        }
+      },
+    );
+  }
+
   Future<dynamic> updateHealthRecords(String url, String payload,
       List<String> imagePaths, String audioPath, String metaId) async {
     final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);

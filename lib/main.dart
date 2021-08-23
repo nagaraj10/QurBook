@@ -234,7 +234,14 @@ Future<void> main() async {
       isDebuggable: true,
       singleLogFileSize: 10,
     );
-
+    FlutterLogs.channel.setMethodCallHandler((call) {
+      if (call.method == 'logsExported') {
+        print(call.arguments);
+        CommonUtil.uploadTheLog(
+          call.arguments.toString(),
+        );
+      }
+    });
     runApp(
       provider.MultiProvider(
         providers: [

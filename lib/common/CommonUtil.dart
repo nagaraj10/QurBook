@@ -2921,7 +2921,7 @@ class CommonUtil {
     }
   }
 
-  static Future<void> sendLogToServer() async {
+  static Future<void> sendLogToServer()  {
     FlutterLogs.exportLogs(
       exportType: ExportType.ALL,
     );
@@ -2930,6 +2930,34 @@ class CommonUtil {
     //
     // FlutterLogs.exportFileLogForName();
     //TODO: SendToServer From Here
+  }
+
+  static uploadTheLog(String value) {
+    getDir().then(
+      (dir) {
+        try {
+          File file = File("${dir.path}/" + value);
+          if (file.existsSync()) {
+            print("Found the file");
+            print(file.path);
+            ApiBaseHelper().uploadLogData(
+              file.path,
+              value,
+            );
+          } else {
+            print("not Found the file");
+          }
+        } catch (e) {
+          print("not Found the file : $e");
+        }
+      },
+    );
+  }
+
+  static Future<Directory> getDir() async {
+    return Platform.isIOS
+        ? await getApplicationDocumentsDirectory()
+        : await getExternalStorageDirectory();
   }
 
   Future<void> isFirstTime() async {
