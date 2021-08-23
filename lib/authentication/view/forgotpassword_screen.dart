@@ -26,7 +26,7 @@ class ForgotPasswordScreen extends StatefulWidget {
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   Country _selectedDialogCountry =
-      CountryPickerUtils.getCountryByPhoneCode(strinitialMobileLabel);
+      CountryPickerUtils.getCountryByIsoCode(CommonUtil.REGION_CODE);
   final mobileController = TextEditingController();
   bool _autoValidateBool = false;
   FlutterToast toast = FlutterToast();
