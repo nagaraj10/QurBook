@@ -193,7 +193,7 @@ const String strIndianPhoneCode = 'IN';
 const String strContextId = 'contextId';
 const String strIsSkipMFA = 'isSkipMFA';
 const String strsupportEmail =
-    'If OTP is not received within 5mins, please contact to support at support@qurhealth.in';
+    'If OTP is not received within 5mins, please contact support at support@qurhealth.in';
 
 const String strEmptyWebView = 'Plan summary will be available soon';
 
