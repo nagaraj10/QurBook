@@ -40,7 +40,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
   AuthViewModel authViewModel;
   var checkedValue = true;
   Country _selectedDialogCountry =
-      CountryPickerUtils.getCountryByPhoneCode(strinitialMobileLabel);
+      CountryPickerUtils.getCountryByIsoCode(CommonUtil.REGION_CODE);
 
   bool _isHidden = true;
 
