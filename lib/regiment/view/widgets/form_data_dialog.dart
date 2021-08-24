@@ -174,25 +174,46 @@ class FormDataDialogState extends State<FormDataDialog> {
                               _showSelectionDialog(context);
                             }
                           : null,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          MediaIconWidget(
-                            color: color,
-                            icon: Icons.camera_alt,
-                            padding: 10.0.sp,
-                          ),
-                          SizedBox(
-                            width: 250.0.w,
-                            child: Text(
-                              imageFileName,
-                              style: TextStyle(
-                                fontSize: 14.0.sp,
-                                color: Colors.grey[500],
+                      child: ValueListenableBuilder(
+                        valueListenable: isUploading,
+                        builder: (contxt, val, child) {
+                          return Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              MediaIconWidget(
+                                color: color,
+                                icon: Icons.camera_alt,
+                                padding: 10.0.sp,
                               ),
-                            ),
-                          ),
-                        ],
+                              Expanded(
+                                child: SizedBox(
+                                  //width: 250.0.w,
+                                  child: Text(
+                                    imageFileName,
+                                    style: TextStyle(
+                                      fontSize: 14.0.sp,
+                                      color: Colors.grey[500],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              val
+                                  ? SizedBox(
+                                      width: 20.0.w,
+                                      height: 18.0.h,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: Color(
+                                            CommonUtil().getMyPrimaryColor()),
+                                      ),
+                                    )
+                                  : SizedBox.shrink(),
+                              SizedBox(
+                                width: 5,
+                              )
+                            ],
+                          );
+                        },
                       ),
                     ),
                   ),
@@ -339,74 +360,63 @@ class FormDataDialogState extends State<FormDataDialog> {
                       valueListenable: isUploading,
                       builder: (contxt, val, child) {
                         return RaisedButton(
-                          onPressed: (!val)
-                              ? () async {
-                                  if (widget.canEdit) {
-                                    if (_formKey.currentState.validate()) {
-                                      var events = '';
-                                      saveMap.forEach((key, value) {
-                                        events += '&$key=$value';
-                                      });
-                                      LoaderClass.showLoadingDialog(
-                                        Get.context,
-                                        canDismiss: false,
-                                      );
-                                      final saveResponse =
-                                          await Provider.of<RegimentViewModel>(
-                                                  context,
-                                                  listen: false)
-                                              .saveFormData(
-                                        eid: eid,
-                                        events: events,
-                                      );
-                                      if (saveResponse?.isSuccess ?? false) {
-                                        LoaderClass.hideLoadingDialog(
-                                            Get.context);
-                                        if (Provider.of<RegimentViewModel>(
-                                                    context,
-                                                    listen: false)
-                                                .regimentStatus ==
-                                            RegimentStatus.DialogOpened) {
-                                          Navigator.pop(context, true);
+                            onPressed: (!val)
+                                ? () async {
+                                    if (widget.canEdit) {
+                                      if (_formKey.currentState.validate()) {
+                                        var events = '';
+                                        saveMap.forEach((key, value) {
+                                          events += '&$key=$value';
+                                        });
+                                        LoaderClass.showLoadingDialog(
+                                          Get.context,
+                                          canDismiss: false,
+                                        );
+                                        final saveResponse = await Provider.of<
+                                                    RegimentViewModel>(context,
+                                                listen: false)
+                                            .saveFormData(
+                                          eid: eid,
+                                          events: events,
+                                        );
+                                        if (saveResponse?.isSuccess ?? false) {
+                                          LoaderClass.hideLoadingDialog(
+                                              Get.context);
+                                          if (Provider.of<RegimentViewModel>(
+                                                      context,
+                                                      listen: false)
+                                                  .regimentStatus ==
+                                              RegimentStatus.DialogOpened) {
+                                            Navigator.pop(context, true);
+                                          }
                                         }
                                       }
+                                    } else {
+                                      FlutterToast().getToast(
+                                        (Provider.of<RegimentViewModel>(context,
+                                                        listen: false)
+                                                    .regimentMode ==
+                                                RegimentMode.Symptoms)
+                                            ? symptomsError
+                                            : activitiesError,
+                                        Colors.red,
+                                      );
                                     }
-                                  } else {
-                                    FlutterToast().getToast(
-                                      (Provider.of<RegimentViewModel>(context,
-                                                      listen: false)
-                                                  .regimentMode ==
-                                              RegimentMode.Symptoms)
-                                          ? symptomsError
-                                          : activitiesError,
-                                      Colors.red,
-                                    );
                                   }
-                                }
-                              : null,
-                          color: Color(CommonUtil().getMyPrimaryColor()),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(
-                              5.0.sp,
-                            )),
-                          ),
-                          child: !val
-                              ? Text(
-                                  saveButton,
-                                  style: TextStyle(
-                                    fontSize: 16.0.sp,
-                                    color: Colors.white,
-                                  ),
-                                )
-                              : SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 1,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                        );
+                                : null,
+                            color: Color(CommonUtil().getMyPrimaryColor()),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(
+                                5.0.sp,
+                              )),
+                            ),
+                            child: Text(
+                              saveButton,
+                              style: TextStyle(
+                                fontSize: 16.0.sp,
+                                color: Colors.white,
+                              ),
+                            ));
                       }),
                 ],
               ),
