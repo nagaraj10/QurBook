@@ -34,7 +34,7 @@ class PatientSignInScreen extends StatefulWidget {
 
 class _PatientSignInScreenState extends State<PatientSignInScreen> {
   Country _selectedDialogCountry =
-      CountryPickerUtils.getCountryByPhoneCode(strinitialMobileLabel);
+      CountryPickerUtils.getCountryByIsoCode(CommonUtil.REGION_CODE);
   final numberController = TextEditingController();
   final passwordController = TextEditingController();
   var isLoading = false;
