@@ -381,6 +381,7 @@ class MainActivity : FlutterActivity() {
         val message = intent.getStringExtra(getString(R.string.message))
         var externalLink = intent.getStringExtra(Constants.PROB_EXTERNAL_LINK)
         var planId = intent.getStringExtra(Constants.PROP_PLANID)
+        var appLog = intent.getStringExtra(getString(R.string.ns_type_applog))
         if (sharedValue != null && sharedValue == "chat") {
             sharedValue = "$sharedValue"
         } else if (externalLink != null && externalLink != "") {
@@ -413,6 +414,8 @@ class MainActivity : FlutterActivity() {
             if (sharedValue == Constants.PROP_RENEW) {
                 sharedValue = "$sharedValue&${planId}&${"$templateName"}"
             }
+        } else if (appLog != null && appLog == "FETCH_LOG") {
+            sharedValue = appLog
         } else {
             if (HRMId != null && HRMId != "") {
                 sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${HRMId}"

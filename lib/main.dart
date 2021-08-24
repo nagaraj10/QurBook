@@ -424,6 +424,8 @@ class _MyFHBState extends State<MyFHB> {
           'navigationPage': 'Tele Health Chat list',
         });
         Get.to(ChatHomeScreen());
+      } else if (cMsg == 'FETCH_LOG') {
+        CommonUtil.sendLogToServer();
       }
       final passedValArr = cMsg.split('&');
       if (passedValArr[0] == 'ack') {
@@ -864,6 +866,11 @@ class _MyFHBState extends State<MyFHB> {
         final parsedData = navRoute.split('&');
         if (navRoute == 'chat') {
           return SplashScreen(nsRoute: 'chat');
+        } else if (navRoute == 'FETCH_LOG') {
+          CommonUtil.sendLogToServer();
+          return SplashScreen(
+              nsRoute: '',
+            );
         } else if (parsedData[1] == 'appointmentList' ||
             parsedData[1] == 'appointmentHistory') {
           return SplashScreen(
