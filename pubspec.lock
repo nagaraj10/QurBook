@@ -435,6 +435,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
+  firebase_dynamic_links:
+    dependency: "direct main"
+    description:
+      name: firebase_dynamic_links
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.7"
   firebase_messaging:
     dependency: "direct main"
     description:
@@ -491,13 +498,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.2"
-  flashlight:
-    dependency: "direct main"
-    description:
-      name: flashlight
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.1"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -740,8 +740,8 @@ packages:
   gmiwidgetspackage:
     dependency: "direct main"
     description:
-      path: "../../QurHealth/fhbCommon"
-      relative: true
+      path: "C:\\Users\\ParvathiM\\commonWidget\\myfhb-flutter-common"
+      relative: false
     source: path
     version: "0.0.1"
   google_maps_flutter:
@@ -989,6 +989,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0+1"
+  open_file:
+    dependency: "direct main"
+    description:
+      name: open_file
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.2.1"
   package_info:
     dependency: "direct main"
     description:
