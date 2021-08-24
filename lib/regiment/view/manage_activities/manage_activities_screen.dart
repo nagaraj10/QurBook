@@ -111,79 +111,79 @@ class _ManageActivitiesScreenState extends State<ManageActivitiesScreen> {
         },
         child: Column(
           children: [
-            Container(
-              width: 1.sw,
-              padding: EdgeInsets.all(10.0.sp),
-              color: Colors.white,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          onTap: () {
-                            _regimentViewModel.getActivityDate(
-                                isPrevious: true);
-                          },
-                          child: Icon(
-                            Icons.chevron_left_rounded,
-                            size: 24.0.sp,
-                            color: Color(CommonUtil().getMyPrimaryColor()),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 5.0.w,
-                      ),
-                      Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          onTap: () async {
-                            final selectedDate = await showDatePicker(
-                              context: context,
-                              firstDate: DateTime(2015, 8),
-                              lastDate: DateTime(2101),
-                              initialDate:
-                                  _regimentViewModel.selectedActivityDate,
-                            );
-                            if (selectedDate != null) {
-                              _regimentViewModel.getActivityDate(
-                                dateTime: selectedDate,
-                              );
-                            }
-                          },
-                          child: Text(
-                            _regimentViewModel.activitiesDate,
-                            style: TextStyle(
-                              fontSize: 14.0.sp,
-                              color: Color(CommonUtil().getMyPrimaryColor()),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 5.0.w,
-                      ),
-                      Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          onTap: () {
-                            _regimentViewModel.getActivityDate(isNext: true);
-                          },
-                          child: Icon(
-                            Icons.chevron_right_rounded,
-                            size: 24.0.sp,
-                            color: Color(CommonUtil().getMyPrimaryColor()),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
+            // Container(
+            //   width: 1.sw,
+            //   padding: EdgeInsets.all(10.0.sp),
+            //   color: Colors.white,
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //     children: [
+            //       Row(
+            //         children: [
+            //           Material(
+            //             color: Colors.transparent,
+            //             child: InkWell(
+            //               onTap: () {
+            //                 _regimentViewModel.getActivityDate(
+            //                     isPrevious: true);
+            //               },
+            //               child: Icon(
+            //                 Icons.chevron_left_rounded,
+            //                 size: 24.0.sp,
+            //                 color: Color(CommonUtil().getMyPrimaryColor()),
+            //               ),
+            //             ),
+            //           ),
+            //           SizedBox(
+            //             width: 5.0.w,
+            //           ),
+            //           Material(
+            //             color: Colors.transparent,
+            //             child: InkWell(
+            //               onTap: () async {
+            //                 final selectedDate = await showDatePicker(
+            //                   context: context,
+            //                   firstDate: DateTime(2015, 8),
+            //                   lastDate: DateTime(2101),
+            //                   initialDate:
+            //                       _regimentViewModel.selectedActivityDate,
+            //                 );
+            //                 if (selectedDate != null) {
+            //                   _regimentViewModel.getActivityDate(
+            //                     dateTime: selectedDate,
+            //                   );
+            //                 }
+            //               },
+            //               child: Text(
+            //                 _regimentViewModel.activitiesDate,
+            //                 style: TextStyle(
+            //                   fontSize: 14.0.sp,
+            //                   color: Color(CommonUtil().getMyPrimaryColor()),
+            //                 ),
+            //               ),
+            //             ),
+            //           ),
+            //           SizedBox(
+            //             width: 5.0.w,
+            //           ),
+            //           Material(
+            //             color: Colors.transparent,
+            //             child: InkWell(
+            //               onTap: () {
+            //                 _regimentViewModel.getActivityDate(isNext: true);
+            //               },
+            //               child: Icon(
+            //                 Icons.chevron_right_rounded,
+            //                 size: 24.0.sp,
+            //                 color: Color(CommonUtil().getMyPrimaryColor()),
+            //               ),
+            //             ),
+            //           ),
+            //         ],
+            //       ),
+            //     ],
+            //   ),
+            // ),
             Padding(
               padding: EdgeInsets.all(
                 10.0.sp,
