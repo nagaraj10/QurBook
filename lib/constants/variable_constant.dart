@@ -642,6 +642,9 @@ const String vitalsSummary = 'Vitals Summary';
 const String renewalLimit =
     'Renewal limit reached for this plan. Please try after few days';
 
+const String alreadySubscribed =
+    'You’ve already subscribed to the plan. Selecting this now will renew the plan';
+
 //Reminders
 //
 const reminderMethodChannel = MethodChannel('flutter.native/reminder');
