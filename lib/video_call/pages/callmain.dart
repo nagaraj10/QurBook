@@ -43,6 +43,8 @@ class CallMain extends StatefulWidget {
   ///check call is made from NS
   bool isAppExists;
 
+  bool isWeb;
+
   CallMain(
       {this.channelName,
       this.role,
@@ -53,7 +55,8 @@ class CallMain extends StatefulWidget {
       this.doctorPic,
       this.patientId,
       this.patientName,
-      this.patientPicUrl});
+      this.patientPicUrl,
+      this.isWeb});
 
   @override
   _CallMainState createState() => _CallMainState();
@@ -135,6 +138,7 @@ class _CallMainState extends State<CallMain> {
                         arguments: widget.arguments,
                         isAppExists: widget.isAppExists,
                         doctorName: widget.doctorName,
+                        isWeb: widget.isWeb ?? false,
                       ),
                       LocalPreview(rtcEngine: rtcEngine,),
                       CustomAppBar(Platform.isIOS
