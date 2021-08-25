@@ -1394,14 +1394,16 @@ class CommonUtil {
   }
 
   getDoctorProfileImageWidget(String doctorUrl, Doctor doctor) {
-    String name=doctor?.firstName?.capitalizeFirstofEach??" "+doctor?.lastName?.capitalizeFirstofEach??" ";
+    String name = doctor?.firstName?.capitalizeFirstofEach ??
+        " " + doctor?.lastName?.capitalizeFirstofEach ??
+        " ";
     if (doctorUrl != null && doctorUrl != '') {
       return Image.network(
         doctorUrl,
         height: 50.0.h,
         width: 50.0.h,
         fit: BoxFit.cover,
-        errorBuilder: (context,exception, stackTrace){
+        errorBuilder: (context, exception, stackTrace) {
           return Container(
             height: 50.0.h,
             width: 50.0.h,
@@ -1425,12 +1427,9 @@ class CommonUtil {
   }
 
   Widget getFirstLastNameText(Doctor doctor) {
-    if (doctor != null &&
-        doctor.firstName != null &&
-        doctor.lastName != null) {
+    if (doctor != null && doctor.firstName != null && doctor.lastName != null) {
       return Text(
-        doctor.firstName[0].toUpperCase() +
-            doctor.lastName[0].toUpperCase(),
+        doctor.firstName[0].toUpperCase() + doctor.lastName[0].toUpperCase(),
         style: TextStyle(
           color: Colors.white,
           fontSize: 22.0.sp,
@@ -3042,6 +3041,11 @@ class CommonUtil {
       if (response?.statusCode == 200) {
         var responseJson = response.bodyBytes;
         var directory = await getApplicationDocumentsDirectory();
+        if (Platform.isAndroid &&
+            !(await Permission.manageExternalStorage.isGranted)) {
+          await Permission.manageExternalStorage.request();
+        }
+
         var path =
             Platform.isIOS ? directory.path : '/storage/emulated/0/Download';
         var file = File('$path/$fileName');
