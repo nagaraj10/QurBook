@@ -108,7 +108,9 @@ class _MyProvidersState extends State<MyProviders> {
                     isSearch = false;
                   });
                 }
-              },
+              },onClosePress: (){
+              FocusManager.instance.primaryFocus.unfocus();
+            },
             ),
             Expanded(
               child: (widget.isRefresh && myProvidersResponseList != null ??
@@ -121,6 +123,7 @@ class _MyProvidersState extends State<MyProviders> {
         floatingActionButton: FloatingActionButton(
           heroTag: "btn2",
           onPressed: () {
+            FocusManager.instance.primaryFocus.unfocus();
             Navigator.pushNamed(
               context,
               router.rt_SearchProvider,
@@ -358,6 +361,7 @@ class _MyProvidersState extends State<MyProviders> {
   Widget providerDoctorItemWidget(int i, List<Doctors> docs) {
     return InkWell(
       onTap: () {
+        FocusManager.instance.primaryFocus.unfocus();
         navigateToHelathOrganizationList(context, docs, i);
       },
       child: Container(

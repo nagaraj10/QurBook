@@ -45,7 +45,7 @@ class PlanNavigationWidget extends StatelessWidget {
             // or ClipRRect if you need to clip the content
             child: InkWell(
               onTap: () {
-                Get.to(CheckoutPage());
+                Get.to(CheckoutPage()).then((value) => FocusManager.instance.primaryFocus.unfocus());
               },
               child: CartIconWithBadge(
                   color: Color(CommonUtil().getMyPrimaryColor()), size: 38.sp),

@@ -1417,6 +1417,7 @@ class _CustomTabsState extends State<CustomTabView>
   }
 
   onPositionChange() {
+    FocusManager.instance.primaryFocus.unfocus();
     if (!controller.indexIsChanging) {
       setState(() {});
       _currentPosition = controller.index;

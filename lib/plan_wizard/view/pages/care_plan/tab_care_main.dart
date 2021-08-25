@@ -48,6 +48,7 @@ class _TabCareMainState extends State<TabCareMain>
   }
 
   void _setActiveTabIndex() {
+    FocusManager.instance.primaryFocus.unfocus();
     _activeTabIndex = _tabController.index;
     planListProvider.changeCurrentTab(_activeTabIndex);
   }
