@@ -1,12 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io' show Platform;
+import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:agora_rtc_engine/rtc_engine.dart' as rtc;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:flutter_logs/flutter_logs.dart';
+import 'package:flutter_logs/flutter_logs.dart' as applog;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myfhb/myPlan/view/myPlanDetail.dart';
 import 'package:myfhb/src/utils/dynamic_links.dart';
@@ -222,24 +223,24 @@ Future<void> main() async {
     //   ),
     // );
 
-    await FlutterLogs.initLogs(
+    await applog.FlutterLogs.initLogs(
       logLevelsEnabled: [
-        LogLevel.INFO,
-        LogLevel.WARNING,
-        LogLevel.ERROR,
-        LogLevel.SEVERE,
+        applog.LogLevel.INFO,
+        applog.LogLevel.WARNING,
+        applog.LogLevel.ERROR,
+        applog.LogLevel.SEVERE,
       ],
-      timeStampFormat: TimeStampFormat.TIME_FORMAT_READABLE,
-      directoryStructure: DirectoryStructure.SINGLE_FILE_FOR_DAY,
+      timeStampFormat: applog.TimeStampFormat.TIME_FORMAT_READABLE,
+      directoryStructure: applog.DirectoryStructure.SINGLE_FILE_FOR_DAY,
       logTypesEnabled: ['device', 'network', 'errors'],
-      logFileExtension: LogFileExtension.TXT,
+      logFileExtension: applog.LogFileExtension.TXT,
       logsWriteDirectoryName: 'Logs',
       logsExportDirectoryName: 'Shared',
       debugFileOperations: true,
       isDebuggable: true,
       singleLogFileSize: 10,
     );
-    FlutterLogs.channel.setMethodCallHandler((call) {
+    applog.FlutterLogs.channel.setMethodCallHandler((call) {
       if (call.method == 'logsExported') {
         print(call.arguments);
         CommonUtil.uploadTheLog(
