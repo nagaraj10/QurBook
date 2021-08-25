@@ -467,7 +467,7 @@ class RegimentViewModel extends ChangeNotifier {
     activitiesData = await RegimentService.getRegimentData(
       dateSelected:
           CommonUtil().dateConversionToApiFormat(selectedActivityDate),
-      isSymptoms: -1,
+      isSymptoms: 0,
     );
     updateActivityStatus(ActivityStatus.Loaded);
     activitiesData?.regimentsList?.forEach((event) {

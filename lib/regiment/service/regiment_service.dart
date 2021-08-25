@@ -289,10 +289,10 @@ class RegimentService {
         body: json.encode(
           {
             'method': 'post',
-            // 'data':
-            //     "Action=ShowHideEvent&teid_user=$eidUser&hh=$hh&mm=$mm&hide=$hide&edate=$date${variable.qr_patientEqaul}$userId",
             'data':
-                'Action=${isDisable ? 'DisableUserActivity' : 'EnableUserActivity'}&teid=$eidUser${variable.qr_patientEqaul}$userId',
+                "Action=ShowHideEvent&teid_user=$eidUser&hh=$hh&mm=$mm&hide=$hide${variable.qr_patientEqaul}$userId",
+            // 'data':
+            //     'Action=${isDisable ? 'DisableUserActivity' : 'EnableUserActivity'}&teid=$eidUser${variable.qr_patientEqaul}$userId',
           },
         ),
       );
