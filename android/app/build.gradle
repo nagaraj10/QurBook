@@ -41,7 +41,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.ventechsolutions.myFHB"
+        applicationId "com.qurhealth.qurbook.us"
         minSdkVersion 21
         targetSdkVersion 29
         versionCode flutterVersionCode.toInteger()
