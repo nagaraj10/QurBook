@@ -151,6 +151,9 @@ class NotificationModel {
         if (message[parameters.strtype] != null) {
           type = message[parameters.strtype];
         }
+        if (message[parameters.strgcmtype] != null) {
+          type = message[parameters.strgcmtype];
+        }
         if (message[parameters.PROP_EVEID] != null) {
           eventId = message[parameters.PROP_EVEID];
         }
@@ -272,7 +275,9 @@ class NotificationModel {
     if (message[parameters.strtype] != null) {
       type = message[parameters.strtype];
     }
-
+    if (message[parameters.strgcmtype] != null) {
+      type = message[parameters.strgcmtype];
+    }
     if (message[parameters.PROP_EVEID] != null) {
       eventId = message[parameters.PROP_EVEID];
     }

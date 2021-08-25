@@ -251,6 +251,7 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                 children: [
                   commonWidget.iconWithText(Constants.Appointments_chatImage,
                       Colors.black38, Constants.Appointments_chat, () {
+                        FocusManager.instance.primaryFocus.unfocus();
                     goToChatIntegration(doc);
                   }, null),
                   SizedBoxWidget(width: 15.0),
@@ -264,6 +265,7 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                       Constants.Appointments_prescriptionImage,
                       Colors.black38,
                       Constants.STR_PRESCRIPTION, () async {
+                    FocusManager.instance.primaryFocus.unfocus();
                     if (healthRecord > 0) {
                       int position =
                           getCategoryPosition(Constants.STR_PRESCRIPTION);
@@ -286,11 +288,13 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                   SizedBoxWidget(width: 15.0),
                   commonWidget.iconWithText(Constants.Appointments_receiptImage,
                       Colors.black38, Constants.Appointments_receipt, () {
+                        FocusManager.instance.primaryFocus.unfocus();
                     moveToBilsPage(doc.healthRecord);
                   }, null),
                   SizedBoxWidget(width: 15.0),
                   GestureDetector(
                     onTap: () {
+                      FocusManager.instance.primaryFocus.unfocus();
                       navigateToProviderScreen(doc, false);
                     },
                     child: commonWidget.svgWithText(

@@ -88,14 +88,16 @@ class _MyPlanState extends State<MyPlanList> {
             onPressed: () async {
               //TODO: Uncomment for actual plans screen
               // await Get.toNamed(rt_Diseases);
-              await Get.toNamed(rt_PlanWizard);
+              await Get.toNamed(rt_PlanWizard).then(
+                  (value) => FocusManager.instance.primaryFocus.unfocus());
             },
             backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
             icon: Icon(
               Icons.add,
               color: Colors.white,
             ),
-            label: Text(strAddPlan,style: TextStyle(fontSize: 18.sp,color: Colors.white)),
+            label: Text(strAddPlan,
+                style: TextStyle(fontSize: 18.sp, color: Colors.white)),
           ),
           body: Stack(
             fit: StackFit.expand,
@@ -114,6 +116,9 @@ class _MyPlanState extends State<MyPlanList> {
                           isSearch = false;
                         });
                       }
+                    },
+                    onClosePress: () {
+                      FocusManager.instance.primaryFocus.unfocus();
                     },
                   ),
                   SizedBox(
@@ -273,7 +278,7 @@ class _MyPlanState extends State<MyPlanList> {
           context,
           MaterialPageRoute(
               builder: (context) => MyPlanDetail(
-                packageId: planList[i].packageid,
+                    packageId: planList[i].packageid,
                     // title: planList[i].title,
                     // providerName: planList[i].providerName,
                     // docName: planList[i].docNick,
@@ -288,6 +293,7 @@ class _MyPlanState extends State<MyPlanList> {
                     // isExtendable: planList[i]?.isExtendable,
                   )),
         ).then((value) {
+          FocusManager.instance.primaryFocus.unfocus();
           if (value == 'refreshUI') {
             setState(() {});
           }

@@ -142,6 +142,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     return Container(
         margin: EdgeInsets.symmetric(vertical: 2),
         child: TextFormField(
+          maxLength: 10,
           style: TextStyle(
             fontSize: 16.0.sp,
           ),
@@ -149,6 +150,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           obscureText: isPassword,
           controller: controller,
           decoration: InputDecoration(
+              counterText: "",
               prefixIcon: Container(
                 constraints:
                     BoxConstraints(maxWidth: 100.0.w, minWidth: 50.0.w),

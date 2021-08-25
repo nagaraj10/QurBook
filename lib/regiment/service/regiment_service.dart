@@ -16,7 +16,7 @@ import 'package:myfhb/src/resources/network/api_services.dart';
 
 class RegimentService {
   static Future<RegimentResponseModel> getRegimentData(
-      {String dateSelected, bool isSymptoms = false}) async {
+      {String dateSelected, int isSymptoms = 0}) async {
     final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var urlForRegiment = Constants.BASE_URL + variable.regiment;
     try {
@@ -36,7 +36,7 @@ class RegimentService {
           {
             "method": "get",
             "data":
-                "Action=GetUserActivities&lang=$currentLanguage&date=$dateSelected&issymptom=${isSymptoms ? 1 : 0}${variable.qr_patientEqaul}$userId",
+                "Action=GetUserActivities&lang=$currentLanguage&date=$dateSelected&issymptom=$isSymptoms${variable.qr_patientEqaul}$userId",
           },
         ),
       );
@@ -290,7 +290,9 @@ class RegimentService {
           {
             'method': 'post',
             'data':
-                "Action=ShowHideEvent&teid_user=$eidUser&hh=$hh&mm=$mm&hide=$hide&edate=$date${variable.qr_patientEqaul}$userId",
+                "Action=ShowHideEvent&teid_user=$eidUser&hh=$hh&mm=$mm&hide=$hide${variable.qr_patientEqaul}$userId",
+            // 'data':
+            //     'Action=${isDisable ? 'DisableUserActivity' : 'EnableUserActivity'}&teid=$eidUser${variable.qr_patientEqaul}$userId',
           },
         ),
       );

@@ -69,6 +69,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         when (NS_TYPE) {
             getString(R.string.ns_type_call) -> createNotification4Call(data)
             getString(R.string.ns_type_ack) -> createNotification4Ack(data)
+            getString(R.string.ns_type_applog) -> createNSForAppLogs(data)
         }
     }
 
@@ -790,6 +791,59 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             onTapNS,
             PendingIntent.FLAG_CANCEL_CURRENT
         )
+        var notification = NotificationCompat.Builder(this, CHANNEL_ACK)
+            .setSmallIcon(R.mipmap.app_ns_icon)
+            .setLargeIcon(
+                BitmapFactory.decodeResource(
+                    applicationContext.resources,
+                    R.mipmap.ic_launcher
+                )
+            )
+            .setContentTitle(data[getString(R.string.pro_ns_title)])
+            .setContentText(data[getString(R.string.pro_ns_body)])
+            .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+            .setContentIntent(onTapPendingIntent)
+            .setStyle(
+                NotificationCompat.BigTextStyle().bigText(data[getString(R.string.pro_ns_body)])
+            )
+            .setSound(ack_sound)
+            .setAutoCancel(true)
+            .build()
+        nsManager.notify(NS_ID, notification)
+    }
+
+    private fun createNSForAppLogs(data: Map<String, String> = HashMap()){
+        val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
+        val NS_ID = System.currentTimeMillis().toInt()
+        val ack_sound: Uri =
+            Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.msg_tone)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val manager = getSystemService(NotificationManager::class.java)
+            val channelAck = NotificationChannel(
+                CHANNEL_ACK,
+                getString(R.string.channel_ack),
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
+            channelAck.description = getString(R.string.channel_ack_desc)
+            val attributes = AudioAttributes.Builder()
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .setUsage(AudioAttributes.USAGE_NOTIFICATION).build()
+            channelAck.setSound(ack_sound, attributes)
+            manager.createNotificationChannel(channelAck)
+        }
+
+        val onTapNS = Intent(applicationContext, OnTapNotification::class.java)
+        onTapNS.putExtra(getString(R.string.ns_type_applog), getString(R.string.ns_type_applog))
+        val onTapPendingIntent = PendingIntent.getBroadcast(
+            applicationContext,
+            NS_ID,
+            onTapNS,
+            PendingIntent.FLAG_CANCEL_CURRENT
+        )
+
+
         var notification = NotificationCompat.Builder(this, CHANNEL_ACK)
             .setSmallIcon(R.mipmap.app_ns_icon)
             .setLargeIcon(

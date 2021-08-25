@@ -178,6 +178,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                 decoration: InputDecoration(
                                   hintText: strNewPhoneHint,
                                   labelText: strNumberHint,
+                                  counterText: "",
                                   prefixIcon: Container(
                                     constraints: BoxConstraints(
                                         maxWidth: 100.0.w, minWidth: 50.0.w),
@@ -208,6 +209,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                           strPhoneCantEmpty);
                                 },
                                 controller: mobileNoController,
+                                maxLength: 10,
                                 onSaved: (value) {},
                                 keyboardType: TextInputType.number,
                               ),

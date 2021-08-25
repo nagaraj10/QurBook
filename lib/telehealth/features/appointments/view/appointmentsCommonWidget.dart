@@ -141,6 +141,7 @@ class AppointmentsCommonWidget {
             Constants.Appointments_notesImage,
             Color(new CommonUtil().getMyPrimaryColor()),
             Constants.Appointments_notes, () async {
+          FocusManager.instance.primaryFocus.unfocus();
           int position = await getCategoryPosition(Constants.STR_NOTES);
 
           await Navigator.of(context)
@@ -187,6 +188,7 @@ class AppointmentsCommonWidget {
             Constants.Appointments_voiceNotesImage,
             Color(new CommonUtil().getMyPrimaryColor()),
             Constants.STR_VOICE_NOTES, () async {
+          FocusManager.instance.primaryFocus.unfocus();
           int position = await getCategoryPosition(Constants.STR_VOICERECORDS);
 
           await Navigator.of(context)
@@ -234,6 +236,7 @@ class AppointmentsCommonWidget {
             Color(new CommonUtil().getMyPrimaryColor()),
             Constants.Appointments_records, () async {
           if (rxCount != null /*&& isUpcoming*/) {
+            FocusManager.instance.primaryFocus.unfocus();
             int position =
                 await getCategoryPosition(Constants.STR_PRESCRIPTION);
 
@@ -417,6 +420,7 @@ class AppointmentsCommonWidget {
         colors: Color(new CommonUtil().getMyPrimaryColor()),
         size: 24.0.sp,
         onTap: () {
+          FocusManager.instance.primaryFocus.unfocus();
           if(!isHome) {
             Navigator.of(context).pop();
           }

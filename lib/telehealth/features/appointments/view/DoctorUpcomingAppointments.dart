@@ -190,6 +190,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                               icon: ImageIcon(
                                   AssetImage(Constants.Appointments_chatImage)),
                               onPressed: () {
+                                FocusManager.instance.primaryFocus.unfocus();
                                 goToChatIntegration(widget.doc);
                               }),
 //                          SizedBoxWidget(
@@ -246,6 +247,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                       Constants.Appointments_resheduleImage,
                       Colors.black38,
                       Constants.Appointments_reshedule, () {
+                    FocusManager.instance.primaryFocus.unfocus();
                     (widget.doc.status != null &&
                             widget.doc.status.code == Constants.PATDNA)
                         ? toast.getToast(Constants.DNA_APPOINTMENT, Colors.red)
@@ -254,6 +256,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                   SizedBoxWidget(width: 15.0.w),
                   commonWidget.iconWithText(Constants.Appointments_cancelImage,
                       Colors.black38, Constants.Appointments_cancel, () {
+                        FocusManager.instance.primaryFocus.unfocus();
                     (widget.doc.status != null &&
                             widget.doc.status.code == Constants.PATDNA)
                         ? toast.getToast(Constants.DNA_APPOINTMENT, Colors.red)

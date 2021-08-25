@@ -32,7 +32,7 @@ class MyPlansScreen extends StatelessWidget {
                 margin: EdgeInsets.only(right: 15.0.sp),
                 child: InkWell(
                     onTap: () {
-                      Get.to(CheckoutPage());
+                      Get.to(CheckoutPage()).then((value) => FocusManager.instance.primaryFocus.unfocus());
                     },
                     child:
                         CartIconWithBadge(color: Colors.white, size: 32.0.sp))),
