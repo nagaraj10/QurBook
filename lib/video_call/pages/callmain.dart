@@ -138,9 +138,13 @@ class _CallMainState extends State<CallMain> {
                         arguments: widget.arguments,
                         isAppExists: widget.isAppExists,
                         doctorName: widget.doctorName,
-                        isWeb: widget.isWeb ?? false,
+                        isWeb: Platform.isIOS
+                            ? widget.arguments.isWeb
+                            : widget.isWeb ?? false,
                       ),
-                      LocalPreview(rtcEngine: rtcEngine,),
+                      LocalPreview(
+                        rtcEngine: rtcEngine,
+                      ),
                       CustomAppBar(Platform.isIOS
                           ? widget.arguments.userName
                           : widget.doctorName),
