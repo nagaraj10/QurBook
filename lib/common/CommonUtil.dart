@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_logs/flutter_logs.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -2965,6 +2968,85 @@ class CommonUtil {
                     )),
       ),
     );
+  }
+
+  static Future<void> saveLog({
+    String message,
+    bool isError = false,
+  }) {
+    var userIdMain = PreferenceUtil.getStringValue(KEY_USERID_MAIN);
+    var userIdCurrent = PreferenceUtil.getStringValue(KEY_USERID);
+    if (isError) {
+      FlutterLogs.logError(
+        'MainUser- $userIdMain',
+        'CurrentUser- $userIdCurrent',
+        '$message',
+      );
+    } else {
+      FlutterLogs.logInfo(
+        'MainUser- $userIdMain',
+        'CurrentUser- $userIdCurrent',
+        '$message',
+      );
+    }
+  }
+
+  static Future<void> sendLogToServer() async {
+    await FlutterLogs.exportLogs(
+      exportType: ExportType.ALL,
+    );
+    //createComputeFunction();
+    // FlutterLogs.exportAllFileLogs();
+    //
+    // FlutterLogs.exportFileLogForName();
+    //TODO: SendToServer From Here
+  }
+
+  // static createComputeFunction() async {
+  //   bool answer;
+  //   answer = await compute(sayHelloFromCompute, 'Hello');
+  //   print("Answer from compute: $answer");
+  // }
+
+  // static bool sayHelloFromCompute(String string) {
+
+  //   return true;
+  // }
+
+  static uploadTheLog(String value) async {
+    var dir = await getDir();
+    try {
+      File file = File("${dir.path}/" + value);
+      if (file.existsSync()) {
+        print("Found the file");
+        print(file.path);
+        final res = await ApiBaseHelper().uploadLogData(
+          file.path,
+          value,
+        );
+        if (res) {
+          FlutterToast().getToast(
+            'Log uploaded successful',
+            Colors.green,
+          );
+        } else {
+          FlutterToast().getToast(
+            'Log uploaded failed',
+            Colors.red,
+          );
+        }
+      } else {
+        print("not Found the file");
+      }
+    } catch (e) {
+      print("not Found the file : $e");
+    }
+  }
+
+  static Future<Directory> getDir() async {
+    return Platform.isIOS
+        ? await getApplicationDocumentsDirectory()
+        : await getExternalStorageDirectory();
   }
 
   Future<void> isFirstTime() async {

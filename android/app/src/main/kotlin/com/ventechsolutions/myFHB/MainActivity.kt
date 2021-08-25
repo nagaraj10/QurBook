@@ -383,6 +383,7 @@ class MainActivity : FlutterActivity() {
         var planId = intent.getStringExtra(Constants.PROP_PLANID)
         var callType = intent.getStringExtra(getString(R.string.callType))
         var userId = intent.getStringExtra(Constants.PROB_USER_ID)
+        var appLog = intent.getStringExtra(getString(R.string.ns_type_applog))
         if (sharedValue != null && sharedValue == "chat") {
             sharedValue = "$sharedValue"
         } else if (externalLink != null && externalLink != "") {
@@ -415,6 +416,8 @@ class MainActivity : FlutterActivity() {
             if (sharedValue == Constants.PROP_RENEW) {
                 sharedValue = "$sharedValue&${planId}&${"$templateName"}&${userId}&${patName}"
             }
+        } else if (appLog != null && appLog == "FETCH_LOG") {
+            sharedValue = appLog
         } else {
             if (HRMId != null && HRMId != "") {
                 sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${HRMId}"
