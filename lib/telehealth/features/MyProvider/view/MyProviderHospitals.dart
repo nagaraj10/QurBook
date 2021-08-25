@@ -124,7 +124,9 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
                       isSearch = false;
                     });
                   }
-                },
+                },onClosePress: (){
+                FocusManager.instance.primaryFocus.unfocus();
+              },
               ),
               Expanded(
                 child: myProvidersResponseList != null ??
@@ -140,6 +142,7 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
         floatingActionButton: FloatingActionButton(
           heroTag: "btn1",
           onPressed: () {
+            FocusManager.instance.primaryFocus.unfocus();
             Navigator.pushNamed(context, router.rt_SearchProvider,
                 arguments: SearchArguments(
                   searchWord: CommonConstants.hospitals,
@@ -219,6 +222,7 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
       BuildContext context, int i, List<Hospitals> hospitals) {
     return InkWell(
       onTap: () {
+        FocusManager.instance.primaryFocus.unfocus();
         navigateToDoctorList(context, hospitals, i);
       },
       child: Container(

@@ -61,6 +61,7 @@ class _UserAccountsState extends State<UserAccounts>
   }
 
   void _handleSelected() {
+    FocusManager.instance.primaryFocus.unfocus();
     this.setState(() {
       selectedTab = _sliverTabController.index;
 //      if (selectedTab != 0) {
