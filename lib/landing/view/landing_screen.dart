@@ -166,8 +166,8 @@ class _LandingScreenState extends State<LandingScreen> {
       });
     }
     return FutureBuilder<MyProfileModel>(
-      future: profileData,
-      builder: (context, snapshot) {
+        future: profileData,
+        builder: (context, snapshot) {
           return Scaffold(
             key: _scaffoldKey,
             backgroundColor: const Color(bgColorContainer),
@@ -212,18 +212,18 @@ class _LandingScreenState extends State<LandingScreen> {
                                 Expanded(
                                   child: getAppBarTitle(),
                                 ),
-                              //TODO: Delete this - Added for Test
-                              if (kDebugMode)
-                                IconButton(
-                                  icon: Icon(Icons.cloud_upload),
-                                  onPressed: () {
-                                    CommonUtil.sendLogToServer();
-                                  },
-                                ),
+                                //TODO: Delete this - Added for Test
+                                // if (kDebugMode)
+                                //   IconButton(
+                                //     icon: Icon(Icons.cloud_upload),
+                                //     onPressed: () {
+                                //       CommonUtil.sendLogToServer();
+                                //     },
+                                //   ),
 
                                 Visibility(
-                                  visible: landingViewModel.currentTabIndex ==
-                                      4,
+                                  visible:
+                                      landingViewModel.currentTabIndex == 4,
                                   child: Padding(
                                     padding: EdgeInsets.only(
                                       right: 5.0.w,
@@ -249,7 +249,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                 SwitchProfile().buildActions(
                                   context,
                                   _key,
-                                      () {
+                                  () {
                                     profileData = getMyProfile();
                                     landingViewModel.getQurPlanDashBoard(
                                         needNotify: true);
@@ -264,14 +264,14 @@ class _LandingScreenState extends State<LandingScreen> {
                         ),
                       ),
                       Expanded(
-                        child:
-                        (snapshot.connectionState == ConnectionState.waiting)
+                        child: (snapshot.connectionState ==
+                                ConnectionState.waiting)
                             ? CommonCircularIndicator()
                             : (snapshot.hasError)
-                            ? Center(
-                          child: ErrorsWidget(),
-                        )
-                            : getCurrentTab(),
+                                ? Center(
+                                    child: ErrorsWidget(),
+                                  )
+                                : getCurrentTab(),
                       ),
                     ],
                   ),
@@ -281,10 +281,9 @@ class _LandingScreenState extends State<LandingScreen> {
             drawer: NavigationDrawer(
               myProfile: myProfile,
               moveToLoginPage: moveToLoginPage,
-              refresh: (userChanged) =>
-                  refresh(
-                    userChanged: userChanged,
-                  ),
+              refresh: (userChanged) => refresh(
+                userChanged: userChanged,
+              ),
             ),
             bottomNavigationBar: Container(
               decoration: const BoxDecoration(
@@ -307,7 +306,9 @@ class _LandingScreenState extends State<LandingScreen> {
                   color: Colors.black54,
                 ),
                 selectedIconTheme: IconThemeData(
-                  color: Color(CommonUtil().getMyPrimaryColor()),
+                  color: Color(
+                    CommonUtil().getMyPrimaryColor(),
+                  ),
                 ),
                 unselectedIconTheme: const IconThemeData(
                   color: Colors.black54,
@@ -323,7 +324,9 @@ class _LandingScreenState extends State<LandingScreen> {
                       variable.strhome,
                       style: TextStyle(
                         color: landingViewModel.currentTabIndex == 0
-                            ? Color(CommonUtil().getMyPrimaryColor())
+                            ? Color(
+                                CommonUtil().getMyPrimaryColor(),
+                              )
                             : Colors.black54,
                       ),
                     ),
@@ -388,9 +391,7 @@ class _LandingScreenState extends State<LandingScreen> {
               ),
             ),
           );
-        }
-
-    );
+        });
   }
 
   Widget getChatIcon() {
@@ -498,7 +499,7 @@ class _LandingScreenState extends State<LandingScreen> {
                     myProfile != null ??
                             myProfile.result.firstName != null &&
                                 myProfile.result.firstName != ''
-                        ? 'Hey ${toBeginningOfSentenceCase(myProfile?.result?.firstName??"")}'
+                        ? 'Hey ${toBeginningOfSentenceCase(myProfile?.result?.firstName ?? "")}'
                         : myProfile != null
                             ? 'Hey User'
                             : '',
@@ -581,7 +582,6 @@ class _LandingScreenState extends State<LandingScreen> {
     try {
       getProfileData();
       getMyProfile();
-
     } catch (e) {}
 
     try {

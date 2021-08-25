@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_logs/flutter_logs.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -1381,14 +1383,16 @@ class CommonUtil {
   }
 
   getDoctorProfileImageWidget(String doctorUrl, Doctor doctor) {
-    String name=doctor?.firstName?.capitalizeFirstofEach??" "+doctor?.lastName?.capitalizeFirstofEach??" ";
+    String name = doctor?.firstName?.capitalizeFirstofEach ??
+        " " + doctor?.lastName?.capitalizeFirstofEach ??
+        " ";
     if (doctorUrl != null && doctorUrl != '') {
       return Image.network(
         doctorUrl,
         height: 50.0.h,
         width: 50.0.h,
         fit: BoxFit.cover,
-        errorBuilder: (context,exception, stackTrace){
+        errorBuilder: (context, exception, stackTrace) {
           return Container(
             height: 50.0.h,
             width: 50.0.h,
@@ -1412,12 +1416,9 @@ class CommonUtil {
   }
 
   Widget getFirstLastNameText(Doctor doctor) {
-    if (doctor != null &&
-        doctor.firstName != null &&
-        doctor.lastName != null) {
+    if (doctor != null && doctor.firstName != null && doctor.lastName != null) {
       return Text(
-        doctor.firstName[0].toUpperCase() +
-            doctor.lastName[0].toUpperCase(),
+        doctor.firstName[0].toUpperCase() + doctor.lastName[0].toUpperCase(),
         style: TextStyle(
           color: Colors.white,
           fontSize: 22.0.sp,
@@ -2921,37 +2922,56 @@ class CommonUtil {
     }
   }
 
-  static Future<void> sendLogToServer()  {
-    FlutterLogs.exportLogs(
+  static Future<void> sendLogToServer() async {
+    await FlutterLogs.exportLogs(
       exportType: ExportType.ALL,
     );
-
+    //createComputeFunction();
     // FlutterLogs.exportAllFileLogs();
     //
     // FlutterLogs.exportFileLogForName();
     //TODO: SendToServer From Here
   }
 
-  static uploadTheLog(String value) {
-    getDir().then(
-      (dir) {
-        try {
-          File file = File("${dir.path}/" + value);
-          if (file.existsSync()) {
-            print("Found the file");
-            print(file.path);
-            ApiBaseHelper().uploadLogData(
-              file.path,
-              value,
-            );
-          } else {
-            print("not Found the file");
-          }
-        } catch (e) {
-          print("not Found the file : $e");
+  // static createComputeFunction() async {
+  //   bool answer;
+  //   answer = await compute(sayHelloFromCompute, 'Hello');
+  //   print("Answer from compute: $answer");
+  // }
+
+  // static bool sayHelloFromCompute(String string) {
+
+  //   return true;
+  // }
+
+  static uploadTheLog(String value) async {
+    var dir = await getDir();
+    try {
+      File file = File("${dir.path}/" + value);
+      if (file.existsSync()) {
+        print("Found the file");
+        print(file.path);
+        final res = await ApiBaseHelper().uploadLogData(
+          file.path,
+          value,
+        );
+        if (res) {
+          FlutterToast().getToast(
+            'Log uploaded successful',
+            Colors.green,
+          );
+        } else {
+          FlutterToast().getToast(
+            'Log uploaded failed',
+            Colors.red,
+          );
         }
-      },
-    );
+      } else {
+        print("not Found the file");
+      }
+    } catch (e) {
+      print("not Found the file : $e");
+    }
   }
 
   static Future<Directory> getDir() async {

@@ -137,6 +137,9 @@ class NotificationModel {
         if (message[parameters.strtype] != null) {
           type = message[parameters.strtype];
         }
+        if (message[parameters.strgcmtype] != null) {
+          type = message[parameters.strgcmtype];
+        }
         if (message[parameters.PROP_EVEID] != null) {
           eventId = message[parameters.PROP_EVEID];
         }
@@ -170,7 +173,7 @@ class NotificationModel {
         if (message[parameters.gcmExternalLink] != null) {
           externalLink = message[parameters.gcmExternalLink];
         }
-        
+
         if (message[parameters.gcmplanId] != null) {
           planId = message[parameters.gcmplanId];
         }
@@ -245,7 +248,9 @@ class NotificationModel {
     if (message[parameters.strtype] != null) {
       type = message[parameters.strtype];
     }
-
+    if (message[parameters.strgcmtype] != null) {
+      type = message[parameters.strgcmtype];
+    }
     if (message[parameters.PROP_EVEID] != null) {
       eventId = message[parameters.PROP_EVEID];
     }
@@ -277,8 +282,8 @@ class NotificationModel {
       planId = message[parameters.planId];
     }
     if (message[parameters.gcmplanId] != null) {
-          planId = message[parameters.gcmplanId];
-        }
+      planId = message[parameters.gcmplanId];
+    }
     if (message[parameters.externalLink] != null) {
       externalLink = message[parameters.externalLink];
     }

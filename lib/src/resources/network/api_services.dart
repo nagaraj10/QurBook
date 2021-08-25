@@ -60,14 +60,14 @@ class ApiServices {
         headers: headers,
         encoding: encoding,
       );
-      await CommonUtil.saveLog(
+      CommonUtil.saveLog(
         message:
             'Request - ${response?.request ?? ''} || Response(${response?.statusCode}) - ${response?.body}',
       );
       // if (response.statusCode == 200 || response.statusCode == 201) {
       return response;
     } catch (exception) {
-      await CommonUtil.saveLog(
+      CommonUtil.saveLog(
         isError: true,
         message:
             'Path - ${path ?? ''} || Header - ${headers ?? ''} || Body - ${body ?? ''}\n Exception - ${exception ?? ''}',
@@ -97,7 +97,7 @@ class ApiServices {
         headers: headers,
         encoding: encoding,
       );
-      await CommonUtil.saveLog(
+      CommonUtil.saveLog(
         message:
             'Request - ${response?.request ?? ''} || Response(${response?.statusCode}) - ${response?.body}',
       );
@@ -105,7 +105,7 @@ class ApiServices {
       // if (response.statusCode == 200 || response.statusCode == 201) {
       return response;
     } catch (exception) {
-      await CommonUtil.saveLog(
+      CommonUtil.saveLog(
         isError: true,
         message:
             'Path - ${path ?? ''} || Header - ${headers ?? ''} || Body - ${body ?? ''}\n Exception - ${exception ?? ''}',
@@ -136,14 +136,14 @@ class ApiServices {
         encoding: encoding,
       );
 
-      await CommonUtil.saveLog(
+      CommonUtil.saveLog(
         message:
             'Request - ${response?.request ?? ''} || Response(${response?.statusCode}) - ${response?.body}',
       );
       // if (response.statusCode == 200 || response.statusCode == 201) {
       return response;
     } catch (exception) {
-      await CommonUtil.saveLog(
+      CommonUtil.saveLog(
         isError: true,
         message:
             'Path - ${path ?? ''} || Header - ${headers ?? ''} || Body - ${body ?? ''}\n Exception - ${exception ?? ''}',
