@@ -228,6 +228,7 @@ const String qr_Google_TTS_Proxy_URL = 'google-tts/proxy';
 const String qr_Google_TTS_Regiment_URL = 'google-tts/google-translate/proxy';
 
 const String qr_plan_list = 'plan-package-master/wrapperApi';
+const String qr_power_bi = 'power-bi';
 const String qr_getUserPack = 'Action=GetUserPackages';
 const String qr_getPack = 'Action=GetPackages';
 const String qr_getPack_details = 'Action=GetPackages&packageid=';

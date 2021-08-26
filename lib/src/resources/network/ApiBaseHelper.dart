@@ -1502,6 +1502,18 @@ class ApiBaseHelper {
     return responseJson;
   }
 
+  Future<dynamic> getReportList(String url) async {
+    var responseJson;
+    try {
+      var response = await ApiServices.get(_baseUrl + url,
+          headers: await headerRequest.getRequestHeadersTimeSlot());
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
   Future<dynamic> getHealthConditions(String url, String jsonString) async {
     var responseJson;
     try {
