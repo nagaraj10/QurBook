@@ -747,10 +747,12 @@ class _MyFHBState extends State<MyFHB> {
             planid,
             userId,
           );
-          var body = {};
-          body['templateName'] = template;
-          body['contextId'] = planid;
-          FetchNotificationService().updateNsActionStatus(body);
+          var nsBody = {};
+          nsBody['templateName'] = template;
+          nsBody['contextId'] = planid;
+          FetchNotificationService().updateNsActionStatus(nsBody).then((data) {
+            FetchNotificationService().updateNsOnTapAction(nsBody);
+          });
           //   //TODO if its Callback just show the message alone
           //   Get.rawSnackbar(
           //       messageText: Center(

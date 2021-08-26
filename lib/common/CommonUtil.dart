@@ -23,6 +23,7 @@ import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
+import 'package:myfhb/telehealth/features/Notifications/viewModel/fetchNotificationViewModel.dart';
 import 'package:open_file/open_file.dart';
 import '../add_family_user_info/models/add_family_user_info_arguments.dart';
 import '../add_family_user_info/services/add_family_user_info_repository.dart';
@@ -2832,7 +2833,11 @@ class CommonUtil {
                             if (moveToCart && nsBody != null) {
                               try {
                                 FetchNotificationService()
-                                    .updateNsActionStatus(nsBody);
+                                    .updateNsActionStatus(nsBody)
+                                    .then((data) {
+                                  FetchNotificationService()
+                                      .updateNsOnTapAction(nsBody);
+                                });
                               } catch (e) {}
                             }
 

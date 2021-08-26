@@ -487,7 +487,11 @@ class _SplashScreenState extends State<SplashScreen> {
                         var body = {};
                         body['templateName'] = template;
                         body['contextId'] = planid;
-                        FetchNotificationService().updateNsActionStatus(body);
+                        FetchNotificationService()
+                            .updateNsActionStatus(body)
+                            .then((data) {
+                          FetchNotificationService().updateNsOnTapAction(body);
+                        });
                       } else {
                         fbaLog(eveParams: {
                           'eventTime': '${DateTime.now()}',

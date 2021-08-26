@@ -205,7 +205,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                           payload?.redirectTo,
                         );
                       } else if (payload?.redirectTo ==
-                          constants.strMyCardDetails) {
+                          constants.strMyCardDetails || payload?.redirectTo == 'mycartdetails') {
                         // do nothing.
                       } else {
                         notificationOnTapActions(
@@ -1042,17 +1042,21 @@ class _NotificationScreen extends State<NotificationScreen> {
                         FetchNotificationService()
                             .updateNsActionStatus(body)
                             .then((data) {
-                          if (data != null && data['isSuccess']) {
-                            Provider.of<FetchNotificationViewModel>(context,
-                                listen: false)
-                              ..clearNotifications()
-                              ..fetchNotifications();
-                          } else {
-                            Provider.of<FetchNotificationViewModel>(context,
-                                listen: false)
-                              ..clearNotifications()
-                              ..fetchNotifications();
-                          }
+                          FetchNotificationService()
+                              .updateNsOnTapAction(body)
+                              .then((data) {
+                            if (data != null && data['isSuccess']) {
+                              Provider.of<FetchNotificationViewModel>(context,
+                                  listen: false)
+                                ..clearNotifications()
+                                ..fetchNotifications();
+                            } else {
+                              Provider.of<FetchNotificationViewModel>(context,
+                                  listen: false)
+                                ..clearNotifications()
+                                ..fetchNotifications();
+                            }
+                          });
                         });
                       }
                     : null,

@@ -76,7 +76,11 @@ class IosNotificationHandler {
                 var body = {};
                 body['templateName'] = model.templateName;
                 body['contextId'] = model.planId;
-                FetchNotificationService().updateNsActionStatus(body);
+                FetchNotificationService()
+                    .updateNsActionStatus(body)
+                    .then((data) {
+                  FetchNotificationService().updateNsOnTapAction(body);
+                });
                 return;
               }
               actionForTheNotification();
