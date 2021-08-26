@@ -121,7 +121,7 @@ class _ReportWebView extends State<ReportWebView> {
           //controller.evaluateJavascript(source: 'onHTMLLoad()');
         },
         onLoadStop: (InAppWebViewController controller, Uri url) {
-          controller.evaluateJavascript(source: 'onHTMLLoad("$reportId","$embededUrl","$authToken")');
+          controller.evaluateJavascript(source: 'onHTMLLoad("$id",$reportId","$embededUrl","$authToken")');
         },
         shouldOverrideUrlLoading: (controller, shouldOverrideUrlLoadingRequest) async {
           if (Platform.isAndroid || shouldOverrideUrlLoadingRequest.iosWKNavigationType == IOSWKNavigationType.LINK_ACTIVATED) {
