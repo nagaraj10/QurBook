@@ -13,6 +13,7 @@ class SearchWidget extends StatefulWidget {
   final FocusNode searchFocus;
   final double padding;
   final String hintText;
+  final Function() onClosePress;
 
   const SearchWidget({
     Key key,
@@ -21,6 +22,7 @@ class SearchWidget extends StatefulWidget {
     this.searchFocus,
     this.padding,
     this.hintText,
+    this.onClosePress,
   }) : super(key: key);
 
   @override
@@ -78,6 +80,7 @@ class SearchWdigetState extends State<SearchWidget> {
                           onPressed: () {
                             _searchQueryController.clear();
                             widget.onChanged('');
+                            widget.onClosePress();
                           },
                         ),
                       ),

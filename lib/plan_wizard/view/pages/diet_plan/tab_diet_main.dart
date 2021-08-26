@@ -45,6 +45,9 @@ class _TabDietMainState extends State<TabDietMain>
   }
 
   void _setActiveTabIndex() {
+
+    FocusManager.instance.primaryFocus.unfocus();
+
     _activeTabIndex = _tabController.index;
     planListProvider.changeCurrentTabDiet(_activeTabIndex);
   }

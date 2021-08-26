@@ -67,6 +67,9 @@ class _FreeCarePlans extends State<FreeCarePlans> {
                         });
                       }
                     },
+                    onClosePress: () {
+                      FocusManager.instance.primaryFocus.unfocus();
+                    },
                     hintText: strPlanHospitalDiet,
                     padding: 10.0.sp,
                   ),
@@ -186,7 +189,9 @@ class _FreeCarePlans extends State<FreeCarePlans> {
             ),
             itemBuilder: (BuildContext ctx, int i) => CarePlanCard(
               planList: isSearch ? planSearchList[i] : planList[i],
-              onClick: () {},
+              onClick: () {
+                FocusManager.instance.primaryFocus.unfocus();
+              },
               isFrom: strFreeCare,
             ),
             itemCount: isSearch ? planSearchList.length : planList.length,

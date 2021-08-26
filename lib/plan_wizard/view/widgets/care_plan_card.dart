@@ -29,6 +29,7 @@ class CarePlanCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
+        onClick();
         onCardTapped(context);
       },
       child: Container(

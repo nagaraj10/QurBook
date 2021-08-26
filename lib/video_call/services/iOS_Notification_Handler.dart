@@ -32,39 +32,44 @@ class IosNotificationHandler {
   NotificationModel model;
   bool renewAction = false;
   setUpListerForTheNotification() {
-    variable.reponseToRemoteNotificationMethodChannel
-        .setMethodCallHandler((call) {
-      if (call.method == variable.notificationResponseMethod) {
-        final data = Map<String, dynamic>.from(call.arguments);
-        model = NotificationModel.fromMap(data.containsKey("action")
-            ? Map<String, dynamic>.from(data["data"])
-            : data);
-        if (model.externalLink != null) {
-          if (model.externalLink == variable.iOSAppStoreLink) {
-            LaunchReview.launch(
-                iOSAppId: variable.iOSAppId, writeReview: false);
+    variable.reponseToRemoteNotificationMethodChannel.setMethodCallHandler(
+      (call) {
+        if (call.method == variable.notificationResponseMethod) {
+          final data = Map<String, dynamic>.from(call.arguments);
+          model = NotificationModel.fromMap(data.containsKey("action")
+              ? Map<String, dynamic>.from(data["data"])
+              : data);
+          if (model.externalLink != null) {
+            if (model.externalLink == variable.iOSAppStoreLink) {
+              LaunchReview.launch(
+                  iOSAppId: variable.iOSAppId, writeReview: false);
+            } else {
+              CommonUtil().launchURL(model.externalLink);
+            }
+          }
+          if (data.containsKey("action")) {
+            renewAction = true;
+            if (!isAlreadyLoaded) {
+              Future.delayed(
+                const Duration(seconds: 4),
+                actionForTheNotification,
+              );
+            } else {
+              actionForTheNotification();
+            }
           } else {
-            CommonUtil().launchURL(model.externalLink);
+            if (!isAlreadyLoaded) {
+              Future.delayed(
+                const Duration(seconds: 4),
+                actionForTheNotification,
+              );
+            } else {
+              actionForTheNotification();
+            }
           }
         }
-        if (data.containsKey("action")) {
-          renewAction = true;
-          if (!isAlreadyLoaded) {
-            Future.delayed(
-                const Duration(seconds: 4), actionForTheNotification);
-          } else {
-            actionForTheNotification();
-          }
-        } else {
-          if (!isAlreadyLoaded) {
-            Future.delayed(
-                const Duration(seconds: 4), actionForTheNotification);
-          } else {
-            actionForTheNotification();
-          }
-        }
-      }
-    });
+      },
+    );
   }
 
   void updateStatus(String status) async {
@@ -99,6 +104,8 @@ class IosNotificationHandler {
   actionForTheNotification() async {
     if (model.isCall) {
       updateStatus(parameters.accept.toLowerCase());
+    } else if (model.type == parameters.FETCH_LOG) {
+      await CommonUtil.sendLogToServer();
     } else if (model.isCancellation) {
       fbaLog(eveParams: {
         'eventTime': '${DateTime.now()}',

@@ -29,6 +29,7 @@ class DietPlanCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
+        onClick();
         Navigator.push(
           context,
           MaterialPageRoute(

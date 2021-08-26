@@ -162,6 +162,8 @@ const String strlastName = 'lastName';
 const String strfirstName = 'firstName';
 const String strmiddleName = 'middleName';
 const String strtype = 'type';
+const String strgcmtype = 'gcm.notification.type';
+
 const String strgeneralInfo = 'generalInfo';
 const String strisDefault = 'isDefault';
 const String strprofilePic = 'profilePic';
@@ -668,8 +670,12 @@ const String CHATTING_WITH = 'chattingWith';
 const String DISPLAY_NAME = 'display_name';
 const String PROFILE_IMAGE = 'profile_image';
 const String ABOUT_ME = 'aboutMe';
+const String FETCH_LOG = 'FETCH_LOG';
+
 const String USERS = 'users';
 const String chat = 'chat';
+const String isWeb = 'isWeb';
+
 const String planId = 'planId';
 const String myCartDetails = 'mycartdetails';
 
