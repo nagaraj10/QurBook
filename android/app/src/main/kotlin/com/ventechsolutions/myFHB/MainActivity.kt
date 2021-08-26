@@ -412,7 +412,7 @@ class MainActivity : FlutterActivity() {
         } else if (data != null && data == "MissingActivitiesReminder") {
             sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${EVEId}"
         } else if ((planId != null && planId != "") && (templateName != null && templateName != "") && (userId != null && userId != "") && (patName != null && patName != "")) {
-            if (sharedValue == Constants.PROP_RENEW) {
+            if ((sharedValue == Constants.PROP_RENEW) || (sharedValue == Constants.PROP_CALLBACK)) {
                 sharedValue = "$sharedValue&${planId}&${"$templateName"}&${userId}&${patName}"
             }
         } else {

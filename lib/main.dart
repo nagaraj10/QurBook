@@ -681,28 +681,46 @@ class _MyFHBState extends State<MyFHB> {
           'navigationPage': 'Browser page',
         });
         CommonUtil().launchURL(urlInfo);
-      } else if (passedValArr[0] == 'Renew') {
+      } else if (passedValArr[0] == 'Renew' || passedValArr[0] == 'Callback') {
         final planid = passedValArr[1];
         final template = passedValArr[2];
         final userId = passedValArr[3];
         final patName = passedValArr[4];
-        final currentUserId = PreferenceUtil.getStringValue(KEY_USERID);
-        if (currentUserId == userId) {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'myplan_deatails',
-            'navigationPage': 'My Plan Details',
-          });
-          Get.to(
-            MyPlanDetail(
-              packageId: planid,
-              showRenew: true,
-              templateName: template,
-            ),
-          );
+        //TODO if its Renew take the user into plandetail view
+        if (passedValArr[0] == 'Renew') {
+          final currentUserId = PreferenceUtil.getStringValue(KEY_USERID);
+          if (currentUserId == userId) {
+            fbaLog(eveParams: {
+              'eventTime': '${DateTime.now()}',
+              'ns_type': 'myplan_deatails',
+              'navigationPage': 'My Plan Details',
+            });
+            Get.to(
+              MyPlanDetail(
+                packageId: planid,
+                showRenew: true,
+                templateName: template,
+              ),
+            );
+          } else {
+            CommonUtil.showFamilyMemberPlanExpiryDialog(patName);
+          }
         } else {
-          CommonUtil.showFamilyMemberPlanExpiryDialog(patName);
+          //TODO if its Callback just show the message alone
+          Get.rawSnackbar(
+              messageText: Center(
+                child: Text(
+                  '$patName, Thank you for reaching out.  Your caregiver will call you as soon as possible.',
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.w500),
+                ),
+              ),
+              snackPosition: SnackPosition.BOTTOM,
+              snackStyle: SnackStyle.GROUNDED,
+              duration: Duration(seconds: 3),
+              backgroundColor: Colors.green.shade500);
         }
+        
       } else if (passedValArr[4] == 'call') {
         try {
           doctorPic = passedValArr[3];
@@ -987,9 +1005,9 @@ class _MyFHBState extends State<MyFHB> {
             nsRoute: 'openurl',
             bundle: navRoute.split('&')[1],
           );
-        } else if (navRoute.split('&')[0] == 'Renew') {
+        } else if (navRoute.split('&')[0] == 'Renew' || navRoute.split('&')[0] == 'Callback') {
           return SplashScreen(
-            nsRoute: 'renew',
+            nsRoute: navRoute.split('&')[0],
             bundle: {
               'planid': '${navRoute.split('&')[1]}',
               'template': '${navRoute.split('&')[2]}',

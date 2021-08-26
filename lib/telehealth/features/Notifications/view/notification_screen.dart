@@ -1012,28 +1012,28 @@ class _NotificationScreen extends State<NotificationScreen> {
                   fontsize: 15.0.sp,
                 ),
               ),
-              // SizedBox(
-              //   width: 15.0.w,
-              // ),
-              // OutlineButton(
-              //   onPressed: !notification?.isActionDone
-              //       ? () {
-              //           // call back action
-              //         }
-              //       : null,
-              //   borderSide: !notification?.isActionDone
-              //       ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
-              //       : BorderSide(color: Colors.grey),
-              //   child: TextWidget(
-              //     text: AppConstants.Appointments_cancel,
-              //     colors: !notification?.isActionDone
-              //         ? Color(CommonUtil().getMyPrimaryColor())
-              //         : Colors.grey,
-              //     overflow: TextOverflow.visible,
-              //     fontWeight: FontWeight.w600,
-              //     fontsize: 15.0.sp,
-              //   ),
-              // ),
+              SizedBox(
+                width: 15.0.w,
+              ),
+              OutlineButton(
+                onPressed: !notification?.isActionDone
+                    ? () {
+                        // call back action
+                      }
+                    : null,
+                borderSide: !notification?.isActionDone
+                    ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
+                    : BorderSide(color: Colors.grey),
+                child: TextWidget(
+                  text: AppConstants.Plan_callback,
+                  colors: !notification?.isActionDone
+                      ? Color(CommonUtil().getMyPrimaryColor())
+                      : Colors.grey,
+                  overflow: TextOverflow.visible,
+                  fontWeight: FontWeight.w600,
+                  fontsize: 15.0.sp,
+                ),
+              ),
             ],
           ),
         );

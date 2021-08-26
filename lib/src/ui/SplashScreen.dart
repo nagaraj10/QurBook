@@ -445,29 +445,49 @@ class _SplashScreenState extends State<SplashScreen> {
                           isFromNotification: true,
                         )).then((value) => PageNavigator.goToPermanent(
                             context, router.rt_Landing));
-                      } else if (widget.nsRoute == 'renew') {
+                      } else if (widget.nsRoute == 'Renew' || widget.nsRoute == 'Callback') {
                         final planid = widget?.bundle['planid'];
                         final template = widget?.bundle['template'];
                         final userId = widget?.bundle['userId'];
                         final patName = widget?.bundle['patName'];
-                        final currentUserId =
-                            PreferenceUtil.getStringValue(KEY_USERID);
-                        if (currentUserId == userId) {
-                          fbaLog(eveParams: {
-                            'eventTime': '${DateTime.now()}',
-                            'ns_type': 'myplan_deatails',
-                            'navigationPage': 'My Plan Details',
-                          });
-                          Get.to(
-                            MyPlanDetail(
-                              packageId: planid,
-                              showRenew: true,
-                              templateName: template,
-                            ),
-                          ).then((value) => PageNavigator.goToPermanent(
-                              context, router.rt_Landing));
+                        //TODO if its Renew take the user into plandetail view
+                        if (widget.nsRoute == 'Renew') {
+                          final currentUserId =
+                              PreferenceUtil.getStringValue(KEY_USERID);
+                          if (currentUserId == userId) {
+                            fbaLog(eveParams: {
+                              'eventTime': '${DateTime.now()}',
+                              'ns_type': 'myplan_deatails',
+                              'navigationPage': 'My Plan Details',
+                            });
+                            Get.to(
+                              MyPlanDetail(
+                                packageId: planid,
+                                showRenew: true,
+                                templateName: template,
+                              ),
+                            ).then((value) => PageNavigator.goToPermanent(
+                                context, router.rt_Landing));
+                          } else {
+                            CommonUtil.showFamilyMemberPlanExpiryDialog(
+                                patName);
+                          }
                         } else {
-                          CommonUtil.showFamilyMemberPlanExpiryDialog(patName);
+                          //TODO if its Callback just show the message alone
+                          PageNavigator.goToPermanent(context, router.rt_Landing);
+                          Get.rawSnackbar(
+                              messageText: Center(
+                                child: Text(
+                                  '$patName, Thank you for reaching out.  Your caregiver will call you as soon as possible.',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ),
+                              snackPosition: SnackPosition.BOTTOM,
+                              snackStyle: SnackStyle.GROUNDED,
+                              duration: Duration(seconds: 3),
+                              backgroundColor: Colors.green.shade500);
                         }
                       } else {
                         fbaLog(eveParams: {

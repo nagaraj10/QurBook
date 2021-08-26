@@ -730,6 +730,20 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             PendingIntent.FLAG_CANCEL_CURRENT
         )
 
+        val callBackIntent = Intent(applicationContext, Callback::class.java)
+        callBackIntent.putExtra(getString(R.string.nsid), NS_ID)
+        callBackIntent.putExtra(Intent.EXTRA_TEXT, Constants.PROP_CALLBACK)
+        callBackIntent.putExtra(Constants.PROP_PLANID, data[Constants.PROP_PLANID])
+        callBackIntent.putExtra(Constants.PROP_TEMP_NAME, data[Constants.PROP_TEMP_NAME])
+        callBackIntent.putExtra(Constants.PROB_USER_ID, data[Constants.PROB_USER_ID])
+        callBackIntent.putExtra(getString(R.string.pat_name), PAT_NAME)
+        val callBackPendingIntent = PendingIntent.getBroadcast(
+            applicationContext,
+            NS_ID,
+            callBackIntent,
+            PendingIntent.FLAG_CANCEL_CURRENT
+        )
+
 
         var notification = NotificationCompat.Builder(this, CHANNEL_RENEW)
             .setSmallIcon(R.mipmap.app_ns_icon)
@@ -744,7 +758,8 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setWhen(0)
             .setCategory(NotificationCompat.CATEGORY_REMINDER)
-            .addAction(R.drawable.ic_reschedule, Constants.PROP_RENEW, renewPendingIntent)
+            .addAction(android.R.drawable.ic_menu_rotate, Constants.PROP_RENEW, renewPendingIntent)
+            .addAction(android.R.drawable.ic_menu_help, Constants.PROP_CALLBACK, callBackPendingIntent)
             .setStyle(
                 NotificationCompat.BigTextStyle().bigText(data[getString(R.string.pro_ns_body)])
             )
