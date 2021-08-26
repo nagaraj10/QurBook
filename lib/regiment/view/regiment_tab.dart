@@ -49,11 +49,13 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
   bool isSettingsOpen = false;
 
   BuildContext _myContext;
+  ProfileResponseModel profileResponseModel;
 
   @override
   void initState() {
     FocusManager.instance.primaryFocus.unfocus();
     super.initState();
+    getProfile();
     WidgetsBinding.instance.addObserver(this);
     Provider.of<RegimentViewModel>(context, listen: false).getRegimentDate(
       dateTime: DateTime.now(),
@@ -108,6 +110,34 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                     .startShowCase([_DailyKey, _cardKey, _SymptomsKey]));
       });
     } catch (e) {}
+  }
+
+  getProfile() async {
+    profileResponseModel =
+        await Provider.of<RegimentViewModel>(context, listen: false)
+            .getProfile();
+    if (profileResponseModel?.result?.profileData?.isDefault ?? false) {
+      await openScheduleDialog();
+    }
+  }
+
+
+  openScheduleDialog() async {
+    if (profileResponseModel.isSuccess &&
+        profileResponseModel?.result?.profileData != null &&
+        _regimentViewModel.regimentStatus != RegimentStatus.DialogOpened) {
+      _regimentViewModel.updateRegimentStatus(RegimentStatus.DialogOpened);
+      await showDialog(
+        context: context,
+        builder: (context) => EventListWidget(
+          profileResultModel: profileResponseModel.result,
+        ),
+      );
+      _regimentViewModel.updateRegimentStatus(RegimentStatus.DialogClosed);
+      profileResponseModel =
+      await Provider.of<RegimentViewModel>(context, listen: false)
+          .getProfile();
+    }
   }
 
   @override
@@ -429,29 +459,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                                 onSelected: (index) async {
                                   isSettingsOpen = false;
                                   if (index == 0) {
-                                    final profileResponseModel =
-                                        await Provider.of<RegimentViewModel>(
-                                                context,
-                                                listen: false)
-                                            .getProfile();
-                                    if (profileResponseModel.isSuccess &&
-                                        profileResponseModel
-                                                ?.result?.profileData !=
-                                            null &&
-                                        _regimentViewModel.regimentStatus !=
-                                            RegimentStatus.DialogOpened) {
-                                      _regimentViewModel.updateRegimentStatus(
-                                          RegimentStatus.DialogOpened);
-                                      await showDialog(
-                                        context: context,
-                                        builder: (context) => EventListWidget(
-                                          profileResultModel:
-                                              profileResponseModel.result,
-                                        ),
-                                      );
-                                      _regimentViewModel.updateRegimentStatus(
-                                          RegimentStatus.DialogClosed);
-                                    }
+                                    await openScheduleDialog();
                                   } else if (index == 1) {
                                     Get.toNamed(rt_ManageActivitiesScreen);
                                   }
