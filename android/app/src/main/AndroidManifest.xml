@@ -111,6 +111,7 @@
         <receiver android:name=".services.OnTapNotification" />
         <receiver android:name=".services.Accept" />
         <receiver android:name=".services.Renew" />
+        <receiver android:name=".services.Callback" />
         <receiver android:name=".services.Decline" />
         <service android:name=".services.AVServices"/>
         <receiver android:name=".services.DismissReceiver"/>
