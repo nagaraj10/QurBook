@@ -266,6 +266,9 @@ Future<void> main() async {
           provider.ChangeNotifierProvider<PlanProviderViewModel>(
             create: (_) => PlanProviderViewModel(),
           ),
+          provider.ChangeNotifierProvider<UserPlansViewModel>(
+            create: (_) => UserPlansViewModel(),
+          ),
         ],
         child: MyFHB(),
       ),

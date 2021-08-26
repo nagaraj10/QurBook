@@ -221,7 +221,7 @@ class RegimentService {
           {
             'method': 'post',
             'data':
-                "Action=SetProfile$schedules${variable.qr_patientEqaul}$userId",
+                "Action=SetProfile$schedules&IsDefault=0${variable.qr_patientEqaul}$userId",
           },
         ),
       );
