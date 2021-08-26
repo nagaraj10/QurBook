@@ -24,6 +24,7 @@ class AcceptReceiver:BroadcastReceiver() {
         val patName = p1?.getStringExtra(p0?.getString(R.string.pat_name))
         val patPic = p1?.getStringExtra(p0?.getString(R.string.pat_pic))
         val callType = p1?.getStringExtra(p0?.getString(R.string.callType))
+        val isWeb = p1?.getStringExtra(p0?.getString(R.string.web))
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(p0!!)
         MyApp.isMissedNSShown=false
         MyApp().updateStatus(true)
@@ -45,6 +46,7 @@ class AcceptReceiver:BroadcastReceiver() {
         launchIntent?.putExtra(p0.getString(R.string.pat_name),patName)
         launchIntent?.putExtra(p0.getString(R.string.pat_pic),patPic)
         launchIntent?.putExtra(p0.getString(R.string.callType),callType)
+        launchIntent?.putExtra(p0.getString(R.string.web),isWeb)
         p0.startActivity(launchIntent)
     }
 }

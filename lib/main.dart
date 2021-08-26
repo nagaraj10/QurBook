@@ -1,12 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io' show Platform;
+import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:agora_rtc_engine/rtc_engine.dart' as rtc;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:flutter_logs/flutter_logs.dart';
+import 'package:flutter_logs/flutter_logs.dart' as applog;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myfhb/myPlan/view/myPlanDetail.dart';
 import 'package:myfhb/src/utils/dynamic_links.dart';
@@ -222,24 +223,24 @@ Future<void> main() async {
     //   ),
     // );
 
-    await FlutterLogs.initLogs(
+    await applog.FlutterLogs.initLogs(
       logLevelsEnabled: [
-        LogLevel.INFO,
-        LogLevel.WARNING,
-        LogLevel.ERROR,
-        LogLevel.SEVERE,
+        applog.LogLevel.INFO,
+        applog.LogLevel.WARNING,
+        applog.LogLevel.ERROR,
+        applog.LogLevel.SEVERE,
       ],
-      timeStampFormat: TimeStampFormat.TIME_FORMAT_READABLE,
-      directoryStructure: DirectoryStructure.SINGLE_FILE_FOR_DAY,
+      timeStampFormat: applog.TimeStampFormat.TIME_FORMAT_READABLE,
+      directoryStructure: applog.DirectoryStructure.SINGLE_FILE_FOR_DAY,
       logTypesEnabled: ['device', 'network', 'errors'],
-      logFileExtension: LogFileExtension.TXT,
+      logFileExtension: applog.LogFileExtension.TXT,
       logsWriteDirectoryName: 'Logs',
       logsExportDirectoryName: 'Shared',
       debugFileOperations: true,
       isDebuggable: true,
       singleLogFileSize: 10,
     );
-    FlutterLogs.channel.setMethodCallHandler((call) {
+    applog.FlutterLogs.channel.setMethodCallHandler((call) {
       if (call.method == 'logsExported') {
         print(call.arguments);
         CommonUtil.uploadTheLog(
@@ -743,41 +744,52 @@ class _MyFHBState extends State<MyFHB> {
           doctorPic = passedValArr[3];
           patientPic = passedValArr[7];
           callType = passedValArr[8];
+          var isWeb = passedValArr[9] == null
+              ? false
+              : passedValArr[9] == 'true'
+                  ? true
+                  : false;
           if (doctorPic.isNotEmpty) {
-            doctorPic = json.decode(doctorPic);
+            try {
+              doctorPic = json.decode(doctorPic);
+            } catch (e) {}
           } else {
             doctorPic = '';
           }
           if (patientPic.isNotEmpty) {
-            patientPic = json.decode(patientPic);
+            try {
+              patientPic = json.decode(patientPic);
+            } catch (e) {}
           } else {
             patientPic = '';
           }
-        } catch (e) {}
-        fbaLog(eveParams: {
-          'eventTime': '${DateTime.now()}',
-          'ns_type': 'call',
-          'navigationPage': 'TeleHelath Call screen',
-        });
-        if (callType.toLowerCase() == 'audio') {
-          Provider.of<AudioCallProvider>(Get.context, listen: false)
-              .enableAudioCall();
-        } else if (callType.toLowerCase() == 'video') {
-          Provider.of<AudioCallProvider>(Get.context, listen: false)
-              .disableAudioCall();
-        }
 
-        Get.to(CallMain(
-          doctorName: passedValArr[1],
-          doctorId: passedValArr[2],
-          doctorPic: doctorPic,
-          patientId: passedValArr[5],
-          patientName: passedValArr[6],
-          patientPicUrl: patientPic,
-          channelName: passedValArr[0],
-          role: rtc.ClientRole.Broadcaster,
-          isAppExists: true,
-        ));
+          fbaLog(eveParams: {
+            'eventTime': '${DateTime.now()}',
+            'ns_type': 'call',
+            'navigationPage': 'TeleHelath Call screen',
+          });
+          if (callType.toLowerCase() == 'audio') {
+            Provider.of<AudioCallProvider>(Get.context, listen: false)
+                .enableAudioCall();
+          } else if (callType.toLowerCase() == 'video') {
+            Provider.of<AudioCallProvider>(Get.context, listen: false)
+                .disableAudioCall();
+          }
+
+          Get.to(CallMain(
+            doctorName: passedValArr[1],
+            doctorId: passedValArr[2],
+            doctorPic: doctorPic,
+            patientId: passedValArr[5],
+            patientName: passedValArr[6],
+            patientPicUrl: patientPic,
+            channelName: passedValArr[0],
+            role: ClientRole.Broadcaster,
+            isAppExists: true,
+            isWeb: isWeb,
+          ));
+        } catch (e) {}
       }
     }
   }
@@ -1125,14 +1137,23 @@ class _MyFHBState extends State<MyFHB> {
     var docPic = navRoute.split('&')[3];
     var patPic = navRoute.split('&')[7];
     var callType = navRoute.split('&')[8];
+    var isWeb = navRoute.split('&')[9] == null
+        ? false
+        : navRoute.split('&')[9] == 'true'
+            ? true
+            : false;
     try {
       if (docPic.isNotEmpty) {
-        docPic = json.decode(navRoute.split('&')[3]);
+        try {
+          docPic = json.decode(navRoute.split('&')[3]);
+        } catch (e) {}
       } else {
         docPic = '';
       }
       if (patPic.isNotEmpty) {
-        patPic = json.decode(navRoute.split('&')[7]);
+        try {
+          patPic = json.decode(navRoute.split('&')[7]);
+        } catch (e) {}
       } else {
         patPic = '';
       }
@@ -1151,15 +1172,17 @@ class _MyFHBState extends State<MyFHB> {
           .disableAudioCall();
     }
     return CallMain(
-        isAppExists: false,
-        role: rtc.ClientRole.Broadcaster,
-        channelName: navRoute.split('&')[0],
-        doctorName: navRoute.split('&')[1] ?? 'Test',
-        doctorId: navRoute.split('&')[2] ?? 'Doctor',
-        doctorPic: docPic,
-        patientId: navRoute.split('&')[5] ?? 'Patient',
-        patientName: navRoute.split('&')[6] ?? 'Test',
-        patientPicUrl: patPic);
+      isAppExists: false,
+      role: ClientRole.Broadcaster,
+      channelName: navRoute.split('&')[0],
+      doctorName: navRoute.split('&')[1] ?? 'Test',
+      doctorId: navRoute.split('&')[2] ?? 'Doctor',
+      doctorPic: docPic,
+      patientId: navRoute.split('&')[5] ?? 'Patient',
+      patientName: navRoute.split('&')[6] ?? 'Test',
+      patientPicUrl: patPic,
+      isWeb: isWeb,
+    );
   }
 
   void onBoardNSAcknowledge(data, body) {

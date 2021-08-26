@@ -383,6 +383,7 @@ class MainActivity : FlutterActivity() {
         var planId = intent.getStringExtra(Constants.PROP_PLANID)
         var callType = intent.getStringExtra(getString(R.string.callType))
         var userId = intent.getStringExtra(Constants.PROB_USER_ID)
+        var isWeb = intent.getStringExtra(getString(R.string.web))
         var appLog = intent.getStringExtra(getString(R.string.ns_type_applog))
         if (sharedValue != null && sharedValue == "chat") {
             sharedValue = "$sharedValue"
@@ -390,9 +391,9 @@ class MainActivity : FlutterActivity() {
             if (!externalLink.startsWith("http://") && !externalLink.startsWith("https://"))
                 externalLink = "http://" + externalLink
             sharedValue = "openurl&$externalLink"
-        } else if (sharedValue != null && username != null && docId != null && docPic != null && callType != null)  {
+        } else if (sharedValue != null && username != null && docId != null && docPic != null && callType != null && isWeb != null)  {
             sharedValue =
-                "$sharedValue&$username&$docId&$docPic&${Constants.PROP_CALL}&${patId}&${patName}&${patPic}&${callType}"
+                "$sharedValue&$username&$docId&$docPic&${Constants.PROP_CALL}&${patId}&${patName}&${patPic}&${callType}&${isWeb}"
         } else if (sharedValue == Constants.PROP_DOC_RESCHDULE) {
             //todo redirect to telehealth page
             sharedValue =

@@ -674,6 +674,8 @@ const String FETCH_LOG = 'FETCH_LOG';
 
 const String USERS = 'users';
 const String chat = 'chat';
+const String isWeb = 'isWeb';
+
 const String planId = 'planId';
 const String myCartDetails = 'mycartdetails';
 
