@@ -25,7 +25,7 @@
 
     <application
         android:name="com.ventechsolutions.myFHB.MyApp"
-        android:label="QurBook"
+        android:label="QurBook US"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true"
         tools:targetApi="m"

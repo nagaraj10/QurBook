@@ -1,294 +1,34 @@
 {
   "project_info": {
-    "project_number": "588661578434",
-    "firebase_url": "https://myfhbfitness.firebaseio.com",
-    "project_id": "myfhbfitness",
-    "storage_bucket": "myfhbfitness.appspot.com"
+    "project_number": "69764989858",
+    "project_id": "myfhbfitness-us",
+    "storage_bucket": "myfhbfitness-us.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:588661578434:android:b58f5ba6e25330f598f95b",
+        "mobilesdk_app_id": "1:69764989858:android:e26bb062cd69152a8c28fb",
         "android_client_info": {
-          "package_name": "com.example.go_fhb_flutter"
+          "package_name": "com.qurhealth.qurbook.us"
         }
       },
       "oauth_client": [
         {
-          "client_id": "588661578434-34nabhf3p85pcgl8nd3ctpoatmv7isph.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.go_fhb_flutter",
-            "certificate_hash": "c7f27710afa65295bb30064511ba46f8c51042f8"
-          }
-        },
-        {
-          "client_id": "588661578434-oki6qk1fmmbu2ads4ihdla1gup3npto1.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.go_fhb_flutter",
-            "certificate_hash": "347d53b3eefe60f15ece110122865268d05bddc3"
-          }
-        },
-        {
-          "client_id": "588661578434-oplufmffn1s1v2an6bgbsupged6lh703.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.go_fhb_flutter",
-            "certificate_hash": "93b2426a89498900e8d4fad8f961294cae406718"
-          }
-        },
-        {
-          "client_id": "588661578434-o02bqib09rg5po5bsk7hhiq4qbgktc0p.apps.googleusercontent.com",
+          "client_id": "69764989858-m91k6ht142sk9g7c7et713a3h4b2vl5j.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyATmXYdNEYYPxrO-DLWppZZJg7e9efo-0I"
+          "current_key": "AIzaSyCKisP0Herhn3V6nzrfqivrBSsAmP9gGhE"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "588661578434-2q9umjc2916u3pdt5i72u0j1sp6sb48p.apps.googleusercontent.com",
+              "client_id": "69764989858-m91k6ht142sk9g7c7et713a3h4b2vl5j.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "588661578434-fj6k7cs9hh78gqo3eakprmmo61tgsoti.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.trident.voipapp"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:588661578434:android:4d5ad5024dd2403298f95b",
-        "android_client_info": {
-          "package_name": "com.globalmantrainnovations.myfhb"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "588661578434-3vair1dbfjvbeuosleiibh1cn8vd6n22.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.globalmantrainnovations.myfhb",
-            "certificate_hash": "93b2426a89498900e8d4fad8f961294cae406718"
-          }
-        },
-        {
-          "client_id": "588661578434-6vj3luftr1h7jtfpata8rmfnha8pjdpp.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.globalmantrainnovations.myfhb",
-            "certificate_hash": "347d53b3eefe60f15ece110122865268d05bddc3"
-          }
-        },
-        {
-          "client_id": "588661578434-lnr22h1bfjo8k6km7jp393vf367ln8ck.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.globalmantrainnovations.myfhb",
-            "certificate_hash": "c7f27710afa65295bb30064511ba46f8c51042f8"
-          }
-        },
-        {
-          "client_id": "588661578434-o02bqib09rg5po5bsk7hhiq4qbgktc0p.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyATmXYdNEYYPxrO-DLWppZZJg7e9efo-0I"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "588661578434-2q9umjc2916u3pdt5i72u0j1sp6sb48p.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "588661578434-fj6k7cs9hh78gqo3eakprmmo61tgsoti.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.trident.voipapp"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:588661578434:android:4fbaa4bc2c5e1bac98f95b",
-        "android_client_info": {
-          "package_name": "com.ventechsolutions.goFHB"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "588661578434-6pdh8o8j1asf4e8nr0d9baacnfs83dfb.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.ventechsolutions.goFHB",
-            "certificate_hash": "93b2426a89498900e8d4fad8f961294cae406718"
-          }
-        },
-        {
-          "client_id": "588661578434-71oua3odgc1gm77jlel7mn8q5eqnu2fh.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.ventechsolutions.goFHB",
-            "certificate_hash": "347d53b3eefe60f15ece110122865268d05bddc3"
-          }
-        },
-        {
-          "client_id": "588661578434-see5pp8tpljregea5d07m8qm698ib6l4.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.ventechsolutions.goFHB",
-            "certificate_hash": "c7f27710afa65295bb30064511ba46f8c51042f8"
-          }
-        },
-        {
-          "client_id": "588661578434-o02bqib09rg5po5bsk7hhiq4qbgktc0p.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyATmXYdNEYYPxrO-DLWppZZJg7e9efo-0I"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "588661578434-2q9umjc2916u3pdt5i72u0j1sp6sb48p.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "588661578434-fj6k7cs9hh78gqo3eakprmmo61tgsoti.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.trident.voipapp"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:588661578434:android:5dc16aa5c1e32e3398f95b",
-        "android_client_info": {
-          "package_name": "com.ventechsolutions.myFHB"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "588661578434-23f3ku96n2khd561ccr27dlpcsg5if85.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.ventechsolutions.myFHB",
-            "certificate_hash": "347d53b3eefe60f15ece110122865268d05bddc3"
-          }
-        },
-        {
-          "client_id": "588661578434-4lc8hp97418590eqidl05nn5ktfrfoti.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.ventechsolutions.myFHB",
-            "certificate_hash": "c7f27710afa65295bb30064511ba46f8c51042f8"
-          }
-        },
-        {
-          "client_id": "588661578434-842292bsjs7p1d9alnn5aq3gflog5uei.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.ventechsolutions.myFHB",
-            "certificate_hash": "93b2426a89498900e8d4fad8f961294cae406718"
-          }
-        },
-        {
-          "client_id": "588661578434-b1363eok5e1oko3ik7qdba9dfnlf4qpe.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.ventechsolutions.myFHB",
-            "certificate_hash": "cb23d717ec91870a52e0ed46c1bdd4b97de9d05e"
-          }
-        },
-        {
-          "client_id": "588661578434-bhio9c4k11lfg4mbketnajitn8f0nrcu.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.ventechsolutions.myFHB",
-            "certificate_hash": "40946d50f1cf43abcd8bcd6f5505741110b11a76"
-          }
-        },
-        {
-          "client_id": "588661578434-is2sdat8babreonacckd8o2lfj15ifr1.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.ventechsolutions.myFHB",
-            "certificate_hash": "02bcdcbfc88d952b8d5ad9d3e2e5205180796c32"
-          }
-        },
-        {
-          "client_id": "588661578434-mqkfedgtg1enrvnsffmkvrjbi2uulssv.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.ventechsolutions.myFHB",
-            "certificate_hash": "8bb397cb79c0b6a635111d263df4e5a315aba1e2"
-          }
-        },
-        {
-          "client_id": "588661578434-mvf7mdkj4cl18ff5o1rokt7nipd7c6rk.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.ventechsolutions.myFHB",
-            "certificate_hash": "361babfe70c16d9a228902e541b7960455c00b26"
-          }
-        },
-        {
-          "client_id": "588661578434-nvk3esukdqgsdig9iqtua474tc11barq.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.ventechsolutions.myFHB",
-            "certificate_hash": "711508af854c2384f5ca0449b5423ea7981b816f"
-          }
-        },
-        {
-          "client_id": "588661578434-o02bqib09rg5po5bsk7hhiq4qbgktc0p.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyATmXYdNEYYPxrO-DLWppZZJg7e9efo-0I"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "588661578434-2q9umjc2916u3pdt5i72u0j1sp6sb48p.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "588661578434-fj6k7cs9hh78gqo3eakprmmo61tgsoti.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.trident.voipapp"
-              }
             }
           ]
         }
