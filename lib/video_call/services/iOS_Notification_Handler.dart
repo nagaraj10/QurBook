@@ -64,6 +64,16 @@ class IosNotificationHandler {
                 actionForTheNotification,
               );
             } else {
+              if (callbackAction) {
+                callbackAction = false;
+                model.redirect = "";
+                CommonUtil().CallbackAPI(
+                  model.patientName,
+                  model.planId,
+                  model.userId,
+                );
+                return;
+              }
               actionForTheNotification();
             }
           } else {

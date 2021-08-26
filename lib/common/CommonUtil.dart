@@ -2992,22 +2992,22 @@ class CommonUtil {
     }
   }
 
-  CallbackAPI(
+  Future<void> CallbackAPI(
     String patientName,
     String planId,
     String userId,
   ) async {
-    LoaderClass.showLoadingDialog(
-      Get.context,
-      canDismiss: false,
-    );
+    // LoaderClass.showLoadingDialog(
+    //   Get.context,
+    //   canDismiss: false,
+    // );
     var res = await ApiBaseHelper().callBackForPlanExpiry(
       userId,
       planId,
     );
-    LoaderClass.hideLoadingDialog(
-      Get.context,
-    );
+    // LoaderClass.hideLoadingDialog(
+    //   Get.context,
+    // );
     if (res) {
       FlutterToast().getToast(
         patientName +
@@ -3015,7 +3015,10 @@ class CommonUtil {
         Colors.green,
       );
     } else {
-      print("api call failed");
+      FlutterToast().getToast(
+        "Failed to notify the caregiver",
+        Colors.red,
+      );
     }
   }
 

@@ -172,9 +172,14 @@ class ApiBaseHelper {
         headers: head,
         body: body,
       );
-      convert.jsonDecode(response.body.toString());
-      print(response.body);
-      return true;
+      final res = convert.jsonDecode(response.body.toString());
+      if (response.statusCode == 200) {
+        print(res);
+        return true;
+      } else {
+        print(res);
+        return false;
+      }
     } catch (e) {
       print(e.toString());
       return false;
