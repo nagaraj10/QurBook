@@ -174,8 +174,13 @@ class ApiBaseHelper {
       );
       final res = convert.jsonDecode(response.body.toString());
       if (response.statusCode == 200) {
-        print(res);
-        return true;
+        if (res["isSuccess"] == true) {
+          print(res);
+          return true;
+        } else {
+          print(res);
+          return false;
+        }
       } else {
         print(res);
         return false;

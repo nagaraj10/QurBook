@@ -17,6 +17,7 @@ import 'package:myfhb/src/ui/bot/SuperMaya.dart';
 import 'package:myfhb/src/ui/bot/view/ChatScreen.dart' as bot;
 import 'package:myfhb/src/ui/bot/view/sheela_arguments.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
+import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/telehealth/features/chat/view/chat.dart';
 import 'package:myfhb/telehealth/features/chat/view/home.dart';
@@ -72,6 +73,10 @@ class IosNotificationHandler {
                   model.planId,
                   model.userId,
                 );
+                var body = {};
+                body['templateName'] = model.templateName;
+                body['contextId'] = model.planId;
+                FetchNotificationService().updateNsActionStatus(body);
                 return;
               }
               actionForTheNotification();
@@ -129,6 +134,10 @@ class IosNotificationHandler {
         model.planId,
         model.userId,
       );
+      var body = {};
+      body['templateName'] = model.templateName;
+      body['contextId'] = model.planId;
+      FetchNotificationService().updateNsActionStatus(body);
     }
     if (model.isCall) {
       updateStatus(parameters.accept.toLowerCase());

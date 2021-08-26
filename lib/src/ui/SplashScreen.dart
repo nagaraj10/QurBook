@@ -25,6 +25,7 @@ import 'package:myfhb/src/ui/Dashboard.dart';
 import 'package:myfhb/src/ui/bot/view/sheela_arguments.dart';
 import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
+import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/city.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/doctor.dart'
@@ -482,20 +483,11 @@ class _SplashScreenState extends State<SplashScreen> {
                             planid,
                             userId,
                           );
-                          // Get.rawSnackbar(
-                          //     messageText: Center(
-                          //       child: Text(
-                          //         '$patName, Thank you for reaching out.  Your caregiver will call you as soon as possible.',
-                          //         style: TextStyle(
-                          //             color: Colors.white,
-                          //             fontWeight: FontWeight.w500),
-                          //       ),
-                          //     ),
-                          //     snackPosition: SnackPosition.BOTTOM,
-                          //     snackStyle: SnackStyle.GROUNDED,
-                          //     duration: Duration(seconds: 3),
-                          //     backgroundColor: Colors.green.shade500);
                         }
+                        var body = {};
+                        body['templateName'] = template;
+                        body['contextId'] = planid;
+                        FetchNotificationService().updateNsActionStatus(body);
                       } else {
                         fbaLog(eveParams: {
                           'eventTime': '${DateTime.now()}',

@@ -1030,7 +1030,30 @@ class _NotificationScreen extends State<NotificationScreen> {
               OutlineButton(
                 onPressed: !notification?.isActionDone
                     ? () {
-                        // call back action
+                        CommonUtil().CallbackAPI(
+                          notification?.messageDetails?.payload?.patientName,
+                          notification?.messageDetails?.payload?.planId,
+                          notification?.messageDetails?.payload?.userId,
+                        );
+                        var body = {};
+                        body['templateName'] = payload?.templateName;
+                        body['contextId'] =
+                            notification?.messageDetails?.payload?.planId;
+                        FetchNotificationService()
+                            .updateNsActionStatus(body)
+                            .then((data) {
+                          if (data != null && data['isSuccess']) {
+                            Provider.of<FetchNotificationViewModel>(context,
+                                listen: false)
+                              ..clearNotifications()
+                              ..fetchNotifications();
+                          } else {
+                            Provider.of<FetchNotificationViewModel>(context,
+                                listen: false)
+                              ..clearNotifications()
+                              ..fetchNotifications();
+                          }
+                        });
                       }
                     : null,
                 borderSide: !notification?.isActionDone

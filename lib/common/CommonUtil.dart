@@ -3008,17 +3008,34 @@ class CommonUtil {
     // LoaderClass.hideLoadingDialog(
     //   Get.context,
     // );
+
     if (res) {
-      FlutterToast().getToast(
-        patientName +
-            "Thank you for reaching out.  Your caregiver will call you as soon as possible.",
-        Colors.green,
-      );
+      Get.rawSnackbar(
+          messageText: Center(
+            child: Text(
+              patientName +
+                  "Thank you for reaching out.  Your caregiver will call you as soon as possible.",
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+            ),
+          ),
+          snackPosition: SnackPosition.BOTTOM,
+          snackStyle: SnackStyle.GROUNDED,
+          duration: Duration(seconds: 3),
+          backgroundColor: Colors.green.shade500);
     } else {
-      FlutterToast().getToast(
-        "Failed to notify the caregiver",
-        Colors.red,
-      );
+      Get.rawSnackbar(
+          messageText: Center(
+            child: Text(
+              "Failed to notify the caregiver",
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+            ),
+          ),
+          snackPosition: SnackPosition.BOTTOM,
+          snackStyle: SnackStyle.GROUNDED,
+          duration: Duration(seconds: 3),
+          backgroundColor: Colors.red.shade500);
     }
   }
 
