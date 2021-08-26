@@ -155,6 +155,32 @@ class ApiBaseHelper {
     return response.data;
   }
 
+  Future<bool> callBackForPlanExpiry(
+    String userId,
+    String planId,
+  ) async {
+    try {
+      final head = await headerRequest.getRequestHeadersAuthContent();
+      final body = convert.jsonEncode(
+        {
+          "planId": planId,
+          "userId": userId,
+        },
+      );
+      final response = await http.post(
+        Uri.parse(_baseUrl + 'fire-base/call-back'),
+        headers: head,
+        body: body,
+      );
+      convert.jsonDecode(response.body.toString());
+      print(response.body);
+      return true;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
   Future<dynamic> updateTeleHealthProviders(String url, String query) async {
     var dio = Dio();
     var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
@@ -169,10 +195,8 @@ class ApiBaseHelper {
     final FormData formData = FormData.fromMap(mapForSignUp);
 
     final response = await dio.post(_baseUrl + url, data: formData);
-
-    //responseJson = _returnResponse(response.data);
-
-    return response.data;
+    print(response.data);
+    return true;
   }
 
   Future<dynamic> updateTeleHealthProvidersNew(

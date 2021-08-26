@@ -101,6 +101,7 @@ import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import '../../authentication/constants/constants.dart';
 import 'package:myfhb/widgets/checkout_page.dart';
 import '../../colors/fhb_colors.dart' as fhbColors;
+import 'package:myfhb/src/ui/loader_class.dart';
 
 class CommonUtil {
   static String SHEELA_URL = '';
@@ -2988,6 +2989,33 @@ class CommonUtil {
         'CurrentUser- $userIdCurrent',
         '$message',
       );
+    }
+  }
+
+  CallbackAPI(
+    String patientName,
+    String planId,
+    String userId,
+  ) async {
+    LoaderClass.showLoadingDialog(
+      Get.context,
+      canDismiss: false,
+    );
+    var res = await ApiBaseHelper().callBackForPlanExpiry(
+      userId,
+      planId,
+    );
+    LoaderClass.hideLoadingDialog(
+      Get.context,
+    );
+    if (res) {
+      FlutterToast().getToast(
+        patientName +
+            "Thank you for reaching out.  Your caregiver will call you as soon as possible.",
+        Colors.green,
+      );
+    } else {
+      print("api call failed");
     }
   }
 

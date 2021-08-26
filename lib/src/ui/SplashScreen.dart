@@ -445,7 +445,8 @@ class _SplashScreenState extends State<SplashScreen> {
                           isFromNotification: true,
                         )).then((value) => PageNavigator.goToPermanent(
                             context, router.rt_Landing));
-                      } else if (widget.nsRoute == 'Renew' || widget.nsRoute == 'Callback') {
+                      } else if (widget.nsRoute == 'Renew' ||
+                          widget.nsRoute == 'Callback') {
                         final planid = widget?.bundle['planid'];
                         final template = widget?.bundle['template'];
                         final userId = widget?.bundle['userId'];
@@ -474,20 +475,26 @@ class _SplashScreenState extends State<SplashScreen> {
                           }
                         } else {
                           //TODO if its Callback just show the message alone
-                          PageNavigator.goToPermanent(context, router.rt_Landing);
-                          Get.rawSnackbar(
-                              messageText: Center(
-                                child: Text(
-                                  '$patName, Thank you for reaching out.  Your caregiver will call you as soon as possible.',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              ),
-                              snackPosition: SnackPosition.BOTTOM,
-                              snackStyle: SnackStyle.GROUNDED,
-                              duration: Duration(seconds: 3),
-                              backgroundColor: Colors.green.shade500);
+                          PageNavigator.goToPermanent(
+                              context, router.rt_Landing);
+                          CommonUtil().CallbackAPI(
+                            patName,
+                            planid,
+                            userId,
+                          );
+                          // Get.rawSnackbar(
+                          //     messageText: Center(
+                          //       child: Text(
+                          //         '$patName, Thank you for reaching out.  Your caregiver will call you as soon as possible.',
+                          //         style: TextStyle(
+                          //             color: Colors.white,
+                          //             fontWeight: FontWeight.w500),
+                          //       ),
+                          //     ),
+                          //     snackPosition: SnackPosition.BOTTOM,
+                          //     snackStyle: SnackStyle.GROUNDED,
+                          //     duration: Duration(seconds: 3),
+                          //     backgroundColor: Colors.green.shade500);
                         }
                       } else {
                         fbaLog(eveParams: {

@@ -742,21 +742,25 @@ class _MyFHBState extends State<MyFHB> {
             CommonUtil.showFamilyMemberPlanExpiryDialog(patName);
           }
         } else {
-          //TODO if its Callback just show the message alone
-          Get.rawSnackbar(
-              messageText: Center(
-                child: Text(
-                  '$patName, Thank you for reaching out.  Your caregiver will call you as soon as possible.',
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.w500),
-                ),
-              ),
-              snackPosition: SnackPosition.BOTTOM,
-              snackStyle: SnackStyle.GROUNDED,
-              duration: Duration(seconds: 3),
-              backgroundColor: Colors.green.shade500);
+          CommonUtil().CallbackAPI(
+            patName,
+            planid,
+            userId,
+          );
+          //   //TODO if its Callback just show the message alone
+          //   Get.rawSnackbar(
+          //       messageText: Center(
+          //         child: Text(
+          //           '$patName, Thank you for reaching out.  Your caregiver will call you as soon as possible.',
+          //           style: TextStyle(
+          //               color: Colors.white, fontWeight: FontWeight.w500),
+          //         ),
+          //       ),
+          //       snackPosition: SnackPosition.BOTTOM,
+          //       snackStyle: SnackStyle.GROUNDED,
+          //       duration: Duration(seconds: 3),
+          //       backgroundColor: Colors.green.shade500);
         }
-        
       } else if (passedValArr[4] == 'call') {
         try {
           doctorPic = passedValArr[3];
@@ -1057,7 +1061,8 @@ class _MyFHBState extends State<MyFHB> {
             nsRoute: 'openurl',
             bundle: navRoute.split('&')[1],
           );
-        } else if (navRoute.split('&')[0] == 'Renew' || navRoute.split('&')[0] == 'Callback') {
+        } else if (navRoute.split('&')[0] == 'Renew' ||
+            navRoute.split('&')[0] == 'Callback') {
           return SplashScreen(
             nsRoute: navRoute.split('&')[0],
             bundle: {
