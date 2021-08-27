@@ -624,7 +624,7 @@ const String strNoAppointments = 'No Appoinments Available';
 const String strNoPlans = 'No Plan List Available';
 const String strNoActivities = 'No Activities Available';
 const String strNoPackages = 'No Packages Available';
-const String strNoReports = 'No Reports Available';
+const String strNoReports = 'Your reports are being generated. We\'ll populate here soon';
 
 const String strNoDataAvailable = 'Unable To load';
 const String strHealthOrganizationName = 'healthOrganizationName';
