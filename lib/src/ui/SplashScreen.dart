@@ -25,6 +25,7 @@ import 'package:myfhb/src/ui/Dashboard.dart';
 import 'package:myfhb/src/ui/bot/view/sheela_arguments.dart';
 import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
+import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/city.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/doctor.dart'
@@ -445,30 +446,52 @@ class _SplashScreenState extends State<SplashScreen> {
                           isFromNotification: true,
                         )).then((value) => PageNavigator.goToPermanent(
                             context, router.rt_Landing));
-                      } else if (widget.nsRoute == 'renew') {
+                      } else if (widget.nsRoute == 'Renew' ||
+                          widget.nsRoute == 'Callback') {
                         final planid = widget?.bundle['planid'];
                         final template = widget?.bundle['template'];
                         final userId = widget?.bundle['userId'];
                         final patName = widget?.bundle['patName'];
-                        final currentUserId =
-                            PreferenceUtil.getStringValue(KEY_USERID);
-                        if (currentUserId == userId) {
-                          fbaLog(eveParams: {
-                            'eventTime': '${DateTime.now()}',
-                            'ns_type': 'myplan_deatails',
-                            'navigationPage': 'My Plan Details',
-                          });
-                          Get.to(
-                            MyPlanDetail(
-                              packageId: planid,
-                              showRenew: true,
-                              templateName: template,
-                            ),
-                          ).then((value) => PageNavigator.goToPermanent(
-                              context, router.rt_Landing));
+                        //TODO if its Renew take the user into plandetail view
+                        if (widget.nsRoute == 'Renew') {
+                          final currentUserId =
+                              PreferenceUtil.getStringValue(KEY_USERID);
+                          if (currentUserId == userId) {
+                            fbaLog(eveParams: {
+                              'eventTime': '${DateTime.now()}',
+                              'ns_type': 'myplan_deatails',
+                              'navigationPage': 'My Plan Details',
+                            });
+                            Get.to(
+                              MyPlanDetail(
+                                packageId: planid,
+                                showRenew: true,
+                                templateName: template,
+                              ),
+                            ).then((value) => PageNavigator.goToPermanent(
+                                context, router.rt_Landing));
+                          } else {
+                            CommonUtil.showFamilyMemberPlanExpiryDialog(
+                                patName);
+                          }
                         } else {
-                          CommonUtil.showFamilyMemberPlanExpiryDialog(patName);
+                          //TODO if its Callback just show the message alone
+                          PageNavigator.goToPermanent(
+                              context, router.rt_Landing);
+                          CommonUtil().CallbackAPI(
+                            patName,
+                            planid,
+                            userId,
+                          );
                         }
+                        var body = {};
+                        body['templateName'] = template;
+                        body['contextId'] = planid;
+                        FetchNotificationService()
+                            .updateNsActionStatus(body)
+                            .then((data) {
+                          FetchNotificationService().updateNsOnTapAction(body);
+                        });
                       } else {
                         fbaLog(eveParams: {
                           'eventTime': '${DateTime.now()}',
