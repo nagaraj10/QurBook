@@ -9,18 +9,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_parameters.dart';
-import 'package:myfhb/plan_dashboard/model/UpdatePaymentStatusSubscribe.dart';
-import 'package:myfhb/plan_dashboard/viewModel/subscribeViewModel.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/updatePayment/UpdatePaymentModel.dart';
-import 'package:myfhb/telehealth/features/MyProvider/viewModel/UpdatePaymentViewModel.dart';
-import 'package:myfhb/telehealth/features/Payment/ResultPage.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -29,11 +22,10 @@ class ReportWebView extends StatefulWidget {
   final String reportId;
   final String id;
 
-  ReportWebView(
-      {Key key,
-      @required this.embededUrl,
-      @required this.reportId,
-      @required this.id})
+  ReportWebView({Key key,
+    @required this.embededUrl,
+    @required this.reportId,
+    @required this.id})
       : super(key: key);
 
   @override
@@ -48,7 +40,7 @@ class _ReportWebView extends State<ReportWebView> {
   String _power_bi_url;
 
   final Completer<WebViewController> _controller =
-      Completer<WebViewController>();
+  Completer<WebViewController>();
 
   @override
   void initState() {
@@ -68,7 +60,10 @@ class _ReportWebView extends State<ReportWebView> {
       'eventTime': '${DateTime.now()}',
       'pageName': 'Payment Screen',
       'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+      '${DateTime
+          .now()
+          .difference(mInitialTime)
+          .inSeconds} secs'
     });
   }
 
@@ -79,16 +74,25 @@ class _ReportWebView extends State<ReportWebView> {
         flexibleSpace: GradientAppBar(),
         title: const Text(REPORT_PAGE),
       ),
-      body: Platform.isAndroid ? androidWebview() : iosWebview(),
+      body: androidWebview(),
     );
   }
 
   Widget androidWebview() {
-    var height = MediaQuery.of(context).size.height;
+    var height = MediaQuery
+        .of(context)
+        .size
+        .height;
     return SingleChildScrollView(
       child: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height + 200,
+        width: MediaQuery
+            .of(context)
+            .size
+            .width,
+        height: MediaQuery
+            .of(context)
+            .size
+            .height + 200,
         child: InAppWebView(
           initialUrlRequest: URLRequest(
             url: Uri.parse(_power_bi_url),
@@ -105,7 +109,7 @@ class _ReportWebView extends State<ReportWebView> {
           onLoadStop: (InAppWebViewController controller, Uri url) {
             controller.evaluateJavascript(
                 source:
-                    'onHTMLLoad("$id","$reportId","$embededUrl","$authToken","$height")');
+                'onHTMLLoad("$id","$reportId","$embededUrl","$authToken","$height")');
             controller.clearCache();
           },
           shouldOverrideUrlLoading:
@@ -124,20 +128,20 @@ class _ReportWebView extends State<ReportWebView> {
     );
   }
 
-  Widget iosWebview() {
+/*Widget iosWebview() {
     return Builder(builder: (BuildContext context) {
       return InAppWebView(
         initialUrlRequest: URLRequest(
           url: Uri.parse(_power_bi_url),
-          /*method: 'GET',
+          */ /*method: 'GET',
               //body: Uint8List.fromList(utf8.encode("authToken=$authToken&reportId=$reportId&embedUrl=$embededUrl")),
-              headers: {'Content-Type': 'application/x-www-form-urlencoded','authToken':authToken,'reportId':reportId,'embedUrl':embededUrl}*/
+              headers: {'Content-Type': 'application/x-www-form-urlencoded','authToken':authToken,'reportId':reportId,'embedUrl':embededUrl}*/ /*
         ),
         onWebViewCreated: (controller) {
-          /*controller.evaluateJavascript(
+          */ /*controller.evaluateJavascript(
               source:
               'onHTMLLoad("$id","$reportId","$embededUrl","$authToken")');
-          controller.clearCache();*/
+          controller.clearCache();*/ /*
         },
         onLoadStop: (InAppWebViewController controller, Uri url) {
           controller.evaluateJavascript(
@@ -158,9 +162,9 @@ class _ReportWebView extends State<ReportWebView> {
         },
       );
     });
-  }
+  }*/
 
-  JavascriptChannel _toasterJavascriptChannel(BuildContext context) {
+/*JavascriptChannel _toasterJavascriptChannel(BuildContext context) {
     return JavascriptChannel(
         name: 'Toaster',
         onMessageReceived: (JavascriptMessage message) {
@@ -168,7 +172,7 @@ class _ReportWebView extends State<ReportWebView> {
             SnackBar(content: Text(message.message)),
           );
         });
-  }
+  }*/
 }
 
 class NavigationControls extends StatelessWidget {
