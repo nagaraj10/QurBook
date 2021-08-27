@@ -526,6 +526,7 @@ const String strManageActivities = 'Enable / Disable Activities';
 const String strDevices = 'Devices';
 const String strHospitals = 'Hospitals';
 const String strMyPlans = 'My Care Plans';
+const String strMyReports = 'My Reports';
 const String strCarePlans = 'Care Plans';
 const String strHealthcon = 'Category';
 const String strCarePlansLine = 'Care\nPlans';

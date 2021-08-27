@@ -317,6 +317,7 @@ void setValues(List<dynamic> values) {
   CommonUtil.BASEURL_DEVICE_READINGS = values[8];
   CommonUtil.FIREBASE_CHAT_NOTIFY_TOKEN = values[9];
   CommonUtil.REGION_CODE = values.length > 10 ? (values[10] ?? 'IN') : 'IN';
+  CommonUtil.POWER_BI_URL = values[11];
 }
 
 Widget buildError(BuildContext context, FlutterErrorDetails error) {

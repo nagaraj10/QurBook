@@ -361,6 +361,7 @@ const String PAYMENT_ID = 'payment_id';
 const String PAYMENT_REQ_ID = 'payment_request_id';
 const String CHECK_URL = 'EFHB_Loader.html';
 const String TITLE_BAR = 'Payment';
+const String REPORT_PAGE = 'Report Page';
 const String PAYSUC = 'PAYSUC';
 const String PAYCREDIT = 'Credit';
 const String PAYMENT_SUCCESS_PNG = 'assets/payment/success_tick.png';

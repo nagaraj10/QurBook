@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Orders/View/OrdersView.dart';
+import 'package:myfhb/my_reports/view/my_report_screen.dart';
 import 'package:myfhb/user_plans/view/user_profile_image.dart';
 import '../../../colors/fhb_colors.dart';
 import '../../../common/CommonUtil.dart';
@@ -182,7 +183,6 @@ class NavigationDrawer extends StatelessWidget {
                           );
                         },
                       ),
-
                       DrawerTile(
                         title: variable.strRefer_friend,
                         // iconWidget: SvgPicture.asset(
@@ -197,6 +197,27 @@ class NavigationDrawer extends StatelessWidget {
                         onPressed: () {
                           CommonUtil().accessContactsDialog();
                           Navigator.pop(context);
+                        },
+                      ),
+                      DrawerTile(
+                        title: variable.strReports,
+                        /*iconWidget: SvgPicture.asset(
+                          variable.icon_settings,
+                          color: Colors.black54,
+                        ),*/
+                        iconWidget: Image.asset(
+                          variable.icon_report_icon,
+                          width: 24.sp,
+                          height: 24.sp,
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ReportListScreen(),
+                            ),
+                          );
                         },
                       ),
                       DrawerTile(
