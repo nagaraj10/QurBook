@@ -10,6 +10,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
@@ -28,7 +29,11 @@ class ReportWebView extends StatefulWidget {
   final String reportId;
   final String id;
 
-  ReportWebView({Key key, @required this.embededUrl, @required this.reportId,@required this.id})
+  ReportWebView(
+      {Key key,
+      @required this.embededUrl,
+      @required this.reportId,
+      @required this.id})
       : super(key: key);
 
   @override
@@ -40,9 +45,10 @@ class _ReportWebView extends State<ReportWebView> {
   String reportId;
   String authToken;
   String id;
+  String _power_bi_url;
 
   final Completer<WebViewController> _controller =
-  Completer<WebViewController>();
+      Completer<WebViewController>();
 
   @override
   void initState() {
@@ -52,6 +58,7 @@ class _ReportWebView extends State<ReportWebView> {
     id = widget.id;
 
     authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    _power_bi_url = CommonUtil.POWER_BI_URL;
   }
 
   @override
@@ -61,7 +68,7 @@ class _ReportWebView extends State<ReportWebView> {
       'eventTime': '${DateTime.now()}',
       'pageName': 'Payment Screen',
       'screenSessionTime':
-      '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
     });
   }
 
@@ -77,27 +84,37 @@ class _ReportWebView extends State<ReportWebView> {
   }
 
   Widget androidWebview() {
+    var height = MediaQuery.of(context).size.height;
     return SingleChildScrollView(
       child: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height + 200,
         child: InAppWebView(
           initialUrlRequest: URLRequest(
-              url: Uri.parse(
-                  'https://portal.dev-efhb.vsolgmi.com/assets/powerbi-mobile.html'),
-              /*method: 'GET',
+            url: Uri.parse(_power_bi_url),
+            /*method: 'GET',
               //body: Uint8List.fromList(utf8.encode("authToken=$authToken&reportId=$reportId&embedUrl=$embededUrl")),
-              headers: {'Content-Type': 'application/x-www-form-urlencoded','authToken':authToken,'reportId':reportId,'embedUrl':embededUrl}*/),
+              headers: {'Content-Type': 'application/x-www-form-urlencoded','authToken':authToken,'reportId':reportId,'embedUrl':embededUrl}*/
+          ),
           onWebViewCreated: (controller) {
-            //controller.evaluateJavascript(source: 'onHTMLLoad($reportId,$embededUrl,$authToken)');
-            //controller.evaluateJavascript(source: 'onHTMLLoad()');
+            /*controller.evaluateJavascript(
+                source:
+                    'onHTMLLoad("$id","$reportId","$embededUrl","$authToken","$height")');
+            controller.clearCache();*/
           },
           onLoadStop: (InAppWebViewController controller, Uri url) {
-            controller.evaluateJavascript(source: 'onHTMLLoad("$id",$reportId","$embededUrl","$authToken")');
+            controller.evaluateJavascript(
+                source:
+                    'onHTMLLoad("$id","$reportId","$embededUrl","$authToken","$height")');
+            controller.clearCache();
           },
-          shouldOverrideUrlLoading: (controller, shouldOverrideUrlLoadingRequest) async {
-            if (Platform.isAndroid || shouldOverrideUrlLoadingRequest.iosWKNavigationType == IOSWKNavigationType.LINK_ACTIVATED) {
-              controller.loadUrl(urlRequest: shouldOverrideUrlLoadingRequest.request);
+          shouldOverrideUrlLoading:
+              (controller, shouldOverrideUrlLoadingRequest) async {
+            if (Platform.isAndroid ||
+                shouldOverrideUrlLoadingRequest.iosWKNavigationType ==
+                    IOSWKNavigationType.LINK_ACTIVATED) {
+              controller.loadUrl(
+                  urlRequest: shouldOverrideUrlLoadingRequest.request);
               return NavigationActionPolicy.CANCEL;
             }
             return NavigationActionPolicy.ALLOW;
@@ -111,21 +128,30 @@ class _ReportWebView extends State<ReportWebView> {
     return Builder(builder: (BuildContext context) {
       return InAppWebView(
         initialUrlRequest: URLRequest(
-          url: Uri.parse(
-              'https://portal.dev-efhb.vsolgmi.com/assets/powerbi-mobile.html'),
+          url: Uri.parse(_power_bi_url),
           /*method: 'GET',
               //body: Uint8List.fromList(utf8.encode("authToken=$authToken&reportId=$reportId&embedUrl=$embededUrl")),
-              headers: {'Content-Type': 'application/x-www-form-urlencoded','authToken':authToken,'reportId':reportId,'embedUrl':embededUrl}*/),
+              headers: {'Content-Type': 'application/x-www-form-urlencoded','authToken':authToken,'reportId':reportId,'embedUrl':embededUrl}*/
+        ),
         onWebViewCreated: (controller) {
-          //controller.evaluateJavascript(source: 'onHTMLLoad($reportId,$embededUrl,$authToken)');
-          //controller.evaluateJavascript(source: 'onHTMLLoad()');
+          /*controller.evaluateJavascript(
+              source:
+              'onHTMLLoad("$id","$reportId","$embededUrl","$authToken")');
+          controller.clearCache();*/
         },
         onLoadStop: (InAppWebViewController controller, Uri url) {
-          controller.evaluateJavascript(source: 'onHTMLLoad("$id",$reportId","$embededUrl","$authToken")');
+          controller.evaluateJavascript(
+              source:
+              'onHTMLLoad("$id","$reportId","$embededUrl","$authToken")');
+          controller.clearCache();
         },
-        shouldOverrideUrlLoading: (controller, shouldOverrideUrlLoadingRequest) async {
-          if (Platform.isAndroid || shouldOverrideUrlLoadingRequest.iosWKNavigationType == IOSWKNavigationType.LINK_ACTIVATED) {
-            controller.loadUrl(urlRequest: shouldOverrideUrlLoadingRequest.request);
+        shouldOverrideUrlLoading:
+            (controller, shouldOverrideUrlLoadingRequest) async {
+          if (Platform.isAndroid ||
+              shouldOverrideUrlLoadingRequest.iosWKNavigationType ==
+                  IOSWKNavigationType.LINK_ACTIVATED) {
+            controller.loadUrl(
+                urlRequest: shouldOverrideUrlLoadingRequest.request);
             return NavigationActionPolicy.CANCEL;
           }
           return NavigationActionPolicy.ALLOW;
@@ -143,7 +169,6 @@ class _ReportWebView extends State<ReportWebView> {
           );
         });
   }
-
 }
 
 class NavigationControls extends StatelessWidget {
