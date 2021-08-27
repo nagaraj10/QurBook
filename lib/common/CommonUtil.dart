@@ -23,6 +23,7 @@ import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
+import 'package:myfhb/telehealth/features/Notifications/viewModel/fetchNotificationViewModel.dart';
 import 'package:open_file/open_file.dart';
 import '../add_family_user_info/models/add_family_user_info_arguments.dart';
 import '../add_family_user_info/services/add_family_user_info_repository.dart';
@@ -101,6 +102,7 @@ import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import '../../authentication/constants/constants.dart';
 import 'package:myfhb/widgets/checkout_page.dart';
 import '../../colors/fhb_colors.dart' as fhbColors;
+import 'package:myfhb/src/ui/loader_class.dart';
 
 class CommonUtil {
   static String SHEELA_URL = '';
@@ -114,6 +116,7 @@ class CommonUtil {
   static String BASEURL_DEVICE_READINGS = '';
   static String FIREBASE_CHAT_NOTIFY_TOKEN = '';
   static String REGION_CODE = 'IN';
+  static String POWER_BI_URL = 'IN';
   static const bgColor = 0xFFe3e2e2;
   static bool isRenewDialogOpened = false;
   static const secondaryGrey = 0xFF545454;
@@ -2831,7 +2834,11 @@ class CommonUtil {
                             if (moveToCart && nsBody != null) {
                               try {
                                 FetchNotificationService()
-                                    .updateNsActionStatus(nsBody);
+                                    .updateNsActionStatus(nsBody)
+                                    .then((data) {
+                                  FetchNotificationService()
+                                      .updateNsOnTapAction(nsBody);
+                                });
                               } catch (e) {}
                             }
 
@@ -2988,6 +2995,53 @@ class CommonUtil {
         'CurrentUser- $userIdCurrent',
         '$message',
       );
+    }
+  }
+
+  Future<void> CallbackAPI(
+    String patientName,
+    String planId,
+    String userId,
+  ) async {
+    // LoaderClass.showLoadingDialog(
+    //   Get.context,
+    //   canDismiss: false,
+    // );
+    var res = await ApiBaseHelper().callBackForPlanExpiry(
+      userId,
+      planId,
+    );
+    // LoaderClass.hideLoadingDialog(
+    //   Get.context,
+    // );
+
+    if (res) {
+      Get.rawSnackbar(
+          messageText: Center(
+            child: Text(
+              patientName +
+                  "Thank you for reaching out.  Your caregiver will call you as soon as possible.",
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+            ),
+          ),
+          snackPosition: SnackPosition.BOTTOM,
+          snackStyle: SnackStyle.GROUNDED,
+          duration: Duration(seconds: 3),
+          backgroundColor: Colors.green.shade500);
+    } else {
+      Get.rawSnackbar(
+          messageText: Center(
+            child: Text(
+              "Failed to notify the caregiver",
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+            ),
+          ),
+          snackPosition: SnackPosition.BOTTOM,
+          snackStyle: SnackStyle.GROUNDED,
+          duration: Duration(seconds: 3),
+          backgroundColor: Colors.red.shade500);
     }
   }
 

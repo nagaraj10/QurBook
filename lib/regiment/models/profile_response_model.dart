@@ -85,6 +85,7 @@ class ProfileDataModel {
     this.tea,
     this.dinner,
     this.sleep,
+    this.isDefault,
   });
 
   final String age;
@@ -96,6 +97,7 @@ class ProfileDataModel {
   final String tea;
   final String dinner;
   final String sleep;
+  final bool isDefault;
 
   factory ProfileDataModel.fromJson(Map<String, dynamic> json) =>
       ProfileDataModel(
@@ -108,6 +110,7 @@ class ProfileDataModel {
         tea: json['Tea'],
         dinner: json['Dinner'],
         sleep: json['Sleep'],
+        isDefault: (json['IsDefault'] ?? '1') == '1',
       );
 
   Map<String, dynamic> toJson() => {

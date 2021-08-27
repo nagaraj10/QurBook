@@ -395,12 +395,12 @@ class RegimentViewModel extends ChangeNotifier {
   }
 
   Future<ProfileResponseModel> getProfile() async {
-    LoaderClass.showLoadingDialog(
-      Get.context,
-      canDismiss: false,
-    );
+    // LoaderClass.showLoadingDialog(
+    //   Get.context,
+    //   canDismiss: false,
+    // );
     var response = await RegimentService.getProfile();
-    LoaderClass.hideLoadingDialog(Get.context);
+    // LoaderClass.hideLoadingDialog(Get.context);
     return response;
   }
 
