@@ -3019,7 +3019,7 @@ class CommonUtil {
       Get.rawSnackbar(
           messageText: Center(
             child: Text(
-              patientName +
+              (patientName.isNotEmpty ? "$patientName, " : patientName) +
                   "Thank you for reaching out.  Your caregiver will call you as soon as possible.",
               style:
                   TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
