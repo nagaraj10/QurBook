@@ -17,6 +17,7 @@ import 'package:myfhb/src/ui/bot/SuperMaya.dart';
 import 'package:myfhb/src/ui/bot/view/ChatScreen.dart' as bot;
 import 'package:myfhb/src/ui/bot/view/sheela_arguments.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
+import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/telehealth/features/chat/view/chat.dart';
 import 'package:myfhb/telehealth/features/chat/view/home.dart';
@@ -31,40 +32,72 @@ class IosNotificationHandler {
   bool isAlreadyLoaded = false;
   NotificationModel model;
   bool renewAction = false;
+  bool callbackAction = false;
+
   setUpListerForTheNotification() {
-    variable.reponseToRemoteNotificationMethodChannel
-        .setMethodCallHandler((call) {
-      if (call.method == variable.notificationResponseMethod) {
-        final data = Map<String, dynamic>.from(call.arguments);
-        model = NotificationModel.fromMap(data.containsKey("action")
-            ? Map<String, dynamic>.from(data["data"])
-            : data);
-        if (model.externalLink != null) {
-          if (model.externalLink == variable.iOSAppStoreLink) {
-            LaunchReview.launch(
-                iOSAppId: variable.iOSAppId, writeReview: false);
+    variable.reponseToRemoteNotificationMethodChannel.setMethodCallHandler(
+      (call) {
+        if (call.method == variable.notificationResponseMethod) {
+          final data = Map<String, dynamic>.from(call.arguments);
+          model = NotificationModel.fromMap(data.containsKey("action")
+              ? Map<String, dynamic>.from(data["data"])
+              : data);
+          if (model.externalLink != null) {
+            if (model.externalLink == variable.iOSAppStoreLink) {
+              LaunchReview.launch(
+                  iOSAppId: variable.iOSAppId, writeReview: false);
+            } else {
+              CommonUtil().launchURL(model.externalLink);
+            }
+          }
+          if (data.containsKey("action")) {
+            if (data["action"] != null) {
+              if (data["action"] == "Renew") {
+                renewAction = true;
+              } else if (data["action"] == "Callback") {
+                callbackAction = true;
+              }
+            }
+
+            if (!isAlreadyLoaded) {
+              Future.delayed(
+                const Duration(seconds: 4),
+                actionForTheNotification,
+              );
+            } else {
+              if (callbackAction) {
+                callbackAction = false;
+                model.redirect = "";
+                CommonUtil().CallbackAPI(
+                  model.patientName,
+                  model.planId,
+                  model.userId,
+                );
+                var body = {};
+                body['templateName'] = model.templateName;
+                body['contextId'] = model.planId;
+                FetchNotificationService()
+                    .updateNsActionStatus(body)
+                    .then((data) {
+                  FetchNotificationService().updateNsOnTapAction(body);
+                });
+                return;
+              }
+              actionForTheNotification();
+            }
           } else {
-            CommonUtil().launchURL(model.externalLink);
+            if (!isAlreadyLoaded) {
+              Future.delayed(
+                const Duration(seconds: 4),
+                actionForTheNotification,
+              );
+            } else {
+              actionForTheNotification();
+            }
           }
         }
-        if (data.containsKey("action")) {
-          renewAction = true;
-          if (!isAlreadyLoaded) {
-            Future.delayed(
-                const Duration(seconds: 4), actionForTheNotification);
-          } else {
-            actionForTheNotification();
-          }
-        } else {
-          if (!isAlreadyLoaded) {
-            Future.delayed(
-                const Duration(seconds: 4), actionForTheNotification);
-          } else {
-            actionForTheNotification();
-          }
-        }
-      }
-    });
+      },
+    );
   }
 
   void updateStatus(String status) async {
@@ -97,8 +130,27 @@ class IosNotificationHandler {
   }
 
   actionForTheNotification() async {
+    if (callbackAction) {
+      callbackAction = false;
+      model.redirect = "";
+      CommonUtil().CallbackAPI(
+        model.patientName,
+        model.planId,
+        model.userId,
+      );
+      var body = {};
+      body['templateName'] = model.templateName;
+      body['contextId'] = model.planId;
+      FetchNotificationService().updateNsActionStatus(body).then(
+        (data) {
+          FetchNotificationService().updateNsOnTapAction(body);
+        },
+      );
+    }
     if (model.isCall) {
       updateStatus(parameters.accept.toLowerCase());
+    } else if (model.type == parameters.FETCH_LOG) {
+      await CommonUtil.sendLogToServer();
     } else if (model.isCancellation) {
       fbaLog(eveParams: {
         'eventTime': '${DateTime.now()}',
@@ -234,6 +286,7 @@ class IosNotificationHandler {
     } else if (model.redirect == parameters.myCartDetails &&
         (model.planId ?? '').isNotEmpty) {
       final userId = PreferenceUtil.getStringValue(KEY_USERID);
+
       if (model.userId == userId) {
         isAlreadyLoaded
             ? Get.to(

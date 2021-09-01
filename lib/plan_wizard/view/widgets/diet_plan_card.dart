@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
@@ -28,6 +29,7 @@ class DietPlanCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
+        onClick();
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -203,112 +205,7 @@ class DietPlanCard extends StatelessWidget {
                                           packageId: planList.packageid,
                                           isFrom: isFrom);
                                 } else {
-                                  bool canProceed =
-                                      await Provider.of<PlanWizardViewModel>(
-                                              context,
-                                              listen: false)
-                                          .handleBundlePlans();
-                                  if (canProceed) {
-                                    /// providerplans care
-                                    if (isFrom == strProviderDiet) {
-                                      if (Provider.of<PlanWizardViewModel>(
-                                                  context,
-                                                  listen: false)
-                                              ?.currentPackageProviderDietId !=
-                                          '') {
-                                        await Provider.of<PlanWizardViewModel>(
-                                                context,
-                                                listen: false)
-                                            ?.removeCart(
-                                                packageId: Provider.of<
-                                                            PlanWizardViewModel>(
-                                                        context,
-                                                        listen: false)
-                                                    ?.currentPackageProviderDietId,
-                                                isFrom: isFrom);
-                                      }
-
-                                      bool isItemInCart =
-                                          Provider.of<PlanWizardViewModel>(
-                                                  context,
-                                                  listen: false)
-                                              .checkAllItemsForProviderDiet();
-                                      if (isItemInCart) {
-                                        await Provider.of<PlanWizardViewModel>(
-                                                context,
-                                                listen: false)
-                                            ?.removeCart(
-                                                packageId: Provider.of<
-                                                            PlanWizardViewModel>(
-                                                        context,
-                                                        listen: false)
-                                                    ?.currentCartProviderDietPackageId,
-                                                isFrom: isFrom);
-                                      }
-
-                                      await Provider.of<PlanWizardViewModel>(
-                                              context,
-                                              listen: false)
-                                          ?.addToCartItem(
-                                              packageId: planList.packageid,
-                                              price: planList.price,
-                                              isRenew: planList.isexpired == '1'
-                                                  ? true
-                                                  : false,
-                                              providerId: planList.providerid,
-                                              isFromAdd: isFrom);
-                                    }
-
-                                    /// free care plans
-                                    else {
-                                      if (Provider.of<PlanWizardViewModel>(
-                                                  context,
-                                                  listen: false)
-                                              ?.currentPackageFreeDietId !=
-                                          '') {
-                                        await Provider.of<PlanWizardViewModel>(
-                                                context,
-                                                listen: false)
-                                            ?.removeCart(
-                                                packageId: Provider.of<
-                                                            PlanWizardViewModel>(
-                                                        context,
-                                                        listen: false)
-                                                    ?.currentPackageFreeDietId,
-                                                isFrom: isFrom);
-                                      }
-
-                                      bool isItemInCart =
-                                          Provider.of<PlanWizardViewModel>(
-                                                  context,
-                                                  listen: false)
-                                              .checkAllItemsForFreeDiet();
-                                      if (isItemInCart) {
-                                        await Provider.of<PlanWizardViewModel>(
-                                                context,
-                                                listen: false)
-                                            ?.removeCart(
-                                                packageId: Provider.of<
-                                                            PlanWizardViewModel>(
-                                                        context,
-                                                        listen: false)
-                                                    ?.currentCartFreeDietPackageId,
-                                                isFrom: isFrom);
-                                      }
-
-                                      await Provider.of<PlanWizardViewModel>(
-                                              context,
-                                              listen: false)
-                                          ?.addToCartItem(
-                                              packageId: planList.packageid,
-                                              price: planList.price,
-                                              isRenew: planList.isexpired == '1'
-                                                  ? true
-                                                  : false,
-                                              providerId: planList.providerid,
-                                              isFromAdd: isFrom);
-                                    }
-                                  }
+                                  _alertForSubscribedPlan(context);
                                 }
                               } else {
                                 FlutterToast()
@@ -441,5 +338,116 @@ class DietPlanCard extends StatelessWidget {
             ],
           )),
     );
+  }
+
+  Future<bool> _alertForSubscribedPlan(BuildContext context) {
+    return showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Are you sure?'),
+            content: Text(alreadySubscribed),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('Cancel'),
+              ),
+              FlatButton(
+                onPressed: () async {
+                  Navigator.pop(context);
+
+                  bool canProceed = await Provider.of<PlanWizardViewModel>(
+                          Get.context,
+                          listen: false)
+                      .handleBundlePlans();
+                  if (canProceed) {
+                    /// provider plans
+                    if (isFrom == strProviderDiet) {
+                      if (Provider.of<PlanWizardViewModel>(Get.context,
+                                  listen: false)
+                              ?.currentPackageProviderDietId !=
+                          '') {
+                        await Provider.of<PlanWizardViewModel>(Get.context,
+                                listen: false)
+                            ?.removeCart(
+                                packageId: Provider.of<PlanWizardViewModel>(
+                                        Get.context,
+                                        listen: false)
+                                    ?.currentPackageProviderDietId,
+                                isFrom: isFrom);
+                      }
+
+                      bool isItemInCart = Provider.of<PlanWizardViewModel>(
+                              Get.context,
+                              listen: false)
+                          .checkAllItemsForProviderDiet();
+                      if (isItemInCart) {
+                        await Provider.of<PlanWizardViewModel>(Get.context,
+                                listen: false)
+                            ?.removeCart(
+                                packageId: Provider.of<PlanWizardViewModel>(
+                                        Get.context,
+                                        listen: false)
+                                    ?.currentCartProviderDietPackageId,
+                                isFrom: isFrom);
+                      }
+
+                      await Provider.of<PlanWizardViewModel>(Get.context,
+                              listen: false)
+                          ?.addToCartItem(
+                              packageId: planList.packageid,
+                              price: planList.price,
+                              isRenew: planList.isexpired == '1' ? true : false,
+                              providerId: planList.providerid,
+                              isFromAdd: isFrom);
+                    }
+
+                    /// free care plans
+                    else {
+                      if (Provider.of<PlanWizardViewModel>(Get.context,
+                                  listen: false)
+                              ?.currentPackageFreeDietId !=
+                          '') {
+                        await Provider.of<PlanWizardViewModel>(Get.context,
+                                listen: false)
+                            ?.removeCart(
+                                packageId: Provider.of<PlanWizardViewModel>(
+                                        Get.context,
+                                        listen: false)
+                                    ?.currentPackageFreeDietId,
+                                isFrom: isFrom);
+                      }
+
+                      bool isItemInCart = Provider.of<PlanWizardViewModel>(
+                              Get.context,
+                              listen: false)
+                          .checkAllItemsForFreeDiet();
+                      if (isItemInCart) {
+                        await Provider.of<PlanWizardViewModel>(Get.context,
+                                listen: false)
+                            ?.removeCart(
+                                packageId: Provider.of<PlanWizardViewModel>(
+                                        Get.context,
+                                        listen: false)
+                                    ?.currentCartFreeDietPackageId,
+                                isFrom: isFrom);
+                      }
+
+                      await Provider.of<PlanWizardViewModel>(Get.context,
+                              listen: false)
+                          ?.addToCartItem(
+                              packageId: planList.packageid,
+                              price: planList.price,
+                              isRenew: planList.isexpired == '1' ? true : false,
+                              providerId: planList.providerid,
+                              isFromAdd: isFrom);
+                    }
+                  }
+                },
+                child: Text('Ok'),
+              ),
+            ],
+          ),
+        ) ??
+        false;
   }
 }

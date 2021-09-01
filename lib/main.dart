@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io' show Platform;
-import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:agora_rtc_engine/rtc_engine.dart';
+import 'package:appsflyer_sdk/appsflyer_sdk.dart';
+import 'package:agora_rtc_engine/rtc_engine.dart' as rtc;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:flutter_logs/flutter_logs.dart' as applog;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myfhb/myPlan/view/myPlanDetail.dart';
 import 'package:myfhb/src/utils/dynamic_links.dart';
@@ -143,106 +145,140 @@ List<CameraDescription> listOfCameras;
 var routes;
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  var cameras = await availableCameras();
-  listOfCameras = cameras;
+  await runZonedGuarded<Future<void>>(() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp();
+    var cameras = await availableCameras();
+    listOfCameras = cameras;
 
-  // Get a specific camera from the list of available cameras.
-  firstCamera = cameras[0];
-  routes = await router.setRouter(listOfCameras);
+    // Get a specific camera from the list of available cameras.
+    firstCamera = cameras[0];
+    routes = await router.setRouter(listOfCameras);
 
-  //get secret from resource
-  final resList = <dynamic>[];
-  await CommonUtil.getResourceLoader().then((value) {
-    final Map mSecretMap = value;
-    mSecretMap.values.forEach((element) {
-      resList.add(element);
+    //get secret from resource
+    final resList = <dynamic>[];
+    await CommonUtil.getResourceLoader().then((value) {
+      final Map mSecretMap = value;
+      mSecretMap.values.forEach((element) {
+        resList.add(element);
+      });
+      setValues(resList);
     });
-    setValues(resList);
-  });
 
-  PreferenceUtil.init();
+    PreferenceUtil.init();
 
-  await DatabaseUtil.getDBLength().then((length) {
-    if (length == 0) {
-      DatabaseUtil.insertCountryMetricsData();
+    await DatabaseUtil.getDBLength().then((length) {
+      if (length == 0) {
+        DatabaseUtil.insertCountryMetricsData();
+      }
+    });
+
+    await DatabaseUtil.getDBLengthUnit().then((length) {
+      if (length == 0) {
+        DatabaseUtil.insertUnitsForDevices();
+      }
+    });
+
+    await FHBUtils.instance.initPlatformState();
+    await FHBUtils.instance.getDb();
+
+    await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+    Map appsFlyerOptions;
+    if (Platform.isIOS) {
+      appsFlyerOptions = {
+        'afDevKey': 'wAZtv6sqho7WqLGgTAAqFV',
+        'afAppId': '1526444520',
+        'isDebug': true
+      };
+    } else {
+      appsFlyerOptions = {
+        'afDevKey': 'UJdqFKHff633D3TcaZ5d55',
+        'afAppId': '',
+        'isDebug': true
+      };
     }
-  });
 
-  await DatabaseUtil.getDBLengthUnit().then((length) {
-    if (length == 0) {
-      DatabaseUtil.insertUnitsForDevices();
+    final appsflyerSdk = AppsflyerSdk(appsFlyerOptions);
+
+    await appsflyerSdk.initSdk(
+      registerConversionDataCallback: true,
+      registerOnAppOpenAttributionCallback: true,
+    );
+
+    if (Platform.isAndroid) {
+      await FlutterDownloader.initialize(
+          debug: true // optional: set false to disable printing logs to console
+          );
+      await Permission.storage.request();
+      await Permission.manageExternalStorage.request();
     }
-  });
 
-  await FHBUtils.instance.initPlatformState();
-  await FHBUtils.instance.getDb();
+    // check if the app install on first time
+    await CommonUtil().isFirstTime();
+    // SystemChrome.setSystemUIOverlayStyle(
+    //   const SystemUiOverlayStyle(
+    //     statusBarIconBrightness: Brightness.light,
+    //     statusBarBrightness: Brightness.light,
+    //   ),
+    // );
 
-  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-
-  Map appsFlyerOptions;
-  if (Platform.isIOS) {
-    appsFlyerOptions = {
-      'afDevKey': 'wAZtv6sqho7WqLGgTAAqFV',
-      'afAppId': '1526444520',
-      'isDebug': true
-    };
-  } else {
-    appsFlyerOptions = {
-      'afDevKey': 'UJdqFKHff633D3TcaZ5d55',
-      'afAppId': '',
-      'isDebug': true
-    };
-  }
-
-  final appsflyerSdk = AppsflyerSdk(appsFlyerOptions);
-
-  await appsflyerSdk.initSdk(
-    registerConversionDataCallback: true,
-    registerOnAppOpenAttributionCallback: true,
-  );
-
-  if (Platform.isAndroid) {
-    await FlutterDownloader.initialize(
-        debug: true // optional: set false to disable printing logs to console
-        );
-    await Permission.storage.request();
-  }
-
-  // check if the app install on first time
-  await CommonUtil().isFirstTime();
-  // SystemChrome.setSystemUIOverlayStyle(
-  //   const SystemUiOverlayStyle(
-  //     statusBarIconBrightness: Brightness.light,
-  //     statusBarBrightness: Brightness.light,
-  //   ),
-  // );
-  runApp(
-    provider.MultiProvider(
-      providers: [
-        provider.ChangeNotifierProvider<ChatScreenViewModel>(
-          create: (_) => ChatScreenViewModel(),
-        ),
-        provider.ChangeNotifierProvider<RegimentViewModel>(
-          create: (_) => RegimentViewModel(),
-        ),
-        provider.ChangeNotifierProvider<PlanWizardViewModel>(
-          create: (_) => PlanWizardViewModel(),
-        ),
-        provider.ChangeNotifierProvider<RTCEngineProvider>(
-          create: (_) => RTCEngineProvider(),
-        ),
-        provider.ChangeNotifierProvider<PlanProviderViewModel>(
-          create: (_) => PlanProviderViewModel(),
-        ),
-        provider.ChangeNotifierProvider<UserPlansViewModel>(
-          create: (_) => UserPlansViewModel(),
-        ),
+    await applog.FlutterLogs.initLogs(
+      logLevelsEnabled: [
+        applog.LogLevel.INFO,
+        applog.LogLevel.WARNING,
+        applog.LogLevel.ERROR,
+        applog.LogLevel.SEVERE,
       ],
-      child: MyFHB(),
-    ),
-  );
+      timeStampFormat: applog.TimeStampFormat.TIME_FORMAT_READABLE,
+      directoryStructure: applog.DirectoryStructure.SINGLE_FILE_FOR_DAY,
+      logTypesEnabled: ['device', 'network', 'errors'],
+      logFileExtension: applog.LogFileExtension.TXT,
+      logsWriteDirectoryName: 'Logs',
+      logsExportDirectoryName: 'Shared',
+      debugFileOperations: true,
+      isDebuggable: true,
+      singleLogFileSize: 10,
+    );
+    applog.FlutterLogs.channel.setMethodCallHandler((call) {
+      if (call.method == 'logsExported') {
+        print(call.arguments);
+        CommonUtil.uploadTheLog(
+          call.arguments.toString(),
+        );
+      }
+    });
+    runApp(
+      provider.MultiProvider(
+        providers: [
+          provider.ChangeNotifierProvider<ChatScreenViewModel>(
+            create: (_) => ChatScreenViewModel(),
+          ),
+          provider.ChangeNotifierProvider<RegimentViewModel>(
+            create: (_) => RegimentViewModel(),
+          ),
+          provider.ChangeNotifierProvider<PlanWizardViewModel>(
+            create: (_) => PlanWizardViewModel(),
+          ),
+          provider.ChangeNotifierProvider<RTCEngineProvider>(
+            create: (_) => RTCEngineProvider(),
+          ),
+          provider.ChangeNotifierProvider<PlanProviderViewModel>(
+            create: (_) => PlanProviderViewModel(),
+          ),
+          provider.ChangeNotifierProvider<UserPlansViewModel>(
+            create: (_) => UserPlansViewModel(),
+          ),
+        ],
+        child: MyFHB(),
+      ),
+    );
+  }, (Object error, StackTrace stack) async {
+    await CommonUtil.saveLog(
+      isError: true,
+      message: 'RunZonedGuarded Error - $error \nStackTrace - ${stack}',
+    );
+  });
 
   // await saveToPreference();
   //await PreferenceUtil.saveString(Constants.KEY_AUTHTOKEN, Constants.AuthToken);
@@ -280,6 +316,8 @@ void setValues(List<dynamic> values) {
   CommonUtil.BASE_URL_FROM_RES = values[7];
   CommonUtil.BASEURL_DEVICE_READINGS = values[8];
   CommonUtil.FIREBASE_CHAT_NOTIFY_TOKEN = values[9];
+  CommonUtil.REGION_CODE = values.length > 10 ? (values[10] ?? 'IN') : 'IN';
+  CommonUtil.POWER_BI_URL = values[11];
 }
 
 Widget buildError(BuildContext context, FlutterErrorDetails error) {
@@ -399,6 +437,8 @@ class _MyFHBState extends State<MyFHB> {
           'navigationPage': 'Tele Health Chat list',
         });
         Get.to(ChatHomeScreen());
+      } else if (cMsg == 'FETCH_LOG') {
+        CommonUtil.sendLogToServer();
       }
       final passedValArr = cMsg.split('&');
       if (passedValArr[0] == 'ack') {
@@ -681,68 +721,107 @@ class _MyFHBState extends State<MyFHB> {
           'navigationPage': 'Browser page',
         });
         CommonUtil().launchURL(urlInfo);
-      } else if (passedValArr[0] == 'Renew') {
+      } else if (passedValArr[0] == 'Renew' || passedValArr[0] == 'Callback') {
         final planid = passedValArr[1];
         final template = passedValArr[2];
         final userId = passedValArr[3];
         final patName = passedValArr[4];
-        final currentUserId = PreferenceUtil.getStringValue(KEY_USERID);
-        if (currentUserId == userId) {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'myplan_deatails',
-            'navigationPage': 'My Plan Details',
-          });
-          Get.to(
-            MyPlanDetail(
-              packageId: planid,
-              showRenew: true,
-              templateName: template,
-            ),
-          );
+        //TODO if its Renew take the user into plandetail view
+        if (passedValArr[0] == 'Renew') {
+          final currentUserId = PreferenceUtil.getStringValue(KEY_USERID);
+          if (currentUserId == userId) {
+            fbaLog(eveParams: {
+              'eventTime': '${DateTime.now()}',
+              'ns_type': 'myplan_deatails',
+              'navigationPage': 'My Plan Details',
+            });
+            Get.to(
+              MyPlanDetail(
+                packageId: planid,
+                showRenew: true,
+                templateName: template,
+              ),
+            );
+          } else {
+            CommonUtil.showFamilyMemberPlanExpiryDialog(patName);
+          }
         } else {
-          CommonUtil.showFamilyMemberPlanExpiryDialog(patName);
+          CommonUtil().CallbackAPI(
+            patName,
+            planid,
+            userId,
+          );
+          var nsBody = {};
+          nsBody['templateName'] = template;
+          nsBody['contextId'] = planid;
+          FetchNotificationService().updateNsActionStatus(nsBody).then((data) {
+            FetchNotificationService().updateNsOnTapAction(nsBody);
+          });
+          //   //TODO if its Callback just show the message alone
+          //   Get.rawSnackbar(
+          //       messageText: Center(
+          //         child: Text(
+          //           '$patName, Thank you for reaching out.  Your caregiver will call you as soon as possible.',
+          //           style: TextStyle(
+          //               color: Colors.white, fontWeight: FontWeight.w500),
+          //         ),
+          //       ),
+          //       snackPosition: SnackPosition.BOTTOM,
+          //       snackStyle: SnackStyle.GROUNDED,
+          //       duration: Duration(seconds: 3),
+          //       backgroundColor: Colors.green.shade500);
         }
       } else if (passedValArr[4] == 'call') {
         try {
           doctorPic = passedValArr[3];
           patientPic = passedValArr[7];
           callType = passedValArr[8];
+          var isWeb = passedValArr[9] == null
+              ? false
+              : passedValArr[9] == 'true'
+                  ? true
+                  : false;
           if (doctorPic.isNotEmpty) {
-            doctorPic = json.decode(doctorPic);
+            try {
+              doctorPic = json.decode(doctorPic);
+            } catch (e) {}
           } else {
             doctorPic = '';
           }
           if (patientPic.isNotEmpty) {
-            patientPic = json.decode(patientPic);
+            try {
+              patientPic = json.decode(patientPic);
+            } catch (e) {}
           } else {
             patientPic = '';
           }
-        } catch (e) {}
-        fbaLog(eveParams: {
-          'eventTime': '${DateTime.now()}',
-          'ns_type': 'call',
-          'navigationPage': 'TeleHelath Call screen',
-        });
-        if (callType.toLowerCase() == 'audio') {
-          Provider.of<AudioCallProvider>(Get.context, listen: false)
-              .enableAudioCall();
-        } else if (callType.toLowerCase() == 'video') {
-          Provider.of<AudioCallProvider>(Get.context, listen: false)
-              .disableAudioCall();
-        }
 
-        Get.to(CallMain(
-          doctorName: passedValArr[1],
-          doctorId: passedValArr[2],
-          doctorPic: doctorPic,
-          patientId: passedValArr[5],
-          patientName: passedValArr[6],
-          patientPicUrl: patientPic,
-          channelName: passedValArr[0],
-          role: ClientRole.Broadcaster,
-          isAppExists: true,
-        ));
+          fbaLog(eveParams: {
+            'eventTime': '${DateTime.now()}',
+            'ns_type': 'call',
+            'navigationPage': 'TeleHelath Call screen',
+          });
+          if (callType.toLowerCase() == 'audio') {
+            Provider.of<AudioCallProvider>(Get.context, listen: false)
+                .enableAudioCall();
+          } else if (callType.toLowerCase() == 'video') {
+            Provider.of<AudioCallProvider>(Get.context, listen: false)
+                .disableAudioCall();
+          }
+
+          Get.to(CallMain(
+            doctorName: passedValArr[1],
+            doctorId: passedValArr[2],
+            doctorPic: doctorPic,
+            patientId: passedValArr[5],
+            patientName: passedValArr[6],
+            patientPicUrl: patientPic,
+            channelName: passedValArr[0],
+            role: ClientRole.Broadcaster,
+            isAppExists: true,
+            isWeb: isWeb,
+          ));
+        } catch (e) {}
       }
     }
   }
@@ -865,6 +944,11 @@ class _MyFHBState extends State<MyFHB> {
         final parsedData = navRoute.split('&');
         if (navRoute == 'chat') {
           return SplashScreen(nsRoute: 'chat');
+        } else if (navRoute == 'FETCH_LOG') {
+          CommonUtil.sendLogToServer();
+          return SplashScreen(
+            nsRoute: '',
+          );
         } else if (parsedData[1] == 'appointmentList' ||
             parsedData[1] == 'appointmentHistory') {
           return SplashScreen(
@@ -987,9 +1071,10 @@ class _MyFHBState extends State<MyFHB> {
             nsRoute: 'openurl',
             bundle: navRoute.split('&')[1],
           );
-        } else if (navRoute.split('&')[0] == 'Renew') {
+        } else if (navRoute.split('&')[0] == 'Renew' ||
+            navRoute.split('&')[0] == 'Callback') {
           return SplashScreen(
-            nsRoute: 'renew',
+            nsRoute: navRoute.split('&')[0],
             bundle: {
               'planid': '${navRoute.split('&')[1]}',
               'template': '${navRoute.split('&')[2]}',
@@ -1085,14 +1170,23 @@ class _MyFHBState extends State<MyFHB> {
     var docPic = navRoute.split('&')[3];
     var patPic = navRoute.split('&')[7];
     var callType = navRoute.split('&')[8];
+    var isWeb = navRoute.split('&')[9] == null
+        ? false
+        : navRoute.split('&')[9] == 'true'
+            ? true
+            : false;
     try {
       if (docPic.isNotEmpty) {
-        docPic = json.decode(navRoute.split('&')[3]);
+        try {
+          docPic = json.decode(navRoute.split('&')[3]);
+        } catch (e) {}
       } else {
         docPic = '';
       }
       if (patPic.isNotEmpty) {
-        patPic = json.decode(navRoute.split('&')[7]);
+        try {
+          patPic = json.decode(navRoute.split('&')[7]);
+        } catch (e) {}
       } else {
         patPic = '';
       }
@@ -1106,20 +1200,22 @@ class _MyFHBState extends State<MyFHB> {
     if (callType.toLowerCase() == 'audio') {
       Provider.of<AudioCallProvider>(Get.context, listen: false)
           .enableAudioCall();
-    } else  if (callType.toLowerCase() == 'video') {
+    } else if (callType.toLowerCase() == 'video') {
       Provider.of<AudioCallProvider>(Get.context, listen: false)
           .disableAudioCall();
     }
     return CallMain(
-        isAppExists: false,
-        role: ClientRole.Broadcaster,
-        channelName: navRoute.split('&')[0],
-        doctorName: navRoute.split('&')[1] ?? 'Test',
-        doctorId: navRoute.split('&')[2] ?? 'Doctor',
-        doctorPic: docPic,
-        patientId: navRoute.split('&')[5] ?? 'Patient',
-        patientName: navRoute.split('&')[6] ?? 'Test',
-        patientPicUrl: patPic);
+      isAppExists: false,
+      role: ClientRole.Broadcaster,
+      channelName: navRoute.split('&')[0],
+      doctorName: navRoute.split('&')[1] ?? 'Test',
+      doctorId: navRoute.split('&')[2] ?? 'Doctor',
+      doctorPic: docPic,
+      patientId: navRoute.split('&')[5] ?? 'Patient',
+      patientName: navRoute.split('&')[6] ?? 'Test',
+      patientPicUrl: patPic,
+      isWeb: isWeb,
+    );
   }
 
   void onBoardNSAcknowledge(data, body) {

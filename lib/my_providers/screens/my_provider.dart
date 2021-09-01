@@ -53,6 +53,7 @@ class MyProviderState extends State<MyProvider>
   }
 
   void _setActiveTabIndex() {
+    FocusManager.instance.primaryFocus.unfocus();
     _activeTabIndex = _tabController.index;
   }
 

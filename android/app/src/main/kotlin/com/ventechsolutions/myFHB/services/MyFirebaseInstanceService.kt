@@ -69,6 +69,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         when (NS_TYPE) {
             getString(R.string.ns_type_call) -> createNotification4Call(data)
             getString(R.string.ns_type_ack) -> createNotification4Ack(data)
+            getString(R.string.ns_type_applog) -> createNSForAppLogs(data)
         }
     }
 
@@ -84,6 +85,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         val PAT_NAME = data[getString(R.string.pat_name)]
         val PAT_PIC = data[getString(R.string.pat_pic)]
         val CallType = data[getString(R.string.callType)]
+        val isWeb = data[getString(R.string.web)]
         val NS_TIMEOUT = 30 * 1000L
         val _sound: Uri =
             Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.helium)
@@ -110,6 +112,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         acceptIntent.putExtra(getString(R.string.pat_name), "$PAT_NAME")
         acceptIntent.putExtra(getString(R.string.pat_pic), "$PAT_PIC")
         acceptIntent.putExtra(getString(R.string.callType), "$CallType")
+        acceptIntent.putExtra(getString(R.string.web), "$isWeb")
         val acceptPendingIntent = PendingIntent.getBroadcast(
             applicationContext,
             0,
@@ -127,6 +130,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             .putExtra(getString(R.string.pat_name), PAT_NAME)
             .putExtra(getString(R.string.pat_pic), PAT_PIC)
             .putExtra(getString(R.string.callType), CallType)
+            .putExtra(getString(R.string.web), "$isWeb")
         val fullScreenPendingIntent = PendingIntent.getActivity(
             this, 0,
             fullScreenIntent, PendingIntent.FLAG_UPDATE_CURRENT
@@ -730,6 +734,20 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             PendingIntent.FLAG_CANCEL_CURRENT
         )
 
+        val callBackIntent = Intent(applicationContext, Callback::class.java)
+        callBackIntent.putExtra(getString(R.string.nsid), NS_ID)
+        callBackIntent.putExtra(Intent.EXTRA_TEXT, Constants.PROP_CALLBACK)
+        callBackIntent.putExtra(Constants.PROP_PLANID, data[Constants.PROP_PLANID])
+        callBackIntent.putExtra(Constants.PROP_TEMP_NAME, data[Constants.PROP_TEMP_NAME])
+        callBackIntent.putExtra(Constants.PROB_USER_ID, data[Constants.PROB_USER_ID])
+        callBackIntent.putExtra(getString(R.string.pat_name), PAT_NAME)
+        val callBackPendingIntent = PendingIntent.getBroadcast(
+            applicationContext,
+            NS_ID,
+            callBackIntent,
+            PendingIntent.FLAG_CANCEL_CURRENT
+        )
+
 
         var notification = NotificationCompat.Builder(this, CHANNEL_RENEW)
             .setSmallIcon(R.mipmap.app_ns_icon)
@@ -744,7 +762,8 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setWhen(0)
             .setCategory(NotificationCompat.CATEGORY_REMINDER)
-            .addAction(R.drawable.ic_reschedule, Constants.PROP_RENEW, renewPendingIntent)
+            .addAction(android.R.drawable.ic_menu_rotate, Constants.PROP_RENEW, renewPendingIntent)
+            .addAction(android.R.drawable.ic_menu_help, Constants.PROP_CALLBACK, callBackPendingIntent)
             .setStyle(
                 NotificationCompat.BigTextStyle().bigText(data[getString(R.string.pro_ns_body)])
             )
@@ -788,6 +807,59 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             onTapNS,
             PendingIntent.FLAG_CANCEL_CURRENT
         )
+        var notification = NotificationCompat.Builder(this, CHANNEL_ACK)
+            .setSmallIcon(R.mipmap.app_ns_icon)
+            .setLargeIcon(
+                BitmapFactory.decodeResource(
+                    applicationContext.resources,
+                    R.mipmap.ic_launcher
+                )
+            )
+            .setContentTitle(data[getString(R.string.pro_ns_title)])
+            .setContentText(data[getString(R.string.pro_ns_body)])
+            .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+            .setContentIntent(onTapPendingIntent)
+            .setStyle(
+                NotificationCompat.BigTextStyle().bigText(data[getString(R.string.pro_ns_body)])
+            )
+            .setSound(ack_sound)
+            .setAutoCancel(true)
+            .build()
+        nsManager.notify(NS_ID, notification)
+    }
+
+    private fun createNSForAppLogs(data: Map<String, String> = HashMap()){
+        val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
+        val NS_ID = System.currentTimeMillis().toInt()
+        val ack_sound: Uri =
+            Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.msg_tone)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val manager = getSystemService(NotificationManager::class.java)
+            val channelAck = NotificationChannel(
+                CHANNEL_ACK,
+                getString(R.string.channel_ack),
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
+            channelAck.description = getString(R.string.channel_ack_desc)
+            val attributes = AudioAttributes.Builder()
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .setUsage(AudioAttributes.USAGE_NOTIFICATION).build()
+            channelAck.setSound(ack_sound, attributes)
+            manager.createNotificationChannel(channelAck)
+        }
+
+        val onTapNS = Intent(applicationContext, OnTapNotification::class.java)
+        onTapNS.putExtra(getString(R.string.ns_type_applog), getString(R.string.ns_type_applog))
+        val onTapPendingIntent = PendingIntent.getBroadcast(
+            applicationContext,
+            NS_ID,
+            onTapNS,
+            PendingIntent.FLAG_CANCEL_CURRENT
+        )
+
+
         var notification = NotificationCompat.Builder(this, CHANNEL_ACK)
             .setSmallIcon(R.mipmap.app_ns_icon)
             .setLargeIcon(

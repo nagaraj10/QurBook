@@ -195,6 +195,7 @@ const String icon_my_family = 'assets/dashboard/my-family.svg';
 const String icon_my_family_menu = 'assets/dashboard/my-family-old.svg';
 const String icon_my_health_regimen = 'assets/dashboard/my-health-regimen.svg';
 const String icon_refer_friend_icon = 'assets/icons/refer_a_friend.png';
+const String icon_report_icon = 'assets/icons/report_icon.png';
 // const String icon_check_symptoms = 'assets/dashboard/symptoms.svg';
 // const String icon_how_to_use = 'assets/dashboard/information.svg';
 // const String icon_my_family = 'assets/dashboard/home.svg';
@@ -293,6 +294,7 @@ List<int> myGradient = [
 ];
 
 const String strSettings = 'Settings';
+const String strReports = 'My Reports';
 const String strMyOrders = 'My Orders';
 const String strHelp = 'Help and support';
 const String strPrivacy = 'Privacy policy';
@@ -622,6 +624,7 @@ const String strNoAppointments = 'No Appoinments Available';
 const String strNoPlans = 'No Plan List Available';
 const String strNoActivities = 'No Activities Available';
 const String strNoPackages = 'No Packages Available';
+const String strNoReports = 'Your reports are being generated. We\'ll populate here soon';
 
 const String strNoDataAvailable = 'Unable To load';
 const String strHealthOrganizationName = 'healthOrganizationName';
@@ -641,6 +644,9 @@ const String vitalsSummary = 'Vitals Summary';
 
 const String renewalLimit =
     'Renewal limit reached for this plan. Please try after few days';
+
+const String alreadySubscribed =
+    'You’ve already subscribed to the plan. Selecting this now will renew the plan';
 
 //Reminders
 //

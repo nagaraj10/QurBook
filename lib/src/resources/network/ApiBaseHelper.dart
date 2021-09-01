@@ -155,6 +155,42 @@ class ApiBaseHelper {
     return response.data;
   }
 
+  Future<bool> callBackForPlanExpiry(
+    String userId,
+    String planId,
+  ) async {
+    try {
+      final head = await headerRequest.getRequestHeadersAuthContent();
+      final body = convert.jsonEncode(
+        {
+          "planId": planId,
+          "userId": userId,
+        },
+      );
+      final response = await http.post(
+        Uri.parse(_baseUrl + 'fire-base/call-back'),
+        headers: head,
+        body: body,
+      );
+      final res = convert.jsonDecode(response.body.toString());
+      if (response.statusCode == 200) {
+        if (res["isSuccess"] == true) {
+          print(res);
+          return true;
+        } else {
+          print(res);
+          return false;
+        }
+      } else {
+        print(res);
+        return false;
+      }
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
   Future<dynamic> updateTeleHealthProviders(String url, String query) async {
     var dio = Dio();
     var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
@@ -169,10 +205,8 @@ class ApiBaseHelper {
     final FormData formData = FormData.fromMap(mapForSignUp);
 
     final response = await dio.post(_baseUrl + url, data: formData);
-
-    //responseJson = _returnResponse(response.data);
-
-    return response.data;
+    print(response.data);
+    return true;
   }
 
   Future<dynamic> updateTeleHealthProvidersNew(
@@ -1231,6 +1265,40 @@ class ApiBaseHelper {
     }
   }
 
+  Future<bool> uploadLogData(String logPath, String fileName) async {
+    final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    final value = await MultipartFile.fromFile(logPath, filename: fileName);
+    final dio = Dio();
+    dio.options.headers['authorization'] = authToken;
+    FormData formData = FormData.fromMap(
+      {
+        'folderName': 'logs',
+        'source': strSource,
+        'file': value,
+      },
+    );
+    var response;
+    try {
+      response = await dio.post(
+        _baseUrl + 'media-details/store-log',
+        data: formData,
+      );
+      if (response.statusCode == 200) {
+        print(response.data.toString());
+        return true;
+      } else {
+        return false;
+      }
+    } on DioError catch (e) {
+      print(e.toString());
+      print(e);
+      return false;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
   Future<dynamic> updateHealthRecords(String url, String payload,
       List<String> imagePaths, String audioPath, String metaId) async {
     final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
@@ -1461,6 +1529,18 @@ class ApiBaseHelper {
       var response = await ApiServices.post(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersTimeSlot(),
           body: jsonString);
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
+  Future<dynamic> getReportList(String url) async {
+    var responseJson;
+    try {
+      var response = await ApiServices.get(_baseUrl + url,
+          headers: await headerRequest.getRequestHeadersTimeSlot());
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);

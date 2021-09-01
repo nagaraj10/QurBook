@@ -85,7 +85,9 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
                           isSearch = false;
                         });
                       }
-                    },
+                    },onClosePress: (){
+                    FocusManager.instance.primaryFocus.unfocus();
+                  },
                     hintText: strPlanHospitalDiet,
                     padding: 10.0.sp,
                   ),
@@ -218,7 +220,9 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
             ),
             itemBuilder: (BuildContext ctx, int i) => CarePlanCard(
               planList: isSearch ? planSearchList[i] : planList[i],
-              onClick: () {},
+              onClick: () {
+                FocusManager.instance.primaryFocus.unfocus();
+              },
               isFrom: strProviderCare,
             ),
             itemCount: isSearch ? planSearchList.length : planList.length,

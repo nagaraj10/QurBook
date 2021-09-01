@@ -42,7 +42,7 @@ class _CountryCodePickerState extends State<CountryCodePickerPage> {
               onValuePicked: widget.onValuePicked,
               itemBuilder: _buildDialogItem,
               priorityList: [
-                CountryPickerUtils.getCountryByIsoCode('IN'),
+                CountryPickerUtils.getCountryByIsoCode(CommonUtil.REGION_CODE),
               ],
             ),
           ),

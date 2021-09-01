@@ -121,16 +121,7 @@ class _NotificationScreen extends State<NotificationScreen> {
             ? (notificationData.notifications != null)
                 ? (notificationData.notifications?.result != null) &&
                         (notificationData.notifications?.result.length > 0)
-                    ? ListView.builder(
-                        itemCount: notificationData.notifications.result.length,
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          notificationData.notifications.result.sort(
-                              (a, b) => b.createdOn.compareTo(a.createdOn));
-                          return notificationView(
-                              notification: notificationData.notifications,
-                              index: index);
-                        })
+                    ? listView(notificationData.notifications)
                     : emptyNotification()
                 : emptyNotification()
             : emptyNotification();
@@ -138,6 +129,38 @@ class _NotificationScreen extends State<NotificationScreen> {
       default:
         return emptyNotification();
     }
+  }
+
+  Widget listView(NotificationModel notification) {
+    List<NotificationResult> pendingNotification = new List();
+    List<NotificationResult> readNotification = new List();
+    List<NotificationResult> mainNotificationList = new List();
+
+    notification.result.sort((a, b) => b.createdOn.compareTo(a.createdOn));
+
+    for (int i = 0; i < notification.result.length; i++) {
+      if (!notification?.result[i]?.isActionDone &&
+          notification?.result[i]?.isUnread) {
+        //this is for action button notification
+        pendingNotification.add(notification.result[i]);
+      } else if (notification?.result[i]?.isUnread) {
+        //this is for normal notification
+        pendingNotification.add(notification.result[i]);
+      } else {
+        readNotification.add(notification.result[i]);
+      }
+
+      mainNotificationList = []
+        ..addAll(pendingNotification)
+        ..addAll(readNotification);
+    }
+
+    return ListView.builder(
+        itemCount: mainNotificationList.length,
+        shrinkWrap: true,
+        itemBuilder: (context, index) {
+          return notificationView(notification: mainNotificationList[index]);
+        });
   }
 
   Widget emptyNotification() {
@@ -150,25 +173,22 @@ class _NotificationScreen extends State<NotificationScreen> {
     );
   }
 
-  Widget notificationView({NotificationModel notification, int index}) {
-    if (notification?.result[index]?.messageDetails != null) {
-      Payload payload = notification?.result[index]?.messageDetails?.payload;
-      MessageContent message =
-          notification.result[index].messageDetails?.messageContent;
+  Widget notificationView({NotificationResult notification}) {
+    if (notification?.messageDetails != null) {
+      Payload payload = notification?.messageDetails?.payload;
+      MessageContent message = notification.messageDetails?.messageContent;
       return (message.messageBody == "" || message.messageTitle == "")
           ? Container()
           : InkWell(
               splashColor: Color(CommonUtil.secondaryGrey),
-              onTap: (notification?.result[index]?.isUnread != null &&
-                      notification?.result[index]?.isUnread)
+              onTap: (notification.isUnread != null && notification?.isUnread)
                   ? () {
                       var tempRedirectTo = payload?.redirectTo != null &&
                               payload?.redirectTo != ''
                           ? payload?.redirectTo.split('|')[0]
                           : '';
                       if (tempRedirectTo == 'myRecords') {
-                        notificationOnTapActions(
-                            notification?.result[index], tempRedirectTo,
+                        notificationOnTapActions(notification, tempRedirectTo,
                             bundles: {
                               'catName': payload?.redirectTo.split('|')[1],
                               'healthRecordMetaIds':
@@ -176,22 +196,22 @@ class _NotificationScreen extends State<NotificationScreen> {
                             });
                       } else if (payload?.redirectTo == 'sheela|pushMessage') {
                         notificationOnTapActions(
-                          notification?.result[index],
+                          notification,
                           payload?.redirectTo,
                         );
                       } else if (payload?.redirectTo == 'mycart') {
                         notificationOnTapActions(
-                          notification?.result[index],
+                          notification,
                           payload?.redirectTo,
                         );
                       } else if (payload?.redirectTo ==
-                          constants.strMyCardDetails) {
+                          constants.strMyCardDetails || payload?.redirectTo == 'mycartdetails') {
                         // do nothing.
                       } else {
                         notificationOnTapActions(
-                            notification?.result[index],
-                            notification?.result[index]?.messageDetails?.content
-                                ?.templateName);
+                            notification,
+                            notification
+                                ?.messageDetails?.content?.templateName);
                       }
                       // notificationOnTapActions(
                       //     notification?.result[index],
@@ -218,11 +238,8 @@ class _NotificationScreen extends State<NotificationScreen> {
                                   children: [
                                     TextWidget(
                                       text: message.messageTitle,
-                                      colors: (notification?.result[index]
-                                                      ?.isUnread ==
-                                                  null ||
-                                              !notification
-                                                  ?.result[index]?.isUnread)
+                                      colors: (notification?.isUnread == null ||
+                                              !notification?.isUnread)
                                           ? Colors.black
                                           : Color(
                                               CommonUtil().getMyPrimaryColor()),
@@ -245,8 +262,8 @@ class _NotificationScreen extends State<NotificationScreen> {
                                     SizedBox(
                                       height: 5.0.h,
                                     ),
-                                    createNSActionButton(payload?.templateName,
-                                        notification.result[index]),
+                                    createNSActionButton(
+                                        payload?.templateName, notification),
                                   ],
                                 ),
                               ),
@@ -260,8 +277,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                                   children: <Widget>[
                                     TextWidget(
                                       text: constants.notificationDate(
-                                          notification
-                                              ?.result[index]?.createdOn),
+                                          notification?.createdOn),
                                       colors: Colors.black,
                                       overflow: TextOverflow.visible,
                                       fontWeight: FontWeight.w500,
@@ -273,13 +289,9 @@ class _NotificationScreen extends State<NotificationScreen> {
                                     ),
                                     TextWidget(
                                       text: constants.notificationTime(
-                                          notification
-                                              ?.result[index]?.createdOn),
-                                      colors: (notification?.result[index]
-                                                      ?.isUnread ==
-                                                  null ||
-                                              !notification
-                                                  ?.result[index]?.isUnread)
+                                          notification?.createdOn),
+                                      colors: (notification?.isUnread == null ||
+                                              !notification?.isUnread)
                                           ? Colors.black
                                           : Color(
                                               CommonUtil().getMyPrimaryColor()),
@@ -1012,28 +1024,55 @@ class _NotificationScreen extends State<NotificationScreen> {
                   fontsize: 15.0.sp,
                 ),
               ),
-              // SizedBox(
-              //   width: 15.0.w,
-              // ),
-              // OutlineButton(
-              //   onPressed: !notification?.isActionDone
-              //       ? () {
-              //           // call back action
-              //         }
-              //       : null,
-              //   borderSide: !notification?.isActionDone
-              //       ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
-              //       : BorderSide(color: Colors.grey),
-              //   child: TextWidget(
-              //     text: AppConstants.Appointments_cancel,
-              //     colors: !notification?.isActionDone
-              //         ? Color(CommonUtil().getMyPrimaryColor())
-              //         : Colors.grey,
-              //     overflow: TextOverflow.visible,
-              //     fontWeight: FontWeight.w600,
-              //     fontsize: 15.0.sp,
-              //   ),
-              // ),
+              SizedBox(
+                width: 15.0.w,
+              ),
+              OutlineButton(
+                onPressed: !notification?.isActionDone
+                    ? () {
+                        CommonUtil().CallbackAPI(
+                          notification?.messageDetails?.payload?.patientName,
+                          notification?.messageDetails?.payload?.planId,
+                          notification?.messageDetails?.payload?.userId,
+                        );
+                        var body = {};
+                        body['templateName'] = payload?.templateName;
+                        body['contextId'] =
+                            notification?.messageDetails?.payload?.planId;
+                        FetchNotificationService()
+                            .updateNsActionStatus(body)
+                            .then((data) {
+                          FetchNotificationService()
+                              .updateNsOnTapAction(body)
+                              .then((data) {
+                            if (data != null && data['isSuccess']) {
+                              Provider.of<FetchNotificationViewModel>(context,
+                                  listen: false)
+                                ..clearNotifications()
+                                ..fetchNotifications();
+                            } else {
+                              Provider.of<FetchNotificationViewModel>(context,
+                                  listen: false)
+                                ..clearNotifications()
+                                ..fetchNotifications();
+                            }
+                          });
+                        });
+                      }
+                    : null,
+                borderSide: !notification?.isActionDone
+                    ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
+                    : BorderSide(color: Colors.grey),
+                child: TextWidget(
+                  text: AppConstants.Plan_callback,
+                  colors: !notification?.isActionDone
+                      ? Color(CommonUtil().getMyPrimaryColor())
+                      : Colors.grey,
+                  overflow: TextOverflow.visible,
+                  fontWeight: FontWeight.w600,
+                  fontsize: 15.0.sp,
+                ),
+              ),
             ],
           ),
         );

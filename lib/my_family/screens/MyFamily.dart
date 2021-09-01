@@ -569,6 +569,9 @@ class _MyFamilyState extends State<MyFamily> {
                                       rebuildFamilyBlock();
                                       setState(() {});
                                     } else {
+                                      FHBBasicWidget().showInSnackBar(
+                                          userLinking.message,
+                                          scaffold_state);
                                       Navigator.of(_keyLoader.currentContext,
                                               rootNavigator: true)
                                           .pop();

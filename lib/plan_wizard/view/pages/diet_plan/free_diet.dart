@@ -69,7 +69,9 @@ class _FreeDietPlans extends State<FreeDietPlans> {
                           isSearch = false;
                         });
                       }
-                    },
+                    },onClosePress: (){
+                    FocusManager.instance.primaryFocus.unfocus();
+                  },
                     hintText: strPlanHospitalDiet,
                     padding: 10.0.sp,
                   ),
@@ -114,7 +116,7 @@ class _FreeDietPlans extends State<FreeDietPlans> {
                     .isEmpty) {
               _alertForUncheckPlan();
             } else {
-              Get.to(CheckoutPage());
+              Get.to(CheckoutPage()).then((value) => FocusManager.instance.primaryFocus.unfocus());
             }
           },
         ));
@@ -209,7 +211,9 @@ class _FreeDietPlans extends State<FreeDietPlans> {
             ),
             itemBuilder: (BuildContext ctx, int i) => DietPlanCard(
               planList: isSearch ? planSearchList[i] : planList[i],
-              onClick: () {},
+              onClick: () {
+                FocusManager.instance.primaryFocus.unfocus();
+              },
               isFrom: strFreeDiet,
             ),
             itemCount: isSearch ? planSearchList.length : planList.length,
@@ -241,7 +245,7 @@ class _FreeDietPlans extends State<FreeDietPlans> {
               FlatButton(
                 onPressed: () {
                   Navigator.pop(context);
-                  Get.to(CheckoutPage());
+                  Get.to(CheckoutPage()).then((value) => FocusManager.instance.primaryFocus.unfocus());
                 },
                 child: Text('Yes'),
               ),

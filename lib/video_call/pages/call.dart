@@ -43,6 +43,7 @@ class CallPage extends StatefulWidget {
   bool isAppExists;
   RtcEngine rtcEngine;
   String doctorName;
+  bool isWeb;
 
   /// Creates a call page with given channel name.
   CallPage(
@@ -51,7 +52,8 @@ class CallPage extends StatefulWidget {
       this.arguments,
       this.isAppExists,
       this.rtcEngine,
-      this.doctorName});
+      this.doctorName, 
+      this.isWeb});
 
   @override
   _CallPageState createState() => _CallPageState();
@@ -181,14 +183,10 @@ class _CallPageState extends State<CallPage> {
 
   /// Create agora sdk instance and initialize
   Future<void> _initAgoraRtcEngine() async {
-    VideoEncoderConfiguration configuration = VideoEncoderConfiguration();
-    configuration.dimensions = VideoDimensions(width: 1920, height: 1080);
-    await widget?.rtcEngine?.setVideoEncoderConfiguration(configuration);
-    //await widget?.rtcEngine?.enableVideo();
     if (!audioStatus?.isAudioCall) {
       //* video call
       VideoEncoderConfiguration configuration = VideoEncoderConfiguration();
-      configuration.dimensions = VideoDimensions(width: 640, height: 360);
+      configuration.dimensions = widget?.isWeb ? VideoDimensions(width: 1280, height: 720) : VideoDimensions(width: 640, height: 360);
       configuration.frameRate = VideoFrameRate.Fps15;
       configuration.bitrate = 200;
       await widget?.rtcEngine?.setVideoEncoderConfiguration(configuration);

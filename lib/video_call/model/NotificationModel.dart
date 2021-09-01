@@ -29,6 +29,7 @@ class NotificationModel {
   String patientPicture;
   String externalLink;
   CallArguments callArguments;
+  bool isWeb;
   String callType;
 
   Map<int, dynamic> redirectData;
@@ -55,6 +56,7 @@ class NotificationModel {
     this.externalLink,
     this.planId,
     this.callType,
+    this.isWeb,
   });
 
   Map<String, dynamic> toMap() {
@@ -76,6 +78,7 @@ class NotificationModel {
       'externalLink': externalLink,
       'planId': planId,
       'callType': callType,
+      'isWeb': isWeb,
     };
   }
 
@@ -96,6 +99,7 @@ class NotificationModel {
     type = message['type'];
     externalLink = message['externalLink'];
     callType = message['callType'];
+    isWeb = message['isWeb'];
   }
 
   NotificationModel.fromMap(Map<String, dynamic> messageFromNative) {
@@ -147,6 +151,9 @@ class NotificationModel {
         if (message[parameters.strtype] != null) {
           type = message[parameters.strtype];
         }
+        if (message[parameters.strgcmtype] != null) {
+          type = message[parameters.strgcmtype];
+        }
         if (message[parameters.PROP_EVEID] != null) {
           eventId = message[parameters.PROP_EVEID];
         }
@@ -187,6 +194,13 @@ class NotificationModel {
         if (message[parameters.gcmplanId] != null) {
           planId = message[parameters.gcmplanId];
         }
+        if (message[parameters.isWeb] != null) {
+          if (message[parameters.isWeb].runtimeType == String) {
+            isWeb = message[parameters.isWeb].toLowerCase() == 'true'
+                ? true
+                : false;
+          }
+        }
       }
     }
 
@@ -211,11 +225,13 @@ class NotificationModel {
             parameters.doctorRescheduling;
     if (isCall) {
       callArguments = CallArguments(
-          role: ClientRole.Broadcaster,
-          channelName: meeting_id,
-          userName: username,
-          doctorId: doctorId,
-          doctorName:doctorName,);
+        role: ClientRole.Broadcaster,
+        channelName: meeting_id,
+        userName: username,
+        doctorId: doctorId,
+        doctorName: doctorName,
+        isWeb: isWeb ?? false,
+      );
     }
   }
 
@@ -259,7 +275,9 @@ class NotificationModel {
     if (message[parameters.strtype] != null) {
       type = message[parameters.strtype];
     }
-
+    if (message[parameters.strgcmtype] != null) {
+      type = message[parameters.strgcmtype];
+    }
     if (message[parameters.PROP_EVEID] != null) {
       eventId = message[parameters.PROP_EVEID];
     }
@@ -304,6 +322,12 @@ class NotificationModel {
     }
     if (message[parameters.gcmpatientName] != null) {
       patientName = message[parameters.gcmpatientName];
+    }
+    if (message[parameters.isWeb] != null) {
+      if (message[parameters.isWeb].runtimeType == String) {
+        isWeb =
+            message[parameters.isWeb].toLowerCase() == 'true' ? true : false;
+      }
     }
   }
 }

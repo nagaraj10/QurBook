@@ -43,6 +43,7 @@ class _TabBarDemoState extends State<MyProvidersMain>
     _controller.index = widget.mTabIndex != null ? widget.mTabIndex : 0;
 
     _controller.addListener(() {
+      FocusManager.instance.primaryFocus.unfocus();
       setState(() {
         _selectedIndex = _controller.index;
       });

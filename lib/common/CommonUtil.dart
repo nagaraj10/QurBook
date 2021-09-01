@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_logs/flutter_logs.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -20,6 +23,7 @@ import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
+import 'package:myfhb/telehealth/features/Notifications/viewModel/fetchNotificationViewModel.dart';
 import 'package:open_file/open_file.dart';
 import '../add_family_user_info/models/add_family_user_info_arguments.dart';
 import '../add_family_user_info/services/add_family_user_info_repository.dart';
@@ -98,6 +102,7 @@ import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import '../../authentication/constants/constants.dart';
 import 'package:myfhb/widgets/checkout_page.dart';
 import '../../colors/fhb_colors.dart' as fhbColors;
+import 'package:myfhb/src/ui/loader_class.dart';
 
 class CommonUtil {
   static String SHEELA_URL = '';
@@ -110,6 +115,8 @@ class CommonUtil {
   static String BASE_URL_FROM_RES = '';
   static String BASEURL_DEVICE_READINGS = '';
   static String FIREBASE_CHAT_NOTIFY_TOKEN = '';
+  static String REGION_CODE = 'IN';
+  static String POWER_BI_URL = 'IN';
   static const bgColor = 0xFFe3e2e2;
   static bool isRenewDialogOpened = false;
   static const secondaryGrey = 0xFF545454;
@@ -1393,14 +1400,16 @@ class CommonUtil {
   }
 
   getDoctorProfileImageWidget(String doctorUrl, Doctor doctor) {
-    String name=doctor?.firstName?.capitalizeFirstofEach??" "+doctor?.lastName?.capitalizeFirstofEach??" ";
+    String name = doctor?.firstName?.capitalizeFirstofEach ??
+        " " + doctor?.lastName?.capitalizeFirstofEach ??
+        " ";
     if (doctorUrl != null && doctorUrl != '') {
       return Image.network(
         doctorUrl,
         height: 50.0.h,
         width: 50.0.h,
         fit: BoxFit.cover,
-        errorBuilder: (context,exception, stackTrace){
+        errorBuilder: (context, exception, stackTrace) {
           return Container(
             height: 50.0.h,
             width: 50.0.h,
@@ -1424,12 +1433,9 @@ class CommonUtil {
   }
 
   Widget getFirstLastNameText(Doctor doctor) {
-    if (doctor != null &&
-        doctor.firstName != null &&
-        doctor.lastName != null) {
+    if (doctor != null && doctor.firstName != null && doctor.lastName != null) {
       return Text(
-        doctor.firstName[0].toUpperCase() +
-            doctor.lastName[0].toUpperCase(),
+        doctor.firstName[0].toUpperCase() + doctor.lastName[0].toUpperCase(),
         style: TextStyle(
           color: Colors.white,
           fontSize: 22.0.sp,
@@ -2828,7 +2834,11 @@ class CommonUtil {
                             if (moveToCart && nsBody != null) {
                               try {
                                 FetchNotificationService()
-                                    .updateNsActionStatus(nsBody);
+                                    .updateNsActionStatus(nsBody)
+                                    .then((data) {
+                                  FetchNotificationService()
+                                      .updateNsOnTapAction(nsBody);
+                                });
                               } catch (e) {}
                             }
 
@@ -2967,6 +2977,132 @@ class CommonUtil {
     );
   }
 
+  static Future<void> saveLog({
+    String message,
+    bool isError = false,
+  }) {
+    var userIdMain = PreferenceUtil.getStringValue(KEY_USERID_MAIN);
+    var userIdCurrent = PreferenceUtil.getStringValue(KEY_USERID);
+    if (isError) {
+      FlutterLogs.logError(
+        'MainUser- $userIdMain',
+        'CurrentUser- $userIdCurrent',
+        '$message',
+      );
+    } else {
+      FlutterLogs.logInfo(
+        'MainUser- $userIdMain',
+        'CurrentUser- $userIdCurrent',
+        '$message',
+      );
+    }
+  }
+
+  Future<void> CallbackAPI(
+    String patientName,
+    String planId,
+    String userId,
+  ) async {
+    // LoaderClass.showLoadingDialog(
+    //   Get.context,
+    //   canDismiss: false,
+    // );
+    var res = await ApiBaseHelper().callBackForPlanExpiry(
+      userId,
+      planId,
+    );
+    // LoaderClass.hideLoadingDialog(
+    //   Get.context,
+    // );
+
+    if (res) {
+      Get.rawSnackbar(
+          messageText: Center(
+            child: Text(
+              (patientName.isNotEmpty ? "$patientName, " : patientName) +
+                  "Thank you for reaching out.  Your caregiver will call you as soon as possible.",
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+            ),
+          ),
+          snackPosition: SnackPosition.BOTTOM,
+          snackStyle: SnackStyle.GROUNDED,
+          duration: Duration(seconds: 3),
+          backgroundColor: Colors.green.shade500);
+    } else {
+      Get.rawSnackbar(
+          messageText: Center(
+            child: Text(
+              "Failed to notify the caregiver",
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+            ),
+          ),
+          snackPosition: SnackPosition.BOTTOM,
+          snackStyle: SnackStyle.GROUNDED,
+          duration: Duration(seconds: 3),
+          backgroundColor: Colors.red.shade500);
+    }
+  }
+
+  static Future<void> sendLogToServer() async {
+    await FlutterLogs.exportLogs(
+      exportType: ExportType.ALL,
+    );
+    //createComputeFunction();
+    // FlutterLogs.exportAllFileLogs();
+    //
+    // FlutterLogs.exportFileLogForName();
+    //TODO: SendToServer From Here
+  }
+
+  // static createComputeFunction() async {
+  //   bool answer;
+  //   answer = await compute(sayHelloFromCompute, 'Hello');
+  //   print("Answer from compute: $answer");
+  // }
+
+  // static bool sayHelloFromCompute(String string) {
+
+  //   return true;
+  // }
+
+  static uploadTheLog(String value) async {
+    var dir = await getDir();
+    try {
+      File file = File("${dir.path}/" + value);
+      if (file.existsSync()) {
+        print("Found the file");
+        print(file.path);
+        final res = await ApiBaseHelper().uploadLogData(
+          file.path,
+          value,
+        );
+        if (res) {
+          FlutterToast().getToast(
+            'Log uploaded successful',
+            Colors.green,
+          );
+        } else {
+          FlutterToast().getToast(
+            'Log uploaded failed',
+            Colors.red,
+          );
+        }
+      } else {
+        print("not Found the file");
+      }
+    } catch (e) {
+      print("not Found the file : $e");
+    }
+  }
+
+  static Future<Directory> getDir() async {
+    return Platform.isIOS
+        ? await getApplicationDocumentsDirectory()
+        : await getExternalStorageDirectory();
+  }
+
   Future<void> isFirstTime() async {
     var prefs = await SharedPreferences.getInstance();
     var firstTime = prefs.getBool('first_time');
@@ -3041,6 +3177,11 @@ class CommonUtil {
       if (response?.statusCode == 200) {
         var responseJson = response.bodyBytes;
         var directory = await getApplicationDocumentsDirectory();
+        if (Platform.isAndroid &&
+            !(await Permission.manageExternalStorage.isGranted)) {
+          await Permission.manageExternalStorage.request();
+        }
+
         var path =
             Platform.isIOS ? directory.path : '/storage/emulated/0/Download';
         var file = File('$path/$fileName');

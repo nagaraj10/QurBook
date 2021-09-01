@@ -9,7 +9,7 @@ class CallArguments {
   String doctorName;
   String doctorPicture;
   String meetingId;
-
+  bool isWeb;
   CallArguments({
     this.channelName,
     this.userName,
@@ -19,5 +19,6 @@ class CallArguments {
     this.doctorPicture,
     this.meetingId,
     this.doctorName,
+    this.isWeb,
   });
 }

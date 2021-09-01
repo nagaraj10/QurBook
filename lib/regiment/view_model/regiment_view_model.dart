@@ -296,7 +296,7 @@ class RegimentViewModel extends ChangeNotifier {
     }
     regimentsData = await RegimentService.getRegimentData(
       dateSelected: CommonUtil().dateConversionToApiFormat(selectedRegimenDate),
-      isSymptoms: regimentMode == RegimentMode.Symptoms,
+      isSymptoms: regimentMode == RegimentMode.Symptoms ? 1 : 0,
     );
     updateRegimentStatus(RegimentStatus.Loaded);
     regimentsData?.regimentsList?.forEach((event) {
@@ -395,12 +395,12 @@ class RegimentViewModel extends ChangeNotifier {
   }
 
   Future<ProfileResponseModel> getProfile() async {
-    LoaderClass.showLoadingDialog(
-      Get.context,
-      canDismiss: false,
-    );
+    // LoaderClass.showLoadingDialog(
+    //   Get.context,
+    //   canDismiss: false,
+    // );
     var response = await RegimentService.getProfile();
-    LoaderClass.hideLoadingDialog(Get.context);
+    // LoaderClass.hideLoadingDialog(Get.context);
     return response;
   }
 
@@ -467,7 +467,7 @@ class RegimentViewModel extends ChangeNotifier {
     activitiesData = await RegimentService.getRegimentData(
       dateSelected:
           CommonUtil().dateConversionToApiFormat(selectedActivityDate),
-      isSymptoms: false,
+      isSymptoms: 0,
     );
     updateActivityStatus(ActivityStatus.Loaded);
     activitiesData?.regimentsList?.forEach((event) {

@@ -2,6 +2,7 @@ import 'package:country_pickers/country.dart';
 import 'package:country_pickers/country_pickers.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import '../model/patientlogin_model.dart';
@@ -34,7 +35,7 @@ class PatientSignInScreen extends StatefulWidget {
 
 class _PatientSignInScreenState extends State<PatientSignInScreen> {
   Country _selectedDialogCountry =
-      CountryPickerUtils.getCountryByPhoneCode(strinitialMobileLabel);
+      CountryPickerUtils.getCountryByIsoCode(CommonUtil.REGION_CODE);
   final numberController = TextEditingController();
   final passwordController = TextEditingController();
   var isLoading = false;
@@ -119,7 +120,9 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                                   fontSize: 16.0.sp,
                                 ),
                                 autovalidate: _autoValidateBool,
+                                maxLength: 10,
                                 decoration: InputDecoration(
+                                  counterText: "",
                                   prefixIcon: Container(
                                     constraints: BoxConstraints(
                                         maxWidth: 100.0.w, minWidth: 50.0.w),
