@@ -20,6 +20,7 @@ import 'package:myfhb/widgets/checkout_page.dart';
 import 'IntroScreens/IntroductionScreen.dart';
 import 'add_provider_plan/service/PlanProviderViewModel.dart';
 import 'regiment/models/regiment_arguments.dart';
+
 //import 'package:myfhb/QurPlan/WelcomeScreens/qurplan_welcome_screen.dart';
 // import 'package:awesome_notifications/awesome_notifications.dart';
 import 'regiment/view_model/regiment_view_model.dart';
@@ -48,6 +49,7 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/landing/view_model/landing_view_model.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:myfhb/regiment/models/regiment_arguments.dart';
+
 //import 'package:myfhb/QurPlan/WelcomeScreens/qurplan_welcome_screen.dart';
 // import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
@@ -183,6 +185,7 @@ Future<void> main() async {
     await FHBUtils.instance.getDb();
 
     await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    await saveUnitSystemToPreference();
 
     Map appsFlyerOptions;
     if (Platform.isIOS) {
@@ -284,6 +287,29 @@ Future<void> main() async {
   //await PreferenceUtil.saveString(Constants.KEY_AUTHTOKEN, Constants.AuthToken);
 }
 
+void saveUnitSystemToPreference() async {
+  if (CommonUtil.REGION_CODE != "IN") {
+    await PreferenceUtil.saveString(Constants.STR_KEY_HEIGHT, STR_VAL_HEIGHT_US)
+        .then((value) {
+      PreferenceUtil.saveString(Constants.STR_KEY_WEIGHT, STR_VAL_WEIGHT_US)
+          .then((value) {
+        PreferenceUtil.saveString(Constants.STR_KEY_TEMP, STR_VAL_TEMP_US)
+            .then((value) {});
+      });
+    });
+  } else {
+    await PreferenceUtil.saveString(
+            Constants.STR_KEY_HEIGHT, STR_VAL_HEIGHT_IND)
+        .then((value) {
+      PreferenceUtil.saveString(Constants.STR_KEY_WEIGHT, STR_VAL_WEIGHT_IND)
+          .then((value) {
+        PreferenceUtil.saveString(Constants.STR_KEY_TEMP, STR_VAL_TEMP_IND)
+            .then((value) {});
+      });
+    });
+  }
+}
+
 void saveToPreference() async {
   await PreferenceUtil.saveString(Constants.KEY_USERID_MAIN, Constants.userID)
       .then((onValue) {
@@ -362,6 +388,7 @@ class _MyFHBState extends State<MyFHB> {
   AuthService authService = AuthService();
   ChatViewModel chatViewModel = ChatViewModel();
   bool isFirstTime;
+
   @override
   void initState() {
     // TODO: implement initState

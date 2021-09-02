@@ -261,6 +261,8 @@ class DatabaseUtil {
     await db.saveUnitMeasurements(glucoRandom);
     final sp = UnitsMesurements(13, 'mmHg', 60, 90,"Sys");
     await db.saveUnitMeasurements(sp);
+    final pounds = UnitsMesurements(14, 'lbs', 0, 551,"");
+    await db.saveUnitMeasurements(pounds);
   }
 
   static Future<int> getDBLength() async {

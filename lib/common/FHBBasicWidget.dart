@@ -286,6 +286,7 @@ class FHBBasicWidget {
       {String range,
       String device}) {
     var errorValue = error;
+    print(suffixTextValue+" ***********");
     return Container(
         width: 1.sw - 60,
         child: TextField(
@@ -293,7 +294,10 @@ class FHBBasicWidget {
           controller: controllerValue,
           decoration: InputDecoration(
               hintText: hintTextValue,
-              suffixText: suffixTextValue,
+             /* suffix:GestureDetector(child: Text(suffixTextValue),onTap: (){
+                print("Pressed Suffix ************");
+              }),*/
+             suffixText: suffixTextValue,
               errorText: errorValue == '' ? null : errorValue,
               errorMaxLines: 2),
           keyboardType: TextInputType.number,

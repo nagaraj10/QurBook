@@ -44,6 +44,8 @@ import '../../../common/PreferenceUtil.dart';
 import '../../../constants/fhb_parameters.dart' as parameters;
 import 'dart:convert';
 import '../../../src/utils/screenutils/size_extensions.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+
 
 class EachDeviceValues extends StatefulWidget {
   const EachDeviceValues(
@@ -96,6 +98,9 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   FHBBasicWidget fhbBasicWidget = FHBBasicWidget();
 
   var commonConstants = CommonConstants();
+
+  String tempUnit;
+String weightUnit;
 
   @override
   void initState() {
@@ -367,13 +372,13 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
               CommonConstants.strTemperature;
           postDeviceValues[parameters.strvalue] = deviceController.text;
           postDeviceValues[parameters.strunit] =
-              CommonConstants.strTemperatureValue;
+              tempUnit;
           postDeviceData.add(postDeviceValues);
         } else if (deviceName == STR_WEIGHING_SCALE) {
           postDeviceValues[parameters.strParameters] =
               CommonConstants.strWeightParam;
           postDeviceValues[parameters.strvalue] = deviceController.text;
-          postDeviceValues[parameters.strunit] = CommonConstants.strWeightUnit;
+          postDeviceValues[parameters.strunit] = weightUnit;
           postDeviceData.add(postDeviceValues);
         } else if (deviceName == STR_PULSE_OXIMETER) {
           postDeviceValues[parameters.strParameters] =
@@ -781,6 +786,12 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   }
 
   Widget getCardForThermometer(String deviceName) {
+    try {
+      tempUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_TEMP);
+    }catch(e){
+      tempUnit="F";
+    }
+
     return Container(
         //height: 70.0.h,
         padding: EdgeInsets.all(10),
@@ -863,7 +874,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                       fhbBasicWidget.getErrorMsgForUnitEntered(
                         context,
                         CommonConstants.strTemperature,
-                        'F',
+                          tempUnit,
                         deviceController,
                         (errorValue) {
                           setState(() {
@@ -871,7 +882,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                           });
                         },
                         errorMsg,
-                        'F',
+                          tempUnit,
                         deviceName,range: "",device:"Temp"
                       )
                     ],
@@ -890,7 +901,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                         width: 50.0.w,
                         constraints: BoxConstraints(maxWidth: 100.0.w),
                         child: Text(
-                          'F',
+                          tempUnit,
                           style: TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 14.0.sp,
@@ -1035,6 +1046,12 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   }
 
   Widget getCardForWeighingScale(String deviceName) {
+    try {
+      weightUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_WEIGHT);
+    }catch(e){
+      weightUnit="kgs";
+    }
+
     return Container(
         //height: 70.0.h,
         padding: EdgeInsets.all(10),
@@ -1081,7 +1098,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                   Column(
                     children: <Widget>[
                       Text(
-                        'Kg',
+                        weightUnit,
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 14.0.sp,
@@ -1091,12 +1108,12 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                       fhbBasicWidget.getErrorMsgForUnitEntered(
                           context,
                           CommonConstants.strWeight,
-                          commonConstants.weightUNIT,
+                          weightUnit,
                           deviceController, (errorValue) {
                         setState(() {
                           errorMsg = errorValue;
                         });
-                      }, errorMsg, commonConstants.weightUNIT, deviceName),
+                      }, errorMsg, weightUnit, deviceName,range: ""),
                     ],
                   ),
                 ],

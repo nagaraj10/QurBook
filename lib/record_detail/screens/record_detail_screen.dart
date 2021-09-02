@@ -745,6 +745,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   void openAlertDialogBasedOnRecordDetails() {
     categoryName = widget.data.metadata.healthRecordCategory.categoryName;
 
+    String tempUnit="F";
+    String weightUnit="Kg";
+    String heightUnit="feet";
     if (widget.data.metadata.doctor != null) {
       doctorsData = widget.data.metadata.doctor.toJson();
     }
@@ -756,6 +759,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     }
     createdDateMethod();
 
+    tempUnit=PreferenceUtil.getStringValue(Constants.STR_KEY_TEMP);
+    weightUnit=PreferenceUtil.getStringValue(Constants.STR_KEY_WEIGHT);
+    heightUnit=PreferenceUtil.getStringValue(Constants.STR_KEY_HEIGHT);
     if (categoryName != Constants.STR_DEVICES) {
       var date = widget.data.metadata.dateOfVisit ?? '';
 
@@ -1102,7 +1108,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                 widget.data,
                 true,
                 TextEditingController(text: thermometerValue),
-                TextEditingController(text: fileName));
+                TextEditingController(text: fileName),tempMainUnit: tempUnit);
             break;
           case Constants.STR_WEIGHING_SCALE:
             final String weightInKgs =
@@ -1132,7 +1138,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                 widget.data,
                 true,
                 TextEditingController(text: weightInKgs),
-                TextEditingController(text: fileName));
+                TextEditingController(text: fileName),weightUnit: weightUnit);
             break;
 
           case Constants.STR_PULSE_OXIMETER:

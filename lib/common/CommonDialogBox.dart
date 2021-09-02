@@ -115,6 +115,10 @@ class CommonDialogBox {
   CommonWidgets commonWidgets = CommonWidgets();
   bool showDoctorList = true;
 
+  String tempUnit="F";
+  String weightMainUnit="Kg";
+  String heightUnit="feet";
+
   Future<Widget> getDialogBoxForPrescription(
       BuildContext context,
       TextEditingController hospitalNameClone,
@@ -1015,13 +1019,18 @@ class CommonDialogBox {
       HealthResult mediaMetaInfoClone,
       bool modeOfSaveClone,
       TextEditingController deviceControllerClone,
-      TextEditingController fileNameClone) {
+      TextEditingController fileNameClone,{String tempMainUnit}) {
     final commonConstants = CommonConstants();
     commonConstants.getCountryMetrics();
     if (mediaMetaInfoClone != null) {
       if (mediaMetaInfoClone != null) {
         metaInfoId = mediaMetaInfoClone.id;
       }
+    }
+    if(tempMainUnit==null){
+      tempMainUnit="F";
+    }else{
+      tempUnit=tempMainUnit;
     }
     modeOfSave = modeOfSaveClone;
     setFileName(fileNameClone.text, mediaMetaInfoClone);
@@ -1068,12 +1077,12 @@ class CommonDialogBox {
             fhbBasicWidget.getTextFiledWithHintAndSuffixText(
                 context,
                 CommonConstants.strTemperature,
-                commonConstants.tempUNIT,
+                tempMainUnit,
                 deviceController, (errorValue) {
               setState(() {
                 errTemp = errorValue;
               });
-            }, errTemp, commonConstants.tempUNIT,range: "",device:"Temp"),
+            }, errTemp, tempMainUnit,range: "",device:"Temp"),
             SizedBox(
               height: 15.0.h,
             ),
@@ -1174,7 +1183,7 @@ class CommonDialogBox {
       HealthResult mediaMetaInfoClone,
       bool modeOfSaveClone,
       TextEditingController deviceControllerClone,
-      TextEditingController fileNameClone) {
+      TextEditingController fileNameClone,{String weightUnit}) {
     final commonConstants = CommonConstants();
     commonConstants.getCountryMetrics();
     if (mediaMetaInfoClone != null) {
@@ -1190,6 +1199,11 @@ class CommonDialogBox {
     imagePathMain.addAll(imagePath);
     deviceController.text = deviceControllerClone.text;
 
+    if(weightUnit==null){
+      weightUnit="kgs";
+    }else{
+      weightMainUnit=weightUnit;
+    }
     if (modeOfSave) {
       deviceHealthResult = mediaMetaInfoClone;
       loadMemoText(mediaMetaInfoClone.metadata.memoText ?? '');
@@ -1228,12 +1242,12 @@ class CommonDialogBox {
             fhbBasicWidget.getTextFiledWithHintAndSuffixText(
                 context,
                 CommonConstants.strWeight,
-                commonConstants.weightUNIT,
+                weightUnit,
                 deviceController, (errorValue) {
               setState(() {
                 errWeight = errorValue;
               });
-            }, errWeight, commonConstants.weightUNIT,range: ""),
+            }, errWeight, weightUnit,range: ""),
             SizedBox(
               height: 15.0.h,
             ),
@@ -1786,13 +1800,13 @@ class CommonDialogBox {
           postDeviceValues[parameters.strParameters] =
               CommonConstants.strTemperature;
           postDeviceValues[parameters.strvalue] = deviceController.text;
-          postDeviceValues[parameters.strunit] = commonConstants.tempUNIT;
+          postDeviceValues[parameters.strunit] = tempUnit;
           postDeviceData.add(postDeviceValues);
         } else if (deviceName == Constants.STR_WEIGHING_SCALE) {
           postDeviceValues[parameters.strParameters] =
               CommonConstants.strWeightParam;
           postDeviceValues[parameters.strvalue] = deviceController.text;
-          postDeviceValues[parameters.strunit] = CommonConstants.strWeightUnit;
+          postDeviceValues[parameters.strunit] = weightMainUnit;
           postDeviceData.add(postDeviceValues);
         } else if (deviceName == Constants.STR_PULSE_OXIMETER) {
           postDeviceValues[parameters.strParameters] =
