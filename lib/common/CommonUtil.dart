@@ -146,6 +146,9 @@ class CommonUtil {
       'Are you sure you want to unsubscribe?';
   final String CONTENT_RENEW_PACKAGE = 'Are you sure you want to renew?';
 
+  final String CONTENT_NO_REFUND =
+      'Please note that no refund will be provided. Are you sure you want to Unsubscribe?';
+
   static Future<dynamic> getResourceLoader() async {
     final secret = SecretLoader(secretPath: 'secrets.json').load();
     final valueFromRes = await secret;
@@ -2876,6 +2879,133 @@ class CommonUtil {
                           //hoverColor: Color(getMyPrimaryColor()),
                           child: Text(
                             'yes'.toUpperCase(),
+                            style: TextStyle(
+                              color: Color(getMyPrimaryColor()),
+                              fontSize: 10,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ]),
+                ),
+              ),
+            ]),
+          );
+        });
+  }
+
+  Future<dynamic> alertDialogForNoReFund(
+      BuildContext context, {
+        String title,
+        String content,
+        String packageId,
+        String isSubscribed,
+        Function() refresh,
+        bool fromDetail = false,
+      }) async {
+    final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    await showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return WillPopScope(
+            onWillPop: () async => false,
+            child: SimpleDialog(children: <Widget>[
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 20),
+                child: Center(
+                  child: Column(children: [
+                    //CircularProgressIndicator(),
+                    SizedBox(
+                      height: 10.0.h,
+                    ),
+                    Text(
+                      CONTENT_NO_REFUND,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16.0.sp,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10.0.h,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        OutlineButton(
+                          onPressed: () async {
+                            // open profile page
+                            Navigator.of(context).pop();
+                          },
+                          borderSide: BorderSide(
+                            color: Color(
+                              getMyPrimaryColor(),
+                            ),
+                          ),
+                          child: Text(
+                            'cancel'.toUpperCase(),
+                            style: TextStyle(
+                              color: Color(
+                                getMyPrimaryColor(),
+                              ),
+                              fontSize: 10,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10.0.h,
+                        ),
+                        OutlineButton(
+                          //hoverColor: Color(getMyPrimaryColor()),
+                          onPressed: () async {
+                            CommonUtil.showLoadingDialog(
+                                context, _keyLoader, variable.Please_Wait);
+                            await subscribeViewModel.UnsubScribePlan(packageId)
+                                .then((value) {
+                              if (value != null) {
+                                if (value.isSuccess) {
+                                  if (value.result != null) {
+                                    if (value.result.result == 'Done') {
+                                      //setState(() {});
+                                      Navigator.of(_keyLoader.currentContext,
+                                          rootNavigator: true)
+                                          .pop();
+                                      if (fromDetail) {
+                                        Get.back();
+                                      }
+                                      Get.back(result: 'refreshUI');
+                                      refresh();
+                                    } else {
+                                      Navigator.of(_keyLoader.currentContext,
+                                          rootNavigator: true)
+                                          .pop();
+                                      Get.back();
+                                      FlutterToast().getToast(
+                                          value.result.message ??
+                                              'UnSubscribe Failed',
+                                          Colors.red);
+                                    }
+                                  }
+                                } else {
+                                  Navigator.of(_keyLoader.currentContext,
+                                      rootNavigator: true)
+                                      .pop();
+                                  Get.back();
+                                  FlutterToast().getToast(
+                                      'UnSubscribe Failed', Colors.red);
+                                }
+                              }
+                            });
+                          },
+                          borderSide: BorderSide(
+                            color: Color(
+                              getMyPrimaryColor(),
+                            ),
+                          ),
+                          //hoverColor: Color(getMyPrimaryColor()),
+                          child: Text(
+                            'confirm'.toUpperCase(),
                             style: TextStyle(
                               color: Color(getMyPrimaryColor()),
                               fontSize: 10,
