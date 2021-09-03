@@ -8,6 +8,7 @@ import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/plan_dashboard/view/planDetailsView.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
+import 'package:myfhb/regiment/view/regiment_screen.dart';
 import 'package:provider/provider.dart';
 
 class DynamicLinks {
@@ -83,6 +84,12 @@ class DynamicLinks {
               planWizardViewModel?.dynamicLinkPage = currentPage ?? 0;
               Get.offAllNamed(rt_PlanWizard);
             }
+            break;
+
+          case 'regimen':
+            Get.offAll(
+              RegimentScreen(),
+            );
             break;
         }
       }

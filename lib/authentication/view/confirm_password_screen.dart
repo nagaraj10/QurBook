@@ -232,38 +232,41 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     ),
                     _changePassword(),
                     SizedBox(height: 10.0.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Flexible(
-                          child: Center(
-                            child: RichText(
-                              text: TextSpan(
-                                text: strOtpNotReceived,
-                                style: TextStyle(
-                                  fontSize: 15.0.sp,
-                                  color: Colors.black,
-                                ),
-                                children: [
-                                  TextSpan(
-                                    text: otpViewModel.timeForResend,
-                                    style: TextStyle(
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
-                                      fontSize: 15.0.sp,
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                    Visibility(
+                      visible: CommonUtil.REGION_CODE == 'IN',
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Flexible(
+                            child: Center(
+                              child: RichText(
+                                text: TextSpan(
+                                  text: strOtpNotReceived,
+                                  style: TextStyle(
+                                    fontSize: 15.0.sp,
+                                    color: Colors.black,
                                   ),
-                                ],
+                                  children: [
+                                    TextSpan(
+                                      text: otpViewModel.timeForResend,
+                                      style: TextStyle(
+                                        color: Color(
+                                            CommonUtil().getMyPrimaryColor()),
+                                        fontSize: 15.0.sp,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                     SizedBox(height: 10.0.h),
                     Visibility(
-                      visible: otpViewModel.timerSeconds == 0,
+                      visible: otpViewModel.timerSeconds == 0 && CommonUtil.REGION_CODE == 'IN',
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
