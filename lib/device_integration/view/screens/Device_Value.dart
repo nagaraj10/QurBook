@@ -1195,8 +1195,6 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                 setState(() {
                                   isSelected[0] = value;
                                   isSelected[1] = null;
-                                  print(isSelected[0]);
-                                  print(isSelected[1]);
                                 });
                               })),
                     ],
@@ -1224,9 +1222,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                 setState(() {
                                   isSelected[1] = value;
                                   isSelected[0] = null;
-                                  print(isSelected[0]);
-                                  print(isSelected[1]);
-                                });
+                                                                  });
                               })),
                     ],
                   ))
