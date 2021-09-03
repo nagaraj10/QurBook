@@ -64,7 +64,7 @@ class EachDeviceValues extends StatefulWidget {
 class _EachDeviceValuesState extends State<EachDeviceValues> {
   GlobalKey<ScaffoldState> scaffold_state = GlobalKey<ScaffoldState>();
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
-  String errorMsg = '',errorMsgDia='',errorMsgSys='';
+  String errorMsg = '', errorMsgDia = '', errorMsgSys = '';
   bool onOkClicked = false;
   String categoryName = STR_DEVICES;
 
@@ -359,6 +359,8 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
             postDeviceValuesExtra[parameters.strunit] = variable.strBefore;
           } else if (isSelected[1] == true) {
             postDeviceValuesExtra[parameters.strunit] = variable.strAfter;
+          } else {
+            postDeviceValuesExtra[parameters.strunit] = 'Random';
           }
 
           postDeviceData.add(postDeviceValuesExtra);
@@ -475,6 +477,10 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
           validationConditon = false;
           validationMsg = CommonConstants.strSugarLevelEmpty;
         } else if (isSelected[0] == null && isSelected[1] == null) {
+          validationConditon = false;
+          validationMsg = CommonConstants.strSugarFasting;
+        } else if ((isSelected[0] == null && isSelected[1] == false) ||
+            (isSelected[0] == false && isSelected[1] == null)) {
           validationConditon = false;
           validationMsg = CommonConstants.strSugarFasting;
         } else {
@@ -637,21 +643,16 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                       onSaved: (input) => setState(() {})),
                                 )*/
                                 fhbBasicWidget.getErrorMsgForUnitEntered(
-                                  context,
-                                  CommonConstants.strSystolicPressure,
-                                  commonConstants.bpDPUNIT,
-                                  deviceController,
-                                  (errorValue) {
-                                    setState(() {
-                                      errorMsgSys = errorValue??"";
-                                      errorMsg=errorMsgSys;
-
-                                    });
-                                  },
-                                    errorMsgSys,
-                                  variable.strbpunit,
-                                  deviceName,range: "Sys"
-                                )
+                                    context,
+                                    CommonConstants.strSystolicPressure,
+                                    commonConstants.bpDPUNIT,
+                                    deviceController, (errorValue) {
+                                  setState(() {
+                                    errorMsgSys = errorValue ?? "";
+                                    errorMsg = errorMsgSys;
+                                  });
+                                }, errorMsgSys, variable.strbpunit, deviceName,
+                                    range: "Sys")
                               ],
                             ),
                           )),
@@ -692,20 +693,16 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                     onSaved: (input) => setState(() {})),
                               ),*/
                           fhbBasicWidget.getErrorMsgForUnitEntered(
-                            context,
-                            CommonConstants.strDiastolicPressure,
-                            commonConstants.bpDPUNIT,
-                            diaStolicPressure,
-                            (errorValue) {
-                              setState(() {
-                                errorMsgDia = errorValue;
-                                errorMsg=errorMsgDia;
-                              });
-                            },
-                              errorMsgDia,
-                            variable.strbpunit,
-                            deviceName,range: "Dia"
-                          )
+                              context,
+                              CommonConstants.strDiastolicPressure,
+                              commonConstants.bpDPUNIT,
+                              diaStolicPressure, (errorValue) {
+                            setState(() {
+                              errorMsgDia = errorValue;
+                              errorMsg = errorMsgDia;
+                            });
+                          }, errorMsgDia, variable.strbpunit, deviceName,
+                              range: "Dia")
                         ],
                       )),
                       Expanded(
@@ -752,19 +749,15 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                       onSaved: (input) => setState(() {})),
                                 ),*/
                                 fhbBasicWidget.getErrorMsgForUnitEntered(
-                                  context,
-                                  CommonConstants.strPulse,
-                                  commonConstants.bpPulseUNIT,
-                                  pulse,
-                                  (errorValue) {
-                                    setState(() {
-                                      errorMsg = errorValue;
-                                    });
-                                  },
-                                  errorMsg,
-                                  variable.strpulse,
-                                  deviceName,range:""
-                                ),
+                                    context,
+                                    CommonConstants.strPulse,
+                                    commonConstants.bpPulseUNIT,
+                                    pulse, (errorValue) {
+                                  setState(() {
+                                    errorMsg = errorValue;
+                                  });
+                                }, errorMsg, variable.strpulse, deviceName,
+                                    range: ""),
                               ],
                             ),
                           )),
@@ -861,19 +854,14 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                             onSaved: (input) => setState(() {})),
                       )*/
                       fhbBasicWidget.getErrorMsgForUnitEntered(
-                        context,
-                        CommonConstants.strTemperature,
-                        'F',
-                        deviceController,
-                        (errorValue) {
-                          setState(() {
-                            errorMsg = errorValue;
-                          });
-                        },
-                        errorMsg,
-                        'F',
-                        deviceName,range: "",device:"Temp"
-                      )
+                          context,
+                          CommonConstants.strTemperature,
+                          'F',
+                          deviceController, (errorValue) {
+                        setState(() {
+                          errorMsg = errorValue;
+                        });
+                      }, errorMsg, 'F', deviceName, range: "", device: "Temp")
                     ],
                   ),
                   Column(
@@ -974,7 +962,8 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                         setState(() {
                           errorMsg = errorValue;
                         });
-                      }, errorMsg, variable.strpulseUnit, deviceName,range: ""),
+                      }, errorMsg, variable.strpulseUnit, deviceName,
+                          range: ""),
                     ],
                   )),
                   Expanded(
@@ -1024,7 +1013,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                         setState(() {
                           errorMsg = errorValue;
                         });
-                      }, errorMsg, variable.strpulse, deviceName,range: ""),
+                      }, errorMsg, variable.strpulse, deviceName, range: ""),
                     ],
                   ))
                 ],
@@ -1169,7 +1158,14 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                   setState(() {
                     errorMsg = errorValue;
                   });
-                }, errorMsg, variable.strGlucUnit, deviceName,range:isSelected[0]==true?'Fast':'PP')
+                }, errorMsg, variable.strGlucUnit, deviceName,
+                    range: ((isSelected[0] == null && isSelected[1] == false) ||
+                            (isSelected[0] == false && isSelected[1] == null) ||
+                            (isSelected[0] == null && isSelected[1] == null))
+                        ? 'Random'
+                        : isSelected[0] == true
+                            ? 'Fast'
+                            : 'PP')
               ],
             )),
             SizedBox(
@@ -1226,7 +1222,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                 setState(() {
                                   isSelected[1] = value;
                                   isSelected[0] = null;
-                                });
+                                                                  });
                               })),
                     ],
                   ))
