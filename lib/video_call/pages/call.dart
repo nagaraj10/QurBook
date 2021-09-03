@@ -78,6 +78,7 @@ class _CallPageState extends State<CallPage> {
   final hideStatus = Provider.of<HideProvider>(Get.context, listen: false);
   final audioStatus =
       Provider.of<AudioCallProvider>(Get.context, listen: false);
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void dispose() {
@@ -115,6 +116,7 @@ class _CallPageState extends State<CallPage> {
     Screen.keepOn(true);
     _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+    listenForVideoCallRequest();
   }
 
   Future<void> _updateConnectionStatus(ConnectivityResult result) async {
@@ -424,7 +426,7 @@ class _CallPageState extends State<CallPage> {
             Get.rawSnackbar(
                 messageText: Center(
                   child: Text(
-                    'Request Canceled',
+                    'Request Cancelled',
                     style: TextStyle(
                         color: Colors.white, fontWeight: FontWeight.w500),
                   ),
@@ -807,13 +809,13 @@ class _CallPageState extends State<CallPage> {
                 //video request has been accecpted by web
                 if (Get.isDialogOpen) {
                   CommonUtil.isVideoRequestSent = false;
-                  Provider?.of<HideProvider>(context, listen: false)
+                  Provider?.of<HideProvider>(Get.context, listen: false)
                       ?.swithToVideo();
-                  Provider.of<AudioCallProvider>(context, listen: false)
+                  Provider.of<AudioCallProvider>(Get.context, listen: false)
                       ?.disableAudioCall();
-                  Provider?.of<VideoIconProvider>(context, listen: false)
+                  Provider?.of<VideoIconProvider>(Get.context, listen: false)
                       ?.turnOnVideo();
-                  Provider.of<RTCEngineProvider>(context, listen: false)
+                  Provider.of<RTCEngineProvider>(Get.context, listen: false)
                       ?.isVideoPaused = false;
                   Get.back();
                 }
@@ -923,16 +925,19 @@ class _CallPageState extends State<CallPage> {
                                         await widget?.rtcEngine
                                             ?.muteLocalVideoStream(false);
 
-                                        Provider?.of<HideProvider>(context,
+                                        Provider?.of<HideProvider>(Get.context,
                                                 listen: false)
                                             ?.swithToVideo();
-                                        Provider.of<AudioCallProvider>(context,
+                                        Provider.of<AudioCallProvider>(
+                                                Get.context,
                                                 listen: false)
                                             ?.disableAudioCall();
-                                        Provider?.of<VideoIconProvider>(context,
+                                        Provider?.of<VideoIconProvider>(
+                                                Get.context,
                                                 listen: false)
                                             ?.turnOnVideo();
-                                        Provider.of<RTCEngineProvider>(context,
+                                        Provider.of<RTCEngineProvider>(
+                                                Get.context,
                                                 listen: false)
                                             ?.isVideoPaused = false;
                                         Get.back();
@@ -954,7 +959,7 @@ class _CallPageState extends State<CallPage> {
                   Get.rawSnackbar(
                       messageText: Center(
                         child: Text(
-                          'Request Canceled',
+                          'Request Cancelled',
                           style: TextStyle(
                               color: Colors.white, fontWeight: FontWeight.w500),
                         ),
@@ -1016,7 +1021,7 @@ class _CallPageState extends State<CallPage> {
 
   @override
   Widget build(BuildContext context) {
-    listenForVideoCallRequest();
+    //listenForVideoCallRequest(context);
     return isCustomViewShown
         ? tryingToConnect()
         : Consumer<AudioCallProvider>(builder: (context, status, child) {
