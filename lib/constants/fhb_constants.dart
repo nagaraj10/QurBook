@@ -17,6 +17,7 @@ const String MYFamily = 'My Family';
 const String MyProviders = 'My Providers';
 const String Feedback = 'Feedback';
 const String Settings = 'App settings';
+const String HELP_SUPPORT = 'Help & Support';
 const String FAQ = 'FAQ';
 const String RateUs = 'Rate us';
 const String SOURCE_NAME = 'tridentApp';
