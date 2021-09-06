@@ -1239,7 +1239,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   void createdDateMethod() {
     final parsedDate =
         DateTime.parse(widget.data.metadata.healthRecordType.createdOn);
-    var dateFormatter = DateFormat(variable.strDateFormatDay);
+    var dateFormatter = DateFormat(CommonUtil.REGION_CODE == 'IN'
+        ? variable.strDateFormatDay
+        : variable.strUSDateFormatDay);
     createdDate = dateFormatter.format(parsedDate);
   }
 
@@ -1512,7 +1514,10 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       var file = File('$filePath${widget.data.metadata.fileName}' + fileType);
       final request = await ApiServices.get(
         audioMediaId.healthRecordUrl,
-        headers: {HttpHeaders.authorizationHeader: authToken},
+        headers: {
+          HttpHeaders.authorizationHeader: authToken,
+          Constants.KEY_OffSet: CommonUtil.TimeZone
+        },
       );
       final bytes = request.bodyBytes; //close();
       await file.writeAsBytes(bytes);

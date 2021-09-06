@@ -52,7 +52,7 @@ class CallPage extends StatefulWidget {
       this.arguments,
       this.isAppExists,
       this.rtcEngine,
-      this.doctorName, 
+      this.doctorName,
       this.isWeb});
 
   @override
@@ -78,6 +78,7 @@ class _CallPageState extends State<CallPage> {
   final hideStatus = Provider.of<HideProvider>(Get.context, listen: false);
   final audioStatus =
       Provider.of<AudioCallProvider>(Get.context, listen: false);
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void dispose() {
@@ -115,6 +116,7 @@ class _CallPageState extends State<CallPage> {
     Screen.keepOn(true);
     _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+    listenForVideoCallRequest();
   }
 
   Future<void> _updateConnectionStatus(ConnectivityResult result) async {
@@ -186,7 +188,9 @@ class _CallPageState extends State<CallPage> {
     if (!audioStatus?.isAudioCall) {
       //* video call
       VideoEncoderConfiguration configuration = VideoEncoderConfiguration();
-      configuration.dimensions = widget?.isWeb ? VideoDimensions(width: 1280, height: 720) : VideoDimensions(width: 640, height: 360);
+      configuration.dimensions = widget?.isWeb
+          ? VideoDimensions(width: 1280, height: 720)
+          : VideoDimensions(width: 640, height: 360);
       configuration.frameRate = VideoFrameRate.Fps15;
       configuration.bitrate = 200;
       await widget?.rtcEngine?.setVideoEncoderConfiguration(configuration);
@@ -270,7 +274,7 @@ class _CallPageState extends State<CallPage> {
         if (reason == UserOfflineReason.Dropped) {
           noResponseDialog(context, 'Disconnected due to Network Failure!');
           //print('user is OFFLINE');
-        } else {
+        } else if (reason == UserOfflineReason.Quit) {
           if (Platform.isIOS) {
             PageNavigator.goToPermanent(context, router.rt_Landing);
           } else {
@@ -327,110 +331,114 @@ class _CallPageState extends State<CallPage> {
       }
     };
 
-       rtcEngineEventHandler.userEnableVideo = (uid, isEnabled) async {
-      if (isEnabled && audioStatus?.isAudioCall) {
-        //show switch to video call dialog
-        if (CommonUtil.isVideoRequestSent) {
-          CommonUtil.isVideoRequestSent = false;
-          Get.back();
-          Provider?.of<HideProvider>(context, listen: false)?.swithToVideo();
-          Provider.of<AudioCallProvider>(context, listen: false)
-              ?.disableAudioCall();
-          Provider?.of<VideoIconProvider>(context, listen: false)
-              ?.turnOnVideo();
-          Provider.of<RTCEngineProvider>(context, listen: false)
-              ?.isVideoPaused = false;
-        } else {
-          var status = await Get.dialog(
-            AlertDialog(
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    child: Text(
-                      '${widget?.doctorName} requesting to switch to video call',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 20.0.sp,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black.withOpacity(0.5)),
+    rtcEngineEventHandler.userEnableVideo = (uid, isEnabled) async {
+      if (widget.isWeb != null && widget.isWeb) {
+        // call is from web so do nothing
+      } else {
+        if (isEnabled && audioStatus?.isAudioCall) {
+          //show switch to video call dialog
+          if (CommonUtil.isVideoRequestSent) {
+            CommonUtil.isVideoRequestSent = false;
+            Get.back();
+            Provider?.of<HideProvider>(context, listen: false)?.swithToVideo();
+            Provider.of<AudioCallProvider>(context, listen: false)
+                ?.disableAudioCall();
+            Provider?.of<VideoIconProvider>(context, listen: false)
+                ?.turnOnVideo();
+            Provider.of<RTCEngineProvider>(context, listen: false)
+                ?.isVideoPaused = false;
+          } else {
+            var status = await Get.dialog(
+              AlertDialog(
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      child: Text(
+                        '${widget?.doctorName} requesting to switch to video call',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 20.0.sp,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black.withOpacity(0.5)),
+                      ),
                     ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      FlatButton(
-                          child: Text(parameters.btn_decline),
-                          onPressed: () async {
-                            Get.back();
-                            FirebaseFirestore.instance
-                              ..collection("call_log")
-                                  .doc("${widget.channelName}")
-                                  .set({"video_request_sent": "decline"});
-                          }),
-                      FlatButton(
-                          child: Text(parameters.btn_switch),
-                          onPressed: () async {
-                            var permissionStatus =
-                                await CommonUtil.askPermissionForCameraAndMic(
-                                    isAudioCall: false);
-                            if (!permissionStatus) {
-                              FlutterToast().getToast(
-                                  'Could not switch on video due to permission settings',
-                                  Colors.black);
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        FlatButton(
+                            child: Text(parameters.btn_decline),
+                            onPressed: () async {
                               Get.back();
                               FirebaseFirestore.instance
                                 ..collection("call_log")
                                     .doc("${widget.channelName}")
                                     .set({"video_request_sent": "decline"});
-                              return;
-                            } else {
-                              await widget?.rtcEngine?.enableVideo();
-                              await widget?.rtcEngine?.enableLocalVideo(true);
-                              await widget?.rtcEngine
-                                  ?.muteLocalVideoStream(false);
+                            }),
+                        FlatButton(
+                            child: Text(parameters.btn_switch),
+                            onPressed: () async {
+                              var permissionStatus =
+                                  await CommonUtil.askPermissionForCameraAndMic(
+                                      isAudioCall: false);
+                              if (!permissionStatus) {
+                                FlutterToast().getToast(
+                                    'Could not switch on video due to permission settings',
+                                    Colors.black);
+                                Get.back();
+                                FirebaseFirestore.instance
+                                  ..collection("call_log")
+                                      .doc("${widget.channelName}")
+                                      .set({"video_request_sent": "decline"});
+                                return;
+                              } else {
+                                await widget?.rtcEngine?.enableVideo();
+                                await widget?.rtcEngine?.enableLocalVideo(true);
+                                await widget?.rtcEngine
+                                    ?.muteLocalVideoStream(false);
 
-                              Provider?.of<HideProvider>(context, listen: false)
-                                  ?.swithToVideo();
-                              Provider.of<AudioCallProvider>(context,
-                                      listen: false)
-                                  ?.disableAudioCall();
-                              Provider?.of<VideoIconProvider>(context,
-                                      listen: false)
-                                  ?.turnOnVideo();
-                              Provider.of<RTCEngineProvider>(context,
-                                      listen: false)
-                                  ?.isVideoPaused = false;
-                              Get.back();
-                            }
-                          }),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            barrierDismissible: false,
-          );
-        }
-      } else {
-        if (Get.isDialogOpen) {
-          Get.back();
-          Get.rawSnackbar(
-              messageText: Center(
-                child: Text(
-                  'Request Canceled',
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.w500),
+                                Provider?.of<HideProvider>(context,
+                                        listen: false)
+                                    ?.swithToVideo();
+                                Provider.of<AudioCallProvider>(context,
+                                        listen: false)
+                                    ?.disableAudioCall();
+                                Provider?.of<VideoIconProvider>(context,
+                                        listen: false)
+                                    ?.turnOnVideo();
+                                Provider.of<RTCEngineProvider>(context,
+                                        listen: false)
+                                    ?.isVideoPaused = false;
+                                Get.back();
+                              }
+                            }),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-              snackPosition: SnackPosition.BOTTOM,
-              snackStyle: SnackStyle.GROUNDED,
-              duration: Duration(seconds: 3),
-              backgroundColor: Colors.red.shade400);
-          //FlutterToast().getToast('Request Canceled', Colors.green);
-        }
+              barrierDismissible: false,
+            );
+          }
+        } else {
+          if (Get.isDialogOpen) {
+            Get.back();
+            Get.rawSnackbar(
+                messageText: Center(
+                  child: Text(
+                    'Request Cancelled',
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.w500),
+                  ),
+                ),
+                snackPosition: SnackPosition.BOTTOM,
+                snackStyle: SnackStyle.GROUNDED,
+                duration: Duration(seconds: 3),
+                backgroundColor: Colors.red.shade400);
+            //FlutterToast().getToast('Request Canceled', Colors.green);
+          }
 
-        /* if (CommonUtil.isVideoRequestSent) {
+          /* if (CommonUtil.isVideoRequestSent) {
           // declined
           FlutterToast()
               .getToast('Video call request Declined by doctor', Colors.black);
@@ -440,6 +448,7 @@ class _CallPageState extends State<CallPage> {
               .getToast('Video call request canceled by doctor', Colors.green);
           videoPauseResumeState = 0;
         } */
+        }
       }
     };
 
@@ -793,41 +802,226 @@ class _CallPageState extends State<CallPage> {
         ..collection('call_log').doc(widget.channelName).snapshots().listen(
             (DocumentSnapshot<Map<String, dynamic>> documentSnapshot) async {
           Map<String, dynamic> firestoreInfo = documentSnapshot.data() ?? {};
-          var recStatus = firestoreInfo['video_request_sent'];
-          if (recStatus == "accept") {
-            //video request has been accecpted
-          } else if (recStatus == "decline") {
-            if (Get.isDialogOpen) {
-              CommonUtil.isVideoRequestSent = false;
-              Get.back();
-              Get.rawSnackbar(
-                  messageText: Center(
-                    child: Text(
-                      'Request Declined',
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.w500),
+          if (widget.isWeb != null && widget.isWeb) {
+            if (CommonUtil.isVideoRequestSent) {
+              var recStatus = firestoreInfo['acceptedByWeb'];
+              if (recStatus == 1) {
+                //video request has been accecpted by web
+                if (Get.isDialogOpen) {
+                  CommonUtil.isVideoRequestSent = false;
+                  Provider?.of<HideProvider>(Get.context, listen: false)
+                      ?.swithToVideo();
+                  Provider.of<AudioCallProvider>(Get.context, listen: false)
+                      ?.disableAudioCall();
+                  Provider?.of<VideoIconProvider>(Get.context, listen: false)
+                      ?.turnOnVideo();
+                  Provider.of<RTCEngineProvider>(Get.context, listen: false)
+                      ?.isVideoPaused = false;
+                  Get.back();
+                }
+                FirebaseFirestore.instance
+                  ..collection('call_log')
+                      .doc(widget.channelName)
+                      .update({'acceptedByWeb': -1});
+              } else if (recStatus == 0) {
+                if (Get.isDialogOpen) {
+                  CommonUtil.isVideoRequestSent = false;
+                  Get.back();
+                  Get.rawSnackbar(
+                      messageText: Center(
+                        child: Text(
+                          'Request Declined',
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                      snackPosition: SnackPosition.BOTTOM,
+                      snackStyle: SnackStyle.GROUNDED,
+                      duration: Duration(seconds: 3),
+                      backgroundColor: Colors.red.shade400);
+                  try {
+                    FirebaseFirestore.instance
+                      ..collection('call_log')
+                          .doc(widget.channelName)
+                          .update({'acceptedByWeb': -1});
+                  } catch (e) {
+                    print(e.toString());
+                  } finally {
+                    await widget?.rtcEngine?.disableVideo();
+                    await widget?.rtcEngine?.enableLocalVideo(false);
+                    await widget?.rtcEngine?.muteLocalVideoStream(true);
+                  }
+                }
+              }
+            } else {
+              var recStatus = firestoreInfo['videoRequestFromWeb'];
+              if (recStatus == 1) {
+                //video request from web
+                if (!Get.isDialogOpen) {
+                  var status = await Get.dialog(
+                    AlertDialog(
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            child: Text(
+                              '${widget?.doctorName} requesting to switch to video call',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 20.0.sp,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black.withOpacity(0.5)),
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              FlatButton(
+                                  child: Text(parameters.btn_decline),
+                                  onPressed: () async {
+                                    Get.back();
+                                    FirebaseFirestore.instance
+                                      ..collection("call_log")
+                                          .doc("${widget.channelName}")
+                                          .update({
+                                        "acceptedByMobile": 0,
+                                        "videoRequestFromWeb": -1
+                                      });
+                                  }),
+                              FlatButton(
+                                  child: Text(parameters.btn_switch),
+                                  onPressed: () async {
+                                    var permissionStatus = await CommonUtil
+                                        .askPermissionForCameraAndMic(
+                                            isAudioCall: false);
+                                    if (!permissionStatus) {
+                                      FlutterToast().getToast(
+                                          'Could not switch on video due to permission settings',
+                                          Colors.black);
+                                      Get.back();
+                                      FirebaseFirestore.instance
+                                        ..collection("call_log")
+                                            .doc("${widget.channelName}")
+                                            .update({
+                                          "acceptedByMobile": 0,
+                                          "videoRequestFromWeb": -1
+                                        });
+                                      return;
+                                    } else {
+                                      try {
+                                        FirebaseFirestore.instance
+                                          ..collection("call_log")
+                                              .doc("${widget.channelName}")
+                                              .update({
+                                            "acceptedByMobile": 1,
+                                            "videoRequestFromWeb": -1
+                                          });
+                                      } catch (e) {
+                                        print(e.toString());
+                                      } finally {
+                                        await widget?.rtcEngine?.enableVideo();
+                                        await widget?.rtcEngine
+                                            ?.enableLocalVideo(true);
+                                        await widget?.rtcEngine
+                                            ?.muteLocalVideoStream(false);
+
+                                        Provider?.of<HideProvider>(Get.context,
+                                                listen: false)
+                                            ?.swithToVideo();
+                                        Provider.of<AudioCallProvider>(
+                                                Get.context,
+                                                listen: false)
+                                            ?.disableAudioCall();
+                                        Provider?.of<VideoIconProvider>(
+                                                Get.context,
+                                                listen: false)
+                                            ?.turnOnVideo();
+                                        Provider.of<RTCEngineProvider>(
+                                                Get.context,
+                                                listen: false)
+                                            ?.isVideoPaused = false;
+                                        Get.back();
+                                      }
+                                    }
+                                  }),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  snackPosition: SnackPosition.BOTTOM,
-                  snackStyle: SnackStyle.GROUNDED,
-                  duration: Duration(seconds: 3),
-                  backgroundColor: Colors.red.shade400);
-              await widget?.rtcEngine?.disableVideo();
-              await widget?.rtcEngine?.enableLocalVideo(false);
-              await widget?.rtcEngine?.muteLocalVideoStream(true);
-              FirebaseFirestore.instance
-                ..collection('call_log')
-                    .doc(widget.channelName)
-                    .update({'video_request_sent': FieldValue.delete()});
+                    barrierDismissible: false,
+                  );
+                }
+              } else if (recStatus == 0) {
+                //video request cancelled by web
+                if (Get.isDialogOpen) {
+                  Get.back();
+                  Get.rawSnackbar(
+                      messageText: Center(
+                        child: Text(
+                          'Request Cancelled',
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                      snackPosition: SnackPosition.BOTTOM,
+                      snackStyle: SnackStyle.GROUNDED,
+                      duration: Duration(seconds: 3),
+                      backgroundColor: Colors.red.shade400);
+                  try {
+                    FirebaseFirestore.instance
+                      ..collection('call_log')
+                          .doc(widget.channelName)
+                          .update({"videoRequestFromWeb": -1});
+                  } catch (e) {
+                    print(e.toString());
+                  } finally {
+                    await widget?.rtcEngine?.disableVideo();
+                    await widget?.rtcEngine?.enableLocalVideo(false);
+                    await widget?.rtcEngine?.muteLocalVideoStream(true);
+                  }
+                }
+              }
+            }
+          } else {
+            var recStatus = firestoreInfo['video_request_sent'];
+            if (recStatus == "accept") {
+              //video request has been accecpted
+            } else if (recStatus == "decline") {
+              if (Get.isDialogOpen) {
+                CommonUtil.isVideoRequestSent = false;
+                Get.back();
+                Get.rawSnackbar(
+                    messageText: Center(
+                      child: Text(
+                        'Request Declined',
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                    snackPosition: SnackPosition.BOTTOM,
+                    snackStyle: SnackStyle.GROUNDED,
+                    duration: Duration(seconds: 3),
+                    backgroundColor: Colors.red.shade400);
+                await widget?.rtcEngine?.disableVideo();
+                await widget?.rtcEngine?.enableLocalVideo(false);
+                await widget?.rtcEngine?.muteLocalVideoStream(true);
+                FirebaseFirestore.instance
+                  ..collection('call_log')
+                      .doc(widget.channelName)
+                      .update({'video_request_sent': FieldValue.delete()});
+              }
             }
           }
-        }).onError((e) {});
+        }).onError((e) {
+          print(e.toString());
+        });
     } catch (e) {}
   }
 
   @override
   Widget build(BuildContext context) {
-    listenForVideoCallRequest();
+    //listenForVideoCallRequest(context);
     return isCustomViewShown
         ? tryingToConnect()
         : Consumer<AudioCallProvider>(builder: (context, status, child) {

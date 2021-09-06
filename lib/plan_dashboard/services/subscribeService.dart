@@ -1,3 +1,5 @@
+import 'package:myfhb/common/CommonUtil.dart';
+
 import '../../constants/fhb_query.dart';
 import '../model/CreateSubscribeModel.dart';
 import '../model/subscribeModel.dart';
@@ -9,8 +11,8 @@ class SubscribeService {
   final ApiBaseHelper _helper = ApiBaseHelper();
 
   Future<SubscribeModel> subscribePlan(String packageId,String patientId) async {
-    var dateFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
-    var localTime = dateFormat.format(DateTime.now());
+   
+    var localTime = CommonUtil.dateFormatterWithdatetimeseconds(DateTime.now());
     final body = {};
     body['method'] = qr_get;
     body['data'] = qr_subscribePlan+packageId+qr_patientEqaul+patientId+qr_timeEqaul+localTime;

@@ -379,7 +379,7 @@ class _MyFamilyState extends State<MyFamily> {
                             headers: {
                               HttpHeaders.authorizationHeader:
                                   PreferenceUtil.getStringValue(
-                                      Constants.KEY_AUTHTOKEN)
+                                      Constants.KEY_AUTHTOKEN),
                             },
                             errorBuilder: (context, exception, stackTrace) {
                               return Container(
@@ -570,8 +570,7 @@ class _MyFamilyState extends State<MyFamily> {
                                       setState(() {});
                                     } else {
                                       FHBBasicWidget().showInSnackBar(
-                                          userLinking.message,
-                                          scaffold_state);
+                                          userLinking.message, scaffold_state);
                                       Navigator.of(_keyLoader.currentContext,
                                               rootNavigator: true)
                                           .pop();
