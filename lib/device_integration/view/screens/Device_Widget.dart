@@ -626,6 +626,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       averageForDia = '';
       pulseBp = '';
       averageForPulForBp = '';
+      timeForBp = '';
     }
     if (deviceValues.bloodGlucose.entities.isNotEmpty) {
       dateTimeStampForGulcose = deviceValues
@@ -682,6 +683,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       sourceForGluco = '';
       averageForFasting = '';
       averageForPP = '';
+      timeForGulcose = '';
     }
     if (deviceValues.oxygenSaturation.entities.isNotEmpty) {
       dateTimeStampForOs = deviceValues
@@ -781,6 +783,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       devicevalue1ForOs = '';
       sourceForPulse = '';
       averageForSPO2 = '';
+      timeForOs = '';
     }
     if (deviceValues.bodyTemperature.entities.isNotEmpty) {
       dateTimeStampForTemp = deviceValues
@@ -816,6 +819,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       devicevalue1ForTemp = '';
       sourceForThermo = '';
       averageForTemp = '';
+      timeForTemp ='';
     }
     if (deviceValues.bodyWeight.entities.isNotEmpty) {
       dateTimeStampForWeight = deviceValues
@@ -850,6 +854,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       devicevalue1ForWeight = '';
       sourceForWeigh = '';
       averageForWeigh = '';
+      timeForWeight = '';
     }
 
     return getDeviceData(
