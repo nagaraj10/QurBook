@@ -244,7 +244,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             //PageNavigator.goTo(context, router.rt_AppSettings);
           },
         ),
-        Divider(),
+        /*Divider(),
         Theme(
           data: theme,
           child: ExpansionTile(
@@ -362,7 +362,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
               )
             ],
           ),
-        ),
+        ),*/
         /* Divider(),
         Theme(
           data: theme,

@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Orders/View/OrdersView.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/landing/view/widgets/help_support.dart';
 import 'package:myfhb/my_reports/view/my_report_screen.dart';
 import 'package:myfhb/user_plans/view/user_profile_image.dart';
 import '../../../colors/fhb_colors.dart';
@@ -31,228 +33,246 @@ class NavigationDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Drawer(
-        child: Container(
-          color: Colors.white,
-          child: Column(
-            children: [
-              Expanded(
-                child: Container(
-                  color: Colors.white,
-                  child: ListView(
-                    padding: EdgeInsets.zero,
-                    children: [
-                      SizedBox(
-                        height: AppBar().preferredSize.height,
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(
-                          left: 20.0.w,
-                          right: 20.0.w,
-                          bottom: 20.0.h,
+    child: Container(
+      color: Colors.white,
+      child: Column(
+        children: [
+          Expanded(
+            child: Container(
+              color: Colors.white,
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  SizedBox(
+                    height: AppBar().preferredSize.height,
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(
+                      left: 20.0.w,
+                      right: 20.0.w,
+                      bottom: 20.0.h,
+                    ),
+                    child: Column(
+                      children: [
+                        AssetImageWidget(
+                          icon: myFHB_logo,
+                          height: 100.0.h,
+                          width: 100.0.h,
                         ),
-                        child: Column(
+                        SizedBox(
+                          height: 20.0.h,
+                        ),
+                        Row(
                           children: [
-                            AssetImageWidget(
-                              icon: myFHB_logo,
-                              height: 100.0.h,
-                              width: 100.0.h,
-                            ),
-                            SizedBox(
-                              height: 20.0.h,
-                            ),
-                            Row(
-                              children: [
-                                Container(
-                                  height: 70.0.h,
-                                  width: 70.0.h,
-                                  decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: UserProfileImage(
-                                    myProfile,
-                                    textColor:
-                                        Color(CommonUtil().getMyPrimaryColor()),
-                                    circleColor: Color(bgColorContainer),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 10.0.w,
-                                ),
-                                getNameWidget(),
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                      DrawerTile(
-                        title: variable.strProfile,
-                        icon: variable.icon_profile,
-                        onPressed: () async {
-                          Navigator.pop(context);
-                          await Navigator.pushNamed(
-                            context,
-                            router.rt_UserAccounts,
-                            arguments: UserAccountsArguments(
-                              selectedIndex: 0,
-                            ),
-                          );
-                          if (refresh != null) {
-                            refresh(true);
-                          }
-                        },
-                      ),
-                      // DrawerTile(
-                      //   title: variable.strMyRecords,
-                      //   icon: variable.icon_records,
-                      //   onPressed: () {
-                      //     Navigator.pop(context);
-                      //     Navigator.pushNamed(
-                      //       context,
-                      //       router.rt_MyRecords,
-                      //       arguments: MyRecordsArgument(),
-                      //     );
-                      //   },
-                      // ),
-                      DrawerTile(
-                        title: variable.strMyProvider,
-                        icon: variable.icon_provider,
-                        onPressed: () async {
-                          Navigator.pop(context);
-                          await Navigator.pushNamed(
-                            context,
-                            router.rt_UserAccounts,
-                            arguments: UserAccountsArguments(
-                              selectedIndex: 2,
-                            ),
-                          );
-                          if (refresh != null) {
-                            refresh(true);
-                          }
-                        },
-                      ),
-                      DrawerTile(
-                        title: variable.strMyFamily,
-                        iconWidget: SvgPicture.asset(
-                          variable.icon_my_family_menu,
-                          color: Colors.black54,
-                        ),
-                        onPressed: () async {
-                          Navigator.pop(context);
-                          await Navigator.pushNamed(
-                            context,
-                            router.rt_UserAccounts,
-                            arguments: UserAccountsArguments(
-                              selectedIndex: 1,
-                            ),
-                          );
-                          if (refresh != null) {
-                            refresh(true);
-                          }
-                        },
-                      ),
-                      DrawerTile(
-                        title: variable.strMyOrders,
-                        iconWidget: Image.asset(
-                          variable.icon_orderHistory,
-                          color: Colors.black54,
-                          width: 24.sp,
-                          height: 24.sp,
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          Get.to(
-                            OrdersView(),
-                          );
-                        },
-                      ),
-                      DrawerTile(
-                        title: variable.strSettings,
-                        iconWidget: SvgPicture.asset(
-                          variable.icon_settings,
-                          color: Colors.black54,
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => MoreMenuScreen(
-                                refresh: refresh,
+                            Container(
+                              height: 70.0.h,
+                              width: 70.0.h,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                              ),
+                              child: UserProfileImage(
+                                myProfile,
+                                textColor:
+                                Color(CommonUtil().getMyPrimaryColor()),
+                                circleColor: Color(bgColorContainer),
                               ),
                             ),
-                          );
-                        },
-                      ),
-                      DrawerTile(
-                        title: variable.strRefer_friend,
-                        // iconWidget: SvgPicture.asset(
-                        //   variable.icon_logout,
-                        //   color: Colors.black54,
-                        // ),
-                        iconWidget: Image.asset(
-                          variable.icon_refer_friend_icon,
-                          width: 24.sp,
-                          height: 24.sp,
+                            SizedBox(
+                              width: 10.0.w,
+                            ),
+                            getNameWidget(),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                  DrawerTile(
+                    title: variable.strProfile,
+                    icon: variable.icon_profile,
+                    onPressed: () async {
+                      Navigator.pop(context);
+                      await Navigator.pushNamed(
+                        context,
+                        router.rt_UserAccounts,
+                        arguments: UserAccountsArguments(
+                          selectedIndex: 0,
                         ),
-                        onPressed: () {
-                          CommonUtil().accessContactsDialog();
-                          Navigator.pop(context);
-                        },
-                      ),
-                      DrawerTile(
-                        title: variable.strReports,
-                        /*iconWidget: SvgPicture.asset(
+                      );
+                      if (refresh != null) {
+                        refresh(true);
+                      }
+                    },
+                  ),
+                  // DrawerTile(
+                  //   title: variable.strMyRecords,
+                  //   icon: variable.icon_records,
+                  //   onPressed: () {
+                  //     Navigator.pop(context);
+                  //     Navigator.pushNamed(
+                  //       context,
+                  //       router.rt_MyRecords,
+                  //       arguments: MyRecordsArgument(),
+                  //     );
+                  //   },
+                  // ),
+                  DrawerTile(
+                    title: variable.strMyProvider,
+                    icon: variable.icon_provider,
+                    onPressed: () async {
+                      Navigator.pop(context);
+                      await Navigator.pushNamed(
+                        context,
+                        router.rt_UserAccounts,
+                        arguments: UserAccountsArguments(
+                          selectedIndex: 2,
+                        ),
+                      );
+                      if (refresh != null) {
+                        refresh(true);
+                      }
+                    },
+                  ),
+                  DrawerTile(
+                    title: variable.strMyFamily,
+                    iconWidget: SvgPicture.asset(
+                      variable.icon_my_family_menu,
+                      color: Colors.black54,
+                    ),
+                    onPressed: () async {
+                      Navigator.pop(context);
+                      await Navigator.pushNamed(
+                        context,
+                        router.rt_UserAccounts,
+                        arguments: UserAccountsArguments(
+                          selectedIndex: 1,
+                        ),
+                      );
+                      if (refresh != null) {
+                        refresh(true);
+                      }
+                    },
+                  ),
+                  DrawerTile(
+                    title: variable.strMyOrders,
+                    iconWidget: Image.asset(
+                      variable.icon_orderHistory,
+                      color: Colors.black54,
+                      width: 24.sp,
+                      height: 24.sp,
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Get.to(
+                        OrdersView(),
+                      );
+                    },
+                  ),
+                  DrawerTile(
+                    title: variable.strSettings,
+                    iconWidget: SvgPicture.asset(
+                      variable.icon_settings,
+                      color: Colors.black54,
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MoreMenuScreen(
+                            refresh: refresh,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  DrawerTile(
+                    title: HELP_SUPPORT,
+                    iconWidget: Image.asset(
+                      variable.icon_help_support,
+                      color: Colors.black54,
+                      width: 24.sp,
+                      height: 24.sp,
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => HelpSupport(),
+                        ),
+                      );
+                    },
+                  ),
+                  DrawerTile(
+                    title: variable.strRefer_friend,
+                    // iconWidget: SvgPicture.asset(
+                    //   variable.icon_logout,
+                    //   color: Colors.black54,
+                    // ),
+                    iconWidget: Image.asset(
+                      variable.icon_refer_friend_icon,
+                      width: 24.sp,
+                      height: 24.sp,
+                    ),
+                    onPressed: () {
+                      CommonUtil().accessContactsDialog();
+                      Navigator.pop(context);
+                    },
+                  ),
+                  DrawerTile(
+                    title: variable.strReports,
+                    /*iconWidget: SvgPicture.asset(
                           variable.icon_settings,
                           color: Colors.black54,
                         ),*/
-                        iconWidget: Image.asset(
-                          variable.icon_report_icon,
-                          width: 24.sp,
-                          height: 24.sp,
+                    iconWidget: Image.asset(
+                      variable.icon_report_icon,
+                      width: 24.sp,
+                      height: 24.sp,
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ReportListScreen(),
                         ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ReportListScreen(),
-                            ),
-                          );
-                        },
-                      ),
-                      DrawerTile(
-                        title: variable.strLogout,
-                        iconWidget: SvgPicture.asset(
-                          variable.icon_logout,
-                          color: Colors.black54,
-                        ),
-                        onPressed: () {
-                          FHBBasicWidget().exitApp(context, () {
-                            CommonUtil().logout(moveToLoginPage);
-                          });
-                        },
-                      ),
-                    ],
+                      );
+                    },
                   ),
-                ),
+                  DrawerTile(
+                    title: variable.strLogout,
+                    iconWidget: SvgPicture.asset(
+                      variable.icon_logout,
+                      color: Colors.black54,
+                    ),
+                    onPressed: () {
+                      FHBBasicWidget().exitApp(context, () {
+                        CommonUtil().logout(moveToLoginPage);
+                      });
+                    },
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      );
+        ],
+      ),
+    ),
+  );
 
   Widget getNameWidget() {
     var name = toBeginningOfSentenceCase((myProfile?.result?.name != null &&
-            myProfile?.result?.name != '')
+        myProfile?.result?.name != '')
         ? myProfile?.result?.name?.capitalizeFirstofEach
         : myProfile?.result?.firstName != null &&
-                myProfile?.result?.lastName != null
-            ? ('${myProfile?.result?.firstName?.capitalizeFirstofEach ?? ''} ${myProfile?.result?.lastName?.capitalizeFirstofEach}')
-            : '');
+        myProfile?.result?.lastName != null
+        ? ('${myProfile?.result?.firstName?.capitalizeFirstofEach ?? ''} ${myProfile?.result?.lastName?.capitalizeFirstofEach}')
+        : '');
     final phoneNumber =
-        (myProfile?.result?.userContactCollection3?.length ?? 0) > 0
-            ? myProfile?.result?.userContactCollection3[0].phoneNumber
-            : '';
+    (myProfile?.result?.userContactCollection3?.length ?? 0) > 0
+        ? myProfile?.result?.userContactCollection3[0].phoneNumber
+        : '';
 
     return Flexible(
       child: RichText(
@@ -263,16 +283,16 @@ class NavigationDrawer extends StatelessWidget {
             fontSize: 18.0.sp,
           ),
           children: ((phoneNumber != null && phoneNumber != ''))
-              ? [
-                  TextSpan(
-                    text: '\n$phoneNumber',
-                    style: TextStyle(
-                      color: Colors.black54,
-                      fontSize: 16.0.sp,
-                    ),
-                  ),
-                ]
-              : null,
+          ? [
+          TextSpan(
+            text: '\n$phoneNumber',
+            style: TextStyle(
+              color: Colors.black54,
+              fontSize: 16.0.sp,
+            ),
+          ),
+          ]
+          : null,
         ),
       ),
     );
