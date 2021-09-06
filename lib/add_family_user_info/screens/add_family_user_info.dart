@@ -572,7 +572,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 height: 60.0.h,
                 headers: {
                   HttpHeaders.authorizationHeader:
-                      PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)
+                      PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN),
+                  Constants.KEY_OffSet: CommonUtil.TimeZone
                 },
               );
             } else {
@@ -624,7 +625,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 height: 60.0.h,
                 headers: {
                   HttpHeaders.authorizationHeader:
-                      PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)
+                      PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN),
+                  Constants.KEY_OffSet: CommonUtil.TimeZone
                 },
               );
             } else {
@@ -676,7 +678,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 height: 60.0.h,
                 headers: {
                   HttpHeaders.authorizationHeader:
-                      PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)
+                      PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN),
+                  Constants.KEY_OffSet: CommonUtil.TimeZone
                 },
               );
             } else {
@@ -1954,7 +1957,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             userAddressCollection3.isPrimary = true;
             userAddressCollection3.isActive = true;
             userAddressCollection3.createdOn =
-                DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
+                CommonUtil.dateFormatterWithdatetimeseconds(DateTime.now());
             userAddressCollection3.lastModifiedOn = null;
             userAddressCollection3.createdBy = widget.arguments.id;
 
@@ -1967,7 +1970,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               isActive: true,
               createdBy: PreferenceUtil.getStringValue(Constants.KEY_USERID),
               createdOn:
-                  DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
+                  CommonUtil.dateFormatterWithdatetimeseconds(DateTime.now()),
             );
 
             final List<UserAddressCollection3> userAddressCollection3List = [];
@@ -2152,7 +2155,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             userAddressCollection3.isPrimary = true;
             userAddressCollection3.isActive = true;
             userAddressCollection3.createdOn =
-                DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
+                CommonUtil.dateFormatterWithdatetimeseconds(DateTime.now());
             userAddressCollection3.lastModifiedOn = null;
             userAddressCollection3.createdBy =
                 widget.arguments.myProfileResult.id;
@@ -2164,7 +2167,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               isActive: true,
               createdBy: PreferenceUtil.getStringValue(Constants.KEY_USERID),
               createdOn:
-                  DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
+                  CommonUtil.dateFormatterWithdatetimeseconds(DateTime.now()),
             );
 
             final userAddressCollection3List = List<UserAddressCollection3>();
@@ -2300,7 +2303,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             userAddressCollection3.isPrimary = true;
             userAddressCollection3.isActive = true;
             userAddressCollection3.createdOn =
-                DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
+                CommonUtil.dateFormatterWithdatetimeseconds(DateTime.now());
             userAddressCollection3.lastModifiedOn = null;
             userAddressCollection3.createdBy = widget.arguments.id;
             userAddressCollection3.addressType = AddressType(
@@ -2311,7 +2314,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               isActive: true,
               createdBy: PreferenceUtil.getStringValue(Constants.KEY_USERID),
               createdOn:
-                  DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
+                  CommonUtil.dateFormatterWithdatetimeseconds(DateTime.now()),
             );
 
             var userAddressCollection3List = List<UserAddressCollection3>();

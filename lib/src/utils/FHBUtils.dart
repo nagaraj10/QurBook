@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:myfhb/constants/db_constants.dart' as DBConstants;
 import 'package:myfhb/src/model/AppointmentModel.dart';
 import 'package:myfhb/src/model/ReminderModel.dart';
+import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -128,12 +129,12 @@ class FHBUtils {
   }
 
   String getFormattedDateForUserBirth(String strDate) {
-    if(strDate.contains("-")) {
+    if (strDate.contains("-")) {
       String formattedDate =
-      DateFormat('yyyy-MM-dd').format(DateTime.parse(strDate));
+          DateFormat('yyyy-MM-dd').format(DateTime.parse(strDate));
       return formattedDate;
-    }else{
-      strDate=strDate+"-01-01";
+    } else {
+      strDate = strDate + "-01-01";
       return strDate;
     }
   }
@@ -175,6 +176,7 @@ class FHBUtils {
     }
     return formattedDate;
   }
+
   String getFormattedDateOnlyNewClone(String strDate) {
     String formattedDate;
     try {
@@ -239,16 +241,17 @@ class FHBUtils {
   }
 
   void getMyDateFormat(String localeCode) {
-    if (YMDList.contains(localeCode)) {
-      CURRENT_DATE_CODE = 'YMD';
-      return;
-    } else if (MDYList.contains(localeCode)) {
-      CURRENT_DATE_CODE = 'MDY';
-      return;
-    } else {
-      CURRENT_DATE_CODE = 'DMY';
-      return;
-    }
+    CURRENT_DATE_CODE = CommonUtil.REGION_CODE == 'IN' ? 'DMY' : 'MDY';
+    // if (YMDList.contains(localeCode)) {
+    //   CURRENT_DATE_CODE = 'YMD';
+    //   return;
+    // } else if (MDYList.contains(localeCode)) {
+    //   CURRENT_DATE_CODE = 'MDY';
+    //   return;
+    // } else {
+    //   CURRENT_DATE_CODE = 'DMY';
+    //   return;
+    // }
   }
 
   Future<Database> getDb() async {

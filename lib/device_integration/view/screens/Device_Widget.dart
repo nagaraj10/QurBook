@@ -1,6 +1,7 @@
 // ignore: file_names
 import 'dart:io';
-import 'package:myfhb/common/common_circular_indicator.dart';import 'package:myfhb/common/common_circular_indicator.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -418,7 +419,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
               height: 38.0.h,
               headers: {
                 HttpHeaders.authorizationHeader:
-                    PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)
+                    PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN),
+                Constants.KEY_OffSet: CommonUtil.TimeZone
               },
             );
           } else {

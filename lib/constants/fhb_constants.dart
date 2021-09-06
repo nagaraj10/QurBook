@@ -29,6 +29,7 @@ const String KEY_PROFILE = 'profile';
 const String KEY_USERID = 'userID';
 const String KEY_LASTLOGGEDTIME = 'lastLoggedIn';
 const String KEY_AUTHTOKEN = 'authToken';
+const String KEY_OffSet = 'offset';
 const String KEY_FAMILYMEMBERID = 'familyMemberId';
 const String KEY_IDDOCSCATEGORYTYPE = 'idDocsCategoryType';
 const String KEY_MEDIADATA = 'mediaData';
@@ -435,7 +436,7 @@ const String STR_USER_PROFILE_SETTING_ALREADY =
     'User Profile Setting is already exists for this User.';
 const String STR_ARE_SURE = 'Are you sure?';
 const String STR_SURE_CANCEL_PAY = 'Do you want to cancel the payment';
-const String STR_UPDATE_AVAIL = 'We\'ve Upgraded!' ;
+const String STR_UPDATE_AVAIL = 'We\'ve Upgraded!';
 const String STR_UPDATE_CONTENT =
     'A newer version of the app is available. Please update to continue.';
 const String STR_UPDATE_NOW = 'Update Now';
