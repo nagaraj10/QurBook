@@ -347,6 +347,7 @@ const String strFileDownloaded = 'File downloaded';
 const String strFilesErrorDownload = 'Error in File download.';
 const String strAfter = 'After';
 const String strDateFormatDay = 'dd/MM/yyyy';
+const String strUSDateFormatDay = 'MM/DD/YYYY';
 
 const String stAudioPath = 'myFHB/Audio';
 const String strDateOfVisit = 'Date of visit: ';
@@ -625,7 +626,8 @@ const String strNoAppointments = 'No Appoinments Available';
 const String strNoPlans = 'No Plan List Available';
 const String strNoActivities = 'No Activities Available';
 const String strNoPackages = 'No Packages Available';
-const String strNoReports = 'Your reports are being generated. We\'ll populate here soon';
+const String strNoReports =
+    'Your reports are being generated. We\'ll populate here soon';
 
 const String strNoDataAvailable = 'Unable To load';
 const String strHealthOrganizationName = 'healthOrganizationName';

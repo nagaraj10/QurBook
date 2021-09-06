@@ -1290,7 +1290,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       setState(() {
         dateTime = picked ?? dateTime;
         dateOfBirthController.text =
-            DateFormat(variable.strDateYear).format(dateTime).toString();
+            CommonUtil.dateConversionToApiFormat(dateTime);
       });
     }
   }
