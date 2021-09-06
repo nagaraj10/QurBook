@@ -380,7 +380,6 @@ class _MyFamilyState extends State<MyFamily> {
                               HttpHeaders.authorizationHeader:
                                   PreferenceUtil.getStringValue(
                                       Constants.KEY_AUTHTOKEN),
-                              Constants.KEY_OffSet: CommonUtil.TimeZone
                             },
                             errorBuilder: (context, exception, stackTrace) {
                               return Container(

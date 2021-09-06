@@ -420,7 +420,6 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
               headers: {
                 HttpHeaders.authorizationHeader:
                     PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN),
-                Constants.KEY_OffSet: CommonUtil.TimeZone
               },
             );
           } else {

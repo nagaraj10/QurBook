@@ -241,7 +241,6 @@ class FHBBasicWidget {
           fit: BoxFit.cover,
           headers: {
             HttpHeaders.authorizationHeader: authToken,
-            Constants.KEY_OffSet: CommonUtil.TimeZone
           },
           errorBuilder: (context, exception, stackTrace) {
             return Container(
