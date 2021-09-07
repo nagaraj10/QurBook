@@ -10,6 +10,7 @@ import 'package:myfhb/landing/view/widgets/video_screen.dart';
 import 'package:myfhb/plan_dashboard/view/planDetailsView.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:myfhb/regiment/view/regiment_screen.dart';
+import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:provider/provider.dart';
 
 class DynamicLinks {
@@ -94,6 +95,14 @@ class DynamicLinks {
             break;
           case 'help_videos':
             Get.offAll(VideoScreen());
+            break;
+          case 'family':
+            Get.offAllNamed(
+              rt_UserAccounts,
+              arguments: UserAccountsArguments(
+                selectedIndex: 1,
+              ),
+            );
             break;
         }
       }
