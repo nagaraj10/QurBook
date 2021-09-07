@@ -116,6 +116,7 @@ class CommonUtil {
   static String BASEURL_DEVICE_READINGS = '';
   static String FIREBASE_CHAT_NOTIFY_TOKEN = '';
   static String REGION_CODE = 'IN';
+  static String TimeZone = '';
   static String POWER_BI_URL = 'IN';
   static const bgColor = 0xFFe3e2e2;
   static bool isRenewDialogOpened = false;
@@ -298,7 +299,10 @@ class CommonUtil {
 
   String getCurrentDate() {
     final now = DateTime.now();
-    return DateFormat(variable.strDateFormatDay).format(now);
+    return DateFormat(CommonUtil.REGION_CODE == 'IN'
+            ? variable.strDateFormatDay
+            : variable.strUSDateFormatDay)
+        .format(now);
   }
 
   Future<DateTime> _selectDate(BuildContext context) async {
@@ -1214,11 +1218,20 @@ class CommonUtil {
     return value != null && value != 'null';
   }
 
-  dateConversion(DateTime dateTime) {
-    final newFormat = DateFormat('EEE ,MMMM d,yyyy');
-    var updatedDate = newFormat.format(dateTime);
+  // dateConversion(DateTime dateTime) {
+  //   final newFormat = DateFormat('EEE ,MMMM d,yyyy');
+  //   var updatedDate = newFormat.format(dateTime);
 
-    return updatedDate;
+  //   return updatedDate;
+  // }
+  static setTimeZone() {
+    var date = DateTime.now().timeZoneOffset.isNegative ? "-" : "+";
+    final timeZoneSplit = DateTime.now().timeZoneOffset.toString().split(":");
+    var hour = int.parse(timeZoneSplit[0]);
+    hour = (hour).abs();
+    date += hour < 10 ? "0${hour}" : "$hour";
+    date += timeZoneSplit[1];
+    TimeZone = date;
   }
 
   regimentDateFormat(
@@ -1270,46 +1283,45 @@ class CommonUtil {
   dateConversionToDayMonthDate(DateTime dateTime) {
     final newFormat = DateFormat('EEEE, MMMM d');
     var updatedDate = newFormat.format(dateTime);
-
     return updatedDate;
   }
 
   dateConversionToDayMonthYear(DateTime dateTime) {
     final newFormat = DateFormat('d MMM, ' 'yyyy');
     final updatedDate = newFormat.format(dateTime);
-
     return updatedDate;
   }
 
   dateConversionToTime(DateTime dateTime) {
     final newFormat = DateFormat('h:mm a');
     var updatedDate = newFormat.format(dateTime);
-
     return updatedDate;
   }
 
   stringToDateTime(String string) {
     var dateTime = DateTime.parse(string);
-
     return dateTime;
   }
 
   removeLastThreeDigits(String string) {
     var removedString = '';
     removedString = string.substring(0, string.length - 3);
-
     return removedString;
   }
 
-  dateConversionToApiFormat(DateTime dateTime) {
-    final newFormat = DateFormat('yyyy-MM-dd');
+  static String dateConversionToApiFormat(DateTime dateTime) {
+    final newFormat = REGION_CODE == 'IN'
+        ? DateFormat('yyyy-MM-dd')
+        : DateFormat('MM-DD-YYYY');
     var updatedDate = newFormat.format(dateTime);
     return updatedDate;
   }
 
-  dateConversionToApiFormatClone(DateTime dateTime) {
-    final newFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
-    var updatedDate = newFormat.format(dateTime);
+  static String dateFormatterWithdatetimeseconds(DateTime dateTime) {
+    final newFormat = REGION_CODE == 'IN'
+        ? DateFormat('yyyy-MM-dd HH:mm:ss')
+        : DateFormat('MM-DD-YYYY HH:mm:ss');
+    final updatedDate = newFormat.format(dateTime);
     return updatedDate;
   }
 
@@ -2896,14 +2908,14 @@ class CommonUtil {
   }
 
   Future<dynamic> alertDialogForNoReFund(
-      BuildContext context, {
-        String title,
-        String content,
-        String packageId,
-        String isSubscribed,
-        Function() refresh,
-        bool fromDetail = false,
-      }) async {
+    BuildContext context, {
+    String title,
+    String content,
+    String packageId,
+    String isSubscribed,
+    Function() refresh,
+    bool fromDetail = false,
+  }) async {
     final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     await showDialog<void>(
         context: context,
@@ -2969,7 +2981,7 @@ class CommonUtil {
                                     if (value.result.result == 'Done') {
                                       //setState(() {});
                                       Navigator.of(_keyLoader.currentContext,
-                                          rootNavigator: true)
+                                              rootNavigator: true)
                                           .pop();
                                       if (fromDetail) {
                                         Get.back();
@@ -2978,7 +2990,7 @@ class CommonUtil {
                                       refresh();
                                     } else {
                                       Navigator.of(_keyLoader.currentContext,
-                                          rootNavigator: true)
+                                              rootNavigator: true)
                                           .pop();
                                       Get.back();
                                       FlutterToast().getToast(
@@ -2989,7 +3001,7 @@ class CommonUtil {
                                   }
                                 } else {
                                   Navigator.of(_keyLoader.currentContext,
-                                      rootNavigator: true)
+                                          rootNavigator: true)
                                       .pop();
                                   Get.back();
                                   FlutterToast().getToast(

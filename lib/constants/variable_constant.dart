@@ -196,6 +196,7 @@ const String icon_my_family_menu = 'assets/dashboard/my-family-old.svg';
 const String icon_my_health_regimen = 'assets/dashboard/my-health-regimen.svg';
 const String icon_refer_friend_icon = 'assets/icons/refer_a_friend.png';
 const String icon_report_icon = 'assets/icons/report_icon.png';
+const String icon_help_support = 'assets/icons/help_support.png';
 // const String icon_check_symptoms = 'assets/dashboard/symptoms.svg';
 // const String icon_how_to_use = 'assets/dashboard/information.svg';
 // const String icon_my_family = 'assets/dashboard/home.svg';
@@ -346,6 +347,7 @@ const String strFileDownloaded = 'File downloaded';
 const String strFilesErrorDownload = 'Error in File download.';
 const String strAfter = 'After';
 const String strDateFormatDay = 'dd/MM/yyyy';
+const String strUSDateFormatDay = 'MM/DD/YYYY';
 
 const String stAudioPath = 'myFHB/Audio';
 const String strDateOfVisit = 'Date of visit: ';
@@ -624,7 +626,8 @@ const String strNoAppointments = 'No Appoinments Available';
 const String strNoPlans = 'No Plan List Available';
 const String strNoActivities = 'No Activities Available';
 const String strNoPackages = 'No Packages Available';
-const String strNoReports = 'Your reports are being generated. We\'ll populate here soon';
+const String strNoReports =
+    'Your reports are being generated. We\'ll populate here soon';
 
 const String strNoDataAvailable = 'Unable To load';
 const String strHealthOrganizationName = 'healthOrganizationName';

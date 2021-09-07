@@ -121,7 +121,6 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
     }
   }
 
-
   openScheduleDialog() async {
     if (profileResponseModel.isSuccess &&
         profileResponseModel?.result?.profileData != null &&
@@ -135,8 +134,8 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
       );
       _regimentViewModel.updateRegimentStatus(RegimentStatus.DialogClosed);
       profileResponseModel =
-      await Provider.of<RegimentViewModel>(context, listen: false)
-          .getProfile();
+          await Provider.of<RegimentViewModel>(context, listen: false)
+              .getProfile();
     }
   }
 

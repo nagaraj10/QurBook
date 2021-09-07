@@ -174,8 +174,13 @@ class FHBBasicWidget {
     if (picked != null && picked != dateTime) {
       dateTime = picked ?? dateTime;
 
-      return onDateSelected(dateTime,
-          DateFormat(variable.strDateFormatDay).format(dateTime).toString());
+      return onDateSelected(
+          dateTime,
+          DateFormat(CommonUtil.REGION_CODE == 'IN'
+                  ? variable.strDateFormatDay
+                  : variable.strUSDateFormatDay)
+              .format(dateTime)
+              .toString());
     }
   }
 
@@ -234,7 +239,9 @@ class FHBBasicWidget {
           height: 50.0.h,
           width: 50.0.h,
           fit: BoxFit.cover,
-          headers: {HttpHeaders.authorizationHeader: authToken},
+          headers: {
+            HttpHeaders.authorizationHeader: authToken,
+          },
           errorBuilder: (context, exception, stackTrace) {
             return Container(
               height: 50.0.h,
@@ -840,8 +847,7 @@ class FHBBasicWidget {
                     node.nextFocus();
                   }
                 }
-              }
-              else if (deviceName == Constants.STR_THERMOMETER &&
+              } else if (deviceName == Constants.STR_THERMOMETER &&
                   value.length < 5) {
                 valueEnterd = value;
                 var number;
@@ -863,8 +869,7 @@ class FHBBasicWidget {
                   onTextChanged('');
                   node.nextFocus();
                 }
-              }
-              else {
+              } else {
                 if (checkifValueisInRange(controllerValue.text, device ?? "")) {
                   Alert.displayConfirmProceed(context,
                       title: 'Confirmation',

@@ -1,6 +1,7 @@
 // ignore: file_names
 import 'dart:io';
-import 'package:myfhb/common/common_circular_indicator.dart';import 'package:myfhb/common/common_circular_indicator.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -418,7 +419,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
               height: 38.0.h,
               headers: {
                 HttpHeaders.authorizationHeader:
-                    PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)
+                    PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN),
               },
             );
           } else {
@@ -626,6 +627,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       averageForDia = '';
       pulseBp = '';
       averageForPulForBp = '';
+      timeForBp = '';
     }
     if (deviceValues.bloodGlucose.entities.isNotEmpty) {
       dateTimeStampForGulcose = deviceValues
@@ -682,6 +684,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       sourceForGluco = '';
       averageForFasting = '';
       averageForPP = '';
+      timeForGulcose = '';
     }
     if (deviceValues.oxygenSaturation.entities.isNotEmpty) {
       dateTimeStampForOs = deviceValues
@@ -781,6 +784,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       devicevalue1ForOs = '';
       sourceForPulse = '';
       averageForSPO2 = '';
+      timeForOs = '';
     }
     if (deviceValues.bodyTemperature.entities.isNotEmpty) {
       dateTimeStampForTemp = deviceValues
@@ -816,6 +820,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       devicevalue1ForTemp = '';
       sourceForThermo = '';
       averageForTemp = '';
+      timeForTemp ='';
     }
     if (deviceValues.bodyWeight.entities.isNotEmpty) {
       dateTimeStampForWeight = deviceValues
@@ -850,6 +855,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       devicevalue1ForWeight = '';
       sourceForWeigh = '';
       averageForWeigh = '';
+      timeForWeight = '';
     }
 
     return getDeviceData(
