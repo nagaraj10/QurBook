@@ -62,13 +62,13 @@ const String STR_KEY_HEIGHT = 'height';
 const String STR_KEY_WEIGHT = 'weight';
 const String STR_KEY_TEMP = 'temp';
 
-const String STR_VAL_HEIGHT_IND = 'feet';
-const String STR_VAL_WEIGHT_IND = 'kgs';
-const String STR_VAL_TEMP_IND = 'F';
+const String STR_VAL_HEIGHT_IND = 'f-in';
+const String STR_VAL_WEIGHT_IND = 'kg';
+const String STR_VAL_TEMP_IND = 'f';
 
-const String STR_VAL_HEIGHT_US = 'Centi';
-const String STR_VAL_WEIGHT_US = 'lbs';
-const String STR_VAL_TEMP_US = 'C';
+const String STR_VAL_HEIGHT_US = 'cm';
+const String STR_VAL_WEIGHT_US = 'lb';
+const String STR_VAL_TEMP_US = 'c';
 
 const String KEY_LANGUAGE = 'languageList';
 

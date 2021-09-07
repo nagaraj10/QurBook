@@ -537,7 +537,11 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
             null,
             false,
             deviceController,
-            fileName,weightUnit: weightUnit);
+            fileName,weightUnit: weightUnit,updateUnit: (unitValue) async {
+          weightUnit =unitValue;
+
+          setState(() {});
+        });
         break;
       case Constants.STR_PULSE_OXIMETER:
         if (digitRecogResponse != null) {

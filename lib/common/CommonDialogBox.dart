@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
+import 'package:myfhb/unit/choose_unit.dart';
 import 'CommonConstants.dart';
 import 'CommonUtil.dart';
 import 'FHBBasicWidget.dart';
@@ -43,6 +44,8 @@ import '../src/utils/colors_utils.dart';
 import '../src/utils/screenutils/size_extensions.dart';
 import '../telehealth/features/MyProvider/view/CommonWidgets.dart';
 import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
+import 'package:myfhb/constants/fhb_router.dart' as router;
+import 'package:get/get.dart';
 
 class CommonDialogBox {
   String categoryName, deviceName;
@@ -115,9 +118,9 @@ class CommonDialogBox {
   CommonWidgets commonWidgets = CommonWidgets();
   bool showDoctorList = true;
 
-  String tempUnit="F";
-  String weightMainUnit="Kg";
-  String heightUnit="feet";
+  String tempUnit = "F";
+  String weightMainUnit = "Kg";
+  String heightUnit = "feet";
 
   Future<Widget> getDialogBoxForPrescription(
       BuildContext context,
@@ -913,7 +916,8 @@ class CommonDialogBox {
                 setState(() {
                   errGluco = errorValue;
                 });
-              }, errGluco, variable.strGlucUnit,range: isSelected[0]==true?'Fast':'PP'),
+              }, errGluco, variable.strGlucUnit,
+                  range: isSelected[0] == true ? 'Fast' : 'PP'),
               SizedBox(
                 height: 15.0.h,
               ),
@@ -1019,7 +1023,8 @@ class CommonDialogBox {
       HealthResult mediaMetaInfoClone,
       bool modeOfSaveClone,
       TextEditingController deviceControllerClone,
-      TextEditingController fileNameClone,{String tempMainUnit}) {
+      TextEditingController fileNameClone,
+      {String tempMainUnit}) {
     final commonConstants = CommonConstants();
     commonConstants.getCountryMetrics();
     if (mediaMetaInfoClone != null) {
@@ -1027,10 +1032,10 @@ class CommonDialogBox {
         metaInfoId = mediaMetaInfoClone.id;
       }
     }
-    if(tempMainUnit==null){
-      tempMainUnit="F";
-    }else{
-      tempUnit=tempMainUnit;
+    if (tempMainUnit == null) {
+      tempMainUnit = "F";
+    } else {
+      tempUnit = tempMainUnit;
     }
     modeOfSave = modeOfSaveClone;
     setFileName(fileNameClone.text, mediaMetaInfoClone);
@@ -1082,7 +1087,7 @@ class CommonDialogBox {
               setState(() {
                 errTemp = errorValue;
               });
-            }, errTemp, tempMainUnit,range: "",device:"Temp"),
+            }, errTemp, tempMainUnit, range: "", device: "Temp"),
             SizedBox(
               height: 15.0.h,
             ),
@@ -1183,7 +1188,8 @@ class CommonDialogBox {
       HealthResult mediaMetaInfoClone,
       bool modeOfSaveClone,
       TextEditingController deviceControllerClone,
-      TextEditingController fileNameClone,{String weightUnit}) {
+      TextEditingController fileNameClone,
+      {String weightUnit,Function(String) updateUnit}) {
     final commonConstants = CommonConstants();
     commonConstants.getCountryMetrics();
     if (mediaMetaInfoClone != null) {
@@ -1199,10 +1205,10 @@ class CommonDialogBox {
     imagePathMain.addAll(imagePath);
     deviceController.text = deviceControllerClone.text;
 
-    if(weightUnit==null){
-      weightUnit="kgs";
-    }else{
-      weightMainUnit=weightUnit;
+    if (weightUnit == null) {
+      weightUnit = "kgs";
+    } else {
+      weightMainUnit = weightUnit;
     }
     if (modeOfSave) {
       deviceHealthResult = mediaMetaInfoClone;
@@ -1239,15 +1245,43 @@ class CommonDialogBox {
             SizedBox(
               height: 15.0.h,
             ),
-            fhbBasicWidget.getTextFiledWithHintAndSuffixText(
-                context,
-                CommonConstants.strWeight,
-                weightUnit,
-                deviceController, (errorValue) {
-              setState(() {
-                errWeight = errorValue;
-              });
-            }, errWeight, weightUnit,range: ""),
+            Row(
+              children: [
+                Expanded(
+                    flex: 2,
+                    child: fhbBasicWidget.getTextFiledWithHintAndSuffixText(
+                        context,
+                        CommonConstants.strWeight,
+                        weightUnit,
+                        deviceController, (errorValue) {
+                      setState(() {
+                        errWeight = errorValue;
+                      });
+                    }, errWeight, weightUnit, range: "", showLabel: false)),
+                SizedBox(width:20),
+                Container(
+                    width: 50,
+                    child: GestureDetector(
+                      child: fhbBasicWidget.getTextForAlertDialog(
+                          context, weightUnit),
+                      onTap: () {
+                        Get.to(() => ChooseUnit()).then((_) async{
+                          try {
+                            weightUnit = await PreferenceUtil.getStringValue(
+                                Constants.STR_KEY_WEIGHT);
+                            updateUnit(weightUnit);
+                            setState(() {});
+                            return;
+                          }catch(e){
+                            print(e);
+                          }
+                        });
+
+
+                      },
+                    ))
+              ],
+            ),
             SizedBox(
               height: 15.0.h,
             ),
@@ -1373,7 +1407,7 @@ class CommonDialogBox {
               setState(() {
                 errPoOs = errorValue;
               });
-            }, errPoOs, variable.strpulseUnit,range: ""),
+            }, errPoOs, variable.strpulseUnit, range: ""),
             SizedBox(
               height: 15.0.h,
             ),
@@ -1385,7 +1419,7 @@ class CommonDialogBox {
               setState(() {
                 errPoPulse = errorValue;
               });
-            }, errPoPulse, variable.strpulse,range: ""),
+            }, errPoPulse, variable.strpulse, range: ""),
             SizedBox(
               height: 15.0.h,
             ),
@@ -1505,7 +1539,7 @@ class CommonDialogBox {
               setState(() {
                 errForbpSp = errorValue;
               });
-            }, errForbpSp, variable.strbpunit,range:"Sys"),
+            }, errForbpSp, variable.strbpunit, range: "Sys"),
             SizedBox(
               height: 15.0.h,
             ),
@@ -1517,7 +1551,7 @@ class CommonDialogBox {
               setState(() {
                 errFForbpDp = errorValue;
               });
-            }, errFForbpDp, variable.strbpunit,range: "Dia"),
+            }, errFForbpDp, variable.strbpunit, range: "Dia"),
             SizedBox(
               height: 15.0.h,
             ),
@@ -1529,7 +1563,7 @@ class CommonDialogBox {
               setState(() {
                 errForbpPulse = errorValue;
               });
-            }, errForbpPulse, variable.strpulse,range:""),
+            }, errForbpPulse, variable.strpulse, range: ""),
             SizedBox(
               height: 15.0.h,
             ),
@@ -1665,18 +1699,21 @@ class CommonDialogBox {
       }
     });
   }
-          
 
   Widget getMicIcon(BuildContext context, bool containsAudio, String audioPath,
       Function(bool, String) updateUI) {
     return GestureDetector(
       onTap: () async {
         await Navigator.of(context)
-            .push(MaterialPageRoute(
-          builder: (context) => AudioRecorder(arguments: AudioScreenArguments(
-            fromVoice: false,
-          ),),
-        ),)
+            .push(
+          MaterialPageRoute(
+            builder: (context) => AudioRecorder(
+              arguments: AudioScreenArguments(
+                fromVoice: false,
+              ),
+            ),
+          ),
+        )
             .then((results) {
           if (results != null) {
             if (results.containsKey(Constants.keyAudioFile)) {

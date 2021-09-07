@@ -232,10 +232,10 @@ class DatabaseUtil {
   static void insertUnitsForDevices() async {
     final db = DatabaseHelper();
 
-    final faren = UnitsMesurements(1, 'F', 97.8, 99.1,"");
+    final faren = UnitsMesurements(1, 'f', 97.8, 99.1,"");
     await db.saveUnitMeasurements(faren);
 
-    final thermo = UnitsMesurements(2, 'C', 36.5, 37.5,"");
+    final thermo = UnitsMesurements(2, 'c', 36.5, 37.5,"");
     await db.saveUnitMeasurements(thermo);
 
     final gluco = UnitsMesurements(3, 'mgdl', 70, 120,"Fast");
@@ -247,7 +247,7 @@ class DatabaseUtil {
     await db.saveUnitMeasurements(pul);
     final pr = UnitsMesurements(6, 'PR bpm', 70, 120,"");
     await db.saveUnitMeasurements(pr);
-    final kg = UnitsMesurements(7, 'kgs', 0, 250,"");
+    final kg = UnitsMesurements(7, 'kg', 0, 250,"");
     await db.saveUnitMeasurements(kg);
     final gram = UnitsMesurements(8, 'g', 0, 25000,"");
     await db.saveUnitMeasurements(gram);
@@ -261,7 +261,7 @@ class DatabaseUtil {
     await db.saveUnitMeasurements(glucoRandom);
     final sp = UnitsMesurements(13, 'mmHg', 60, 90,"Sys");
     await db.saveUnitMeasurements(sp);
-    final pounds = UnitsMesurements(14, 'lbs', 0, 551,"");
+    final pounds = UnitsMesurements(14, 'lb', 0, 551,"");
     await db.saveUnitMeasurements(pounds);
   }
 

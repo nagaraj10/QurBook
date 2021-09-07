@@ -79,22 +79,22 @@ class ProfileSetting {
   int greColor;
   String preferred_language;
   String qa_subscription;
+  PreferredMeasurement preferredMeasurement;
 
-  ProfileSetting(
-      {this.bpMonitor,
-        this.googleFit,
-        this.healthFit,
-        this.allowDigit,
-        this.glucoMeter,
-        this.weighScale,
-        this.allowDevice,
-        this.thermoMeter,
-        this.pulseOximeter,
-        this.preColor,
-        this.greColor,
-        this.preferred_language,
-        this.qa_subscription
-      });
+  ProfileSetting({this.bpMonitor,
+    this.googleFit,
+    this.healthFit,
+    this.allowDigit,
+    this.glucoMeter,
+    this.weighScale,
+    this.allowDevice,
+    this.thermoMeter,
+    this.pulseOximeter,
+    this.preColor,
+    this.greColor,
+    this.preferred_language,
+    this.qa_subscription, this.preferredMeasurement
+  });
 
   ProfileSetting.fromJson(Map<String, dynamic> json) {
     bpMonitor = json['bpMonitor'];
@@ -110,6 +110,9 @@ class ProfileSetting {
     greColor = json['greColor'];
     preferred_language = json['preferred_language'];
     qa_subscription = json['qa-subscription'];
+    preferredMeasurement = json['preferred_measurement'] != null
+        ? new PreferredMeasurement.fromJson(json['preferred_measurement'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -127,6 +130,60 @@ class ProfileSetting {
     data['greColor'] = greColor;
     data['preferred_language'] = preferred_language;
     data['qa-subscription'] = qa_subscription;
+    if (this.preferredMeasurement != null) {
+      data['preferred_measurement'] = this.preferredMeasurement.toJson();
+    }
+    return data;
+  }
+
+}
+class PreferredMeasurement {
+  Height height;
+  Height weight;
+  Height temperature;
+
+  PreferredMeasurement({this.height, this.weight, this.temperature});
+
+  PreferredMeasurement.fromJson(Map<String, dynamic> json) {
+    height =
+    json['height'] != null ? new Height.fromJson(json['height']) : null;
+    weight =
+    json['weight'] != null ? new Height.fromJson(json['weight']) : null;
+    temperature = json['temperature'] != null
+        ? new Height.fromJson(json['temperature'])
+        : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.height != null) {
+      data['height'] = this.height.toJson();
+    }
+    if (this.weight != null) {
+      data['weight'] = this.weight.toJson();
+    }
+    if (this.temperature != null) {
+      data['temperature'] = this.temperature.toJson();
+    }
+    return data;
+  }
+}
+
+class Height {
+  String unitCode;
+  String unitName;
+
+  Height({this.unitCode, this.unitName});
+
+  Height.fromJson(Map<String, dynamic> json) {
+    unitCode = json['unitCode'];
+    unitName = json['unitName'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['unitCode'] = this.unitCode;
+    data['unitName'] = this.unitName;
     return data;
   }
 }
