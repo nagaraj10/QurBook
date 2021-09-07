@@ -212,6 +212,7 @@ class ChatScreenState extends State<ChatScreen> {
   String currentPlayedVoiceURL = '';
 
   bool isCareGiver = false;
+  bool isChatDisable = false;
 
   @override
   void initState() {
@@ -279,6 +280,8 @@ class ChatScreenState extends State<ChatScreen> {
             .collection(STR_USER_LIST)
             .doc(peerId)
             .update({STR_IS_READ_COUNT: 0});
+
+        isChatDisable = snapShot.data()[STR_IS_DISABLE] ?? false;
       }
     } catch (e) {}
   }
@@ -469,6 +472,7 @@ class ChatScreenState extends State<ChatScreen> {
     // type: 0 = text, 1 = image, 2 = sticker
     if (content.trim() != '') {
       bool isMuted = false;
+      bool isTempChatDisable = false;
       final snapShot = await FirebaseFirestore.instance
           .collection(STR_CHAT_LIST)
           .doc(peerId)
@@ -477,6 +481,7 @@ class ChatScreenState extends State<ChatScreen> {
           .get();
       if (snapShot.data() != null) {
         isMuted = snapShot.data()[STR_IS_MUTED] ?? false;
+        isTempChatDisable = snapShot.data()[STR_IS_DISABLE] ?? false;
       }
       textValue = textEditingController.text;
       textEditingController.clear();
@@ -499,7 +504,7 @@ class ChatScreenState extends State<ChatScreen> {
           },
         );
       });
-      addChatList(content, type, isMuted);
+      addChatList(content, type, isMuted,isTempChatDisable);
     } else {
       Fluttertoast.showToast(msg: NOTHING_SEND, backgroundColor: Colors.red);
     }
@@ -524,7 +529,7 @@ class ChatScreenState extends State<ChatScreen> {
     return count;
   }
 
-  void addChatList(String content, int type, bool isMuted) async {
+  void addChatList(String content, int type, bool isMuted,bool isTempChatDisable) async {
     await FirebaseFirestore.instance
         .collection(STR_CHAT_LIST)
         .doc(patientId)
@@ -537,7 +542,8 @@ class ChatScreenState extends State<ChatScreen> {
       STR_CREATED_AT: FieldValue.serverTimestamp(),
       STR_LAST_MESSAGE: content,
       STR_IS_READ_COUNT: 0,
-      STR_IS_MUTED: isMuted
+      STR_IS_MUTED: isMuted,
+      STR_IS_DISABLE: isTempChatDisable
     });
 
     await getReadCount().then((value) async {
@@ -553,7 +559,8 @@ class ChatScreenState extends State<ChatScreen> {
         STR_CREATED_AT: FieldValue.serverTimestamp(),
         STR_LAST_MESSAGE: content,
         STR_IS_READ_COUNT: value != 0 ? value + 1 : 1,
-        STR_IS_MUTED: isMuted
+        STR_IS_MUTED: isMuted,
+        STR_IS_DISABLE: isTempChatDisable
       });
     });
 
@@ -1838,6 +1845,7 @@ class ChatScreenState extends State<ChatScreen> {
               child: Container(
                 height: 58.0.h,
                 child: TextField(
+                  readOnly: isChatDisable,
                   style: TextStyle(fontSize: 16.0.sp),
                   focusNode: focusNode,
                   onTap: () {
@@ -1854,10 +1862,12 @@ class ChatScreenState extends State<ChatScreen> {
                       width: 50.0.h,
                       height: 50.0.h,
                       child: FlatButton(
-                          onPressed: () {
-                            recordIds.clear();
-                            FetchRecords(0, true, true, false, recordIds);
-                          },
+                          onPressed: isChatDisable
+                              ? null
+                              : () {
+                                  recordIds.clear();
+                                  FetchRecords(0, true, true, false, recordIds);
+                                },
                           child: new Icon(
                             Icons.attach_file,
                             color: Color(CommonUtil().getMyPrimaryColor()),
@@ -1891,7 +1901,7 @@ class ChatScreenState extends State<ChatScreen> {
               flex: 1,
               child: new Container(
                 child: RawMaterialButton(
-                  onPressed: () {
+                  onPressed: isChatDisable?null:() {
                     onSendMessage(textEditingController.text, 0);
                   },
                   elevation: 2.0,
@@ -1909,27 +1919,30 @@ class ChatScreenState extends State<ChatScreen> {
                     flex: 1,
                     child: new Container(
                       child: RawMaterialButton(
-                        onPressed: () {
-                          Navigator.of(context)
-                              .push(
-                            MaterialPageRoute(
-                              builder: (context) => AudioRecorder(
-                                arguments: AudioScreenArguments(
-                                  fromVoice: false,
-                                ),
-                              ),
-                            ),
-                          )
-                              .then((results) {
-                            String audioPath = results[Constants.keyAudioFile];
-                            if (audioPath != null && audioPath != '') {
-                              setState(() {
-                                isLoading = true;
-                              });
-                              uploadFile(audioPath);
-                            }
-                          });
-                        },
+                        onPressed: isChatDisable
+                            ? null
+                            : () {
+                                Navigator.of(context)
+                                    .push(
+                                  MaterialPageRoute(
+                                    builder: (context) => AudioRecorder(
+                                      arguments: AudioScreenArguments(
+                                        fromVoice: false,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                                    .then((results) {
+                                  String audioPath =
+                                      results[Constants.keyAudioFile];
+                                  if (audioPath != null && audioPath != '') {
+                                    setState(() {
+                                      isLoading = true;
+                                    });
+                                    uploadFile(audioPath);
+                                  }
+                                });
+                              },
                         elevation: 2.0,
                         fillColor: Colors.white,
                         child: Icon(Icons.mic,
