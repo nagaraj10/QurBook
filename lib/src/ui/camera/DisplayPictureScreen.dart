@@ -502,7 +502,11 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
             null,
             false,
             deviceController,
-            fileName,tempMainUnit:tempUnit);
+            fileName,tempMainUnit:tempUnit,updateUnit: (unitValue) async {
+          tempUnit =unitValue;
+
+          setState(() {});
+        });
         break;
       case Constants.STR_WEIGHING_SCALE:
         if (digitRecogResponse != null) {

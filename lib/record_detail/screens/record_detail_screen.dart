@@ -1129,7 +1129,11 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                 true,
                 TextEditingController(text: thermometerValue),
                 TextEditingController(text: fileName),
-                tempMainUnit: tempUnit);
+                tempMainUnit: tempUnit,updateUnit: (unitValue) async {
+              tempUnit =unitValue;
+
+              setState(() {});
+            });
             break;
           case Constants.STR_WEIGHING_SCALE:
             final String weightInKgs =

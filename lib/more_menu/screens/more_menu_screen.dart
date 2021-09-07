@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:launch_review/launch_review.dart';
+import 'package:myfhb/unit/choose_unit.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/FHBBasicWidget.dart';
 import '../../common/PreferenceUtil.dart';
@@ -235,6 +236,29 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
               MaterialPageRoute(
                 builder: (context) =>
                     MySettings(priColor: preColor, greColor: greColor),
+              ),
+            ).then((value) {
+              if (value) {
+                setState(() {});
+              }
+            });
+            //PageNavigator.goTo(context, router.rt_AppSettings);
+          },
+        ),
+        Divider(),
+        ListTile(
+          title: Text(Constants.UnitPreference,
+              style: TextStyle(fontWeight: FontWeight.w500)),
+          trailing: Icon(
+            Icons.arrow_forward_ios,
+            size: 16.0.sp,
+          ),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    ChooseUnit(),
               ),
             ).then((value) {
               if (value) {

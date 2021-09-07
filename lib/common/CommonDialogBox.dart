@@ -1024,7 +1024,7 @@ class CommonDialogBox {
       bool modeOfSaveClone,
       TextEditingController deviceControllerClone,
       TextEditingController fileNameClone,
-      {String tempMainUnit}) {
+      {String tempMainUnit,Function(String) updateUnit}) {
     final commonConstants = CommonConstants();
     commonConstants.getCountryMetrics();
     if (mediaMetaInfoClone != null) {
@@ -1079,15 +1079,45 @@ class CommonDialogBox {
             SizedBox(
               height: 15.0.h,
             ),
-            fhbBasicWidget.getTextFiledWithHintAndSuffixText(
+            Row(children: [
+              Expanded(
+                flex: 2,
+                child: fhbBasicWidget.getTextFiledWithHintAndSuffixText(
                 context,
                 CommonConstants.strTemperature,
                 tempMainUnit,
                 deviceController, (errorValue) {
-              setState(() {
-                errTemp = errorValue;
-              });
-            }, errTemp, tempMainUnit, range: "", device: "Temp"),
+                setState(() {
+                  errTemp = errorValue;
+                });
+              }, errTemp, tempMainUnit, range: "", device: "Temp",showLabel: false)),
+              SizedBox(width:20),
+              Container(
+                  width: 50,
+                  child: GestureDetector(
+                    child: fhbBasicWidget.getTextForAlertDialog(
+                        context, tempMainUnit),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) => ChooseUnit(),
+                        ),
+                      ).then(
+                            (value) {
+                          tempMainUnit = PreferenceUtil.getStringValue(
+                              Constants.STR_KEY_TEMP);
+                          updateUnit(tempMainUnit);
+                          tempUnit=tempMainUnit;
+                          setState(() {});
+                        },
+                      );
+
+
+                    },
+                  ))
+            ],),
+
             SizedBox(
               height: 15.0.h,
             ),
@@ -1265,17 +1295,20 @@ class CommonDialogBox {
                       child: fhbBasicWidget.getTextForAlertDialog(
                           context, weightUnit),
                       onTap: () {
-                        Get.to(() => ChooseUnit()).then((_) async{
-                          try {
-                            weightUnit = await PreferenceUtil.getStringValue(
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) => ChooseUnit(),
+                          ),
+                        ).then(
+                              (value) {
+                            weightUnit = PreferenceUtil.getStringValue(
                                 Constants.STR_KEY_WEIGHT);
                             updateUnit(weightUnit);
+                            weightMainUnit=weightUnit;
                             setState(() {});
-                            return;
-                          }catch(e){
-                            print(e);
-                          }
-                        });
+                          },
+                        );
 
 
                       },
