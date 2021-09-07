@@ -392,6 +392,7 @@ const String STR_CHAT_LIST = 'chat_list';
 const String STR_USER_LIST = 'user_list';
 const String STR_NICK_NAME = 'nickname';
 const String STR_PHOTO_URL = 'photoUrl';
+const String STR_IS_DISABLE = 'isDisable';
 const String STR_ID = 'id';
 const String STR_CREATED_AT = 'createdAt';
 const String STR_LAST_MESSAGE = 'lastMessage';
