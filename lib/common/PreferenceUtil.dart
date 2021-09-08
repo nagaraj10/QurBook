@@ -148,7 +148,7 @@ class PreferenceUtil {
   static MyProfileModel getProfileData(String keyProfile) {
     if (_prefsInstance == null) {}
     return MyProfileModel.fromJson(
-        json.decode(_prefsInstance.getString(keyProfile)));
+        json.decode(_prefsInstance.getString(keyProfile) ?? ''));
   }
 
   static List<CategoryResult> getCategoryType() {

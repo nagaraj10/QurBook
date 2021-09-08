@@ -86,13 +86,6 @@ class _LandingScreenState extends State<LandingScreen> {
     super.initState();
     dbInitialize();
     QurPlanReminders.getTheRemindersFromAPI();
-    var url = (PreferenceUtil.getStringValue(constants.KEY_DYNAMIC_URL) ?? '');
-    if (url?.isNotEmpty ?? false) {
-      try {
-        Uri deepLink = Uri.parse(jsonDecode(url));
-        DynamicLinks.processDynamicLink(deepLink);
-      } catch (e) {}
-    }
     callImportantsMethod();
 
     var profilebanner =
@@ -610,6 +603,13 @@ class _LandingScreenState extends State<LandingScreen> {
     try {
       await getDeviceSelectionValues().then((value) => {});
     } catch (e) {}
+    var url = (PreferenceUtil.getStringValue(constants.KEY_DYNAMIC_URL) ?? '');
+    if (url?.isNotEmpty ?? false) {
+      try {
+        Uri deepLink = Uri.parse(jsonDecode(url));
+        DynamicLinks.processDynamicLink(deepLink);
+      } catch (e) {}
+    }
   }
 
   Future<GetDeviceSelectionModel> getDeviceSelectionValues() async {
