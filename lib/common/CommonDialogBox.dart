@@ -557,7 +557,7 @@ class CommonDialogBox {
       );
     });
 
-    return showDialog(context: context, builder: (context) => dialog);
+    return showDialog(context: context, builder: (context) => dialog,barrierDismissible:false);
   }
 
   Future<Widget> getDialogBoxForBillsAndOthers(
@@ -664,7 +664,7 @@ class CommonDialogBox {
       );
     });
 
-    return showDialog(context: context, builder: (context) => dialog);
+    return showDialog(context: context, builder: (context) => dialog,barrierDismissible:false);
   }
 
   Future<Widget> getDialogForIDDocs(
@@ -840,7 +840,7 @@ class CommonDialogBox {
       );
     });
 
-    return showDialog(context: context, builder: (context) => dialog);
+    return showDialog(context: context, builder: (context) => dialog,barrierDismissible:false);
   }
 
   Future<Widget> getDialogBoxForGlucometer(
@@ -1009,7 +1009,7 @@ class CommonDialogBox {
           )));
     });
 
-    return showDialog(context: context, builder: (context) => dialog);
+    return showDialog(context: context, builder: (context) => dialog,barrierDismissible:false);
   }
 
   Future<Widget> getDialogBoxForTemperature(
@@ -1168,7 +1168,7 @@ class CommonDialogBox {
       );
     });
 
-    return showDialog(context: context, builder: (context) => dialog);
+    return showDialog(context: context, builder: (context) => dialog,barrierDismissible:false);
   }
 
   void setFileName(String fileNameClone, HealthResult healthResult,
@@ -1365,7 +1365,7 @@ class CommonDialogBox {
       );
     });
 
-    return showDialog(context: context, builder: (context) => dialog);
+    return showDialog(context: context, builder: (context) => dialog,barrierDismissible:false);
   }
 
   Future<Widget> getDialogBoxForPulseOxidometer(
@@ -1496,7 +1496,7 @@ class CommonDialogBox {
       );
     });
 
-    return showDialog(context: context, builder: (context) => dialog);
+    return showDialog(context: context, builder: (context) => dialog,barrierDismissible:false);
   }
 
   Future<Widget> getDialogBoxForBPMonitor(
@@ -1640,7 +1640,7 @@ class CommonDialogBox {
       );
     });
 
-    return showDialog(context: context, builder: (context) => dialog);
+    return showDialog(context: context, builder: (context) => dialog,barrierDismissible:false);
   }
 
   Future<void> _selectDate(
@@ -2382,7 +2382,7 @@ class CommonDialogBox {
       );
     });
 
-    return showDialog(context: context, builder: (context) => dialog);
+    return showDialog(context: context, builder: (context) => dialog,barrierDismissible:false);
   }
 
   void setPrefreferedProvidersIfAvailable(
@@ -2638,7 +2638,7 @@ class CommonDialogBox {
       );
     });
 
-    return showDialog(context: context, builder: (context) => dialog);
+    return showDialog(context: context, builder: (context) => dialog,barrierDismissible:false);
   }
 
   getCategoryPosition(String categoryName) {

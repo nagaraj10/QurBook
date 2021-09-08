@@ -333,11 +333,20 @@ class PlanDetail extends State<MyPlanDetail> {
                         Navigator.pop(context);
                       });
                     } else {
-                      await CommonUtil().unSubcribeAlertDialog(
-                        context,
-                        packageId: packageId,
-                        fromDetail: true,
-                      );
+                      if(price=='0'){
+                        await CommonUtil().unSubcribeAlertDialog(
+                          context,
+                          packageId: packageId,
+                          fromDetail: true,
+                        );
+                      }else{
+                        await CommonUtil().alertDialogForNoReFund(
+                          context,
+                          packageId: packageId,
+                          fromDetail: true,
+                        );
+                      }
+
                     }
                   },
                   borderSide: BorderSide(

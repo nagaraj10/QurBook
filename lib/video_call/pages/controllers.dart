@@ -34,6 +34,7 @@ class MyControllers extends StatefulWidget {
   String patientPicUrl;
   RtcEngine rtcEngine;
   String channelName;
+  bool isWeb;
 
   MyControllers(
       this.rtcEngine,
@@ -49,7 +50,8 @@ class MyControllers extends StatefulWidget {
       this.patientId,
       this.patientName,
       this.patientPicUrl,
-      this.channelName);
+      this.channelName,
+      this.isWeb);
 
   @override
   _MyControllersState createState() => _MyControllersState();
@@ -343,10 +345,17 @@ class _MyControllersState extends State<MyControllers> {
         await widget?.rtcEngine?.enableLocalVideo(true);
         await widget?.rtcEngine?.muteLocalVideoStream(false);
         requestingDialog();
-        FirebaseFirestore.instance
-          ..collection("call_log")
-              .doc("${widget.channelName}")
-              .set({"video_request_sent": "sent"});
+        if (widget.isWeb != null && widget.isWeb) {
+          FirebaseFirestore.instance
+            ..collection("call_log")
+                .doc("${widget.channelName}")
+                .update({"videoRequestFromMobile": 1});
+        } else {
+          FirebaseFirestore.instance
+            ..collection("call_log")
+                .doc("${widget.channelName}")
+                .set({"video_request_sent": "sent"});
+        }
       }
     } else {
       if (CommonUtil.isRemoteUserOnPause) {
@@ -408,6 +417,12 @@ class _MyControllersState extends State<MyControllers> {
                   FlatButton(
                       child: Text('Cancel'),
                       onPressed: () async {
+                        if (widget.isWeb != null && widget.isWeb) {
+                          FirebaseFirestore.instance
+                            ..collection("call_log")
+                                .doc("${widget.channelName}")
+                                .update({"videoRequestFromMobile": 0});
+                        }
                         CommonUtil.isVideoRequestSent = false;
                         await widget?.rtcEngine?.disableVideo();
                         await widget?.rtcEngine?.enableLocalVideo(false);

@@ -64,7 +64,7 @@ class UserProfileImage extends StatelessWidget {
                             fit: BoxFit.cover,
                             headers: {
                               HttpHeaders.authorizationHeader:
-                                  PreferenceUtil.getStringValue(KEY_AUTHTOKEN)
+                                  PreferenceUtil.getStringValue(KEY_AUTHTOKEN),
                             },
                             errorBuilder: (context, exception, stackTrace) =>
                                 Container(
