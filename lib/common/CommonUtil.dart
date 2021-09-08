@@ -2774,6 +2774,32 @@ class CommonUtil {
     );
   }
 
+  Future<DateTime> selectDate(BuildContext context, DateTime _date,
+      DateTime startDate, DateTime endDate, bool isExpired) async {
+    DateTime firstDate;
+
+    if (isExpired) {
+      print('endDate: expired');
+      firstDate = DateTime(
+          DateTime.now().year, DateTime.now().month, DateTime.now().day);
+    } else {
+      print('endDate:' + endDate.toString());
+      firstDate = endDate;
+    }
+
+    final DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: _date,
+      firstDate: firstDate,
+      lastDate: DateTime(2040),
+    );
+
+    if (picked != null) {
+      _date = picked;
+    }
+    return _date;
+  }
+
   Future<dynamic> renewAlertDialog(BuildContext context,
       {String title,
       String content,
@@ -2781,9 +2807,31 @@ class CommonUtil {
       String isSubscribed,
       bool IsExtendable,
       String price,
+      String startDate,
+      String endDate,
+      bool isExpired,
       Function() refresh,
       bool moveToCart = false,
       dynamic nsBody}) async {
+    DateTime initDate;
+    var formatter = new DateFormat('yyyy-MM-dd');
+
+    DateTime startDateFinal = startDate != null
+        ? new DateFormat("yyyy-MM-dd").parse(startDate)
+        : DateTime(
+            DateTime.now().year, DateTime.now().month, DateTime.now().day);
+    DateTime endDateFinal = endDate != null
+        ? new DateFormat("yyyy-MM-dd").parse(endDate)
+        : DateTime(
+            DateTime.now().year, DateTime.now().month, DateTime.now().day);
+
+    if (isExpired) {
+      initDate = DateTime(
+          DateTime.now().year, DateTime.now().month, DateTime.now().day);
+    } else {
+      initDate = endDateFinal;
+    }
+
     final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     await showDialog<void>(
         context: context,
@@ -2792,116 +2840,142 @@ class CommonUtil {
           return WillPopScope(
             onWillPop: () async => false,
             child: SimpleDialog(children: <Widget>[
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 20),
-                child: Center(
-                  child: Column(children: [
-                    //CircularProgressIndicator(),
-                    SizedBox(
-                      height: 10.0.h,
-                    ),
-                    Text(
-                      CONTENT_RENEW_PACKAGE,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16.0.sp,
+              StatefulBuilder(builder: (context, setState) {
+                return Container(
+                  margin: EdgeInsets.symmetric(horizontal: 20),
+                  child: Center(
+                    child: Column(children: [
+                      //CircularProgressIndicator(),
+                      SizedBox(
+                        height: 10.0.h,
                       ),
-                    ),
-                    SizedBox(
-                      height: 10.0.h,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        OutlineButton(
-                          onPressed: () async {
-                            // open profile page
-                            isRenewDialogOpened = false;
-                            Navigator.of(context).pop();
-                          },
-                          borderSide: BorderSide(
-                            color: Color(
-                              getMyPrimaryColor(),
-                            ),
+                      Text(
+                        CONTENT_RENEW_PACKAGE,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16.0.sp,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10.0.h,
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Text(
+                            'Effective Renewal Date: ',
                           ),
-                          child: Text(
-                            'no'.toUpperCase(),
-                            style: TextStyle(
+                          SizedBox(width: 5.w),
+                          IconButton(
+                            icon: Icon(Icons.calendar_today, size: 18.sp),
+                            onPressed: () async {
+                              initDate = await selectDate(
+                                  context,
+                                  isExpired ? initDate : endDateFinal,
+                                  startDateFinal,
+                                  endDateFinal,
+                                  isExpired);
+                              setState(() {});
+                            },
+                          ),
+                          Text('${formatter.format(initDate)}'),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 10.0.h,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          OutlineButton(
+                            onPressed: () async {
+                              // open profile page
+                              isRenewDialogOpened = false;
+                              Navigator.of(context).pop();
+                            },
+                            borderSide: BorderSide(
                               color: Color(
                                 getMyPrimaryColor(),
                               ),
-                              fontSize: 10,
+                            ),
+                            child: Text(
+                              'no'.toUpperCase(),
+                              style: TextStyle(
+                                color: Color(
+                                  getMyPrimaryColor(),
+                                ),
+                                fontSize: 10,
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          width: 10.0.h,
-                        ),
-                        OutlineButton(
-                          //hoverColor: Color(getMyPrimaryColor()),
-                          onPressed: () async {
-                            Navigator.pop(context);
-                            /*_dialogForSubscribePayment(
-                                context, '', packageId, true, () {
-                              refresh();
-                            });*/
-                            isRenewDialogOpened = false;
-                            if (moveToCart && nsBody != null) {
-                              try {
-                                FetchNotificationService()
-                                    .updateNsActionStatus(nsBody)
-                                    .then((data) {
+                          SizedBox(
+                            width: 10.0.h,
+                          ),
+                          OutlineButton(
+                            //hoverColor: Color(getMyPrimaryColor()),
+                            onPressed: () async {
+                              Navigator.pop(context);
+                              /*_dialogForSubscribePayment(
+                                  context, '', packageId, true, () {
+                                refresh();
+                              });*/
+                              isRenewDialogOpened = false;
+                              if (moveToCart && nsBody != null) {
+                                try {
                                   FetchNotificationService()
-                                      .updateNsOnTapAction(nsBody);
-                                });
-                              } catch (e) {}
-                            }
-
-                            if (IsExtendable) {
-                              var response =
-                                  await Provider.of<PlanWizardViewModel>(
-                                          context,
-                                          listen: false)
-                                      ?.addToCartItem(
-                                          packageId: packageId,
-                                          price: price,
-                                          isRenew: true,
-                                          isFromAdd: strMyPlan);
-
-                              refresh();
-                              if (moveToCart) {
-                                if ((response.message?.toLowerCase() ==
-                                        'Product already exists in cart'
-                                            .toLowerCase()) ||
-                                    response.isSuccess) {
-                                  Get.to(CheckoutPage());
-                                }
+                                      .updateNsActionStatus(nsBody)
+                                      .then((data) {
+                                    FetchNotificationService()
+                                        .updateNsOnTapAction(nsBody);
+                                  });
+                                } catch (e) {}
                               }
-                            } else {
-                              FlutterToast().getToast(
-                                  'Renewal limit reached for this plan. Please try after few days',
-                                  Colors.black);
-                            }
-                          },
-                          borderSide: BorderSide(
-                            color: Color(
-                              getMyPrimaryColor(),
+
+                              if (IsExtendable) {
+                                var response =
+                                    await Provider.of<PlanWizardViewModel>(
+                                            context,
+                                            listen: false)
+                                        ?.addToCartItem(
+                                            packageId: packageId,
+                                            price: price,
+                                            isRenew: true,
+                                            isFromAdd: strMyPlan);
+
+                                refresh();
+                                if (moveToCart) {
+                                  if ((response.message?.toLowerCase() ==
+                                          'Product already exists in cart'
+                                              .toLowerCase()) ||
+                                      response.isSuccess) {
+                                    Get.to(CheckoutPage());
+                                  }
+                                }
+                              } else {
+                                FlutterToast().getToast(
+                                    'Renewal limit reached for this plan. Please try after few days',
+                                    Colors.black);
+                              }
+                            },
+                            borderSide: BorderSide(
+                              color: Color(
+                                getMyPrimaryColor(),
+                              ),
+                            ),
+                            //hoverColor: Color(getMyPrimaryColor()),
+                            child: Text(
+                              'yes'.toUpperCase(),
+                              style: TextStyle(
+                                color: Color(getMyPrimaryColor()),
+                                fontSize: 10,
+                              ),
                             ),
                           ),
-                          //hoverColor: Color(getMyPrimaryColor()),
-                          child: Text(
-                            'yes'.toUpperCase(),
-                            style: TextStyle(
-                              color: Color(getMyPrimaryColor()),
-                              fontSize: 10,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ]),
-                ),
-              ),
+                        ],
+                      ),
+                    ]),
+                  ),
+                );
+              }),
             ]),
           );
         });
