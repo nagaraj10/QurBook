@@ -155,7 +155,7 @@ class _NotificationScreen extends State<NotificationScreen> {
         fontsize: 18.0.sp,
         softwrap: true,
       ),
-      actions: notificationData.deleteMode
+      actions: (notificationData?.deleteMode ?? false)
           ? [
               InkWell(
                 onTap: () {
