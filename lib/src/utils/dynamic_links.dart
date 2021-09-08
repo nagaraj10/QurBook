@@ -88,7 +88,9 @@ class DynamicLinks {
               Get.offAllNamed(rt_PlanWizard);
             }
             break;
-
+          case 'devices':
+            Get.offAllNamed(rt_Devices);
+            break;
           case 'regimen':
             Get.offAll(
               RegimentScreen(),
