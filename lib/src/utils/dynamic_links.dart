@@ -10,6 +10,7 @@ import 'package:myfhb/landing/view/widgets/video_screen.dart';
 import 'package:myfhb/plan_dashboard/view/planDetailsView.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:myfhb/regiment/view/regiment_screen.dart';
+import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:provider/provider.dart';
 
@@ -87,7 +88,9 @@ class DynamicLinks {
               Get.offAllNamed(rt_PlanWizard);
             }
             break;
-
+          case 'devices':
+            Get.offAllNamed(rt_Devices);
+            break;
           case 'regimen':
             Get.offAll(
               RegimentScreen(),
@@ -96,6 +99,14 @@ class DynamicLinks {
           case 'help_videos':
             Get.offAll(VideoScreen());
             break;
+          case 'providers':
+            Get.offAllNamed(
+              rt_UserAccounts,
+              arguments: UserAccountsArguments(
+                selectedIndex: 2,
+              ),
+            );
+            break;
           case 'family':
             Get.offAllNamed(
               rt_UserAccounts,
@@ -103,6 +114,17 @@ class DynamicLinks {
                 selectedIndex: 1,
               ),
             );
+            break;
+          case 'symptoms':
+            Provider.of<RegimentViewModel>(
+              Get.context,
+              listen: false,
+            ).regimentMode = RegimentMode.Symptoms;
+            Provider.of<RegimentViewModel>(
+              Get.context,
+              listen: false,
+            ).regimentFilter = RegimentFilter.Scheduled;
+            Get.offAllNamed(rt_Regimen);
             break;
         }
       }

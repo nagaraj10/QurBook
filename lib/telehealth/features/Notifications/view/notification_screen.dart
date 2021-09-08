@@ -8,7 +8,10 @@ import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/landing/view/landing_arguments.dart';
 import 'package:myfhb/myPlan/view/myPlanDetail.dart';
+import 'package:myfhb/regiment/models/regiment_arguments.dart';
+import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/ui/bot/view/sheela_arguments.dart';
 import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/MyProvidersMain.dart';
@@ -310,11 +313,16 @@ class _NotificationScreen extends State<NotificationScreen> {
                                   constants.strMyCardDetails ||
                               payload?.redirectTo == 'mycartdetails') {
                             // do nothing.
-                          } else {
+                          } else if (payload?.redirectTo == 'devices_tab') {
                             notificationOnTapActions(
-                                notification,
-                                notification
-                                    ?.messageDetails?.content?.templateName);
+                              notification,
+                              payload?.redirectTo,
+                            );
+                          } else if (payload?.redirectTo == 'regiment_screen') {
+                            notificationOnTapActions(
+                              notification,
+                              payload?.redirectTo,
+                            );
                           }
                           // notificationOnTapActions(
                           //     notification?.result[index],
@@ -915,6 +923,40 @@ class _NotificationScreen extends State<NotificationScreen> {
       case "mycart":
         Get.to(CheckoutPage(isFromNotification: true)).then(
             (value) => PageNavigator.goToPermanent(context, router.rt_Landing));
+        readUnreadAction(result);
+        break;
+      case "devices_tab":
+        getProfileData();
+        Get.toNamed(
+          router.rt_HomeScreen,
+          arguments: HomeScreenArguments(selectedIndex: 1, thTabIndex: 1),
+        ).then(
+          (value) => PageNavigator.goToPermanent(
+            context,
+            router.rt_Landing,
+            arguments: LandingArguments(
+              needFreshLoad: false,
+            ),
+          ),
+        );
+        readUnreadAction(result);
+        break;
+      case "regiment_screen":
+        Provider.of<RegimentViewModel>(
+          context,
+          listen: false,
+        )?.regimentMode = RegimentMode.Schedule;
+        Provider.of<RegimentViewModel>(context, listen: false)?.regimentFilter =
+            RegimentFilter.Missed;
+        Get.toNamed(router.rt_Regimen, arguments: RegimentArguments()).then(
+          (value) => PageNavigator.goToPermanent(
+            context,
+            router.rt_Landing,
+            arguments: LandingArguments(
+              needFreshLoad: false,
+            ),
+          ),
+        );
         readUnreadAction(result);
         break;
       default:

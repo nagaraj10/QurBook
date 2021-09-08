@@ -502,7 +502,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                   child: Text(
                                     /* toBeginningOfSentenceCase(
                                         snapshotUser.data[STR_NICK_NAME]), */
-                                    snapshotUser?.data[STR_NICK_NAME] != ''
+                                    snapshotUser?.data[STR_NICK_NAME] != '' && snapshotUser?.data[STR_NICK_NAME]!=null
                                         ? snapshotUser?.data[STR_NICK_NAME]
                                             ?.toString()
                                             ?.capitalizeFirstofEach
