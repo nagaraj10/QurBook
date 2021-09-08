@@ -43,6 +43,7 @@ const String rt_deviceDashboard = '/deviceDashboard';
 const String rt_Sheela = '/sheela';
 const String rt_PlanWizard = '/plan-wizard';
 const String rt_AddProviderPlan = '/add-provider-plan';
+const String rt_chooseUnit = '/choose-unit';
 
 const String cn_AddProvider = 'add_providers';
 

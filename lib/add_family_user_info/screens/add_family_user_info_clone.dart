@@ -58,6 +58,7 @@ class AddFamilyUserInfoScreen extends StatefulWidget {
   AddFamilyUserInfoArguments arguments;
 
   AddFamilyUserInfoScreen({this.arguments});
+
   @override
   AddFamilyUserInfoScreenState createState() => AddFamilyUserInfoScreenState();
 }
@@ -97,6 +98,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   final heightController = TextEditingController(text: '');
   FocusNode heightFocus = FocusNode();
+  final heightInchController = TextEditingController(text: '');
+  FocusNode heightInchFocus = FocusNode();
 
   final weightController = TextEditingController(text: '');
   FocusNode weightFocus = FocusNode();
@@ -155,6 +158,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   AddFamilyUserInfoRepository addFamilyUserInfoRepository;
   MyProfileModel myProfile = MyProfileModel();
 
+  bool isFeetOrInches = true;
+  bool isKg = true;
+
   @override
   void initState() {
     mInitialTime = DateTime.now();
@@ -167,6 +173,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       //fetchUserProfileInfo();
     });
     setValuesInEditText();
+    setUnit();
 
     languageBlock = LanguageRepository();
   }
@@ -204,24 +211,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   }
 
   void checkCSIRPackageVaildation() async {
-    /* if(widget?.arguments?.isFromCartPage){
-      MyProfileModel myProfile = await CommonUtil().fetchUserProfileInfo();
-      if (myProfile?.result?.userAddressCollection3?.isNotEmpty) {
-        final callback = checkAddressValidation(
-            myProfile?.result?.userAddressCollection3[0]);
-        if (callback) {
-          CheckoutPageWidgets().mDisclaimerAlertDialog(
-            context: Get.context,
-            packageId: widget.arguments.packageId,
-            isSubscribed: widget.arguments.isSubscribed,
-            providerId: widget.arguments.providerId,
-            feeZero: widget.arguments.feeZero,
-            refresh: widget.arguments.refresh,
-          );
-        } else {}
-      }
-    }
-    else  */
     if (widget.arguments.isFromCSIR) {
       final myProfile = await CommonUtil().fetchUserProfileInfo();
       if (myProfile?.result?.userAddressCollection3?.isNotEmpty) {
@@ -300,53 +289,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                         ),
                       ),
                     )),
-//                Stack(
-//                  alignment: Alignment.bottomLeft,
-//                  children: <Widget>[
-//                    Padding(
-//                      padding: EdgeInsets.only(bottom: circleRadius / 2.0),
-//                      child: Container(
-//                        color: Color(new CommonUtil().getMyPrimaryColor()),
-//                        height: 160.0.h,
-//                        child: Stack(
-//                            fit: StackFit.expand,
-//                            overflow: Overflow.visible,
-//                            children: [
-//                              Container(
-//                                color: Colors.black.withOpacity(0.2),
-//                              )
-//                            ]),
-//                      ),
-//                    ),
-//                    Padding(
-//                        padding: EdgeInsets.only(left: 10),
-//                        child: Container(
-//                          width: circleRadius,
-//                          height: circleRadius,
-//                          decoration: ShapeDecoration(
-//                              shape: CircleBorder(),
-//                              color:
-//                                  Color(new CommonUtil().getMyPrimaryColor())),
-//                          child: Padding(
-//                            padding: EdgeInsets.all(circleBorderWidth),
-//                            child: InkWell(
-//                              child: ClipOval(
-//                                  child: (imageURI != null && imageURI != '')
-//                                      ? Image.file(
-//                                          imageURI,
-//                                          fit: BoxFit.cover,
-//                                          width: 60.0.h,
-//                                          height: 60.0.h,
-//                                        )
-//                                      : showProfileImageNew()),
-//                              onTap: () {
-//                                saveMediaDialog(context);
-//                              },
-//                            ),
-//                          ),
-//                        )),
-//                  ],
-//                ),
                 _showCommonEditText(
                   mobileNoController,
                   mobileNoFocus,
@@ -416,30 +358,74 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     Expanded(child: getBloodRangeDetails())
                   ],
                 ),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                        child: _showCommonEditText(
-                            heightController,
-                            heightFocus,
-                            middleNameFocus,
-                            CommonConstants.heightName,
-                            CommonConstants.heightName,
-                            true,
-                            isheightOrWeight: true,
-                            maxLength: 3)),
-                    Expanded(
-                        child: _showCommonEditText(
-                            weightController,
-                            weightFocus,
-                            middleNameFocus,
-                            CommonConstants.weightName,
-                            CommonConstants.weightName,
-                            true,
-                            isheightOrWeight: true,
-                            maxLength: 3))
-                  ],
-                ),
+                isFeetOrInches
+                    ? Container(
+                        child: Row(
+                        children: [
+                          Expanded(
+                              child: _showCommonEditText(
+                                  heightController,
+                                  heightFocus,
+                                  heightInchFocus,
+                                  CommonConstants.heightNameFeetInd,
+                                  CommonConstants.heightNameFeetInd,
+                                  true,
+                                  isheightOrWeight: true,
+                                  maxLength: 3)),
+                          Expanded(
+                              child: _showCommonEditText(
+                                  heightInchController,
+                                  heightInchFocus,
+                                  middleNameFocus,
+                                  CommonConstants.heightNameInchInd,
+                                  CommonConstants.heightNameInchInd,
+                                  true,
+                                  isheightOrWeight: true,
+                                  maxLength: 3)),
+                          Expanded(
+                              child: _showCommonEditText(
+                                  weightController,
+                                  weightFocus,
+                                  middleNameFocus,
+                                  isKg
+                                      ? CommonConstants.weightName
+                                      : CommonConstants.weightNameUS,
+                                  isKg
+                                      ? CommonConstants.weightName
+                                      : CommonConstants.weightNameUS,
+                                  true,
+                                  isheightOrWeight: true,
+                                  maxLength: 3))
+                        ],
+                      ))
+                    : Row(
+                        children: [
+                          Expanded(
+                              child: _showCommonEditText(
+                                  heightController,
+                                  heightFocus,
+                                  middleNameFocus,
+                                  CommonConstants.heightName,
+                                  CommonConstants.heightName,
+                                  true,
+                                  isheightOrWeight: true,
+                                  maxLength: 3)),
+                          Expanded(
+                              child: _showCommonEditText(
+                                  weightController,
+                                  weightFocus,
+                                  middleNameFocus,
+                                  isKg
+                                      ? CommonConstants.weightName
+                                      : CommonConstants.weightNameUS,
+                                  isKg
+                                      ? CommonConstants.weightName
+                                      : CommonConstants.weightNameUS,
+                                  true,
+                                  isheightOrWeight: true,
+                                  maxLength: 3))
+                        ],
+                      ),
                 if (widget.arguments.fromClass == CommonConstants.user_update)
                   getLanguageWidget()
                 else
@@ -1610,11 +1596,26 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     var additionalInfo = AdditionalInfo();
     if (widget.arguments.myProfileResult?.additionalInfo != null) {
       additionalInfo = widget.arguments.myProfileResult.additionalInfo;
-      additionalInfo.height = heightController.text;
+
+      var heightObj=new  HeightObj();
+      if(isFeetOrInches){
+        heightObj.valueFeet=heightController.text;
+        heightObj.valueInches=heightInchController.text;
+      }else{
+        additionalInfo.height = heightController.text;
+
+      }
+
       additionalInfo.weight = weightController.text;
     } else {
-      additionalInfo.height = heightController.text;
-      additionalInfo.weight = weightController.text;
+      var heightObj=new  HeightObj();
+      if(isFeetOrInches){
+        heightObj.valueFeet=heightController.text;
+        heightObj.valueInches=heightInchController.text;
+      }else{
+        additionalInfo.height = heightController.text;
+
+      }      additionalInfo.weight = weightController.text;
       additionalInfo.age = 0;
       additionalInfo.mrdNumber = '';
       additionalInfo.patientHistory = '';
@@ -1672,7 +1673,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         userAddressCollection3.id =
             widget?.arguments?.sharedbyme?.child?.userAddressCollection3[0].id;
       }
-    } else if (widget.arguments.fromClass == CommonConstants.user_update) {
+    }
+    else if (widget.arguments.fromClass == CommonConstants.user_update) {
       addFamilyUserInfoBloc.isUpdate = false;
       profileResult.id = widget.arguments.myProfileResult.id;
       if (widget
@@ -1691,7 +1693,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         userContactCollection3List.add(userContact);
         profileResult.userContactCollection3 = userContactCollection3List;
       }
-    } else {
+    }
+    else {
       profileResult.id = widget.arguments.addFamilyUserInfo.childInfo.id;
       addFamilyUserInfoBloc.isUpdate = false;
       if (widget
@@ -1786,7 +1789,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         await Alert.displayAlertPlain(context,
             title: variable.Error, content: strErrorMsg);
       }
-    } else if (widget.arguments.fromClass == CommonConstants.user_update) {
+    }
+    else if (widget.arguments.fromClass == CommonConstants.user_update) {
       //*update the user details
       if (doValidation()) {
         if (addFamilyUserInfoBloc.profileBanner != null) {
@@ -2313,25 +2317,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   }
 
   Future<String> setValueLanguages() async {
-    /* for (LanguageResult languageResultObj in languageModelList.result) {
-      if (languageResultObj.referenceValueCollection.length > 0) {
-        for (ReferenceValueCollection referenceValueCollection
-            in languageResultObj.referenceValueCollection) {
-          if (myProfile?.result?.additionalInfo.language != null &&
-              myProfile?.result?.additionalInfo.language.length > 0) {
-            if (referenceValueCollection.id ==
-                myProfile?.result?.additionalInfo.language[0]) {
-              // selectedLanguage = referenceValueCollection.code;
-              String languageCode =
-                  referenceValueCollection.code.substring(0, 2).toLowerCase();
-              selectedLanguage = languageCode;
-              PreferenceUtil.saveString(SHEELA_LANG,
-                  CommonUtil.langaugeCodes[languageCode] ?? 'en-IN');
-            }
-          }
-        }
-      }
-    }*/
     if (selectedLanguage != null && selectedLanguage != '') {
     } else {
       if (addFamilyUserInfoBloc
@@ -2422,5 +2407,23 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     }
 
     return condition;
+  }
+
+  void setUnit() async {
+    String heightUnit =
+        await PreferenceUtil.getStringValue(Constants.STR_KEY_HEIGHT);
+    String weightUnit =
+        await PreferenceUtil.getStringValue(Constants.STR_KEY_WEIGHT);
+    if (heightUnit == Constants.STR_VAL_HEIGHT_IND) {
+      isFeetOrInches = true;
+    } else {
+      isFeetOrInches = false;
+    }
+
+    if (weightUnit == Constants.STR_VAL_WEIGHT_IND) {
+      isKg = true;
+    } else {
+      isKg = false;
+    }
   }
 }

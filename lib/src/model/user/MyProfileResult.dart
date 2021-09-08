@@ -202,7 +202,7 @@ class AdditionalInfo {
   String uhidNumber;
   String visitReason;
   String patientHistory;
-
+  HeightObj heightObj;
   AdditionalInfo(
       {this.age,
       this.height,
@@ -222,8 +222,17 @@ class AdditionalInfo {
       }
     }
 
-    height = json['height'];
     weight = json['weight'];
+    try {
+      heightObj =
+      json['height'] != null ? new HeightObj.fromJson(json['height']) : null;
+
+      height = json['height'];
+
+    }catch(e){
+
+    }
+
     try {
       if (json.containsKey('language')) {
         language = json['language'].cast<String>();
@@ -248,6 +257,9 @@ class AdditionalInfo {
     data['uhidNumber'] = uhidNumber;
     data['visitReason'] = visitReason;
     data['patientHistory'] = patientHistory;
+    if (this.heightObj != null) {
+      data['height'] = this.heightObj.toJson();
+    }
     return data;
   }
 }
@@ -418,6 +430,25 @@ class UserProfileSettingCollection3 {
     data['isActive'] = isActive;
     data['createdOn'] = createdOn;
     data['lastModifiedOn'] = lastModifiedOn;
+    return data;
+  }
+}
+
+class  HeightObj {
+  String valueFeet;
+  String valueInches;
+
+  HeightObj({this.valueFeet, this.valueInches});
+
+  HeightObj.fromJson(Map<String, dynamic> json) {
+    valueFeet = json['valueFeet'];
+    valueInches = json['valueInches'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['valueFeet'] = this.valueFeet;
+    data['valueInches'] = this.valueInches;
     return data;
   }
 }

@@ -99,6 +99,10 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
   String audioPath = '';
 
   bool skipTapped;
+  
+  String tempUnit="F";
+  String weightUnit="Kg";
+  String heightUnit="feet";
 
   List<T> map<T>(List list, Function handler) {
     List<T> result = [];
@@ -191,6 +195,11 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
   saveMediaDialog(
       BuildContext context, String categoryName, String deviceName) {
     categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
+
+     tempUnit=PreferenceUtil.getStringValue(Constants.STR_KEY_TEMP);
+     weightUnit=PreferenceUtil.getStringValue(Constants.STR_KEY_WEIGHT);
+     heightUnit=PreferenceUtil.getStringValue(Constants.STR_KEY_HEIGHT);
+
 
     audioPath = '';
     containsAudio = false;
@@ -493,7 +502,11 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
             null,
             false,
             deviceController,
-            fileName);
+            fileName,tempMainUnit:tempUnit,updateUnit: (unitValue) async {
+          tempUnit =unitValue;
+
+          setState(() {});
+        });
         break;
       case Constants.STR_WEIGHING_SCALE:
         if (digitRecogResponse != null) {
@@ -528,7 +541,11 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
             null,
             false,
             deviceController,
-            fileName);
+            fileName,weightUnit: weightUnit,updateUnit: (unitValue) async {
+          weightUnit =unitValue;
+
+          setState(() {});
+        });
         break;
       case Constants.STR_PULSE_OXIMETER:
         if (digitRecogResponse != null) {

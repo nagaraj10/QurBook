@@ -651,6 +651,19 @@ const String renewalLimit =
 const String alreadySubscribed =
     'You’ve already subscribed to the plan. Selecting this now will renew the plan';
 
+//String for choose Units
+const String str_Weight='Weight';
+const String str_Pounds='Pounds';
+const String str_Kilogram='Kilograms';
+
+const String str_Height='Height';
+const String str_Feet='Feet/Inches';
+const String str_centi='Centimeters';
+
+const String str_Temp='Temperature';
+const String str_celesius='Celisius';
+const String str_far='Farenheit';
+
 //Reminders
 //
 const reminderMethodChannel = MethodChannel('flutter.native/reminder');
