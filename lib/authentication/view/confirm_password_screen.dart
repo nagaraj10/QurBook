@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 import '../constants/constants.dart';
 import '../model/confirm_password_model.dart';
 import '../model/confirm_password_model.dart' as confirmPasswordModel;
@@ -22,7 +23,7 @@ class ChangePasswordScreen extends StatefulWidget {
   _ChangePasswordScreenState createState() => _ChangePasswordScreenState();
 }
 
-class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
+class _ChangePasswordScreenState extends State<ChangePasswordScreen> with CodeAutoFill {
   final CodeController = TextEditingController();
   final NewPasswordController = TextEditingController();
   final NewPasswordAgainController = TextEditingController();
@@ -40,12 +41,16 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   void initState() {
     mInitialTime = DateTime.now();
     super.initState();
+    listenForCode();
+    SmsAutoFill().listenForCode;
     authViewModel = AuthViewModel();
     Provider.of<OtpViewModel>(context, listen: false)?.startTimer();
   }
 
   @override
   void dispose() {
+    cancel();
+    unregisterListener();
     super.dispose();
     otpViewModel?.stopTimer();
     otpViewModel?.stopOTPTimer();
@@ -54,6 +59,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       'pageName': 'Confirm Password Screen',
       'screenSessionTime':
           '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
+  }
+
+   @override
+  void codeUpdated() {
+    setState(() {
+      CodeController.text = code;
     });
   }
 
