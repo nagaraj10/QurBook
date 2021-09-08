@@ -104,6 +104,7 @@ class _LandingScreenState extends State<LandingScreen> {
       try {
         commonUtil.versionCheck(context);
       } catch (e) {}
+      profileData = getMyProfile();
       Provider.of<LandingViewModel>(context, listen: false)
           .getQurPlanDashBoard(needNotify: true);
     } else {
@@ -506,9 +507,9 @@ class _LandingScreenState extends State<LandingScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    myProfile != null ??
+                    myProfile != null &&
                             myProfile.result.firstName != null &&
-                                myProfile.result.firstName != ''
+                            myProfile.result.firstName != ''
                         ? 'Hey ${toBeginningOfSentenceCase(myProfile?.result?.firstName ?? "")}'
                         : myProfile != null
                             ? 'Hey User'
@@ -544,11 +545,9 @@ class _LandingScreenState extends State<LandingScreen> {
   Future<MyProfileModel> getMyProfile() async {
     final userId = await PreferenceUtil.getStringValue(constants.KEY_USERID);
     if (userId != null && userId.isNotEmpty) {
-      await addFamilyUserInfoRepository
-          .getMyProfileInfoNew(userId)
-          .then((value) {
-        myProfile = value;
-      });
+      MyProfileModel value =
+          await addFamilyUserInfoRepository.getMyProfileInfoNew(userId);
+      myProfile = value;
     } else {
       CommonUtil().logout(moveToLoginPage);
     }
@@ -593,7 +592,6 @@ class _LandingScreenState extends State<LandingScreen> {
     } catch (e) {}
     try {
       getProfileData();
-      getMyProfile();
     } catch (e) {}
 
     try {
