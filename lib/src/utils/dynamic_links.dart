@@ -97,6 +97,14 @@ class DynamicLinks {
           case 'help_videos':
             Get.offAll(VideoScreen());
             break;
+          case 'providers':
+            Get.offAllNamed(
+              rt_UserAccounts,
+              arguments: UserAccountsArguments(
+                selectedIndex: 2,
+              ),
+            );
+            break;
           case 'family':
             Get.offAllNamed(
               rt_UserAccounts,
