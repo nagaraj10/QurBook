@@ -98,7 +98,8 @@ const String qr_bookAppointment = 'appointment';
 const String qr_update_payment = 'payment/update-payment-status/';
 const String qr_update_payment_subscribe =
     'payment/plan-subscription-update-payment-status';
-
+const String qr_medium = 'medium';
+const String qr_clearIds = 'clearIds';
 const String qr_created_by = 'createdBy';
 const String qr_booked_for = 'bookedFor';
 const String qr_doctor_session_id = 'doctorSessionId';

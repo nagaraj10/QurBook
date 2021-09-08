@@ -15,20 +15,22 @@ class NotificationResult {
   RecipientUser senderUser;
   bool isActionDone;
   bool isUnread;
+  bool deleteSelected = false;
 
-  NotificationResult(
-      {this.id,
-      this.messageDetails,
-      this.transportMedium,
-      this.responseText,
-      this.deliveredDateTime,
-      this.createdOn,
-      this.recipientUserDetails,
-      this.recipientUser,
-      this.scheduler,
-      this.senderUser,
-      this.isActionDone,
-      this.isUnread});
+  NotificationResult({
+    this.id,
+    this.messageDetails,
+    this.transportMedium,
+    this.responseText,
+    this.deliveredDateTime,
+    this.createdOn,
+    this.recipientUserDetails,
+    this.recipientUser,
+    this.scheduler,
+    this.senderUser,
+    this.isActionDone,
+    this.isUnread,
+  });
 
   NotificationResult.fromJson(Map<String, dynamic> json) {
     id = json['id'];
