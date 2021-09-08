@@ -103,15 +103,15 @@ class MyProviderViewModel extends ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<List<HealthOrganizationResult>> getHealthOrgFromDoctor(
+  Future<HealthOrganizationModel> getHealthOrgFromDoctor(
       String doctorId) async {
     try {
       HealthOrganizationModel healthOrganizationModel =
           await _providersListRepository
               .getHealthOrganizationFromDoctor(doctorId);
 
-      healthOrganizationResult = healthOrganizationModel.result;
-      return healthOrganizationResult;
+      //healthOrganizationResult = healthOrganizationModel.result;
+      return healthOrganizationModel;
     } catch (e) {}
   }
 

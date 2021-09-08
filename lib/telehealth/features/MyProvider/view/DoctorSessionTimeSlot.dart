@@ -9,6 +9,7 @@ import 'package:myfhb/my_providers/models/Doctors.dart';
 import 'package:myfhb/my_providers/models/GetDoctorsByIdModel.dart';
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/telehealth/features/MyProvider/model/DoctorsFromHospitalModel.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/AvailableTimeSlotsModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/SlotsResultModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/healthOrganization/HealthOrganizationResult.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
@@ -193,7 +194,7 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
   }
 
   Widget getTimeSlots() {
-    return new FutureBuilder<SlotsResultModel>(
+    return new FutureBuilder<AvailableTimeSlotsModel>(
       future: slotsAvailabilityViewModel.fetchTimeSlots(
           _selectedValue.toString(),
           widget.doctorId,
@@ -216,40 +217,75 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
           } else if (snapshot.hasError) {
             return ErrorsWidget();
           } else {
-            return snapshot.data.sessionCounts != null &&
-                    snapshot.data.sessions != null
-                ? snapshot.data.sessions[0].slots != null &&
-                        snapshot.data.sessions[0].slots.isNotEmpty
-                    ? Container(
-                        margin: EdgeInsets.only(left: 5, top: 12),
-                        child: GetTimeSlots(
-                          dateSlotTimingsObj: snapshot.data,
-                          docs: widget.docs,
-                          docsReschedule: widget.docsReschedule,
-                          j: widget.i,
-                          doctorListIndex: widget.doctorListIndex,
-                          selectedDate: _selectedValue,
-                          isReshedule: widget.isReshedule,
-                          doctorsData: widget.doctorsData,
-                          healthOrganizationResult:
-                              widget.healthOrganizationResult,
-                          resultFromHospitalList: widget.resultFromHospitalList,
-                          doctorListPos: widget.doctorListPos,
-                          closePage: (value) {
-                            widget.closePage(value);
-                          },
-                          isRefresh: () {
-                            widget.refresh();
-                          },
-                          isFromNotification: widget.isFromNotification,
-                          isFromHospital: widget.isFromHospital,
-                          body: widget.body,
-                          isFromFollowReschedule:
-                              widget.isFromFollowOrReschedule,
-                          isFromFollowUpApp: widget.isFromFollowUpApp,
-                          isFromFollowUpTake: widget.isFromFollowUpTake,
+            return (snapshot?.data?.isSuccess != null &&
+                    !snapshot?.data?.isSuccess && (snapshot?.data?.message ?? '').isNotEmpty)
+                ? Column(
+                    children: <Widget>[
+                      SizedBoxWidget(
+                        height: 8.0.h,
+                      ),
+                      new Text(
+                        snapshot?.data?.message,
+                        style: TextStyle(
+                          fontSize: 12.0.sp,
                         ),
-                      )
+                      ),
+                      SizedBoxWidget(
+                        height: 8.0.h,
+                      ),
+                    ],
+                  )
+                : snapshot.data.result.sessions != null &&
+                        snapshot.data.result.sessions != null
+                    ? snapshot.data.result.sessions[0].slots != null &&
+                            snapshot.data.result.sessions[0].slots.isNotEmpty
+                        ? Container(
+                            margin: EdgeInsets.only(left: 5, top: 12),
+                            child: GetTimeSlots(
+                              dateSlotTimingsObj: snapshot.data.result,
+                              docs: widget.docs,
+                              docsReschedule: widget.docsReschedule,
+                              j: widget.i,
+                              doctorListIndex: widget.doctorListIndex,
+                              selectedDate: _selectedValue,
+                              isReshedule: widget.isReshedule,
+                              doctorsData: widget.doctorsData,
+                              healthOrganizationResult:
+                                  widget.healthOrganizationResult,
+                              resultFromHospitalList:
+                                  widget.resultFromHospitalList,
+                              doctorListPos: widget.doctorListPos,
+                              closePage: (value) {
+                                widget.closePage(value);
+                              },
+                              isRefresh: () {
+                                widget.refresh();
+                              },
+                              isFromNotification: widget.isFromNotification,
+                              isFromHospital: widget.isFromHospital,
+                              body: widget.body,
+                              isFromFollowReschedule:
+                                  widget.isFromFollowOrReschedule,
+                              isFromFollowUpApp: widget.isFromFollowUpApp,
+                              isFromFollowUpTake: widget.isFromFollowUpTake,
+                            ),
+                          )
+                        : Column(
+                            children: <Widget>[
+                              SizedBoxWidget(
+                                height: 8.0.h,
+                              ),
+                              new Text(
+                                slotsAreNotAvailable,
+                                style: TextStyle(
+                                  fontSize: 12.0.sp,
+                                ),
+                              ),
+                              SizedBoxWidget(
+                                height: 8.0.h,
+                              ),
+                            ],
+                          )
                     : Column(
                         children: <Widget>[
                           SizedBoxWidget(
@@ -265,23 +301,7 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
                             height: 8.0.h,
                           ),
                         ],
-                      )
-                : Column(
-                    children: <Widget>[
-                      SizedBoxWidget(
-                        height: 8.0.h,
-                      ),
-                      new Text(
-                        slotsAreNotAvailable,
-                        style: TextStyle(
-                          fontSize: 12.0.sp,
-                        ),
-                      ),
-                      SizedBoxWidget(
-                        height: 8.0.h,
-                      ),
-                    ],
-                  );
+                      );
           }
         } else {
           return Column(
