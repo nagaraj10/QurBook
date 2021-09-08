@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart'
     as Constants;
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/appointmentsData.dart';
@@ -84,9 +85,13 @@ class AppointmentsListViewModel extends ChangeNotifier {
   Time getTimeSlot(String plannedStartDateTime) {
     String hours, min;
     int dys;
-    DateTime dob1 = DateFormat(Constants.Appointments_iso_format)
+    DateTime dob1 = DateFormat(CommonUtil.REGION_CODE == 'IN'
+            ? Constants.Appointments_iso_format
+            : Constants.Appointments_iso_formatUS)
         .parse(plannedStartDateTime);
-    DateTime dob2 = DateFormat(Constants.Appointments_slot_format)
+    DateTime dob2 = DateFormat(CommonUtil.REGION_CODE == 'IN'
+            ? Constants.Appointments_slot_format
+            : Constants.Appointments_slot_formatUS)
         .parse('${DateTime.now()}');
     Duration dur = dob1.difference(dob2);
     dys = dur.inDays;

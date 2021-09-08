@@ -344,6 +344,7 @@ void setValues(List<dynamic> values) {
   CommonUtil.FIREBASE_CHAT_NOTIFY_TOKEN = values[9];
   CommonUtil.REGION_CODE = values.length > 10 ? (values[10] ?? 'IN') : 'IN';
   CommonUtil.POWER_BI_URL = values[11];
+  CommonUtil.setTimeZone();
 }
 
 Widget buildError(BuildContext context, FlutterErrorDetails error) {

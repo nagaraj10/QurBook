@@ -175,9 +175,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     getDataFromWidget();
     setLengthValue();
 
-
     INR_Price = commonWidgets.getMoneyWithForamt((widget.isFromFollowUpApp &&
-            widget.isFromFollowUpTake == false && isFollowUp())
+            widget.isFromFollowUpTake == false &&
+            isFollowUp())
         ? getFollowUpFee()
         : widget.isFromHospital
             ? getFeesFromHospital(
@@ -234,8 +234,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         .sessionData[widget.rowPosition].slots[widget.itemPosition].slotNumber
         .toString();
     doctorSessionId = widget.sessionData[widget.rowPosition].doctorSessionId;
-    scheduleDate =
-        commonUtil.dateConversionToApiFormat(widget.selectedDate).toString();
+    scheduleDate = CommonUtil.dateConversionToApiFormat(widget.selectedDate);
 
     doctorId = widget.isFromHospital
         ? widget.resultFromHospitalList[widget.doctorListIndex].doctor.user.id
@@ -1027,7 +1026,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                                     healthRecords.length > 0)
                                                 ? true
                                                 : false,
-                                            (widget.isFromFollowUpApp&&widget.isFromFollowUpTake==false&&isFollowUp()),
+                                            (widget.isFromFollowUpApp &&
+                                                widget.isFromFollowUpTake ==
+                                                    false &&
+                                                isFollowUp()),
                                             (healthRecords != null &&
                                                     healthRecords.length > 0)
                                                 ? healthRecords

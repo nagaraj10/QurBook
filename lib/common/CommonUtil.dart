@@ -116,6 +116,7 @@ class CommonUtil {
   static String BASEURL_DEVICE_READINGS = '';
   static String FIREBASE_CHAT_NOTIFY_TOKEN = '';
   static String REGION_CODE = 'IN';
+  static String TimeZone = '';
   static String POWER_BI_URL = 'IN';
   static const bgColor = 0xFFe3e2e2;
   static bool isRenewDialogOpened = false;
@@ -145,6 +146,9 @@ class CommonUtil {
   final String CONTENT_UNSUBSCRIBE_PACKAGE =
       'Are you sure you want to unsubscribe?';
   final String CONTENT_RENEW_PACKAGE = 'Are you sure you want to renew?';
+
+  final String CONTENT_NO_REFUND =
+      'Please note that no refund will be provided. Are you sure you want to Unsubscribe?';
 
   static Future<dynamic> getResourceLoader() async {
     final secret = SecretLoader(secretPath: 'secrets.json').load();
@@ -295,7 +299,10 @@ class CommonUtil {
 
   String getCurrentDate() {
     final now = DateTime.now();
-    return DateFormat(variable.strDateFormatDay).format(now);
+    return DateFormat(CommonUtil.REGION_CODE == 'IN'
+            ? variable.strDateFormatDay
+            : variable.strUSDateFormatDay)
+        .format(now);
   }
 
   Future<DateTime> _selectDate(BuildContext context) async {
@@ -1211,11 +1218,20 @@ class CommonUtil {
     return value != null && value != 'null';
   }
 
-  dateConversion(DateTime dateTime) {
-    final newFormat = DateFormat('EEE ,MMMM d,yyyy');
-    var updatedDate = newFormat.format(dateTime);
+  // dateConversion(DateTime dateTime) {
+  //   final newFormat = DateFormat('EEE ,MMMM d,yyyy');
+  //   var updatedDate = newFormat.format(dateTime);
 
-    return updatedDate;
+  //   return updatedDate;
+  // }
+  static setTimeZone() {
+    var date = DateTime.now().timeZoneOffset.isNegative ? "-" : "+";
+    final timeZoneSplit = DateTime.now().timeZoneOffset.toString().split(":");
+    var hour = int.parse(timeZoneSplit[0]);
+    hour = (hour).abs();
+    date += hour < 10 ? "0${hour}" : "$hour";
+    date += timeZoneSplit[1];
+    TimeZone = date;
   }
 
   regimentDateFormat(
@@ -1267,46 +1283,45 @@ class CommonUtil {
   dateConversionToDayMonthDate(DateTime dateTime) {
     final newFormat = DateFormat('EEEE, MMMM d');
     var updatedDate = newFormat.format(dateTime);
-
     return updatedDate;
   }
 
   dateConversionToDayMonthYear(DateTime dateTime) {
     final newFormat = DateFormat('d MMM, ' 'yyyy');
     final updatedDate = newFormat.format(dateTime);
-
     return updatedDate;
   }
 
   dateConversionToTime(DateTime dateTime) {
     final newFormat = DateFormat('h:mm a');
     var updatedDate = newFormat.format(dateTime);
-
     return updatedDate;
   }
 
   stringToDateTime(String string) {
     var dateTime = DateTime.parse(string);
-
     return dateTime;
   }
 
   removeLastThreeDigits(String string) {
     var removedString = '';
     removedString = string.substring(0, string.length - 3);
-
     return removedString;
   }
 
-  dateConversionToApiFormat(DateTime dateTime) {
-    final newFormat = DateFormat('yyyy-MM-dd');
+  static String dateConversionToApiFormat(DateTime dateTime) {
+    final newFormat = REGION_CODE == 'IN'
+        ? DateFormat('yyyy-MM-dd')
+        : DateFormat('MM-DD-YYYY');
     var updatedDate = newFormat.format(dateTime);
     return updatedDate;
   }
 
-  dateConversionToApiFormatClone(DateTime dateTime) {
-    final newFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
-    var updatedDate = newFormat.format(dateTime);
+  static String dateFormatterWithdatetimeseconds(DateTime dateTime) {
+    final newFormat = REGION_CODE == 'IN'
+        ? DateFormat('yyyy-MM-dd HH:mm:ss')
+        : DateFormat('MM-DD-YYYY HH:mm:ss');
+    final updatedDate = newFormat.format(dateTime);
     return updatedDate;
   }
 
@@ -2876,6 +2891,133 @@ class CommonUtil {
                           //hoverColor: Color(getMyPrimaryColor()),
                           child: Text(
                             'yes'.toUpperCase(),
+                            style: TextStyle(
+                              color: Color(getMyPrimaryColor()),
+                              fontSize: 10,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ]),
+                ),
+              ),
+            ]),
+          );
+        });
+  }
+
+  Future<dynamic> alertDialogForNoReFund(
+    BuildContext context, {
+    String title,
+    String content,
+    String packageId,
+    String isSubscribed,
+    Function() refresh,
+    bool fromDetail = false,
+  }) async {
+    final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    await showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return WillPopScope(
+            onWillPop: () async => false,
+            child: SimpleDialog(children: <Widget>[
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 20),
+                child: Center(
+                  child: Column(children: [
+                    //CircularProgressIndicator(),
+                    SizedBox(
+                      height: 10.0.h,
+                    ),
+                    Text(
+                      CONTENT_NO_REFUND,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16.0.sp,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10.0.h,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        OutlineButton(
+                          onPressed: () async {
+                            // open profile page
+                            Navigator.of(context).pop();
+                          },
+                          borderSide: BorderSide(
+                            color: Color(
+                              getMyPrimaryColor(),
+                            ),
+                          ),
+                          child: Text(
+                            'cancel'.toUpperCase(),
+                            style: TextStyle(
+                              color: Color(
+                                getMyPrimaryColor(),
+                              ),
+                              fontSize: 10,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10.0.h,
+                        ),
+                        OutlineButton(
+                          //hoverColor: Color(getMyPrimaryColor()),
+                          onPressed: () async {
+                            CommonUtil.showLoadingDialog(
+                                context, _keyLoader, variable.Please_Wait);
+                            await subscribeViewModel.UnsubScribePlan(packageId)
+                                .then((value) {
+                              if (value != null) {
+                                if (value.isSuccess) {
+                                  if (value.result != null) {
+                                    if (value.result.result == 'Done') {
+                                      //setState(() {});
+                                      Navigator.of(_keyLoader.currentContext,
+                                              rootNavigator: true)
+                                          .pop();
+                                      if (fromDetail) {
+                                        Get.back();
+                                      }
+                                      Get.back(result: 'refreshUI');
+                                      refresh();
+                                    } else {
+                                      Navigator.of(_keyLoader.currentContext,
+                                              rootNavigator: true)
+                                          .pop();
+                                      Get.back();
+                                      FlutterToast().getToast(
+                                          value.result.message ??
+                                              'UnSubscribe Failed',
+                                          Colors.red);
+                                    }
+                                  }
+                                } else {
+                                  Navigator.of(_keyLoader.currentContext,
+                                          rootNavigator: true)
+                                      .pop();
+                                  Get.back();
+                                  FlutterToast().getToast(
+                                      'UnSubscribe Failed', Colors.red);
+                                }
+                              }
+                            });
+                          },
+                          borderSide: BorderSide(
+                            color: Color(
+                              getMyPrimaryColor(),
+                            ),
+                          ),
+                          //hoverColor: Color(getMyPrimaryColor()),
+                          child: Text(
+                            'confirm'.toUpperCase(),
                             style: TextStyle(
                               color: Color(getMyPrimaryColor()),
                               fontSize: 10,

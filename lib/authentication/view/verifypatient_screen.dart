@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 import '../../add_family_otp/models/add_family_otp_response.dart';
 import '../../add_family_user_info/models/add_family_user_info_arguments.dart';
 import '../constants/constants.dart';
@@ -68,7 +70,7 @@ class VerifyPatient extends StatefulWidget {
   _VerifyPatientState createState() => _VerifyPatientState();
 }
 
-class _VerifyPatientState extends State<VerifyPatient> {
+class _VerifyPatientState extends State<VerifyPatient> with CodeAutoFill {
   final OtpController = TextEditingController();
   ApiBaseHelper apiBaseHelper = ApiBaseHelper();
   var isLoading = false;
@@ -96,11 +98,14 @@ class _VerifyPatientState extends State<VerifyPatient> {
   bool enableResendButton = true;
   bool disableResendButton = false;
   OtpViewModel otpViewModel;
+  ValueNotifier otpNotifier = ValueNotifier(false);
 
   @override
   void initState() {
     con.mInitialTime = DateTime.now();
     super.initState();
+    listenForCode();
+    SmsAutoFill().listenForCode;
     from = widget.from;
     authViewModel = AuthViewModel();
     if (widget.userConfirm) {
@@ -113,6 +118,9 @@ class _VerifyPatientState extends State<VerifyPatient> {
   void dispose() {
     otpViewModel?.stopTimer();
     otpViewModel?.stopOTPTimer();
+    cancel();
+    unregisterListener();
+    otpNotifier.value = false;
     super.dispose();
     con.fbaLog(eveName: 'qurbook_screen_event', eveParams: {
       'eventTime': '${DateTime.now()}',
@@ -120,6 +128,16 @@ class _VerifyPatientState extends State<VerifyPatient> {
       'screenSessionTime':
           '${DateTime.now().difference(con.mInitialTime).inSeconds} secs'
     });
+  }
+
+  @override
+  void codeUpdated() {
+    setState(() {
+      OtpController.text = code;
+    });
+    if (OtpController.text != '') {
+      otpNotifier.value = true;
+    }
   }
 
   @override
@@ -155,10 +173,28 @@ class _VerifyPatientState extends State<VerifyPatient> {
                       SizedBox(
                         height: 10.0.h,
                       ),
-                      Column(
-                        children: [
-                          _resetTextFields(strOtp, strOtpHint, OtpController),
-                        ],
+                      ValueListenableBuilder(
+                        valueListenable: otpNotifier,
+                        builder: (context, otpStatus, child) {
+                          if (otpStatus) {
+                            otpNotifier.value = false;
+                            AuthenticationValidator()
+                                .checkNetwork()
+                                .then((intenet) {
+                              if (intenet != null && intenet) {
+                                _verifyDetails();
+                              } else {
+                                toast.getToast(strNetworkIssue, Colors.red);
+                              }
+                            });
+                          }
+                          return Column(
+                            children: [
+                              _resetTextFields(
+                                  strOtp, strOtpHint, OtpController),
+                            ],
+                          );
+                        },
                       ),
                       // (widget.dataForResendOtp != null ||
                       //         from == strFromVerifyFamilyMember)
@@ -235,11 +271,13 @@ class _VerifyPatientState extends State<VerifyPatient> {
                               ],
                             ),
                             Visibility(
-                              visible: from != strFromVerifyFamilyMember && CommonUtil.REGION_CODE == 'IN',
+                              visible: from != strFromVerifyFamilyMember &&
+                                  CommonUtil.REGION_CODE == 'IN',
                               child: OrDivider(),
                             ),
                             Visibility(
-                              visible: from != strFromVerifyFamilyMember && CommonUtil.REGION_CODE == 'IN',
+                              visible: from != strFromVerifyFamilyMember &&
+                                  CommonUtil.REGION_CODE == 'IN',
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [

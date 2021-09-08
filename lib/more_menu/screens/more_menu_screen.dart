@@ -257,8 +257,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) =>
-                    ChooseUnit(),
+                builder: (context) => ChooseUnit(),
               ),
             ).then((value) {
               if (value) {
@@ -268,7 +267,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             //PageNavigator.goTo(context, router.rt_AppSettings);
           },
         ),
-        Divider(),
+        /* Divider(),
         Theme(
           data: theme,
           child: ExpansionTile(
@@ -386,7 +385,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
               )
             ],
           ),
-        ),
+        ),*/
         /* Divider(),
         Theme(
           data: theme,

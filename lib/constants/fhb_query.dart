@@ -279,6 +279,7 @@ const String qr_date = '&date=';
 const String qr_module_equal = '&module=';
 const String qr_healthOrg = 'healthOrganization';
 const String qr_all = 'all';
+const String qr_helperVideos = 'helperVideos';
 
 const String qr_createSubscribe = 'payment/plan-subscription-create-payment';
 const String qr_add_cart = 'cart/add-product';

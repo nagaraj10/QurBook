@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:myfhb/constants/fhb_query.dart';
 import '../../common/CommonUtil.dart';
 import '../../constants/fhb_constants.dart' as constants;
 import '../model/qur_plan_dashboard_model.dart';
@@ -13,7 +14,9 @@ class LandingViewModel extends ChangeNotifier {
   var appBarTitle = constants.strMyDashboard;
   bool isSearchVisible = false;
   LandingScreenStatus landingScreenStatus = LandingScreenStatus.Loaded;
+  LandingScreenStatus widgetScreenStatus = LandingScreenStatus.Loaded;
   DashboardModel dashboardData;
+  DashboardModel widgetsData;
   bool isLoadDone = true;
   bool isURLCome = false;
 
@@ -77,5 +80,26 @@ class LandingViewModel extends ChangeNotifier {
       }
       notifyListeners();
     }
+  }
+
+  Future<void> getQurPlanWidgetsData({
+    bool needNotify = false,
+    String includeText = qr_all,
+  }) async {
+    if (needNotify) {
+      widgetScreenStatus = LandingScreenStatus.Loading;
+    }
+    final dashboardResponse = await LandingService.getQurPlanDashBoard(
+      includeText: includeText,
+    );
+    if (dashboardResponse?.isSuccess ?? false) {
+      widgetsData = dashboardResponse.dashboardData;
+    } else {
+      widgetsData = dashboardResponse?.dashboardData;
+    }
+    if (needNotify) {
+      widgetScreenStatus = LandingScreenStatus.Loaded;
+    }
+    notifyListeners();
   }
 }

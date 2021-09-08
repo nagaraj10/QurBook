@@ -89,8 +89,11 @@ class GoogleSignInHelper {
       if (m_currentUser == null) {
         throw 'Failed to login GoogleFit account. Please activate and do sync again';
       }
-      var response = await ApiServices.post(_url,
-          body: jsonBody, headers: await m_currentUser.authHeaders);
+      var response = await ApiServices.post(
+        _url,
+        body: jsonBody,
+        headers: await m_currentUser.authHeaders,
+      );
       if (response.statusCode != 200) {
         throw '${response.statusCode} and ${response.body}';
       }
