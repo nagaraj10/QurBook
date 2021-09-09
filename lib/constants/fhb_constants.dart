@@ -406,6 +406,8 @@ const String STR_PUSH_TOKEN = 'pushToken';
 const String STR_MIP_MAP_LAUNCHER = '@mipmap/ic_launcher';
 const String STR_HTTPS = 'https';
 const String STR_FILE = 'File';
+const String STR_INSTAMOJO = 'instamojo';
+const String STR_RAZOPAY = 'razorpay';
 
 const String STR_JPG = '.jpg';
 const String STR_JPEG = '.jpeg';

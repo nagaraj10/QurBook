@@ -356,14 +356,21 @@ const String CLEAR_CART_MSG = 'Are you sure you want to remove all plans?';
 
 //Payment
 const String PAYMENT_STATUS = 'payment_status';
+const String RAZOR_PAYMENT_STATUS = 'razorpay_payment_link_status';
 const String CREDIT = 'Credit';
+const String PAID = 'paid';
 const String PAYMENT_ID = 'payment_id';
+const String RAZOR_PAYMENT_ID = 'razorpay_payment_id';
 const String PAYMENT_REQ_ID = 'payment_request_id';
+const String RAZOR_PAYMENT_REQ_ID = 'razorpay_payment_link_id';
+const String SIGNATURE = 'razorpay_signature';
 const String CHECK_URL = 'EFHB_Loader.html';
 const String TITLE_BAR = 'Payment';
 const String REPORT_PAGE = 'Report Page';
 const String PAYSUC = 'PAYSUC';
+const String STATUS_FAILED = 'status=failed';
 const String PAYCREDIT = 'Credit';
+const String PAYCAPTURED = 'captured';
 const String PAYMENT_SUCCESS_PNG = 'assets/payment/success_tick.png';
 const String PAYMENT_FAILURE_PNG = 'assets/payment/failure.png';
 const String PROFILE_PH = 'assets/user/profile_pic_ph.png';

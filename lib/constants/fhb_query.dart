@@ -115,6 +115,7 @@ const String qr_payment_id = 'paymentId';
 const String qr_appoint_id = 'appointmentId';
 const String qr_payment_order_id = 'paymentOrderId';
 const String qr_payment_req_id = 'paymentRequestId';
+const String qr_signature = 'signature';
 
 const String qr_input = '?input=';
 const String qr_key = 'key=';
