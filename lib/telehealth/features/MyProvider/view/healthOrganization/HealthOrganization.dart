@@ -22,6 +22,7 @@ import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/AvailableTimeSlotsModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/SlotSessionsModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/Slots.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/healthOrganization/HealthOrganizationModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/healthOrganization/HealthOrganizationResult.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
@@ -496,7 +497,7 @@ class _HealthOrganizationState extends State<HealthOrganization> {
   }
 
   Widget getHospitalProviderList(String doctorId) {
-    return new FutureBuilder<List<HealthOrganizationResult>>(
+    return new FutureBuilder<HealthOrganizationModel>(
       future: providerViewModel.getHealthOrgFromDoctor(doctorId),
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -507,7 +508,15 @@ class _HealthOrganizationState extends State<HealthOrganization> {
           final items = snapshot.data ??
               <DoctorIds>[]; // handle the case that data is null
 
-          return providerListWidget(snapshot.data);
+          return (snapshot?.data?.isSuccess != null &&
+                  !snapshot?.data?.isSuccess &&
+                  (snapshot?.data?.message ?? '').isNotEmpty)
+              ? Container(
+                  child: Center(
+                    child: Text(snapshot?.data?.message),
+                  ),
+                )
+              : providerListWidget(snapshot.data.result);
         }
       },
     );

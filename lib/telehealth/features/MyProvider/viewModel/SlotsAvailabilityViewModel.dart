@@ -8,12 +8,12 @@ class SlotsAvailabilityViewModel{
   SlotsResultModel sessionList = new SlotsResultModel();
 
 
-  Future<SlotsResultModel> fetchTimeSlots(String date, String doctorId,String healthOrgId) async {
+  Future<AvailableTimeSlotsModel> fetchTimeSlots(String date, String doctorId,String healthOrgId) async {
     try {
       AvailableTimeSlotsModel doctorTimeSlotsModel =
       await slotsAvailabilityService.getTelehealthSlotsList(date, doctorId,healthOrgId);
-      sessionList = doctorTimeSlotsModel.result;
-      return sessionList;
+      //sessionList = doctorTimeSlotsModel;
+      return doctorTimeSlotsModel;
     } catch (e) {}
   }
 }
