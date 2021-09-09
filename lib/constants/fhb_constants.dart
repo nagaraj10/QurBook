@@ -373,6 +373,7 @@ const String CSR_DISCOUNT = 'CSR_DISCOUNT';
 const String HealthOrg = 'Health Organization';
 const String HEALTH_RECORDIDS = 'healthRecordIds';
 const String INR = 'INR ';
+const String USD = '\$ ';
 const String FREE = 'FREE';
 const String LAST_RECEIVED = 'Last Received: ';
 const String DATE_FORMAT = 'dd MMM kk:mm';

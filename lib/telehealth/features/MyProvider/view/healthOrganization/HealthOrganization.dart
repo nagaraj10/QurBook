@@ -416,7 +416,7 @@ class _HealthOrganizationState extends State<HealthOrganization> {
                   Container(
                     child: Center(
                       child: TextWidget(
-                          text: INR +
+                          text: CommonUtil.CURRENCY +
                               commonWidgets.getMoneyWithForamt(
                                   getFees(eachHospitalModel[i], false)),
                           fontsize: 16.0.sp,

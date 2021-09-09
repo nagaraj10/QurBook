@@ -417,7 +417,7 @@ class PlanDetail extends State<MyPlanDetailView> {
                                           ),
                                           Text(
                                             price != null && price != ''
-                                                ? 'INR $price'
+                                                ? '${CommonUtil.CURRENCY}$price'
                                                 : '-',
                                             style: TextStyle(
                                                 color: Color(CommonUtil()

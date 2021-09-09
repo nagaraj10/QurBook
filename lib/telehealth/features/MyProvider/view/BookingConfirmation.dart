@@ -759,7 +759,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
               Container(
                 child: Center(
                   child: Text(
-                    'Pay INR ' + INR_Price,
+                    'Pay ${CommonUtil.CURRENCY}' + INR_Price,
                     maxLines: 1,
                     style: TextStyle(
                         fontSize: 22.0.sp,

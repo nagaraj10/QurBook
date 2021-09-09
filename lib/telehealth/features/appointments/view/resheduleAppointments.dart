@@ -432,7 +432,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                   Container(
                     child: Center(
                       child: TextWidget(
-                          text: 'INR ' +
+                          text: '${CommonUtil.CURRENCY}' +
                               commonWidgets.getMoneyWithForamt(widget
                                       .isReshedule
                                   ? 0.toString()

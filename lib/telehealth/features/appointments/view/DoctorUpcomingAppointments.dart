@@ -345,8 +345,8 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                                                   text: widget.doc?.feeDetails
                                                               ?.paymentMode ==
                                                           strOFFMODE
-                                                      ? ' ${Constants.inrLabelZero} '
-                                                      : ' ${Constants.inrLabel} ${widget.doc.feeDetails.doctorCancellationCharge}',
+                                                      ? ' ${CommonUtil.CURRENCY} 0'
+                                                      : ' ${CommonUtil.CURRENCY} ${widget.doc.feeDetails.doctorCancellationCharge}',
                                                   style: TextStyle(
                                                       fontSize: 14.0.sp,
                                                       fontFamily:
