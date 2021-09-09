@@ -82,7 +82,7 @@ class LandingViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> getQurPlanWidgetsData({
+  Future<DashboardModel> getQurPlanWidgetsData({
     bool needNotify = false,
     String includeText = qr_all,
   }) async {
@@ -101,5 +101,6 @@ class LandingViewModel extends ChangeNotifier {
       widgetScreenStatus = LandingScreenStatus.Loaded;
     }
     notifyListeners();
+    return widgetsData;
   }
 }
