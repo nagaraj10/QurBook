@@ -465,7 +465,7 @@ class ApiBaseHelper {
   }
 
   dynamic _returnResponse(http.Response response, {bool forDoctorSearch}) {
-    switch (response.statusCode) {
+    switch (response?.statusCode) {
       case 200:
         var responseJson;
         if (response.headers[variable.strcontenttype] ==

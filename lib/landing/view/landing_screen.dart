@@ -86,13 +86,6 @@ class _LandingScreenState extends State<LandingScreen> {
     super.initState();
     dbInitialize();
     QurPlanReminders.getTheRemindersFromAPI();
-    var url = (PreferenceUtil.getStringValue(constants.KEY_DYNAMIC_URL) ?? '');
-    if (url?.isNotEmpty ?? false) {
-      try {
-        Uri deepLink = Uri.parse(jsonDecode(url));
-        DynamicLinks.processDynamicLink(deepLink);
-      } catch (e) {}
-    }
     callImportantsMethod();
 
     var profilebanner =
@@ -104,6 +97,7 @@ class _LandingScreenState extends State<LandingScreen> {
       try {
         commonUtil.versionCheck(context);
       } catch (e) {}
+      profileData = getMyProfile();
       Provider.of<LandingViewModel>(context, listen: false)
           .getQurPlanDashBoard(needNotify: true);
     } else {
@@ -506,9 +500,9 @@ class _LandingScreenState extends State<LandingScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    myProfile != null ??
+                    myProfile != null &&
                             myProfile.result.firstName != null &&
-                                myProfile.result.firstName != ''
+                            myProfile.result.firstName != ''
                         ? 'Hey ${toBeginningOfSentenceCase(myProfile?.result?.firstName ?? "")}'
                         : myProfile != null
                             ? 'Hey User'
@@ -544,11 +538,9 @@ class _LandingScreenState extends State<LandingScreen> {
   Future<MyProfileModel> getMyProfile() async {
     final userId = await PreferenceUtil.getStringValue(constants.KEY_USERID);
     if (userId != null && userId.isNotEmpty) {
-      await addFamilyUserInfoRepository
-          .getMyProfileInfoNew(userId)
-          .then((value) {
-        myProfile = value;
-      });
+      MyProfileModel value =
+          await addFamilyUserInfoRepository.getMyProfileInfoNew(userId);
+      myProfile = value;
     } else {
       CommonUtil().logout(moveToLoginPage);
     }
@@ -593,7 +585,6 @@ class _LandingScreenState extends State<LandingScreen> {
     } catch (e) {}
     try {
       getProfileData();
-      getMyProfile();
     } catch (e) {}
 
     try {
@@ -612,6 +603,13 @@ class _LandingScreenState extends State<LandingScreen> {
     try {
       await getDeviceSelectionValues().then((value) => {});
     } catch (e) {}
+    var url = (PreferenceUtil.getStringValue(constants.KEY_DYNAMIC_URL) ?? '');
+    if (url?.isNotEmpty ?? false) {
+      try {
+        Uri deepLink = Uri.parse(jsonDecode(url));
+        DynamicLinks.processDynamicLink(deepLink);
+      } catch (e) {}
+    }
   }
 
   Future<GetDeviceSelectionModel> getDeviceSelectionValues() async {
