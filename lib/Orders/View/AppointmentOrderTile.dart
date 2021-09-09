@@ -79,7 +79,7 @@ class AppointmentOrderTile extends StatelessWidget {
                             style: Theme.of(context).textTheme.subtitle1,
                           ),
                           Text(
-                            'INR ${double.parse(order.feePaid).toInt()}',
+                            '${CommonUtil.CURRENCY}${double.parse(order.feePaid).toInt()}',
                             style:
                                 Theme.of(context).textTheme.subtitle1.copyWith(
                                       color: Color(

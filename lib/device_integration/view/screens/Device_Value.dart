@@ -342,6 +342,7 @@ String weightUnit;
       var dateTime = DateTime.now();
       postMediaData[parameters.strStartDate] = dateTime.toUtc().toString();
       postMediaData[parameters.strEndDate] = dateTime.toUtc().toString();
+      postMediaData[strlocalTime] = dateTime.toLocal();
       final commonConstants = CommonConstants();
 
       if (categoryName == CommonConstants.strDevice) {
@@ -1244,7 +1245,7 @@ String weightUnit;
                                 setState(() {
                                   isSelected[1] = value;
                                   isSelected[0] = null;
-                                                                  });
+                                });
                               })),
                     ],
                   ))

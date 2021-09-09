@@ -399,7 +399,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                 'Price \(${value?.fetchingCartItemsModel?.result?.productsCount ?? 0} items\)'),
                                             Spacer(),
                                             Text(
-                                                'INR ${value?.fetchingCartItemsModel?.result?.totalCartAmount ?? 0}'),
+                                                '${CommonUtil.CURRENCY}${value?.fetchingCartItemsModel?.result?.totalCartAmount ?? 0}'),
                                           ],
                                         ),
                                         DottedLine(
@@ -419,7 +419,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                               width: 20.0.w,
                                             ),
                                             Text(
-                                              'INR ${value?.fetchingCartItemsModel?.result?.totalCartAmount ?? 0}',
+                                              '${CommonUtil.CURRENCY}${value?.fetchingCartItemsModel?.result?.totalCartAmount ?? 0}',
                                               style: TextStyle(
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.w500),
@@ -462,7 +462,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        'INR ${value?.fetchingCartItemsModel?.result?.totalCartAmount ?? 0}',
+                                        '${CommonUtil.CURRENCY}${value?.fetchingCartItemsModel?.result?.totalCartAmount ?? 0}',
                                         style: TextStyle(
                                             color: Colors.black,
                                             fontWeight: FontWeight.bold,
@@ -852,7 +852,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     ),
                     Spacer(),
                     Text(
-                      'INR ${item?.productDetail?.planSubscriptionFee}',
+                      '${CommonUtil.CURRENCY}${item?.productDetail?.planSubscriptionFee}',
                       style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.w500,

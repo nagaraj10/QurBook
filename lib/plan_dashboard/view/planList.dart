@@ -393,7 +393,7 @@ class _MyPlanState extends State<PlanList> {
                               visible: planList[i].price.isNotEmpty &&
                                   planList[i].price != '0',
                               child: TextWidget(
-                                  text: INR + planList[i].price,
+                                  text: CommonUtil.CURRENCY + planList[i].price,
                                   fontsize: 16.0.sp,
                                   fontWeight: FontWeight.w500,
                                   colors: Color(
