@@ -143,7 +143,7 @@ class PaymentMetadata {
   String phone;
   String email;
   String buyerName;
-  String amount;
+  var amount;
   String purpose;
   String expiresAt;
   String status;
@@ -155,8 +155,9 @@ class PaymentMetadata {
   String webhook;
   bool allowRepeatedPayments;
   String customerId;
-  String createdAt;
+  var createdAt;
   String modifiedAt;
+  String paymentGateWay;
 
   PaymentMetadata(
       {this.id,
@@ -176,7 +177,8 @@ class PaymentMetadata {
         this.allowRepeatedPayments,
         this.customerId,
         this.createdAt,
-        this.modifiedAt});
+        this.modifiedAt,
+        this.paymentGateWay});
 
   PaymentMetadata.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -189,7 +191,7 @@ class PaymentMetadata {
     status = json['status'];
     sendSms = json['send_sms'];
     sendEmail = json['send_email'];
-    shorturl = json['shorturl'];
+    shorturl = json['short_url'];
     longurl = json['longurl'];
     redirectUrl = json['redirect_url'];
     webhook = json['webhook'];
@@ -197,6 +199,7 @@ class PaymentMetadata {
     customerId = json['customer_id'];
     createdAt = json['created_at'];
     modifiedAt = json['modified_at'];
+    paymentGateWay = json['payment_gateway'];
   }
 
   Map<String, dynamic> toJson() {
@@ -219,6 +222,7 @@ class PaymentMetadata {
     data['customer_id'] = customerId;
     data['created_at'] = createdAt;
     data['modified_at'] = modifiedAt;
+    data['payment_gateway'] = this.paymentGateWay;
     return data;
   }
 }
