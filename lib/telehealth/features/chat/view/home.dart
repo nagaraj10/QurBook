@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:get/get.dart';
+import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/landing/model/qur_plan_dashboard_model.dart';
+import 'package:myfhb/landing/view/landing_arguments.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -33,11 +36,13 @@ class ChatHomeScreen extends StatefulWidget {
     this.isHome = false,
     this.onBackPressed,
     this.careGiversList,
+    this.isDynamicLink = false,
   }) : super(key: key);
 
   final bool isHome;
   final Function onBackPressed;
   final List<CareGiverInfo> careGiversList;
+  final bool isDynamicLink;
 
   @override
   State createState() => HomeScreenState();
@@ -151,7 +156,16 @@ class HomeScreenState extends State<ChatHomeScreen> {
 
   Future<bool> onBackPress() {
     if (!widget.isHome) {
-      Navigator.pop(context);
+      if (Navigator.canPop(context)) {
+        Get.back();
+      } else {
+        Get.offAllNamed(
+          rt_Landing,
+          arguments: const LandingArguments(
+            needFreshLoad: false,
+          ),
+        );
+      }
     } else {
       widget.onBackPressed();
     }
@@ -275,7 +289,8 @@ class HomeScreenState extends State<ChatHomeScreen> {
               elevation: 0.0,
               backgroundColor: Colors.transparent,
               title: Text(
-                (widget?.careGiversList?.length ?? 0) > 0
+                ((widget?.careGiversList?.length ?? 0) > 0 ||
+                        widget.isDynamicLink)
                     ? CAREPROVIDERS
                     : CHAT,
                 style: TextStyle(
@@ -502,7 +517,9 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                   child: Text(
                                     /* toBeginningOfSentenceCase(
                                         snapshotUser.data[STR_NICK_NAME]), */
-                                    snapshotUser?.data[STR_NICK_NAME] != '' && snapshotUser?.data[STR_NICK_NAME]!=null
+                                    snapshotUser?.data[STR_NICK_NAME] != '' &&
+                                            snapshotUser?.data[STR_NICK_NAME] !=
+                                                null
                                         ? snapshotUser?.data[STR_NICK_NAME]
                                             ?.toString()
                                             ?.capitalizeFirstofEach

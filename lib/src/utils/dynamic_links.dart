@@ -5,13 +5,16 @@ import 'package:get/get.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/landing/view/widgets/video_screen.dart';
+import 'package:myfhb/landing/view_model/landing_view_model.dart';
 import 'package:myfhb/plan_dashboard/view/planDetailsView.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:myfhb/regiment/view/regiment_screen.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
+import 'package:myfhb/telehealth/features/chat/view/home.dart';
 import 'package:provider/provider.dart';
 
 class DynamicLinks {
@@ -125,6 +128,20 @@ class DynamicLinks {
               listen: false,
             ).regimentFilter = RegimentFilter.Scheduled;
             Get.offAllNamed(rt_Regimen);
+            break;
+          case 'caregivers_chat':
+            var widgetsData =
+                await Provider.of<LandingViewModel>(Get.context, listen: false)
+                    .getQurPlanWidgetsData(
+              needNotify: true,
+              includeText: qr_careGiverList,
+            );
+            Get.offAll(
+              ChatHomeScreen(
+                isDynamicLink: true,
+                careGiversList: widgetsData?.careGiverList ?? [],
+              ),
+            );
             break;
         }
       }
