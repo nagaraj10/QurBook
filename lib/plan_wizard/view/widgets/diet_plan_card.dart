@@ -151,7 +151,7 @@ class DietPlanCard extends StatelessWidget {
                                         visible: planList.price.isNotEmpty &&
                                             planList.price != '0',
                                         child: TextWidget(
-                                            text: INR + planList.price,
+                                            text: CommonUtil.CURRENCY + planList.price,
                                             fontsize: 12.0.sp,
                                             fontWeight: FontWeight.w500,
                                             colors: Color(new CommonUtil()

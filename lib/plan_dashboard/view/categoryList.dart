@@ -611,7 +611,7 @@ class _CategoryState extends State<CategoryList> {
                                         colors: Color(
                                             CommonUtil().getMyPrimaryColor())),
                                     child: TextWidget(
-                                        text: INR +
+                                        text: CommonUtil.CURRENCY +
                                             planListResult[inx.index]?.price,
                                         fontsize: 16.0.sp,
                                         fontWeight: FontWeight.w500,
