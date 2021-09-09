@@ -9,6 +9,7 @@ import 'package:myfhb/add_family_user_info/services/add_family_user_info_reposit
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/plan_dashboard/model/CreateSubscribeModel.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
@@ -30,6 +31,7 @@ class CheckoutPageWidgets {
   AddFamilyUserInfoRepository addFamilyUserInfoRepository =
       AddFamilyUserInfoRepository();
   CommonUtil commonUtil = CommonUtil();
+
   Future<dynamic> showPaymentConfirmationDialog(
       {dynamic body, dynamic totalCartAmount, Function(String) closePage}) {
     return showDialog(
@@ -141,48 +143,106 @@ class CheckoutPageWidgets {
                                                               ?.responseInfo !=
                                                           null) {
                                                         if (value
-                                                                    ?.result
-                                                                    ?.paymentGatewayDetail
-                                                                    ?.responseInfo
-                                                                    ?.longurl !=
-                                                                null &&
-                                                            value
-                                                                    ?.result
-                                                                    ?.paymentGatewayDetail
-                                                                    ?.responseInfo
-                                                                    ?.longurl !=
-                                                                '') {
-                                                          Navigator
-                                                              .pushReplacement(
-                                                            Get.context,
-                                                            MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  PaymentGatwayPage(
-                                                                redirectUrl: value
-                                                                    ?.result
-                                                                    ?.paymentGatewayDetail
-                                                                    ?.responseInfo
-                                                                    ?.longurl,
-                                                                paymentId: value
-                                                                    ?.result
-                                                                    ?.payment
-                                                                    ?.id
-                                                                    ?.toString(),
-                                                                isFromSubscribe:
-                                                                    true,
-                                                                closePage:
-                                                                    (value) {
-                                                                  if (value ==
-                                                                      'success') {
-                                                                    Get.back();
-                                                                  } else {
-                                                                    Navigator.pop(
-                                                                        context);
-                                                                  }
-                                                                },
+                                                                ?.result
+                                                                ?.paymentGatewayDetail
+                                                                ?.responseInfo
+                                                                ?.paymentGateWay ==
+                                                            STR_RAZOPAY) {
+                                                          if (value
+                                                                      ?.result
+                                                                      ?.paymentGatewayDetail
+                                                                      ?.responseInfo
+                                                                      ?.shorturl !=
+                                                                  null &&
+                                                              value
+                                                                      ?.result
+                                                                      ?.paymentGatewayDetail
+                                                                      ?.responseInfo
+                                                                      ?.shorturl !=
+                                                                  '') {
+                                                            Navigator
+                                                                .pushReplacement(
+                                                              Get.context,
+                                                              MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        PaymentGatwayPage(
+                                                                  redirectUrl: value
+                                                                      ?.result
+                                                                      ?.paymentGatewayDetail
+                                                                      ?.responseInfo
+                                                                      ?.shorturl,
+                                                                  paymentId: value
+                                                                      ?.result
+                                                                      ?.payment
+                                                                      ?.id
+                                                                      ?.toString(),
+                                                                  isFromSubscribe:
+                                                                      true,
+                                                                  isFromRazor:
+                                                                      true,
+                                                                  closePage:
+                                                                      (value) {
+                                                                    if (value ==
+                                                                        'success') {
+                                                                      Get.back();
+                                                                    } else {
+                                                                      Navigator.pop(
+                                                                          context);
+                                                                    }
+                                                                  },
+                                                                ),
                                                               ),
-                                                            ),
-                                                          );
+                                                            );
+                                                          }
+                                                        } else {
+                                                          if (value
+                                                                      ?.result
+                                                                      ?.paymentGatewayDetail
+                                                                      ?.responseInfo
+                                                                      ?.longurl !=
+                                                                  null &&
+                                                              value
+                                                                      ?.result
+                                                                      ?.paymentGatewayDetail
+                                                                      ?.responseInfo
+                                                                      ?.longurl !=
+                                                                  '') {
+                                                            Navigator
+                                                                .pushReplacement(
+                                                              Get.context,
+                                                              MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        PaymentGatwayPage(
+                                                                  redirectUrl: value
+                                                                      ?.result
+                                                                      ?.paymentGatewayDetail
+                                                                      ?.responseInfo
+                                                                      ?.longurl,
+                                                                  paymentId: value
+                                                                      ?.result
+                                                                      ?.payment
+                                                                      ?.id
+                                                                      ?.toString(),
+                                                                  isFromSubscribe:
+                                                                      true,
+                                                                  isFromRazor:
+                                                                      false,
+                                                                  closePage:
+                                                                      (value) {
+                                                                    if (value ==
+                                                                        'success') {
+                                                                      Get.back();
+                                                                    } else {
+                                                                      Navigator.pop(
+                                                                          context);
+                                                                    }
+                                                                  },
+                                                                ),
+                                                              ),
+                                                            );
+                                                          }
                                                         }
                                                       } else {
                                                         Navigator.of(
