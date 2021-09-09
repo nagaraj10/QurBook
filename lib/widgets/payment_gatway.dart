@@ -29,12 +29,14 @@ class PaymentGatwayPage extends StatefulWidget {
   final String paymentId;
   Function(String) closePage;
   bool isFromSubscribe;
+  bool isFromRazor;
 
   PaymentGatwayPage(
       {Key key,
       @required this.redirectUrl,
       @required this.paymentId,
       @required this.isFromSubscribe,
+      @required this.isFromRazor,
       this.closePage})
       : super(key: key);
 
@@ -46,6 +48,7 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
   String PAYMENT_URL;
   UpdatePaymentViewModel updatePaymentViewModel;
   bool isFromSubscribe = false;
+  bool isFromRazor = false;
 
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
@@ -60,6 +63,9 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
     updatePaymentViewModel = new UpdatePaymentViewModel();
     PAYMENT_URL = widget.redirectUrl;
     isFromSubscribe = widget.isFromSubscribe;
+    isFromRazor = widget.isFromRazor;
+
+    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
   }
 
   @override
@@ -94,7 +100,7 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
               NavigationControls(_controller.future),
             ],
           ),
-          body: Platform.isAndroid ? androidWebview() : iosWebview()),
+          body: isFromRazor?iosWebview():Platform.isAndroid ? androidWebview() : iosWebview()),
     );
   }
 
@@ -118,16 +124,30 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
             if (finalUrl.contains(CHECK_URL)) {
               String paymentOrderId = '';
               String paymentRequestId = '';
+              String signature = '';
+              String paymentStatus = '';
               Uri uri = Uri.parse(finalUrl);
-              String paymentStatus = uri.queryParameters[PAYMENT_STATUS];
-              paymentOrderId = uri.queryParameters[PAYMENT_ID];
-              paymentRequestId = uri.queryParameters[PAYMENT_REQ_ID];
-              if (paymentStatus != null && paymentStatus == CREDIT) {
-                updatePaymentSubscribe(
-                        widget.paymentId, paymentOrderId, paymentRequestId)
+
+              if (isFromRazor) {
+                paymentStatus = uri.queryParameters[RAZOR_PAYMENT_STATUS];
+                paymentOrderId = uri.queryParameters[RAZOR_PAYMENT_ID];
+                paymentRequestId = uri.queryParameters[RAZOR_PAYMENT_REQ_ID];
+                signature = uri.queryParameters[SIGNATURE];
+              } else {
+                paymentStatus = uri.queryParameters[PAYMENT_STATUS];
+                paymentOrderId = uri.queryParameters[PAYMENT_ID];
+                paymentRequestId = uri.queryParameters[PAYMENT_REQ_ID];
+              }
+
+              if (paymentStatus != null && paymentStatus == CREDIT ||
+                  paymentStatus != null && paymentStatus == PAID) {
+                updatePaymentSubscribe(widget.paymentId, paymentOrderId,
+                        paymentRequestId, isFromRazor, signature)
                     .then((value) {
-                  if (value?.isSuccess == true &&
-                      value?.result?.paymentStatus == PAYCREDIT) {
+                  if ((value?.isSuccess == true &&
+                          value?.result?.paymentStatus == PAYCREDIT) ||
+                      (value?.isSuccess == true &&
+                          value?.result?.paymentStatus == PAYCAPTURED)) {
                     paymentOrderIdSub = value?.result?.paymentOrderId ?? '';
                     gotoPaymentResultPage(true, paymentOrderIdSub);
                   } else {
@@ -140,8 +160,8 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
                   }
                 });
               } else {
-                updatePaymentSubscribe(
-                        widget.paymentId, paymentOrderId, paymentRequestId)
+                updatePaymentSubscribe(widget.paymentId, paymentOrderId,
+                        paymentRequestId, isFromRazor, signature)
                     .then((value) {
                   gotoPaymentResultPage(
                     false,
@@ -151,6 +171,13 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
                   );
                 });
               }
+            } else if (finalUrl.contains(STATUS_FAILED)) {
+              gotoPaymentResultPage(
+                false,
+                '',
+                cartUserId: '',
+                isPaymentFails: true,
+              );
             }
             return NavigationDecision.navigate;
           },
@@ -165,6 +192,7 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
       ),
     );
   }
+
 
   Widget iosWebview() {
     return Builder(builder: (BuildContext context) {
@@ -183,16 +211,30 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
           if (finalUrl.contains(CHECK_URL)) {
             String paymentOrderId = '';
             String paymentRequestId = '';
+            String signature = '';
+            String paymentStatus = '';
             Uri uri = Uri.parse(finalUrl);
-            String paymentStatus = uri.queryParameters[PAYMENT_STATUS];
-            paymentOrderId = uri.queryParameters[PAYMENT_ID];
-            paymentRequestId = uri.queryParameters[PAYMENT_REQ_ID];
-            if (paymentStatus != null && paymentStatus == CREDIT) {
-              updatePaymentSubscribe(
-                      widget.paymentId, paymentOrderId, paymentRequestId)
+
+            if (isFromRazor) {
+              paymentStatus = uri.queryParameters[RAZOR_PAYMENT_STATUS];
+              paymentOrderId = uri.queryParameters[RAZOR_PAYMENT_ID];
+              paymentRequestId = uri.queryParameters[RAZOR_PAYMENT_REQ_ID];
+              signature = uri.queryParameters[SIGNATURE];
+            } else {
+              paymentStatus = uri.queryParameters[PAYMENT_STATUS];
+              paymentOrderId = uri.queryParameters[PAYMENT_ID];
+              paymentRequestId = uri.queryParameters[PAYMENT_REQ_ID];
+            }
+
+            if (paymentStatus != null && paymentStatus == CREDIT ||
+                paymentStatus != null && paymentStatus == PAID) {
+              updatePaymentSubscribe(widget.paymentId, paymentOrderId,
+                      paymentRequestId, isFromRazor, signature)
                   .then((value) {
-                if (value?.isSuccess == true &&
-                    value?.result?.paymentStatus == PAYCREDIT) {
+                if ((value?.isSuccess == true &&
+                    value?.result?.paymentStatus == PAYCREDIT) ||
+                    (value?.isSuccess == true &&
+                        value?.result?.paymentStatus == PAYCAPTURED)) {
                   paymentOrderIdSub = value?.result?.paymentOrderId ?? '';
                   gotoPaymentResultPage(true, paymentOrderIdSub);
                 } else {
@@ -205,8 +247,8 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
                 }
               });
             } else {
-              updatePaymentSubscribe(
-                      widget.paymentId, paymentOrderId, paymentRequestId)
+              updatePaymentSubscribe(widget.paymentId, paymentOrderId,
+                      paymentRequestId, isFromRazor, signature)
                   .then((value) {
                 gotoPaymentResultPage(
                   false,
@@ -216,6 +258,13 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
                 );
               });
             }
+          } else if (finalUrl.contains(STATUS_FAILED)) {
+            gotoPaymentResultPage(
+              false,
+              '',
+              cartUserId: '',
+              isPaymentFails: true,
+            );
           }
           return NavigationDecision.navigate;
         },
@@ -292,12 +341,26 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
   }
 
   Future<UpdatePaymentResponse> updatePaymentSubscribe(
-      String paymentId, String paymentOrderId, String paymentRequestId) async {
-    var body = {
-      "paymentId": "${paymentId}",
-      "paymentOrderId": "${paymentOrderId}",
-      "paymentRequestId": "${paymentRequestId}"
-    };
+      String paymentId,
+      String paymentOrderId,
+      String paymentRequestId,
+      bool isFromRazor,
+      String signature) async {
+    var body;
+    if (isFromRazor) {
+      body = {
+        "paymentId": "${paymentId}",
+        "paymentOrderId": "${paymentOrderId}",
+        "paymentRequestId": "${paymentRequestId}",
+        "signature": "${signature}"
+      };
+    } else {
+      body = {
+        "paymentId": "${paymentId}",
+        "paymentOrderId": "${paymentOrderId}",
+        "paymentRequestId": "${paymentRequestId}"
+      };
+    }
 
     final updatePaymentResponse =
         await ApiBaseHelper().updatePaymentStatus(body);

@@ -1204,19 +1204,41 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             if (value?.result?.paymentInfo != null &&
                 value?.result.paymentInfo?.payload?.paymentGatewayDetail !=
                     null) {
-              if (value.result.paymentInfo.payload.paymentGatewayDetail
-                      .responseInfo.longurl !=
-                  null) {
-                PreferenceUtil.saveString(Constants.KEY_USERID_BOOK, '');
+                if (value?.result?.paymentInfo?.payload?.paymentGatewayDetail
+                        ?.responseInfo?.paymentGateWay ==
+                    STR_RAZOPAY) {
+                  if (value?.result?.paymentInfo?.payload?.paymentGatewayDetail
+                          ?.responseInfo?.shorturl !=
+                      null) {
+                    PreferenceUtil.saveString(Constants.KEY_USERID_BOOK, '');
 
-                goToPaymentPage(
-                    value.result.paymentInfo.payload.paymentGatewayDetail
-                        .responseInfo.longurl,
-                    value.result.paymentInfo.payload.payment.id);
-              } else {
-                pr.hide();
-                toast.getToast(noUrl, Colors.red);
-              }
+                    goToPaymentPage(
+                        value?.result?.paymentInfo?.payload?.paymentGatewayDetail
+                            ?.responseInfo?.shorturl,
+                        value?.result?.paymentInfo?.payload?.payment?.id,
+                        true);
+                  } else {
+                    pr.hide();
+                    toast.getToast(
+                        value.message != null ? value.message : someWentWrong,
+                        Colors.red);
+                  }
+                } else {
+                  if (value?.result?.paymentInfo?.payload?.paymentGatewayDetail
+                          ?.responseInfo?.longurl !=
+                      null) {
+                    PreferenceUtil.saveString(Constants.KEY_USERID_BOOK, '');
+
+                    goToPaymentPage(
+                        value?.result?.paymentInfo?.payload?.paymentGatewayDetail
+                            ?.responseInfo?.longurl,
+                        value?.result?.paymentInfo?.payload?.payment?.id,
+                        false);
+                  } else {
+                    pr.hide();
+                    toast.getToast(noUrl, Colors.red);
+                  }
+                }
             } else {
               Navigator.pop(context);
               Navigator.pop(context);
@@ -1224,8 +1246,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => TelehealthProviders(
-                            arguments: HomeScreenArguments(selectedIndex: 0),
-                          )));
+                        arguments: HomeScreenArguments(selectedIndex: 0),
+                      )));
             }
           } else {
             pr.hide();
@@ -1235,18 +1257,14 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           }
         } else {
           pr.hide();
-          toast.getToast(value.message != null ? value.message : someWentWrong,
-              Colors.red);
+          toast.getToast(noUrl, Colors.red);
         }
-      } else {
-        pr.hide();
-        toast.getToast(noUrl, Colors.red);
+        PreferenceUtil.saveString(Constants.KEY_USERID_BOOK, '');
       }
-      PreferenceUtil.saveString(Constants.KEY_USERID_BOOK, '');
     });
   }
 
-  goToPaymentPage(String longurl, String paymentId) {
+  goToPaymentPage(String longurl, String paymentId, bool isRazor) {
     CommonUtil.recordIds.clear();
     CommonUtil.notesId.clear();
     CommonUtil.voiceIds.clear();
@@ -1258,6 +1276,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                   redirectUrl: longurl,
                   paymentId: paymentId,
                   isFromSubscribe: false,
+                  isFromRazor: isRazor,
                   closePage: (value) {
                     if (value == 'success') {
                       widget.closePage(value);
