@@ -356,20 +356,12 @@ class HomeScreenState extends State<ChatHomeScreen> {
                 return countChatListUsers(patientId, snapshot) > 0
                     ? ListView.builder(
                         padding: EdgeInsets.all(10.0),
-                        itemBuilder: (context, index) {
-                          var isDisabled = false;
-                          if (snapshot.data.docs[index]
-                              .data()
-                              .containsKey(STR_IS_DISABLE)) {
-                            isDisabled = snapshot.data.docs[index]
-                                    [STR_IS_DISABLE] ??
-                                false;
-                          }
-                          return isDisabled
-                              ? const SizedBox.shrink()
-                              : buildItem(context, snapshot.data.docs[index],
-                                  snapshot, index, careGiverIds);
-                        },
+                        itemBuilder: (context, index) => buildItem(
+                            context,
+                            snapshot.data.docs[index],
+                            snapshot,
+                            index,
+                            careGiverIds),
                         itemCount: snapshot.data.docs.length,
                       )
                     : Container(
@@ -510,9 +502,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                   child: Text(
                                     /* toBeginningOfSentenceCase(
                                         snapshotUser.data[STR_NICK_NAME]), */
-                                    snapshotUser?.data[STR_NICK_NAME] != '' &&
-                                            snapshotUser?.data[STR_NICK_NAME] !=
-                                                null
+                                    snapshotUser?.data[STR_NICK_NAME] != '' && snapshotUser?.data[STR_NICK_NAME]!=null
                                         ? snapshotUser?.data[STR_NICK_NAME]
                                             ?.toString()
                                             ?.capitalizeFirstofEach
@@ -710,12 +700,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
   int countChatListUsers(myID, snapshot) {
     int resultInt = snapshot.data.docs.length;
     for (var data in snapshot.data.docs) {
-      var isDisabled = false;
-      if (data?.data()?.containsKey(STR_IS_DISABLE) ?? false) {
-        isDisabled = data[STR_IS_DISABLE] ?? false;
-      }
-
-      if (data[STR_ID] == myID || isDisabled) {
+      if (data[STR_ID] == myID) {
         resultInt--;
       }
     }
