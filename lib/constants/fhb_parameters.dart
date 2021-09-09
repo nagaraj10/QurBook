@@ -403,6 +403,7 @@ const String strRawData = 'rawHealthData';
 
 const String strsyncStartDate = 'startDateTime';
 const String strsyncEndDate = 'endDateTime';
+const String strlocalTime = 'localTime';
 const String strlastSyncDateTime = 'lastSyncDateTime';
 const String strStartTimeStamp = 'startDateTime';
 const String strEndTimeStamp = 'endDateTime';

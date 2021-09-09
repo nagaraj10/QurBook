@@ -45,6 +45,7 @@ class FetchHealthKitData {
         if (healthData.isNotEmpty) {
           healthRecord[strsyncStartDate] = startDate.toIso8601String();
           healthRecord[strsyncEndDate] = endDate.toIso8601String();
+          healthRecord[strlocalTime] = DateTime.now().toLocal();
           healthRecord[strlastSyncDateTime] = endDate.toIso8601String();
           healthRecord[strdevicesourceName] = strsourceHK;
           healthRecord[strdeviceType] = strWeighingScale;
@@ -95,6 +96,7 @@ class FetchHealthKitData {
         if (healthData.isNotEmpty) {
           healthRecord[strsyncStartDate] = startDate.toIso8601String();
           healthRecord[strsyncEndDate] = endDate.toIso8601String();
+          healthRecord[strlocalTime] = DateTime.now().toLocal();
           healthRecord[strlastSyncDateTime] = endDate.toIso8601String();
           healthRecord[strdevicesourceName] = strsourceHK;
           healthRecord[strdeviceType] = strOxymeter;
@@ -144,6 +146,7 @@ class FetchHealthKitData {
         if (systolicData.isNotEmpty && diastolicData.isNotEmpty) {
           healthRecord[strsyncStartDate] = startDate.toIso8601String();
           healthRecord[strsyncEndDate] = endDate.toIso8601String();
+          healthRecord[strlocalTime] = DateTime.now().toLocal();
           healthRecord[strlastSyncDateTime] = endDate.toIso8601String();
           healthRecord[strdevicesourceName] = strsourceHK;
           healthRecord[strdeviceType] = strBPMonitor;
@@ -196,6 +199,7 @@ class FetchHealthKitData {
         if (healthData.isNotEmpty) {
           healthRecord[strsyncStartDate] = startDate.toIso8601String();
           healthRecord[strsyncEndDate] = endDate.toIso8601String();
+          healthRecord[strlocalTime] = DateTime.now().toLocal();
           healthRecord[strlastSyncDateTime] = endDate.toIso8601String();
           healthRecord[strdevicesourceName] = strsourceHK;
           healthRecord[strdeviceType] = strGlucometer;
@@ -246,6 +250,7 @@ class FetchHealthKitData {
         if (healthData.isNotEmpty) {
           healthRecord[strsyncStartDate] = startDate.toIso8601String();
           healthRecord[strsyncEndDate] = endDate.toIso8601String();
+          healthRecord[strlocalTime] = DateTime.now().toLocal();
           healthRecord[strlastSyncDateTime] = endDate.toIso8601String();
           healthRecord[strdevicesourceName] = strsourceHK;
           healthRecord[strdeviceType] = strOxymeter;
@@ -293,6 +298,8 @@ class FetchHealthKitData {
         if (healthData.isNotEmpty) {
           healthRecord[strsyncStartDate] = startDate.toIso8601String();
           healthRecord[strsyncEndDate] = endDate.toIso8601String();
+          healthRecord[strlocalTime] = DateTime.now().toLocal();
+
           healthRecord[strlastSyncDateTime] = endDate.toIso8601String();
           healthRecord[strdevicesourceName] = strsourceHK;
           healthRecord[strdeviceType] = strThermometer;
