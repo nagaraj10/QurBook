@@ -116,16 +116,16 @@ class _LandingScreenState extends State<LandingScreen> {
     });
   }
 
-    @override
-    void dispose() {
-      super.dispose();
-      fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-        'eventTime': '${DateTime.now()}',
-        'pageName': 'Landing Screen',
-        'screenSessionTime':
-            '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-      });
-    }
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Landing Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
+  }
 
   changeTabToAppointments() async {
     try {
@@ -550,6 +550,9 @@ class _LandingScreenState extends State<LandingScreen> {
 
   Future<MyProfileModel> getMyProfile() async {
     final userId = await PreferenceUtil.getStringValue(constants.KEY_USERID);
+    try {
+      await getDeviceSelectionValues().then((value) => {});
+    } catch (e) {}
     if (userId != null && userId.isNotEmpty) {
       MyProfileModel value =
           await addFamilyUserInfoRepository.getMyProfileInfoNew(userId);
@@ -612,9 +615,6 @@ class _LandingScreenState extends State<LandingScreen> {
     try {
       final addFamilyUserInfoBloc = AddFamilyUserInfoBloc();
       await addFamilyUserInfoBloc.getDeviceSelectionValues().then((value) {});
-    } catch (e) {}
-    try {
-      await getDeviceSelectionValues().then((value) => {});
     } catch (e) {}
     var url = (PreferenceUtil.getStringValue(constants.KEY_DYNAMIC_URL) ?? '');
     if (url?.isNotEmpty ?? false) {
