@@ -131,6 +131,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             .putExtra(getString(R.string.pat_pic), PAT_PIC)
             .putExtra(getString(R.string.callType), CallType)
             .putExtra(getString(R.string.web), "$isWeb")
+            .putExtra(getString(R.string.pro_ns_body), data[getString(R.string.pro_ns_body)])
         val fullScreenPendingIntent = PendingIntent.getActivity(
             this, 0,
             fullScreenIntent, PendingIntent.FLAG_UPDATE_CURRENT
