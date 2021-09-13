@@ -50,9 +50,9 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
 
   BuildContext _myContext;
   ProfileResponseModel profileResponseModel;
-
   @override
   void initState() {
+    mInitialTime = DateTime.now();
     FocusManager.instance.primaryFocus.unfocus();
     super.initState();
     getProfile();
@@ -155,6 +155,12 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
   @override
   void dispose() {
     // searchController?.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Regimen Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
     scrollController?.dispose();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
