@@ -57,6 +57,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
   @override
   void initState() {
     super.initState();
+    mInitialTime = DateTime.now();
     // Provider.of<CheckoutPageProvider>(context, listen: false).cartType =
     //     widget?.cartType;
     Provider.of<CheckoutPageProvider>(context, listen: false)
@@ -71,6 +72,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
   void dispose() {
     _controller.dispose();
     super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'CheckoutPage Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   Future<bool> onBackPressed(BuildContext context) {

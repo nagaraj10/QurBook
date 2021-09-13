@@ -8,6 +8,7 @@ import 'package:myfhb/add_provider_plan/service/PlanProviderViewModel.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/errors_widget.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/plan_wizard/view/widgets/Rounded_CheckBox.dart';
 import 'package:provider/provider.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
@@ -38,10 +39,22 @@ class AddProviderPlanState extends State<AddProviderPlan> {
   @override
   void initState() {
     // TODO: implement initState
+    mInitialTime = DateTime.now();
     providerOrganizationResult =
         Provider.of<PlanProviderViewModel>(context, listen: false)
             .getCarePlanList(widget.selectedTag);
     //Provider.of<PlanProviderViewModel>(context, listen: false).hasSelectAllData=false;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'AddProviderPlan Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   @override

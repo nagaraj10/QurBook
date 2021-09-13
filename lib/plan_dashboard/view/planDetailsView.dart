@@ -103,12 +103,23 @@ class PlanDetail extends State<MyPlanDetailView> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   Future<PlanListModel> planListModel;
-
   @override
   void initState() {
     super.initState();
+    mInitialTime = DateTime.now();
     // setValues();
     planListModel = PlanViewModel().getPlanDetail(widget?.packageId);
+  }
+
+   @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'PlanDetail Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   void setValues(PlanListResult planList) {

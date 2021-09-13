@@ -45,6 +45,7 @@ import 'package:provider/provider.dart';
 
 import 'widgets/home_widget.dart';
 import 'widgets/navigation_drawer.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 
 class LandingScreen extends StatefulWidget {
   static _LandingScreenState of(BuildContext context) =>
@@ -84,6 +85,7 @@ class _LandingScreenState extends State<LandingScreen> {
   @override
   void initState() {
     super.initState();
+    mInitialTime = DateTime.now();
     dbInitialize();
     QurPlanReminders.getTheRemindersFromAPI();
     callImportantsMethod();
@@ -113,6 +115,17 @@ class _LandingScreenState extends State<LandingScreen> {
       }
     });
   }
+
+    @override
+    void dispose() {
+      super.dispose();
+      fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+        'eventTime': '${DateTime.now()}',
+        'pageName': 'Landing Screen',
+        'screenSessionTime':
+            '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+      });
+    }
 
   changeTabToAppointments() async {
     try {
