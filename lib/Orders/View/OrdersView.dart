@@ -7,6 +7,7 @@ import 'package:myfhb/Orders/View/AppointmentOrderTile.dart';
 import 'package:myfhb/Orders/View/OrderTile.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
@@ -22,7 +23,20 @@ class _OrdersViewState extends State<OrdersView> {
   @override
   void initState() {
     controller.getOrders();
+     mInitialTime = DateTime.now();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    FocusManager.instance.primaryFocus.unfocus();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'OrdersView Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
+    super.dispose();
   }
 
   @override

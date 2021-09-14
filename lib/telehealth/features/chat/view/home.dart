@@ -284,7 +284,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                     size: 24.0.sp,
                   ),
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    onBackPress();
                   }),
               elevation: 0.0,
               backgroundColor: Colors.transparent,

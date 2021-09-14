@@ -45,6 +45,7 @@ import 'package:provider/provider.dart';
 
 import 'widgets/home_widget.dart';
 import 'widgets/navigation_drawer.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 
 class LandingScreen extends StatefulWidget {
   static _LandingScreenState of(BuildContext context) =>
@@ -84,6 +85,7 @@ class _LandingScreenState extends State<LandingScreen> {
   @override
   void initState() {
     super.initState();
+    mInitialTime = DateTime.now();
     dbInitialize();
     QurPlanReminders.getTheRemindersFromAPI();
     callImportantsMethod();
@@ -111,6 +113,17 @@ class _LandingScreenState extends State<LandingScreen> {
           changeTabToAppointments();
         }
       }
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Landing Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
     });
   }
 
@@ -537,6 +550,9 @@ class _LandingScreenState extends State<LandingScreen> {
 
   Future<MyProfileModel> getMyProfile() async {
     final userId = await PreferenceUtil.getStringValue(constants.KEY_USERID);
+    try {
+      await getDeviceSelectionValues().then((value) => {});
+    } catch (e) {}
     if (userId != null && userId.isNotEmpty) {
       MyProfileModel value =
           await addFamilyUserInfoRepository.getMyProfileInfoNew(userId);
@@ -599,9 +615,6 @@ class _LandingScreenState extends State<LandingScreen> {
     try {
       final addFamilyUserInfoBloc = AddFamilyUserInfoBloc();
       await addFamilyUserInfoBloc.getDeviceSelectionValues().then((value) {});
-    } catch (e) {}
-    try {
-      await getDeviceSelectionValues().then((value) => {});
     } catch (e) {}
     var url = (PreferenceUtil.getStringValue(constants.KEY_DYNAMIC_URL) ?? '');
     if (url?.isNotEmpty ?? false) {

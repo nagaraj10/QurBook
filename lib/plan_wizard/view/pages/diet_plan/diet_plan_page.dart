@@ -48,10 +48,21 @@ class _DietPlanPageState extends State<DietPlanPage> {
 
   @override
   void initState() {
+     mInitialTime = DateTime.now();
     Provider.of<PlanWizardViewModel>(context, listen: false)
         .currentPackageIdDiet = '';
 
     planListModel = planWizardViewModel.getDietPlanList();
+  }
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'DietPlanPage Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   @override
