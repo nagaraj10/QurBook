@@ -337,7 +337,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
       var dateTime = DateTime.now();
       postMediaData[parameters.strStartDate] = dateTime.toUtc().toString();
       postMediaData[parameters.strEndDate] = dateTime.toUtc().toString();
-      postMediaData[strlocalTime] = dateTime.toLocal();
+      postMediaData[strlocalTime] = dateTime.toLocal().toString();
       final commonConstants = CommonConstants();
 
       if (categoryName == CommonConstants.strDevice) {
