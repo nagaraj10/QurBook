@@ -570,20 +570,22 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
       future: providerViewModel.getHealthOrgFromDoctor(doctorId),
       builder: (BuildContext context, snapshot) {
         if (snapshot.hasData) {
-          List<HealthOrganizationResult> healthOrganizationResult =
-              snapshot.data.result;
-          healthOrganizationResult.retainWhere((element) =>
-              element.healthOrganization.id ==
-              widget.doc.healthOrganization.id);
-          return (snapshot?.data?.isSuccess != null &&
-                  !snapshot?.data?.isSuccess &&
-                  (snapshot?.data?.message ?? '').isNotEmpty)
-              ? Container(
-                  child: Center(
-                    child: Text(snapshot?.data?.message),
-                  ),
-                )
-              : providerListWidget(healthOrganizationResult);
+          if (snapshot?.data?.isSuccess != null &&
+              !snapshot?.data?.isSuccess &&
+              (snapshot?.data?.message ?? '').isNotEmpty) {
+            return Container(
+              child: Center(
+                child: Text(snapshot?.data?.message),
+              ),
+            );
+          } else {
+            List<HealthOrganizationResult> healthOrganizationResult =
+                snapshot.data.result;
+            healthOrganizationResult.retainWhere((element) =>
+                element.healthOrganization.id ==
+                widget.doc.healthOrganization.id);
+            return providerListWidget(healthOrganizationResult);
+          }
         } else if (snapshot.hasError) {
           return ErrorsWidget();
         } else {
