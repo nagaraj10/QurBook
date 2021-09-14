@@ -347,7 +347,7 @@ const String strFileDownloaded = 'File downloaded';
 const String strFilesErrorDownload = 'Error in File download.';
 const String strAfter = 'After';
 const String strDateFormatDay = 'dd/MM/yyyy';
-const String strUSDateFormatDay = 'MM/DD/YYYY';
+const String strUSDateFormatDay = 'MM/dd/yyyy';
 
 const String stAudioPath = 'myFHB/Audio';
 const String strDateOfVisit = 'Date of visit: ';
