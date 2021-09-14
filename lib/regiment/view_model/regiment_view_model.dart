@@ -301,7 +301,7 @@ class RegimentViewModel extends ChangeNotifier {
     updateRegimentStatus(RegimentStatus.Loaded);
     regimentsData?.regimentsList?.forEach((event) {
       if (!(event?.isEventDisabled ?? false)) {
-        if (event.doseMeal) {
+        if (event.isSymptom ?? false) {
           regimentsSymptomsList.add(event);
         } else {
           regimentsScheduledList.add(event);
