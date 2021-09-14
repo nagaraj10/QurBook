@@ -1313,7 +1313,7 @@ class CommonUtil {
   static String dateConversionToApiFormat(DateTime dateTime) {
     final newFormat = REGION_CODE == 'IN'
         ? DateFormat('yyyy-MM-dd')
-        : DateFormat('MM-DD-YYYY');
+        : DateFormat('MM-dd-yyyy');
     var updatedDate = newFormat.format(dateTime);
     return updatedDate;
   }
@@ -1321,7 +1321,7 @@ class CommonUtil {
   static String dateFormatterWithdatetimeseconds(DateTime dateTime) {
     final newFormat = REGION_CODE == 'IN'
         ? DateFormat('yyyy-MM-dd HH:mm:ss')
-        : DateFormat('MM-DD-YYYY HH:mm:ss');
+        : DateFormat('MM-dd-yyyy HH:mm:ss');
     final updatedDate = newFormat.format(dateTime);
     return updatedDate;
   }
@@ -3531,26 +3531,31 @@ class CommonUtil {
                                                                 ?.metadata !=
                                                             null) {
                                                           if (value
-                                                              ?.result
-                                                              ?.paymentGatewayDetail
-                                                              ?.metadata.paymentGateWay ==
+                                                                  ?.result
+                                                                  ?.paymentGatewayDetail
+                                                                  ?.metadata
+                                                                  .paymentGateWay ==
                                                               STR_RAZOPAY) {
                                                             if (value
-                                                                ?.result
-                                                                ?.paymentGatewayDetail
-                                                                ?.metadata.shorturl !=
+                                                                    ?.result
+                                                                    ?.paymentGatewayDetail
+                                                                    ?.metadata
+                                                                    .shorturl !=
                                                                 null) {
-                                                              Navigator
-                                                                  .pushReplacement(
+                                                              Navigator.pushReplacement(
                                                                   context,
                                                                   MaterialPageRoute(
-                                                                      builder: (context) =>
-                                                                          PaymentPage(
-                                                                            redirectUrl: value?.result?.paymentGatewayDetail?.metadata?.shorturl,
-                                                                            paymentId: value?.result?.payment?.id.toString(),
-                                                                            isFromSubscribe: true,
-                                                                            isFromRazor: true,
-                                                                            closePage: (value) {
+                                                                      builder: (context) => PaymentPage(
+                                                                            redirectUrl:
+                                                                                value?.result?.paymentGatewayDetail?.metadata?.shorturl,
+                                                                            paymentId:
+                                                                                value?.result?.payment?.id.toString(),
+                                                                            isFromSubscribe:
+                                                                                true,
+                                                                            isFromRazor:
+                                                                                true,
+                                                                            closePage:
+                                                                                (value) {
                                                                               if (value == STR_SUCCESS) {
                                                                                 refresh();
                                                                                 /*Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
@@ -3567,38 +3572,44 @@ class CommonUtil {
                                                                           )));
                                                             } else {
                                                               Navigator.of(
-                                                                  _keyLoader
-                                                                      .currentContext,
-                                                                  rootNavigator: true)
+                                                                      _keyLoader
+                                                                          .currentContext,
+                                                                      rootNavigator:
+                                                                          true)
                                                                   .pop();
-                                                              FlutterToast().getToast(
-                                                                  'Renew Failed',
-                                                                  Colors.red);
+                                                              FlutterToast()
+                                                                  .getToast(
+                                                                      'Renew Failed',
+                                                                      Colors
+                                                                          .red);
                                                             }
-                                                          }else{
+                                                          } else {
                                                             if (value
-                                                                ?.result
-                                                                ?.paymentGatewayDetail
-                                                                ?.metadata
-                                                                ?.longurl !=
-                                                                null &&
+                                                                        ?.result
+                                                                        ?.paymentGatewayDetail
+                                                                        ?.metadata
+                                                                        ?.longurl !=
+                                                                    null &&
                                                                 value
-                                                                    ?.result
-                                                                    ?.paymentGatewayDetail
-                                                                    ?.metadata
-                                                                    ?.longurl !=
+                                                                        ?.result
+                                                                        ?.paymentGatewayDetail
+                                                                        ?.metadata
+                                                                        ?.longurl !=
                                                                     '') {
-                                                              Navigator
-                                                                  .pushReplacement(
+                                                              Navigator.pushReplacement(
                                                                   context,
                                                                   MaterialPageRoute(
-                                                                      builder: (context) =>
-                                                                          PaymentPage(
-                                                                            redirectUrl: value?.result?.paymentGatewayDetail?.metadata?.longurl,
-                                                                            paymentId: value?.result?.payment?.id.toString(),
-                                                                            isFromSubscribe: true,
-                                                                            isFromRazor: false,
-                                                                            closePage: (value) {
+                                                                      builder: (context) => PaymentPage(
+                                                                            redirectUrl:
+                                                                                value?.result?.paymentGatewayDetail?.metadata?.longurl,
+                                                                            paymentId:
+                                                                                value?.result?.payment?.id.toString(),
+                                                                            isFromSubscribe:
+                                                                                true,
+                                                                            isFromRazor:
+                                                                                false,
+                                                                            closePage:
+                                                                                (value) {
                                                                               if (value == STR_SUCCESS) {
                                                                                 refresh();
                                                                                 /*Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
@@ -3615,7 +3626,6 @@ class CommonUtil {
                                                                           )));
                                                             }
                                                           }
-
                                                         }
                                                       }
                                                     } else {
@@ -3683,21 +3693,21 @@ class CommonUtil {
                                                                       ?.metadata !=
                                                                   null) {
                                                                 if (value
-                                                                    ?.result
-                                                                    ?.paymentGatewayDetail
-                                                                    ?.metadata.paymentGateWay ==
+                                                                        ?.result
+                                                                        ?.paymentGatewayDetail
+                                                                        ?.metadata
+                                                                        .paymentGateWay ==
                                                                     STR_RAZOPAY) {
                                                                   if (value
-                                                                      ?.result
-                                                                      ?.paymentGatewayDetail
-                                                                      ?.metadata?.shorturl !=
+                                                                          ?.result
+                                                                          ?.paymentGatewayDetail
+                                                                          ?.metadata
+                                                                          ?.shorturl !=
                                                                       null) {
-                                                                    Navigator
-                                                                        .pushReplacement(
+                                                                    Navigator.pushReplacement(
                                                                         context,
                                                                         MaterialPageRoute(
-                                                                            builder: (context) =>
-                                                                                PaymentPage(
+                                                                            builder: (context) => PaymentPage(
                                                                                   redirectUrl: value?.result?.paymentGatewayDetail?.metadata?.shorturl,
                                                                                   paymentId: value?.result?.payment?.id.toString(),
                                                                                   isFromSubscribe: true,
@@ -3719,46 +3729,47 @@ class CommonUtil {
                                                                                 )));
                                                                   } else {
                                                                     Navigator.of(
-                                                                        _keyLoader
-                                                                            .currentContext,
-                                                                        rootNavigator: true)
+                                                                            _keyLoader
+                                                                                .currentContext,
+                                                                            rootNavigator:
+                                                                                true)
                                                                         .pop();
                                                                     FlutterToast().getToast(
                                                                         'Renew Failed',
-                                                                        Colors.red);
+                                                                        Colors
+                                                                            .red);
                                                                   }
-                                                                }else{
+                                                                } else {
                                                                   if (value
-                                                                      ?.result
-                                                                      ?.paymentGatewayDetail
-                                                                      ?.metadata
-                                                                      ?.longurl !=
-                                                                      null &&
+                                                                              ?.result
+                                                                              ?.paymentGatewayDetail
+                                                                              ?.metadata
+                                                                              ?.longurl !=
+                                                                          null &&
                                                                       value
-                                                                          ?.result
-                                                                          ?.paymentGatewayDetail
-                                                                          ?.metadata
-                                                                          ?.longurl !=
+                                                                              ?.result
+                                                                              ?.paymentGatewayDetail
+                                                                              ?.metadata
+                                                                              ?.longurl !=
                                                                           '') {
                                                                     Navigator.pushReplacement(
                                                                         Get.context,
                                                                         MaterialPageRoute(
                                                                             builder: (context) => PaymentPage(
-                                                                              redirectUrl: value?.result?.paymentGatewayDetail?.metadata?.longurl,
-                                                                              paymentId: value?.result?.payment?.id?.toString(),
-                                                                              isFromSubscribe: true,
-                                                                              isFromRazor: false,
-                                                                              closePage: (value) {
-                                                                                if (value == 'success') {
-                                                                                  refresh();
-                                                                                } else {
-                                                                                  Navigator.pop(context);
-                                                                                }
-                                                                              },
-                                                                            )));
+                                                                                  redirectUrl: value?.result?.paymentGatewayDetail?.metadata?.longurl,
+                                                                                  paymentId: value?.result?.payment?.id?.toString(),
+                                                                                  isFromSubscribe: true,
+                                                                                  isFromRazor: false,
+                                                                                  closePage: (value) {
+                                                                                    if (value == 'success') {
+                                                                                      refresh();
+                                                                                    } else {
+                                                                                      Navigator.pop(context);
+                                                                                    }
+                                                                                  },
+                                                                                )));
                                                                   }
                                                                 }
-
                                                               } else {
                                                                 Navigator.of(
                                                                         _keyLoader
