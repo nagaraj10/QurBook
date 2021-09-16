@@ -23,8 +23,7 @@ import 'package:intl/intl.dart';
 class ChatScreen extends StatefulWidget {
   //List<Conversation> conversation;
   final SheelaArgument arguments;
-  ChatScreen(
-      {this.arguments});
+  ChatScreen({this.arguments});
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -50,6 +49,8 @@ class _ChatScreenState extends State<ChatScreen>
       true,
       isInitial: true,
     );
+    Provider.of<ChatScreenViewModel>(context, listen: false)?.isMicListening =
+        false;
     Provider.of<ChatScreenViewModel>(context, listen: false)
         ?.getDeviceSelectionValues();
     PreferenceUtil.init();
@@ -59,16 +60,20 @@ class _ChatScreenState extends State<ChatScreen>
     _controller.forward();
 
     getMyViewModel().clearMyConversation();
-    if (widget?.arguments?.sheelaInputs != null && widget?.arguments?.sheelaInputs != '') {
+    if (widget?.arguments?.sheelaInputs != null &&
+        widget?.arguments?.sheelaInputs != '') {
       getMyViewModel(sheelaInputs: widget?.arguments?.sheelaInputs);
     } else {
       widget?.arguments?.isSheelaAskForLang
-          ? (widget?.arguments?.rawMessage != null && widget?.arguments?.rawMessage?.isNotEmpty)
-              ? getMyViewModel().askUserForLanguage(message: widget?.arguments?.rawMessage)
-              : getMyViewModel().askUserForLanguage()
-          : (widget?.arguments?.rawMessage != null && widget?.arguments?.rawMessage?.isNotEmpty)
+          ? (widget?.arguments?.rawMessage != null &&
+                  widget?.arguments?.rawMessage?.isNotEmpty)
               ? getMyViewModel()
-                  .startMayaAutomatically(message: widget?.arguments?.rawMessage)
+                  .askUserForLanguage(message: widget?.arguments?.rawMessage)
+              : getMyViewModel().askUserForLanguage()
+          : (widget?.arguments?.rawMessage != null &&
+                  widget?.arguments?.rawMessage?.isNotEmpty)
+              ? getMyViewModel().startMayaAutomatically(
+                  message: widget?.arguments?.rawMessage)
               : getMyViewModel().startMayaAutomatically();
     }
   }
@@ -87,10 +92,12 @@ class _ChatScreenState extends State<ChatScreen>
   }
 
   @override
-void deactivate() {
-  Provider.of<ChatScreenViewModel>(context, listen: false)?.conversations?.clear();
-  super.deactivate();
-}
+  void deactivate() {
+    Provider.of<ChatScreenViewModel>(context, listen: false)
+        ?.conversations
+        ?.clear();
+    super.deactivate();
+  }
 
   @override
   void dispose() {
@@ -107,6 +114,8 @@ void deactivate() {
 
   List<PopupMenuItem<String>> getSupportedLanguages() {
     stopTTSEngine();
+    Provider.of<ChatScreenViewModel>(context, listen: false)?.isMicListening =
+        false;
     List<PopupMenuItem<String>> languagesMenuList = [];
     String currentLanguage = '';
     final lan = Utils.getCurrentLanCode();
@@ -226,7 +235,8 @@ void deactivate() {
             onPressed: Provider.of<ChatScreenViewModel>(context).isLoading
                 ? null
                 : () {
-                    if (getMyViewModel().isLoading) {
+                    if (getMyViewModel().isLoading ||
+                        (getMyViewModel().isMicListening ?? false)) {
                       //do nothing
                     } else if (getMyViewModel().isSheelaSpeaking) {
                       stopTTSEngine();
@@ -237,13 +247,17 @@ void deactivate() {
                       getMyViewModel().gettingReposnseFromNative();
                     }
                   },
+            elevation: 10,
             child: Icon(
               Provider.of<ChatScreenViewModel>(context).isSheelaSpeaking
                   ? Icons.pause
                   : Icons.mic,
               color: Colors.white,
             ),
-            backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+            backgroundColor:
+                Provider.of<ChatScreenViewModel>(context).isMicListening
+                    ? Colors.red
+                    : Color(CommonUtil().getMyPrimaryColor()),
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
