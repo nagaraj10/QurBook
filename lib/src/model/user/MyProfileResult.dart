@@ -121,8 +121,7 @@ class MyProfileResult {
     if (json['userRelationshipCollection'] != null) {
       userRelationshipCollection = <UserRelationshipCollection>[];
       json['userRelationshipCollection'].forEach((v) {
-        userRelationshipCollection
-            .add(UserRelationshipCollection.fromJson(v));
+        userRelationshipCollection.add(UserRelationshipCollection.fromJson(v));
       });
     }
     if (json['userProfileSettingCollection3'] != null) {
@@ -223,15 +222,13 @@ class AdditionalInfo {
     }
 
     weight = json['weight'];
+    height = json['height'];
     try {
       heightObj =
-      json['height'] != null ? new HeightObj.fromJson(json['height']) : null;
-
-      height = json['height'];
-
-    }catch(e){
-
-    }
+          json['height'] != null && json['height'] is Map<String, dynamic>
+              ? new HeightObj.fromJson(json['height'] ?? {})
+              : null;
+    } catch (e) {}
 
     try {
       if (json.containsKey('language')) {
@@ -434,7 +431,7 @@ class UserProfileSettingCollection3 {
   }
 }
 
-class  HeightObj {
+class HeightObj {
   String valueFeet;
   String valueInches;
 
