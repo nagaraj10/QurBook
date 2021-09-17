@@ -1282,14 +1282,15 @@ String weightUnit;
 
                 final translis = snapshot.data;
                 //List<WVResult> translist = translis.first;
-                final List<BPResult> bpResultNew = translis.first;
-                bpResultNew.sort((translisCopy, translisClone) {
+                final List<BPResult> bpResultNew =
+                    translis?.isNotEmpty ? translis?.first : [];
+                bpResultNew?.sort((translisCopy, translisClone) {
                   return translisClone.dateTimeValue
                       .compareTo(translisCopy.dateTimeValue);
                 });
                 final bpResult = bpResultNew;
-                final List<DeviceIntervalData> deviceFullList = translis.last;
-                return bpResult.isNotEmpty
+                //final List<DeviceIntervalData> deviceFullList = translis?.last;
+                return bpResult?.isNotEmpty
                     ? GroupedListView<BPResult, String>(
                         groupBy: (element) =>
                             getFormattedDateTime(element.startDateTime),
@@ -1355,14 +1356,15 @@ String weightUnit;
 
                 var translis = snapshot.data;
                 //List<WVResult> translist = translis.first;
-                final List<GVResult> translistNew = translis.first;
-                translistNew.sort((translisCopy, translisClone) {
+                final List<GVResult> translistNew =
+                    translis?.isNotEmpty ? translis?.first : [];
+                translistNew?.sort((translisCopy, translisClone) {
                   return translisClone.dateTimeValue
                       .compareTo(translisCopy.dateTimeValue);
                 });
                 final translist = translistNew;
-                final List<DeviceIntervalData> deviceFullList = translis.last;
-                return translist.isNotEmpty
+                //final List<DeviceIntervalData> deviceFullList = translis?.last;
+                return translist?.isNotEmpty
                     ? GroupedListView<GVResult, String>(
                         groupBy: (element) =>
                             getFormattedDateTime(element.startDateTime),
@@ -1429,14 +1431,15 @@ String weightUnit;
 
                 var translis = snapshot.data;
                 //List<WVResult> translist = translis.first;
-                final List<OxyResult> translistNew = translis.first;
-                translistNew.sort((translisCopy, translisClone) {
+                final List<OxyResult> translistNew =
+                    translis?.isNotEmpty ? translis?.first : [];
+                translistNew?.sort((translisCopy, translisClone) {
                   return translisClone.dateTimeValue
                       .compareTo(translisCopy.dateTimeValue);
                 });
                 var translist = translistNew;
-                final List<DeviceIntervalData> deviceFullList = translis.last;
-                return translist.isNotEmpty
+                // final List<DeviceIntervalData> deviceFullList = translis.last;
+                return translist?.isNotEmpty
                     ? GroupedListView<OxyResult, String>(
                         groupBy: (element) =>
                             getFormattedDateTime(element.startDateTime),
@@ -1501,14 +1504,15 @@ String weightUnit;
 
                 var translis = snapshot.data;
                 //List<WVResult> translist = translis.first;
-                final List<WVResult> translistNew = translis.first;
-                translistNew.sort((translisCopy, translisClone) {
+                final List<WVResult> translistNew =
+                    translis?.isNotEmpty ? translis?.first : [];
+                translistNew?.sort((translisCopy, translisClone) {
                   return translisClone.dateTimeValue
                       .compareTo(translisCopy.dateTimeValue);
                 });
                 var translist = translistNew;
-                final List<DeviceIntervalData> deviceFullList = translis.last;
-                return translist.isNotEmpty
+                //final List<DeviceIntervalData> deviceFullList = translis?.last;
+                return translist?.isNotEmpty
                     ? GroupedListView<WVResult, String>(
                         groupBy: (element) =>
                             getFormattedDateTime(element.startDateTime),
@@ -1572,14 +1576,18 @@ String weightUnit;
 
                 var translis = snapshot.data;
                 //List<WVResult> translist = translis.first;
-                final List<TMPResult> translistNew = translis.first;
-                translistNew.sort((translisCopy, translisClone) {
+                final List<TMPResult> translistNew = translis?.isNotEmpty
+                    ? translis?.isNotEmpty
+                        ? translis?.first
+                        : []
+                    : [];
+                translistNew?.sort((translisCopy, translisClone) {
                   return translisClone.dateTimeValue
                       .compareTo(translisCopy.dateTimeValue);
                 });
                 var translist = translistNew;
-                final List<DeviceIntervalData> deviceFullList = translis.last;
-                return translist.isNotEmpty
+                //final List<DeviceIntervalData> deviceFullList = translis?.last;
+                return translist?.isNotEmpty
                     ? GroupedListView<TMPResult, String>(
                         groupBy: (element) =>
                             getFormattedDateTime(element.startDateTime),
