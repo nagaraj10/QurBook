@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:convert' as convert;
+import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:http/http.dart' as http;
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/HeaderRequest.dart';
@@ -59,6 +61,31 @@ class FetchNotificationService {
       return jsonDecode(response.body);
     } else {
       return null;
+    }
+  }
+
+  Future<bool> clearNotifications(dynamic body) async {
+    final headers = await headerRequest.getRequestHeadersAuthContents();
+    print(_baseUrl + qr_notification_clear);
+    print(headers);
+    final response = await ApiServices.post(
+      _baseUrl + qr_notification_clear,
+      headers: headers,
+      body: json.encode(body),
+    );
+
+    if (response.statusCode == 200) {
+      FlutterToast().getToast(
+        'Deleted Notifications successfully.',
+        Colors.green,
+      );
+      return true;
+    } else {
+      FlutterToast().getToast(
+        'Failed to deleted notifications.',
+        Colors.red,
+      );
+      return false;
     }
   }
 }

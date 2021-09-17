@@ -84,7 +84,7 @@ class _UserAccountsState extends State<UserAccounts>
       Get.offAllNamed(
         router.rt_Landing,
         arguments: LandingArguments(
-          needFreshLoad: true,
+          needFreshLoad: false,
         ),
       );
     }

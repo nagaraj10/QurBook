@@ -30,10 +30,10 @@ class VideoScreen extends StatefulWidget {
 
 class _VideoScreenState extends State<VideoScreen> {
   var videoList;
-
   @override
   void initState() {
     super.initState();
+    mInitialTime = DateTime.now();
     if (widget.videoList == null) {
       Provider.of<LandingViewModel>(context, listen: false)
           .getQurPlanWidgetsData(
@@ -41,6 +41,17 @@ class _VideoScreenState extends State<VideoScreen> {
         includeText: qr_helperVideos,
       );
     }
+  }
+
+   @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'Help Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   @override

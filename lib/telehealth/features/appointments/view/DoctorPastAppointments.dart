@@ -228,7 +228,7 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                             fontsize: 15.0.sp,
                             text: doc.plannedFollowupDate == null
                                 ? ''
-                                : 'INR ' +
+                                : '${CommonUtil.CURRENCY}' +
                                         providerCommonWidget.getMoneyWithForamt(
                                             doc.doctorFollowUpFee) ??
                                     '',

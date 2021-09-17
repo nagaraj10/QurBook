@@ -82,12 +82,23 @@ class PlanDetail extends State<MyPlanDetail> {
   InAppWebViewController webView;
 
   Future<MyPlanListModel> planListFetch;
-
   @override
   void initState() {
     super.initState();
+     mInitialTime = DateTime.now();
     //setValues();
     planListFetch = myPlanViewModel.getMyPlanListDetail(widget?.packageId);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'MyPlanDetail Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   void setValues(MyPlanListResult planList) {

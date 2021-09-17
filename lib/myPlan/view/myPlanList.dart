@@ -44,10 +44,10 @@ class _MyPlanState extends State<MyPlanList> {
   final GlobalKey _PlanCardKey = GlobalKey();
   bool isFirst;
   BuildContext _myContext;
-
   @override
   void initState() {
     super.initState();
+    mInitialTime = DateTime.now();
     FocusManager.instance.primaryFocus.unfocus();
     if (widget.fromDashBoard) {
       Provider.of<RegimentViewModel>(
@@ -73,6 +73,12 @@ class _MyPlanState extends State<MyPlanList> {
   @override
   void dispose() {
     FocusManager.instance.primaryFocus.unfocus();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'MyPlans Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
     super.dispose();
   }
 

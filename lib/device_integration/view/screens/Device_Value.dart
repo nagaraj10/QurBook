@@ -337,6 +337,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
       var dateTime = DateTime.now();
       postMediaData[parameters.strStartDate] = dateTime.toUtc().toString();
       postMediaData[parameters.strEndDate] = dateTime.toUtc().toString();
+      postMediaData[strlocalTime] = dateTime.toLocal().toString();
       final commonConstants = CommonConstants();
 
       if (categoryName == CommonConstants.strDevice) {
@@ -1222,7 +1223,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                 setState(() {
                                   isSelected[1] = value;
                                   isSelected[0] = null;
-                                                                  });
+                                });
                               })),
                     ],
                   ))

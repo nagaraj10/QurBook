@@ -57,6 +57,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
   @override
   void initState() {
     super.initState();
+    mInitialTime = DateTime.now();
     // Provider.of<CheckoutPageProvider>(context, listen: false).cartType =
     //     widget?.cartType;
     Provider.of<CheckoutPageProvider>(context, listen: false)
@@ -71,6 +72,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
   void dispose() {
     _controller.dispose();
     super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'CheckoutPage Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   Future<bool> onBackPressed(BuildContext context) {
@@ -399,7 +406,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                 'Price \(${value?.fetchingCartItemsModel?.result?.productsCount ?? 0} items\)'),
                                             Spacer(),
                                             Text(
-                                                'INR ${value?.fetchingCartItemsModel?.result?.totalCartAmount ?? 0}'),
+                                                '${CommonUtil.CURRENCY}${value?.fetchingCartItemsModel?.result?.totalCartAmount ?? 0}'),
                                           ],
                                         ),
                                         DottedLine(
@@ -419,7 +426,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                               width: 20.0.w,
                                             ),
                                             Text(
-                                              'INR ${value?.fetchingCartItemsModel?.result?.totalCartAmount ?? 0}',
+                                              '${CommonUtil.CURRENCY}${value?.fetchingCartItemsModel?.result?.totalCartAmount ?? 0}',
                                               style: TextStyle(
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.w500),
@@ -462,7 +469,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        'INR ${value?.fetchingCartItemsModel?.result?.totalCartAmount ?? 0}',
+                                        '${CommonUtil.CURRENCY}${value?.fetchingCartItemsModel?.result?.totalCartAmount ?? 0}',
                                         style: TextStyle(
                                             color: Colors.black,
                                             fontWeight: FontWeight.bold,
@@ -852,7 +859,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     ),
                     Spacer(),
                     Text(
-                      'INR ${item?.productDetail?.planSubscriptionFee}',
+                      '${CommonUtil.CURRENCY}${item?.productDetail?.planSubscriptionFee}',
                       style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.w500,
