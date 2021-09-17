@@ -41,7 +41,7 @@ class MyFamily extends StatefulWidget {
 class _MyFamilyState extends State<MyFamily> {
   FamilyListBloc _familyListBloc;
 
-  var _selected = Country.IN;
+  var _selected = CommonUtil.REGION_CODE == 'IN' ? Country.IN : Country.US;
   bool isPrimaryNoSelected = false;
 
   final mobileNoController = TextEditingController();
