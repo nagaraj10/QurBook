@@ -425,8 +425,8 @@ class _MyPlanState extends State<MyPlanList> {
                                     await CommonUtil().renewAlertDialog(context,
                                         packageId: planList[i]?.packageid,
                                         price: planList[i]?.price,
-                                        startDate: planList[i]?.startdate,
-                                        endDate: planList[i]?.enddate,
+                                        startDate: planList[i]?.startdate??'',
+                                        endDate: planList[i]?.enddate??'',
                                         isExpired: true,
                                         IsExtendable:
                                             planList[i]?.isExtendable == '1'
