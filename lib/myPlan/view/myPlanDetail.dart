@@ -186,6 +186,9 @@ class PlanDetail extends State<MyPlanDetail> {
       context,
       packageId: widget?.packageId,
       price: price,
+      startDate: startDate??'',
+      endDate: endDate??'',
+      isExpired: isExpired=='1'?true:false,
       refresh: () {
         print('ns done');
       },
@@ -339,6 +342,9 @@ class PlanDetail extends State<MyPlanDetail> {
                       await CommonUtil().renewAlertDialog(context,
                           packageId: packageId,
                           price: price,
+                          startDate: startDate??'',
+                          endDate: endDate??'',
+                          isExpired: isExpired=='1'?true:false,
                           IsExtendable: isExtendable == '1' ? true : false,
                           refresh: () {
                         Navigator.pop(context);
@@ -389,6 +395,9 @@ class PlanDetail extends State<MyPlanDetail> {
                       await CommonUtil().renewAlertDialog(context,
                           packageId: packageId,
                           price: price,
+                          startDate: startDate??'',
+                          endDate: endDate??'',
+                          isExpired: isExpired=='1'?true:false,
                           IsExtendable: isExtendable == '1' ? true : false,
                           refresh: () {
                         Navigator.pop(context);
