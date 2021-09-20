@@ -1310,16 +1310,18 @@ class CommonUtil {
     return removedString;
   }
 
-  static String dateConversionToApiFormat(DateTime dateTime) {
-    final newFormat = REGION_CODE == 'IN'
+  static String dateConversionToApiFormat(DateTime dateTime,
+      {bool isIndianTime = false}) {
+    final newFormat = REGION_CODE == 'IN' || isIndianTime
         ? DateFormat('yyyy-MM-dd')
         : DateFormat('MM-dd-yyyy');
     var updatedDate = newFormat.format(dateTime);
     return updatedDate;
   }
 
-  static String dateFormatterWithdatetimeseconds(DateTime dateTime) {
-    final newFormat = REGION_CODE == 'IN'
+  static String dateFormatterWithdatetimeseconds(DateTime dateTime,
+      {bool isIndianTime = false}) {
+    final newFormat = REGION_CODE == 'IN' || isIndianTime
         ? DateFormat('yyyy-MM-dd HH:mm:ss')
         : DateFormat('MM-dd-yyyy HH:mm:ss');
     final updatedDate = newFormat.format(dateTime);

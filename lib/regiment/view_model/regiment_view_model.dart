@@ -295,7 +295,7 @@ class RegimentViewModel extends ChangeNotifier {
       updateRegimentStatus(RegimentStatus.Loading, isInitial: isInitial);
     }
     regimentsData = await RegimentService.getRegimentData(
-      dateSelected: CommonUtil.dateConversionToApiFormat(selectedRegimenDate),
+      dateSelected: CommonUtil.dateConversionToApiFormat(selectedRegimenDate,isIndianTime: true,),
       isSymptoms: regimentMode == RegimentMode.Symptoms ? 1 : 0,
     );
     updateRegimentStatus(RegimentStatus.Loaded);
@@ -465,7 +465,7 @@ class RegimentViewModel extends ChangeNotifier {
       updateActivityStatus(ActivityStatus.Loading, isInitial: isInitial);
     }
     activitiesData = await RegimentService.getRegimentData(
-      dateSelected: CommonUtil.dateConversionToApiFormat(selectedActivityDate),
+      dateSelected: CommonUtil.dateConversionToApiFormat(selectedActivityDate,isIndianTime: true,),
       isSymptoms: 0,
     );
     updateActivityStatus(ActivityStatus.Loaded);
