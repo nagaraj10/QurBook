@@ -212,7 +212,7 @@ class ChatScreenState extends State<ChatScreen> {
   String currentPlayedVoiceURL = '';
 
   bool isCareGiver = false;
-  bool isChatDisable = false;
+  bool isChatDisable = true;
 
   @override
   void initState() {
@@ -234,7 +234,6 @@ class ChatScreenState extends State<ChatScreen> {
 
     getPatientDetails();
     set_up_audios();
-    updateReadCount();
 
     textEditingController.text = widget?.message;
   }
@@ -274,14 +273,13 @@ class ChatScreenState extends State<ChatScreen> {
           .doc(peerId)
           .get();
       if (snapShot.data != null) {
+        isChatDisable = snapShot.data()[STR_IS_DISABLE] ?? false;
         await FirebaseFirestore.instance
             .collection(STR_CHAT_LIST)
             .doc(patientId)
             .collection(STR_USER_LIST)
             .doc(peerId)
             .update({STR_IS_READ_COUNT: 0});
-
-        isChatDisable = snapShot.data()[STR_IS_DISABLE] ?? false;
       }
     } catch (e) {}
   }
@@ -302,6 +300,8 @@ class ChatScreenState extends State<ChatScreen> {
     if (patientPicUrl == null || patientPicUrl == '') {
       patientPicUrl = getProfileURL();
     }
+
+    updateReadCount();
 
     readLocal();
 
@@ -481,7 +481,15 @@ class ChatScreenState extends State<ChatScreen> {
           .get();
       if (snapShot.data() != null) {
         isMuted = snapShot.data()[STR_IS_MUTED] ?? false;
-        isTempChatDisable = snapShot.data()[STR_IS_DISABLE] ?? false;
+      }
+      final snapShotDisable = await FirebaseFirestore.instance
+          .collection(STR_CHAT_LIST)
+          .doc(patientId)
+          .collection(STR_USER_LIST)
+          .doc(peerId)
+          .get();
+      if (snapShotDisable.data() != null) {
+        isTempChatDisable = snapShotDisable.data()[STR_IS_DISABLE] ?? false;
       }
       textValue = textEditingController.text;
       textEditingController.clear();
@@ -504,7 +512,7 @@ class ChatScreenState extends State<ChatScreen> {
           },
         );
       });
-      addChatList(content, type, isMuted,isTempChatDisable);
+      addChatList(content, type, isMuted, isTempChatDisable);
     } else {
       Fluttertoast.showToast(msg: NOTHING_SEND, backgroundColor: Colors.red);
     }
@@ -529,7 +537,8 @@ class ChatScreenState extends State<ChatScreen> {
     return count;
   }
 
-  void addChatList(String content, int type, bool isMuted,bool isTempChatDisable) async {
+  void addChatList(
+      String content, int type, bool isMuted, bool isTempChatDisable) async {
     await FirebaseFirestore.instance
         .collection(STR_CHAT_LIST)
         .doc(patientId)
@@ -1901,9 +1910,11 @@ class ChatScreenState extends State<ChatScreen> {
               flex: 1,
               child: new Container(
                 child: RawMaterialButton(
-                  onPressed: isChatDisable?null:() {
-                    onSendMessage(textEditingController.text, 0);
-                  },
+                  onPressed: isChatDisable
+                      ? null
+                      : () {
+                          onSendMessage(textEditingController.text, 0);
+                        },
                   elevation: 2.0,
                   fillColor: Colors.white,
                   child: Icon(Icons.send,
