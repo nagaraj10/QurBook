@@ -77,8 +77,8 @@ class GetTimeSlots extends StatelessWidget {
       this.isFromHospital,
       this.body,
       this.isFromFollowReschedule,
-        this.isFromFollowUpApp,
-        this.isFromFollowUpTake});
+      this.isFromFollowUpApp,
+      this.isFromFollowUpTake});
 
   @override
   Widget build(BuildContext context) {
@@ -187,8 +187,8 @@ class GetTimeSlots extends StatelessWidget {
             },
             isFromHospital: isFromHospital,
             isFromFollowReschedule: isFromFollowReschedule,
-              isFromFollowUpApp: isFromFollowUpApp,
-              isFromFollowUpTake: isFromFollowUpTake,
+            isFromFollowUpApp: isFromFollowUpApp,
+            isFromFollowUpTake: isFromFollowUpTake,
           ),
         ));
   }
@@ -338,13 +338,13 @@ class GetTimeSlots extends StatelessWidget {
 
   patientAddressCheck(UserAddressCollection3 userAddressCollection,
       BuildContext context, int rowPosition, int itemPosition) {
-    String address1 = userAddressCollection.addressLine1 != null
+    String address1 = userAddressCollection?.addressLine1 != null
         ? userAddressCollection.addressLine1
         : '';
-    String city = userAddressCollection.city.name != null
+    String city = userAddressCollection?.city?.name != null
         ? userAddressCollection.city.name
         : '';
-    String state = userAddressCollection.state.name != null
+    String state = userAddressCollection?.state?.name != null
         ? userAddressCollection.state.name
         : '';
 
