@@ -12,7 +12,7 @@ class SubscribeService {
 
   Future<SubscribeModel> subscribePlan(String packageId,String patientId) async {
    
-    var localTime = CommonUtil.dateFormatterWithdatetimeseconds(DateTime.now());
+    var localTime = CommonUtil.dateFormatterWithdatetimeseconds(DateTime.now(),isIndianTime: true,);
     final body = {};
     body['method'] = qr_get;
     body['data'] = qr_subscribePlan+packageId+qr_patientEqaul+patientId+qr_timeEqaul+localTime;

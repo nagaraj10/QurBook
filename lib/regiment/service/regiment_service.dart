@@ -281,7 +281,7 @@ class RegimentService {
       var headerRequest = await HeaderRequest().getRequestHeadersAuthContent();
       var hh = DateFormat('HH').format(startTime);
       var mm = DateFormat('mm').format(startTime);
-      var date = '${CommonUtil.dateConversionToApiFormat(startTime)}';
+      var date = '${CommonUtil.dateConversionToApiFormat(startTime,isIndianTime: true,)}';
       var hide = isDisable ? '1' : '0';
       var response = await ApiServices.post(
         urlForRegiment,
