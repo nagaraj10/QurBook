@@ -1371,10 +1371,10 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               enabled: false,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
-                hintStyle: TextStyle(fontSize: 16.0.sp),
-                labelText: CommonConstants.addr_zip
-                    .substring(0, CommonConstants.addr_zip.length - 1),
-              ),
+                  hintStyle: TextStyle(fontSize: 16.0.sp),
+                  labelText: CommonConstants.addr_zip
+                  //.substring(0, CommonConstants.addr_zip.length - 1),
+                  ),
               validator: (res) {
                 return (res.isEmpty || res == null)
                     ? 'Zip can\'t be empty'
