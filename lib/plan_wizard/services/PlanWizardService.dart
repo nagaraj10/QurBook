@@ -84,7 +84,7 @@ class PlanWizardService {
   }
 
   Future<AddToCartModel> addToCartService(
-      {String packageId, String price, bool isRenew, String tag}) async {
+      {String packageId, String price, bool isRenew, String tag,String startDate}) async {
     var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var createdBy = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
     var paymentInput = {};
@@ -96,6 +96,7 @@ class PlanWizardService {
     paymentInput['paidAmount'] = price;
     additionalInfo['isRenewal'] = isRenew;
     additionalInfo['tag'] = tag;
+    additionalInfo['planStartDate'] = startDate;
     paymentInput['additionalInfo'] = additionalInfo;
     var jsonString = convert.jsonEncode(paymentInput);
     print(jsonString);

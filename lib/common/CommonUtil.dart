@@ -1,10 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:isolate';
-import 'package:flutter/foundation.dart';
-import 'package:flutter_logs/flutter_logs.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
@@ -12,31 +9,42 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:flutter_logs/flutter_logs.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
-import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
+import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
+import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
-import 'package:myfhb/telehealth/features/Notifications/viewModel/fetchNotificationViewModel.dart';
+import 'package:myfhb/widgets/checkout_page.dart';
 import 'package:open_file/open_file.dart';
+import 'package:package_info/package_info.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:showcaseview/showcaseview.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../../authentication/constants/constants.dart';
 import '../add_family_user_info/models/add_family_user_info_arguments.dart';
 import '../add_family_user_info/services/add_family_user_info_repository.dart';
 import '../add_providers/bloc/update_providers_bloc.dart';
 import '../authentication/model/logged_in_success.dart';
 import '../authentication/view/login_screen.dart';
 import '../bookmark_record/bloc/bookmarkRecordBloc.dart';
-import 'CommonConstants.dart';
-import 'PreferenceUtil.dart';
-import '../constants/fhb_constants.dart' as Constants;
 import '../constants/fhb_constants.dart';
-import '../constants/fhb_parameters.dart';
+import '../constants/fhb_constants.dart' as Constants;
 import '../constants/fhb_parameters.dart' as parameters;
+import '../constants/fhb_parameters.dart';
 import '../constants/responseModel.dart';
 import '../constants/router_variable.dart' as router;
 import '../constants/variable_constant.dart' as variable;
@@ -52,7 +60,6 @@ import '../myfhb_weview/myfhb_webview.dart';
 import '../plan_dashboard/viewModel/subscribeViewModel.dart';
 import '../refer_friend/view/invite_contacts_screen.dart';
 import '../refer_friend/viewmodel/referafriend_vm.dart';
-import '../regiment/view_model/regiment_view_model.dart';
 import '../reminders/QurPlanReminders.dart';
 import '../src/blocs/Authentication/LoginBloc.dart';
 import '../src/blocs/Media/MediaTypeBlock.dart';
@@ -60,7 +67,6 @@ import '../src/blocs/User/MyProfileBloc.dart';
 import '../src/blocs/health/HealthReportListForUserBlock.dart';
 import '../src/model/Authentication/DeviceInfoSucess.dart';
 import '../src/model/Category/CategoryData.dart';
-import '../src/model/Category/catergory_data_list.dart';
 import '../src/model/Category/catergory_result.dart';
 import '../src/model/Health/CategoryInfo.dart';
 import '../src/model/Health/MediaMasterIds.dart';
@@ -71,9 +77,7 @@ import '../src/model/Health/asgard/health_record_list.dart';
 import '../src/model/Media/DeviceModel.dart';
 import '../src/model/Media/media_result.dart';
 import '../src/model/sceretLoader.dart';
-import '../src/model/secretmodel.dart';
 import '../src/model/user/MyProfileModel.dart';
-import '../src/model/user/MyProfileResult.dart';
 import '../src/model/user/UserAddressCollection.dart';
 import '../src/resources/network/ApiBaseHelper.dart';
 import '../src/resources/repository/CategoryRepository/CategoryResponseListRepository.dart';
@@ -85,24 +89,8 @@ import '../src/utils/screenutils/size_extensions.dart';
 import '../telehealth/features/Notifications/view/notification_main.dart';
 import '../telehealth/features/Payment/PaymentPage.dart';
 import '../telehealth/features/chat/view/BadgeIcon.dart';
-import 'package:package_info/package_info.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:provider/provider.dart';
-import 'package:provider/single_child_widget.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:showcaseview/showcaseview.dart';
-import 'package:url_launcher/url_launcher.dart';
-
-import 'package:myfhb/telehealth/features/chat/view/PDFModel.dart';
-import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
-import 'package:myfhb/telehealth/features/chat/view/PDFView.dart';
-import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
-import '../../authentication/constants/constants.dart';
-import 'package:myfhb/widgets/checkout_page.dart';
-import '../../colors/fhb_colors.dart' as fhbColors;
-import 'package:myfhb/src/ui/loader_class.dart';
+import 'CommonConstants.dart';
+import 'PreferenceUtil.dart';
 
 class CommonUtil {
   static String SHEELA_URL = '';
@@ -2777,6 +2765,30 @@ class CommonUtil {
     );
   }
 
+  Future<DateTime> selectDate(BuildContext context, DateTime _date,
+      DateTime startDate, DateTime endDate, bool isExpired) async {
+    DateTime firstDate;
+
+    if (isExpired) {
+      firstDate = DateTime(
+          DateTime.now().year, DateTime.now().month, DateTime.now().day);
+    } else {
+      firstDate = _date;
+    }
+
+    final DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: firstDate,
+      firstDate: firstDate,
+      lastDate: DateTime(2040),
+    );
+
+    if (picked != null) {
+      _date = picked;
+    }
+    return _date;
+  }
+
   Future<dynamic> renewAlertDialog(BuildContext context,
       {String title,
       String content,
@@ -2784,10 +2796,34 @@ class CommonUtil {
       String isSubscribed,
       bool IsExtendable,
       String price,
+      String startDate,
+      String endDate,
+      bool isExpired,
       Function() refresh,
       bool moveToCart = false,
       dynamic nsBody}) async {
-    final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    DateTime initDate;
+    var formatter = new DateFormat(STR_DATE_FORMAT);
+    String selectedDate = '';
+
+    DateTime startDateFinal = startDate != null && startDate != ''
+        ? new DateFormat(STR_DATE_FORMAT).parse(startDate)
+        : DateTime(
+            DateTime.now().year, DateTime.now().month, DateTime.now().day);
+    DateTime endDateFinal = endDate != null && endDate != ''
+        ? new DateFormat(STR_DATE_FORMAT).parse(endDate)
+        : DateTime(
+            DateTime.now().year, DateTime.now().month, DateTime.now().day);
+
+    if (isExpired) {
+      initDate = DateTime(
+          DateTime.now().year, DateTime.now().month, DateTime.now().day);
+    } else {
+      initDate =
+          DateTime(endDateFinal.year, endDateFinal.month, endDateFinal.day + 1);
+    }
+    selectedDate = formatter.format(initDate);
+
     await showDialog<void>(
         context: context,
         barrierDismissible: false,
@@ -2795,116 +2831,144 @@ class CommonUtil {
           return WillPopScope(
             onWillPop: () async => false,
             child: SimpleDialog(children: <Widget>[
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 20),
-                child: Center(
-                  child: Column(children: [
-                    //CircularProgressIndicator(),
-                    SizedBox(
-                      height: 10.0.h,
-                    ),
-                    Text(
-                      CONTENT_RENEW_PACKAGE,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16.0.sp,
+              StatefulBuilder(builder: (context, setState) {
+                return Container(
+                  margin: EdgeInsets.symmetric(horizontal: 20),
+                  child: Center(
+                    child: Column(children: [
+                      //CircularProgressIndicator(),
+                      SizedBox(
+                        height: 10.0.h,
                       ),
-                    ),
-                    SizedBox(
-                      height: 10.0.h,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        OutlineButton(
-                          onPressed: () async {
-                            // open profile page
-                            isRenewDialogOpened = false;
-                            Navigator.of(context).pop();
-                          },
-                          borderSide: BorderSide(
-                            color: Color(
-                              getMyPrimaryColor(),
-                            ),
+                      Text(
+                        CONTENT_RENEW_PACKAGE,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16.0.sp,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10.0.h,
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Text(
+                            STR_RENEWAL_DATE,
                           ),
-                          child: Text(
-                            'no'.toUpperCase(),
-                            style: TextStyle(
+                          SizedBox(width: 5.w),
+                          IconButton(
+                            icon: Icon(Icons.calendar_today, size: 18.sp),
+                            onPressed: () async {
+                              initDate = await selectDate(
+                                  context,
+                                  initDate,
+                                  startDateFinal,
+                                  endDateFinal,
+                                  isExpired);
+                              selectedDate = formatter.format(initDate);
+                              setState(() {});
+                            },
+                          ),
+                          Text('${formatter.format(initDate)}'),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 10.0.h,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          OutlineButton(
+                            onPressed: () async {
+                              // open profile page
+                              isRenewDialogOpened = false;
+                              Navigator.of(context).pop();
+                            },
+                            borderSide: BorderSide(
                               color: Color(
                                 getMyPrimaryColor(),
                               ),
-                              fontSize: 10,
+                            ),
+                            child: Text(
+                              'no'.toUpperCase(),
+                              style: TextStyle(
+                                color: Color(
+                                  getMyPrimaryColor(),
+                                ),
+                                fontSize: 10,
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          width: 10.0.h,
-                        ),
-                        OutlineButton(
-                          //hoverColor: Color(getMyPrimaryColor()),
-                          onPressed: () async {
-                            Navigator.pop(context);
-                            /*_dialogForSubscribePayment(
-                                context, '', packageId, true, () {
-                              refresh();
-                            });*/
-                            isRenewDialogOpened = false;
-                            if (moveToCart && nsBody != null) {
-                              try {
-                                FetchNotificationService()
-                                    .updateNsActionStatus(nsBody)
-                                    .then((data) {
+                          SizedBox(
+                            width: 10.0.h,
+                          ),
+                          OutlineButton(
+                            //hoverColor: Color(getMyPrimaryColor()),
+                            onPressed: () async {
+                              Navigator.pop(context);
+                              /*_dialogForSubscribePayment(
+                                  context, '', packageId, true, () {
+                                refresh();
+                              });*/
+                              isRenewDialogOpened = false;
+                              if (moveToCart && nsBody != null) {
+                                try {
                                   FetchNotificationService()
-                                      .updateNsOnTapAction(nsBody);
-                                });
-                              } catch (e) {}
-                            }
-
-                            if (IsExtendable) {
-                              var response =
-                                  await Provider.of<PlanWizardViewModel>(
-                                          context,
-                                          listen: false)
-                                      ?.addToCartItem(
-                                          packageId: packageId,
-                                          price: price,
-                                          isRenew: true,
-                                          isFromAdd: strMyPlan);
-
-                              refresh();
-                              if (moveToCart) {
-                                if ((response.message?.toLowerCase() ==
-                                        'Product already exists in cart'
-                                            .toLowerCase()) ||
-                                    response.isSuccess) {
-                                  Get.to(CheckoutPage());
-                                }
+                                      .updateNsActionStatus(nsBody)
+                                      .then((data) {
+                                    FetchNotificationService()
+                                        .updateNsOnTapAction(nsBody);
+                                  });
+                                } catch (e) {}
                               }
-                            } else {
-                              FlutterToast().getToast(
-                                  'Renewal limit reached for this plan. Please try after few days',
-                                  Colors.black);
-                            }
-                          },
-                          borderSide: BorderSide(
-                            color: Color(
-                              getMyPrimaryColor(),
+
+                              if (IsExtendable) {
+                                var response =
+                                    await Provider.of<PlanWizardViewModel>(
+                                            context,
+                                            listen: false)
+                                        ?.addToCartItem(
+                                            packageId: packageId,
+                                            price: price,
+                                            isRenew: true,
+                                            isFromAdd: strMyPlan,
+                                            planStartDate: selectedDate);
+
+                                refresh();
+                                if (moveToCart) {
+                                  if ((response.message?.toLowerCase() ==
+                                          'Product already exists in cart'
+                                              .toLowerCase()) ||
+                                      response.isSuccess) {
+                                    Get.to(CheckoutPage());
+                                  }
+                                }
+                              } else {
+                                FlutterToast().getToast(
+                                    'Renewal limit reached for this plan. Please try after few days',
+                                    Colors.black);
+                              }
+                            },
+                            borderSide: BorderSide(
+                              color: Color(
+                                getMyPrimaryColor(),
+                              ),
+                            ),
+                            //hoverColor: Color(getMyPrimaryColor()),
+                            child: Text(
+                              'yes'.toUpperCase(),
+                              style: TextStyle(
+                                color: Color(getMyPrimaryColor()),
+                                fontSize: 10,
+                              ),
                             ),
                           ),
-                          //hoverColor: Color(getMyPrimaryColor()),
-                          child: Text(
-                            'yes'.toUpperCase(),
-                            style: TextStyle(
-                              color: Color(getMyPrimaryColor()),
-                              fontSize: 10,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ]),
-                ),
-              ),
+                        ],
+                      ),
+                    ]),
+                  ),
+                );
+              }),
             ]),
           );
         });

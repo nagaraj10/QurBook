@@ -615,6 +615,9 @@ const String STR_YES = 'yes';
 const String STR_NO = 'no';
 
 const String UnitPreference = 'Unit Preferences';
+const String STR_DATE_FORMAT = 'yyyy-MM-dd';
+const String STR_RENEWAL_DATE = 'Effective Renewal Date:';
+
 
 FirebaseAnalytics _firebaseAnalytics = FirebaseAnalytics();
 var mInitialTime;
