@@ -601,10 +601,6 @@ const String STR_NOTES_HINT =
 const String STR_YES = 'yes';
 const String STR_NO = 'no';
 
-const String STR_DATE_FORMAT = 'yyyy-MM-dd';
-const String STR_RENEWAL_DATE = 'Effective Renewal Date:';
-
-
 FirebaseAnalytics _firebaseAnalytics = FirebaseAnalytics();
 var mInitialTime;
 
