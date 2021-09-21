@@ -762,23 +762,29 @@ class ChatScreenViewModel extends ChangeNotifier {
   Future<void> gettingReposnseFromNative() async {
     stopTTSEngine();
     try {
-      await variable.voice_platform.invokeMethod(variable.strspeakAssistant,
-          {'langcode': Utils.getCurrentLanCode()}).then((response) {
-        sendToMaya(response, screen: screenValue);
-        var date =
-            new FHBUtils().getFormattedDateString(DateTime.now().toString());
-        Conversation model = new Conversation(
-            isMayaSaid: false,
-            text: response,
-            name: prof.result != null
-                ? prof.result.firstName + ' ' + prof.result.lastName
-                : '',
-            timeStamp: date,
-            redirect: isRedirect,
-            screen: screenValue);
-        conversations.add(model);
-        notifyListeners();
-      });
+      var micStatus = await variable.voice_platform
+          .invokeMethod(variable.strvalidateMicAvailablity);
+      if (micStatus) {
+        await variable.voice_platform.invokeMethod(variable.strspeakAssistant,
+            {'langcode': Utils.getCurrentLanCode()}).then((response) {
+          sendToMaya(response, screen: screenValue);
+          var date =
+              new FHBUtils().getFormattedDateString(DateTime.now().toString());
+          Conversation model = new Conversation(
+              isMayaSaid: false,
+              text: response,
+              name: prof.result != null
+                  ? prof.result.firstName + ' ' + prof.result.lastName
+                  : '',
+              timeStamp: date,
+              redirect: isRedirect,
+              screen: screenValue);
+          conversations.add(model);
+          notifyListeners();
+        });
+      } else {
+        FlutterToast().getToast('The Mic is currently in use by another app. Please try later', Colors.grey.shade900);
+      }
     } on PlatformException catch (e) {}
   }
 
