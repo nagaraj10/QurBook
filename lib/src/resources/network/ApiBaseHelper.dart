@@ -142,7 +142,7 @@ class ApiBaseHelper {
     dio.options.headers[variable.straccept] = variable.strAcceptVal;
     dio.options.headers[variable.strContentType] = variable.strcntVal;
     dio.options.headers[variable.strAuthorization] = authToken;
-    dio.options.headers[Constants.KEY_OffSet] = CommonUtil.TimeZone;
+    dio.options.headers[Constants.KEY_OffSet] = CommonUtil().setTimeZone();
     final Map<String, dynamic> mapForSignUp = {};
     mapForSignUp[parameters.strSections] = query;
     final FormData formData = FormData.fromMap(mapForSignUp);
@@ -199,7 +199,7 @@ class ApiBaseHelper {
 
     dio.options.headers[variable.straccept] = variable.strAcceptVal;
     dio.options.headers[variable.strAuthorization] = authToken;
-    dio.options.headers[Constants.KEY_OffSet] = CommonUtil.TimeZone;
+    dio.options.headers[Constants.KEY_OffSet] = CommonUtil().setTimeZone();
     final mapForSignUp = Map<String, dynamic>();
     mapForSignUp[parameters.strSections] = query;
     final FormData formData = FormData.fromMap(mapForSignUp);
@@ -215,7 +215,7 @@ class ApiBaseHelper {
     dio.options.headers[variable.straccept] = variable.strAcceptVal;
     dio.options.headers[variable.strAuthorization] =
         await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
-    dio.options.headers[Constants.KEY_OffSet] = CommonUtil.TimeZone;
+    dio.options.headers[Constants.KEY_OffSet] = CommonUtil().setTimeZone();
 
     final response = await dio.put(_baseUrl + url, data: jsonString);
     print(response.data);
@@ -577,7 +577,7 @@ class ApiBaseHelper {
       dio.options.headers[variable.straccept] = variable.strAcceptVal;
       dio.options.headers[variable.strcontenttype] = variable.strcntVal;
       dio.options.headers[variable.strauthorization] = authToken;
-      dio.options.headers[Constants.KEY_OffSet] = CommonUtil.TimeZone;
+      dio.options.headers[Constants.KEY_OffSet] = CommonUtil().setTimeZone();
 
       final fileNoun = file.path.split('/').last;
 
@@ -602,7 +602,7 @@ class ApiBaseHelper {
 
       dio.options.headers[variable.straccept] = variable.strAcceptVal;
       dio.options.headers[variable.strContentType] = variable.strcntVal;
-      dio.options.headers[Constants.KEY_OffSet] = CommonUtil.TimeZone;
+      dio.options.headers[Constants.KEY_OffSet] = CommonUtil().setTimeZone();
 
       final FormData formData = FormData.fromMap(mapForSignUp);
 
@@ -652,7 +652,7 @@ class ApiBaseHelper {
     //dio.options.headers[variable.strContentType] = variable.strcntVal;
     dio.options.headers[variable.strAuthorization] = authToken;
     dio.options.headers[variable.straccept] = variable.strAcceptVal;
-    dio.options.headers[Constants.KEY_OffSet] = CommonUtil.TimeZone;
+    dio.options.headers[Constants.KEY_OffSet] = CommonUtil().setTimeZone();
 
     print(url);
     print(query);
@@ -720,7 +720,7 @@ class ApiBaseHelper {
       //dio.options.headers[variable.straccept] = variable.strAcceptVal;
       dio.options.headers[variable.strContentType] = variable.strcntVal;
       dio.options.headers[variable.strauthorization] = authToken;
-      dio.options.headers[Constants.KEY_OffSet] = CommonUtil.TimeZone;
+      dio.options.headers[Constants.KEY_OffSet] = CommonUtil().setTimeZone();
 
       final fileNoun = file.path.split('/').last;
 
@@ -854,7 +854,7 @@ class ApiBaseHelper {
       var dio = Dio();
       dio.options.headers['content-type'] = 'multipart/form-data';
       dio.options.headers['authorization'] = authToken;
-      dio.options.headers[Constants.KEY_OffSet] = CommonUtil.TimeZone;
+      dio.options.headers[Constants.KEY_OffSet] = CommonUtil().setTimeZone();
 
       FormData formData;
 
@@ -1073,7 +1073,7 @@ class ApiBaseHelper {
 
     requestHeadersAuthAccept['Authorization'] =
         await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
-    requestHeadersAuthAccept[Constants.KEY_OffSet] = CommonUtil.TimeZone;
+    requestHeadersAuthAccept[Constants.KEY_OffSet] = CommonUtil().setTimeZone();
 
     var responseJson;
     try {
@@ -1099,7 +1099,8 @@ class ApiBaseHelper {
     requestHeadersAuthContent['Content-type'] = 'application/json';
     requestHeadersAuthContent['authorization'] =
         await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
-    requestHeadersAuthContent[Constants.KEY_OffSet] = CommonUtil.TimeZone;
+    requestHeadersAuthContent[Constants.KEY_OffSet] =
+        CommonUtil().setTimeZone();
 
     try {
       var response = await ApiServices.post(
@@ -1150,7 +1151,7 @@ class ApiBaseHelper {
       '$_baseUrl$apiname/search/$name',
       headers: {
         HttpHeaders.authorizationHeader: authToken,
-        Constants.KEY_OffSet: CommonUtil.TimeZone
+        Constants.KEY_OffSet: CommonUtil().setTimeZone()
       },
     );
     if (response.statusCode == 200) {
@@ -1226,7 +1227,7 @@ class ApiBaseHelper {
     final dio = Dio();
     dio.options.headers['content-type'] = 'multipart/form-data';
     dio.options.headers['authorization'] = authToken;
-    dio.options.headers[Constants.KEY_OffSet] = CommonUtil.TimeZone;
+    dio.options.headers[Constants.KEY_OffSet] = CommonUtil().setTimeZone();
 
     FormData formData;
 
@@ -1289,7 +1290,7 @@ class ApiBaseHelper {
     final value = await MultipartFile.fromFile(logPath, filename: fileName);
     final dio = Dio();
     dio.options.headers['authorization'] = authToken;
-    dio.options.headers[Constants.KEY_OffSet] = CommonUtil.TimeZone;
+    dio.options.headers[Constants.KEY_OffSet] = CommonUtil().setTimeZone();
 
     FormData formData = FormData.fromMap(
       {
@@ -1328,7 +1329,7 @@ class ApiBaseHelper {
     var dio = Dio();
     dio.options.headers['content-type'] = 'multipart/form-data';
     dio.options.headers['authorization'] = authToken;
-    dio.options.headers[Constants.KEY_OffSet] = CommonUtil.TimeZone;
+    dio.options.headers[Constants.KEY_OffSet] = CommonUtil().setTimeZone();
 
     FormData formData;
 
@@ -1442,7 +1443,7 @@ class ApiBaseHelper {
     dio.options.headers['content-type'] = 'multipart/form-data';
     dio.options.headers['authorization'] = authToken;
     dio.options.headers['accept'] = 'application/json';
-    dio.options.headers[Constants.KEY_OffSet] = CommonUtil.TimeZone;
+    dio.options.headers[Constants.KEY_OffSet] = CommonUtil().setTimeZone();
 
     final FormData formData = FormData.fromMap({
       'profilePicture': await MultipartFile.fromFile(image.path,
@@ -1510,7 +1511,8 @@ class ApiBaseHelper {
     requestHeadersAuthContent['Content-type'] = 'application/json';
     requestHeadersAuthContent['authorization'] =
         PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
-    requestHeadersAuthContent[Constants.KEY_OffSet] = CommonUtil.TimeZone;
+    requestHeadersAuthContent[Constants.KEY_OffSet] =
+        CommonUtil().setTimeZone();
 
     try {
       var response = await ApiServices.put(
@@ -1624,7 +1626,7 @@ class ApiBaseHelper {
       final dio = Dio();
       dio.options.headers['content-type'] = 'multipart/form-data';
       dio.options.headers['authorization'] = authToken;
-      dio.options.headers[Constants.KEY_OffSet] = CommonUtil.TimeZone;
+      dio.options.headers[Constants.KEY_OffSet] = CommonUtil().setTimeZone();
 
       FormData formData;
 
@@ -1709,7 +1711,7 @@ class ApiBaseHelper {
       _baseUrl + 'user/loggedin-details/',
       headers: {
         HttpHeaders.authorizationHeader: authToken,
-        Constants.KEY_OffSet: CommonUtil.TimeZone
+        Constants.KEY_OffSet: CommonUtil().setTimeZone()
       },
     );
     if (response.statusCode == 200) {

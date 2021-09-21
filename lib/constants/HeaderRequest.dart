@@ -9,7 +9,7 @@ class HeaderRequest {
     var auth = Map<String, String>();
     auth['authorization'] =
         PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
-    auth[Constants.KEY_OffSet] = CommonUtil.TimeZone;
+    auth[Constants.KEY_OffSet] = CommonUtil().setTimeZone();
     print(PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN));
     return auth;
   }
@@ -19,7 +19,8 @@ class HeaderRequest {
 
     requestHeadersWithoutToken['Content-type'] = 'application/json';
     requestHeadersWithoutToken['Accept'] = 'application/json';
-    requestHeadersWithoutToken[Constants.KEY_OffSet] = CommonUtil.TimeZone;
+    requestHeadersWithoutToken[Constants.KEY_OffSet] =
+        CommonUtil().setTimeZone();
     return requestHeadersWithoutToken;
   }
 
@@ -29,7 +30,7 @@ class HeaderRequest {
     var requestHeadersAuthAccept = Map<String, String>();
     requestHeadersAuthAccept['Authorization'] =
         PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
-    requestHeadersAuthAccept[Constants.KEY_OffSet] = CommonUtil.TimeZone;
+    requestHeadersAuthAccept[Constants.KEY_OffSet] = CommonUtil().setTimeZone();
 
     return requestHeadersAuthAccept;
   }
@@ -39,7 +40,7 @@ class HeaderRequest {
     requestHeadersAuthStar['accept'] = '*/*';
     requestHeadersAuthStar['authorization'] =
         PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
-    requestHeadersAuthStar[Constants.KEY_OffSet] = CommonUtil.TimeZone;
+    requestHeadersAuthStar[Constants.KEY_OffSet] = CommonUtil().setTimeZone();
 
     return requestHeadersAuthStar;
   }
@@ -49,7 +50,7 @@ class HeaderRequest {
     requestHeadersTimeSlot['Authorization'] =
         PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     requestHeadersTimeSlot['Content-Type'] = 'application/json';
-    requestHeadersTimeSlot[Constants.KEY_OffSet] = CommonUtil.TimeZone;
+    requestHeadersTimeSlot[Constants.KEY_OffSet] = CommonUtil().setTimeZone();
 
     return requestHeadersTimeSlot;
   }
@@ -60,7 +61,8 @@ class HeaderRequest {
     requestHeadersAuthContent['content-type'] = 'application/json';
     requestHeadersAuthContent['authorization'] =
         PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
-    requestHeadersAuthContent[Constants.KEY_OffSet] = CommonUtil.TimeZone;
+    requestHeadersAuthContent[Constants.KEY_OffSet] =
+        CommonUtil().setTimeZone();
 
     return requestHeadersAuthContent;
   }
@@ -70,7 +72,8 @@ class HeaderRequest {
     requestHeadersAuthContent['Content-type'] = 'application/json';
     requestHeadersAuthContent['authorization'] =
         PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
-    requestHeadersAuthContent[Constants.KEY_OffSet] = CommonUtil.TimeZone;
+    requestHeadersAuthContent[Constants.KEY_OffSet] =
+        CommonUtil().setTimeZone();
 
     return requestHeadersAuthContent;
   }
@@ -85,7 +88,7 @@ class HeaderRequest {
         PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     /*var token = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
         printWrapped(token);*/
-    requestHeaders[Constants.KEY_OffSet] = CommonUtil.TimeZone;
+    requestHeaders[Constants.KEY_OffSet] = CommonUtil().setTimeZone();
 
     return requestHeaders;
   }
@@ -95,7 +98,7 @@ class HeaderRequest {
     requestHeadersAuthAccept['accept'] = 'application/json';
     requestHeadersAuthAccept['Authorization'] =
         PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
-    requestHeadersAuthAccept[Constants.KEY_OffSet] = CommonUtil.TimeZone;
+    requestHeadersAuthAccept[Constants.KEY_OffSet] = CommonUtil().setTimeZone();
 
     printWrapped(PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN));
 
@@ -107,7 +110,7 @@ class HeaderRequest {
     var requestHeadersAuthAccept = Map<String, String>();
     requestHeadersAuthAccept['accept'] = 'application/json';
     requestHeadersAuthAccept['authorization'] = authToken;
-    requestHeadersAuthAccept[Constants.KEY_OffSet] = CommonUtil.TimeZone;
+    requestHeadersAuthAccept[Constants.KEY_OffSet] = CommonUtil().setTimeZone();
 
     return requestHeadersAuthAccept;
   }
@@ -119,7 +122,8 @@ class HeaderRequest {
     requestHeadersAuthContent['Authorization'] =
         PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     requestHeadersAuthContent['accept'] = 'multipart/form-data';
-    requestHeadersAuthContent[Constants.KEY_OffSet] = CommonUtil.TimeZone;
+    requestHeadersAuthContent[Constants.KEY_OffSet] =
+        CommonUtil().setTimeZone();
 
     return requestHeadersAuthContent;
   }
@@ -133,7 +137,7 @@ class HeaderRequest {
     final Map<String, String> auth = {};
     auth['authorization'] =
         PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
-    auth[Constants.KEY_OffSet] = CommonUtil.TimeZone;
+    auth[Constants.KEY_OffSet] = CommonUtil().setTimeZone();
 
     print(PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN));
     return auth;
