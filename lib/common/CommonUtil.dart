@@ -117,7 +117,6 @@ class CommonUtil {
   static String FIREBASE_CHAT_NOTIFY_TOKEN = '';
   static String REGION_CODE = 'IN';
   static String CURRENCY = INR;
-  static String TimeZone = '';
   static String POWER_BI_URL = 'IN';
   static const bgColor = 0xFFe3e2e2;
   static bool isRenewDialogOpened = false;
@@ -1225,14 +1224,14 @@ class CommonUtil {
 
   //   return updatedDate;
   // }
-  static setTimeZone() {
+  String setTimeZone() {
     var date = DateTime.now().timeZoneOffset.isNegative ? "-" : "+";
     final timeZoneSplit = DateTime.now().timeZoneOffset.toString().split(":");
     var hour = int.parse(timeZoneSplit[0]);
     hour = (hour).abs();
     date += hour < 10 ? "0${hour}" : "$hour";
     date += timeZoneSplit[1];
-    TimeZone = date;
+    return date;
   }
 
   regimentDateFormat(
