@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-
+import 'dart:isolate';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_logs/flutter_logs.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
@@ -9,42 +12,31 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:flutter_logs/flutter_logs.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
-import 'package:intl/intl.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
-import 'package:myfhb/widgets/checkout_page.dart';
+import 'package:myfhb/telehealth/features/Notifications/viewModel/fetchNotificationViewModel.dart';
 import 'package:open_file/open_file.dart';
-import 'package:package_info/package_info.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:provider/provider.dart';
-import 'package:provider/single_child_widget.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:showcaseview/showcaseview.dart';
-import 'package:url_launcher/url_launcher.dart';
-
-import '../../authentication/constants/constants.dart';
 import '../add_family_user_info/models/add_family_user_info_arguments.dart';
 import '../add_family_user_info/services/add_family_user_info_repository.dart';
 import '../add_providers/bloc/update_providers_bloc.dart';
 import '../authentication/model/logged_in_success.dart';
 import '../authentication/view/login_screen.dart';
 import '../bookmark_record/bloc/bookmarkRecordBloc.dart';
-import '../constants/fhb_constants.dart';
+import 'CommonConstants.dart';
+import 'PreferenceUtil.dart';
 import '../constants/fhb_constants.dart' as Constants;
-import '../constants/fhb_parameters.dart' as parameters;
+import '../constants/fhb_constants.dart';
 import '../constants/fhb_parameters.dart';
+import '../constants/fhb_parameters.dart' as parameters;
 import '../constants/responseModel.dart';
 import '../constants/router_variable.dart' as router;
 import '../constants/variable_constant.dart' as variable;
@@ -60,6 +52,7 @@ import '../myfhb_weview/myfhb_webview.dart';
 import '../plan_dashboard/viewModel/subscribeViewModel.dart';
 import '../refer_friend/view/invite_contacts_screen.dart';
 import '../refer_friend/viewmodel/referafriend_vm.dart';
+import '../regiment/view_model/regiment_view_model.dart';
 import '../reminders/QurPlanReminders.dart';
 import '../src/blocs/Authentication/LoginBloc.dart';
 import '../src/blocs/Media/MediaTypeBlock.dart';
@@ -67,6 +60,7 @@ import '../src/blocs/User/MyProfileBloc.dart';
 import '../src/blocs/health/HealthReportListForUserBlock.dart';
 import '../src/model/Authentication/DeviceInfoSucess.dart';
 import '../src/model/Category/CategoryData.dart';
+import '../src/model/Category/catergory_data_list.dart';
 import '../src/model/Category/catergory_result.dart';
 import '../src/model/Health/CategoryInfo.dart';
 import '../src/model/Health/MediaMasterIds.dart';
@@ -77,7 +71,9 @@ import '../src/model/Health/asgard/health_record_list.dart';
 import '../src/model/Media/DeviceModel.dart';
 import '../src/model/Media/media_result.dart';
 import '../src/model/sceretLoader.dart';
+import '../src/model/secretmodel.dart';
 import '../src/model/user/MyProfileModel.dart';
+import '../src/model/user/MyProfileResult.dart';
 import '../src/model/user/UserAddressCollection.dart';
 import '../src/resources/network/ApiBaseHelper.dart';
 import '../src/resources/repository/CategoryRepository/CategoryResponseListRepository.dart';
@@ -89,8 +85,24 @@ import '../src/utils/screenutils/size_extensions.dart';
 import '../telehealth/features/Notifications/view/notification_main.dart';
 import '../telehealth/features/Payment/PaymentPage.dart';
 import '../telehealth/features/chat/view/BadgeIcon.dart';
-import 'CommonConstants.dart';
-import 'PreferenceUtil.dart';
+import 'package:package_info/package_info.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:showcaseview/showcaseview.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import 'package:myfhb/telehealth/features/chat/view/PDFModel.dart';
+import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
+import 'package:myfhb/telehealth/features/chat/view/PDFView.dart';
+import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
+import '../../authentication/constants/constants.dart';
+import 'package:myfhb/widgets/checkout_page.dart';
+import '../../colors/fhb_colors.dart' as fhbColors;
+import 'package:myfhb/src/ui/loader_class.dart';
 
 class CommonUtil {
   static String SHEELA_URL = '';
@@ -2770,15 +2782,17 @@ class CommonUtil {
     DateTime firstDate;
 
     if (isExpired) {
+      print('endDate: expired');
       firstDate = DateTime(
           DateTime.now().year, DateTime.now().month, DateTime.now().day);
     } else {
-      firstDate = _date;
+      print('endDate:' + endDate.toString());
+      firstDate = endDate;
     }
 
     final DateTime picked = await showDatePicker(
       context: context,
-      initialDate: firstDate,
+      initialDate: _date,
       firstDate: firstDate,
       lastDate: DateTime(2040),
     );
@@ -2803,15 +2817,14 @@ class CommonUtil {
       bool moveToCart = false,
       dynamic nsBody}) async {
     DateTime initDate;
-    var formatter = new DateFormat(STR_DATE_FORMAT);
-    String selectedDate = '';
+    var formatter = new DateFormat('yyyy-MM-dd');
 
-    DateTime startDateFinal = startDate != null && startDate != ''
-        ? new DateFormat(STR_DATE_FORMAT).parse(startDate)
+    DateTime startDateFinal = startDate != null
+        ? new DateFormat("yyyy-MM-dd").parse(startDate)
         : DateTime(
             DateTime.now().year, DateTime.now().month, DateTime.now().day);
-    DateTime endDateFinal = endDate != null && endDate != ''
-        ? new DateFormat(STR_DATE_FORMAT).parse(endDate)
+    DateTime endDateFinal = endDate != null
+        ? new DateFormat("yyyy-MM-dd").parse(endDate)
         : DateTime(
             DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
@@ -2819,11 +2832,10 @@ class CommonUtil {
       initDate = DateTime(
           DateTime.now().year, DateTime.now().month, DateTime.now().day);
     } else {
-      initDate =
-          DateTime(endDateFinal.year, endDateFinal.month, endDateFinal.day + 1);
+      initDate = endDateFinal;
     }
-    selectedDate = formatter.format(initDate);
 
+    final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     await showDialog<void>(
         context: context,
         barrierDismissible: false,
@@ -2853,7 +2865,7 @@ class CommonUtil {
                       Row(
                         children: <Widget>[
                           Text(
-                            STR_RENEWAL_DATE,
+                            'Effective Renewal Date: ',
                           ),
                           SizedBox(width: 5.w),
                           IconButton(
@@ -2861,11 +2873,10 @@ class CommonUtil {
                             onPressed: () async {
                               initDate = await selectDate(
                                   context,
-                                  initDate,
+                                  isExpired ? initDate : endDateFinal,
                                   startDateFinal,
                                   endDateFinal,
                                   isExpired);
-                              selectedDate = formatter.format(initDate);
                               setState(() {});
                             },
                           ),
@@ -2931,8 +2942,7 @@ class CommonUtil {
                                             packageId: packageId,
                                             price: price,
                                             isRenew: true,
-                                            isFromAdd: strMyPlan,
-                                            planStartDate: selectedDate);
+                                            isFromAdd: strMyPlan);
 
                                 refresh();
                                 if (moveToCart) {
