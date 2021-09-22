@@ -111,7 +111,7 @@ class PlanDetail extends State<MyPlanDetailView> {
     planListModel = PlanViewModel().getPlanDetail(widget?.packageId);
   }
 
-   @override
+  @override
   void dispose() {
     super.dispose();
     fbaLog(eveName: 'qurbook_screen_event', eveParams: {
@@ -222,7 +222,10 @@ class PlanDetail extends State<MyPlanDetailView> {
                               child: CircleAvatar(
                                   backgroundColor: Colors.grey[200],
                                   radius: 30,
-                                  child: CommonUtil().customImage(getImage())),
+                                  child: CommonUtil().customImage(
+                                    getImage(),
+                                    planInitial: providerName,
+                                  )),
                               // child: ClipOval(
                               //   // backgroundColor: Colors.grey[200],
                               //   // radius: 35,

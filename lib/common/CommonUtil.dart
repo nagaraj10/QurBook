@@ -3110,8 +3110,40 @@ class CommonUtil {
         });
   }
 
-  Widget customImage(String iconApi, {Widget defaultWidget}) {
-    print(iconApi);
+  Widget customImage(
+    String iconApi, {
+    Widget defaultWidget,
+    String planInitial,
+  }) {
+    var defaultInitial = '';
+    if ((planInitial ?? '').isNotEmpty) {
+      var planWords = planInitial?.split(' ') ?? [];
+      if (planWords.length > 1) {
+        defaultInitial =
+            planWords[0]?.substring(0, 1) + planWords[1]?.substring(0, 1);
+      } else {
+        defaultInitial = planWords[0]?.substring(0, 1);
+      }
+    }
+
+    if ((defaultInitial ?? '').isNotEmpty) {
+      defaultWidget = ClipOval(
+        child: CircleAvatar(
+          radius: 32,
+          backgroundColor: Colors.grey[200],
+          child: Center(
+            child: Text(
+              defaultInitial?.toUpperCase() ?? '',
+              style: TextStyle(
+                fontSize: 25.0.sp,
+                color: Color(CommonUtil().getMyPrimaryColor()),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
     return ClipOval(
       child: Container(
         alignment: Alignment.center,
