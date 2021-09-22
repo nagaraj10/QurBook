@@ -769,45 +769,44 @@ class ChatScreenViewModel extends ChangeNotifier {
       isMicListening = true;
       notifyListeners();
       try {
-      var micStatus = await variable.voice_platform
-          .invokeMethod(variable.strvalidateMicAvailablity);
-      if (micStatus) {
-        await variable.voice_platform.invokeMethod(variable.strspeakAssistant,
-            {'langcode': Utils.getCurrentLanCode()}).then((response) {
-          isMicListening = false;
-          notifyListeners();
-          if ((response ?? '').toString()?.isNotEmpty) {
-            sendToMaya(response, screen: screenValue);
-            var date = new FHBUtils()
-                .getFormattedDateString(DateTime.now().toString());
-            Conversation model = new Conversation(
-                isMayaSaid: false,
-                text: response,
-                name: prof.result != null
-                    ? prof.result.firstName + ' ' + prof.result.lastName
-                    : '',
-                timeStamp: date,
-                redirect: isRedirect,
-                screen: screenValue);
-            conversations.add(model);
+        var micStatus = await variable.voice_platform
+            .invokeMethod(variable.strvalidateMicAvailablity);
+        if (micStatus) {
+          await variable.voice_platform.invokeMethod(variable.strspeakAssistant,
+              {'langcode': Utils.getCurrentLanCode()}).then((response) {
+            isMicListening = false;
             notifyListeners();
-          }
-        }).whenComplete(() {
-          isMicListening = false;
-          notifyListeners();
-        }).onError((error, stackTrace) {
-          isMicListening = false;
-          notifyListeners();
-        });
+            if ((response ?? '').toString()?.isNotEmpty) {
+              sendToMaya(response, screen: screenValue);
+              var date = new FHBUtils()
+                  .getFormattedDateString(DateTime.now().toString());
+              Conversation model = new Conversation(
+                  isMayaSaid: false,
+                  text: response,
+                  name: prof.result != null
+                      ? prof.result.firstName + ' ' + prof.result.lastName
+                      : '',
+                  timeStamp: date,
+                  redirect: isRedirect,
+                  screen: screenValue);
+              conversations.add(model);
+              notifyListeners();
+            }
+          }).whenComplete(() {
+            isMicListening = false;
+            notifyListeners();
+          }).onError((error, stackTrace) {
+            isMicListening = false;
+            notifyListeners();
+          });
+        } else {
+          FlutterToast().getToast(CommonConstants.strMicAlertMsg, Colors.black);
+        }
       } on PlatformException catch (e) {
         isMicListening = false;
         notifyListeners();
       }
     }
-      } else {
-        FlutterToast().getToast(CommonConstants.strMicAlertMsg,Colors.black);
-      }
-    } on PlatformException catch (e) {}
   }
 
   void refreshData() {

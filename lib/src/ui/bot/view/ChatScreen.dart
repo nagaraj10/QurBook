@@ -31,7 +31,7 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen>
     with TickerProviderStateMixin, WidgetsBindingObserver {
-  AnimationController _controller;
+  AnimationController animationController;
 
   Animation<double> _animation;
   MyProfileModel myProfile =
@@ -54,10 +54,21 @@ class _ChatScreenState extends State<ChatScreen>
     Provider.of<ChatScreenViewModel>(context, listen: false)
         ?.getDeviceSelectionValues();
     PreferenceUtil.init();
-    _controller = AnimationController(
-        duration: const Duration(milliseconds: 2000), vsync: this, value: 0.1);
-    _animation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
-    _controller.forward();
+    animationController = AnimationController(
+        duration: const Duration(
+          milliseconds: 600,
+        ),
+        vsync: this,
+        value: 0.0);
+    _animation =
+        Tween<double>(begin: 0.0, end: 15.0).animate(animationController)
+          ..addStatusListener((status) {
+            if (status == AnimationStatus.completed) {
+              animationController.reverse();
+            } else if (status == AnimationStatus.dismissed) {
+              animationController.forward();
+            }
+          });
 
     getMyViewModel().clearMyConversation();
     if (widget?.arguments?.sheelaInputs != null &&
@@ -108,7 +119,7 @@ class _ChatScreenState extends State<ChatScreen>
           '${DateTime.now().difference(constants.mInitialTime).inSeconds} secs'
     });
     WidgetsBinding.instance.removeObserver(this);
-    _controller.dispose();
+    animationController?.dispose();
     super.dispose();
   }
 
@@ -223,6 +234,12 @@ class _ChatScreenState extends State<ChatScreen>
         ),
         body: Consumer<ChatScreenViewModel>(
           builder: (contxt, model, child) {
+            if (model?.isMicListening ?? false) {
+              animationController?.reset();
+              animationController?.forward();
+            } else {
+              animationController?.stop();
+            }
             isLoading = model.isLoading;
             closeIfByeSaid(model.conversations);
             return ChatData(conversations: model.getMyConversations);
@@ -231,33 +248,56 @@ class _ChatScreenState extends State<ChatScreen>
         floatingActionButton: Visibility(
           visible:
               !Provider.of<ChatScreenViewModel>(context).getIsButtonResponse,
-          child: FloatingActionButton(
-            onPressed: Provider.of<ChatScreenViewModel>(context).isLoading
-                ? null
-                : () {
-                    if (getMyViewModel().isLoading ||
-                        (getMyViewModel().isMicListening ?? false)) {
-                      //do nothing
-                    } else if (getMyViewModel().isSheelaSpeaking) {
-                      stopTTSEngine();
-                    } else if (getMyViewModel().getisMayaSpeaks <= 0) {
-                      stopTTSEngine();
-                      getMyViewModel().gettingReposnseFromNative();
-                    } else {
-                      getMyViewModel().gettingReposnseFromNative();
-                    }
-                  },
-            elevation: 10,
-            child: Icon(
-              Provider.of<ChatScreenViewModel>(context).isSheelaSpeaking
-                  ? Icons.pause
-                  : Icons.mic,
-              color: Colors.white,
+          child: AnimatedBuilder(
+            animation: animationController,
+            builder: (context, child) {
+              return Container(
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  shape: BoxShape.circle,
+                ),
+                padding: EdgeInsets.all((_animation?.value ?? 0)),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color:
+                        Provider.of<ChatScreenViewModel>(context).isMicListening
+                            ? Colors.redAccent.shade100
+                            : Colors.transparent,
+                    shape: BoxShape.circle,
+                  ),
+                  padding: EdgeInsets.all((15.0 - (_animation?.value ?? 0))),
+                  child: child,
+                ),
+              );
+            },
+            child: FloatingActionButton(
+              onPressed: Provider.of<ChatScreenViewModel>(context).isLoading
+                  ? null
+                  : () {
+                      if (getMyViewModel().isLoading ||
+                          (getMyViewModel().isMicListening ?? false)) {
+                        //do nothing
+                      } else if (getMyViewModel().isSheelaSpeaking) {
+                        stopTTSEngine();
+                      } else if (getMyViewModel().getisMayaSpeaks <= 0) {
+                        stopTTSEngine();
+                        getMyViewModel().gettingReposnseFromNative();
+                      } else {
+                        getMyViewModel().gettingReposnseFromNative();
+                      }
+                    },
+              elevation: 10,
+              child: Icon(
+                Provider.of<ChatScreenViewModel>(context).isSheelaSpeaking
+                    ? Icons.pause
+                    : Icons.mic,
+                color: Colors.white,
+              ),
+              backgroundColor:
+                  Provider.of<ChatScreenViewModel>(context).isMicListening
+                      ? Colors.red
+                      : Color(CommonUtil().getMyPrimaryColor()),
             ),
-            backgroundColor:
-                Provider.of<ChatScreenViewModel>(context).isMicListening
-                    ? Colors.red
-                    : Color(CommonUtil().getMyPrimaryColor()),
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
