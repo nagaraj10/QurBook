@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as constants;
 import 'package:myfhb/src/model/CreateDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
@@ -783,7 +784,7 @@ class ChatScreenViewModel extends ChangeNotifier {
           notifyListeners();
         });
       } else {
-        FlutterToast().getToast('The Mic is currently in use by another app. Please try later', Colors.grey.shade900);
+        FlutterToast().getToast(CommonConstants.strMicAlertMsg,Colors.black);
       }
     } on PlatformException catch (e) {}
   }
