@@ -260,6 +260,7 @@ class CommonConstants {
   static const String strQueryString = '?';
   static const String strGetProfilePic = 'section=profilePicture';
   static const String strUserQuery = 'user/';
+  static const String strMicAlertMsg = 'The Mic is currently in use by another app. Please try later';
 
   /// Color for devices
   static var bpDarkColor = 0xff059192;
