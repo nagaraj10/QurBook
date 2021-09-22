@@ -4,7 +4,7 @@ import android.app.*
 import android.content.*
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.net.Uri
+import android.media.AudioManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -287,7 +287,14 @@ class MainActivity : FlutterActivity() {
             flutterEngine.dartExecutor.binaryMessenger,
             VOICE_CHANNEL
         ).setMethodCallHandler { call, result ->
-            if (call.method == Constants.FUN_VOICE_ASST) {
+            if (call.method == Constants.FUN_VALIDATE_MIC_AVAIL) {
+                val mic_status = validateMicAvailability()
+                if (mic_status) {
+                    result.success(true)
+                } else {
+                    result.success(false)
+                }
+            } else if (call.method == Constants.FUN_VOICE_ASST) {
                 val lang_code =
                     call.argument<String>(Constants.PROP_LANG_CODE) //todo uncomment this line
                 _result = result
@@ -916,6 +923,16 @@ class MainActivity : FlutterActivity() {
             PendingIntent.FLAG_UPDATE_CURRENT
         )
         alarmManager.cancel(pendingIntent)
+    }
+
+    private fun validateMicAvailability(): Boolean {
+        var available = true
+        val am: AudioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        if (am.getMode() === AudioManager.MODE_IN_COMMUNICATION) {
+            //Mic is in use
+            available = false
+        }
+        return available
     }
 
 }

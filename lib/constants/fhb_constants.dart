@@ -59,7 +59,6 @@ const String KEY_MEMBERSHIP = 'membership';
 const String GOLD_MEMBERSHIP = 'CORPGOLDQURHL';
 const String KEY_DYNAMIC_URL = 'dynamicURL';
 
-
 const String STR_KEY_HEIGHT = 'height';
 const String STR_KEY_WEIGHT = 'weight';
 const String STR_KEY_TEMP = 'temp';
@@ -617,7 +616,6 @@ const String STR_NO = 'no';
 const String UnitPreference = 'Unit Preferences';
 const String STR_DATE_FORMAT = 'yyyy-MM-dd';
 const String STR_RENEWAL_DATE = 'Effective Renewal Date:';
-
 
 FirebaseAnalytics _firebaseAnalytics = FirebaseAnalytics();
 var mInitialTime;

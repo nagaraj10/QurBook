@@ -25,6 +25,7 @@ import 'package:myfhb/video_call/model/NotificationModel.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/video_call/utils/audiocall_provider.dart';
+import 'package:myfhb/widgets/checkout_page.dart';
 import 'package:provider/provider.dart';
 
 class IosNotificationHandler {
@@ -394,6 +395,17 @@ class IosNotificationHandler {
           nsRoute: 'regiment_screen',
         ));
       }
+    } else if (model.redirect == 'mycart') {
+      fbaLog(eveParams: {
+        'eventTime': '${DateTime.now()}',
+        'ns_type': 'my cart',
+        'navigationPage': 'My Cart',
+      });
+      Get.to(
+        CheckoutPage(
+          isFromNotification: true,
+        ),
+      );
     } else if (model.redirect == 'dashboard') {
       fbaLog(eveParams: {
         'eventTime': '${DateTime.now()}',

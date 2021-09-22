@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as constants;
 import 'package:myfhb/src/model/CreateDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
@@ -762,23 +763,29 @@ class ChatScreenViewModel extends ChangeNotifier {
   Future<void> gettingReposnseFromNative() async {
     stopTTSEngine();
     try {
-      await variable.voice_platform.invokeMethod(variable.strspeakAssistant,
-          {'langcode': Utils.getCurrentLanCode()}).then((response) {
-        sendToMaya(response, screen: screenValue);
-        var date =
-            new FHBUtils().getFormattedDateString(DateTime.now().toString());
-        Conversation model = new Conversation(
-            isMayaSaid: false,
-            text: response,
-            name: prof.result != null
-                ? prof.result.firstName + ' ' + prof.result.lastName
-                : '',
-            timeStamp: date,
-            redirect: isRedirect,
-            screen: screenValue);
-        conversations.add(model);
-        notifyListeners();
-      });
+      var micStatus = await variable.voice_platform
+          .invokeMethod(variable.strvalidateMicAvailablity);
+      if (micStatus) {
+        await variable.voice_platform.invokeMethod(variable.strspeakAssistant,
+            {'langcode': Utils.getCurrentLanCode()}).then((response) {
+          sendToMaya(response, screen: screenValue);
+          var date =
+              new FHBUtils().getFormattedDateString(DateTime.now().toString());
+          Conversation model = new Conversation(
+              isMayaSaid: false,
+              text: response,
+              name: prof.result != null
+                  ? prof.result.firstName + ' ' + prof.result.lastName
+                  : '',
+              timeStamp: date,
+              redirect: isRedirect,
+              screen: screenValue);
+          conversations.add(model);
+          notifyListeners();
+        });
+      } else {
+        FlutterToast().getToast(CommonConstants.strMicAlertMsg,Colors.black);
+      }
     } on PlatformException catch (e) {}
   }
 
