@@ -498,6 +498,7 @@ const String requestSheelaForglucose = 'record my glucose';
 const String requestSheelaForpo = 'record my po';
 const String requestSheelaForweight = 'record my weight';
 const String strspeakAssistant = 'speakWithVoiceAssistant';
+const String strvalidateMicAvailablity = 'validateMicAvailability';
 const String strdevice = 'device';
 
 const String strIntromaya = 'Hi, I am Sheela your voice health assistant.';
