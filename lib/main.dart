@@ -319,7 +319,6 @@ void setValues(List<dynamic> values) {
   CommonUtil.REGION_CODE = values.length > 10 ? (values[10] ?? 'IN') : 'IN';
   CommonUtil.CURRENCY = (CommonUtil.REGION_CODE == 'IN') ? INR : USD;
   CommonUtil.POWER_BI_URL = values[11];
-  CommonUtil.setTimeZone();
 }
 
 Widget buildError(BuildContext context, FlutterErrorDetails error) {

@@ -1,3 +1,6 @@
+import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
+
 import '../../../my_family/models/FamilyMembersRes.dart';
 import '../GetDeviceSelectionModel.dart';
 import 'UserAddressCollection.dart';
@@ -121,8 +124,7 @@ class MyProfileResult {
     if (json['userRelationshipCollection'] != null) {
       userRelationshipCollection = <UserRelationshipCollection>[];
       json['userRelationshipCollection'].forEach((v) {
-        userRelationshipCollection
-            .add(UserRelationshipCollection.fromJson(v));
+        userRelationshipCollection.add(UserRelationshipCollection.fromJson(v));
       });
     }
     if (json['userProfileSettingCollection3'] != null) {
@@ -202,6 +204,7 @@ class AdditionalInfo {
   String uhidNumber;
   String visitReason;
   String patientHistory;
+  String offSet = CommonUtil().setTimeZone();
 
   AdditionalInfo(
       {this.age,
@@ -248,6 +251,7 @@ class AdditionalInfo {
     data['uhidNumber'] = uhidNumber;
     data['visitReason'] = visitReason;
     data['patientHistory'] = patientHistory;
+    data[KEY_OffSet] = CommonUtil().setTimeZone();
     return data;
   }
 }

@@ -22,7 +22,7 @@ class AuthService {
         _auth_base_url + strSignUpEndpoint,
         headers: <String, String>{
           c_content_type_key: c_content_type_val,
-          Constants.KEY_OffSet: CommonUtil.TimeZone
+          Constants.KEY_OffSet: CommonUtil().setTimeZone()
         },
         body: json.encode(params),
       );
@@ -46,7 +46,7 @@ class AuthService {
         _auth_base_url + strSignEndpoint,
         headers: <String, String>{
           c_content_type_key: c_content_type_val,
-          Constants.KEY_OffSet: CommonUtil.TimeZone
+          Constants.KEY_OffSet: CommonUtil().setTimeZone()
         },
         body: jsonEncode(params),
       );
@@ -76,7 +76,7 @@ class AuthService {
         _auth_base_url + strResendConfirmCode,
         headers: <String, String>{
           c_content_type_key: c_content_type_val,
-          Constants.KEY_OffSet: CommonUtil.TimeZone
+          Constants.KEY_OffSet: CommonUtil().setTimeZone()
         },
         body: jsonEncode(params),
       );
@@ -115,7 +115,7 @@ class AuthService {
         _auth_base_url + strKeyForgotPassword,
         headers: <String, String>{
           c_content_type_key: c_content_type_val,
-          Constants.KEY_OffSet: CommonUtil.TimeZone
+          Constants.KEY_OffSet: CommonUtil().setTimeZone()
         },
         body: jsonEncode(params),
       );
@@ -137,7 +137,7 @@ class AuthService {
         _auth_base_url + strKeyConfirmForgotPassword,
         headers: <String, String>{
           c_content_type_key: c_content_type_val,
-          Constants.KEY_OffSet: CommonUtil.TimeZone
+          Constants.KEY_OffSet: CommonUtil().setTimeZone()
         },
         body: jsonEncode(params),
       );
@@ -158,7 +158,7 @@ class AuthService {
         _auth_base_url + strUserVerifyEndpoint,
         headers: <String, String>{
           c_content_type_key: c_content_type_val,
-          Constants.KEY_OffSet: CommonUtil.TimeZone
+          Constants.KEY_OffSet: CommonUtil().setTimeZone()
         },
         body: jsonEncode(params),
       );
@@ -210,7 +210,7 @@ class AuthService {
           c_content_type_key: c_content_type_val,
           c_auth_key:
               '$strBearer ${PreferenceUtil.getStringValue(strKeyVerifyOtpService)}',
-          Constants.KEY_OffSet: CommonUtil.TimeZone
+          Constants.KEY_OffSet: CommonUtil().setTimeZone()
         },
         body: jsonEncode(params),
       );
@@ -233,7 +233,7 @@ class AuthService {
           c_content_type_key: c_content_type_val,
           c_auth_key:
               '$strBearer ${PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)}',
-          Constants.KEY_OffSet: CommonUtil.TimeZone
+          Constants.KEY_OffSet: CommonUtil().setTimeZone()
         },
         body: jsonEncode(params),
       );
@@ -294,7 +294,7 @@ class AuthService {
     var requestHeaders = <String, String>{
       'authorization': PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN),
       'Content-Type': 'application/json',
-      Constants.KEY_OffSet: CommonUtil.TimeZone
+      Constants.KEY_OffSet: CommonUtil().setTimeZone()
     };
     try {
       var response = await ApiServices.put(
@@ -314,7 +314,7 @@ class AuthService {
     var requestHeaders = <String, String>{
       'authorization': PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN),
       'Content-Type': 'application/json',
-      Constants.KEY_OffSet: CommonUtil.TimeZone
+      Constants.KEY_OffSet: CommonUtil().setTimeZone()
     };
     try {
       var response = await ApiServices.get(
