@@ -134,7 +134,7 @@ class _ChatScreenState extends State<ChatScreen>
       final langCode = lan.split("-").first;
       currentLanguage = langCode;
     }
-    Utils.supportedLanguages.forEach((language, languageCode) {
+    CommonUtil.supportedLanguages.forEach((language, languageCode) {
       languagesMenuList.add(
         PopupMenuItem<String>(
           value: languageCode,
@@ -147,7 +147,7 @@ class _ChatScreenState extends State<ChatScreen>
                 onChanged: (value) {
                   Navigator.pop(context);
                   PreferenceUtil.saveString(constants.SHEELA_LANG,
-                      Utils.langaugeCodes[value ?? 'undef']);
+                      CommonUtil.langaugeCodes[value ?? 'undef']);
                   Provider.of<ChatScreenViewModel>(context, listen: false)
                       .updateDeviceSelectionModel(
                     preferredLanguage: value,
@@ -221,7 +221,7 @@ class _ChatScreenState extends State<ChatScreen>
               child: PopupMenuButton<String>(
                 onSelected: (languageCode) {
                   PreferenceUtil.saveString(constants.SHEELA_LANG,
-                      Utils.langaugeCodes[languageCode ?? 'undef']);
+                      CommonUtil.langaugeCodes[languageCode ?? 'undef']);
                   Provider.of<ChatScreenViewModel>(context, listen: false)
                       .updateDeviceSelectionModel(
                     preferredLanguage: languageCode,
