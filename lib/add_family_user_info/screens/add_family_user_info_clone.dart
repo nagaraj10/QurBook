@@ -172,8 +172,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     addFamilyUserInfoBloc.getDeviceSelectionValues().then((value) {
       //fetchUserProfileInfo();
     });
-    setValuesInEditText();
     setUnit();
+    setValuesInEditText();
 
     languageBlock = LanguageRepository();
   }
@@ -1325,8 +1325,16 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         }
 
         if (widget.arguments.myProfileResult.additionalInfo != null) {
-          heightController.text =
-              widget.arguments.myProfileResult.additionalInfo.height ?? '';
+          if(isFeetOrInches){
+            heightController.text =
+                widget.arguments.myProfileResult.additionalInfo?.heightObj?.valueFeet??'';
+            heightInchController.text =
+                widget.arguments.myProfileResult.additionalInfo?.heightObj?.valueInches??'';
+          }else{
+            heightController.text =
+                widget.arguments.myProfileResult.additionalInfo.height ?? '';
+          }
+
           weightController.text =
               widget.arguments.myProfileResult.additionalInfo.weight ?? '';
         }
@@ -1601,6 +1609,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       if(isFeetOrInches){
         heightObj.valueFeet=heightController.text;
         heightObj.valueInches=heightInchController.text;
+        additionalInfo.heightObj=heightObj;
+
       }else{
         additionalInfo.height = heightController.text;
 
@@ -1612,6 +1622,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       if(isFeetOrInches){
         heightObj.valueFeet=heightController.text;
         heightObj.valueInches=heightInchController.text;
+        additionalInfo.heightObj=heightObj;
       }else{
         additionalInfo.height = heightController.text;
 
@@ -1624,27 +1635,35 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       additionalInfo.language = [];
     }
 
+
     profileResult.additionalInfo = additionalInfo;
 
     if (widget.arguments.fromClass == CommonConstants.user_update) {
       try {
-        List<UserProfileSettingCollection3> userProfileSettingCollection = [];
+        List<UserProfileSettingCollection3> userProfileSettingCollection = new List();
 
         var userProfileSettingCollection3Obj = UserProfileSettingCollection3();
         var profileSetting = ProfileSetting();
         userProfileSettingCollection = addFamilyUserInfoBloc
             .myprofileObject.result.userProfileSettingCollection3;
         if (userProfileSettingCollection.isNotEmpty) {
-          userProfileSettingCollection3Obj = addFamilyUserInfoBloc
-              .myprofileObject.result.userProfileSettingCollection3[0];
+
+          /*userProfileSettingCollection3Obj = addFamilyUserInfoBloc
+              .myprofileObject.result.userProfileSettingCollection3[0];*/
+          userProfileSettingCollection3Obj = widget.arguments?.myProfileResult
+              ?.userProfileSettingCollection3[0];
           if (userProfileSettingCollection3Obj.profileSetting != null) {
             profileSetting = userProfileSettingCollection3Obj.profileSetting;
             userProfileSettingCollection3Obj.profileSetting.preferred_language =
                 selectedLanguage;
+            profileSetting.preferredMeasurement=widget.arguments.myProfileResult.userProfileSettingCollection3[0].profileSetting.preferredMeasurement;
+
           } else {
             profileSetting.preferred_language = selectedLanguage;
+            profileSetting.preferredMeasurement=widget.arguments.myProfileResult.userProfileSettingCollection3[0].profileSetting.preferredMeasurement;
             userProfileSettingCollection3Obj.profileSetting = profileSetting;
           }
+          userProfileSettingCollection.clear();
           userProfileSettingCollection.insert(
               0, userProfileSettingCollection3Obj);
         } else {
@@ -2406,20 +2425,42 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   }
 
   void setUnit() async {
-    String heightUnit =
-        await PreferenceUtil.getStringValue(Constants.STR_KEY_HEIGHT);
-    String weightUnit =
-        await PreferenceUtil.getStringValue(Constants.STR_KEY_WEIGHT);
-    if (heightUnit == Constants.STR_VAL_HEIGHT_IND) {
-      isFeetOrInches = true;
-    } else {
+
+    if (widget.arguments.fromClass == CommonConstants.user_update) {
+      var profileSetting = widget.arguments?.myProfileResult
+          ?.userProfileSettingCollection3[0].profileSetting;
+      if (profileSetting != null) {
+        if (profileSetting?.preferredMeasurement != null) {
+          String heightUnit =
+          await profileSetting?.preferredMeasurement.height.unitCode;
+          String weightUnit =
+          await profileSetting?.preferredMeasurement.weight.unitCode;
+          if (heightUnit == Constants.STR_VAL_HEIGHT_IND) {
+            isFeetOrInches = true;
+          } else {
+            isFeetOrInches = false;
+          }
+
+          if (weightUnit == Constants.STR_VAL_WEIGHT_IND) {
+            isKg = true;
+          } else {
+            isKg = false;
+          }
+        } else {
+          if (CommonUtil.REGION_CODE == 'IND') {
+            isFeetOrInches = true;
+            isKg = true;
+          } else {
+            isFeetOrInches = false;
+            isKg = false;
+          }
+        }
+      }
+    }else{
       isFeetOrInches = false;
+      isKg = true;
     }
 
-    if (weightUnit == Constants.STR_VAL_WEIGHT_IND) {
-      isKg = true;
-    } else {
-      isKg = false;
+
     }
-  }
 }

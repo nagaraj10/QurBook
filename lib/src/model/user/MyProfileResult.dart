@@ -28,6 +28,7 @@ class MyProfileResult {
   String medicalPreferences;
   bool isSignedIn;
   bool isActive;
+
   // String createdBy;
   // String createdOn;
   String lastModifiedBy;
@@ -121,8 +122,7 @@ class MyProfileResult {
     if (json['userRelationshipCollection'] != null) {
       userRelationshipCollection = <UserRelationshipCollection>[];
       json['userRelationshipCollection'].forEach((v) {
-        userRelationshipCollection
-            .add(UserRelationshipCollection.fromJson(v));
+        userRelationshipCollection.add(UserRelationshipCollection.fromJson(v));
       });
     }
     if (json['userProfileSettingCollection3'] != null) {
@@ -203,6 +203,7 @@ class AdditionalInfo {
   String visitReason;
   String patientHistory;
   HeightObj heightObj;
+
   AdditionalInfo(
       {this.age,
       this.height,
@@ -224,14 +225,14 @@ class AdditionalInfo {
 
     weight = json['weight'];
     try {
-      heightObj =
-      json['height'] != null ? new HeightObj.fromJson(json['height']) : null;
+      heightObj = json['height'] != null
+          ? new HeightObj.fromJson(json['height'])
+          : null;
+    } catch (e) {}
 
+    try {
       height = json['height'];
-
-    }catch(e){
-
-    }
+    } catch (e) {}
 
     try {
       if (json.containsKey('language')) {
@@ -434,7 +435,7 @@ class UserProfileSettingCollection3 {
   }
 }
 
-class  HeightObj {
+class HeightObj {
   String valueFeet;
   String valueInches;
 

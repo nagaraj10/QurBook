@@ -80,6 +80,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
       PreferenceUtil.getSavedTheme(Constants.keyGreyColor) ?? 0xff753aec;
 
   String version = '';
+  PreferredMeasurement preferredMeasurement;
 
   @override
   void initState() {
@@ -608,6 +609,14 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
 
     selectedPrimaryColor =
         PreferenceUtil.getSavedTheme(Constants.keyPriColor) ?? preColor;
+
+    preferredMeasurement=getDeviceSelectionModel
+        .result[0].profileSetting.preferredMeasurement !=
+        null &&
+        getDeviceSelectionModel.result[0].profileSetting.preferredMeasurement !=
+            ''
+        ? getDeviceSelectionModel.result[0].profileSetting.preferredMeasurement
+        : null;
   }
 
   Future<CreateDeviceSelectionModel> createAppColorSelection(
@@ -659,7 +668,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             preferred_language,
             qa_subscription,
             priColor,
-            greColor)
+            greColor,preferredMeasurement)
         .then((value) {
       updateDeviceModel = value;
       if (updateDeviceModel.isSuccess) {
