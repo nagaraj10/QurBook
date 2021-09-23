@@ -44,6 +44,7 @@ const String qr_deletemedia = 'deletemeta/';
 const String qr_deletemaster = 'deletemaster/';
 
 const String qr_SearchBy = 'search?';
+const String qr_DoctorSearchByFilters = 'dynamic-search?';
 const String qr_sortBy = 'sortBy=';
 const String qr_offset = 'offset=';
 const String qr_limit = 'limit=';
