@@ -513,7 +513,7 @@ class _LandingScreenState extends State<LandingScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    myProfile != null &&
+                    myProfile?.result != null &&
                             myProfile.result.firstName != null &&
                             myProfile.result.firstName != ''
                         ? 'Hey ${toBeginningOfSentenceCase(myProfile?.result?.firstName ?? "")}'
