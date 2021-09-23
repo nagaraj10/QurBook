@@ -188,7 +188,7 @@ class EventListWidget extends StatelessWidget {
                   )),
                 ),
                 child: Text(
-                  saveButton,
+                  confirmButton,
                   style: TextStyle(
                     fontSize: 16.0.sp,
                     color: Colors.white,
