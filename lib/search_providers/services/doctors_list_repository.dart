@@ -11,7 +11,7 @@ class DoctorsListRepository {
     final offset = 0;
     final limit = 10;
     var response = await _helper.getDoctorsListFromSearch(
-        "${query.qr_doctors}${query.qr_SearchBy}${query.qr_sortBy}${query.qr_name_asc}${query.qr_And}${query.qr_offset}${offset.toString()}${query.qr_And}${query.qr_limit}${limit.toString()}${query.qr_And}${query.qr_keyword}",
+        "${query.qr_doctors}${query.qr_DoctorSearchByFilters}${query.qr_sortBy}${query.qr_name_asc}${query.qr_And}${query.qr_offset}${offset.toString()}${query.qr_And}${query.qr_limit}${limit.toString()}${query.qr_And}${query.qr_keyword}",
         param);
     return DoctorsListResponse.fromJson(response);
   }
@@ -21,7 +21,7 @@ class DoctorsListRepository {
     final offset = 0;
     var limit = 10;
     var response = await _helper.getDoctorsListFromSearchNew(
-        "${query.qr_doctor}${query.qr_SearchBy}${query.qr_SearchText}$param${query.qr_And}${query.qr_include}${query.qr_personal}${query.qr_And}${query.qr_limit}${limit.toString()}${query.qr_And}${query.qr_skip}$offset${query.qr_And}${query.qr_sortBy}${query.qr_name_desc}${query.qr_And}${query.qr_isSkipUnknown}$isSkipUnknown");
+        "${query.qr_doctor}${query.qr_DoctorSearchByFilters}${query.qr_SearchText}$param${query.qr_And}${query.qr_include}${query.qr_personal}${query.qr_And}${query.qr_limit}${limit.toString()}${query.qr_And}${query.qr_skip}$offset${query.qr_And}${query.qr_sortBy}${query.qr_name_desc}${query.qr_And}${query.qr_isSkipUnknown}$isSkipUnknown");
 
     return DoctorsSearchListResponse.fromJson(response);
   }

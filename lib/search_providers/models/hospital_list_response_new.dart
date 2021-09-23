@@ -39,30 +39,32 @@ class HospitalsListResult {
   String phoneNumber;
   String phoneNumberTypeId;
   String phoneNumberTypeName;
+  String specialization;
 
-  HospitalsListResult(
-      {this.healthOrganizationReferenceId,
-        this.healthOrganizationName,
-        this.addressLine1,
-        this.addressLine2,
-        this.cityName,
-        this.stateName,
-        this.pincode,
-        this.healthOrganizationId,
-        this.healthOrganizationTypeId,
-        this.healthOrganizationTypeName,
-        this.phoneNumber,
-        this.phoneNumberTypeId,
-        this.phoneNumberTypeName,this.name});
+  HospitalsListResult({
+    this.healthOrganizationReferenceId,
+    this.healthOrganizationName,
+    this.addressLine1,
+    this.addressLine2,
+    this.cityName,
+    this.stateName,
+    this.pincode,
+    this.healthOrganizationId,
+    this.healthOrganizationTypeId,
+    this.healthOrganizationTypeName,
+    this.phoneNumber,
+    this.phoneNumberTypeId,
+    this.phoneNumberTypeName,
+    this.name,
+    this.specialization,
+  });
 
   HospitalsListResult.fromJson(Map<String, dynamic> json) {
     healthOrganizationReferenceId = json['healthOrganizationReferenceId'];
     healthOrganizationName = json['healthOrganizationName'];
     try {
       name = json['name'];
-    }catch(e){
-
-    }
+    } catch (e) {}
     addressLine1 = json['addressLine1'];
     addressLine2 = json['addressLine2'];
     cityName = json['cityName'];
@@ -74,6 +76,7 @@ class HospitalsListResult {
     phoneNumber = json['phoneNumber'];
     phoneNumberTypeId = json['phoneNumberTypeId'];
     phoneNumberTypeName = json['phoneNumberTypeName'];
+    specialization = json['specialization'];
   }
 
   Map<String, dynamic> toJson() {
@@ -92,6 +95,7 @@ class HospitalsListResult {
     data['phoneNumber'] = phoneNumber;
     data['phoneNumberTypeId'] = phoneNumberTypeId;
     data['phoneNumberTypeName'] = phoneNumberTypeName;
+    data['specialization'] = specialization;
     return data;
   }
 }

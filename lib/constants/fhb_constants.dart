@@ -486,6 +486,7 @@ const String searchTextSecond =
     'Choose Qurhealth as your provider to subscribe to care plans for free';
 const String okButton = 'OK';
 const String saveButton = 'Save';
+const String confirmButton = 'Confirm';
 const String select = 'Select';
 const String scheduled = 'Activities';
 const String symptoms = 'Symptoms';
