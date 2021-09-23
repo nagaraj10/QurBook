@@ -143,6 +143,13 @@ class MainActivity : FlutterActivity() {
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         close.setOnClickListener {
             if (dialog.isShowing) {
+                try {
+                    _result?.let {
+                        _result.success("")
+                    }
+                }  catch (e: Exception) {
+                    print(e.printStackTrace())
+                }
                 dialog.dismiss()
             }
         }
