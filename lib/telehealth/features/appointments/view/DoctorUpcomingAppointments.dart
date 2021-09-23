@@ -207,7 +207,9 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                           commonWidget.count(widget.doc.slotNumber),
                           TextWidget(
                             fontsize: 12.0.sp,
-                            text: DateFormat(Constants.Appointments_time_format)
+                            text: DateFormat(CommonUtil.REGION_CODE == 'IN'
+                                        ? Constants.Appointments_time_format
+                                        : Constants.Appointments_time_formatUS)
                                     .format(DateTime.parse(
                                         widget.doc.plannedStartDateTime))
                                     .toString() ??
@@ -256,7 +258,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                   SizedBoxWidget(width: 15.0.w),
                   commonWidget.iconWithText(Constants.Appointments_cancelImage,
                       Colors.black38, Constants.Appointments_cancel, () {
-                        FocusManager.instance.primaryFocus.unfocus();
+                    FocusManager.instance.primaryFocus.unfocus();
                     (widget.doc.status != null &&
                             widget.doc.status.code == Constants.PATDNA)
                         ? toast.getToast(Constants.DNA_APPOINTMENT, Colors.red)

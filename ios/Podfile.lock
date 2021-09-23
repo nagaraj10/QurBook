@@ -303,6 +303,9 @@ PODS:
     - FirebaseAnalytics (~> 8.3.0)
   - Firebase/CoreOnly (8.3.0):
     - FirebaseCore (= 8.3.0)
+  - Firebase/DynamicLinks (8.3.0):
+    - Firebase/CoreOnly
+    - FirebaseDynamicLinks (~> 8.3.0)
   - Firebase/Firestore (8.3.0):
     - Firebase/CoreOnly
     - FirebaseFirestore (~> 8.3.0)
@@ -325,6 +328,10 @@ PODS:
     - Flutter
   - firebase_core (1.4.0):
     - Firebase/CoreOnly (= 8.3.0)
+    - Flutter
+  - firebase_dynamic_links (2.0.7):
+    - Firebase/DynamicLinks (= 8.3.0)
+    - firebase_core
     - Flutter
   - firebase_messaging (10.0.4):
     - Firebase/Messaging (= 8.3.0)
@@ -372,6 +379,8 @@ PODS:
     - GoogleUtilities/Environment (~> 7.4)
     - GoogleUtilities/Logger (~> 7.4)
     - nanopb (~> 2.30908.0)
+  - FirebaseDynamicLinks (8.3.0):
+    - FirebaseCore (~> 8.0)
   - FirebaseFirestore (8.3.0):
     - abseil/algorithm (= 0.20200225.0)
     - abseil/base (= 0.20200225.0)
@@ -425,6 +434,9 @@ PODS:
     - Flutter
   - flutter_local_notifications (0.0.1):
     - Flutter
+  - flutter_logs (0.0.1):
+    - Flutter
+    - ZIPFoundation
   - flutter_sound (8.2.0):
     - Flutter
     - mobile-ffmpeg-full (= 4.4.LTS)
@@ -543,6 +555,8 @@ PODS:
     - nanopb/encode (= 2.30908.0)
   - nanopb/decode (2.30908.0)
   - nanopb/encode (2.30908.0)
+  - open_file (0.0.1):
+    - Flutter
   - OrderedSet (5.0.0)
   - package_info (0.0.1):
     - Flutter
@@ -558,6 +572,8 @@ PODS:
     - SDWebImage/Core (= 5.11.1)
   - SDWebImage/Core (5.11.1)
   - shared_preferences (0.0.1):
+    - Flutter
+  - sms_autofill (0.0.1):
     - Flutter
   - sqflite (0.0.2):
     - Flutter
@@ -578,6 +594,7 @@ PODS:
     - Flutter
   - webview_flutter (0.0.1):
     - Flutter
+  - ZIPFoundation (0.9.11)
 
 DEPENDENCIES:
   - advance_pdf_viewer (from `.symlinks/plugins/advance_pdf_viewer/ios`)
@@ -595,6 +612,7 @@ DEPENDENCIES:
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
+  - firebase_dynamic_links (from `.symlinks/plugins/firebase_dynamic_links/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - firebase_remote_config (from `.symlinks/plugins/firebase_remote_config/ios`)
   - firebase_storage (from `.symlinks/plugins/firebase_storage/ios`)
@@ -606,6 +624,7 @@ DEPENDENCIES:
   - flutter_inappwebview (from `.symlinks/plugins/flutter_inappwebview/ios`)
   - flutter_keyboard_visibility (from `.symlinks/plugins/flutter_keyboard_visibility/ios`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
+  - flutter_logs (from `.symlinks/plugins/flutter_logs/ios`)
   - flutter_sound (from `.symlinks/plugins/flutter_sound/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - gallery_saver (from `.symlinks/plugins/gallery_saver/ios`)
@@ -620,11 +639,13 @@ DEPENDENCIES:
   - image_picker (from `.symlinks/plugins/image_picker/ios`)
   - launch_review (from `.symlinks/plugins/launch_review/ios`)
   - multi_image_picker (from `.symlinks/plugins/multi_image_picker/ios`)
+  - open_file (from `.symlinks/plugins/open_file/ios`)
   - package_info (from `.symlinks/plugins/package_info/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
   - screen (from `.symlinks/plugins/screen/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
+  - sms_autofill (from `.symlinks/plugins/sms_autofill/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
   - tflite (from `.symlinks/plugins/tflite/ios`)
   - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
@@ -650,6 +671,7 @@ SPEC REPOS:
     - FirebaseAuth
     - FirebaseCore
     - FirebaseCoreDiagnostics
+    - FirebaseDynamicLinks
     - FirebaseFirestore
     - FirebaseInstallations
     - FirebaseMessaging
@@ -677,6 +699,7 @@ SPEC REPOS:
     - TensorFlowLiteC
     - Toast
     - TOCropViewController
+    - ZIPFoundation
 
 EXTERNAL SOURCES:
   advance_pdf_viewer:
@@ -709,6 +732,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_auth/ios"
   firebase_core:
     :path: ".symlinks/plugins/firebase_core/ios"
+  firebase_dynamic_links:
+    :path: ".symlinks/plugins/firebase_dynamic_links/ios"
   firebase_messaging:
     :path: ".symlinks/plugins/firebase_messaging/ios"
   firebase_remote_config:
@@ -731,6 +756,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_keyboard_visibility/ios"
   flutter_local_notifications:
     :path: ".symlinks/plugins/flutter_local_notifications/ios"
+  flutter_logs:
+    :path: ".symlinks/plugins/flutter_logs/ios"
   flutter_sound:
     :path: ".symlinks/plugins/flutter_sound/ios"
   fluttertoast:
@@ -759,6 +786,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/launch_review/ios"
   multi_image_picker:
     :path: ".symlinks/plugins/multi_image_picker/ios"
+  open_file:
+    :path: ".symlinks/plugins/open_file/ios"
   package_info:
     :path: ".symlinks/plugins/package_info/ios"
   path_provider:
@@ -769,6 +798,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/screen/ios"
   shared_preferences:
     :path: ".symlinks/plugins/shared_preferences/ios"
+  sms_autofill:
+    :path: ".symlinks/plugins/sms_autofill/ios"
   sqflite:
     :path: ".symlinks/plugins/sqflite/ios"
   tflite:
@@ -809,6 +840,7 @@ SPEC CHECKSUMS:
   firebase_analytics: 25a03006c041a3be10bbd8e7313f87f59b9857bf
   firebase_auth: 5d48a6c2c9de6d8f7946269ef904136298c6aa12
   firebase_core: 72374607c8c6f5a0adc0559e5c5bf57deda975e3
+  firebase_dynamic_links: 63d25b8afb1257210012a703b2029b425f0b62c7
   firebase_messaging: 55c5b8184efd330b9d1f1765b55c4ae57e015c5e
   firebase_remote_config: d6a613ccdc8d2e211f235e7f4f4735d5f2713285
   firebase_storage: 93642c2a5d403bd218134a2bfe61e311a6f446bc
@@ -817,6 +849,7 @@ SPEC CHECKSUMS:
   FirebaseAuth: fd12c82de44e7ad3b821610c387b8251f03aa0f9
   FirebaseCore: a6dba751680d7033b9d3831e1cfc95ead0605118
   FirebaseCoreDiagnostics: cad03be1904b975f845e632f2720c3337da27faf
+  FirebaseDynamicLinks: 5ab1f7988e31b5b267a2e034659e43cef4fff613
   FirebaseFirestore: f4f42828c6d82f6945575611c23dd343e0e7d0aa
   FirebaseInstallations: 1585729afc787877763208c2088ed84221161f77
   FirebaseMessaging: 42252b79b860482021483748669ec32e22196462
@@ -830,6 +863,7 @@ SPEC CHECKSUMS:
   flutter_inappwebview: bfd58618f49dc62f2676de690fc6dcda1d6c3721
   flutter_keyboard_visibility: 0339d06371254c3eb25eeb90ba8d17dca8f9c069
   flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
+  flutter_logs: 5d0dca26963e0f30b11a995a764744ef77d5d428
   flutter_sound: 9abd356ff1aac77f0cad17152c59ae320226bbe7
   fluttertoast: 6122fa75143e992b1d3470f61000f591a798cc58
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
@@ -857,6 +891,7 @@ SPEC CHECKSUMS:
   mobile-ffmpeg-full: f17c82219b4ff9e4018b5e21f88b78c28a3475db
   multi_image_picker: 443e776a762d7901641854043b60abf88a85d5ef
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
+  open_file: 02eb5cb6b21264bd3a696876f5afbfb7ca4f4b7d
   OrderedSet: aaeb196f7fef5a9edf55d89760da9176ad40b93c
   package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
@@ -866,6 +901,7 @@ SPEC CHECKSUMS:
   screen: abd91ca7bf3426e1cc3646d27e9b2358d6bf07b0
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
+  sms_autofill: c461043483362c3f1709ee76eaae6eb570b31686
   sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
   SwiftyGif: 5d4af95df24caf1c570dbbcb32a3b8a0763bc6d7
   tau_core: 0a1354b62e31cbe11ce49dc7169becfac5bd4850
@@ -877,7 +913,8 @@ SPEC CHECKSUMS:
   video_player: 9cc823b1d9da7e8427ee591e8438bfbcde500e6e
   wakelock: d0fc7c864128eac40eba1617cb5264d9c940b46f
   webview_flutter: 3603125dfd3bcbc9d8d418c3f80aeecf331c068b
+  ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
 
-PODFILE CHECKSUM: 3dffd8c48b531d21ec0ec153c22dc8e3a6223bc9
+PODFILE CHECKSUM: e00a561fdad1f8a8ae3fb7484f3618adad7be5b3
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.10.2

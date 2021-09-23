@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -42,6 +43,7 @@ class NotificationController {
       headers: <String, String>{
         'Content-Type': 'application/json',
         'Authorization': 'key=$_firebaseChatNotifyToken',
+        KEY_OffSet: CommonUtil.TimeZone
       },
       body: jsonEncode(
         <String, dynamic>{

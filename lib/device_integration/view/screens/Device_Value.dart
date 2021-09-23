@@ -46,7 +46,6 @@ import 'dart:convert';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
-
 class EachDeviceValues extends StatefulWidget {
   const EachDeviceValues(
       {this.device_name,
@@ -66,7 +65,7 @@ class EachDeviceValues extends StatefulWidget {
 class _EachDeviceValuesState extends State<EachDeviceValues> {
   GlobalKey<ScaffoldState> scaffold_state = GlobalKey<ScaffoldState>();
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
-  String errorMsg = '',errorMsgDia='',errorMsgSys='';
+  String errorMsg = '', errorMsgDia = '', errorMsgSys = '';
   bool onOkClicked = false;
   String categoryName = STR_DEVICES;
 
@@ -100,7 +99,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   var commonConstants = CommonConstants();
 
   String tempUnit;
-String weightUnit;
+  String weightUnit;
 
   @override
   void initState() {
@@ -364,6 +363,8 @@ String weightUnit;
             postDeviceValuesExtra[parameters.strunit] = variable.strBefore;
           } else if (isSelected[1] == true) {
             postDeviceValuesExtra[parameters.strunit] = variable.strAfter;
+          } else {
+            postDeviceValuesExtra[parameters.strunit] = 'Random';
           }
 
           postDeviceData.add(postDeviceValuesExtra);
@@ -371,8 +372,7 @@ String weightUnit;
           postDeviceValues[parameters.strParameters] =
               CommonConstants.strTemperature;
           postDeviceValues[parameters.strvalue] = deviceController.text;
-          postDeviceValues[parameters.strunit] =
-              tempUnit;
+          postDeviceValues[parameters.strunit] = tempUnit;
           postDeviceData.add(postDeviceValues);
         } else if (deviceName == STR_WEIGHING_SCALE) {
           postDeviceValues[parameters.strParameters] =
@@ -480,6 +480,10 @@ String weightUnit;
           validationConditon = false;
           validationMsg = CommonConstants.strSugarLevelEmpty;
         } else if (isSelected[0] == null && isSelected[1] == null) {
+          validationConditon = false;
+          validationMsg = CommonConstants.strSugarFasting;
+        } else if ((isSelected[0] == null && isSelected[1] == false) ||
+            (isSelected[0] == false && isSelected[1] == null)) {
           validationConditon = false;
           validationMsg = CommonConstants.strSugarFasting;
         } else {
@@ -642,21 +646,16 @@ String weightUnit;
                                       onSaved: (input) => setState(() {})),
                                 )*/
                                 fhbBasicWidget.getErrorMsgForUnitEntered(
-                                  context,
-                                  CommonConstants.strSystolicPressure,
-                                  commonConstants.bpDPUNIT,
-                                  deviceController,
-                                  (errorValue) {
-                                    setState(() {
-                                      errorMsgSys = errorValue??"";
-                                      errorMsg=errorMsgSys;
-
-                                    });
-                                  },
-                                    errorMsgSys,
-                                  variable.strbpunit,
-                                  deviceName,range: "Sys"
-                                )
+                                    context,
+                                    CommonConstants.strSystolicPressure,
+                                    commonConstants.bpDPUNIT,
+                                    deviceController, (errorValue) {
+                                  setState(() {
+                                    errorMsgSys = errorValue ?? "";
+                                    errorMsg = errorMsgSys;
+                                  });
+                                }, errorMsgSys, variable.strbpunit, deviceName,
+                                    range: "Sys")
                               ],
                             ),
                           )),
@@ -697,20 +696,16 @@ String weightUnit;
                                     onSaved: (input) => setState(() {})),
                               ),*/
                           fhbBasicWidget.getErrorMsgForUnitEntered(
-                            context,
-                            CommonConstants.strDiastolicPressure,
-                            commonConstants.bpDPUNIT,
-                            diaStolicPressure,
-                            (errorValue) {
-                              setState(() {
-                                errorMsgDia = errorValue;
-                                errorMsg=errorMsgDia;
-                              });
-                            },
-                              errorMsgDia,
-                            variable.strbpunit,
-                            deviceName,range: "Dia"
-                          )
+                              context,
+                              CommonConstants.strDiastolicPressure,
+                              commonConstants.bpDPUNIT,
+                              diaStolicPressure, (errorValue) {
+                            setState(() {
+                              errorMsgDia = errorValue;
+                              errorMsg = errorMsgDia;
+                            });
+                          }, errorMsgDia, variable.strbpunit, deviceName,
+                              range: "Dia")
                         ],
                       )),
                       Expanded(
@@ -757,19 +752,15 @@ String weightUnit;
                                       onSaved: (input) => setState(() {})),
                                 ),*/
                                 fhbBasicWidget.getErrorMsgForUnitEntered(
-                                  context,
-                                  CommonConstants.strPulse,
-                                  commonConstants.bpPulseUNIT,
-                                  pulse,
-                                  (errorValue) {
-                                    setState(() {
-                                      errorMsg = errorValue;
-                                    });
-                                  },
-                                  errorMsg,
-                                  variable.strpulse,
-                                  deviceName,range:""
-                                ),
+                                    context,
+                                    CommonConstants.strPulse,
+                                    commonConstants.bpPulseUNIT,
+                                    pulse, (errorValue) {
+                                  setState(() {
+                                    errorMsg = errorValue;
+                                  });
+                                }, errorMsg, variable.strpulse, deviceName,
+                                    range: ""),
                               ],
                             ),
                           )),
@@ -788,8 +779,8 @@ String weightUnit;
   Widget getCardForThermometer(String deviceName) {
     try {
       tempUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_TEMP);
-    }catch(e){
-      tempUnit="F";
+    } catch (e) {
+      tempUnit = "F";
     }
 
     return Container(
@@ -872,19 +863,15 @@ String weightUnit;
                             onSaved: (input) => setState(() {})),
                       )*/
                       fhbBasicWidget.getErrorMsgForUnitEntered(
-                        context,
-                        CommonConstants.strTemperature,
+                          context,
+                          CommonConstants.strTemperature,
                           tempUnit,
-                        deviceController,
-                        (errorValue) {
-                          setState(() {
-                            errorMsg = errorValue;
-                          });
-                        },
-                        errorMsg,
-                          tempUnit,
-                        deviceName,range: "",device:"Temp"
-                      )
+                          deviceController, (errorValue) {
+                        setState(() {
+                          errorMsg = errorValue;
+                        });
+                      }, errorMsg, tempUnit, deviceName,
+                          range: "", device: "Temp")
                     ],
                   ),
                   Column(
@@ -985,7 +972,8 @@ String weightUnit;
                         setState(() {
                           errorMsg = errorValue;
                         });
-                      }, errorMsg, variable.strpulseUnit, deviceName,range: ""),
+                      }, errorMsg, variable.strpulseUnit, deviceName,
+                          range: ""),
                     ],
                   )),
                   Expanded(
@@ -1035,7 +1023,7 @@ String weightUnit;
                         setState(() {
                           errorMsg = errorValue;
                         });
-                      }, errorMsg, variable.strpulse, deviceName,range: ""),
+                      }, errorMsg, variable.strpulse, deviceName, range: ""),
                     ],
                   ))
                 ],
@@ -1048,8 +1036,8 @@ String weightUnit;
   Widget getCardForWeighingScale(String deviceName) {
     try {
       weightUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_WEIGHT);
-    }catch(e){
-      weightUnit="kgs";
+    } catch (e) {
+      weightUnit = "kgs";
     }
 
     return Container(
@@ -1113,7 +1101,7 @@ String weightUnit;
                         setState(() {
                           errorMsg = errorValue;
                         });
-                      }, errorMsg, weightUnit, deviceName,range: ""),
+                      }, errorMsg, weightUnit, deviceName, range: ""),
                     ],
                   ),
                 ],
@@ -1186,7 +1174,14 @@ String weightUnit;
                   setState(() {
                     errorMsg = errorValue;
                   });
-                }, errorMsg, variable.strGlucUnit, deviceName,range:isSelected[0]==true?'Fast':'PP')
+                }, errorMsg, variable.strGlucUnit, deviceName,
+                    range: ((isSelected[0] == null && isSelected[1] == false) ||
+                            (isSelected[0] == false && isSelected[1] == null) ||
+                            (isSelected[0] == null && isSelected[1] == null))
+                        ? 'Random'
+                        : isSelected[0] == true
+                            ? 'Fast'
+                            : 'PP')
               ],
             )),
             SizedBox(

@@ -1734,7 +1734,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     userAddressCollection3.isPrimary = true;
     userAddressCollection3.isActive = true;
     userAddressCollection3.createdOn =
-        DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
+        CommonUtil.dateFormatterWithdatetimeseconds(DateTime.now());
     userAddressCollection3.lastModifiedOn = null;
     if (widget.arguments.fromClass == CommonConstants.my_family) {
       userAddressCollection3.createdBy = widget.arguments.id;
@@ -1759,7 +1759,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       createdBy: widget.arguments.fromClass == CommonConstants.user_update
           ? PreferenceUtil.getStringValue(Constants.KEY_USERID)
           : widget.arguments.id,
-      createdOn: DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
+      createdOn: CommonUtil.dateFormatterWithdatetimeseconds(DateTime.now()),
     );
 
     var userAddressCollection3List = List<UserAddressCollection3>();
@@ -1933,7 +1933,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     snapshot.data.result,
                     headers: {
                       HttpHeaders.authorizationHeader:
-                          PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)
+                          PreferenceUtil.getStringValue(
+                              Constants.KEY_AUTHTOKEN),
+                      Constants.KEY_OffSet: CommonUtil.TimeZone
                     },
                   ),
                   // ignore: always_specify_types
@@ -2026,7 +2028,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   height: 60.0.h,
                   headers: {
                     HttpHeaders.authorizationHeader:
-                        PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)
+                        PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN),
+                    Constants.KEY_OffSet: CommonUtil.TimeZone
                   },
                 );
               } else {
@@ -2113,7 +2116,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   height: 60.0.h,
                   headers: {
                     HttpHeaders.authorizationHeader:
-                        PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)
+                        PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN),
+                    Constants.KEY_OffSet: CommonUtil.TimeZone
                   },
                 );
               } else {

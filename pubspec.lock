@@ -498,6 +498,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.2"
+  flashlight:
+    dependency: "direct main"
+    description:
+      name: flashlight
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.1"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -608,6 +615,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.0"
+  flutter_logs:
+    dependency: "direct main"
+    description:
+      name: flutter_logs
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.4"
   flutter_math_fork:
     dependency: transitive
     description:
@@ -740,8 +754,8 @@ packages:
   gmiwidgetspackage:
     dependency: "direct main"
     description:
-      path: "C:\\Users\\ParvathiM\\commonWidget\\myfhb-flutter-common"
-      relative: false
+      path: "../../fhb/fhbCommon"
+      relative: true
     source: path
     version: "0.0.1"
   google_maps_flutter:
@@ -1101,6 +1115,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.11.1"
+  pin_input_text_field:
+    dependency: transitive
+    description:
+      name: pin_input_text_field
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.1.0"
   platform:
     dependency: transitive
     description:
@@ -1246,6 +1267,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
+  sms_autofill:
+    dependency: "direct main"
+    description:
+      name: sms_autofill
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.1"
   source_span:
     dependency: transitive
     description:

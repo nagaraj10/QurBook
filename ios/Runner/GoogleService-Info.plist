@@ -3,23 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>588661578434-l1qvt7tl7de2hbqa5o8iqvak8tvmofkn.apps.googleusercontent.com</string>
+	<string>69764989858-b2p2t37rgbprjajtk6m6pibehk7qg1rj.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.588661578434-l1qvt7tl7de2hbqa5o8iqvak8tvmofkn</string>
-	<key>ANDROID_CLIENT_ID</key>
-	<string>588661578434-oplufmffn1s1v2an6bgbsupged6lh703.apps.googleusercontent.com</string>
+	<string>com.googleusercontent.apps.69764989858-b2p2t37rgbprjajtk6m6pibehk7qg1rj</string>
 	<key>API_KEY</key>
-	<string>AIzaSyA94AzMwGOVqspftaGHjtEEegzbrlxAaRY</string>
+	<string>AIzaSyAyolVw2RexIINGU5VrXfGSL_JEh2k2kAQ</string>
 	<key>GCM_SENDER_ID</key>
-	<string>588661578434</string>
+	<string>69764989858</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.ventechsolutions.myFHB</string>
+	<string>com.qurhealth.qurbook.us</string>
 	<key>PROJECT_ID</key>
-	<string>myfhbfitness</string>
+	<string>myfhbfitness-us</string>
 	<key>STORAGE_BUCKET</key>
-	<string>myfhbfitness.appspot.com</string>
+	<string>myfhbfitness-us.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -31,10 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:588661578434:ios:517489e9957ed41898f95b</string>
-	<key>DATABASE_URL</key>
-	<string>https://myfhbfitness.firebaseio.com</string>
-	<key>io.flutter.embedded_views_preview</key>
-	<true/>
+	<string>1:69764989858:ios:f3b272513f843a718c28fb</string>
 </dict>
 </plist>

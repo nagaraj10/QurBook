@@ -241,7 +241,7 @@ class DatabaseUtil {
     final gluco = UnitsMesurements(3, 'mgdl', 70, 120,"Fast");
     await db.saveUnitMeasurements(gluco);
 
-    final bp = UnitsMesurements(4, 'mmHg', 90, 130,"Dia");
+    final bp = UnitsMesurements(4, 'mmHg', 60, 90,"Dia");
     await db.saveUnitMeasurements(bp);
     final pul = UnitsMesurements(5, '%spo2', 95, 100,"");
     await db.saveUnitMeasurements(pul);
@@ -259,7 +259,7 @@ class DatabaseUtil {
     await db.saveUnitMeasurements(glucoPP);
     final glucoRandom = UnitsMesurements(12, 'mgdl', 70, 200,"Random");
     await db.saveUnitMeasurements(glucoRandom);
-    final sp = UnitsMesurements(13, 'mmHg', 60, 90,"Sys");
+    final sp = UnitsMesurements(13, 'mmHg', 80, 139,"Sys");
     await db.saveUnitMeasurements(sp);
     final pounds = UnitsMesurements(14, 'lb', 0, 551,"");
     await db.saveUnitMeasurements(pounds);

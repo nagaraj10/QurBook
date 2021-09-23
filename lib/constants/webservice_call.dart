@@ -245,7 +245,7 @@ class WebserviceCall {
       description: 'Resident Address',
       isActive: true,
       createdBy: userID,
-      createdOn: DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
+      createdOn: CommonUtil.dateFormatterWithdatetimeseconds(DateTime.now()),
     );
 
     //TOD O here only check user add/update flow for removing the id from useraddresscollection

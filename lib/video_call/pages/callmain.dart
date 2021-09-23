@@ -181,7 +181,8 @@ class _CallMainState extends State<CallMain> {
                                       widget.patientId,
                                       widget.patientName,
                                       widget.patientPicUrl,
-                                      widget.channelName),
+                                      widget.channelName,
+                                      widget.isWeb),
                                   SizedBox(
                                     height: 20.0.h,
                                   ),

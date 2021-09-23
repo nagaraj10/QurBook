@@ -426,12 +426,22 @@ class _MyPlanState extends State<MyPlanList> {
                                       setState(() {});
                                     });
                                   } else {
-                                    await CommonUtil().unSubcribeAlertDialog(
-                                        context,
-                                        packageId: planList[i].packageid,
-                                        refresh: () {
-                                      setState(() {});
-                                    });
+                                    if(planList[i].price=='0'){
+                                      await CommonUtil().unSubcribeAlertDialog(
+                                          context,
+                                          packageId: planList[i].packageid,
+                                          refresh: () {
+                                            setState(() {});
+                                          });
+                                    }else{
+                                      await CommonUtil().alertDialogForNoReFund(
+                                          context,
+                                          packageId: planList[i].packageid,
+                                          refresh: () {
+                                            setState(() {});
+                                          });
+                                    }
+
                                   }
                                 },
                                 child: TextWidget(
