@@ -703,41 +703,47 @@ class ChatScreenViewModel extends ChangeNotifier {
     Service mService = Service();
     final response = await mService.getAudioFileTTS(reqJson);
 
-    if (response.statusCode == 200) {
-      if (response.body != null) {
-        final data = jsonDecode(response.body);
-        final result = data["payload"];
-        if (result != null) {
-          final audioContent = result["audioContent"];
-          if (audioContent != null) {
-            final bytes = Base64Decoder().convert(audioContent);
-            if (bytes != null) {
-              final dir = await getTemporaryDirectory();
-              final file = File('${dir.path}/wavenet.mp3');
-              await file.writeAsBytes(bytes);
-              final path = dir.path + "/wavenet.mp3";
-              if (canSpeak) {
-                if (isTTS) {
-                  newAudioPlay1.play(path, isLocal: true);
-                } else {
-                  audioPlayerForTTS.play(path, isLocal: true);
-                }
-                await Future.delayed(Duration(milliseconds: 500), () async {
-                  await Future.delayed(
-                      Duration(
-                        milliseconds: delayTime > 0 ? delayTime : 0,
-                      ), () {
-                    return true;
-                  });
-                });
+    if (response.statusCode == 200 && response.body != null) {
+      final data = jsonDecode(response.body);
+      final result = data["payload"];
+      if (result != null && (data['isSuccess'] ?? false)) {
+        final audioContent = result["audioContent"];
+        if (audioContent != null) {
+          final bytes = Base64Decoder().convert(audioContent);
+          if (bytes != null) {
+            final dir = await getTemporaryDirectory();
+            final file = File('${dir.path}/wavenet.mp3');
+            await file.writeAsBytes(bytes);
+            final path = dir.path + "/wavenet.mp3";
+            if (canSpeak) {
+              if (isTTS) {
+                newAudioPlay1.play(path, isLocal: true);
+              } else {
+                audioPlayerForTTS.play(path, isLocal: true);
               }
+              await Future.delayed(Duration(milliseconds: 500), () async {
+                await Future.delayed(
+                    Duration(
+                      milliseconds: delayTime > 0 ? delayTime : 0,
+                    ), () {
+                  return true;
+                });
+              });
             }
           }
         }
+      } else {
+        isLoading = false;
+        stopTTSEngine();
+        notifyListeners();
+        FlutterToast().getToast(
+            'There is some issue with sheela,\n Please try after some time',
+            Colors.black54);
       }
     } else {
       isLoading = false;
       notifyListeners();
+      stopTTSEngine();
       FlutterToast().getToast(
           'There is some issue with sheela,\n Please try after some time',
           Colors.black54);
@@ -765,13 +771,13 @@ class ChatScreenViewModel extends ChangeNotifier {
 
   Future<void> gettingReposnseFromNative() async {
     stopTTSEngine();
-    if (!isMicListening) {
-      isMicListening = true;
-      notifyListeners();
-      try {
-        var micStatus = await variable.voice_platform
-            .invokeMethod(variable.strvalidateMicAvailablity);
-        if (micStatus) {
+    try {
+      var micStatus = await variable.voice_platform
+          .invokeMethod(variable.strvalidateMicAvailablity);
+      if (micStatus) {
+        if (!isMicListening) {
+          isMicListening = true;
+          notifyListeners();
           await variable.voice_platform.invokeMethod(variable.strspeakAssistant,
               {'langcode': Utils.getCurrentLanCode()}).then((response) {
             isMicListening = false;
@@ -799,13 +805,13 @@ class ChatScreenViewModel extends ChangeNotifier {
             isMicListening = false;
             notifyListeners();
           });
-        } else {
-          FlutterToast().getToast(CommonConstants.strMicAlertMsg, Colors.black);
         }
-      } on PlatformException catch (e) {
-        isMicListening = false;
-        notifyListeners();
+      } else {
+        FlutterToast().getToast(CommonConstants.strMicAlertMsg, Colors.black);
       }
+    } on PlatformException catch (e) {
+      isMicListening = false;
+      notifyListeners();
     }
   }
 
