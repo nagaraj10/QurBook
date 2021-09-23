@@ -593,7 +593,9 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                 itemBuilder: (c, i) => Container(
                   padding: EdgeInsets.only(top: 2, bottom: 2),
                   child: getCardToDisplaySearchList(
-                      (data[i].name!=null && data[i].name!="") ? data[i].name:data[i].healthOrganizationName,
+                      (data[i].name != null && data[i].name != "")
+                          ? data[i].name
+                          : data[i].healthOrganizationName,
                       data[i].addressLine1,
                       data[i].healthOrganizationId ??
                           data[i].healthOrganizationReferenceId,
@@ -684,16 +686,20 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                       child: Padding(
                         padding: EdgeInsets.all(10),
                         child: getDataToView(
-                            widget.arguments.searchWord ==
-                                    CommonConstants.doctors
-                                ? name
-                                : widget.arguments.searchWord ==
-                                        CommonConstants.hospitals
-                                    ? name
-                                    : labData.healthOrganizationName,
-                            address,
-                            id,
-                            data),
+                          widget.arguments.searchWord == CommonConstants.doctors
+                              ? name
+                              : widget.arguments.searchWord ==
+                                      CommonConstants.hospitals
+                                  ? name
+                                  : labData.healthOrganizationName,
+                          address,
+                          id,
+                          data,
+                          specialization: widget.arguments.searchWord ==
+                                  CommonConstants.hospitals
+                              ? hospitalData.specialization
+                              : null,
+                        ),
                       ))
                 ]))),
         onTap: () {
@@ -728,8 +734,14 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     Navigator.of(context).pop({Constants.keyLab: json.encode(laboratoryData)});
   }
 
-  getDataToView(String name, String address, String id, DoctorsListResult data,
-      {String cityAndState}) {
+  getDataToView(
+    String name,
+    String address,
+    String id,
+    DoctorsListResult data, {
+    String cityAndState,
+    String specialization,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -774,7 +786,17 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                     overflow: TextOverflow.ellipsis,
                   )
                 : SizedBox(height: 10.0.h)
-            : SizedBox(height: 10.0.h),
+            : (specialization != null && specialization != '')
+                ? Text(
+                    toBeginningOfSentenceCase(specialization ?? ''),
+                    style: TextStyle(
+                        fontSize: 15.0.sp,
+                        fontWeight: FontWeight.w400,
+                        color: ColorUtils.lightgraycolor),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  )
+                : SizedBox(height: 10.0.h),
       ],
     );
   }

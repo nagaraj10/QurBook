@@ -290,7 +290,7 @@ class HealthReportListForUserRepository {
 
     final response = await _helper.createDeviceSelection(
         query.qr_user_profile_no_slash, body);
-    return CreateDeviceSelectionModel.fromJson(response);
+    return CreateDeviceSelectionModel.fromJson(response ?? {});
   }
 
   Future<UpdateDeviceModel> updateDeviceModel(
