@@ -360,9 +360,11 @@ class _CategoryState extends State<CategoryList> {
                       backgroundColor: Colors.grey[200],
                       radius: 20,
                       child: CommonUtil().customImage(
-                          (planList[i]?.catmetadata?.icon ?? '').isNotEmpty
-                              ? planList[i]?.catmetadata?.icon
-                              : icon)),
+                        (planList[i]?.catmetadata?.icon ?? '').isNotEmpty
+                            ? planList[i]?.catmetadata?.icon
+                            : icon,
+                        planInitial: planList[i]?.providerName,
+                      )),
                   SizedBox(
                     width: 20.0.w,
                   ),
@@ -495,8 +497,10 @@ class _CategoryState extends State<CategoryList> {
                     CircleAvatar(
                       backgroundColor: Colors.grey[200],
                       radius: 20,
-                      child: CommonUtil()
-                          .customImage(getImage(inx.index, planListResult)),
+                      child: CommonUtil().customImage(
+                        getImage(inx.index, planListResult),
+                        planInitial: planListResult[inx.index]?.providerName,
+                      ),
                     ),
                     SizedBox(
                       width: 20.0.w,

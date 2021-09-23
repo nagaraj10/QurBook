@@ -63,6 +63,7 @@ class ChatScreenViewModel extends ChangeNotifier {
   String _screen = parameters.strSheela;
   int delayTime = 0;
   int playingIndex = 0;
+  bool isMicListening = false;
 
   List<Conversation> get getMyConversations => conversations;
 
@@ -187,6 +188,7 @@ class ChatScreenViewModel extends ChangeNotifier {
     if (stopPrevious) {
       stopTTSEngine();
     }
+    isMicListening = false;
     stopTTS = false;
     if (canSpeak) {
       if (index != null) {
@@ -439,6 +441,7 @@ class ChatScreenViewModel extends ChangeNotifier {
     final response = await mService.sendMetaToMaya(reqJson);
 
     if (response.statusCode == 200) {
+      isMicListening = false;
       if (response.body != null) {
         final jsonResponse = jsonDecode(response.body);
 
@@ -762,31 +765,48 @@ class ChatScreenViewModel extends ChangeNotifier {
 
   Future<void> gettingReposnseFromNative() async {
     stopTTSEngine();
-    try {
-      var micStatus = await variable.voice_platform
-          .invokeMethod(variable.strvalidateMicAvailablity);
-      if (micStatus) {
-        await variable.voice_platform.invokeMethod(variable.strspeakAssistant,
-            {'langcode': Utils.getCurrentLanCode()}).then((response) {
-          sendToMaya(response, screen: screenValue);
-          var date =
-              new FHBUtils().getFormattedDateString(DateTime.now().toString());
-          Conversation model = new Conversation(
-              isMayaSaid: false,
-              text: response,
-              name: prof.result != null
-                  ? prof.result.firstName + ' ' + prof.result.lastName
-                  : '',
-              timeStamp: date,
-              redirect: isRedirect,
-              screen: screenValue);
-          conversations.add(model);
-          notifyListeners();
-        });
-      } else {
-        FlutterToast().getToast(CommonConstants.strMicAlertMsg,Colors.black);
+    if (!isMicListening) {
+      isMicListening = true;
+      notifyListeners();
+      try {
+        var micStatus = await variable.voice_platform
+            .invokeMethod(variable.strvalidateMicAvailablity);
+        if (micStatus) {
+          await variable.voice_platform.invokeMethod(variable.strspeakAssistant,
+              {'langcode': Utils.getCurrentLanCode()}).then((response) {
+            isMicListening = false;
+            notifyListeners();
+            if ((response ?? '').toString()?.isNotEmpty) {
+              sendToMaya(response, screen: screenValue);
+              var date = new FHBUtils()
+                  .getFormattedDateString(DateTime.now().toString());
+              Conversation model = new Conversation(
+                  isMayaSaid: false,
+                  text: response,
+                  name: prof.result != null
+                      ? prof.result.firstName + ' ' + prof.result.lastName
+                      : '',
+                  timeStamp: date,
+                  redirect: isRedirect,
+                  screen: screenValue);
+              conversations.add(model);
+              notifyListeners();
+            }
+          }).whenComplete(() {
+            isMicListening = false;
+            notifyListeners();
+          }).onError((error, stackTrace) {
+            isMicListening = false;
+            notifyListeners();
+          });
+        } else {
+          FlutterToast().getToast(CommonConstants.strMicAlertMsg, Colors.black);
+        }
+      } on PlatformException catch (e) {
+        isMicListening = false;
+        notifyListeners();
       }
-    } on PlatformException catch (e) {}
+    }
   }
 
   void refreshData() {

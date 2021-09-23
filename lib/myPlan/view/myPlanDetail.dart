@@ -85,7 +85,7 @@ class PlanDetail extends State<MyPlanDetail> {
   @override
   void initState() {
     super.initState();
-     mInitialTime = DateTime.now();
+    mInitialTime = DateTime.now();
     //setValues();
     planListFetch = myPlanViewModel.getMyPlanListDetail(widget?.packageId);
   }
@@ -188,7 +188,7 @@ class PlanDetail extends State<MyPlanDetail> {
       price: price,
       startDate: startDate,
       endDate: endDate,
-      isExpired: isExpired=='1'?true:false,
+      isExpired: isExpired == '1' ? true : false,
       refresh: () {
         print('ns done');
       },
@@ -225,7 +225,10 @@ class PlanDetail extends State<MyPlanDetail> {
                       child: CircleAvatar(
                           backgroundColor: Colors.grey[200],
                           radius: 26,
-                          child: CommonUtil().customImage(getImage())),
+                          child: CommonUtil().customImage(
+                            getImage(),
+                            planInitial: providerName,
+                          )),
                     ),
                     Expanded(
                       flex: 3,
@@ -251,22 +254,23 @@ class PlanDetail extends State<MyPlanDetail> {
                           ),
                           docName != null && docName != ''
                               ? Row(
-                                children: [
-                                  Text(
-                                      'Plan approved by:',
-                                      style: TextStyle(fontSize: 16.sp,color: Colors.grey[600])),
-                                  SizedBox(width: 4.w),
-                                  Flexible(
-                                    child: Container(
-                                      child: Text(
-                                          toBeginningOfSentenceCase(docName),
-                                          textAlign: TextAlign.start,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(fontSize: 16.sp)),
+                                  children: [
+                                    Text('Plan approved by:',
+                                        style: TextStyle(
+                                            fontSize: 16.sp,
+                                            color: Colors.grey[600])),
+                                    SizedBox(width: 4.w),
+                                    Flexible(
+                                      child: Container(
+                                        child: Text(
+                                            toBeginningOfSentenceCase(docName),
+                                            textAlign: TextAlign.start,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(fontSize: 16.sp)),
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              )
+                                  ],
+                                )
                               : SizedBox.shrink(),
                           SizedBox(
                             height: 3.h,
@@ -344,26 +348,25 @@ class PlanDetail extends State<MyPlanDetail> {
                           price: price,
                           startDate: startDate,
                           endDate: endDate,
-                          isExpired: isExpired=='1'?true:false,
+                          isExpired: isExpired == '1' ? true : false,
                           IsExtendable: isExtendable == '1' ? true : false,
                           refresh: () {
                         Navigator.pop(context);
                       });
                     } else {
-                      if(price=='0'){
+                      if (price == '0') {
                         await CommonUtil().unSubcribeAlertDialog(
                           context,
                           packageId: packageId,
                           fromDetail: true,
                         );
-                      }else{
+                      } else {
                         await CommonUtil().alertDialogForNoReFund(
                           context,
                           packageId: packageId,
                           fromDetail: true,
                         );
                       }
-
                     }
                   },
                   borderSide: BorderSide(
@@ -397,7 +400,7 @@ class PlanDetail extends State<MyPlanDetail> {
                           price: price,
                           startDate: startDate,
                           endDate: endDate,
-                          isExpired: isExpired=='1'?true:false,
+                          isExpired: isExpired == '1' ? true : false,
                           IsExtendable: isExtendable == '1' ? true : false,
                           refresh: () {
                         Navigator.pop(context);
