@@ -68,124 +68,129 @@ class _MyProvidersDoctorsList extends State<MyProvidersHospitalsList> {
     return ListView.separated(
       itemBuilder: (context, index) {
         var eachHospitalModel = widget.hospitalsModel[index];
-        return InkWell(
-            onTap: () {
-              Navigator.pushNamed(context, router.rt_AddProvider,
-                  arguments: AddProvidersArguments(
-                      searchKeyWord: CommonConstants.hospitals,
-                      hospitalsModel: eachHospitalModel,
-                      fromClass: router.rt_myprovider,
-                      hasData: true,
-                      isRefresh: () {
-                        widget.isRefresh();
-                      })).then((value) {
-                myProviderState.refreshPage();
-              });
-            },
-            child: Container(
-                padding: EdgeInsets.all(10),
-                margin: EdgeInsets.only(left: 12, right: 12, top: 12),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(fhbColors.cardShadowColor),
-                      blurRadius: 16, // has the effect of extending the shadow
-                    )
-                  ],
-                ),
-                child: Row(
-                  children: <Widget>[
-                    CircleAvatar(
-                      radius: 18,
-                      child: ClipOval(
-                          child: eachHospitalModel != null
-                              ? /*myProfile.result.profilePicThumbnailUrl != null
+        return ((getHospitalName(eachHospitalModel) ?? '').isNotEmpty)
+            ? InkWell(
+                onTap: () {
+                  Navigator.pushNamed(context, router.rt_AddProvider,
+                      arguments: AddProvidersArguments(
+                          searchKeyWord: CommonConstants.hospitals,
+                          hospitalsModel: eachHospitalModel,
+                          fromClass: router.rt_myprovider,
+                          hasData: true,
+                          isRefresh: () {
+                            widget.isRefresh();
+                          })).then((value) {
+                    myProviderState.refreshPage();
+                  });
+                },
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  margin: EdgeInsets.only(left: 12, right: 12, top: 12),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(fhbColors.cardShadowColor),
+                        blurRadius:
+                            16, // has the effect of extending the shadow
+                      )
+                    ],
+                  ),
+                  child: Row(
+                    children: <Widget>[
+                      CircleAvatar(
+                        radius: 18,
+                        child: ClipOval(
+                            child: eachHospitalModel != null
+                                ? /*myProfile.result.profilePicThumbnailUrl != null
                               ? new FHBBasicWidget().getProfilePicWidgeUsingUrl(
                                   myProfile.result.profilePicThumbnailUrl)
                               :*/
-                              Container(
-                                  height: 50.0.h,
-                                  width: 50.0.h,
-                                  color: Color(fhbColors.bgColorContainer),
-                                  child: Center(
-                                    child: Text(
-                                      getHospitalName(
-                                          eachHospitalModel)[0].toUpperCase() ,
-                                      style: TextStyle(
-                                          color: Color(CommonUtil()
-                                              .getMyPrimaryColor())),
-                                    ),
-                                  ))
-                              : Container(
-                                  height: 50.0.h,
-                                  width: 50.0.h,
-                                  color: Color(fhbColors.bgColorContainer),
-                                )),
-                    ),
-                    SizedBox(
-                      width: 20.0.w,
-                    ),
-                    Expanded(
-                      flex: 6,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          SizedBox(height: 5.0.h),
-                          AutoSizeText(
-                            getHospitalName(
-                                eachHospitalModel) /* toBeginningOfSentenceCase(
+                                Container(
+                                    height: 50.0.h,
+                                    width: 50.0.h,
+                                    color: Color(fhbColors.bgColorContainer),
+                                    child: Center(
+                                      child: Text(
+                                        getHospitalName(eachHospitalModel)[0]
+                                            .toUpperCase(),
+                                        style: TextStyle(
+                                            color: Color(CommonUtil()
+                                                .getMyPrimaryColor())),
+                                      ),
+                                    ))
+                                : Container(
+                                    height: 50.0.h,
+                                    width: 50.0.h,
+                                    color: Color(fhbColors.bgColorContainer),
+                                  )),
+                      ),
+                      SizedBox(
+                        width: 20.0.w,
+                      ),
+                      Expanded(
+                        flex: 6,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            SizedBox(height: 5.0.h),
+                            AutoSizeText(
+                              getHospitalName(
+                                  eachHospitalModel) /* toBeginningOfSentenceCase(
                                     eachHospitalModel.name) */
-                            ,
-                            maxLines: 1,
-                            style: TextStyle(
-                              fontSize: 16.0.sp,
-                              fontWeight: FontWeight.w500,
+                              ,
+                              maxLines: 1,
+                              style: TextStyle(
+                                fontSize: 16.0.sp,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              textAlign: TextAlign.start,
                             ),
-                            textAlign: TextAlign.start,
-                          ),
-                          SizedBox(height: 5.0.h),
-                          AutoSizeText(
-                            '' +
-                                commonWidgets
-                                    .getCityHospital(eachHospitalModel),
-                            maxLines: 1,
-                            style: TextStyle(
-                                fontSize: 15.0.sp,
-                                fontWeight: FontWeight.w400,
-                                color: ColorUtils.lightgraycolor),
-                          ),
-                          SizedBox(height: 5.0.h),
-                        ],
+                            SizedBox(height: 5.0.h),
+                            AutoSizeText(
+                              '' +
+                                  commonWidgets
+                                      .getCityHospital(eachHospitalModel),
+                              maxLines: 1,
+                              style: TextStyle(
+                                  fontSize: 15.0.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: ColorUtils.lightgraycolor),
+                            ),
+                            SizedBox(height: 5.0.h),
+                          ],
+                        ),
                       ),
-                    ),
-                    Expanded(
-                        child: Container(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          commonWidgets
-                              .getBookMarkedIconHealth(eachHospitalModel, () {
-                            providerViewModel
-                                .bookMarkHealthOrg(
-                                    eachHospitalModel,
-                                    false,
-                                    'ListItem',
-                                    eachHospitalModel.sharedCategories)
-                                .then((status) {
-                              if (status) {
-                                widget.isRefresh();
-                              }
-                            });
-                          }),
-                        ],
-                      ),
-                    )),
-                  ],
-                )));
+                      Expanded(
+                          child: Container(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            commonWidgets
+                                .getBookMarkedIconHealth(eachHospitalModel, () {
+                              providerViewModel
+                                  .bookMarkHealthOrg(
+                                      eachHospitalModel,
+                                      false,
+                                      'ListItem',
+                                      eachHospitalModel.sharedCategories)
+                                  .then((status) {
+                                if (status) {
+                                  widget.isRefresh();
+                                }
+                              });
+                            }),
+                          ],
+                        ),
+                      )),
+                    ],
+                  ),
+                ),
+              )
+            : SizedBox.shrink();
       },
       separatorBuilder: (context, index) {
         return Divider(
@@ -198,7 +203,7 @@ class _MyProvidersDoctorsList extends State<MyProvidersHospitalsList> {
   }
 
   String getHospitalName(Hospitals eachHospitalModel) {
-    String name="";
+    String name = "";
 
     if (eachHospitalModel.name != null) {
       if (eachHospitalModel.name != "Self" &&
