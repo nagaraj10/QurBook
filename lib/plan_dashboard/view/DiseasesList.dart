@@ -372,9 +372,11 @@ class _DiseasesList extends State<DiseasesList> {
                     backgroundColor: Colors.grey[200],
                     radius: 20,
                     child: CommonUtil().customImage(
-                        (planList[i]?.metadata?.diseaseIcon ?? '').isNotEmpty
-                            ? planList[i]?.metadata?.diseaseIcon
-                            : '')),
+                      (planList[i]?.metadata?.diseaseIcon ?? '').isNotEmpty
+                          ? planList[i]?.metadata?.diseaseIcon
+                          : '',
+                      planInitial: planList[i]?.providerName,
+                    )),
                 SizedBox(
                   width: 10.0.w,
                 ),
