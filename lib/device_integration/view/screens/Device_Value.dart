@@ -46,7 +46,6 @@ import 'dart:convert';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
-
 class EachDeviceValues extends StatefulWidget {
   const EachDeviceValues(
       {this.device_name,
@@ -100,7 +99,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   var commonConstants = CommonConstants();
 
   String tempUnit;
-String weightUnit;
+  String weightUnit;
 
   @override
   void initState() {
@@ -374,8 +373,7 @@ String weightUnit;
           postDeviceValues[parameters.strParameters] =
               CommonConstants.strTemperature;
           postDeviceValues[parameters.strvalue] = deviceController.text;
-          postDeviceValues[parameters.strunit] =
-              tempUnit;
+          postDeviceValues[parameters.strunit] = tempUnit;
           postDeviceData.add(postDeviceValues);
         } else if (deviceName == STR_WEIGHING_SCALE) {
           postDeviceValues[parameters.strParameters] =
@@ -782,8 +780,8 @@ String weightUnit;
   Widget getCardForThermometer(String deviceName) {
     try {
       tempUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_TEMP);
-    }catch(e){
-      tempUnit="F";
+    } catch (e) {
+      tempUnit = "F";
     }
 
     return Container(
@@ -866,19 +864,15 @@ String weightUnit;
                             onSaved: (input) => setState(() {})),
                       )*/
                       fhbBasicWidget.getErrorMsgForUnitEntered(
-                        context,
-                        CommonConstants.strTemperature,
+                          context,
+                          CommonConstants.strTemperature,
                           tempUnit,
-                        deviceController,
-                        (errorValue) {
-                          setState(() {
-                            errorMsg = errorValue;
-                          });
-                        },
-                        errorMsg,
-                          tempUnit,
-                        deviceName,range: "",device:"Temp"
-                      )
+                          deviceController, (errorValue) {
+                        setState(() {
+                          errorMsg = errorValue;
+                        });
+                      }, errorMsg, tempUnit, deviceName,
+                          range: "", device: "Temp")
                     ],
                   ),
                   Column(
@@ -1043,8 +1037,8 @@ String weightUnit;
   Widget getCardForWeighingScale(String deviceName) {
     try {
       weightUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_WEIGHT);
-    }catch(e){
-      weightUnit="kgs";
+    } catch (e) {
+      weightUnit = "kgs";
     }
 
     return Container(
@@ -1108,7 +1102,7 @@ String weightUnit;
                         setState(() {
                           errorMsg = errorValue;
                         });
-                      }, errorMsg, weightUnit, deviceName,range: ""),
+                      }, errorMsg, weightUnit, deviceName, range: ""),
                     ],
                   ),
                 ],

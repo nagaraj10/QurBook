@@ -63,6 +63,8 @@ class _MySettingsState extends State<MySettings> {
   var userMappingId = '';
   bool isTouched = false;
 
+  PreferredMeasurement preferredMeasurement;
+
   @override
   void initState() {
     mInitialTime = DateTime.now();
@@ -200,7 +202,7 @@ class _MySettingsState extends State<MySettings> {
             preferred_language,
             qa_subscription,
             priColor,
-            greColor)
+            greColor,preferredMeasurement)
         .then((value) {
       updateDeviceModel = value;
       if (updateDeviceModel.isSuccess) {
@@ -312,6 +314,14 @@ class _MySettingsState extends State<MySettings> {
                       ''
               ? getDeviceSelectionModel.result[0].profileSetting.qa_subscription
               : 'Y';
+
+      preferredMeasurement=getDeviceSelectionModel
+          .result[0].profileSetting.preferredMeasurement !=
+          null &&
+          getDeviceSelectionModel.result[0].profileSetting.preferredMeasurement !=
+              ''
+          ? getDeviceSelectionModel.result[0].profileSetting.preferredMeasurement
+          : null;
     });
   }
 

@@ -129,6 +129,8 @@ class AddFamilyUserInfoBloc extends BaseBloc {
 
   File profilePic, profileBanner;
   CreateDeviceSelectionModel createDeviceSelectionModel;
+  PreferredMeasurement preferredMeasurement;
+
 
   @override
   void dispose() {
@@ -467,6 +469,14 @@ class AddFamilyUserInfoBloc extends BaseBloc {
                 ''
         ? getDeviceSelectionModel.result[0].profileSetting.qa_subscription
         : 'Y';
+
+    preferredMeasurement=getDeviceSelectionModel
+        .result[0].profileSetting.preferredMeasurement !=
+        null &&
+        getDeviceSelectionModel.result[0].profileSetting.preferredMeasurement !=
+            ''
+        ? getDeviceSelectionModel.result[0].profileSetting.preferredMeasurement
+        : null;
   }
 
   Future<UpdateDeviceModel> updateDeviceSelectionModel(
@@ -487,7 +497,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
             preferredLanguage ?? preferred_language,
             qa_subscription,
             preColor,
-            greColor)
+            greColor,preferredMeasurement)
         .then(
       (value) {
         if (value?.isSuccess ?? false) {

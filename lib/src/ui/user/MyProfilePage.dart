@@ -52,6 +52,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
 
   var heightController = TextEditingController();
   var weightController = TextEditingController();
+  var heightInchController = TextEditingController();
 
   var firstName = TextEditingController();
   var middleName = TextEditingController();
@@ -69,6 +70,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
   bool _isEditable = false;
   double sliverBarHeight = 220;
   AddFamilyUserInfoBloc addFamilyUserInfoBloc;
+
+  bool isFeetOrInches = true;
+  bool isKg = true;
 
   @override
   void initState() {
@@ -225,6 +229,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
   Widget getProfileWidget(MyProfileModel myProfile, MyProfileResult data,
       {String errorMsg}) {
     if (data != null) {
+      setUnit(data);
+
       if (data.userContactCollection3 != null) {
         if (data.userContactCollection3.length > 0) {
           mobile.text = data.userContactCollection3[0].phoneNumber;
@@ -243,9 +249,17 @@ class _MyProfilePageState extends State<MyProfilePage> {
       }
 
       if (data.additionalInfo != null) {
-        heightController.text = data.additionalInfo.height != null
-            ? data.additionalInfo.height
-            : '';
+        if(isFeetOrInches){
+          heightController.text =
+              data.additionalInfo?.heightObj?.valueFeet??'';
+          heightInchController.text =
+              data.additionalInfo?.heightObj?.valueInches??'';
+        }else{
+          heightController.text = data.additionalInfo.height != null
+              ? data.additionalInfo.height
+              : '';
+        }
+
         weightController.text = data.additionalInfo.weight != null
             ? data.additionalInfo.weight
             : '';
@@ -508,6 +522,56 @@ class _MyProfilePageState extends State<MyProfilePage> {
                         )),
                   ],
                 ),
+                isFeetOrInches?Row(
+                  children: <Widget>[
+                    Padding(
+                        padding: EdgeInsets.all(5),
+                        child: Container(
+                          width: 0.5.sw / 2 - 20,
+                          child: TextField(
+                            style: TextStyle(fontSize: 16.0.sp),
+                            controller: heightController,
+                            enabled: false,
+                            decoration: InputDecoration(
+                                hintText: CommonConstants.heightNameFeetInd,
+                                hintStyle: TextStyle(fontSize: 16.0.sp),
+                                labelText: CommonConstants.heightNameFeetInd),
+                          ),
+                        )),
+                    Padding(
+                        padding: EdgeInsets.all(5),
+                        child: Container(
+                          width: 0.5.sw / 2 - 20,
+                          child: TextField(
+                            style: TextStyle(fontSize: 16.0.sp),
+                            controller: heightInchController,
+                            enabled: false,
+                            decoration: InputDecoration(
+                                hintText: CommonConstants.heightNameInchInd,
+                                hintStyle: TextStyle(fontSize: 16.0.sp),
+                                labelText: CommonConstants.heightNameInchInd),
+                          ),
+                        )),
+                    Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Container(
+                          width: 1.sw / 2 - 40,
+                          child: TextField(
+                            style: TextStyle(fontSize: 16.0.sp),
+                            controller: weightController,
+                            enabled: false,
+                            decoration: InputDecoration(
+                                hintText: isKg
+                                    ? CommonConstants.weightName
+                                    : CommonConstants.weightNameUS,
+                                hintStyle: TextStyle(fontSize: 16.0.sp),
+                                labelText: isKg
+                                    ? CommonConstants.weightName
+                                    : CommonConstants.weightNameUS),
+                          ),
+                        )),
+                  ],
+                ):
                 Row(
                   children: <Widget>[
                     Padding(
@@ -533,9 +597,13 @@ class _MyProfilePageState extends State<MyProfilePage> {
                             controller: weightController,
                             enabled: false,
                             decoration: InputDecoration(
-                                hintText: CommonConstants.weight,
+                                hintText: isKg
+                                    ? CommonConstants.weightName
+                                    : CommonConstants.weightNameUS,
                                 hintStyle: TextStyle(fontSize: 16.0.sp),
-                                labelText: CommonConstants.weight),
+                                labelText: isKg
+                                    ? CommonConstants.weightName
+                                    : CommonConstants.weightNameUS),
                           ),
                         )),
                   ],
@@ -690,4 +758,41 @@ class _MyProfilePageState extends State<MyProfilePage> {
           );
         });
   }
+
+  void setUnit(MyProfileResult data) {
+
+
+    var profileSetting = data.userProfileSettingCollection3[0].profileSetting;
+    if (profileSetting != null) {
+      if(profileSetting?.preferredMeasurement!=null){
+        String heightUnit =
+         profileSetting?.preferredMeasurement.height.unitCode;
+        String weightUnit =
+         profileSetting?.preferredMeasurement.weight.unitCode;
+        if (heightUnit == Constants.STR_VAL_HEIGHT_IND) {
+          isFeetOrInches = true;
+        } else {
+          isFeetOrInches = false;
+        }
+
+        if (weightUnit == Constants.STR_VAL_WEIGHT_IND) {
+          isKg = true;
+        } else {
+          isKg = false;
+        }
+      }
+    }else{
+      if(CommonUtil.REGION_CODE=='IND'){
+        isFeetOrInches=true;
+        isKg=true;
+      }else{
+        isFeetOrInches=false;
+        isKg=false;
+      }
+    }
+
+
+
+  }
+
 }

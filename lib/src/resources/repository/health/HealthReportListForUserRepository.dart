@@ -307,7 +307,7 @@ class HealthReportListForUserRepository {
       String preferred_language,
       String qa_subscription,
       int priColor,
-      int greColor) async {
+      int greColor,PreferredMeasurement preferredMeasurement) async {
     var body = jsonEncode({
       'id': userMappingId,
       'profileSetting': {
@@ -323,7 +323,8 @@ class HealthReportListForUserRepository {
         "greColor": greColor,
         "priColor": priColor,
         'preferred_language': preferred_language,
-        'qa-subscription': qa_subscription
+        'qa-subscription': qa_subscription,
+        'preferred_measurement':preferredMeasurement
       }
     });
     final response = await _helper.updateDeviceSelection(

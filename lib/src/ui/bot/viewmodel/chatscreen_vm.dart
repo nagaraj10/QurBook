@@ -73,6 +73,7 @@ class ChatScreenViewModel extends ChangeNotifier {
   bool isAudioPlayerPlaying = false;
   bool get getIsButtonResponse => isButtonResponse && !enableMic;
   CreateDeviceSelectionModel createDeviceSelectionModel;
+  PreferredMeasurement preferredMeasurement;
 
   void updateAppState(bool canSheelaSpeak, {bool isInitial: false}) {
     canSpeak = canSheelaSpeak;
@@ -973,6 +974,14 @@ class ChatScreenViewModel extends ChangeNotifier {
                 ''
         ? getDeviceSelectionModel.result[0].profileSetting.qa_subscription
         : 'Y';
+
+    preferredMeasurement=getDeviceSelectionModel
+        .result[0].profileSetting.preferredMeasurement !=
+        null &&
+        getDeviceSelectionModel.result[0].profileSetting.preferredMeasurement !=
+            ''
+        ? getDeviceSelectionModel.result[0].profileSetting.preferredMeasurement
+        : null;
   }
 
   Future<UpdateDeviceModel> updateDeviceSelectionModel(
@@ -994,7 +1003,7 @@ class ChatScreenViewModel extends ChangeNotifier {
             preferredLanguage ?? preferred_language,
             qa_subscription,
             preColor,
-            greColor)
+            greColor,preferredMeasurement)
         .then(
       (value) {
         if (value?.isSuccess ?? false) {

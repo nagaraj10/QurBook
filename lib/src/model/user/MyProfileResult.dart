@@ -31,6 +31,7 @@ class MyProfileResult {
   String medicalPreferences;
   bool isSignedIn;
   bool isActive;
+
   // String createdBy;
   // String createdOn;
   String lastModifiedBy;
@@ -205,6 +206,7 @@ class AdditionalInfo {
   String visitReason;
   String patientHistory;
   HeightObj heightObj;
+
   String offSet = CommonUtil().setTimeZone();
 
   AdditionalInfo(
@@ -227,12 +229,14 @@ class AdditionalInfo {
     }
 
     weight = json['weight'];
-    height = json['height'];
     try {
-      heightObj =
-          json['height'] != null && json['height'] is Map<String, dynamic>
-              ? new HeightObj.fromJson(json['height'] ?? {})
-              : null;
+      heightObj = json['height'] != null
+          ? new HeightObj.fromJson(json['height'])
+          : null;
+    } catch (e) {}
+
+    try {
+      height = json['height'];
     } catch (e) {}
 
     try {
