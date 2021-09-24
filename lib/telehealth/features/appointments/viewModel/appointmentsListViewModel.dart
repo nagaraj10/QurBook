@@ -85,14 +85,15 @@ class AppointmentsListViewModel extends ChangeNotifier {
   Time getTimeSlot(String plannedStartDateTime) {
     String hours, min;
     int dys;
-    DateTime dob1 = DateFormat(CommonUtil.REGION_CODE == 'IN'
-            ? Constants.Appointments_iso_format
-            : Constants.Appointments_iso_formatUS)
+    DateTime dob1 = DateFormat(Constants.Appointments_iso_format)
         .parse(plannedStartDateTime);
-    DateTime dob2 = DateFormat(CommonUtil.REGION_CODE == 'IN'
-            ? Constants.Appointments_slot_format
-            : Constants.Appointments_slot_formatUS)
+    DateTime dob2 = DateFormat(Constants.Appointments_slot_format)
         .parse('${DateTime.now()}');
+    if (CommonUtil.REGION_CODE != 'IN') {
+      dob1 = dob1.toLocal();
+      dob2 = dob2.toLocal();
+    }
+
     Duration dur = dob1.difference(dob2);
     dys = dur.inDays;
     hours = dur.inHours >= 0 && dur.inHours <= 24
