@@ -371,7 +371,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
                 greColor)
             .then((value) {
           createDeviceSelectionModel = value;
-          if (createDeviceSelectionModel.isSuccess) {
+          if (createDeviceSelectionModel?.isSuccess ?? false) {
             userMappingId = createDeviceSelectionModel.result;
             updateDeviceSelectionModel(preferredLanguage: preferredLanguage);
           } else {
@@ -481,8 +481,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
 
   Future<UpdateDeviceModel> updateDeviceSelectionModel(
       {String preferredLanguage}) async {
-    var healthReportListForUserRepository =
-        HealthReportListForUserRepository();
+    var healthReportListForUserRepository = HealthReportListForUserRepository();
     await healthReportListForUserRepository
         .updateDeviceModel(
             userMappingId,

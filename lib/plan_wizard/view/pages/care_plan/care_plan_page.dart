@@ -36,14 +36,25 @@ class _CarePlanPageState extends State<CarePlanPage> {
 
   List sortType = ['Default', 'Price', 'Duration'];
   ValueNotifier<String> _selectedItem = new ValueNotifier<String>('Default');
-
   @override
   void initState() {
+    mInitialTime = DateTime.now();
     Provider.of<PlanWizardViewModel>(context, listen: false).currentPackageProviderCareId =
         '';
 
     planListModel = Provider.of<PlanWizardViewModel>(context, listen: false)
         .getCarePlanList('');
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'CarePlanPage Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   @override

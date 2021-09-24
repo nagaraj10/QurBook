@@ -109,6 +109,10 @@ class DevicesViewModel with ChangeNotifier {
       if (resp == null) {
         return [];
       }
+      var response = json.decode(resp.toString())[is_Success];
+      if (!(response ?? false)) {
+        return [];
+      }
       var parsedResponse = json.decode(resp.toString())[dataResult] as List;
       var deviceIntervalData =
           parsedResponse.map((e) => DeviceIntervalData.fromJson(e)).toList();
@@ -160,6 +164,10 @@ class DevicesViewModel with ChangeNotifier {
       if (resp == null) {
         return [];
       }
+      var response = json.decode(resp.toString())[is_Success];
+      if (!(response ?? false)) {
+        return [];
+      }
       var parsedResponse = json.decode(resp.toString())[dataResult] as List;
       var deviceIntervalData =
           parsedResponse.map((e) => DeviceIntervalData.fromJson(e)).toList();
@@ -206,6 +214,10 @@ class DevicesViewModel with ChangeNotifier {
     try {
       var resp = await _helper.getOxygenSaturationData();
       if (resp == null) {
+        return [];
+      }
+      var response = json.decode(resp.toString())[is_Success];
+      if (!(response ?? false)) {
         return [];
       }
       var parsedResponse = json.decode(resp.toString())[dataResult] as List;
@@ -261,6 +273,10 @@ class DevicesViewModel with ChangeNotifier {
       if (resp == null) {
         return [];
       }
+      var response = json.decode(resp.toString())[is_Success];
+      if (!(response ?? false)) {
+        return [];
+      }
       var parsedResponse = json.decode(resp.toString())[dataResult] as List;
       var deviceIntervalData =
           parsedResponse.map((e) => DeviceIntervalData.fromJson(e)).toList();
@@ -293,13 +309,19 @@ class DevicesViewModel with ChangeNotifier {
       finalResult = [ret, deviceIntervalData];
 
       return finalResult;
-    } catch (e) {}
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future<List<dynamic>> fetchWVDetails(String response) async {
     try {
       var resp = await _helper.getWeightData();
       if (resp == null) {
+        return [];
+      }
+      var response = json.decode(resp.toString())[is_Success];
+      if (!(response ?? false)) {
         return [];
       }
       var parsedResponse = json.decode(resp.toString())[dataResult] as List;
@@ -345,6 +367,10 @@ class DevicesViewModel with ChangeNotifier {
     try {
       var resp = await _helper.getHeartRateData();
       if (resp == null) {
+        return [];
+      }
+      var response = json.decode(resp.toString())[is_Success];
+      if (!(response ?? false)) {
         return [];
       }
       var parsedResponse = json.decode(resp.toString())[dataResult] as List;

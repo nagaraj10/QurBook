@@ -5,6 +5,7 @@ object Constants {
     val FUN_LISTEN_SMS = "listenForSMS"
     val FUN_KEY_GAURD = "secureMe"
     val FUN_VOICE_ASST = "speakWithVoiceAssistant"
+    val FUN_VALIDATE_MIC_AVAIL= "validateMicAvailability"
     val VOICE_ASST_PROMPT = "Need to speak"
     val FUN_TEXT2SPEECH = "textToSpeech"
     val KEY_GAURD_TITLE = "myFHB"

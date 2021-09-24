@@ -241,11 +241,11 @@ class CommonConstants {
   static String middleName = 'MiddleName';
   static String lastName = 'LastName';
 
-  static const String addr_line_1 = 'Address line 1*';
+  static const String addr_line_1 = 'Address line 1';
   static const String addr_line_2 = 'Address line 2';
   static const String addr_city = 'City*';
   static const String addr_state = 'State*';
-  static const String addr_zip = 'Zipcode*';
+  static const String addr_zip = 'Zipcode';
 
   static String KEY_COUNTRYCODE = 'CountryCode';
   static String KEY_COUNTRYNAME = 'CountryName';
@@ -265,6 +265,7 @@ class CommonConstants {
   static const String strQueryString = '?';
   static const String strGetProfilePic = 'section=profilePicture';
   static const String strUserQuery = 'user/';
+  static const String strMicAlertMsg = 'The Mic is currently in use by another app. Please try later';
 
   /// Color for devices
   static var bpDarkColor = 0xff059192;
@@ -306,7 +307,7 @@ class CommonConstants {
     final db = DatabaseHelper();
 
     unitsMeasurements = await db.getMeasurementsBasedOnUnits(units, range);
-   //print(unitsMeasurements.maxValue.toString()+"MAX"+unitsMeasurements.minValue.toString()+" MIN"+ "unitsMeasurements*************");
+    //print(unitsMeasurements.maxValue.toString()+"MAX"+unitsMeasurements.minValue.toString()+" MIN"+ "unitsMeasurements*************");
     return unitsMeasurements;
   }
 

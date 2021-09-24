@@ -7,7 +7,7 @@ class MakePaymentResponse {
   MakePaymentResponse.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     result =
-        json['result'] != null ? new Result.fromJson(json['result']) : null;
+    json['result'] != null ? new Result.fromJson(json['result']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -26,11 +26,10 @@ class Result {
   Payment payment;
   PaymentGatewayDetail paymentGatewayDetail;
 
-  Result(
-      {this.orderId,
-      this.subscribeResponse,
-      this.payment,
-      this.paymentGatewayDetail});
+  Result({this.orderId,
+    this.subscribeResponse,
+    this.payment,
+    this.paymentGatewayDetail});
 
   Result.fromJson(Map<String, dynamic> json) {
     orderId = json['orderId'];
@@ -41,7 +40,7 @@ class Result {
       });
     }
     payment =
-        json['payment'] != null ? new Payment.fromJson(json['payment']) : null;
+    json['payment'] != null ? new Payment.fromJson(json['payment']) : null;
     paymentGatewayDetail = json['paymentGatewayDetail'] != null
         ? new PaymentGatewayDetail.fromJson(json['paymentGatewayDetail'])
         : null;
@@ -72,13 +71,12 @@ class SubscribeResponse {
   String price;
   String docid;
 
-  SubscribeResponse(
-      {this.result,
-      this.planStartDate,
-      this.message,
-      this.packageid,
-      this.price,
-      this.docid});
+  SubscribeResponse({this.result,
+    this.planStartDate,
+    this.message,
+    this.packageid,
+    this.price,
+    this.docid});
 
   SubscribeResponse.fromJson(Map<String, dynamic> json) {
     result = json['Result'];
@@ -122,26 +120,25 @@ class Payment {
   bool isDiscount;
   String discountDetails;
 
-  Payment(
-      {this.id,
-      this.paymentStatus,
-      this.paymentGateway,
-      this.paidTo,
-      this.paidBy,
-      this.createdBy,
-      this.createdOn,
-      this.isActive,
-      this.purpose,
-      this.paidAmount,
-      this.transactionDateTime,
-      this.metadata,
-      this.cart,
-      this.paymentReference,
-      this.paidDate,
-      this.receiptUrl,
-      this.lastModifiedOn,
-      this.isDiscount,
-      this.discountDetails});
+  Payment({this.id,
+    this.paymentStatus,
+    this.paymentGateway,
+    this.paidTo,
+    this.paidBy,
+    this.createdBy,
+    this.createdOn,
+    this.isActive,
+    this.purpose,
+    this.paidAmount,
+    this.transactionDateTime,
+    this.metadata,
+    this.cart,
+    this.paymentReference,
+    this.paidDate,
+    this.receiptUrl,
+    this.lastModifiedOn,
+    this.isDiscount,
+    this.discountDetails});
 
   Payment.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -216,17 +213,16 @@ class PaymentStatus {
   String lastModifiedOn;
   ReferenceData referenceData;
 
-  PaymentStatus(
-      {this.id,
-      this.code,
-      this.name,
-      this.description,
-      this.sortOrder,
-      this.isActive,
-      this.createdBy,
-      this.createdOn,
-      this.lastModifiedOn,
-      this.referenceData});
+  PaymentStatus({this.id,
+    this.code,
+    this.name,
+    this.description,
+    this.sortOrder,
+    this.isActive,
+    this.createdBy,
+    this.createdOn,
+    this.lastModifiedOn,
+    this.referenceData});
 
   PaymentStatus.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -271,15 +267,14 @@ class ReferenceData {
   String createdOn;
   String lastModifiedOn;
 
-  ReferenceData(
-      {this.id,
-      this.code,
-      this.name,
-      this.description,
-      this.isActive,
-      this.createdBy,
-      this.createdOn,
-      this.lastModifiedOn});
+  ReferenceData({this.id,
+    this.code,
+    this.name,
+    this.description,
+    this.isActive,
+    this.createdBy,
+    this.createdOn,
+    this.lastModifiedOn});
 
   ReferenceData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -349,16 +344,15 @@ class PaymentGatewayDetail {
   String lastModifiedOn;
   String id;
 
-  PaymentGatewayDetail(
-      {this.sourceId,
-      this.sourceCode,
-      this.responseInfo,
-      this.createdBy,
-      this.createdOn,
-      this.isActive,
-      this.paymentGatewayRequestId,
-      this.lastModifiedOn,
-      this.id});
+  PaymentGatewayDetail({this.sourceId,
+    this.sourceCode,
+    this.responseInfo,
+    this.createdBy,
+    this.createdOn,
+    this.isActive,
+    this.paymentGatewayRequestId,
+    this.lastModifiedOn,
+    this.id});
 
   PaymentGatewayDetail.fromJson(Map<String, dynamic> json) {
     sourceId = json['sourceId'];
@@ -396,7 +390,7 @@ class ResponseInfo {
   String phone;
   String email;
   String buyerName;
-  String amount;
+  var amount;
   String purpose;
   String expiresAt;
   String status;
@@ -410,30 +404,31 @@ class ResponseInfo {
   String webhook;
   bool allowRepeatedPayments;
   String customerId;
-  String createdAt;
+  var createdAt;
   String modifiedAt;
+  String paymentGateWay;
 
-  ResponseInfo(
-      {this.id,
-      this.phone,
-      this.email,
-      this.buyerName,
-      this.amount,
-      this.purpose,
-      this.expiresAt,
-      this.status,
-      this.sendSms,
-      this.sendEmail,
-      this.smsStatus,
-      this.emailStatus,
-      this.shorturl,
-      this.longurl,
-      this.redirectUrl,
-      this.webhook,
-      this.allowRepeatedPayments,
-      this.customerId,
-      this.createdAt,
-      this.modifiedAt});
+  ResponseInfo({this.id,
+    this.phone,
+    this.email,
+    this.buyerName,
+    this.amount,
+    this.purpose,
+    this.expiresAt,
+    this.status,
+    this.sendSms,
+    this.sendEmail,
+    this.smsStatus,
+    this.emailStatus,
+    this.shorturl,
+    this.longurl,
+    this.redirectUrl,
+    this.webhook,
+    this.allowRepeatedPayments,
+    this.customerId,
+    this.createdAt,
+    this.modifiedAt,
+    this.paymentGateWay});
 
   ResponseInfo.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -448,7 +443,7 @@ class ResponseInfo {
     sendEmail = json['send_email'];
     smsStatus = json['sms_status'];
     emailStatus = json['email_status'];
-    shorturl = json['shorturl'];
+    shorturl = json['short_url'];
     longurl = json['longurl'];
     redirectUrl = json['redirect_url'];
     webhook = json['webhook'];
@@ -456,6 +451,7 @@ class ResponseInfo {
     customerId = json['customer_id'];
     createdAt = json['created_at'];
     modifiedAt = json['modified_at'];
+    paymentGateWay = json['payment_gateway'];
   }
 
   Map<String, dynamic> toJson() {
@@ -480,6 +476,7 @@ class ResponseInfo {
     data['customer_id'] = this.customerId;
     data['created_at'] = this.createdAt;
     data['modified_at'] = this.modifiedAt;
+    data['payment_gateway'] = this.paymentGateWay;
     return data;
   }
 }

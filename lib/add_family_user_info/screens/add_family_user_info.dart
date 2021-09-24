@@ -625,7 +625,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 headers: {
                   HttpHeaders.authorizationHeader:
                       PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN),
-                  Constants.KEY_OffSet: CommonUtil.TimeZone
+                  Constants.KEY_OffSet: CommonUtil().setTimeZone()
                 },
               );
             } else {

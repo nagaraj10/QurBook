@@ -33,6 +33,7 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
   @override
   void initState() {
     super.initState();
+    mInitialTime = DateTime.now();
     if (!(Provider.of<PlanWizardViewModel>(context, listen: false)
             ?.isDynamicLink ??
         false)) {
@@ -49,6 +50,17 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
     Provider.of<PlanWizardViewModel>(context, listen: false)?.fetchCartItem();
     Provider.of<PlanWizardViewModel>(context, listen: false)
         ?.isPlanWizardActive = true;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'PlanWizard Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   @override

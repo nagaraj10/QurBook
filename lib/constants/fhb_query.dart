@@ -44,6 +44,7 @@ const String qr_deletemedia = 'deletemeta/';
 const String qr_deletemaster = 'deletemaster/';
 
 const String qr_SearchBy = 'search?';
+const String qr_DoctorSearchByFilters = 'dynamic-search?';
 const String qr_sortBy = 'sortBy=';
 const String qr_offset = 'offset=';
 const String qr_limit = 'limit=';
@@ -98,7 +99,8 @@ const String qr_bookAppointment = 'appointment';
 const String qr_update_payment = 'payment/update-payment-status/';
 const String qr_update_payment_subscribe =
     'payment/plan-subscription-update-payment-status';
-
+const String qr_medium = 'medium';
+const String qr_clearIds = 'clearIds';
 const String qr_created_by = 'createdBy';
 const String qr_booked_for = 'bookedFor';
 const String qr_doctor_session_id = 'doctorSessionId';
@@ -114,6 +116,7 @@ const String qr_payment_id = 'paymentId';
 const String qr_appoint_id = 'appointmentId';
 const String qr_payment_order_id = 'paymentOrderId';
 const String qr_payment_req_id = 'paymentRequestId';
+const String qr_signature = 'signature';
 
 const String qr_input = '?input=';
 const String qr_key = 'key=';
@@ -280,6 +283,7 @@ const String qr_module_equal = '&module=';
 const String qr_healthOrg = 'healthOrganization';
 const String qr_all = 'all';
 const String qr_helperVideos = 'helperVideos';
+const String qr_careGiverList = 'careGiverList';
 
 const String qr_createSubscribe = 'payment/plan-subscription-create-payment';
 const String qr_add_cart = 'cart/add-product';

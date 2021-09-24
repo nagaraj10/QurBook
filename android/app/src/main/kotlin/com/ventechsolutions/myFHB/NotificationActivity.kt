@@ -35,6 +35,7 @@ class NotificationActivity : AppCompatActivity() {
         setContentView(R.layout.activity_notification)
         setupActivity()
         val tv = findViewById<TextView>(R.id.recipient_name_tv)
+        val tv_callType = findViewById<TextView>(R.id.calling_tv)
         val profile_pic = findViewById<TextView>(R.id.profile_dp)
         val callerName = "${intent.getStringExtra(UNAME)}"
         tv.text = callerName
@@ -51,6 +52,7 @@ class NotificationActivity : AppCompatActivity() {
         patPic=intent.getStringExtra(getString(R.string.pat_pic))
         callType = intent.getStringExtra(getString(R.string.callType))
         isWeb = intent.getStringExtra(getString(R.string.web))
+        tv_callType.text = intent.getStringExtra(getString(R.string.pro_ns_body))
         listenEvent(id=channelName)
         val handler = Handler()
         val r = object:Runnable {

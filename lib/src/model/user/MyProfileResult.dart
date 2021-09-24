@@ -1,3 +1,6 @@
+import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
+
 import '../../../my_family/models/FamilyMembersRes.dart';
 import '../GetDeviceSelectionModel.dart';
 import 'UserAddressCollection.dart';
@@ -204,6 +207,8 @@ class AdditionalInfo {
   String patientHistory;
   HeightObj heightObj;
 
+  String offSet = CommonUtil().setTimeZone();
+
   AdditionalInfo(
       {this.age,
       this.height,
@@ -261,6 +266,7 @@ class AdditionalInfo {
     if (this.heightObj != null) {
       data['height'] = this.heightObj.toJson();
     }
+    data[KEY_OffSet] = CommonUtil().setTimeZone();
     return data;
   }
 }

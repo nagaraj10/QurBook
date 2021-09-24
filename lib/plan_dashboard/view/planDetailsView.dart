@@ -103,12 +103,23 @@ class PlanDetail extends State<MyPlanDetailView> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   Future<PlanListModel> planListModel;
-
   @override
   void initState() {
     super.initState();
+    mInitialTime = DateTime.now();
     // setValues();
     planListModel = PlanViewModel().getPlanDetail(widget?.packageId);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'PlanDetail Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
   }
 
   void setValues(PlanListResult planList) {
@@ -211,7 +222,10 @@ class PlanDetail extends State<MyPlanDetailView> {
                               child: CircleAvatar(
                                   backgroundColor: Colors.grey[200],
                                   radius: 30,
-                                  child: CommonUtil().customImage(getImage())),
+                                  child: CommonUtil().customImage(
+                                    getImage(),
+                                    planInitial: providerName,
+                                  )),
                               // child: ClipOval(
                               //   // backgroundColor: Colors.grey[200],
                               //   // radius: 35,
@@ -417,7 +431,7 @@ class PlanDetail extends State<MyPlanDetailView> {
                                           ),
                                           Text(
                                             price != null && price != ''
-                                                ? 'INR $price'
+                                                ? '${CommonUtil.CURRENCY}$price'
                                                 : '-',
                                             style: TextStyle(
                                                 color: Color(CommonUtil()

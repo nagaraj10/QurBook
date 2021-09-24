@@ -58,8 +58,10 @@ class CarePlanCard extends StatelessWidget {
                   CircleAvatar(
                     backgroundColor: Colors.grey[200],
                     radius: 20,
-                    child: CommonUtil()
-                        .customImage(planList?.metadata?.icon ?? ''),
+                    child: CommonUtil().customImage(
+                      planList?.metadata?.icon ?? '',
+                      planInitial: planList?.providerName,
+                    ),
                   ),
                   SizedBox(
                     width: 20.0.w,
@@ -126,7 +128,8 @@ class CarePlanCard extends StatelessWidget {
                                         visible: planList.price.isNotEmpty &&
                                             planList.price != '0',
                                         child: TextWidget(
-                                            text: INR + planList.price,
+                                            text: CommonUtil.CURRENCY +
+                                                planList.price,
                                             fontsize: 12.0.sp,
                                             fontWeight: FontWeight.w500,
                                             colors: Color(new CommonUtil()

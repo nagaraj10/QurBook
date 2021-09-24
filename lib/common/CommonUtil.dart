@@ -116,7 +116,7 @@ class CommonUtil {
   static String BASEURL_DEVICE_READINGS = '';
   static String FIREBASE_CHAT_NOTIFY_TOKEN = '';
   static String REGION_CODE = 'IN';
-  static String TimeZone = '';
+  static String CURRENCY = INR;
   static String POWER_BI_URL = 'IN';
   static const bgColor = 0xFFe3e2e2;
   static bool isRenewDialogOpened = false;
@@ -1224,14 +1224,14 @@ class CommonUtil {
 
   //   return updatedDate;
   // }
-  static setTimeZone() {
+  String setTimeZone() {
     var date = DateTime.now().timeZoneOffset.isNegative ? "-" : "+";
     final timeZoneSplit = DateTime.now().timeZoneOffset.toString().split(":");
     var hour = int.parse(timeZoneSplit[0]);
     hour = (hour).abs();
     date += hour < 10 ? "0${hour}" : "$hour";
     date += timeZoneSplit[1];
-    TimeZone = date;
+    return date;
   }
 
   regimentDateFormat(
@@ -1309,18 +1309,20 @@ class CommonUtil {
     return removedString;
   }
 
-  static String dateConversionToApiFormat(DateTime dateTime) {
-    final newFormat = REGION_CODE == 'IN'
+  static String dateConversionToApiFormat(DateTime dateTime,
+      {bool isIndianTime = false}) {
+    final newFormat = REGION_CODE == 'IN' || isIndianTime
         ? DateFormat('yyyy-MM-dd')
-        : DateFormat('MM-DD-YYYY');
+        : DateFormat('MM-dd-yyyy');
     var updatedDate = newFormat.format(dateTime);
     return updatedDate;
   }
 
-  static String dateFormatterWithdatetimeseconds(DateTime dateTime) {
-    final newFormat = REGION_CODE == 'IN'
+  static String dateFormatterWithdatetimeseconds(DateTime dateTime,
+      {bool isIndianTime = false}) {
+    final newFormat = REGION_CODE == 'IN' || isIndianTime
         ? DateFormat('yyyy-MM-dd HH:mm:ss')
-        : DateFormat('MM-DD-YYYY HH:mm:ss');
+        : DateFormat('MM-dd-yyyy HH:mm:ss');
     final updatedDate = newFormat.format(dateTime);
     return updatedDate;
   }
@@ -2022,19 +2024,24 @@ class CommonUtil {
     }
   }
 
-  static const Map<String, String> supportedLanguages = {
-    'english': 'en',
-    'french': 'fr',
-    'german': 'de',
-    'spanish': 'es',
-    'bengali': 'bn',
-    'gujarati': 'gu',
-    'hindi': 'hi',
-    'kannada': 'kn',
-    'malayalam': 'ml',
-    'tamil': 'ta',
-    'telugu': 'te',
-  };
+  static Map<String, String> supportedLanguages = (REGION_CODE == 'IN')
+      ? {
+          'english': 'en',
+          'french': 'fr',
+          'german': 'de',
+          'spanish': 'es',
+          'bengali': 'bn',
+          'gujarati': 'gu',
+          'hindi': 'hi',
+          'kannada': 'kn',
+          'malayalam': 'ml',
+          'tamil': 'ta',
+          'telugu': 'te',
+        }
+      : {
+          'english': 'en',
+          'spanish': 'es',
+        };
 
   static const Map<String, String> langaugeCodes = {
     'en': 'en-IN',
@@ -2774,6 +2781,32 @@ class CommonUtil {
     );
   }
 
+  Future<DateTime> selectDate(BuildContext context, DateTime _date,
+      DateTime startDate, DateTime endDate, bool isExpired) async {
+    DateTime firstDate;
+
+    if (isExpired) {
+      print('endDate: expired');
+      firstDate = DateTime(
+          DateTime.now().year, DateTime.now().month, DateTime.now().day);
+    } else {
+      print('endDate:' + endDate.toString());
+      firstDate = endDate;
+    }
+
+    final DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: _date,
+      firstDate: firstDate,
+      lastDate: DateTime(2040),
+    );
+
+    if (picked != null) {
+      _date = picked;
+    }
+    return _date;
+  }
+
   Future<dynamic> renewAlertDialog(BuildContext context,
       {String title,
       String content,
@@ -2781,9 +2814,31 @@ class CommonUtil {
       String isSubscribed,
       bool IsExtendable,
       String price,
+      String startDate,
+      String endDate,
+      bool isExpired,
       Function() refresh,
       bool moveToCart = false,
       dynamic nsBody}) async {
+    DateTime initDate;
+    var formatter = new DateFormat('yyyy-MM-dd');
+
+    DateTime startDateFinal = startDate != null
+        ? new DateFormat("yyyy-MM-dd").parse(startDate)
+        : DateTime(
+            DateTime.now().year, DateTime.now().month, DateTime.now().day);
+    DateTime endDateFinal = endDate != null
+        ? new DateFormat("yyyy-MM-dd").parse(endDate)
+        : DateTime(
+            DateTime.now().year, DateTime.now().month, DateTime.now().day);
+
+    if (isExpired) {
+      initDate = DateTime(
+          DateTime.now().year, DateTime.now().month, DateTime.now().day);
+    } else {
+      initDate = endDateFinal;
+    }
+
     final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     await showDialog<void>(
         context: context,
@@ -2792,116 +2847,142 @@ class CommonUtil {
           return WillPopScope(
             onWillPop: () async => false,
             child: SimpleDialog(children: <Widget>[
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 20),
-                child: Center(
-                  child: Column(children: [
-                    //CircularProgressIndicator(),
-                    SizedBox(
-                      height: 10.0.h,
-                    ),
-                    Text(
-                      CONTENT_RENEW_PACKAGE,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16.0.sp,
+              StatefulBuilder(builder: (context, setState) {
+                return Container(
+                  margin: EdgeInsets.symmetric(horizontal: 20),
+                  child: Center(
+                    child: Column(children: [
+                      //CircularProgressIndicator(),
+                      SizedBox(
+                        height: 10.0.h,
                       ),
-                    ),
-                    SizedBox(
-                      height: 10.0.h,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        OutlineButton(
-                          onPressed: () async {
-                            // open profile page
-                            isRenewDialogOpened = false;
-                            Navigator.of(context).pop();
-                          },
-                          borderSide: BorderSide(
-                            color: Color(
-                              getMyPrimaryColor(),
-                            ),
+                      Text(
+                        CONTENT_RENEW_PACKAGE,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16.0.sp,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10.0.h,
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Text(
+                            'Effective Renewal Date: ',
                           ),
-                          child: Text(
-                            'no'.toUpperCase(),
-                            style: TextStyle(
+                          SizedBox(width: 5.w),
+                          IconButton(
+                            icon: Icon(Icons.calendar_today, size: 18.sp),
+                            onPressed: () async {
+                              initDate = await selectDate(
+                                  context,
+                                  isExpired ? initDate : endDateFinal,
+                                  startDateFinal,
+                                  endDateFinal,
+                                  isExpired);
+                              setState(() {});
+                            },
+                          ),
+                          Text('${formatter.format(initDate)}'),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 10.0.h,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          OutlineButton(
+                            onPressed: () async {
+                              // open profile page
+                              isRenewDialogOpened = false;
+                              Navigator.of(context).pop();
+                            },
+                            borderSide: BorderSide(
                               color: Color(
                                 getMyPrimaryColor(),
                               ),
-                              fontSize: 10,
+                            ),
+                            child: Text(
+                              'no'.toUpperCase(),
+                              style: TextStyle(
+                                color: Color(
+                                  getMyPrimaryColor(),
+                                ),
+                                fontSize: 10,
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          width: 10.0.h,
-                        ),
-                        OutlineButton(
-                          //hoverColor: Color(getMyPrimaryColor()),
-                          onPressed: () async {
-                            Navigator.pop(context);
-                            /*_dialogForSubscribePayment(
-                                context, '', packageId, true, () {
-                              refresh();
-                            });*/
-                            isRenewDialogOpened = false;
-                            if (moveToCart && nsBody != null) {
-                              try {
-                                FetchNotificationService()
-                                    .updateNsActionStatus(nsBody)
-                                    .then((data) {
+                          SizedBox(
+                            width: 10.0.h,
+                          ),
+                          OutlineButton(
+                            //hoverColor: Color(getMyPrimaryColor()),
+                            onPressed: () async {
+                              Navigator.pop(context);
+                              /*_dialogForSubscribePayment(
+                                  context, '', packageId, true, () {
+                                refresh();
+                              });*/
+                              isRenewDialogOpened = false;
+                              if (moveToCart && nsBody != null) {
+                                try {
                                   FetchNotificationService()
-                                      .updateNsOnTapAction(nsBody);
-                                });
-                              } catch (e) {}
-                            }
-
-                            if (IsExtendable) {
-                              var response =
-                                  await Provider.of<PlanWizardViewModel>(
-                                          context,
-                                          listen: false)
-                                      ?.addToCartItem(
-                                          packageId: packageId,
-                                          price: price,
-                                          isRenew: true,
-                                          isFromAdd: strMyPlan);
-
-                              refresh();
-                              if (moveToCart) {
-                                if ((response.message?.toLowerCase() ==
-                                        'Product already exists in cart'
-                                            .toLowerCase()) ||
-                                    response.isSuccess) {
-                                  Get.to(CheckoutPage());
-                                }
+                                      .updateNsActionStatus(nsBody)
+                                      .then((data) {
+                                    FetchNotificationService()
+                                        .updateNsOnTapAction(nsBody);
+                                  });
+                                } catch (e) {}
                               }
-                            } else {
-                              FlutterToast().getToast(
-                                  'Renewal limit reached for this plan. Please try after few days',
-                                  Colors.black);
-                            }
-                          },
-                          borderSide: BorderSide(
-                            color: Color(
-                              getMyPrimaryColor(),
+
+                              if (IsExtendable) {
+                                var response =
+                                    await Provider.of<PlanWizardViewModel>(
+                                            context,
+                                            listen: false)
+                                        ?.addToCartItem(
+                                            packageId: packageId,
+                                            price: price,
+                                            isRenew: true,
+                                            isFromAdd: strMyPlan);
+
+                                refresh();
+                                if (moveToCart) {
+                                  if ((response.message?.toLowerCase() ==
+                                          'Product already exists in cart'
+                                              .toLowerCase()) ||
+                                      response.isSuccess) {
+                                    Get.to(CheckoutPage());
+                                  }
+                                }
+                              } else {
+                                FlutterToast().getToast(
+                                    'Renewal limit reached for this plan. Please try after few days',
+                                    Colors.black);
+                              }
+                            },
+                            borderSide: BorderSide(
+                              color: Color(
+                                getMyPrimaryColor(),
+                              ),
+                            ),
+                            //hoverColor: Color(getMyPrimaryColor()),
+                            child: Text(
+                              'yes'.toUpperCase(),
+                              style: TextStyle(
+                                color: Color(getMyPrimaryColor()),
+                                fontSize: 10,
+                              ),
                             ),
                           ),
-                          //hoverColor: Color(getMyPrimaryColor()),
-                          child: Text(
-                            'yes'.toUpperCase(),
-                            style: TextStyle(
-                              color: Color(getMyPrimaryColor()),
-                              fontSize: 10,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ]),
-                ),
-              ),
+                        ],
+                      ),
+                    ]),
+                  ),
+                );
+              }),
             ]),
           );
         });
@@ -3034,8 +3115,40 @@ class CommonUtil {
         });
   }
 
-  Widget customImage(String iconApi, {Widget defaultWidget}) {
-    print(iconApi);
+  Widget customImage(
+    String iconApi, {
+    Widget defaultWidget,
+    String planInitial,
+  }) {
+    var defaultInitial = '';
+    if ((planInitial ?? '').isNotEmpty) {
+      var planWords = planInitial?.split(' ') ?? [];
+      if (planWords.length > 1) {
+        defaultInitial =
+            planWords[0]?.substring(0, 1) + planWords[1]?.substring(0, 1);
+      } else {
+        defaultInitial = planWords[0]?.substring(0, 1);
+      }
+    }
+
+    if ((defaultInitial ?? '').isNotEmpty) {
+      defaultWidget = ClipOval(
+        child: CircleAvatar(
+          radius: 32,
+          backgroundColor: Colors.grey[200],
+          child: Center(
+            child: Text(
+              defaultInitial?.toUpperCase() ?? '',
+              style: TextStyle(
+                fontSize: 25.0.sp,
+                color: Color(CommonUtil().getMyPrimaryColor()),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
     return ClipOval(
       child: Container(
         alignment: Alignment.center,
@@ -3530,41 +3643,100 @@ class CommonUtil {
                                                                 ?.metadata !=
                                                             null) {
                                                           if (value
-                                                                      ?.result
-                                                                      ?.paymentGatewayDetail
-                                                                      ?.metadata
-                                                                      ?.longurl !=
-                                                                  null &&
-                                                              value
-                                                                      ?.result
-                                                                      ?.paymentGatewayDetail
-                                                                      ?.metadata
-                                                                      ?.longurl !=
-                                                                  '') {
-                                                            Navigator
-                                                                .pushReplacement(
-                                                                    context,
-                                                                    MaterialPageRoute(
-                                                                        builder: (context) =>
-                                                                            PaymentPage(
-                                                                              redirectUrl: value?.result?.paymentGatewayDetail?.metadata?.longurl,
-                                                                              paymentId: value?.result?.payment?.id.toString(),
-                                                                              isFromSubscribe: true,
-                                                                              closePage: (value) {
-                                                                                if (value == STR_SUCCESS) {
-                                                                                  refresh();
-                                                                                  /*Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+                                                                  ?.result
+                                                                  ?.paymentGatewayDetail
+                                                                  ?.metadata
+                                                                  .paymentGateWay ==
+                                                              STR_RAZOPAY) {
+                                                            if (value
+                                                                    ?.result
+                                                                    ?.paymentGatewayDetail
+                                                                    ?.metadata
+                                                                    .shorturl !=
+                                                                null) {
+                                                              Navigator.pushReplacement(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                      builder: (context) => PaymentPage(
+                                                                            redirectUrl:
+                                                                                value?.result?.paymentGatewayDetail?.metadata?.shorturl,
+                                                                            paymentId:
+                                                                                value?.result?.payment?.id.toString(),
+                                                                            isFromSubscribe:
+                                                                                true,
+                                                                            isFromRazor:
+                                                                                true,
+                                                                            closePage:
+                                                                                (value) {
+                                                                              if (value == STR_SUCCESS) {
+                                                                                refresh();
+                                                                                /*Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
                                                                                   Provider.of<RegimentViewModel>(
                                                                                     context,
                                                                                     listen: false,
                                                                                   ).updateTabIndex(currentIndex: 3);
                                                                                   Get.offNamedUntil(router.rt_MyPlans, (Route<dynamic> route) => false);*/
 
-                                                                                } else {
-                                                                                  Navigator.pop(context);
-                                                                                }
-                                                                              },
-                                                                            )));
+                                                                              } else {
+                                                                                Navigator.pop(context);
+                                                                              }
+                                                                            },
+                                                                          )));
+                                                            } else {
+                                                              Navigator.of(
+                                                                      _keyLoader
+                                                                          .currentContext,
+                                                                      rootNavigator:
+                                                                          true)
+                                                                  .pop();
+                                                              FlutterToast()
+                                                                  .getToast(
+                                                                      'Renew Failed',
+                                                                      Colors
+                                                                          .red);
+                                                            }
+                                                          } else {
+                                                            if (value
+                                                                        ?.result
+                                                                        ?.paymentGatewayDetail
+                                                                        ?.metadata
+                                                                        ?.longurl !=
+                                                                    null &&
+                                                                value
+                                                                        ?.result
+                                                                        ?.paymentGatewayDetail
+                                                                        ?.metadata
+                                                                        ?.longurl !=
+                                                                    '') {
+                                                              Navigator.pushReplacement(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                      builder: (context) => PaymentPage(
+                                                                            redirectUrl:
+                                                                                value?.result?.paymentGatewayDetail?.metadata?.longurl,
+                                                                            paymentId:
+                                                                                value?.result?.payment?.id.toString(),
+                                                                            isFromSubscribe:
+                                                                                true,
+                                                                            isFromRazor:
+                                                                                false,
+                                                                            closePage:
+                                                                                (value) {
+                                                                              if (value == STR_SUCCESS) {
+                                                                                refresh();
+                                                                                /*Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+                                                                                  Provider.of<RegimentViewModel>(
+                                                                                    context,
+                                                                                    listen: false,
+                                                                                  ).updateTabIndex(currentIndex: 3);
+                                                                                  Get.offNamedUntil(router.rt_MyPlans, (Route<dynamic> route) => false);*/
+
+                                                                              } else {
+                                                                                Navigator.pop(context);
+                                                                              }
+                                                                            },
+                                                                          )));
+                                                            }
                                                           }
                                                         }
                                                       }
@@ -3633,32 +3805,82 @@ class CommonUtil {
                                                                       ?.metadata !=
                                                                   null) {
                                                                 if (value
-                                                                            ?.result
-                                                                            ?.paymentGatewayDetail
-                                                                            ?.metadata
-                                                                            ?.longurl !=
-                                                                        null &&
-                                                                    value
-                                                                            ?.result
-                                                                            ?.paymentGatewayDetail
-                                                                            ?.metadata
-                                                                            ?.longurl !=
-                                                                        '') {
-                                                                  Navigator.pushReplacement(
-                                                                      Get.context,
-                                                                      MaterialPageRoute(
-                                                                          builder: (context) => PaymentPage(
-                                                                                redirectUrl: value?.result?.paymentGatewayDetail?.metadata?.longurl,
-                                                                                paymentId: value?.result?.payment?.id?.toString(),
-                                                                                isFromSubscribe: true,
-                                                                                closePage: (value) {
-                                                                                  if (value == 'success') {
-                                                                                    refresh();
-                                                                                  } else {
-                                                                                    Navigator.pop(context);
-                                                                                  }
-                                                                                },
-                                                                              )));
+                                                                        ?.result
+                                                                        ?.paymentGatewayDetail
+                                                                        ?.metadata
+                                                                        .paymentGateWay ==
+                                                                    STR_RAZOPAY) {
+                                                                  if (value
+                                                                          ?.result
+                                                                          ?.paymentGatewayDetail
+                                                                          ?.metadata
+                                                                          ?.shorturl !=
+                                                                      null) {
+                                                                    Navigator.pushReplacement(
+                                                                        context,
+                                                                        MaterialPageRoute(
+                                                                            builder: (context) => PaymentPage(
+                                                                                  redirectUrl: value?.result?.paymentGatewayDetail?.metadata?.shorturl,
+                                                                                  paymentId: value?.result?.payment?.id.toString(),
+                                                                                  isFromSubscribe: true,
+                                                                                  isFromRazor: true,
+                                                                                  closePage: (value) {
+                                                                                    if (value == STR_SUCCESS) {
+                                                                                      refresh();
+                                                                                      /*Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+                                                                                  Provider.of<RegimentViewModel>(
+                                                                                    context,
+                                                                                    listen: false,
+                                                                                  ).updateTabIndex(currentIndex: 3);
+                                                                                  Get.offNamedUntil(router.rt_MyPlans, (Route<dynamic> route) => false);*/
+
+                                                                                    } else {
+                                                                                      Navigator.pop(context);
+                                                                                    }
+                                                                                  },
+                                                                                )));
+                                                                  } else {
+                                                                    Navigator.of(
+                                                                            _keyLoader
+                                                                                .currentContext,
+                                                                            rootNavigator:
+                                                                                true)
+                                                                        .pop();
+                                                                    FlutterToast().getToast(
+                                                                        'Renew Failed',
+                                                                        Colors
+                                                                            .red);
+                                                                  }
+                                                                } else {
+                                                                  if (value
+                                                                              ?.result
+                                                                              ?.paymentGatewayDetail
+                                                                              ?.metadata
+                                                                              ?.longurl !=
+                                                                          null &&
+                                                                      value
+                                                                              ?.result
+                                                                              ?.paymentGatewayDetail
+                                                                              ?.metadata
+                                                                              ?.longurl !=
+                                                                          '') {
+                                                                    Navigator.pushReplacement(
+                                                                        Get.context,
+                                                                        MaterialPageRoute(
+                                                                            builder: (context) => PaymentPage(
+                                                                                  redirectUrl: value?.result?.paymentGatewayDetail?.metadata?.longurl,
+                                                                                  paymentId: value?.result?.payment?.id?.toString(),
+                                                                                  isFromSubscribe: true,
+                                                                                  isFromRazor: false,
+                                                                                  closePage: (value) {
+                                                                                    if (value == 'success') {
+                                                                                      refresh();
+                                                                                    } else {
+                                                                                      Navigator.pop(context);
+                                                                                    }
+                                                                                  },
+                                                                                )));
+                                                                  }
                                                                 }
                                                               } else {
                                                                 Navigator.of(

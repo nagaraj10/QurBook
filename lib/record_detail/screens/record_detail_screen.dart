@@ -1537,7 +1537,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         audioMediaId.healthRecordUrl,
         headers: {
           HttpHeaders.authorizationHeader: authToken,
-          Constants.KEY_OffSet: CommonUtil.TimeZone
+          Constants.KEY_OffSet: CommonUtil().setTimeZone()
         },
       );
       final bytes = request.bodyBytes; //close();

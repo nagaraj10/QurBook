@@ -89,6 +89,7 @@ class GoogleFitData {
             getFormatedDateFromMicro(bucket.startTimeMillis);
         healthRecord[strsyncEndDate] =
             getFormatedDateFromMicro(bucket.endTimeMillis);
+        healthRecord[strlocalTime] = DateTime.now().toLocal().toString();
         healthRecord[strlastSyncDateTime] =
             getFormatedDateFromMicro(bucket.endTimeMillis);
         healthRecord[strdevicesourceName] = strsourceGoogle;
@@ -140,6 +141,7 @@ class GoogleFitData {
             getFormatedDateFromMicro(bucket.startTimeMillis);
         healthRecord[strsyncEndDate] =
             getFormatedDateFromMicro(bucket.endTimeMillis);
+        healthRecord[strlocalTime] = DateTime.now().toLocal().toString();
         healthRecord[strlastSyncDateTime] =
             getFormatedDateFromMicro(bucket.endTimeMillis);
         healthRecord[strdevicesourceName] = strsourceGoogle;
@@ -193,6 +195,7 @@ class GoogleFitData {
             getFormatedDateFromMicro(bucket.startTimeMillis);
         healthRecord[strsyncEndDate] =
             getFormatedDateFromMicro(bucket.endTimeMillis);
+        healthRecord[strlocalTime] = DateTime.now().toLocal().toString();
         healthRecord[strlastSyncDateTime] =
             getFormatedDateFromMicro(bucket.endTimeMillis);
         healthRecord[strdevicesourceName] = strsourceGoogle;
@@ -246,6 +249,7 @@ class GoogleFitData {
             getFormatedDateFromMicro(bucket.startTimeMillis);
         healthRecord[strsyncEndDate] =
             getFormatedDateFromMicro(bucket.endTimeMillis);
+        healthRecord[strlocalTime] = DateTime.now().toLocal().toString();
         healthRecord[strlastSyncDateTime] =
             getFormatedDateFromMicro(bucket.endTimeMillis);
         healthRecord[strdevicesourceName] = strsourceGoogle;
@@ -298,6 +302,7 @@ class GoogleFitData {
             getFormatedDateFromMicro(bucket.startTimeMillis);
         healthRecord[strsyncEndDate] =
             getFormatedDateFromMicro(bucket.endTimeMillis);
+        healthRecord[strlocalTime] = DateTime.now().toLocal().toString();
         healthRecord[strlastSyncDateTime] =
             getFormatedDateFromMicro(bucket.endTimeMillis);
         healthRecord[strdevicesourceName] = strsourceGoogle;
@@ -350,6 +355,7 @@ class GoogleFitData {
             getFormatedDateFromMicro(bucket.startTimeMillis);
         healthRecord[strsyncEndDate] =
             getFormatedDateFromMicro(bucket.endTimeMillis);
+        healthRecord[strlocalTime] = DateTime.now().toLocal().toString();
         healthRecord[strlastSyncDateTime] =
             getFormatedDateFromMicro(bucket.endTimeMillis);
         healthRecord[strdevicesourceName] = strsourceGoogle;

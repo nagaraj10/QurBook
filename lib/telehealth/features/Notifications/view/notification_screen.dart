@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
@@ -7,7 +8,10 @@ import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/landing/view/landing_arguments.dart';
 import 'package:myfhb/myPlan/view/myPlanDetail.dart';
+import 'package:myfhb/regiment/models/regiment_arguments.dart';
+import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/ui/bot/view/sheela_arguments.dart';
 import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/MyProvidersMain.dart';
@@ -58,7 +62,7 @@ class NotificationScreen extends StatefulWidget {
 class _NotificationScreen extends State<NotificationScreen> {
   FlutterToast toast = FlutterToast();
   CancelAppointmentViewModel cancelAppointmentViewModel;
-
+  FetchNotificationViewModel notificationData;
   @override
   void initState() {
     mInitialTime = DateTime.now();
@@ -66,6 +70,7 @@ class _NotificationScreen extends State<NotificationScreen> {
         .fetchNotifications();
     cancelAppointmentViewModel =
         Provider.of<CancelAppointmentViewModel>(context, listen: false);
+
     super.initState();
   }
 
@@ -82,13 +87,58 @@ class _NotificationScreen extends State<NotificationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    notificationData = Provider.of<FetchNotificationViewModel>(context);
     return Scaffold(
-      appBar: notificationAppBar(),
+      appBar: notificationAppBar(context),
       body: notificationBodyView(),
     );
   }
 
-  Widget notificationAppBar() {
+  showDeleteAlert(BuildContext context) {
+    showCupertinoDialog(
+      context: context,
+      builder: (context) {
+        return CupertinoAlertDialog(
+          content: Text(
+            'Are you sure to delete ?',
+            style: TextStyle(
+              fontSize: 16,
+            ),
+          ),
+          actions: [
+            CupertinoDialogAction(
+              child: Text(
+                'Cancel',
+                style: TextStyle(
+                  color: Colors.grey,
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                notificationData.fetchNotifications();
+              },
+            ),
+            CupertinoDialogAction(
+              child: Text(
+                'Delete',
+                style: TextStyle(
+                  color: Color(
+                    CommonUtil().getMyPrimaryColor(),
+                  ),
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                notificationData.deleteTheSelectedNotifiations();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget notificationAppBar(BuildContext context) {
     return AppBar(
       flexibleSpace: GradientAppBar(),
       //centerTitle: true,
@@ -108,11 +158,44 @@ class _NotificationScreen extends State<NotificationScreen> {
         fontsize: 18.0.sp,
         softwrap: true,
       ),
+      actions: (notificationData?.deleteMode ?? false)
+          ? [
+              InkWell(
+                onTap: () {
+                  notificationData.selectOrDeselectAllTapped();
+                },
+                child: Center(
+                  child: Text(
+                    'Select All',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: 16,
+              ),
+              IconWidget(
+                icon: Icons.delete,
+                colors: Colors.white,
+                size: 24.0.sp,
+                onTap: () {
+                  showDeleteAlert(context);
+                },
+              ),
+              SizedBox(
+                width: 16,
+              )
+            ]
+          : [],
     );
   }
 
   Widget notificationBodyView() {
-    var notificationData = Provider.of<FetchNotificationViewModel>(context);
+    if (notificationData == null) {
+      notificationData = Provider.of<FetchNotificationViewModel>(context);
+    }
     switch (notificationData.loadingStatus) {
       case LoadingStatus.searching:
         return CommonCircularIndicator();
@@ -168,7 +251,9 @@ class _NotificationScreen extends State<NotificationScreen> {
       height: 1.sh,
       alignment: Alignment.center,
       child: Center(
-        child: Text(constants.lblNoNotification),
+        child: Text(
+          constants.lblNoNotification,
+        ),
       ),
     );
   }
@@ -180,141 +265,176 @@ class _NotificationScreen extends State<NotificationScreen> {
       return (message.messageBody == "" || message.messageTitle == "")
           ? Container()
           : InkWell(
+              onLongPress: () {
+                if ((notificationData?.deleteLogId?.length ?? 0) == 0) {
+                  notificationData.deleteMode = true;
+                  notification.deleteSelected = true;
+                  notificationData.addTheidToDelete(notification.id);
+                }
+              },
               splashColor: Color(CommonUtil.secondaryGrey),
-              onTap: (notification.isUnread != null && notification?.isUnread)
+              onTap: notificationData.deleteMode
                   ? () {
-                      var tempRedirectTo = payload?.redirectTo != null &&
-                              payload?.redirectTo != ''
-                          ? payload?.redirectTo.split('|')[0]
-                          : '';
-                      if (tempRedirectTo == 'myRecords') {
-                        notificationOnTapActions(notification, tempRedirectTo,
-                            bundles: {
-                              'catName': payload?.redirectTo.split('|')[1],
-                              'healthRecordMetaIds':
-                                  payload?.healthRecordMetaIds
-                            });
-                      } else if (payload?.redirectTo == 'sheela|pushMessage') {
-                        notificationOnTapActions(
-                          notification,
-                          payload?.redirectTo,
-                        );
-                      } else if (payload?.redirectTo == 'mycart') {
-                        notificationOnTapActions(
-                          notification,
-                          payload?.redirectTo,
-                        );
-                      } else if (payload?.redirectTo ==
-                          constants.strMyCardDetails || payload?.redirectTo == 'mycartdetails') {
-                        // do nothing.
+                      if (notification.deleteSelected) {
+                        notification.deleteSelected = false;
+
+                        notificationData.removeTheIdToDelete(notification.id);
                       } else {
-                        notificationOnTapActions(
-                            notification,
-                            notification
-                                ?.messageDetails?.content?.templateName);
+                        notification.deleteSelected = true;
+                        notificationData.addTheidToDelete(notification.id);
                       }
-                      // notificationOnTapActions(
-                      //     notification?.result[index],
-                      //     notification?.result[index]?.messageDetails?.content
-                      //         ?.templateName);
                     }
-                  : null,
-              child: Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5, bottom: 5),
-                    child: Column(
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              flex: 3,
-                              child: Container(
-                                padding: EdgeInsets.only(top: 5, left: 10),
-                                width: 1.sw * 0.8,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    TextWidget(
-                                      text: message.messageTitle,
-                                      colors: (notification?.isUnread == null ||
-                                              !notification?.isUnread)
-                                          ? Colors.black
-                                          : Color(
-                                              CommonUtil().getMyPrimaryColor()),
-                                      overflow: TextOverflow.visible,
-                                      fontWeight: FontWeight.w600,
-                                      fontsize: 15.0.sp,
-                                      softwrap: true,
-                                    ),
-                                    SizedBox(
-                                      height: 5.0.h,
-                                    ),
-                                    TextWidget(
-                                      text: message.messageBody,
-                                      colors: Color(CommonUtil.secondaryGrey),
-                                      overflow: TextOverflow.visible,
-                                      fontWeight: FontWeight.w500,
-                                      fontsize: 14.0.sp,
-                                      softwrap: true,
-                                    ),
-                                    SizedBox(
-                                      height: 5.0.h,
-                                    ),
-                                    createNSActionButton(
-                                        payload?.templateName, notification),
-                                  ],
+                  : (notification.isUnread != null && notification?.isUnread)
+                      ? () {
+                          var tempRedirectTo = payload?.redirectTo != null &&
+                                  payload?.redirectTo != ''
+                              ? payload?.redirectTo.split('|')[0]
+                              : '';
+                          if (tempRedirectTo == 'myRecords') {
+                            notificationOnTapActions(
+                                notification, tempRedirectTo,
+                                bundles: {
+                                  'catName': payload?.redirectTo.split('|')[1],
+                                  'healthRecordMetaIds':
+                                      payload?.healthRecordMetaIds
+                                });
+                          } else if (payload?.redirectTo ==
+                              'sheela|pushMessage') {
+                            notificationOnTapActions(
+                              notification,
+                              payload?.redirectTo,
+                            );
+                          } else if (payload?.redirectTo == 'mycart') {
+                            notificationOnTapActions(
+                              notification,
+                              payload?.redirectTo,
+                            );
+                          } else if (payload?.redirectTo ==
+                                  constants.strMyCardDetails ||
+                              payload?.redirectTo == 'mycartdetails') {
+                            // do nothing.
+                          } else if (payload?.redirectTo == 'devices_tab') {
+                            notificationOnTapActions(
+                              notification,
+                              payload?.redirectTo,
+                            );
+                          } else if (payload?.redirectTo == 'regiment_screen') {
+                            notificationOnTapActions(
+                              notification,
+                              payload?.redirectTo,
+                            );
+                          }
+                          // notificationOnTapActions(
+                          //     notification?.result[index],
+                          //     notification?.result[index]?.messageDetails?.content
+                          //         ?.templateName);
+                        }
+                      : null,
+              child: Container(
+                color: notification.deleteSelected ? Colors.grey : Colors.white,
+                child: Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5, bottom: 5),
+                      child: Column(
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                flex: 3,
+                                child: Container(
+                                  padding: EdgeInsets.only(top: 5, left: 10),
+                                  width: 1.sw * 0.8,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      TextWidget(
+                                        text: message.messageTitle,
+                                        colors:
+                                            (notification?.isUnread == null ||
+                                                    !notification?.isUnread)
+                                                ? Colors.black
+                                                : Color(CommonUtil()
+                                                    .getMyPrimaryColor()),
+                                        overflow: TextOverflow.visible,
+                                        fontWeight: FontWeight.w600,
+                                        fontsize: 15.0.sp,
+                                        softwrap: true,
+                                      ),
+                                      SizedBox(
+                                        height: 5.0.h,
+                                      ),
+                                      TextWidget(
+                                        text: message.messageBody,
+                                        colors: Color(CommonUtil.secondaryGrey),
+                                        overflow: TextOverflow.visible,
+                                        fontWeight: FontWeight.w500,
+                                        fontsize: 14.0.sp,
+                                        softwrap: true,
+                                      ),
+                                      SizedBox(
+                                        height: 5.0.h,
+                                      ),
+                                      createNSActionButton(
+                                          payload?.templateName, notification),
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                            Expanded(
-                              flex: 1,
-                              child: Container(
-                                padding: EdgeInsets.only(top: 5),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    TextWidget(
-                                      text: constants.notificationDate(
-                                          notification?.createdOn),
-                                      colors: Colors.black,
-                                      overflow: TextOverflow.visible,
-                                      fontWeight: FontWeight.w500,
-                                      fontsize: 12.0.sp,
-                                      softwrap: true,
-                                    ),
-                                    SizedBox(
-                                      height: 5.0.h,
-                                    ),
-                                    TextWidget(
-                                      text: constants.notificationTime(
-                                          notification?.createdOn),
-                                      colors: (notification?.isUnread == null ||
-                                              !notification?.isUnread)
-                                          ? Colors.black
-                                          : Color(
-                                              CommonUtil().getMyPrimaryColor()),
-                                      //colors: Color(CommonUtil.primaryColor),
-                                      overflow: TextOverflow.visible,
-                                      fontWeight: FontWeight.w600,
-                                      fontsize: 12.0.sp,
-                                      softwrap: true,
-                                    ),
-                                  ],
+                              Expanded(
+                                flex: 1,
+                                child: Container(
+                                  padding: EdgeInsets.only(top: 5),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: <Widget>[
+                                      TextWidget(
+                                        text: constants.notificationDate(
+                                            notification?.createdOn),
+                                        colors: Colors.black,
+                                        overflow: TextOverflow.visible,
+                                        fontWeight: FontWeight.w500,
+                                        fontsize: 12.0.sp,
+                                        softwrap: true,
+                                      ),
+                                      SizedBox(
+                                        height: 5.0.h,
+                                      ),
+                                      TextWidget(
+                                        text: constants.notificationTime(
+                                            notification?.createdOn),
+                                        colors:
+                                            (notification?.isUnread == null ||
+                                                    !notification?.isUnread)
+                                                ? Colors.black
+                                                : Color(CommonUtil()
+                                                    .getMyPrimaryColor()),
+                                        //colors: Color(CommonUtil.primaryColor),
+                                        overflow: TextOverflow.visible,
+                                        fontWeight: FontWeight.w600,
+                                        fontsize: 12.0.sp,
+                                        softwrap: true,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  Container(
-                    height: 0.2.h,
-                    color: Colors.black,
-                  )
-                ],
+                    Container(
+                      height: 0.2.h,
+                      color: notification.deleteSelected
+                          ? Colors.white
+                          : Colors.black,
+                    )
+                  ],
+                ),
               ),
             );
       /* : Column(
@@ -803,6 +923,40 @@ class _NotificationScreen extends State<NotificationScreen> {
       case "mycart":
         Get.to(CheckoutPage(isFromNotification: true)).then(
             (value) => PageNavigator.goToPermanent(context, router.rt_Landing));
+        readUnreadAction(result);
+        break;
+      case "devices_tab":
+        getProfileData();
+        Get.toNamed(
+          router.rt_HomeScreen,
+          arguments: HomeScreenArguments(selectedIndex: 1, thTabIndex: 1),
+        ).then(
+          (value) => PageNavigator.goToPermanent(
+            context,
+            router.rt_Landing,
+            arguments: LandingArguments(
+              needFreshLoad: false,
+            ),
+          ),
+        );
+        readUnreadAction(result);
+        break;
+      case "regiment_screen":
+        Provider.of<RegimentViewModel>(
+          context,
+          listen: false,
+        )?.regimentMode = RegimentMode.Schedule;
+        Provider.of<RegimentViewModel>(context, listen: false)?.regimentFilter =
+            RegimentFilter.Missed;
+        Get.toNamed(router.rt_Regimen, arguments: RegimentArguments()).then(
+          (value) => PageNavigator.goToPermanent(
+            context,
+            router.rt_Landing,
+            arguments: LandingArguments(
+              needFreshLoad: false,
+            ),
+          ),
+        );
         readUnreadAction(result);
         break;
       default:

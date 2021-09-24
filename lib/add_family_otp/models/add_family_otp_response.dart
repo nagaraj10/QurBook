@@ -1,3 +1,6 @@
+import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
+
 import '../../constants/fhb_parameters.dart' as parameters;
 // class AddFamilyOTPResponse {
 //   int status;
@@ -78,8 +81,7 @@ class AddFamilyOTPResponse {
   AddFamilyOTPResponse.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     message = json['message'];
-    result =
-        json['result'] != null ? Result.fromJson(json['result']) : null;
+    result = json['result'] != null ? Result.fromJson(json['result']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -419,6 +421,7 @@ class ChildInfo {
 class AdditionalInfos {
   String height;
   String weight;
+  String offSet = CommonUtil().setTimeZone();
 
   AdditionalInfos({this.height, this.weight});
 
@@ -431,6 +434,7 @@ class AdditionalInfos {
     final data = <String, dynamic>{};
     data['height'] = height;
     data['weight'] = weight;
+    data[KEY_OffSet] = CommonUtil().setTimeZone();
     return data;
   }
 }

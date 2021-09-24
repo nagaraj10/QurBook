@@ -347,7 +347,7 @@ const String strFileDownloaded = 'File downloaded';
 const String strFilesErrorDownload = 'Error in File download.';
 const String strAfter = 'After';
 const String strDateFormatDay = 'dd/MM/yyyy';
-const String strUSDateFormatDay = 'MM/DD/YYYY';
+const String strUSDateFormatDay = 'MM/dd/yyyy';
 
 const String stAudioPath = 'myFHB/Audio';
 const String strDateOfVisit = 'Date of visit: ';
@@ -498,6 +498,7 @@ const String requestSheelaForglucose = 'record my glucose';
 const String requestSheelaForpo = 'record my po';
 const String requestSheelaForweight = 'record my weight';
 const String strspeakAssistant = 'speakWithVoiceAssistant';
+const String strvalidateMicAvailablity = 'validateMicAvailability';
 const String strdevice = 'device';
 
 const String strIntromaya = 'Hi, I am Sheela your voice health assistant.';

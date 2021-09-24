@@ -59,7 +59,6 @@ const String KEY_MEMBERSHIP = 'membership';
 const String GOLD_MEMBERSHIP = 'CORPGOLDQURHL';
 const String KEY_DYNAMIC_URL = 'dynamicURL';
 
-
 const String STR_KEY_HEIGHT = 'height';
 const String STR_KEY_WEIGHT = 'weight';
 const String STR_KEY_TEMP = 'temp';
@@ -386,6 +385,7 @@ const String CSR_DISCOUNT = 'CSR_DISCOUNT';
 const String HealthOrg = 'Health Organization';
 const String HEALTH_RECORDIDS = 'healthRecordIds';
 const String INR = 'INR ';
+const String USD = '\$ ';
 const String FREE = 'FREE';
 const String LAST_RECEIVED = 'Last Received: ';
 const String DATE_FORMAT = 'dd MMM kk:mm';
@@ -418,6 +418,8 @@ const String STR_PUSH_TOKEN = 'pushToken';
 const String STR_MIP_MAP_LAUNCHER = '@mipmap/ic_launcher';
 const String STR_HTTPS = 'https';
 const String STR_FILE = 'File';
+const String STR_INSTAMOJO = 'instamojo';
+const String STR_RAZOPAY = 'razorpay';
 
 const String STR_JPG = '.jpg';
 const String STR_JPEG = '.jpeg';
@@ -484,6 +486,7 @@ const String searchTextSecond =
     'Choose Qurhealth as your provider to subscribe to care plans for free';
 const String okButton = 'OK';
 const String saveButton = 'Save';
+const String confirmButton = 'Confirm';
 const String select = 'Select';
 const String scheduled = 'Activities';
 const String symptoms = 'Symptoms';
@@ -612,6 +615,8 @@ const String STR_YES = 'yes';
 const String STR_NO = 'no';
 
 const String UnitPreference = 'Unit Preferences';
+const String STR_DATE_FORMAT = 'yyyy-MM-dd';
+const String STR_RENEWAL_DATE = 'Effective Renewal Date:';
 
 FirebaseAnalytics _firebaseAnalytics = FirebaseAnalytics();
 var mInitialTime;

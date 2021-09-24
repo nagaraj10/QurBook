@@ -23,8 +23,8 @@ const String Appointments_followUpStatus = 'Next follow up on';
 const String Appointments_slot_format = 'yyyy-MM-dd HH:mm:ss';
 const String Appointments_iso_format = 'yyyy-MM-ddTHH:mm:ss';
 const String Appointments_time_format = "hh:mm a";
-const String Appointments_slot_formatUS = 'MM-DD-YYYY HH:mm:ss';
-const String Appointments_iso_formatUS = 'MM-DD-YYYYTHH:mm:ss';
+const String Appointments_slot_formatUS = 'MM-dd-yyyy HH:mm:ss';
+const String Appointments_iso_formatUS = 'MM-dd-yyyyTHH:mm:ss';
 const String Appointments_time_formatUS = "hh:mm a";
 const String STATIC_HOUR = '00';
 const String ZERO = '0';
@@ -50,8 +50,6 @@ const String strFailed = 'Failed to Invoke: ';
 const String resheduled = 'rescheduled';
 const String NOT_AVAILABLE = 'not available';
 const String CANCELLATION_CHARGE = 'Cancellation Charges:';
-const String inrLabel = 'INR';
-const String inrLabelZero = 'INR 0';
 
 //Custom Icon
 const String Appointments_notesImage = 'assets/icons/notes.png';

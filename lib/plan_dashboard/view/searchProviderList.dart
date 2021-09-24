@@ -284,7 +284,9 @@ class _SearchProviderList extends State<SearchProviderList> {
                       backgroundColor: Colors.grey[200],
                       radius: 20,
                       child: CommonUtil().customImage(
-                          planList[i]?.providerMetadata?.icon ?? '')),
+                        planList[i]?.providerMetadata?.icon ?? '',
+                        planInitial: planList[i]?.providerName,
+                      )),
                   SizedBox(
                     width: 20.0.w,
                   ),

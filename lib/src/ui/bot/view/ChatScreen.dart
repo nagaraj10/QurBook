@@ -23,8 +23,7 @@ import 'package:intl/intl.dart';
 class ChatScreen extends StatefulWidget {
   //List<Conversation> conversation;
   final SheelaArgument arguments;
-  ChatScreen(
-      {this.arguments});
+  ChatScreen({this.arguments});
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -32,7 +31,7 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen>
     with TickerProviderStateMixin, WidgetsBindingObserver {
-  AnimationController _controller;
+  AnimationController animationController;
 
   Animation<double> _animation;
   MyProfileModel myProfile =
@@ -50,25 +49,42 @@ class _ChatScreenState extends State<ChatScreen>
       true,
       isInitial: true,
     );
+    Provider.of<ChatScreenViewModel>(context, listen: false)?.isMicListening =
+        false;
     Provider.of<ChatScreenViewModel>(context, listen: false)
         ?.getDeviceSelectionValues();
     PreferenceUtil.init();
-    _controller = AnimationController(
-        duration: const Duration(milliseconds: 2000), vsync: this, value: 0.1);
-    _animation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
-    _controller.forward();
+    animationController = AnimationController(
+        duration: const Duration(
+          milliseconds: 600,
+        ),
+        vsync: this,
+        value: 0.0);
+    _animation =
+        Tween<double>(begin: 0.0, end: 15.0).animate(animationController)
+          ..addStatusListener((status) {
+            if (status == AnimationStatus.completed) {
+              animationController.reverse();
+            } else if (status == AnimationStatus.dismissed) {
+              animationController.forward();
+            }
+          });
 
     getMyViewModel().clearMyConversation();
-    if (widget?.arguments?.sheelaInputs != null && widget?.arguments?.sheelaInputs != '') {
+    if (widget?.arguments?.sheelaInputs != null &&
+        widget?.arguments?.sheelaInputs != '') {
       getMyViewModel(sheelaInputs: widget?.arguments?.sheelaInputs);
     } else {
       widget?.arguments?.isSheelaAskForLang
-          ? (widget?.arguments?.rawMessage != null && widget?.arguments?.rawMessage?.isNotEmpty)
-              ? getMyViewModel().askUserForLanguage(message: widget?.arguments?.rawMessage)
-              : getMyViewModel().askUserForLanguage()
-          : (widget?.arguments?.rawMessage != null && widget?.arguments?.rawMessage?.isNotEmpty)
+          ? (widget?.arguments?.rawMessage != null &&
+                  widget?.arguments?.rawMessage?.isNotEmpty)
               ? getMyViewModel()
-                  .startMayaAutomatically(message: widget?.arguments?.rawMessage)
+                  .askUserForLanguage(message: widget?.arguments?.rawMessage)
+              : getMyViewModel().askUserForLanguage()
+          : (widget?.arguments?.rawMessage != null &&
+                  widget?.arguments?.rawMessage?.isNotEmpty)
+              ? getMyViewModel().startMayaAutomatically(
+                  message: widget?.arguments?.rawMessage)
               : getMyViewModel().startMayaAutomatically();
     }
   }
@@ -87,10 +103,12 @@ class _ChatScreenState extends State<ChatScreen>
   }
 
   @override
-void deactivate() {
-  Provider.of<ChatScreenViewModel>(context, listen: false)?.conversations?.clear();
-  super.deactivate();
-}
+  void deactivate() {
+    Provider.of<ChatScreenViewModel>(context, listen: false)
+        ?.conversations
+        ?.clear();
+    super.deactivate();
+  }
 
   @override
   void dispose() {
@@ -101,12 +119,14 @@ void deactivate() {
           '${DateTime.now().difference(constants.mInitialTime).inSeconds} secs'
     });
     WidgetsBinding.instance.removeObserver(this);
-    _controller.dispose();
+    animationController?.dispose();
     super.dispose();
   }
 
   List<PopupMenuItem<String>> getSupportedLanguages() {
     stopTTSEngine();
+    Provider.of<ChatScreenViewModel>(context, listen: false)?.isMicListening =
+        false;
     List<PopupMenuItem<String>> languagesMenuList = [];
     String currentLanguage = '';
     final lan = Utils.getCurrentLanCode();
@@ -114,7 +134,7 @@ void deactivate() {
       final langCode = lan.split("-").first;
       currentLanguage = langCode;
     }
-    Utils.supportedLanguages.forEach((language, languageCode) {
+    CommonUtil.supportedLanguages.forEach((language, languageCode) {
       languagesMenuList.add(
         PopupMenuItem<String>(
           value: languageCode,
@@ -127,7 +147,7 @@ void deactivate() {
                 onChanged: (value) {
                   Navigator.pop(context);
                   PreferenceUtil.saveString(constants.SHEELA_LANG,
-                      Utils.langaugeCodes[value ?? 'undef']);
+                      CommonUtil.langaugeCodes[value ?? 'undef']);
                   Provider.of<ChatScreenViewModel>(context, listen: false)
                       .updateDeviceSelectionModel(
                     preferredLanguage: value,
@@ -201,7 +221,7 @@ void deactivate() {
               child: PopupMenuButton<String>(
                 onSelected: (languageCode) {
                   PreferenceUtil.saveString(constants.SHEELA_LANG,
-                      Utils.langaugeCodes[languageCode ?? 'undef']);
+                      CommonUtil.langaugeCodes[languageCode ?? 'undef']);
                   Provider.of<ChatScreenViewModel>(context, listen: false)
                       .updateDeviceSelectionModel(
                     preferredLanguage: languageCode,
@@ -214,6 +234,12 @@ void deactivate() {
         ),
         body: Consumer<ChatScreenViewModel>(
           builder: (contxt, model, child) {
+            if (model?.isMicListening ?? false) {
+              animationController?.reset();
+              animationController?.forward();
+            } else {
+              animationController?.stop();
+            }
             isLoading = model.isLoading;
             closeIfByeSaid(model.conversations);
             return ChatData(conversations: model.getMyConversations);
@@ -222,28 +248,56 @@ void deactivate() {
         floatingActionButton: Visibility(
           visible:
               !Provider.of<ChatScreenViewModel>(context).getIsButtonResponse,
-          child: FloatingActionButton(
-            onPressed: Provider.of<ChatScreenViewModel>(context).isLoading
-                ? null
-                : () {
-                    if (getMyViewModel().isLoading) {
-                      //do nothing
-                    } else if (getMyViewModel().isSheelaSpeaking) {
-                      stopTTSEngine();
-                    } else if (getMyViewModel().getisMayaSpeaks <= 0) {
-                      stopTTSEngine();
-                      getMyViewModel().gettingReposnseFromNative();
-                    } else {
-                      getMyViewModel().gettingReposnseFromNative();
-                    }
-                  },
-            child: Icon(
-              Provider.of<ChatScreenViewModel>(context).isSheelaSpeaking
-                  ? Icons.pause
-                  : Icons.mic,
-              color: Colors.white,
+          child: AnimatedBuilder(
+            animation: animationController,
+            builder: (context, child) {
+              return Container(
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  shape: BoxShape.circle,
+                ),
+                padding: EdgeInsets.all((_animation?.value ?? 0)),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color:
+                        Provider.of<ChatScreenViewModel>(context).isMicListening
+                            ? Colors.redAccent.shade100
+                            : Colors.transparent,
+                    shape: BoxShape.circle,
+                  ),
+                  padding: EdgeInsets.all((15.0 - (_animation?.value ?? 0))),
+                  child: child,
+                ),
+              );
+            },
+            child: FloatingActionButton(
+              onPressed: Provider.of<ChatScreenViewModel>(context).isLoading
+                  ? null
+                  : () {
+                      if (getMyViewModel().isLoading ||
+                          (getMyViewModel().isMicListening ?? false)) {
+                        //do nothing
+                      } else if (getMyViewModel().isSheelaSpeaking) {
+                        stopTTSEngine();
+                      } else if (getMyViewModel().getisMayaSpeaks <= 0) {
+                        stopTTSEngine();
+                        getMyViewModel().gettingReposnseFromNative();
+                      } else {
+                        getMyViewModel().gettingReposnseFromNative();
+                      }
+                    },
+              elevation: 10,
+              child: Icon(
+                Provider.of<ChatScreenViewModel>(context).isSheelaSpeaking
+                    ? Icons.pause
+                    : Icons.mic,
+                color: Colors.white,
+              ),
+              backgroundColor:
+                  Provider.of<ChatScreenViewModel>(context).isMicListening
+                      ? Colors.red
+                      : Color(CommonUtil().getMyPrimaryColor()),
             ),
-            backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

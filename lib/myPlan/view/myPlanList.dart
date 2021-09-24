@@ -44,10 +44,10 @@ class _MyPlanState extends State<MyPlanList> {
   final GlobalKey _PlanCardKey = GlobalKey();
   bool isFirst;
   BuildContext _myContext;
-
   @override
   void initState() {
     super.initState();
+    mInitialTime = DateTime.now();
     FocusManager.instance.primaryFocus.unfocus();
     if (widget.fromDashBoard) {
       Provider.of<RegimentViewModel>(
@@ -73,6 +73,12 @@ class _MyPlanState extends State<MyPlanList> {
   @override
   void dispose() {
     FocusManager.instance.primaryFocus.unfocus();
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+      'eventTime': '${DateTime.now()}',
+      'pageName': 'MyPlans Screen',
+      'screenSessionTime':
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+    });
     super.dispose();
   }
 
@@ -327,7 +333,10 @@ class _MyPlanState extends State<MyPlanList> {
                   CircleAvatar(
                     backgroundColor: Colors.grey[200],
                     radius: 20,
-                    child: CommonUtil().customImage(getImage(i, planList)),
+                    child: CommonUtil().customImage(
+                      getImage(i, planList),
+                      planInitial: planList[i]?.providerName ?? '',
+                    ),
                   ),
                   SizedBox(
                     width: 20.0.w,
@@ -419,6 +428,9 @@ class _MyPlanState extends State<MyPlanList> {
                                     await CommonUtil().renewAlertDialog(context,
                                         packageId: planList[i]?.packageid,
                                         price: planList[i]?.price,
+                                        startDate: planList[i]?.startdate,
+                                        endDate: planList[i]?.enddate,
+                                        isExpired: true,
                                         IsExtendable:
                                             planList[i]?.isExtendable == '1'
                                                 ? true
@@ -426,22 +438,21 @@ class _MyPlanState extends State<MyPlanList> {
                                       setState(() {});
                                     });
                                   } else {
-                                    if(planList[i].price=='0'){
+                                    if (planList[i].price == '0') {
                                       await CommonUtil().unSubcribeAlertDialog(
                                           context,
                                           packageId: planList[i].packageid,
                                           refresh: () {
-                                            setState(() {});
-                                          });
-                                    }else{
+                                        setState(() {});
+                                      });
+                                    } else {
                                       await CommonUtil().alertDialogForNoReFund(
                                           context,
                                           packageId: planList[i].packageid,
                                           refresh: () {
-                                            setState(() {});
-                                          });
+                                        setState(() {});
+                                      });
                                     }
-
                                   }
                                 },
                                 child: TextWidget(
