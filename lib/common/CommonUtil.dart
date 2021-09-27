@@ -3253,6 +3253,47 @@ class CommonUtil {
     }
   }
 
+  Future<void> CallbackAPIFromChat(
+    String patId,
+    String careProviderId,
+    String careProviderName,
+  ) async {
+    
+    var res = await ApiBaseHelper().callBackFromChat(
+      careProviderId,
+      patId,
+    );
+    
+    if (res) {
+      Get.rawSnackbar(
+          messageText: Center(
+            child: Text(
+              "Your request is placed. " + (careProviderName.isNotEmpty ? "$careProviderName, " : careProviderName) +
+                  " will reach you shortly.",
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+            ),
+          ),
+          snackPosition: SnackPosition.BOTTOM,
+          snackStyle: SnackStyle.GROUNDED,
+          duration: Duration(seconds: 3),
+          backgroundColor: Colors.green.shade500);
+    } else {
+      Get.rawSnackbar(
+          messageText: Center(
+            child: Text(
+              "Failed to notify the caregiver",
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+            ),
+          ),
+          snackPosition: SnackPosition.BOTTOM,
+          snackStyle: SnackStyle.GROUNDED,
+          duration: Duration(seconds: 3),
+          backgroundColor: Colors.red.shade500);
+    }
+  }
+
   Future<void> CallbackAPI(
     String patientName,
     String planId,

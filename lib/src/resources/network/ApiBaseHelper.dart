@@ -191,6 +191,42 @@ class ApiBaseHelper {
     }
   }
 
+  Future<bool> callBackFromChat(
+    String careGiverId,
+    String patId,
+  ) async {
+    try {
+      final head = await headerRequest.getRequestHeadersAuthContent();
+      final body = convert.jsonEncode(
+        {
+          "careGiverId": careGiverId,
+          "patientId": patId,
+        },
+      );
+      final response = await http.post(
+        Uri.parse(_baseUrl + 'user/callback/patient-caregiver-chat'),
+        headers: head,
+        body: body,
+      );
+      final res = convert.jsonDecode(response.body.toString());
+      if (response.statusCode == 200) {
+        if (res["isSuccess"] == true) {
+          print(res);
+          return true;
+        } else {
+          print(res);
+          return false;
+        }
+      } else {
+        print(res);
+        return false;
+      }
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
   Future<dynamic> updateTeleHealthProviders(String url, String query) async {
     var dio = Dio();
     var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
