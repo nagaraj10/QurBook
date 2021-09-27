@@ -46,6 +46,7 @@ class RegimentDataModel {
     this.isEventDisabled = false,
     this.sayTextDynamic,
     this.isSymptom = false,
+    this.isMandatory = false,
   });
 
   final String eid;
@@ -90,6 +91,7 @@ class RegimentDataModel {
   final bool isEventDisabled;
   final String sayTextDynamic;
   final bool isSymptom;
+  final bool isMandatory;
 
   factory RegimentDataModel.fromJson(Map<String, dynamic> json) =>
       RegimentDataModel(
@@ -145,6 +147,7 @@ class RegimentDataModel {
         isEventDisabled: (json['ev_disabled'] ?? '0') == '1',
         sayTextDynamic: json['saytext_dyn'] ?? '',
         isSymptom: (json['issymptom'] ?? '0') == '1',
+        isMandatory:(json['importance'] ?? '0') == '2',
       );
 
   Map<String, dynamic> toJson() => {
