@@ -514,7 +514,6 @@ const strProviderActive = 'Providers';
 const strHowVideos = 'Help';
 const strNoVideos = 'No videos available';
 const strVideosAvailable = 'videos available';
-const strChatWithUs = 'Chat with us';
 const strChatAvailable = ' is available';
 const strCareProvidersAvailable = 'care providers available';
 const strChatNotAvailable = 'No care provider assigned';

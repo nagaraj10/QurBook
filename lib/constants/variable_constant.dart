@@ -636,7 +636,6 @@ const String EMAIL_REGEXP =
 //r"^[a-zA-Z0-9.a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
     r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{​​​​​|}​​​​​~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
 
-const String c_chat_with_whatsapp = 'Chat with Us';
 const String c_chat_with_whatsapp_begin_conv = 'Hi';
 const String c_qurhealth_helpline = '919566200555';
 const String icon_whatsapp = 'assets/icons/ic_whatsapp.png';

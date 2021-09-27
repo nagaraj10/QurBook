@@ -4,6 +4,7 @@ import 'package:myfhb/colors/fhb_colors.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/myfhb_weview/myfhb_webview.dart';
+import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
@@ -120,7 +121,7 @@ class HelpSupport extends StatelessWidget {
                               AssetImage(icon_whatsapp),
                               color: Color(0XFF66AB5B),
                             ),
-                            title: Text(c_chat_with_whatsapp)),
+                            title: Text(TranslationConstants.chatWithUs.t())),
                       ),
                       Container(
                         height: 1.h,

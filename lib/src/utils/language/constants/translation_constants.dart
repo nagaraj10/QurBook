@@ -374,7 +374,6 @@ class TranslationConstants {
   static const strHowVideos = 'Help';
   static const strNoVideos = 'No videos available';
   static const strVideosAvailable = 'videos available';
-  static const strChatWithUs = 'Chat with us';
   static const strChatAvailable = ' is available';
   static const strCareProvidersAvailable = 'care providers available';
   static const strChatNotAvailable = 'No care provider assigned';
@@ -766,7 +765,7 @@ class TranslationConstants {
   static const String strNoDataAvailable = 'Unable To load';
   static const String strHealthOrganizationName = 'healthOrganizationName';
 
-  static const String c_chat_with_whatsapp = 'Chat with Us';
+  static const String chatWithUs = 'chatWithUs';
   static const String c_chat_with_whatsapp_begin_conv = 'Hi';
 
   static const String strSync = 'Syncing...';
