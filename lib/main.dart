@@ -7,10 +7,14 @@ import 'package:agora_rtc_engine/rtc_engine.dart' as rtc;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_logs/flutter_logs.dart' as applog;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myfhb/myPlan/view/myPlanDetail.dart';
 import 'package:myfhb/src/utils/dynamic_links.dart';
+import 'package:myfhb/src/utils/language/app_localizations.dart';
+import 'package:myfhb/src/utils/language/languages.dart';
+import 'package:myfhb/src/utils/language/view_model/language_view_model.dart';
 import 'package:myfhb/video_call/utils/audiocall_provider.dart';
 import 'package:myfhb/user_plans/view_model/user_plans_view_model.dart';
 import 'package:myfhb/video_call/utils/rtc_engine.dart';
@@ -268,6 +272,9 @@ Future<void> main() async {
           ),
           provider.ChangeNotifierProvider<UserPlansViewModel>(
             create: (_) => UserPlansViewModel(),
+          ),
+          provider.ChangeNotifierProvider<LanguageProvider>(
+            create: (_) => LanguageProvider(),
           ),
         ],
         child: MyFHB(),
@@ -923,12 +930,15 @@ class _MyFHBState extends State<MyFHB> {
             routes: routes,
             debugShowCheckedModeBanner: false,
             navigatorKey: Get.key,
-            /* builder: (BuildContext context, Widget widget) {
-          ErrorWidget.builder = (FlutterErrorDetails errorDetails) {
-            return buildError(context, errorDetails);
-          };
-          return widget;
-        },*/
+            supportedLocales:
+                Languages.languages.map((e) => Locale(e.code)).toList(),
+            locale: provider.Provider.of<LanguageProvider>(context).locale,
+            localizationsDelegates: [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
           );
         });
       }),
