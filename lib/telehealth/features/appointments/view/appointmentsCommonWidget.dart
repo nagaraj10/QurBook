@@ -8,6 +8,7 @@ import 'package:gmiwidgetspackage/widgets/BadgesBlue.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
+import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -140,9 +141,9 @@ class AppointmentsCommonWidget {
         iconWithText(
             Constants.Appointments_notesImage,
             Color(new CommonUtil().getMyPrimaryColor()),
-            Constants.Appointments_notes, () async {
+            TranslationConstants.notes.t(), () async {
           FocusManager.instance.primaryFocus.unfocus();
-          int position = await getCategoryPosition(Constants.STR_NOTES);
+          int position = await getCategoryPosition(AppConstants.notes);
 
           await Navigator.of(context)
               .push(MaterialPageRoute(
@@ -187,9 +188,9 @@ class AppointmentsCommonWidget {
         iconWithText(
             Constants.Appointments_voiceNotesImage,
             Color(new CommonUtil().getMyPrimaryColor()),
-            Constants.STR_VOICE_NOTES, () async {
+            AppConstants.voiceNotes, () async {
           FocusManager.instance.primaryFocus.unfocus();
-          int position = await getCategoryPosition(Constants.STR_VOICERECORDS);
+          int position = await getCategoryPosition(AppConstants.voiceRecords);
 
           await Navigator.of(context)
               .push(MaterialPageRoute(
@@ -234,11 +235,11 @@ class AppointmentsCommonWidget {
         iconWithText(
             Constants.Appointments_recordsImage,
             Color(new CommonUtil().getMyPrimaryColor()),
-            Constants.Appointments_records, () async {
+            TranslationConstants.records.t(), () async {
           if (rxCount != null /*&& isUpcoming*/) {
             FocusManager.instance.primaryFocus.unfocus();
             int position =
-                await getCategoryPosition(Constants.STR_PRESCRIPTION);
+                await getCategoryPosition(AppConstants.prescription);
 
             await Navigator.of(context)
                 .push(MaterialPageRoute(
@@ -366,7 +367,7 @@ class AppointmentsCommonWidget {
               BorderSide(color: Color(new CommonUtil().getMyPrimaryColor())),
           onPressed: () {},
           child: TextWidget(
-            text: Constants.Appointments_joinCall,
+            text: TranslationConstants.joinCall.t(),
             colors: Color(new CommonUtil().getMyPrimaryColor()),
             fontsize: 10.0.sp,
           ),
@@ -404,7 +405,10 @@ class AppointmentsCommonWidget {
     );
   }
 
-  Widget floatingButton(BuildContext context,{bool isHome=false,}) {
+  Widget floatingButton(
+    BuildContext context, {
+    bool isHome = false,
+  }) {
     return FloatingActionButton(
       mini: true,
       backgroundColor: Colors.white,
@@ -421,7 +425,7 @@ class AppointmentsCommonWidget {
         size: 24.0.sp,
         onTap: () {
           FocusManager.instance.primaryFocus.unfocus();
-          if(!isHome) {
+          if (!isHome) {
             Navigator.of(context).pop();
           }
           Navigator.pushNamed(
@@ -450,19 +454,19 @@ class AppointmentsCommonWidget {
   getCategoryPosition(String categoryName) {
     int categoryPosition = 0;
     switch (categoryName) {
-      case Constants.STR_NOTES:
+      case AppConstants.notes:
         categoryPosition = pickPosition(categoryName);
         return categoryPosition;
         break;
-      case Constants.STR_PRESCRIPTION:
+      case AppConstants.prescription:
         categoryPosition = pickPosition(categoryName);
         return categoryPosition;
         break;
-      case Constants.STR_VOICERECORDS:
+      case AppConstants.voiceRecords:
         categoryPosition = pickPosition(categoryName);
         return categoryPosition;
         break;
-      case Constants.STR_BILLS:
+      case AppConstants.bills:
         categoryPosition = pickPosition(categoryName);
         return categoryPosition;
         break;
@@ -485,7 +489,7 @@ class AppointmentsCommonWidget {
         position = i;
       }
     }
-    if (categoryName == Constants.STR_PRESCRIPTION) {
+    if (categoryName == AppConstants.prescription) {
       return position;
     } else {
       return position;

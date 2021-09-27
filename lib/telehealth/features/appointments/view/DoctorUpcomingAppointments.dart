@@ -8,6 +8,7 @@ import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/ui/MyRecordsArguments.dart';
+import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/my_providers/bloc/providers_block.dart';
@@ -173,7 +174,8 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                               SizedBoxWidget(height: 15.0),
                               commonWidget.docIcons(true, widget.doc, context,
                                   () {
-                                widget.onChanged(Constants.callBack);
+                                widget.onChanged(
+                                    TranslationConstants.callback.t());
                                 setState(() {});
                               })
                             ],
@@ -241,27 +243,29 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
               child: Row(
                 children: [
                   commonWidget.iconWithText(Constants.Appointments_receiptImage,
-                      Colors.black38, Constants.Appointments_receipt, () {
+                      Colors.black38, TranslationConstants.receipt.t(), () {
                     moveToBilsPage(widget.doc.healthRecord);
                   }, null),
                   SizedBoxWidget(width: 15.0.w),
                   commonWidget.iconWithText(
                       Constants.Appointments_resheduleImage,
                       Colors.black38,
-                      Constants.Appointments_reshedule, () {
+                      TranslationConstants.reschedule.t(), () {
                     FocusManager.instance.primaryFocus.unfocus();
                     (widget.doc.status != null &&
                             widget.doc.status.code == Constants.PATDNA)
-                        ? toast.getToast(Constants.DNA_APPOINTMENT, Colors.red)
+                        ? toast.getToast(
+                            TranslationConstants.dnaAppointment.t(), Colors.red)
                         : navigateToProviderScreen(widget.doc, true);
                   }, null),
                   SizedBoxWidget(width: 15.0.w),
                   commonWidget.iconWithText(Constants.Appointments_cancelImage,
-                      Colors.black38, Constants.Appointments_cancel, () {
+                      Colors.black38, TranslationConstants.cancel.t(), () {
                     FocusManager.instance.primaryFocus.unfocus();
                     (widget.doc.status != null &&
                             widget.doc.status.code == Constants.PATDNA)
-                        ? toast.getToast(Constants.DNA_APPOINTMENT, Colors.red)
+                        ? toast.getToast(
+                            TranslationConstants.dnaAppointment.t(), Colors.red)
                         : _displayDialog(context, [widget.doc]);
                   }, null),
                   SizedBoxWidget(width: 15.0.w),
@@ -291,7 +295,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                 isFromFollowUpApp: false,
                 isFromNotification: false,
               )),
-    ).then((value) => widget.onChanged(Constants.callBack));
+    ).then((value) => widget.onChanged(TranslationConstants.callback.t()));
   }
 
   _displayDialog(BuildContext context, List<Past> appointments) async {
@@ -333,8 +337,9 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                                       ? Container()
                                       : RichText(
                                           text: TextSpan(
-                                              text:
-                                                  Constants.CANCELLATION_CHARGE,
+                                              text: TranslationConstants
+                                                  .cancellationCharge
+                                                  .t(),
                                               style: TextStyle(
                                                   fontSize: 14.0.sp,
                                                   fontFamily: Constants.poppins,
@@ -426,12 +431,13 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
   getCancelAppoitment(List<Past> appointments) {
     cancelAppointment(appointments).then((value) {
       if (value == null) {
-        toast.getToast(Constants.BOOKING_CANCEL, Colors.red);
+        toast.getToast(TranslationConstants.bookingCancel.t(), Colors.red);
       } else if (value.isSuccess == true) {
-        widget.onChanged(Constants.callBack);
-        toast.getToast(Constants.YOUR_BOOKING_SUCCESS, Colors.green);
+        widget.onChanged(TranslationConstants.callback.t());
+        toast.getToast(
+            TranslationConstants.yourBookingSuccess.t(), Colors.green);
       } else {
-        toast.getToast(Constants.BOOKING_CANCEL, Colors.red);
+        toast.getToast(TranslationConstants.bookingCancel.t(), Colors.red);
       }
     });
   }
@@ -457,7 +463,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
         paymentID.add(healthRecord.bills[i]);
       }
     }
-    int position = getCategoryPosition(Constants.STR_BILLS);
+    int position = getCategoryPosition(AppConstants.bills);
     await Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => MyRecords(
           argument: MyRecordsArgument(
@@ -477,21 +483,21 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
   getCategoryPosition(String categoryName) {
     int categoryPosition;
     switch (categoryName) {
-      case Constants.STR_NOTES:
+      case AppConstants.notes:
         categoryPosition = pickPosition(categoryName);
         return categoryPosition;
         break;
 
-      case Constants.STR_PRESCRIPTION:
+      case AppConstants.prescription:
         categoryPosition = pickPosition(categoryName);
         return categoryPosition;
         break;
 
-      case Constants.STR_VOICERECORDS:
+      case AppConstants.voiceRecords:
         categoryPosition = pickPosition(categoryName);
         return categoryPosition;
         break;
-      case Constants.STR_BILLS:
+      case AppConstants.bills:
         categoryPosition = pickPosition(categoryName);
         return categoryPosition;
         break;
@@ -515,7 +521,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
         position = i;
       }
     }
-    if (categoryName == Constants.STR_PRESCRIPTION) {
+    if (categoryName == AppConstants.prescription) {
       return position;
     } else {
       return position;

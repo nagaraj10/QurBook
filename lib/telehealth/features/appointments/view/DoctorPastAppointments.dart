@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
 import 'package:myfhb/src/model/Category/catergory_result.dart';
+import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/ui/MyRecordsArguments.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
@@ -200,7 +201,7 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                                 )
                               : TextWidget(
                                   fontsize: 11.0.sp,
-                                  text: Constants.Appointments_followUpStatus,
+                                  text: TranslationConstants.nextFollowUpOn.t(),
                                   overflow: TextOverflow.visible,
                                   fontWeight: FontWeight.w400,
                                   colors: Colors.black38,
@@ -250,25 +251,25 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
               child: Row(
                 children: [
                   commonWidget.iconWithText(Constants.Appointments_chatImage,
-                      Colors.black38, Constants.Appointments_chat, () {
-                        FocusManager.instance.primaryFocus.unfocus();
+                      Colors.black38, TranslationConstants.chats.t(), () {
+                    FocusManager.instance.primaryFocus.unfocus();
                     goToChatIntegration(doc);
                   }, null),
                   SizedBoxWidget(width: 15.0),
                   /*commonWidget.iconWithText(
                       Constants.Appointments_prescriptionImage,
                       Colors.black38,
-                      Constants.STR_PRESCRIPTION,
+                      AppConstants.prescription,
                       () {},
                       null),*/
                   commonWidget.iconWithText(
                       Constants.Appointments_prescriptionImage,
                       Colors.black38,
-                      Constants.STR_PRESCRIPTION, () async {
+                      AppConstants.prescription, () async {
                     FocusManager.instance.primaryFocus.unfocus();
                     if (healthRecord > 0) {
                       int position =
-                          getCategoryPosition(Constants.STR_PRESCRIPTION);
+                          getCategoryPosition(AppConstants.prescription);
 
                       await Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => MyRecords(
@@ -287,8 +288,8 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                   }, healthRecord.toString()),
                   SizedBoxWidget(width: 15.0),
                   commonWidget.iconWithText(Constants.Appointments_receiptImage,
-                      Colors.black38, Constants.Appointments_receipt, () {
-                        FocusManager.instance.primaryFocus.unfocus();
+                      Colors.black38, TranslationConstants.receipt.t(), () {
+                    FocusManager.instance.primaryFocus.unfocus();
                     moveToBilsPage(doc.healthRecord);
                   }, null),
                   SizedBoxWidget(width: 15.0),
@@ -300,7 +301,7 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                     child: commonWidget.svgWithText(
                         Constants.Appointments_newAppoinmentImage,
                         Colors.black38,
-                        Constants.Appointments_new),
+                        TranslationConstants.newAppointment.t()),
                   ),
                 ],
               ),
@@ -359,7 +360,7 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
         paymentID.add(healthRecord.bills[i]);
       }
     }
-    int position = getCategoryPosition(Constants.STR_BILLS);
+    int position = getCategoryPosition(AppConstants.bills);
     await Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => MyRecords(
           argument: MyRecordsArgument(
@@ -378,21 +379,21 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
   getCategoryPosition(String categoryName) {
     int categoryPosition;
     switch (categoryName) {
-      case Constants.STR_NOTES:
+      case AppConstants.notes:
         categoryPosition = pickPosition(categoryName);
         return categoryPosition;
         break;
 
-      case Constants.STR_PRESCRIPTION:
+      case AppConstants.prescription:
         categoryPosition = pickPosition(categoryName);
         return categoryPosition;
         break;
 
-      case Constants.STR_VOICERECORDS:
+      case AppConstants.voiceRecords:
         categoryPosition = pickPosition(categoryName);
         return categoryPosition;
         break;
-      case Constants.STR_BILLS:
+      case AppConstants.bills:
         categoryPosition = pickPosition(categoryName);
         return categoryPosition;
         break;
@@ -416,7 +417,7 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
         position = i;
       }
     }
-    if (categoryName == Constants.STR_PRESCRIPTION) {
+    if (categoryName == AppConstants.prescription) {
       return position;
     } else {
       return position;

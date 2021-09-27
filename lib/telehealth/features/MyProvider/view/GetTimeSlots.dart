@@ -5,6 +5,7 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
+import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
@@ -232,15 +233,16 @@ class GetTimeSlots extends StatelessWidget {
         }
       }
       if (value == null) {
-        toast.getToast(AppointmentConstant.SLOT_NOT_AVAILABLE, Colors.red);
+        toast.getToast(TranslationConstants.slotNotAvailable.t(), Colors.red);
       } else if (value.isSuccess == true) {
         toast.getToast(
-            AppointmentConstant.YOUR_RESHEDULE_SUCCESS, Colors.green);
+            TranslationConstants.yourResheduleSuccess.t(), Colors.green);
         //TODO call the ns action api
-      } else if (value.message.contains(AppointmentConstant.NOT_AVAILABLE)) {
-        toast.getToast(AppointmentConstant.SLOT_NOT_AVAILABLE, Colors.red);
+      } else if (value.message
+          .contains(TranslationConstants.notAvailable.t())) {
+        toast.getToast(TranslationConstants.slotNotAvailable.t(), Colors.red);
       } else {
-        toast.getToast(AppointmentConstant.RESHEDULE_CANCEL, Colors.red);
+        toast.getToast(TranslationConstants.rescheduleCancel.t(), Colors.red);
       }
     });
   }
@@ -296,13 +298,11 @@ class GetTimeSlots extends StatelessWidget {
                             itemPosition);
                       } else {
                         //toast.getToast(noAddress, Colors.red);
-                        CommonUtil()
-                            .mSnackbar(context, noAddress, 'Add');
+                        CommonUtil().mSnackbar(context, noAddress, 'Add');
                       }
                     } else {
                       //toast.getToast(noAddress, Colors.red);
-                      CommonUtil()
-                          .mSnackbar(context, noAddress, 'Add');
+                      CommonUtil().mSnackbar(context, noAddress, 'Add');
                     }
                   } else {
                     //toast.getToast(noWeight, Colors.red);
