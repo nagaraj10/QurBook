@@ -1349,12 +1349,39 @@ class ChatScreenState extends State<ChatScreen> {
                     SizedBox(
                       width: 1.sw * 0.03,
                     ),
-                    SizedBoxWithChild(
-                      height: 24.0.h,
-                      width: 24.0.h,
-                      child: new CommonUtil().getNotificationIcon(context),
-                    ),
-                    moreOptionsPopup()
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        isCareGiver
+                            ? IconButton(
+                                onPressed: () {
+                                  CommonUtil().CallbackAPIFromChat(
+                                      patientId,
+                                      peerId,
+                                      (widget.peerName ?? "").length > 0
+                                          ? widget
+                                              .peerName?.capitalizeFirstofEach
+                                          : '');
+                                },
+                                icon: Icon(
+                                  Icons.call,
+                                  color: Colors.white,
+                                  size: 24.0.h,
+                                ),
+                              )
+                            : SizedBoxWithChild(
+                                height: 24.0.h,
+                                width: 24.0.h,
+                                child:
+                                    CommonUtil().getNotificationIcon(context),
+                              ),
+                        SizedBoxWithChild(
+                          height: 24.0.h,
+                          width: 24.0.h,
+                          child: moreOptionsPopup(),
+                        )
+                      ],
+                    )
                   ],
                 ),
               ),
