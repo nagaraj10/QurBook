@@ -1,50 +1,49 @@
-class Constants {
-  static const String STR_NOTES = 'Notes';
-  static const String STR_BILLS = 'Bills';
-  static const String STR_VOICERECORDS = 'Voice Records';
-  static const String STR_VOICE_NOTES = 'Voice Notes';
-  static const String STR_PRESCRIPTION = 'Prescription';
-  static const String Appointments_Title = "Appointments";
-  static const String Appointments_upcoming = "Upcoming Appointments";
-  static const String Appointments_joinCall = 'Join Call';
-  static const String Appointments_history = "Appointment History";
-  static const String Appointments_hours = "Hrs";
-  static const String Appointments_minutes = "Mins";
-  static const String Appointments_chat = "Chats";
-  static const String Appointments_notes = 'Notes';
-  static const String Appointments_records = 'Records';
-  static const String Appointments_receipt = 'Receipt';
-  static const String Appointments_reshedule = 'Reschedule';
-  static const String Plan_renew = 'Renew';
-  static const String Appointments_cancel = 'Cancel';
-  static const String Appointments_new = 'New Appointment';
-  static const String Appointments_followUpStatus = 'Next follow up on';
-  static const String callBack = 'Completed';
-  static const String Appointments_days = ' days';
-  static const String PATIENT_FOLLOW_UP = 'Patient follow up';
-  static const String VERIFIED = 'Verified';
-  static const String NOT_VERIFIED = 'Not Verified';
+//TODO: Read the comments if adding new String for first time
 
-  static const String DNA_APPOINTMENT =
-      'This Appointment cannot be cancelled or rescheduled';
-  static const String YOUR_BOOKING_SUCCESS =
-      "Your booking has been cancelled succesfully..";
-  static const String YOUR_RESHEDULE_SUCCESS =
-      "Your booking has been resheduled succesfully..";
-  static const String BOOKING_CANCEL =
-      "Booking cancellation failed.. Plesae try again!";
-  static const String RESHEDULE_CANCEL =
-      "Resheduling failed.. Plesae try again!";
-  static const String RESHEDULE_SUCCESS_MESSAGE =
-      "Appointment reschedule done successfully";
-  static const String SLOT_NOT_AVAILABLE =
-      "Slot is not available.. Please try again!";
-  static const String strFailed = 'Failed to Invoke: ';
-  static const String resheduled = 'rescheduled';
-  static const String NOT_AVAILABLE = 'not available';
-  static const String CANCELLATION_CHARGE = 'Cancellation Charges:';
-  static const String inrLabel = 'INR';
-  static const String inrLabelZero = 'INR 0';
+// TranslationConstants class is used to have all the keys for constants
+// which are required to be translated
+// Add only the key(a simple text in lowerCamelCase) here and
+// the value(translated String) should be given in the .json files
+// in assets/languages/ folder under all the supported languages .json file
+// The key is Case sensitive & it should be given
+
+// Eg - In TranslationConstants.dart, give the key as below
+//      static const String timeConstant = 'timeString';
+//   (For easy understanding, keep the Constant name & key name as same -
+//    Eg - static const String timeConstant = 'timeConstant';)
+//    - In en.json file, give the English translated text as below
+//       "timeString" : "Time"
+//    - In ta.json file, give the Tamil translated text as below
+//       "timeString" : "நேரம்"
+//   Similarly it should be added for all supporting languages .json files
+
+class TranslationConstants {
+  static const String appointments = 'appointments';
+  static const String upcomingAppointments = 'upcomingAppointments';
+  static const String joinCall = 'joinCall';
+  static const String appointmentHistory = 'appointmentHistory';
+  static const String hours = 'hours';
+  static const String minutes = 'minutes';
+  static const String chats = 'chats';
+  static const String notes = 'notes';
+  static const String records = 'records';
+  static const String receipt = 'receipt';
+  static const String reschedule = 'reschedule';
+  static const String renew = 'renew';
+  static const String cancel = 'cancel';
+  static const String newAppointment = 'newAppointment';
+  static const String nextFollowUpOn = 'nextFollowUpOn';
+  static const String callback = 'callback';
+  static const String days = 'days';
+  static const String dnaAppointment = 'dnaAppointment';
+  static const String yourBookingSuccess = 'yourBookingSuccess';
+  static const String yourResheduleSuccess = 'yourResheduleSuccess';
+  static const String bookingCancel = 'bookingCancel';
+  static const String rescheduleCancel = 'rescheduleCancel';
+  static const String slotNotAvailable = 'slotNotAvailable';
+  static const String failedToInvoke = 'failedToInvoke';
+  static const String notAvailable = 'notAvailable';
+  static const String cancellationCharge = 'cancellationCharge';
 
   static const String APP_NAME = 'myFHB';
   static const String MOB_NUM = 'Mobile number';
@@ -167,7 +166,7 @@ class Constants {
   static const String NO_DATA_PRESCRIPTION =
       'Don\'t want to type? \n Take a picture or upload from gallery \nto add prescriptions.';
   static const String NO_DATA_DEVICES =
-      'Click \'n\' go (or) tell \"Sheela\" \nand it will record for you.';
+      'Click \'n\' go (or) tell \'Sheela\' \nand it will record for you.';
   static const String NO_DATA_LAB_REPORT =
       'Upload your report or click \'n\' go';
   static const String NO_DATA_MEDICAL_REPORT =
@@ -271,24 +270,24 @@ class Constants {
   static const String STR_ONLY_ONE = 'Can attach only one record';
 
 //// Check Internet connectivity
-  static const String failed_wifi = "Failed to get Wifi Name";
-  static const String failed_wifi_bssid = "Failed to get Wifi BSSID";
-  static const String failed_wifi_ip = "Failed to get Wifi IP";
-  static const String wifi_connected = "Wifi connected";
-  static const String data_connected = "Mobile data connected";
-  static const String no_internet_conn = "No internet connection";
-  static const String failed_get_conn = "Failed to get connectivity.";
+  static const String failed_wifi = 'Failed to get Wifi Name';
+  static const String failed_wifi_bssid = 'Failed to get Wifi BSSID';
+  static const String failed_wifi_ip = 'Failed to get Wifi IP';
+  static const String wifi_connected = 'Wifi connected';
+  static const String data_connected = 'Mobile data connected';
+  static const String no_internet_conn = 'No internet connection';
+  static const String failed_get_conn = 'Failed to get connectivity.';
   static const String failed_get_connectivity =
-      "Failed to get internet connectivity.";
-  static const String NOT_FILE_IMAGE = "Something went wrong";
+      'Failed to get internet connectivity.';
+  static const String NOT_FILE_IMAGE = 'Something went wrong';
   static const String TRY_AGAIN =
-      "Please try again or report the issue to support";
-  static const String EXIT_APP = "Exit app";
-  static const String EXIT_APP_TO_EXIT = "Are you sure to exit app?";
-  static const String CANCEL = "CANCEL";
-  static const String YES = "YES";
-  static const String CHAT = "Chats";
-  static const String CAREPROVIDERS = "Care Providers";
+      'Please try again or report the issue to support';
+  static const String EXIT_APP = 'Exit app';
+  static const String EXIT_APP_TO_EXIT = 'Are you sure to exit app?';
+  static const String CANCEL = 'CANCEL';
+  static const String YES = 'YES';
+  static const String CHAT = 'Chats';
+  static const String CAREPROVIDERS = 'Care Providers';
 
   static const String CONSULTING = 'CONSULTING';
   static const String HealthOrg = 'Health Organization';
@@ -451,7 +450,7 @@ class Constants {
       'Invite sending failed. Please try again';
 
   static const String STR_NOTES_HINT =
-      "Provide details on existing illness, allergies, history of the disease and medication taken";
+      'Provide details on existing illness, allergies, history of the disease and medication taken';
 
   static const String STR_YES = 'yes';
   static const String STR_NO = 'no';
@@ -481,7 +480,7 @@ class Constants {
   static const String strFamilySucess =
       'Your family member has been added successfully';
   static const String strDisableTeleconsulting =
-      "Provider that you selected hasn't enrolled for teleconsulting service, we will onboard your doctor shortly";
+      'Provider that you selected hasn\'t enrolled for teleconsulting service, we will onboard your doctor shortly';
 
   static const String strFetchRoles = 'Fetching Custom Roles';
   static const String strFetchProfile = 'Fetching User Profile';

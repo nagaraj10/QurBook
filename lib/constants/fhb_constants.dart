@@ -42,14 +42,11 @@ const String STR_THERMOMETER = 'Thermometer';
 const String STR_BP_MONITOR = 'BP Monitor';
 const String STR_WEIGHING_SCALE = 'Weighing Scale';
 const String STR_PULSE_OXIMETER = 'Pulse Oximeter';
-const String STR_PRESCRIPTION = 'Prescription';
 const String STR_DEVICES = 'Devices';
 const String STR_LABREPORT = 'Lab Report';
 const String STR_MEDICALREPORT = 'Medical Report';
-const String STR_BILLS = 'Bills';
 const String STR_IDDOCS = 'ID Docs';
 const String STR_OTHERS = 'Others';
-const String STR_VOICERECORDS = 'Voice Records';
 const String STR_CLAIMSRECORD = 'Claim Records';
 const String STR_FEEDBACK = 'Feedback';
 const String STR_WEARABLES = 'Wearable';
@@ -61,7 +58,6 @@ const String KEY_DYNAMIC_URL = 'dynamicURL';
 
 const String KEY_LANGUAGE = 'languageList';
 
-const String STR_VOICE_NOTES = 'Voice Notes';
 const String KEY_USERID_MAIN = 'mainUserUD';
 const String KEY_PROFILE_MAIN = 'profileMain';
 const String KEY_SEARCHED_LIST = 'searchedList';
@@ -310,8 +306,6 @@ const String countryCode = '91';
 const String mobileNumber = '9176117878';
 
 //for security purposesf
-
-const String STR_NOTES = 'Notes';
 const String STR_ONLY_ONE = 'Can attach only one record';
 
 //ICON for Device Reading widgets

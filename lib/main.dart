@@ -11,6 +11,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_logs/flutter_logs.dart' as applog;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myfhb/myPlan/view/myPlanDetail.dart';
+import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'package:myfhb/src/utils/dynamic_links.dart';
 import 'package:myfhb/src/utils/language/app_localizations.dart';
 import 'package:myfhb/src/utils/language/languages.dart';
@@ -1106,7 +1107,7 @@ class _MyFHBState extends State<MyFHB> {
       final result = await platform.invokeMethod(variable.strGetAppVersion);
       res = result;
     } on PlatformException catch (e) {
-      res = variable.strFailed + "'${e.message}'.";
+      res = TranslationConstants.failedToInvoke.t() + "'${e.message}'.";
     }
 
     setState(() {

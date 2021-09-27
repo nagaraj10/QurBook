@@ -7,6 +7,7 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/appointmentsModel.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
+import 'package:myfhb/src/utils/language/language_utils.dart';
 
 class FetchAppointmentsService {
   final String _baseUrl = Constants.BASE_URL;
@@ -41,10 +42,10 @@ class FetchAppointmentsService {
           print(response.body);
           return AppointmentsModel.fromJson(jsonDecode(response.body));
         } else {
-          throw Exception(strFailed);
+          throw Exception(TranslationConstants.failedToInvoke.t());
         }
       } else {
-        throw Exception(strFailed);
+        throw Exception(TranslationConstants.failedToInvoke.t());
       }
     });
   }

@@ -13,6 +13,7 @@ import 'package:myfhb/myPlan/view/myPlanDetail.dart';
 import 'package:myfhb/regiment/models/regiment_arguments.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/ui/bot/view/sheela_arguments.dart';
+import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/MyProvidersMain.dart';
 import 'package:myfhb/telehealth/features/Notifications/constants/notification_constants.dart'
@@ -520,7 +521,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                                       }
                                     : null,
                                 child: TextWidget(
-                                  text: AppConstants.Appointments_cancel,
+                                  text: AppConstants.cancel,
                                   colors: !notification
                                           ?.result[index]?.isActionDone
                                       ? Color(
@@ -593,7 +594,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                                       }
                                     : null,
                                 child: TextWidget(
-                                  text: AppConstants.Appointments_reshedule,
+                                  text: AppConstants.reschedule,
                                   colors: !notification
                                           ?.result[index]?.isActionDone
                                       ? Color(
@@ -728,10 +729,11 @@ class _NotificationScreen extends State<NotificationScreen> {
       List<Past> appointments, dynamic body, NotificationResult notification) {
     cancelAppointment(appointments).then((value) {
       if (value == null) {
-        toast.getToast(AppConstants.BOOKING_CANCEL, Colors.red);
+        toast.getToast(TranslationConstants.bookingCancel.t(), Colors.red);
       } else if (value.isSuccess == true) {
 //        widget.onChanged(AppConstants.callBack);
-        toast.getToast(AppConstants.YOUR_BOOKING_SUCCESS, Colors.green);
+        toast.getToast(
+            TranslationConstants.yourBookingSuccess.t(), Colors.green);
         FetchNotificationService().updateNsActionStatus(body).then((data) {
           if (data != null && data['isSuccess']) {
             if (notification.isUnread != null && notification.isUnread) {
@@ -759,7 +761,7 @@ class _NotificationScreen extends State<NotificationScreen> {
           }
         });
       } else {
-        toast.getToast(AppConstants.BOOKING_CANCEL, Colors.red);
+        toast.getToast(TranslationConstants.bookingCancel.t(), Colors.red);
       }
     });
   }
@@ -1055,7 +1057,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                     ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
                     : BorderSide(color: Colors.grey),
                 child: TextWidget(
-                  text: AppConstants.Appointments_reshedule,
+                  text: TranslationConstants.reschedule.t(),
                   colors: !notification?.isActionDone
                       ? Color(CommonUtil().getMyPrimaryColor())
                       : Colors.grey,
@@ -1092,7 +1094,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                     ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
                     : BorderSide(color: Colors.grey),
                 child: TextWidget(
-                  text: AppConstants.Appointments_cancel,
+                  text: TranslationConstants.cancel.t(),
                   colors: !notification?.isActionDone
                       ? Color(CommonUtil().getMyPrimaryColor())
                       : Colors.grey,
@@ -1169,7 +1171,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                     ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
                     : BorderSide(color: Colors.grey),
                 child: TextWidget(
-                  text: AppConstants.Plan_renew,
+                  text: TranslationConstants.renew.t(),
                   colors: !notification?.isActionDone
                       ? Color(CommonUtil().getMyPrimaryColor())
                       : Colors.grey,
@@ -1218,7 +1220,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                     ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
                     : BorderSide(color: Colors.grey),
                 child: TextWidget(
-                  text: AppConstants.Plan_callback,
+                  text: TranslationConstants.callback.t(),
                   colors: !notification?.isActionDone
                       ? Color(CommonUtil().getMyPrimaryColor())
                       : Colors.grey,

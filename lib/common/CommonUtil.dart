@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:isolate';
 import 'package:flutter/foundation.dart';
+import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'package:flutter_logs/flutter_logs.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -1963,7 +1964,7 @@ class CommonUtil {
             position = i;
           }
         }
-        if (categoryName == Constants.STR_PRESCRIPTION) {
+        if (categoryName == AppConstants.prescription) {
           return position;
         } else if (categoryName == Constants.STR_IDDOCS ||
             categoryName == Constants.STR_HOS_ID ||

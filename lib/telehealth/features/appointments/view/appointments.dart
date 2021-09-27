@@ -8,6 +8,7 @@ import 'package:myfhb/src/blocs/Media/MediaTypeBlock.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart'
     as Constants;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/appointmentsModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
 import 'package:myfhb/telehealth/features/appointments/view/DoctorUpcomingAppointments.dart';
@@ -55,7 +56,6 @@ class _AppointmentsState extends State<Appointments> {
   @override
   void initState() {
     mInitialTime = DateTime.now();
-    //commonWidget.getCategoryPosition(Constants.STR_NOTES);
     Provider.of<AppointmentsListViewModel>(context, listen: false)
         .fetchAppointments();
     super.initState();
@@ -228,14 +228,16 @@ class _AppointmentsState extends State<Appointments> {
                         ),
                         isSearch
                             ? (upcomingInfo != null && upcomingInfo.length != 0)
-                                ? commonWidget
-                                    .title(Constants.Appointments_upcoming)
+                                ? commonWidget.title(TranslationConstants
+                                    .upcomingAppointments
+                                    .t())
                                 : Container()
                             : (appointmentsData.result.upcoming != null &&
                                     appointmentsData.result.upcoming.length !=
                                         0)
-                                ? commonWidget
-                                    .title(Constants.Appointments_upcoming)
+                                ? commonWidget.title(TranslationConstants
+                                    .upcomingAppointments
+                                    .t())
                                 : Container(),
                         SizedBoxWidget(
                           width: 0.0.h,
@@ -270,12 +272,12 @@ class _AppointmentsState extends State<Appointments> {
                         isSearch
                             ? (historyInfo != null && historyInfo.length != 0)
                                 ? commonWidget
-                                    .title(Constants.Appointments_history)
+                                    .title(TranslationConstants.appointmentHistory.t())
                                 : Container()
                             : (appointmentsData.result.past != null &&
                                     appointmentsData.result.past.length != 0)
                                 ? commonWidget
-                                    .title(Constants.Appointments_history)
+                                    .title(TranslationConstants.appointmentHistory.t())
                                 : Container(),
                         SizedBoxWidget(
                           width: 0.0.h,
@@ -380,7 +382,7 @@ class _AppointmentsState extends State<Appointments> {
       children: [
         Expanded(
           child: TextWidget(
-            text: Constants.Appointments_Title,
+            text: TranslationConstants.appointments.t(),
             colors: Colors.white,
             overflow: TextOverflow.visible,
             fontWeight: FontWeight.w600,

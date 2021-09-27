@@ -12,6 +12,7 @@ import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/OverLayCategoryDialog.dart';
 import 'package:myfhb/common/OverlayDeviceDialog.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
@@ -201,7 +202,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
     if (categoryName != Constants.STR_DEVICES) {
       switch (categoryName) {
-        case Constants.STR_PRESCRIPTION:
+        case AppConstants.prescription:
           new CommonDialogBox().getDialogBoxForPrescription(
               context,
               hospitalName,
@@ -223,7 +224,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
           }, widget.imagePath, null, false, fileName);
 
           break;
-        case Constants.STR_BILLS:
+        case AppConstants.bills:
           new CommonDialogBox().getDialogBoxForBillsAndOthers(
               context,
               containsAudio,

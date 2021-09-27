@@ -590,7 +590,6 @@ const String strValidPhoneNumber = 'Enter a valid mobile number';
 const String strGetAppVersion = 'getAppVersion';
 const String strSecure = 'secureMe';
 const String strpop = 'SystemNavigator.pop';
-const String strFailed = 'Failed to Invoke: ';
 
 const String strformateedAddress = 'formateedAddress';
 const String strformateedPhoneNumber = 'formateedPhoneNumber';

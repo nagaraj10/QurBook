@@ -11,6 +11,7 @@ import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonDialogBox.dart';
+import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -821,7 +822,7 @@ class _CustomTabsState extends State<CustomTabView>
             borderRadius: BorderRadius.circular(30)),
         child: (widget.categoryData != null &&
                 widget.categoryData[controller.index].categoryName ==
-                    Constants.STR_NOTES)
+                    AppConstants.notes)
             ? IconButton(
                 icon: Icon(
                   Icons.add,
@@ -1542,12 +1543,12 @@ class _CustomTabsState extends State<CustomTabView>
       await _handleCameraAndMic();
     } else {
       saveCategoryToPrefernce();
-      if (categoryName == Constants.STR_VOICERECORDS ||
+      if (categoryName == AppConstants.voiceRecords ||
           categoryName == Constants.STR_HOSPITALDOCUMENT) {
         new FHBBasicWidget().showInSnackBar(
             Constants.MSG_NO_CAMERA_VOICERECORDS + ' ' + categoryName,
             widget.scaffold_state);
-      } else if (categoryName == Constants.STR_NOTES) {
+      } else if (categoryName == AppConstants.notes) {
         openNotesDialog();
       } else {
         PreferenceUtil.saveString(Constants.KEY_DEVICENAME, '').then((onValue) {
@@ -1593,7 +1594,7 @@ class _CustomTabsState extends State<CustomTabView>
           widget.scaffold_state);
     } else {
       PreferenceUtil.saveString(
-              Constants.KEY_CATEGORYNAME, Constants.STR_VOICERECORDS)
+              Constants.KEY_CATEGORYNAME, AppConstants.voiceRecords)
           .then((value) {
         PreferenceUtil.saveString(Constants.KEY_CATEGORYID,
                 PreferenceUtil.getStringValue(Constants.KEY_VOICE_ID))
@@ -1607,7 +1608,7 @@ class _CustomTabsState extends State<CustomTabView>
             //                 arguments: AudioScreenArguments(
             //                     fromVoice: true,
             //                     fromClass: categoryName ==
-            //                             Constants.STR_VOICERECORDS
+            //                             AppConstants.voiceRecords
             //                         ? ''
             //                         : widget.argument.fromClass ?? 'audio'))))
             //     .then((results) {});
@@ -1615,7 +1616,7 @@ class _CustomTabsState extends State<CustomTabView>
               () => AudioRecorder(
                 arguments: AudioScreenArguments(
                     fromVoice: true,
-                    fromClass: categoryName == Constants.STR_VOICERECORDS
+                    fromClass: categoryName == AppConstants.voiceRecords
                         ? ''
                         : widget.argument.fromClass ?? 'audio'),
               ),
