@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart'
     as Constants;
+import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
@@ -71,7 +72,7 @@ class DoctorTimeSlotWidgetState extends State<DoctorTimeSlotWidget> {
     return days != Constants.ZERO && days != null
         ? TextWidget(
             fontsize: 12.0.sp,
-            text: days + Constants.Appointments_days,
+            text: days + TranslationConstants.days.t(),
             fontWeight: FontWeight.w500,
             colors: Colors.black,
           )
@@ -103,7 +104,7 @@ class DoctorTimeSlotWidgetState extends State<DoctorTimeSlotWidget> {
                           ),
                           TextWidget(
                             fontsize: 7.0.sp,
-                            text: Constants.Appointments_hours,
+                            text: TranslationConstants.hours.t(),
                             fontWeight: FontWeight.w500,
                             colors: Color(new CommonUtil().getMyPrimaryColor()),
                           ),
@@ -135,7 +136,7 @@ class DoctorTimeSlotWidgetState extends State<DoctorTimeSlotWidget> {
                           ),
                           TextWidget(
                             fontsize: 7.0.sp,
-                            text: Constants.Appointments_minutes,
+                            text: TranslationConstants.minutes.t(),
                             fontWeight: FontWeight.w500,
                             colors: Color(new CommonUtil().getMyPrimaryColor()),
                           ),

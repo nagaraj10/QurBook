@@ -1,6 +1,7 @@
 import 'dart:core';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:open_file/open_file.dart';
@@ -211,7 +212,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                     ? getCarousalImage(mediMasterId)
                                     : (widget.data.metadata.healthRecordType
                                                     .name ==
-                                                Constants.STR_VOICE_NOTES ||
+                                                AppConstants.voiceNotes ||
                                             ispdfPresent == true)
                                         ? getCarousalImage(null)
                                         : widget?.data?.metadata?.sourceName ==
@@ -772,7 +773,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         date = FHBUtils().getFormattedDateOnly(date);
       }
       switch (categoryName) {
-        case Constants.STR_PRESCRIPTION:
+        case AppConstants.prescription:
           final fileName = widget.data.metadata.fileName;
 
           CommonDialogBox().getDialogBoxForPrescription(
@@ -808,7 +809,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
           break;
 
-        case Constants.STR_BILLS:
+        case AppConstants.bills:
           final fileName = widget.data.metadata.fileName;
 
           CommonDialogBox().getDialogBoxForBillsAndOthers(
@@ -982,7 +983,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               TextEditingController(text: fileName));
 
           break;
-        case Constants.STR_VOICERECORDS:
+        case AppConstants.voiceRecords:
           var fileName = widget.data.metadata.fileName;
 
           CommonDialogBox().getDialogBoxForBillsAndOthers(
@@ -1008,7 +1009,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
           break;
 
-        case Constants.STR_NOTES:
+        case AppConstants.notes:
           final fileName = widget.data.metadata.fileName;
 
           CommonDialogBox().getDialogBoxForNotes(
@@ -1281,7 +1282,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           widget.data.metadata.healthRecordType.name !=
-                  Constants.STR_VOICE_NOTES
+                  AppConstants.voiceNotes
               ? (imagesPath != null && imagesPath.isNotEmpty)
                   ? Expanded(
                       child: CarouselSlider(

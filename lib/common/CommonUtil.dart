@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:isolate';
 import 'package:flutter/foundation.dart';
+import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'package:flutter_logs/flutter_logs.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -1963,7 +1964,7 @@ class CommonUtil {
             position = i;
           }
         }
-        if (categoryName == Constants.STR_PRESCRIPTION) {
+        if (categoryName == AppConstants.prescription) {
           return position;
         } else if (categoryName == Constants.STR_IDDOCS ||
             categoryName == Constants.STR_HOS_ID ||
@@ -3250,6 +3251,47 @@ class CommonUtil {
         'CurrentUser- $userIdCurrent',
         '$message',
       );
+    }
+  }
+
+  Future<void> CallbackAPIFromChat(
+    String patId,
+    String careProviderId,
+    String careProviderName,
+  ) async {
+    
+    var res = await ApiBaseHelper().callBackFromChat(
+      careProviderId,
+      patId,
+    );
+    
+    if (res) {
+      Get.rawSnackbar(
+          messageText: Center(
+            child: Text(
+              "Your request is placed. " + (careProviderName.isNotEmpty ? "$careProviderName, " : careProviderName) +
+                  " will reach you shortly.",
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+            ),
+          ),
+          snackPosition: SnackPosition.BOTTOM,
+          snackStyle: SnackStyle.GROUNDED,
+          duration: Duration(seconds: 3),
+          backgroundColor: Colors.green.shade500);
+    } else {
+      Get.rawSnackbar(
+          messageText: Center(
+            child: Text(
+              "Failed to notify the caregiver",
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+            ),
+          ),
+          snackPosition: SnackPosition.BOTTOM,
+          snackStyle: SnackStyle.GROUNDED,
+          duration: Duration(seconds: 3),
+          backgroundColor: Colors.red.shade500);
     }
   }
 

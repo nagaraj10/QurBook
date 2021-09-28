@@ -10,6 +10,7 @@ import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments.dart';
 import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
 import 'package:myfhb/common/CommonConstants.dart';
+import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -603,7 +604,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                           onPressed: () {
                                             FetchRecords(
                                                 getCategoryPosition(
-                                                    Constants.STR_NOTES),
+                                                    AppConstants.notes),
                                                 false,
                                                 false,
                                                 true,
@@ -651,7 +652,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                           onPressed: () {
                                             FetchRecords(
                                                 getCategoryPosition(
-                                                    Constants.STR_VOICERECORDS),
+                                                    AppConstants.voiceRecords),
                                                 false,
                                                 true,
                                                 false,
@@ -699,7 +700,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                           onPressed: () {
                                             FetchRecords(
                                                 getCategoryPosition(
-                                                    Constants.STR_PRESCRIPTION),
+                                                    AppConstants.prescription),
                                                 true,
                                                 false,
                                                 false,
@@ -1204,41 +1205,41 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             if (value?.result?.paymentInfo != null &&
                 value?.result.paymentInfo?.payload?.paymentGatewayDetail !=
                     null) {
+              if (value?.result?.paymentInfo?.payload?.paymentGatewayDetail
+                      ?.responseInfo?.paymentGateWay ==
+                  STR_RAZOPAY) {
                 if (value?.result?.paymentInfo?.payload?.paymentGatewayDetail
-                        ?.responseInfo?.paymentGateWay ==
-                    STR_RAZOPAY) {
-                  if (value?.result?.paymentInfo?.payload?.paymentGatewayDetail
-                          ?.responseInfo?.shorturl !=
-                      null) {
-                    PreferenceUtil.saveString(Constants.KEY_USERID_BOOK, '');
+                        ?.responseInfo?.shorturl !=
+                    null) {
+                  PreferenceUtil.saveString(Constants.KEY_USERID_BOOK, '');
 
-                    goToPaymentPage(
-                        value?.result?.paymentInfo?.payload?.paymentGatewayDetail
-                            ?.responseInfo?.shorturl,
-                        value?.result?.paymentInfo?.payload?.payment?.id,
-                        true);
-                  } else {
-                    pr.hide();
-                    toast.getToast(
-                        value.message != null ? value.message : someWentWrong,
-                        Colors.red);
-                  }
+                  goToPaymentPage(
+                      value?.result?.paymentInfo?.payload?.paymentGatewayDetail
+                          ?.responseInfo?.shorturl,
+                      value?.result?.paymentInfo?.payload?.payment?.id,
+                      true);
                 } else {
-                  if (value?.result?.paymentInfo?.payload?.paymentGatewayDetail
-                          ?.responseInfo?.longurl !=
-                      null) {
-                    PreferenceUtil.saveString(Constants.KEY_USERID_BOOK, '');
-
-                    goToPaymentPage(
-                        value?.result?.paymentInfo?.payload?.paymentGatewayDetail
-                            ?.responseInfo?.longurl,
-                        value?.result?.paymentInfo?.payload?.payment?.id,
-                        false);
-                  } else {
-                    pr.hide();
-                    toast.getToast(noUrl, Colors.red);
-                  }
+                  pr.hide();
+                  toast.getToast(
+                      value.message != null ? value.message : someWentWrong,
+                      Colors.red);
                 }
+              } else {
+                if (value?.result?.paymentInfo?.payload?.paymentGatewayDetail
+                        ?.responseInfo?.longurl !=
+                    null) {
+                  PreferenceUtil.saveString(Constants.KEY_USERID_BOOK, '');
+
+                  goToPaymentPage(
+                      value?.result?.paymentInfo?.payload?.paymentGatewayDetail
+                          ?.responseInfo?.longurl,
+                      value?.result?.paymentInfo?.payload?.payment?.id,
+                      false);
+                } else {
+                  pr.hide();
+                  toast.getToast(noUrl, Colors.red);
+                }
+              }
             } else {
               Navigator.pop(context);
               Navigator.pop(context);
@@ -1246,8 +1247,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => TelehealthProviders(
-                        arguments: HomeScreenArguments(selectedIndex: 0),
-                      )));
+                            arguments: HomeScreenArguments(selectedIndex: 0),
+                          )));
             }
           } else {
             pr.hide();
@@ -1564,17 +1565,17 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   getCategoryPosition(String categoryName) {
     int categoryPosition;
     switch (categoryName) {
-      case Constants.STR_NOTES:
+      case AppConstants.notes:
         categoryPosition = pickPosition(categoryName);
         return categoryPosition;
         break;
 
-      case Constants.STR_PRESCRIPTION:
+      case AppConstants.prescription:
         categoryPosition = pickPosition(categoryName);
         return categoryPosition;
         break;
 
-      case Constants.STR_VOICERECORDS:
+      case AppConstants.voiceRecords:
         categoryPosition = pickPosition(categoryName);
         return categoryPosition;
         break;
@@ -1595,7 +1596,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         position = i;
       }
     }
-    if (categoryName == Constants.STR_PRESCRIPTION) {
+    if (categoryName == AppConstants.prescription) {
       return position;
     } else {
       return position;

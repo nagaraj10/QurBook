@@ -32,7 +32,7 @@ class _AppointmentsMainState extends State<AppointmentsMain> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
-        if(widget.isHome){
+        if (widget.isHome) {
           widget.onBackPressed();
         }
         return Future.value(widget.isHome ? false : true);
@@ -87,7 +87,7 @@ class _AppointmentsMainState extends State<AppointmentsMain> {
       children: [
         Expanded(
           child: TextWidget(
-            text: Constants.Appointments_Title,
+            text: TranslationConstants.appointments.t(),
             colors: Colors.white,
             overflow: TextOverflow.visible,
             fontWeight: FontWeight.w600,
