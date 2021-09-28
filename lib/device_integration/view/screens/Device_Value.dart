@@ -6,6 +6,7 @@ import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
+import 'package:myfhb/unit/choose_unit.dart';
 import '../../../colors/fhb_colors.dart';
 import '../../../common/CommonConstants.dart';
 import '../../../common/CommonUtil.dart';
@@ -888,14 +889,29 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                       Container(
                         width: 50.0.w,
                         constraints: BoxConstraints(maxWidth: 100.0.w),
-                        child: Text(
+                        child: InkWell(child:Text(
                           tempUnit,
                           style: TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 14.0.sp,
                               color: Color(CommonConstants.ThermoDarkColor)),
                           softWrap: true,
-                        ),
+                        ), onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) => ChooseUnit(),
+                            ),
+                          ).then(
+                                (value) {
+                              tempUnit = PreferenceUtil.getStringValue(
+                                  Constants.STR_KEY_TEMP);
+                              setState(() {});
+                            },
+                          );
+
+
+                        }),
                       ),
                     ],
                   )
@@ -1087,7 +1103,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                   Column(
                     children: <Widget>[
                       Text(
-                        weightUnit,
+                        'Weight',
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 14.0.sp,
@@ -1105,6 +1121,43 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                       }, errorMsg, weightUnit, deviceName, range: ""),
                     ],
                   ),
+                  Column(
+                    children: <Widget>[
+                      Text(
+                        '',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14.0.sp,
+                            color: Color(CommonUtil().getMyPrimaryColor())),
+                        softWrap: true,
+                      ),
+                      Container(
+                        width: 50.0.w,
+                        constraints: BoxConstraints(maxWidth: 100.0.w),
+                        child: InkWell(child: Text(
+                          weightUnit,
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14.0.sp,
+                              color: Color(CommonConstants.weightlightColor)),
+                          softWrap: true,
+                        ),onTap:(){
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) => ChooseUnit(),
+                            ),
+                          ).then(
+                                (value) {
+                              weightUnit = PreferenceUtil.getStringValue(
+                                  Constants.STR_KEY_WEIGHT);
+                               setState(() {});
+                            },
+                          );
+                        }),
+                      ),
+                    ],
+                  )
                 ],
               ),
             ),
@@ -1539,7 +1592,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                               '',
                               '',
                               getFormattedTime(translist[index].startDateTime),
-                              'Kg',
+                              translist[index].weightUnit,
                               translist[index].deviceId);
                         },
                       )
@@ -1614,7 +1667,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                               '',
                               '',
                               getFormattedTime(translist[index].startDateTime),
-                              'F',
+                              translist[index].temperatureUnit,
                               translist[index].deviceId);
                         },
                       )
@@ -2160,7 +2213,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      value1 == '' ? '' : value1,
+                                      (value1 != '' && value1 != null)  ? value1 : '',
                                       style: TextStyle(
                                           color: Color(
                                               CommonUtil().getMyPrimaryColor()),
@@ -2171,7 +2224,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                       width: 2,
                                     ),
                                     Text(
-                                      unit != '' ? unit : '',
+                                      (unit != '' && unit != null) ? unit : '',
                                       style: TextStyle(
                                           color: Color(
                                               CommonUtil().getMyPrimaryColor()),
