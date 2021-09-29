@@ -24,8 +24,8 @@ class RefrenceValueMeta {
     factory RefrenceValueMeta.fromJson(Map<String, dynamic> json) => RefrenceValueMeta(
         code: json['code'],
         name: json['name'],
-       /* id: json['id'],
         description: json['description'],
+        /* id: json['id'],
         sortOrder: json['sortOrder'],
         isActive: json['isActive'],
         createdBy: json['createdBy'],
@@ -37,8 +37,9 @@ class RefrenceValueMeta {
 
         'code': code,
         'name': name,
-       /* 'id': id,
         'description': description,
+
+        /* 'id': id,
         'sortOrder': sortOrder,
         'isActive': isActive,
         'createdBy': createdBy,
