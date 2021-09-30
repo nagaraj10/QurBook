@@ -24,6 +24,8 @@ import Firebase
     
     var STT_METHOD = Constants.STT_METHOD
     var TTS_METHOD = Constants.TTS_METHOD
+    var STT_MicavailablityMethod = "validateMicAvailability"
+    
     
     var detectionTimer : Timer?
     var message = ""
@@ -54,23 +56,23 @@ import Firebase
         if #available(iOS 10.0, *) {
             // For iOS 10 display notification (sent via APNS)
             UNUserNotificationCenter.current().delegate = self
-
+            
             let authOptions: UNAuthorizationOptions = [.alert,  .sound]
             UNUserNotificationCenter.current().requestAuthorization(
-              options: authOptions,
-              completionHandler: {_, _ in })
-          } else {
+                options: authOptions,
+                completionHandler: {_, _ in })
+        } else {
             let settings: UIUserNotificationSettings =
             UIUserNotificationSettings(types: [.alert,  .sound], categories: nil)
             application.registerUserNotificationSettings(settings)
-          }
-
-          application.registerForRemoteNotifications()
-          
-          // Use Firebase library to configure APIs
-          FirebaseApp.configure()
-          Messaging.messaging().delegate = self
-
+        }
+        
+        application.registerForRemoteNotifications()
+        
+        // Use Firebase library to configure APIs
+        FirebaseApp.configure()
+        Messaging.messaging().delegate = self
+        
         
         // 2
         // Speech Recognization
@@ -99,9 +101,9 @@ import Firebase
                                                               intentIdentifiers: [],
                                                               options: [])
         let planRenewButtonCategory = UNNotificationCategory(identifier: planRenewButton,
-                                                              actions:  [renewNowAction,callBackNowAction],
-                                                              intentIdentifiers: [],
-                                                              options: [])
+                                                             actions:  [renewNowAction,callBackNowAction],
+                                                             intentIdentifiers: [],
+                                                             options: [])
         notificationCenter.setNotificationCategories([showBothButtonscategory,showSingleButtonCategory,planRenewButtonCategory])
         // 2 a)
         // Speech to Text
@@ -110,19 +112,24 @@ import Firebase
         sttChannel.setMethodCallHandler({
             [weak self] (call: FlutterMethodCall, result: @escaping FlutterResult) -> Void in
             // Note: this method is invoked on the UI thread.
-            guard call.method == self?.STT_METHOD else {
+            if call.method == self?.STT_METHOD  {
+                print(Constants.speechToText)
+                print(Constants.STT, result)
+                Loading.sharedInstance.showLoader()
+                self?.STT_Result = result;
+                do{
+                    try self?.startRecording();
+                }catch(let error){
+                    print("\(Constants.errorIs) \(error.localizedDescription)")
+                }
+            }else if call.method == self?.STT_MicavailablityMethod{
+                let audioSession = AVAudioSession.sharedInstance()
+                result(!audioSession.isOtherAudioPlaying)
+            }else{
                 result(FlutterMethodNotImplemented)
                 return
             }
-            print(Constants.speechToText)
-            print(Constants.STT, result)
-            Loading.sharedInstance.showLoader()
-            self?.STT_Result = result;
-            do{
-                try self?.startRecording();
-            }catch(let error){
-                print("\(Constants.errorIs) \(error.localizedDescription)")
-            }
+            
         })
         
         // 2  b)
@@ -435,7 +442,7 @@ import Firebase
             else {
                 var newData :NSDictionary
                 if (response.actionIdentifier == "Renew" || response.actionIdentifier == "Callback"){
-                     newData  = [
+                    newData  = [
                         "action" : response.actionIdentifier,
                         "data" : data
                     ]
@@ -456,9 +463,8 @@ extension AppDelegate: AVSpeechSynthesizerDelegate,MessagingDelegate {
     }
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         print("Firebase registration token: \(String(describing: fcmToken))")
-        
     }
-
+    
 }
 extension Date {
     // Convert local time to UTC (or GMT)
