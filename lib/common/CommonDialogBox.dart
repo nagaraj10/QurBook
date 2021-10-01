@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
+import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'CommonConstants.dart';
 import 'CommonUtil.dart';
 import 'FHBBasicWidget.dart';
@@ -550,7 +551,10 @@ class CommonDialogBox {
       );
     });
 
-    return showDialog(context: context, builder: (context) => dialog,barrierDismissible:false);
+    return showDialog(
+        context: context,
+        builder: (context) => dialog,
+        barrierDismissible: false);
   }
 
   Future<Widget> getDialogBoxForBillsAndOthers(
@@ -657,7 +661,10 @@ class CommonDialogBox {
       );
     });
 
-    return showDialog(context: context, builder: (context) => dialog,barrierDismissible:false);
+    return showDialog(
+        context: context,
+        builder: (context) => dialog,
+        barrierDismissible: false);
   }
 
   Future<Widget> getDialogForIDDocs(
@@ -833,7 +840,10 @@ class CommonDialogBox {
       );
     });
 
-    return showDialog(context: context, builder: (context) => dialog,barrierDismissible:false);
+    return showDialog(
+        context: context,
+        builder: (context) => dialog,
+        barrierDismissible: false);
   }
 
   Future<Widget> getDialogBoxForGlucometer(
@@ -909,7 +919,8 @@ class CommonDialogBox {
                 setState(() {
                   errGluco = errorValue;
                 });
-              }, errGluco, variable.strGlucUnit,range: isSelected[0]==true?'Fast':'PP'),
+              }, errGluco, variable.strGlucUnit,
+                  range: isSelected[0] == true ? 'Fast' : 'PP'),
               SizedBox(
                 height: 15.0.h,
               ),
@@ -1001,7 +1012,10 @@ class CommonDialogBox {
           )));
     });
 
-    return showDialog(context: context, builder: (context) => dialog,barrierDismissible:false);
+    return showDialog(
+        context: context,
+        builder: (context) => dialog,
+        barrierDismissible: false);
   }
 
   Future<Widget> getDialogBoxForTemperature(
@@ -1073,7 +1087,7 @@ class CommonDialogBox {
               setState(() {
                 errTemp = errorValue;
               });
-            }, errTemp, commonConstants.tempUNIT,range: "",device:"Temp"),
+            }, errTemp, commonConstants.tempUNIT, range: "", device: "Temp"),
             SizedBox(
               height: 15.0.h,
             ),
@@ -1124,7 +1138,10 @@ class CommonDialogBox {
       );
     });
 
-    return showDialog(context: context, builder: (context) => dialog,barrierDismissible:false);
+    return showDialog(
+        context: context,
+        builder: (context) => dialog,
+        barrierDismissible: false);
   }
 
   void setFileName(String fileNameClone, HealthResult healthResult,
@@ -1158,7 +1175,7 @@ class CommonDialogBox {
     }
 
     if (forNotes) {
-      categoryName = Constants.STR_NOTES;
+      categoryName = AppConstants.notes;
       categoryID = categoryIDForNotes;
     }
   }
@@ -1233,7 +1250,7 @@ class CommonDialogBox {
               setState(() {
                 errWeight = errorValue;
               });
-            }, errWeight, commonConstants.weightUNIT,range: ""),
+            }, errWeight, commonConstants.weightUNIT, range: ""),
             SizedBox(
               height: 15.0.h,
             ),
@@ -1284,7 +1301,10 @@ class CommonDialogBox {
       );
     });
 
-    return showDialog(context: context, builder: (context) => dialog,barrierDismissible:false);
+    return showDialog(
+        context: context,
+        builder: (context) => dialog,
+        barrierDismissible: false);
   }
 
   Future<Widget> getDialogBoxForPulseOxidometer(
@@ -1359,7 +1379,7 @@ class CommonDialogBox {
               setState(() {
                 errPoOs = errorValue;
               });
-            }, errPoOs, variable.strpulseUnit,range: ""),
+            }, errPoOs, variable.strpulseUnit, range: ""),
             SizedBox(
               height: 15.0.h,
             ),
@@ -1371,7 +1391,7 @@ class CommonDialogBox {
               setState(() {
                 errPoPulse = errorValue;
               });
-            }, errPoPulse, variable.strpulse,range: ""),
+            }, errPoPulse, variable.strpulse, range: ""),
             SizedBox(
               height: 15.0.h,
             ),
@@ -1415,7 +1435,10 @@ class CommonDialogBox {
       );
     });
 
-    return showDialog(context: context, builder: (context) => dialog,barrierDismissible:false);
+    return showDialog(
+        context: context,
+        builder: (context) => dialog,
+        barrierDismissible: false);
   }
 
   Future<Widget> getDialogBoxForBPMonitor(
@@ -1491,7 +1514,7 @@ class CommonDialogBox {
               setState(() {
                 errForbpSp = errorValue;
               });
-            }, errForbpSp, variable.strbpunit,range:"Sys"),
+            }, errForbpSp, variable.strbpunit, range: "Sys"),
             SizedBox(
               height: 15.0.h,
             ),
@@ -1503,7 +1526,7 @@ class CommonDialogBox {
               setState(() {
                 errFForbpDp = errorValue;
               });
-            }, errFForbpDp, variable.strbpunit,range: "Dia"),
+            }, errFForbpDp, variable.strbpunit, range: "Dia"),
             SizedBox(
               height: 15.0.h,
             ),
@@ -1515,7 +1538,7 @@ class CommonDialogBox {
               setState(() {
                 errForbpPulse = errorValue;
               });
-            }, errForbpPulse, variable.strpulse,range:""),
+            }, errForbpPulse, variable.strpulse, range: ""),
             SizedBox(
               height: 15.0.h,
             ),
@@ -1559,7 +1582,10 @@ class CommonDialogBox {
       );
     });
 
-    return showDialog(context: context, builder: (context) => dialog,barrierDismissible:false);
+    return showDialog(
+        context: context,
+        builder: (context) => dialog,
+        barrierDismissible: false);
   }
 
   Future<void> _selectDate(
@@ -1651,18 +1677,21 @@ class CommonDialogBox {
       }
     });
   }
-          
 
   Widget getMicIcon(BuildContext context, bool containsAudio, String audioPath,
       Function(bool, String) updateUI) {
     return GestureDetector(
       onTap: () async {
         await Navigator.of(context)
-            .push(MaterialPageRoute(
-          builder: (context) => AudioRecorder(arguments: AudioScreenArguments(
-            fromVoice: false,
-          ),),
-        ),)
+            .push(
+          MaterialPageRoute(
+            builder: (context) => AudioRecorder(
+              arguments: AudioScreenArguments(
+                fromVoice: false,
+              ),
+            ),
+          ),
+        )
             .then((results) {
           if (results != null) {
             if (results.containsKey(Constants.keyAudioFile)) {
@@ -1734,7 +1763,7 @@ class CommonDialogBox {
 
       postMediaData[parameters.strmemoText] = memoController.text;
 
-      if (categoryName != Constants.STR_VOICERECORDS) {
+      if (categoryName != AppConstants.voiceRecords) {
         postMediaData[parameters.strhasVoiceNotes] =
             (audioPathMain != '' && audioPathMain != null) ? true : false;
 
@@ -1833,7 +1862,7 @@ class CommonDialogBox {
           postDeviceData.add(postDeviceValuesExtraClone);
         }
         postMediaData[parameters.strdeviceReadings] = postDeviceData;
-      } else if (categoryName == Constants.STR_PRESCRIPTION ||
+      } else if (categoryName == AppConstants.prescription ||
           categoryName == Constants.STR_MEDICALREPORT) {
         postMediaData[Constants.keyDoctor] = doctorsData;
         if (hospitalData == null) {
@@ -1889,7 +1918,7 @@ class CommonDialogBox {
                 .then((value) async {
               await PreferenceUtil.saveCompleteData(
                   Constants.KEY_COMPLETE_DATA, value);
-              if (categoryName == Constants.STR_VOICERECORDS) {
+              if (categoryName == AppConstants.voiceRecords) {
                 Navigator.of(_keyLoader.currentContext, rootNavigator: true)
                     .pop();
 
@@ -1905,7 +1934,7 @@ class CommonDialogBox {
                         builder: (context) => MyRecords(
                             argument: MyRecordsArgument(
                           categoryPosition:
-                              getCategoryPosition(Constants.STR_VOICERECORDS),
+                              getCategoryPosition(AppConstants.voiceRecords),
                           allowSelect: false,
                           isAudioSelect: true,
                           isNotesSelect: false,
@@ -1926,7 +1955,7 @@ class CommonDialogBox {
                         builder: (context) => MyRecords(
                             argument: MyRecordsArgument(
                           categoryPosition:
-                              getCategoryPosition(Constants.STR_VOICERECORDS),
+                              getCategoryPosition(AppConstants.voiceRecords),
                           allowSelect: false,
                           isAudioSelect: true,
                           isNotesSelect: false,
@@ -1941,7 +1970,7 @@ class CommonDialogBox {
                 } else {
                   Navigator.of(context).pop();
                 }
-              } else if (categoryName == Constants.STR_NOTES) {
+              } else if (categoryName == AppConstants.notes) {
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
                 onRefresh(true);
@@ -1994,7 +2023,7 @@ class CommonDialogBox {
                 Navigator.of(_keyLoader.currentContext, rootNavigator: true)
                     .pop();
 
-                if (categoryName == Constants.STR_NOTES) {
+                if (categoryName == AppConstants.notes) {
                   Navigator.of(context).pop();
                   onRefresh(true);
                 } else {
@@ -2011,7 +2040,7 @@ class CommonDialogBox {
               Navigator.of(_keyLoader.currentContext, rootNavigator: true)
                   .pop();
 
-              if (categoryName == Constants.STR_NOTES) {
+              if (categoryName == AppConstants.notes) {
                 Navigator.of(context).pop();
                 onRefresh(true);
               } else {
@@ -2027,7 +2056,7 @@ class CommonDialogBox {
               Navigator.of(_keyLoader.currentContext, rootNavigator: true)
                   .pop();
 
-              if (categoryName == Constants.STR_NOTES) {
+              if (categoryName == AppConstants.notes) {
                 Navigator.of(context).pop();
                 onRefresh(true);
               } else {
@@ -2054,7 +2083,7 @@ class CommonDialogBox {
               .then((value) {
             Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
 
-            if (categoryName == Constants.STR_NOTES) {
+            if (categoryName == AppConstants.notes) {
               Navigator.of(context).pop();
               onRefresh(true);
             } else {
@@ -2065,7 +2094,7 @@ class CommonDialogBox {
         });
       });
     } else {
-      if (categoryName == Constants.STR_NOTES) {
+      if (categoryName == AppConstants.notes) {
         Navigator.of(context).pop();
         onRefresh(true);
       } else {
@@ -2077,7 +2106,7 @@ class CommonDialogBox {
 
   bool doValidationBeforePosting() {
     var validationConditon = false;
-    if (categoryName == Constants.STR_PRESCRIPTION ||
+    if (categoryName == AppConstants.prescription ||
         categoryName == Constants.STR_MEDICALREPORT) {
       if (doctor.text == '') {
         validationConditon = false;
@@ -2104,7 +2133,7 @@ class CommonDialogBox {
       } else {
         validationConditon = true;
       }
-    } else if (categoryName == Constants.STR_BILLS ||
+    } else if (categoryName == AppConstants.bills ||
         categoryName == Constants.STR_OTHERS ||
         categoryName == Constants.STR_CLAIMSRECORD) {
       if (fileName.text == '') {
@@ -2113,7 +2142,7 @@ class CommonDialogBox {
       } else {
         validationConditon = true;
       }
-    } else if (categoryName == Constants.STR_VOICERECORDS) {
+    } else if (categoryName == AppConstants.voiceRecords) {
       if (fileName.text == '') {
         validationConditon = false;
         validationMsg = CommonConstants.strFileEmpty;
@@ -2134,7 +2163,7 @@ class CommonDialogBox {
       } else {
         validationConditon = true;
       }
-    } else if (categoryName == Constants.STR_NOTES) {
+    } else if (categoryName == AppConstants.notes) {
       if (fileName.text == '') {
         validationConditon = false;
         validationMsg = CommonConstants.strFileEmpty;
@@ -2240,7 +2269,7 @@ class CommonDialogBox {
       return AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: fhbBasicWidget
-            .getTextTextTitleWithPurpleColor(Constants.STR_VOICERECORDS),
+            .getTextTextTitleWithPurpleColor(AppConstants.voiceRecords),
         content: SingleChildScrollView(
             child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -2298,7 +2327,10 @@ class CommonDialogBox {
       );
     });
 
-    return showDialog(context: context, builder: (context) => dialog,barrierDismissible:false);
+    return showDialog(
+        context: context,
+        builder: (context) => dialog,
+        barrierDismissible: false);
   }
 
   void setPrefreferedProvidersIfAvailable(
@@ -2468,7 +2500,7 @@ class CommonDialogBox {
     }
 
     setFileName(fileNameClone.text, mediaMetaInfoClone);
-    categoryName = Constants.STR_NOTES;
+    categoryName = AppConstants.notes;
     var dialog = StatefulBuilder(builder: (context, setState) {
       return AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -2554,27 +2586,30 @@ class CommonDialogBox {
       );
     });
 
-    return showDialog(context: context, builder: (context) => dialog,barrierDismissible:false);
+    return showDialog(
+        context: context,
+        builder: (context) => dialog,
+        barrierDismissible: false);
   }
 
   getCategoryPosition(String categoryName) {
     int categoryPosition;
     switch (categoryName) {
-      case Constants.STR_NOTES:
+      case AppConstants.notes:
         categoryPosition = pickPosition(categoryName);
         return categoryPosition;
         break;
 
-      case Constants.STR_PRESCRIPTION:
+      case AppConstants.prescription:
         categoryPosition = pickPosition(categoryName);
         return categoryPosition;
         break;
 
-      case Constants.STR_VOICERECORDS:
+      case AppConstants.voiceRecords:
         categoryPosition = pickPosition(categoryName);
         return categoryPosition;
         break;
-      case Constants.STR_BILLS:
+      case AppConstants.bills:
         categoryPosition = pickPosition(categoryName);
         return categoryPosition;
         break;
@@ -2598,7 +2633,7 @@ class CommonDialogBox {
         position = i;
       }
     }
-    if (categoryName == Constants.STR_PRESCRIPTION) {
+    if (categoryName == AppConstants.prescription) {
       return position;
     } else {
       return position;

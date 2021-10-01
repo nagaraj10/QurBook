@@ -43,7 +43,7 @@ class NotificationController {
       headers: <String, String>{
         'Content-Type': 'application/json',
         'Authorization': 'key=$_firebaseChatNotifyToken',
-        KEY_OffSet: CommonUtil.TimeZone
+        KEY_OffSet: CommonUtil().setTimeZone()
       },
       body: jsonEncode(
         <String, dynamic>{

@@ -10,6 +10,7 @@ import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:myfhb/telehealth/features/Notifications/constants/notification_constants.dart';
 import 'package:myfhb/telehealth/features/Notifications/model/notification_model.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart';
+import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'dart:convert';
 
 class FetchNotificationService {
@@ -31,10 +32,10 @@ class FetchNotificationService {
         if (resReturnCode.isSuccess == true) {
           return NotificationModel.fromJson(responseJson);
         } else {
-          throw Exception(strFailed);
+          throw Exception(TranslationConstants.failedToInvoke.t());
         }
       } else {
-        throw Exception(strFailed);
+        throw Exception(TranslationConstants.failedToInvoke.t());
       }
     });
   }

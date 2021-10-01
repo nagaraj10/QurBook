@@ -556,15 +556,13 @@ class PlanWizardViewModel extends ChangeNotifier {
       String price,
       bool isRenew,
       String providerId,
-      String isFromAdd,
-      String planStartDate}) async {
+      String isFromAdd}) async {
     try {
       AddToCartModel addToCartModel = await planWizardService.addToCartService(
           packageId: packageId,
           price: price,
           isRenew: isRenew,
-          tag: getTag(isFromAdd),
-          startDate: planStartDate);
+          tag: getTag(isFromAdd));
 
       if (addToCartModel.isSuccess) {
         if (isFromAdd == strProviderDiet) {

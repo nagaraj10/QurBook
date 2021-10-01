@@ -128,6 +128,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
       _regimentViewModel.updateRegimentStatus(RegimentStatus.DialogOpened);
       await showDialog(
         context: context,
+        barrierDismissible: false,
         builder: (context) => EventListWidget(
           profileResultModel: profileResponseModel.result,
         ),

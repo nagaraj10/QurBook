@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:myfhb/telehealth/features/chat/view/home.dart';
 import '../../../common/CommonConstants.dart';
@@ -374,7 +375,7 @@ class HomeWidget extends StatelessWidget {
                           },
                         ),
                         LandingCard(
-                          title: constants.strChatWithUs,
+                          title: TranslationConstants.chatWithUs.t(),
                           lastStatus: '',
                           isEnabled: activePlanCount > 0,
                           // alerts: availableCareProvider > 0 &&

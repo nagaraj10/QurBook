@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as constants;
 import 'package:myfhb/src/model/CreateDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
@@ -62,6 +63,7 @@ class ChatScreenViewModel extends ChangeNotifier {
   String _screen = parameters.strSheela;
   int delayTime = 0;
   int playingIndex = 0;
+  bool isMicListening = false;
 
   List<Conversation> get getMyConversations => conversations;
 
@@ -186,6 +188,7 @@ class ChatScreenViewModel extends ChangeNotifier {
     if (stopPrevious) {
       stopTTSEngine();
     }
+    isMicListening = false;
     stopTTS = false;
     if (canSpeak) {
       if (index != null) {
@@ -438,6 +441,7 @@ class ChatScreenViewModel extends ChangeNotifier {
     final response = await mService.sendMetaToMaya(reqJson);
 
     if (response.statusCode == 200) {
+      isMicListening = false;
       if (response.body != null) {
         final jsonResponse = jsonDecode(response.body);
 
@@ -699,41 +703,47 @@ class ChatScreenViewModel extends ChangeNotifier {
     Service mService = Service();
     final response = await mService.getAudioFileTTS(reqJson);
 
-    if (response.statusCode == 200) {
-      if (response.body != null) {
-        final data = jsonDecode(response.body);
-        final result = data["payload"];
-        if (result != null) {
-          final audioContent = result["audioContent"];
-          if (audioContent != null) {
-            final bytes = Base64Decoder().convert(audioContent);
-            if (bytes != null) {
-              final dir = await getTemporaryDirectory();
-              final file = File('${dir.path}/wavenet.mp3');
-              await file.writeAsBytes(bytes);
-              final path = dir.path + "/wavenet.mp3";
-              if (canSpeak) {
-                if (isTTS) {
-                  newAudioPlay1.play(path, isLocal: true);
-                } else {
-                  audioPlayerForTTS.play(path, isLocal: true);
-                }
-                await Future.delayed(Duration(milliseconds: 500), () async {
-                  await Future.delayed(
-                      Duration(
-                        milliseconds: delayTime > 0 ? delayTime : 0,
-                      ), () {
-                    return true;
-                  });
-                });
+    if (response.statusCode == 200 && response.body != null) {
+      final data = jsonDecode(response.body);
+      final result = data["payload"];
+      if (result != null && (data['isSuccess'] ?? false)) {
+        final audioContent = result["audioContent"];
+        if (audioContent != null) {
+          final bytes = Base64Decoder().convert(audioContent);
+          if (bytes != null) {
+            final dir = await getTemporaryDirectory();
+            final file = File('${dir.path}/wavenet.mp3');
+            await file.writeAsBytes(bytes);
+            final path = dir.path + "/wavenet.mp3";
+            if (canSpeak) {
+              if (isTTS) {
+                newAudioPlay1.play(path, isLocal: true);
+              } else {
+                audioPlayerForTTS.play(path, isLocal: true);
               }
+              await Future.delayed(Duration(milliseconds: 500), () async {
+                await Future.delayed(
+                    Duration(
+                      milliseconds: delayTime > 0 ? delayTime : 0,
+                    ), () {
+                  return true;
+                });
+              });
             }
           }
         }
+      } else {
+        isLoading = false;
+        stopTTSEngine();
+        notifyListeners();
+        FlutterToast().getToast(
+            'There is some issue with sheela,\n Please try after some time',
+            Colors.black54);
       }
     } else {
       isLoading = false;
       notifyListeners();
+      stopTTSEngine();
       FlutterToast().getToast(
           'There is some issue with sheela,\n Please try after some time',
           Colors.black54);
@@ -762,24 +772,47 @@ class ChatScreenViewModel extends ChangeNotifier {
   Future<void> gettingReposnseFromNative() async {
     stopTTSEngine();
     try {
-      await variable.voice_platform.invokeMethod(variable.strspeakAssistant,
-          {'langcode': Utils.getCurrentLanCode()}).then((response) {
-        sendToMaya(response, screen: screenValue);
-        var date =
-            new FHBUtils().getFormattedDateString(DateTime.now().toString());
-        Conversation model = new Conversation(
-            isMayaSaid: false,
-            text: response,
-            name: prof.result != null
-                ? prof.result.firstName + ' ' + prof.result.lastName
-                : '',
-            timeStamp: date,
-            redirect: isRedirect,
-            screen: screenValue);
-        conversations.add(model);
-        notifyListeners();
-      });
-    } on PlatformException catch (e) {}
+      var micStatus = await variable.voice_platform
+          .invokeMethod(variable.strvalidateMicAvailablity);
+      if (micStatus) {
+        if (!isMicListening) {
+          isMicListening = true;
+          notifyListeners();
+          await variable.voice_platform.invokeMethod(variable.strspeakAssistant,
+              {'langcode': Utils.getCurrentLanCode()}).then((response) {
+            isMicListening = false;
+            notifyListeners();
+            if ((response ?? '').toString()?.isNotEmpty) {
+              sendToMaya(response, screen: screenValue);
+              var date = new FHBUtils()
+                  .getFormattedDateString(DateTime.now().toString());
+              Conversation model = new Conversation(
+                  isMayaSaid: false,
+                  text: response,
+                  name: prof.result != null
+                      ? prof.result.firstName + ' ' + prof.result.lastName
+                      : '',
+                  timeStamp: date,
+                  redirect: isRedirect,
+                  screen: screenValue);
+              conversations.add(model);
+              notifyListeners();
+            }
+          }).whenComplete(() {
+            isMicListening = false;
+            notifyListeners();
+          }).onError((error, stackTrace) {
+            isMicListening = false;
+            notifyListeners();
+          });
+        }
+      } else {
+        FlutterToast().getToast(CommonConstants.strMicAlertMsg, Colors.black);
+      }
+    } on PlatformException catch (e) {
+      isMicListening = false;
+      notifyListeners();
+    }
   }
 
   void refreshData() {

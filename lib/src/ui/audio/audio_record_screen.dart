@@ -10,6 +10,7 @@ import 'package:flutter_sound/flutter_sound.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
 import 'package:myfhb/src/model/Category/catergory_result.dart';
 import 'package:myfhb/src/ui/audio/AudioScreenArguments.dart';
@@ -154,13 +155,13 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
     });
     if (widget.arguments.fromVoice) {
       PreferenceUtil.saveString(
-              Constants.KEY_CATEGORYNAME, Constants.STR_VOICERECORDS)
+              Constants.KEY_CATEGORYNAME, AppConstants.voiceRecords)
           .then((value) {
         PreferenceUtil.saveString(Constants.KEY_CATEGORYID,
                 PreferenceUtil.getStringValue(Constants.KEY_VOICE_ID))
             .then((value) {
           TextEditingController fileName = new TextEditingController(
-              text: Constants.STR_VOICERECORDS +
+              text: AppConstants.voiceRecords +
                   '_${DateTime.now().toUtc().millisecondsSinceEpoch}');
 
           new CommonDialogBox().getDialogForVoicerecords(

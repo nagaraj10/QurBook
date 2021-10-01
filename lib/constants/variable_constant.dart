@@ -498,6 +498,7 @@ const String requestSheelaForglucose = 'record my glucose';
 const String requestSheelaForpo = 'record my po';
 const String requestSheelaForweight = 'record my weight';
 const String strspeakAssistant = 'speakWithVoiceAssistant';
+const String strvalidateMicAvailablity = 'validateMicAvailability';
 const String strdevice = 'device';
 
 const String strIntromaya = 'Hi, I am Sheela your voice health assistant.';
@@ -589,7 +590,6 @@ const String strValidPhoneNumber = 'Enter a valid mobile number';
 const String strGetAppVersion = 'getAppVersion';
 const String strSecure = 'secureMe';
 const String strpop = 'SystemNavigator.pop';
-const String strFailed = 'Failed to Invoke: ';
 
 const String strformateedAddress = 'formateedAddress';
 const String strformateedPhoneNumber = 'formateedPhoneNumber';
@@ -636,7 +636,6 @@ const String EMAIL_REGEXP =
 //r"^[a-zA-Z0-9.a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
     r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{​​​​​|}​​​​​~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
 
-const String c_chat_with_whatsapp = 'Chat with Us';
 const String c_chat_with_whatsapp_begin_conv = 'Hi';
 const String c_qurhealth_helpline = '919566200555';
 const String icon_whatsapp = 'assets/icons/ic_whatsapp.png';

@@ -356,7 +356,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                       size: 22.0.sp,
                     ),
                     SizedBox(width: 20.0.sp),
-                    Text(variable.c_chat_with_whatsapp),
+                    Text(variable.chatWithUs),
                   ],
                 )),
               )

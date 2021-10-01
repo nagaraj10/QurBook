@@ -8,6 +8,7 @@ import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/ui/MyRecordsArguments.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
+import 'package:myfhb/src/utils/language/language_utils.dart';
 //import 'package:myfhb/src/ui/MyRecords.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/src/ui/bot/SuperMaya.dart';
@@ -92,10 +93,10 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
   @override
   Widget build(BuildContext context) {
     if (_selectedIndex == 0 && _isCancelDialogShouldShown) {
-      if(CommonConstants.showNotificationdialog) {
-        CommonConstants.showNotificationdialog=false;
+      if (CommonConstants.showNotificationdialog) {
+        CommonConstants.showNotificationdialog = false;
 
-            Future.delayed(Duration(seconds: 5), () {
+        Future.delayed(Duration(seconds: 5), () {
           //* show cancel app. dialog
 
           showCanelAppointmentPromptToUser(context);
@@ -282,7 +283,7 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
                       child: Text(parameters.Yes),
                       onPressed: () async {
                         //call the appointment cancel api
-                        CommonConstants.showNotificationdialog=true;
+                        CommonConstants.showNotificationdialog = true;
                         FlutterToast toast = new FlutterToast();
                         _isCancelDialogShouldShown = false;
                         Navigator.of(context).pop(true);
@@ -292,7 +293,8 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
 
                         if (cancelAppointment.isSuccess == true) {
                           toast.getToast(
-                              AppConstants.YOUR_BOOKING_SUCCESS, Colors.green);
+                              TranslationConstants.yourBookingSuccess.t(),
+                              Colors.green);
                           var body = {};
                           body['templateName'] =
                               widget?.arguments?.templateName;
@@ -301,21 +303,19 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
                               .updateNsActionStatus(body)
                               .then((data) {
                             if (data != null && data['isSuccess']) {
-                              setState(() {
-
-                              });
+                              setState(() {});
                             } else {}
                           });
                         } else {
-                          toast.getToast(
-                              AppConstants.BOOKING_CANCEL, Colors.red);
+                          toast.getToast(TranslationConstants.bookingCancel.t(),
+                              Colors.red);
                         }
                       },
                     ),
                     FlatButton(
                         child: Text(parameters.No),
                         onPressed: () {
-                          CommonConstants.showNotificationdialog=true;
+                          CommonConstants.showNotificationdialog = true;
                           _isCancelDialogShouldShown = false;
                           Navigator.of(context).pop(false);
                         }),

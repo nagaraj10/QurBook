@@ -115,6 +115,8 @@ dependencies:
   lottie: ^1.1.0
   flutter_logs: ^2.1.4
   sms_autofill: ^2.0.1
+  flutter_localizations:
+    sdk: flutter
 
 dev_dependencies:
   flutter_test:
@@ -164,6 +166,7 @@ flutter:
     - assets/launcher/myfhb1.png
     - assets/dashboard/
     - assets/loading_wave.json
+    - assets/languages/
 
   #  - images/a_dot_ham.jpeg
 

@@ -513,7 +513,7 @@ class _LandingScreenState extends State<LandingScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    myProfile != null &&
+                    myProfile?.result != null &&
                             myProfile.result.firstName != null &&
                             myProfile.result.firstName != ''
                         ? 'Hey ${toBeginningOfSentenceCase(myProfile?.result?.firstName ?? "")}'
@@ -668,7 +668,7 @@ class _LandingScreenState extends State<LandingScreen> {
                 currentLanguage = 'en';
               }
               PreferenceUtil.saveString(Constants.SHEELA_LANG,
-                  Utils.langaugeCodes[currentLanguage] ?? 'en-IN');
+                  CommonUtil.langaugeCodes[currentLanguage] ?? 'en-IN');
             }
             if (selectionResult.result[0].profileSetting.preColor != null &&
                 selectionResult.result[0].profileSetting.greColor != null) {

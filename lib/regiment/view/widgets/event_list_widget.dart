@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import '../../models/profile_response_model.dart';
 import 'event_time_tile.dart';
@@ -24,95 +25,99 @@ class EventListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var saveMap = <String, dynamic>{};
-    return Form(
-      key: _formKey,
-      child: SimpleDialog(
-        children: getDialogItems(
-          onTimeSelected: (timeSelected, scheduleName, controller) {
-            //tempEventList = eventTime.values.toList();
-            final eventControllerList = eventController.values.toList();
-            var currentIndex = eventTime.keys.toList().indexOf(scheduleName);
-            tempEventList[currentIndex] = toDouble(timeSelected);
-            eventControllerList[currentIndex].text =
-                getTimeAsString(timeSelected);
-            final isValid = eventTimeValidation(tempEventList);
-            /* if(currentIndex<tempEventList.length-1 && currentIndex<eventControllerList.length-1){
-              if(currentIndex==0){
-                //do nothing
-              }else if(tempEventList[currentIndex] > tempEventList[currentIndex+1]){
-                FlutterToast().getToast(
-            '${tempEventList[currentIndex+1]} time should be greater than the ${tempEventList[currentIndex]} event',
-            Colors.red);
-                for(int i = currentIndex;i<eventControllerList.length;i++){
-                  eventControllerList[i].clear();
-                }
-
-                for (int j = tempEventList.length-1;j>=currentIndex;j--){
-                  tempEventList[j]=0.0;
-                }
-              }else if(tempEventList[currentIndex] == tempEventList[currentIndex+1]){
-                FlutterToast().getToast(
-            '${tempEventList)[currentIndex+1]} time should be greater than the ${tempEventList[currentIndex]} event',
-            Colors.red);
-                for(int i = currentIndex;i<eventControllerList.length;i++){
-                  eventControllerList[i].clear();
-                }
-
-                for (int j = tempEventList.length-1;j>=currentIndex;j--){
-                  tempEventList[j]=0.0;
-                }
-              }
-            }else{
-              //do nothing
-            } */
-            final oldValue = saveMap.putIfAbsent(
-              scheduleName,
-              () => getTimeAsString(timeSelected),
-            );
-            if (oldValue != null) {
-              saveMap[scheduleName] = getTimeAsString(timeSelected);
-            }
-          },
-          onSave: () async {
-            if (_formKey.currentState.validate()) {
+    return WillPopScope(
+      onWillPop: () => Future<bool>.value(false),
+      child: Form(
+        key: _formKey,
+        child: SimpleDialog(
+          children: getDialogItems(
+            onTimeSelected: (timeSelected, scheduleName, controller) {
+              //tempEventList = eventTime.values.toList();
+              final eventControllerList = eventController.values.toList();
+              var currentIndex = eventTime.keys.toList().indexOf(scheduleName);
+              tempEventList[currentIndex] = toDouble(timeSelected);
+              eventControllerList[currentIndex].text =
+                  getTimeAsString(timeSelected);
               final isValid = eventTimeValidation(tempEventList);
-              if (isValid) {
-                var currentLanguage = '';
-                var lan = CommonUtil.getCurrentLanCode();
-                if (lan != 'undef') {
-                  var langCode = lan.split('-').first;
-                  currentLanguage = langCode;
-                } else {
-                  currentLanguage = 'en';
-                }
-                var schedules = '&Language=$currentLanguage';
-                saveMap.forEach((key, value) {
-                  schedules += '&$key=$value';
-                });
-                var saveResponse =
-                    await Provider.of<RegimentViewModel>(context, listen: false)
-                        .saveProfile(
-                  schedules: schedules,
-                );
-                if (saveResponse?.isSuccess ?? false) {
+              /* if(currentIndex<tempEventList.length-1 && currentIndex<eventControllerList.length-1){
+                if(currentIndex==0){
+                  //do nothing
+                }else if(tempEventList[currentIndex] > tempEventList[currentIndex+1]){
                   FlutterToast().getToast(
-                      'Regimen will be updated from the next day',
-                      Colors.green);
-                  Navigator.pop(context, true);
-                  // if (Provider.of<RegimentViewModel>(context, listen: false).regimentStatus == RegimentStatus.DialogOpened) {
-                  //   Navigator.pop(context, true);
-                  // }else{
-                  //   Navigator.pop(context, true);
-                  // }
+              '${tempEventList[currentIndex+1]} time should be greater than the ${tempEventList[currentIndex]} event',
+              Colors.red);
+                  for(int i = currentIndex;i<eventControllerList.length;i++){
+                    eventControllerList[i].clear();
+                  }
+
+                  for (int j = tempEventList.length-1;j>=currentIndex;j--){
+                    tempEventList[j]=0.0;
+                  }
+                }else if(tempEventList[currentIndex] == tempEventList[currentIndex+1]){
+                  FlutterToast().getToast(
+              '${tempEventList)[currentIndex+1]} time should be greater than the ${tempEventList[currentIndex]} event',
+              Colors.red);
+                  for(int i = currentIndex;i<eventControllerList.length;i++){
+                    eventControllerList[i].clear();
+                  }
+
+                  for (int j = tempEventList.length-1;j>=currentIndex;j--){
+                    tempEventList[j]=0.0;
+                  }
                 }
+              }else{
+                //do nothing
+              } */
+              final oldValue = saveMap.putIfAbsent(
+                scheduleName,
+                () => getTimeAsString(timeSelected),
+              );
+              if (oldValue != null) {
+                saveMap[scheduleName] = getTimeAsString(timeSelected);
               }
-            } else {
-              FlutterToast()
-                  .getToast('event time should\'t be empty', Colors.red);
-            }
-          },
+            },
+            onSave: () async {
+              if (_formKey.currentState.validate()) {
+                final isValid = eventTimeValidation(tempEventList);
+                if (isValid) {
+                  var currentLanguage = '';
+                  var lan = CommonUtil.getCurrentLanCode();
+                  if (lan != 'undef') {
+                    var langCode = lan.split('-').first;
+                    currentLanguage = langCode;
+                  } else {
+                    currentLanguage = 'en';
+                  }
+                  var schedules = '&Language=$currentLanguage';
+                  saveMap.forEach((key, value) {
+                    schedules += '&$key=$value';
+                  });
+                  var saveResponse = await Provider.of<RegimentViewModel>(
+                          context,
+                          listen: false)
+                      .saveProfile(
+                    schedules: schedules,
+                  );
+                  if (saveResponse?.isSuccess ?? false) {
+                    FlutterToast().getToast(
+                        'Regimen will be updated from the next day',
+                        Colors.green);
+                    Navigator.pop(context, true);
+                    // if (Provider.of<RegimentViewModel>(context, listen: false).regimentStatus == RegimentStatus.DialogOpened) {
+                    //   Navigator.pop(context, true);
+                    // }else{
+                    //   Navigator.pop(context, true);
+                    // }
+                  }
+                }
+              } else {
+                FlutterToast()
+                    .getToast('event time should\'t be empty', Colors.red);
+              }
+            },
+          ),
+          contentPadding: EdgeInsets.all(10.0.sp),
         ),
-        contentPadding: EdgeInsets.all(10.0.sp),
       ),
     );
   }
@@ -124,18 +129,31 @@ class EventListWidget extends StatelessWidget {
     var dialogItems = <Widget>[];
 
     dialogItems.add(
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            scheduleTitle,
-            style: TextStyle(
-              fontSize: 16.0.sp,
-              color: Color(CommonUtil().getMyPrimaryColor()),
-              fontWeight: FontWeight.w500,
+      Container(
+        height: 45.0.h,
+        child: Stack(
+          alignment: Alignment.centerRight,
+          children: [
+            Align(
+              alignment: Alignment.center,
+              child: Text(
+                scheduleTitle,
+                style: TextStyle(
+                  fontSize: 16.0.sp,
+                  color: Color(CommonUtil().getMyPrimaryColor()),
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
             ),
-          ),
-        ],
+            IconButton(
+              icon: Icon(
+                Icons.close,
+                size: 24.0.sp,
+              ),
+              onPressed: () => Navigator.pop(Get.context),
+            ),
+          ],
+        ),
       ),
     );
 
@@ -188,7 +206,7 @@ class EventListWidget extends StatelessWidget {
                   )),
                 ),
                 child: Text(
-                  saveButton,
+                  confirmButton,
                   style: TextStyle(
                     fontSize: 16.0.sp,
                     color: Colors.white,
