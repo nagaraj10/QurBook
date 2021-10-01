@@ -22,17 +22,25 @@ class MayaConvUI extends StatelessWidget {
         spacing: 10,
         children: c.buttons
             .map((buttonData) => InkWell(
-                  onTap: () {
-                    Provider.of<ChatScreenViewModel>(context, listen: false)
-                        .startSheelaFromButton(
-                      buttonText: buttonData.title,
-                      payload: buttonData.payload,
-                    );
-                  },
+                  onTap: (c.singleuse && c.isActionDone)
+                      ? null
+                      : () {
+                          if (c.singleuse) {
+                            c.isActionDone = true;
+                          }
+                          Provider.of<ChatScreenViewModel>(context,
+                                  listen: false)
+                              .startSheelaFromButton(
+                            buttonText: buttonData.title,
+                            payload: buttonData.payload,
+                          );
+                        },
                   child: Card(
                     color: ((buttonData.isPlaying ?? false) && c.isSpeaking)
                         ? Colors.lightBlueAccent
-                        : Colors.white,
+                        : (c.singleuse && c.isActionDone)
+                            ? Colors.white.withOpacity(0.7)
+                            : Colors.white,
                     margin: const EdgeInsets.only(top: 10),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
