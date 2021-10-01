@@ -15,6 +15,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/widgets/checkout_page.dart';
 import 'package:myfhb/widgets/checkout_page_provider.dart';
+import 'package:myfhb/widgets/payment_gatway.dart';
 import 'package:provider/provider.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 
@@ -26,6 +27,9 @@ class PaymentResultPage extends StatefulWidget {
   Function(String) closePage;
   final bool isPaymentFails;
   final String cartUserId;
+  final String paymentRetryUrl;
+  final String paymentId;
+  final bool isFromRazor;
 
   PaymentResultPage({
     Key key,
@@ -36,6 +40,9 @@ class PaymentResultPage extends StatefulWidget {
     this.isFreePlan = false,
     this.isPaymentFails = false,
     this.cartUserId = null,
+    this.paymentRetryUrl,
+    this.paymentId,
+    this.isFromRazor,
   }) : super(key: key);
 
   @override
@@ -44,6 +51,7 @@ class PaymentResultPage extends StatefulWidget {
 
 class _ResultPage extends State<PaymentResultPage> {
   bool status;
+
   //bool isFromSubscribe;
 
   @override
@@ -118,9 +126,8 @@ class _ResultPage extends State<PaymentResultPage> {
                       SizedBox(height: 15.0.h),
                       (widget?.isFreePlan ?? false)
                           ? Text(
-                              status
-                                  ? 'Subscribe Success'
-                                  : 'Subscribe Failed', // TODO this need to confirm with bussinees
+                              status ? 'Subscribe Success' : 'Subscribe Failed',
+                              // TODO this need to confirm with bussinees
                               style: TextStyle(
                                   fontSize: 22.0.sp,
                                   color: Colors.white,
@@ -135,48 +142,55 @@ class _ResultPage extends State<PaymentResultPage> {
                                   fontWeight: FontWeight.bold))
                           : SizedBox(),
                       SizedBox(height: 30.0.h),
-                      FlatButton(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                            side: BorderSide(color: Colors.white)),
-                        color: Color(new CommonUtil().getMyPrimaryColor()),
-                        textColor: Colors.white,
-                        padding: EdgeInsets.all(12.0),
-                        onPressed: () {
-                          Provider.of<CheckoutPageProvider>(context,
-                                  listen: false)
-                              .loader(false, isNeedRelod: true);
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          FlatButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                                side: BorderSide(color: Colors.white)),
+                            color: Color(new CommonUtil().getMyPrimaryColor()),
+                            textColor: Colors.white,
+                            padding: EdgeInsets.all(12.0),
+                            onPressed: () {
+                              Provider.of<CheckoutPageProvider>(context,
+                                      listen: false)
+                                  .loader(false, isNeedRelod: true);
 
-                          if (status) {
-                            //widget.closePage(STR_SUCCESS);
-                            Get.offAllNamed(router.rt_MyPlans);
-                          } else {
-                            if (widget?.isFreePlan ?? false) {
-                              Get.back();
-                            } else {
-                              Get.offAllNamed(
-                                router.rt_Landing,
-                                arguments: LandingArguments(
-                                  needFreshLoad: false,
-                                ),
-                              );
-                            }
-                          }
-                        },
-                        child: Text(
-                          STR_DONE.toUpperCase(),
-                          style: TextStyle(
-                            fontSize: 16.0.sp,
+                              if (status) {
+                                //widget.closePage(STR_SUCCESS);
+                                Get.offAllNamed(router.rt_MyPlans);
+                              } else {
+                                if (widget?.isFreePlan ?? false) {
+                                  Get.back();
+                                } else {
+                                  Get.offAllNamed(
+                                    router.rt_Landing,
+                                    arguments: LandingArguments(
+                                      needFreshLoad: false,
+                                    ),
+                                  );
+                                }
+                              }
+                            },
+                            child: Text(
+                              STR_DONE.toUpperCase(),
+                              style: TextStyle(
+                                fontSize: 16.0.sp,
+                              ),
+                            ),
                           ),
-                        ),
+                          SizedBox(width: 15.w),
+                          getRetryButton(),
+                        ],
                       ),
                       SizedBox(height: 20.0.h),
                       status
                           ? Visibility(
                               visible: !(Provider.of<CheckoutPageProvider>(
-                                          context,
-                                          listen: false)
-                                      .isMembershipCart),
+                                      context,
+                                      listen: false)
+                                  .isMembershipCart),
                               child: FlatButton(
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8.0),
@@ -244,4 +258,54 @@ class _ResultPage extends State<PaymentResultPage> {
       ),
     );
   }
+
+  Widget getRetryButton(){
+
+    if(!status&&!widget?.isFreePlan??false){
+      return FlatButton(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+            side: BorderSide(color: Colors.white)),
+        color: Color(new CommonUtil().getMyPrimaryColor()),
+        textColor: Colors.white,
+        padding: EdgeInsets.all(12.0),
+        onPressed: () {
+          Provider.of<CheckoutPageProvider>(context,
+              listen: false)
+              .loader(false, isNeedRelod: true);
+
+
+          Navigator.pop(context);
+          Navigator.pushReplacement(
+            Get.context,
+            MaterialPageRoute(
+              builder: (context) => PaymentGatwayPage(
+                redirectUrl: widget.paymentRetryUrl,
+                paymentId: widget.paymentId,
+                isFromSubscribe: true,
+                isFromRazor: widget.isFromRazor,
+                closePage: (value) {
+                  if (value == 'success') {
+                    Get.back();
+                  } else {
+                    Navigator.pop(context);
+                  }
+                },
+              ),
+            ),
+          );
+        },
+        child: Text(
+          STR_RETRY.toUpperCase(),
+          style: TextStyle(
+            fontSize: 16.0.sp,
+          ),
+        ),
+      );
+    }else{
+      return SizedBox.shrink();
+    }
+
+  }
+
 }
