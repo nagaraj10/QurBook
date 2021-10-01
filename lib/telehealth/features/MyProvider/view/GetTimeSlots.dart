@@ -355,7 +355,7 @@ class GetTimeSlots extends StatelessWidget {
       navigateToConfirmBook(
           context, rowPosition, itemPosition, null, false, false);
     } else {
-      CommonUtil().mSnackbar(context, noAddress, 'Add');
+      toast.getToast(noAddress, Colors.red);
     }
   }
 }
