@@ -22,10 +22,13 @@ class MayaConvUI extends StatelessWidget {
         spacing: 10,
         children: c.buttons
             .map((buttonData) => InkWell(
-                  onTap: (c.singleuse && c.isActionDone)
+                  onTap: ((c.singleuse != null && c.singleuse) &&
+                          (c.isActionDone != null && c.isActionDone))
                       ? null
                       : () {
-                          if (c.singleuse) {
+                          if (c.singleuse != null &&
+                              c.singleuse &&
+                              c.isActionDone != null) {
                             c.isActionDone = true;
                           }
                           Provider.of<ChatScreenViewModel>(context,
@@ -38,7 +41,8 @@ class MayaConvUI extends StatelessWidget {
                   child: Card(
                     color: ((buttonData.isPlaying ?? false) && c.isSpeaking)
                         ? Colors.lightBlueAccent
-                        : (c.singleuse && c.isActionDone)
+                        : ((c.singleuse != null && c.singleuse) &&
+                                (c.isActionDone != null && c.isActionDone))
                             ? Colors.white.withOpacity(0.7)
                             : Colors.white,
                     margin: const EdgeInsets.only(top: 10),
