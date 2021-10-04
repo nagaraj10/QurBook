@@ -106,6 +106,8 @@ const String strRedirect = 'redirect';
 const String strEnableMic = 'enable_mic';
 const String strDashboard = 'dashboard';
 const String strSheela = 'sheela';
+const String strsingleuse = 'singleuse';
+const String strisActionDone = 'isActionDone';
 
 //for category
 const String strCategoryName = 'categoryName';
@@ -327,7 +329,7 @@ const String selectSlotsMsg =
     'Please select your time slot before you book an appointment';
 const String noUrl = 'Something went wrong ..please try again..';
 const String noAddress =
-    'Address line 1 and Zipcode is required to proceed booking the appointment';
+    'Please fill your address details in your profile before you book an appointment';
 const String noGender =
     'Please fill your gender and address details in your profile before you book an appointment';
 const String noDOB =
