@@ -776,8 +776,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     SizedBoxWithChild(
-                      width: 130,
-                      height: 40,
+                      width: 130.0.w,
+                      height: 40.0.h,
                       child: FlatButton(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12.0),
