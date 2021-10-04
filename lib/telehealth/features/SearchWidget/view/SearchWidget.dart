@@ -51,9 +51,10 @@ class SearchWdigetState extends State<SearchWidget> {
             children: <Widget>[
               Expanded(
                 child: Container(
-                  constraints: BoxConstraints(maxHeight: 40.0.h),
+                  // constraints: BoxConstraints(minHeight: 20.h),
                   decoration: BoxDecoration(color: Colors.white),
                   child: TextField(
+                    textAlignVertical: TextAlignVertical.center,
                     controller: _searchQueryController,
                     focusNode: widget.searchFocus,
                     autofocus: false,
