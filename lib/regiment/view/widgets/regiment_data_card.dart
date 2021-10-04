@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/src/utils/ImageViewer.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import '../../models/regiment_data_model.dart';
@@ -116,65 +118,87 @@ class RegimentDataCard extends StatelessWidget {
                             ],
                           ),
                           Visibility(
-                            visible: regimentData.ack != null,
+                            visible: (regimentData?.isModifiedToday ?? false) ||
+                                regimentData.ack != null,
                             child: Padding(
                               padding: EdgeInsets.only(
                                 top: 5.0.h,
                                 bottom: 5.0.h,
                               ),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    '${CommonUtil().regimentDateFormat(
-                                      regimentData?.ack ?? DateTime.now(),
-                                      isAck: true,
-                                    )}',
-                                    style: TextStyle(
-                                      fontSize: 12.0.sp,
+                                  Visibility(
+                                    visible:
+                                        regimentData?.isModifiedToday ?? false,
+                                    child: SvgPicture.asset(
+                                      icon_modified,
+                                      width: 20.0.sp,
+                                      height: 20.0.sp,
                                     ),
                                   ),
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 5.0.w),
-                                    child: InkWell(
-                                      onTap: () async {
-                                        LoaderClass.showLoadingDialog(
-                                          Get.context,
-                                          canDismiss: false,
-                                        );
-                                        var saveResponse = await Provider.of<
-                                                    RegimentViewModel>(context,
-                                                listen: false)
-                                            .undoSaveFormData(
-                                          eid: eid,
-                                        );
-                                        if (saveResponse?.isSuccess ?? false) {
-                                          Future.delayed(
-                                              Duration(milliseconds: 300),
-                                              () async {
-                                            await Provider.of<
-                                                        RegimentViewModel>(
-                                                    context,
-                                                    listen: false)
-                                                .fetchRegimentData();
-                                            LoaderClass.hideLoadingDialog(
-                                                Get.context);
-                                          });
-                                        } else {
-                                          LoaderClass.hideLoadingDialog(
-                                              Get.context);
-                                        }
-                                      },
-                                      child: Text(
-                                        undo,
-                                        style: TextStyle(
-                                          fontSize: 14.0.sp,
-                                          fontWeight: FontWeight.w500,
-                                          decoration: TextDecoration.underline,
-                                          color: Color(
-                                              CommonUtil().getMyPrimaryColor()),
+                                  Visibility(
+                                    visible: regimentData.ack != null,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          '${CommonUtil().regimentDateFormat(
+                                            regimentData?.ack ?? DateTime.now(),
+                                            isAck: true,
+                                          )}',
+                                          style: TextStyle(
+                                            fontSize: 12.0.sp,
+                                          ),
                                         ),
-                                      ),
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 5.0.w),
+                                          child: InkWell(
+                                            onTap: () async {
+                                              LoaderClass.showLoadingDialog(
+                                                Get.context,
+                                                canDismiss: false,
+                                              );
+                                              var saveResponse = await Provider
+                                                      .of<RegimentViewModel>(
+                                                          context,
+                                                          listen: false)
+                                                  .undoSaveFormData(
+                                                eid: eid,
+                                              );
+                                              if (saveResponse?.isSuccess ??
+                                                  false) {
+                                                Future.delayed(
+                                                    Duration(milliseconds: 300),
+                                                    () async {
+                                                  await Provider.of<
+                                                              RegimentViewModel>(
+                                                          context,
+                                                          listen: false)
+                                                      .fetchRegimentData();
+                                                  LoaderClass.hideLoadingDialog(
+                                                      Get.context);
+                                                });
+                                              } else {
+                                                LoaderClass.hideLoadingDialog(
+                                                    Get.context);
+                                              }
+                                            },
+                                            child: Text(
+                                              undo,
+                                              style: TextStyle(
+                                                fontSize: 14.0.sp,
+                                                fontWeight: FontWeight.w500,
+                                                decoration:
+                                                    TextDecoration.underline,
+                                                color: Color(CommonUtil()
+                                                    .getMyPrimaryColor()),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],
