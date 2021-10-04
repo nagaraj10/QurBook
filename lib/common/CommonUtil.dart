@@ -1310,6 +1310,19 @@ class CommonUtil {
     return removedString;
   }
 
+  static String getDateStringFromDateTime(String string) {
+    try {
+      var dateTime = DateTime.tryParse(string);
+      if (dateTime != null) {
+       return dateConversionToApiFormat(dateTime);
+      }
+      return '';
+    }catch(e){
+      return '';
+    }
+
+  }
+
   static String dateConversionToApiFormat(DateTime dateTime,
       {bool isIndianTime = false}) {
     final newFormat = REGION_CODE == 'IN' || isIndianTime

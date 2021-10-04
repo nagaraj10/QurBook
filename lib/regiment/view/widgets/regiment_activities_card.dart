@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:myfhb/constants/variable_constant.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import '../../models/regiment_data_model.dart';
 import '../../../constants/fhb_constants.dart';
@@ -83,12 +85,33 @@ class RegimentActivitiesCard extends StatelessWidget {
                       vertical: 5.0.h,
                       horizontal: 20.0.w,
                     ),
-                    child: Text(
-                      title?.trim(),
-                      style: TextStyle(
-                        fontSize: 16.0.sp,
-                        fontWeight: FontWeight.w500,
-                      ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Visibility(
+                          visible: regimentData?.isMandatory ?? false,
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                              right: 5.0.w,
+                              top: 4.0.h,
+                            ),
+                            child: SvgPicture.asset(
+                              icon_mandatory,
+                              width: 7.0.sp,
+                              height: 7.0.sp,
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Text(
+                            title?.trim(),
+                            style: TextStyle(
+                              fontSize: 16.0.sp,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -97,16 +120,18 @@ class RegimentActivitiesCard extends StatelessWidget {
                   inactiveThumbColor: Colors.grey[200],
                   inactiveTrackColor: Colors.grey[400],
                   value: !regimentData?.isEventDisabled,
-                  onChanged: (isEnabled) {
-                    Provider.of<RegimentViewModel>(
-                      context,
-                      listen: false,
-                    ).enableDisableActivity(
-                      eidUser: regimentData?.teidUser,
-                      startTime: regimentData?.estart,
-                      isDisable: !isEnabled,
-                    );
-                  },
+                  onChanged: (regimentData?.isMandatory ?? false)
+                      ? null
+                      : (isEnabled) {
+                          Provider.of<RegimentViewModel>(
+                            context,
+                            listen: false,
+                          ).enableDisableActivity(
+                            eidUser: regimentData?.teidUser,
+                            startTime: regimentData?.estart,
+                            isDisable: !isEnabled,
+                          );
+                        },
                 ),
                 SizedBox(
                   width: 3.0.w,
