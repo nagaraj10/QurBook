@@ -106,6 +106,8 @@ const String strRedirect = 'redirect';
 const String strEnableMic = 'enable_mic';
 const String strDashboard = 'dashboard';
 const String strSheela = 'sheela';
+const String strsingleuse = 'singleuse';
+const String strisActionDone = 'isActionDone';
 
 //for category
 const String strCategoryName = 'categoryName';

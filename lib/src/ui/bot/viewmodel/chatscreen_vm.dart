@@ -440,7 +440,7 @@ class ChatScreenViewModel extends ChangeNotifier {
     Service mService = Service();
     final response = await mService.sendMetaToMaya(reqJson);
 
-    if (response.statusCode == 200) {
+    if (response != null && response?.statusCode == 200) {
       isMicListening = false;
       if (response.body != null) {
         final jsonResponse = jsonDecode(response.body);
@@ -472,7 +472,9 @@ class ChatScreenViewModel extends ChangeNotifier {
                 redirect: isRedirect,
                 screen: screenValue,
                 isSpeaking: false,
-                provider_msg: res.provider_msg);
+                provider_msg: res.provider_msg,
+                singleuse: res.singleuse,
+                isActionDone: res.isActionDone);
             if (res.text == null || res.text == '') {
               isLoading = false;
             }
@@ -618,7 +620,13 @@ class ChatScreenViewModel extends ChangeNotifier {
             notifyListeners();
           }
           return jsonResponse;
+        } else {
+          isLoading = false;
+          notifyListeners();
         }
+      } else {
+        isLoading = false;
+        notifyListeners();
       }
     } else {
       isLoading = false;

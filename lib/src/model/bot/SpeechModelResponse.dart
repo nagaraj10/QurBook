@@ -14,6 +14,8 @@ class SpeechModelResponse {
   bool redirect;
   bool enableMic;
   bool provider_msg;
+  bool singleuse;
+  bool isActionDone;
   SpeechModelResponse({
     this.recipientId,
     this.text,
@@ -26,6 +28,8 @@ class SpeechModelResponse {
     this.redirect,
     this.enableMic,
     this.provider_msg,
+    this.singleuse: true,
+    this.isActionDone: false,
   });
 
   //setter
@@ -53,6 +57,8 @@ class SpeechModelResponse {
     redirect = json[parameters.strRedirect];
     enableMic = json[parameters.strEnableMic] ?? false;
     provider_msg = json[parameters.strProviderMsg] ?? false;
+    singleuse = json[parameters.strsingleuse];
+    isActionDone = json[parameters.strisActionDone];
   }
 
   //getter
@@ -74,6 +80,8 @@ class SpeechModelResponse {
     data[parameters.strRedirect] = this.redirect;
     data[parameters.strEnableMic] = this.enableMic;
     data[parameters.strProviderMsg] = this.provider_msg;
+    data[parameters.strsingleuse] = this.singleuse;
+    data[parameters.strisActionDone] = this.isActionDone;
     return data;
   }
 }
