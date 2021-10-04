@@ -1,30 +1,36 @@
 import 'dart:convert';
 import 'dart:io';
+
+import 'package:audioplayer/audioplayer.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/foundation.dart';
+import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as constants;
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/constants/router_variable.dart' as routervariable;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/my_family/screens/MyFamily.dart';
 import 'package:myfhb/src/model/CreateDeviceSelectionModel.dart';
+import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
+import 'package:myfhb/src/model/UpdatedDeviceModel.dart';
+import 'package:myfhb/src/model/bot/button_model.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
+import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
+import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
 import 'package:myfhb/src/ui/bot/common/botutils.dart';
 import 'package:myfhb/src/ui/bot/service/sheela_service.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
+
 import '../../../../common/PreferenceUtil.dart';
 import '../../../blocs/health/HealthReportListForUserBlock.dart';
 import '../../../model/bot/ConversationModel.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import '../../../model/bot/SpeechModelResponse.dart';
 import '../../../utils/FHBUtils.dart';
-import 'package:audioplayer/audioplayer.dart';
-import 'package:myfhb/src/model/UpdatedDeviceModel.dart';
-import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
-import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
-import 'package:myfhb/src/model/bot/button_model.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 class ChatScreenViewModel extends ChangeNotifier {
   static MyProfileModel prof =
@@ -474,7 +480,8 @@ class ChatScreenViewModel extends ChangeNotifier {
                 isSpeaking: false,
                 provider_msg: res.provider_msg,
                 singleuse: res.singleuse,
-                isActionDone: res.isActionDone);
+                isActionDone: res.isActionDone,
+                redirectTo: res.redirectTo);
             if (res.text == null || res.text == '') {
               isLoading = false;
             }
@@ -536,6 +543,25 @@ class ChatScreenViewModel extends ChangeNotifier {
                         gettingReposnseFromNative();
                       } else {
                         refreshData();
+                        Future<dynamic>.delayed(const Duration(seconds: 2),
+                            () async {
+                          if (conversations[conversations.length - 1]
+                                      .redirectTo !=
+                                  null &&
+                              conversations[conversations.length - 1]
+                                  .redirectTo
+                                  .contains('myfamily_list')) {
+                            Get.toNamed(
+                              routervariable.rt_UserAccounts,
+                              arguments: UserAccountsArguments(
+                                selectedIndex: 1,
+                              ),
+                            );
+
+                            FlutterToast()
+                                .getToast('Redirecting...', Colors.black54);
+                          }
+                        });
                       }
                     } else {
                       playingIndex = conversations.length - 1;
@@ -582,6 +608,27 @@ class ChatScreenViewModel extends ChangeNotifier {
                         notifyListeners();
                         if (!isEndOfConv) {
                           gettingReposnseFromNative();
+                        } else {
+                          Future<dynamic>.delayed(const Duration(seconds: 2),
+                              () {
+                            if (conversations[conversations.length - 1]
+                                        .redirectTo !=
+                                    null &&
+                                conversations[conversations.length - 1]
+                                    .redirectTo
+                                    .contains('myfamily_list')) {
+                              //Get.to(MyFamily());
+                              Get.toNamed(
+                                routervariable.rt_UserAccounts,
+                                arguments: UserAccountsArguments(
+                                  selectedIndex: 1,
+                                ),
+                              );
+
+                              FlutterToast()
+                                  .getToast('Redirecting...', Colors.black87);
+                            }
+                          });
                         }
                       } else {
                         playingIndex = conversations.length - 1;

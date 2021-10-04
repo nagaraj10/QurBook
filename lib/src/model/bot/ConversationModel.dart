@@ -20,6 +20,7 @@ class Conversation {
   bool provider_msg;
   bool singleuse;
   bool isActionDone;
+  String redirectTo;
   Conversation({
     @required this.isMayaSaid,
     @required this.text,
@@ -37,6 +38,7 @@ class Conversation {
     this.provider_msg: false,
     this.singleuse: true,
     this.isActionDone: false,
+    this.redirectTo,
   });
 
   Conversation.fromJson(Map<String, dynamic> json) {
