@@ -18,6 +18,8 @@ class Conversation {
   bool isSpeaking;
   bool loadingDots;
   bool provider_msg;
+  bool singleuse;
+  bool isActionDone;
   Conversation({
     @required this.isMayaSaid,
     @required this.text,
@@ -33,6 +35,8 @@ class Conversation {
     this.isSpeaking: false,
     this.loadingDots: true,
     this.provider_msg: false,
+    this.singleuse: true,
+    this.isActionDone: false,
   });
 
   Conversation.fromJson(Map<String, dynamic> json) {
