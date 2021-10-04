@@ -95,7 +95,9 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
       isInitial: true,
     );
     PreferenceUtil.init();
+  }
 
+  void showShowcase() {
     isFirst = PreferenceUtil.isKeyValid(KEY_SHOWCASE_Regimen);
     isFirstSymptom = PreferenceUtil.isKeyValid(KEY_SHOWCASE_Symptom);
 
@@ -118,6 +120,9 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
             .getProfile();
     if (profileResponseModel?.result?.profileData?.isDefault ?? false) {
       await openScheduleDialog();
+      showShowcase();
+    } else {
+      showShowcase();
     }
   }
 
