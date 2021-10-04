@@ -232,12 +232,33 @@ class RegimentDataCard extends StatelessWidget {
               padding: EdgeInsets.only(
                 bottom: 5.0.h,
               ),
-              child: Text(
-                title?.trim(),
-                style: TextStyle(
-                  fontSize: 16.0.sp,
-                  fontWeight: FontWeight.w500,
-                ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Visibility(
+                    visible: regimentData?.isMandatory ?? false,
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        right: 5.0.w,
+                        top: 4.0.h,
+                      ),
+                      child: SvgPicture.asset(
+                        icon_mandatory,
+                        width: 7.0.sp,
+                        height: 7.0.sp,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      title?.trim(),
+                      style: TextStyle(
+                        fontSize: 16.0.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

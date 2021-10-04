@@ -207,6 +207,7 @@ const String icon_record_my_vitals = 'assets/dashboard/record-my-vitals.svg';
 const String icon_logout = 'assets/icons/logout.svg';
 const String icon_settings = 'assets/icons/settings.svg';
 const String icon_modified = 'assets/icons/modified.svg';
+const String icon_mandatory = 'assets/icons/mandatory.svg';
 
 //For Apple Health Settings Info
 const String apple_health_settings_info = 'assets/settings/health.jpg';
