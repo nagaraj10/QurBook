@@ -16,6 +16,7 @@ class SpeechModelResponse {
   bool provider_msg;
   bool singleuse;
   bool isActionDone;
+  String redirectTo;
   SpeechModelResponse({
     this.recipientId,
     this.text,
@@ -30,6 +31,7 @@ class SpeechModelResponse {
     this.provider_msg,
     this.singleuse: true,
     this.isActionDone: false,
+    this.redirectTo,
   });
 
   //setter
@@ -59,6 +61,7 @@ class SpeechModelResponse {
     provider_msg = json[parameters.strProviderMsg] ?? false;
     singleuse = json[parameters.strsingleuse];
     isActionDone = json[parameters.strisActionDone];
+    redirectTo = json[parameters.strRedirectTo];
   }
 
   //getter
@@ -82,6 +85,7 @@ class SpeechModelResponse {
     data[parameters.strProviderMsg] = this.provider_msg;
     data[parameters.strsingleuse] = this.singleuse;
     data[parameters.strisActionDone] = this.isActionDone;
+    data[parameters.strRedirectTo] = this.redirectTo;
     return data;
   }
 }
