@@ -476,7 +476,7 @@ class RegimentViewModel extends ChangeNotifier {
     );
     updateActivityStatus(ActivityStatus.Loaded);
     activitiesData?.regimentsList?.forEach((event) {
-      if ((event?.scheduled ?? false) && !(event?.isMandatory ?? false)) {
+      if (event?.scheduled ?? false) {
         activitiesAllList.add(event);
       }
     });
