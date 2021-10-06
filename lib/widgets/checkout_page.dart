@@ -652,13 +652,29 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     //title of the plan/package
-                    Text(
-                      '${item?.productDetail?.planName}',
-                      style: TextStyle(
-                          color: Colors.black54,
-                          // fontWeight: FontWeight.bold,
-                          fontSize: 13),
+                    Wrap(
+                      //mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '${item?.productDetail?.planName}',
+                          style: TextStyle(
+                              color: Colors.black54,
+                              // fontWeight: FontWeight.bold,
+                              fontSize: 13),
+                        ),
+                        item.additionalInfo.isRenewal
+                            ? Text(
+                                strRenewal,
+                                style: TextStyle(
+                                    color:
+                                        Color(CommonUtil().getMyPrimaryColor()),
+                                    // fontWeight: FontWeight.bold,
+                                    fontSize: 13),
+                              )
+                            : Container()
+                      ],
                     ),
+
                     //duration
                     Text(
                       'Duration-${item?.productDetail?.packageDuration} days',

@@ -579,6 +579,8 @@ const strSelectPlan = 'Select a Plan';
 const strSelectPlans = 'Select your Plan(s)';
 const strIsFromSubscibe = 'fromSubscribe';
 const strIsRenew = 'Renew';
+const strRenewal = 'Renewal';
+
 const goToRegimen = 'Go to Regimen';
 const symptomsError = 'Data for Symptoms cannot be entered for future dates';
 const activitiesError =

@@ -23,6 +23,7 @@ import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
 import 'package:myfhb/src/ui/bot/common/botutils.dart';
 import 'package:myfhb/src/ui/bot/service/sheela_service.dart';
+import 'package:myfhb/widgets/checkout_page.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
@@ -561,6 +562,16 @@ class ChatScreenViewModel extends ChangeNotifier {
 
                             FlutterToast()
                                 .getToast('Redirecting...', Colors.black54);
+                          } else if (conversations[conversations.length - 1]
+                                      .redirectTo !=
+                                  null &&
+                              conversations[conversations.length - 1]
+                                  .redirectTo
+                                  .contains('mycart')) {
+                            Get.to(CheckoutPage());
+
+                            FlutterToast()
+                                .getToast('Redirecting...', Colors.black54);
                           }
                         });
                       }
@@ -628,6 +639,16 @@ class ChatScreenViewModel extends ChangeNotifier {
 
                               FlutterToast()
                                   .getToast('Redirecting...', Colors.black87);
+                            } else if (conversations[conversations.length - 1]
+                                        .redirectTo !=
+                                    null &&
+                                conversations[conversations.length - 1]
+                                    .redirectTo
+                                    .contains('mycart')) {
+                              Get.to(CheckoutPage());
+
+                              FlutterToast()
+                                  .getToast('Redirecting...', Colors.black54);
                             }
                           });
                         }
