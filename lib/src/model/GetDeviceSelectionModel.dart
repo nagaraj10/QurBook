@@ -1,3 +1,5 @@
+import 'package:myfhb/src/model/user/Tags.dart';
+
 class GetDeviceSelectionModel {
   bool isSuccess;
   List<SelectionResult> result;
@@ -31,6 +33,8 @@ class SelectionResult {
   bool isActive;
   String createdOn;
   String lastModifiedOn;
+  List<Tags> tags;
+
 
   SelectionResult(
       {this.id,
@@ -38,7 +42,7 @@ class SelectionResult {
         this.profileSetting,
         this.isActive,
         this.createdOn,
-        this.lastModifiedOn});
+        this.lastModifiedOn,this.tags});
 
   SelectionResult.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -49,6 +53,12 @@ class SelectionResult {
     isActive = json['isActive'];
     createdOn = json['createdOn'];
     lastModifiedOn = json['lastModifiedOn'];
+    if (json['tags'] != null) {
+      tags = new List<Tags>();
+      json['tags'].forEach((v) {
+        tags.add(new Tags.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -61,6 +71,9 @@ class SelectionResult {
     data['isActive'] = isActive;
     data['createdOn'] = createdOn;
     data['lastModifiedOn'] = lastModifiedOn;
+    if (this.tags != null) {
+      data['tags'] = this.tags.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }

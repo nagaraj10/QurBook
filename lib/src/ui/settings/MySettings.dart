@@ -22,6 +22,8 @@ import 'package:provider/provider.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 
 import 'AppleHealthSettings.dart';
+import 'package:myfhb/src/model/user/Tags.dart';
+
 
 class MySettings extends StatefulWidget {
   @override
@@ -62,7 +64,8 @@ class _MySettingsState extends State<MySettings> {
 
   var userMappingId = '';
   bool isTouched = false;
-
+  List<Tags> tagsList =
+  new List<Tags>();
   @override
   void initState() {
     mInitialTime = DateTime.now();
@@ -167,7 +170,7 @@ class _MySettingsState extends State<MySettings> {
             preferred_language,
             qa_subscription,
             priColor,
-            greColor)
+            greColor,tagsList)
         .then((value) {
       Provider.of<LandingViewModel>(context, listen: false)
           .getQurPlanDashBoard();
@@ -200,7 +203,7 @@ class _MySettingsState extends State<MySettings> {
             preferred_language,
             qa_subscription,
             priColor,
-            greColor)
+            greColor,tagsList)
         .then((value) {
       updateDeviceModel = value;
       if (updateDeviceModel.isSuccess) {
@@ -312,6 +315,11 @@ class _MySettingsState extends State<MySettings> {
                       ''
               ? getDeviceSelectionModel.result[0].profileSetting.qa_subscription
               : 'Y';
+
+      tagsList=getDeviceSelectionModel
+          .result[0].tags!=null && getDeviceSelectionModel
+          .result[0].tags.length>0?getDeviceSelectionModel
+          .result[0].tags:new List();
     });
   }
 

@@ -1998,6 +1998,19 @@ class ApiBaseHelper {
     }
     return responseJson;
   }
+
+  Future<dynamic> getTags( String jsonData) async {
+    var responseJson;
+    try {
+      var response = await ApiServices.post(_baseUrl + 'reference-value/data-codes',
+          body: '["TAGS"]', headers: await headerRequest.getRequestHeadersAuthContents());
+      responseJson = _returnResponse(response);
+      print(responseJson.toString());
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
 }
 
 void exitFromApp() async {

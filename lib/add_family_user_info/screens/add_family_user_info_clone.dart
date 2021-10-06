@@ -2,6 +2,10 @@ import 'dart:io';
 import 'dart:math';
 import 'package:get/get.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
+import 'package:myfhb/src/model/user/Tags.dart';
+import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
+import 'package:myfhb/widgets/DropdownWithTags.dart';
+import 'package:myfhb/widgets/TagsList.dart';
 import '../../constants/fhb_constants.dart';
 import '../../language/blocks/LanguageBlock.dart';
 import '../../language/model/Language.dart';
@@ -154,7 +158,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   AddFamilyUserInfoRepository addFamilyUserInfoRepository;
   MyProfileModel myProfile = MyProfileModel();
-
+  HealthReportListForUserRepository _healthReportListForUserRepository;
+  List<Tags> selectedTags = [];
+  var mediaResultFiltered=[];
   @override
   void initState() {
     mInitialTime = DateTime.now();
@@ -162,6 +168,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     getSupportedLanguages();
     addFamilyUserInfoBloc = AddFamilyUserInfoBloc();
     _addFamilyUserInfoRepository = AddFamilyUserInfoRepository();
+    _healthReportListForUserRepository= new HealthReportListForUserRepository();
+
     setUserId();
     addFamilyUserInfoBloc.getDeviceSelectionValues().then((value) {
       //fetchUserProfileInfo();
@@ -444,6 +452,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   getLanguageWidget()
                 else
                   Container(),
+                if (widget.arguments.fromClass == CommonConstants.user_update)
+                getDropDownWithTagsdrop()
+                else
+                  Container(),
+
                 _showDateOfBirthTextFieldNew(),
                 AddressTypeWidget(
                   addressResult: _addressResult,
@@ -1358,6 +1371,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         if (widget.arguments.myProfileResult.gender != null) {
           selectedGender = widget.arguments.myProfileResult.gender;
         }
+
+        selectedTags=addFamilyUserInfoBloc.tagsList
+            !=null && addFamilyUserInfoBloc.tagsList.length>0?addFamilyUserInfoBloc.tagsList:new List();
       }
       await setValueLanguages();
     } else if (widget.arguments.fromClass == CommonConstants.my_family) {
@@ -1656,6 +1672,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             userProfileSettingCollection;
       } catch (e) {}
     }
+
+    addFamilyUserInfoBloc.tagsList=selectedTags;
 
     if (currentselectedBloodGroup != null &&
         currentselectedBloodGroupRange != null) {
@@ -2422,5 +2440,61 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     }
 
     return condition;
+  }
+
+  Widget getDropDownWithTagsdrop() {
+    return FutureBuilder(
+        future: _healthReportListForUserRepository.getTags(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return CommonCircularIndicator();
+          }
+          final List<Tags> tagslist = snapshot.data.result;
+
+          mediaResultFiltered= removeUnwantedCategories(tagslist);
+
+          setTheValuesForDropdown(mediaResultFiltered);
+          return DropdownWithTags(
+            isClickable: true,
+            tags: mediaResultFiltered,
+            onChecked: (result) {
+              addSelectedcategoriesToList(result);
+            },
+          );
+        });
+  }
+
+  List<Tags> removeUnwantedCategories(List<Tags> tagsList) {
+    final tagsListDuplicate = List<Tags>();
+    for (var i = 0; i < tagsList.length; i++) {
+
+        if (!tagsListDuplicate.contains(tagsList[i].name)) {
+          tagsListDuplicate.add(tagsList[i]);
+        }
+
+    }
+    return tagsListDuplicate;
+  }
+
+  void setTheValuesForDropdown(List<Tags> result) {
+    if (addFamilyUserInfoBloc.tagsList != null && addFamilyUserInfoBloc.tagsList .isNotEmpty) {
+      for (var mediaResultObj in mediaResultFiltered) {
+        for(var tagsSelected in addFamilyUserInfoBloc.tagsList) {
+          if (tagsSelected.name.toUpperCase()==mediaResultObj.name.toUpperCase()) {
+            mediaResultObj.isChecked = true;
+          }
+        }
+      }
+    }
+  }
+
+  void addSelectedcategoriesToList(List<Tags> result) {
+    selectedTags = [];
+    for (final mediaResultObj in result) {
+      if (!selectedTags.contains(mediaResultObj.name) &&
+          mediaResultObj.isChecked) {
+        selectedTags .add(mediaResultObj);
+      }
+    }
   }
 }

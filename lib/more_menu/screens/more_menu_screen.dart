@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:launch_review/launch_review.dart';
+import 'package:myfhb/src/model/user/Tags.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/FHBBasicWidget.dart';
 import '../../common/PreferenceUtil.dart';
@@ -79,7 +80,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
       PreferenceUtil.getSavedTheme(Constants.keyGreyColor) ?? 0xff753aec;
 
   String version = '';
-
+  List<Tags> tagsList =
+  new List<Tags>();
   @override
   void initState() {
     mInitialTime = DateTime.now();
@@ -584,6 +586,11 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
 
     selectedPrimaryColor =
         PreferenceUtil.getSavedTheme(Constants.keyPriColor) ?? preColor;
+
+    tagsList=getDeviceSelectionModel
+        .result[0].tags!=null && getDeviceSelectionModel
+        .result[0].tags.length>0?getDeviceSelectionModel
+        .result[0].tags:new List();
   }
 
   Future<CreateDeviceSelectionModel> createAppColorSelection(
@@ -604,7 +611,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             preferred_language,
             qa_subscription,
             priColor,
-            greColor)
+            greColor,tagsList)
         .then((value) {
       createDeviceSelectionModel = value;
       if (createDeviceSelectionModel.isSuccess) {
@@ -635,7 +642,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             preferred_language,
             qa_subscription,
             priColor,
-            greColor)
+            greColor,tagsList)
         .then((value) {
       updateDeviceModel = value;
       if (updateDeviceModel.isSuccess) {
