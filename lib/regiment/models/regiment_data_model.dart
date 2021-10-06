@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/regiment/models/field_response_model.dart';
 
 class RegimentDataModel {
@@ -47,6 +48,7 @@ class RegimentDataModel {
     this.sayTextDynamic,
     this.isSymptom = false,
     this.isMandatory = false,
+    this.isModifiedToday = false,
   });
 
   final String eid;
@@ -92,6 +94,7 @@ class RegimentDataModel {
   final String sayTextDynamic;
   final bool isSymptom;
   final bool isMandatory;
+  final bool isModifiedToday;
 
   factory RegimentDataModel.fromJson(Map<String, dynamic> json) =>
       RegimentDataModel(
@@ -147,7 +150,10 @@ class RegimentDataModel {
         isEventDisabled: (json['ev_disabled'] ?? '0') == '1',
         sayTextDynamic: json['saytext_dyn'] ?? '',
         isSymptom: (json['issymptom'] ?? '0') == '1',
-        isMandatory:(json['importance'] ?? '0') == '2',
+        isMandatory: (json['importance'] ?? '0') == '2',
+        isModifiedToday: ((json['customized'] ?? '0') == '1') &&
+            (CommonUtil.getDateStringFromDateTime(json['dtu_ts']) ==
+                CommonUtil.getDateStringFromDateTime(json['estart'])),
       );
 
   Map<String, dynamic> toJson() => {

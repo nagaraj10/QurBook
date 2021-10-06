@@ -100,7 +100,11 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
               NavigationControls(_controller.future),
             ],
           ),
-          body: isFromRazor?iosWebview():Platform.isAndroid ? androidWebview() : iosWebview()),
+          body: isFromRazor
+              ? iosWebview()
+              : Platform.isAndroid
+                  ? androidWebview()
+                  : iosWebview()),
     );
   }
 
@@ -193,7 +197,6 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
     );
   }
 
-
   Widget iosWebview() {
     return Builder(builder: (BuildContext context) {
       return WebView(
@@ -232,7 +235,7 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
                       paymentRequestId, isFromRazor, signature)
                   .then((value) {
                 if ((value?.isSuccess == true &&
-                    value?.result?.paymentStatus == PAYCREDIT) ||
+                        value?.result?.paymentStatus == PAYCREDIT) ||
                     (value?.isSuccess == true &&
                         value?.result?.paymentStatus == PAYCAPTURED)) {
                   paymentOrderIdSub = value?.result?.paymentOrderId ?? '';
@@ -326,6 +329,9 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
             },
             cartUserId: cartUserId,
             isPaymentFails: isPaymentFails,
+            paymentRetryUrl: PAYMENT_URL,
+            paymentId: widget.paymentId,
+            isFromRazor: isFromRazor,
           ),
         ));
   }

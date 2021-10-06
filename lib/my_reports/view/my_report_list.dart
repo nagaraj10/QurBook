@@ -71,9 +71,15 @@ class _MyReportList extends State<MyReportList> {
               child: SizedBox(
                 height: 1.sh / 1.3,
                 child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 60.w,
+                    ),
                     child: Center(
-                  child: Text(variable.strNoReports),
-                )),
+                      child: Text(
+                        variable.strNoReports,
+                        textAlign: TextAlign.center,
+                      ),
+                    )),
               ),
             );
           }
@@ -109,14 +115,13 @@ class _MyReportList extends State<MyReportList> {
       BuildContext context, int i, List<MyReportResult> reportList) {
     return InkWell(
       onTap: () {
-         Navigator.push(
+        Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => ReportWebView(
-                embededUrl: reportList[i].embeddedUrl,
+                  embededUrl: reportList[i].embeddedUrl,
                   reportId: reportList[i].reportId,
-                  id: reportList[i].id
-              )),
+                  id: reportList[i].id)),
         );
       },
       child: Container(

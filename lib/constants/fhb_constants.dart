@@ -415,6 +415,7 @@ const String STR_NOT_VERIFIED = 'Not Verified';
 const String STR_SUCCESS = 'success';
 const String STR_FAILED = 'failed';
 const String STR_DONE = 'Done';
+const String STR_RETRY = 'Retry';
 const String STR_REGIMENT = 'Go to Regimen';
 
 const String STR_LATEST_VALUE = 'Latest Value';
@@ -566,6 +567,8 @@ const strSelectPlan = 'Select a Plan';
 const strSelectPlans = 'Select your Plan(s)';
 const strIsFromSubscibe = 'fromSubscribe';
 const strIsRenew = 'Renew';
+const strRenewal = 'Renewal';
+
 const goToRegimen = 'Go to Regimen';
 const symptomsError = 'Data for Symptoms cannot be entered for future dates';
 const activitiesError =

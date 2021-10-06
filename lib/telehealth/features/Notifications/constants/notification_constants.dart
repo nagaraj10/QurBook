@@ -20,8 +20,8 @@ String notificationTime(String value) =>
     DateFormat('hh:mm a').format(DateTime.parse(value)).toString();
 
 const String qr_notification_fetch =
-    'notification-log/user/notifications-list?medium=Push&fromDate=&toDate=';
-
+    'notification-log/user/notifications-list?medium=Push&fromDate=';
+const String qr_to_date = "&toDate=";
 const String qr_notification_action = 'notification-log/actions';
 const String qr_notification_action_ontap = 'notification-log/on-tap';
 const String qr_notification_clear = 'notification-log/clear-notifications';

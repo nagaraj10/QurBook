@@ -816,7 +816,7 @@ class _CustomTabsState extends State<CustomTabView>
       getAllTabsToDisplayInBody(data),
       Container(
         margin: EdgeInsets.only(right: 10, bottom: 10),
-        constraints: BoxConstraints(maxHeight: 100.0.h),
+        constraints: BoxConstraints(maxHeight: 120.0.h),
         decoration: BoxDecoration(
             color: Color(new CommonUtil().getMyPrimaryColor()),
             borderRadius: BorderRadius.circular(30)),

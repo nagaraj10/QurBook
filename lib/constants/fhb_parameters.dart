@@ -108,6 +108,7 @@ const String strDashboard = 'dashboard';
 const String strSheela = 'sheela';
 const String strsingleuse = 'singleuse';
 const String strisActionDone = 'isActionDone';
+const String strRedirectTo = 'redirectTo';
 
 //for category
 const String strCategoryName = 'categoryName';

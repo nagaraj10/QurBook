@@ -89,7 +89,7 @@ class DoctorTimeSlotWidgetState extends State<DoctorTimeSlotWidget> {
                         border: Border.all(
                             color: Color(new CommonUtil().getMyPrimaryColor())),
                       ),
-                      height: 35.0.h,
+                      height: 40.0.h,
                       width: 25.0.h,
                       alignment: Alignment.center,
                       padding: EdgeInsets.all(2.0.sp),
@@ -119,7 +119,7 @@ class DoctorTimeSlotWidgetState extends State<DoctorTimeSlotWidget> {
                         border: Border.all(
                             color: Color(new CommonUtil().getMyPrimaryColor())),
                       ),
-                      height: 35.0.h,
+                      height: 40.0.h,
                       width: 25.0.w,
                       alignment: Alignment.center,
                       padding: EdgeInsets.all(
