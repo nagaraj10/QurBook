@@ -19,6 +19,7 @@ import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/UpdatedDeviceModel.dart';
 import 'package:myfhb/src/model/bot/button_model.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
+import 'package:myfhb/src/model/user/Tags.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
 import 'package:myfhb/src/ui/bot/common/botutils.dart';
@@ -80,7 +81,8 @@ class ChatScreenViewModel extends ChangeNotifier {
   bool isAudioPlayerPlaying = false;
   bool get getIsButtonResponse => isButtonResponse && !enableMic;
   CreateDeviceSelectionModel createDeviceSelectionModel;
-
+  List<Tags> tagsList =
+  new List<Tags>();
   void updateAppState(bool canSheelaSpeak, {bool isInitial: false}) {
     canSpeak = canSheelaSpeak;
     if (!canSheelaSpeak) {
@@ -949,7 +951,7 @@ class ChatScreenViewModel extends ChangeNotifier {
                 preferred_language,
                 qa_subscription,
                 preColor,
-                greColor)
+                greColor,tagsList)
             .then((value) {
           createDeviceSelectionModel = value;
           if (createDeviceSelectionModel.isSuccess) {
@@ -971,7 +973,7 @@ class ChatScreenViewModel extends ChangeNotifier {
                     preferred_language,
                     qa_subscription,
                     preColor,
-                    greColor)
+                    greColor,tagsList)
                 .then((value) {
               createDeviceSelectionModel = value;
               if (createDeviceSelectionModel.isSuccess) {
@@ -1049,6 +1051,11 @@ class ChatScreenViewModel extends ChangeNotifier {
                 ''
         ? getDeviceSelectionModel.result[0].profileSetting.qa_subscription
         : 'Y';
+
+    tagsList=getDeviceSelectionModel
+        .result[0].tags!=null && getDeviceSelectionModel
+        .result[0].tags.length>0?getDeviceSelectionModel
+        .result[0].tags:new List();
   }
 
   Future<UpdateDeviceModel> updateDeviceSelectionModel(
@@ -1070,7 +1077,7 @@ class ChatScreenViewModel extends ChangeNotifier {
             preferredLanguage ?? preferred_language,
             qa_subscription,
             preColor,
-            greColor)
+            greColor,tagsList)
         .then(
       (value) {
         if (value?.isSuccess ?? false) {
@@ -1093,7 +1100,7 @@ class ChatScreenViewModel extends ChangeNotifier {
                   preferred_language,
                   qa_subscription,
                   preColor,
-                  greColor)
+                  greColor,tagsList)
               .then((value) {
             createDeviceSelectionModel = value;
             if (createDeviceSelectionModel.isSuccess) {

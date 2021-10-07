@@ -17,9 +17,12 @@ import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/language/model/Language.dart';
 import 'package:myfhb/language/repository/LanguageRepository.dart';
+import 'package:myfhb/src/blocs/Media/MediaTypeBlock.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/model/user/MyProfileResult.dart';
+import 'package:myfhb/src/model/user/Tags.dart';
+import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
 import 'package:myfhb/src/ui/authentication/OtpVerifyScreen.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
@@ -27,6 +30,8 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/user_plans/view/user_profile_image.dart';
 import 'package:myfhb/user_plans/view_model/user_plans_view_model.dart';
+import 'package:myfhb/widgets/DropdownWithTags.dart';
+import 'package:myfhb/widgets/TagsList.dart';
 import 'package:provider/provider.dart';
 
 class MyProfilePage extends StatefulWidget {
@@ -70,6 +75,11 @@ class _MyProfilePageState extends State<MyProfilePage> {
   double sliverBarHeight = 220;
   AddFamilyUserInfoBloc addFamilyUserInfoBloc;
 
+  MediaTypeBlock _mediaTypeBlock;
+  HealthReportListForUserRepository _healthReportListForUserRepository;
+
+  List<Tags> selectedTags = [];
+
   @override
   void initState() {
     PreferenceUtil.init();
@@ -77,7 +87,15 @@ class _MyProfilePageState extends State<MyProfilePage> {
     super.initState();
     languageBlock = new LanguageRepository();
     addFamilyUserInfoBloc = new AddFamilyUserInfoBloc();
-    addFamilyUserInfoBloc.getDeviceSelectionValues().then((value) {});
+    _healthReportListForUserRepository= new HealthReportListForUserRepository();
+    addFamilyUserInfoBloc.getDeviceSelectionValues().then((value) {
+
+    });
+
+    if (_mediaTypeBlock == null) {
+      _mediaTypeBlock = MediaTypeBlock();
+      _mediaTypeBlock.getMediTypesList();
+    }
   }
 
   @override
@@ -224,6 +242,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
 
   Widget getProfileWidget(MyProfileModel myProfile, MyProfileResult data,
       {String errorMsg}) {
+    addFamilyUserInfoBloc.getDeviceSelectionValues().then((value) {
+
+    });
     if (data != null) {
       if (data.userContactCollection3 != null) {
         if (data.userContactCollection3.length > 0) {
@@ -286,6 +307,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
           cntrlr_addr_state.text = data.userAddressCollection3[0].state?.name;
         }
       }
+
+
     }
     try {
       try {
@@ -462,7 +485,6 @@ class _MyProfilePageState extends State<MyProfilePage> {
                     //     : Text('')
                   ],
                 ),
-
                 Padding(
                   padding: EdgeInsets.all(10),
                   child: TextField(
@@ -541,6 +563,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                   ],
                 ),
                 getLanguageWidget(myProfile),
+                addFamilyUserInfoBloc.tagsList.length>0?getDropDownWithTagsdrop():SizedBox(),
                 Padding(
                   padding: EdgeInsets.all(10),
                   child: TextField(
@@ -690,4 +713,48 @@ class _MyProfilePageState extends State<MyProfilePage> {
           );
         });
   }
+
+  Widget getDropDownWithTagsdrop() {
+    return FutureBuilder(
+        future: _healthReportListForUserRepository.getTags(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return CommonCircularIndicator();
+          }
+          final List<Tags> tagslist = snapshot.data.result;
+
+        //  final mediaResultFiltered = removeUnwantedCategories(tagslist);
+
+          setTheValuesForDropdown(tagslist);
+          return Taglist(
+            isClickable: true,
+            tags: addFamilyUserInfoBloc.tagsList,
+            onChecked: (result) {
+              addSelectedcategoriesToList(result);
+            },
+          );
+        });
+  }
+
+  void setTheValuesForDropdown(List<Tags> result) {
+    if (selectedTags != null && selectedTags.isNotEmpty) {
+      for (var mediaResultObj in result) {
+        if (selectedTags.contains(mediaResultObj.id)) {
+          mediaResultObj.isChecked = true;
+        }
+      }
+    }
+  }
+
+  void addSelectedcategoriesToList(List<Tags> result) {
+    selectedTags = [];
+    for (final mediaResultObj in result) {
+      if (!selectedTags.contains(mediaResultObj.id) &&
+          mediaResultObj.isChecked) {
+        selectedTags.add(mediaResultObj);
+      }
+    }
+  }
+
+
 }
