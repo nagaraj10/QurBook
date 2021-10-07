@@ -300,13 +300,17 @@ class _ChatScreenState extends State<ChatScreen>
               child: Icon(
                 Provider.of<ChatScreenViewModel>(context).isSheelaSpeaking
                     ? Icons.pause
-                    : Icons.mic,
+                    : Provider.of<ChatScreenViewModel>(context).isLoading
+                        ? Icons.mic_off
+                        : Icons.mic,
                 color: Colors.white,
               ),
               backgroundColor:
                   Provider.of<ChatScreenViewModel>(context).isMicListening
                       ? Colors.red
-                      : Color(CommonUtil().getMyPrimaryColor()),
+                      : Provider.of<ChatScreenViewModel>(context).isLoading
+                          ? Colors.black45
+                          : Color(CommonUtil().getMyPrimaryColor()),
             ),
           ),
         ),
