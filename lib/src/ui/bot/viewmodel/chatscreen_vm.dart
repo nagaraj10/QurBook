@@ -24,6 +24,7 @@ import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
 import 'package:myfhb/src/ui/bot/common/botutils.dart';
 import 'package:myfhb/src/ui/bot/service/sheela_service.dart';
+import 'package:myfhb/telehealth/features/appointments/view/appointmentsMain.dart';
 import 'package:myfhb/widgets/checkout_page.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
@@ -81,8 +82,7 @@ class ChatScreenViewModel extends ChangeNotifier {
   bool isAudioPlayerPlaying = false;
   bool get getIsButtonResponse => isButtonResponse && !enableMic;
   CreateDeviceSelectionModel createDeviceSelectionModel;
-  List<Tags> tagsList =
-  new List<Tags>();
+  List<Tags> tagsList = new List<Tags>();
   void updateAppState(bool canSheelaSpeak, {bool isInitial: false}) {
     canSpeak = canSheelaSpeak;
     if (!canSheelaSpeak) {
@@ -573,6 +573,16 @@ class ChatScreenViewModel extends ChangeNotifier {
 
                             FlutterToast()
                                 .getToast('Redirecting...', Colors.black54);
+                          } else if (conversations[conversations.length - 1]
+                                      .redirectTo !=
+                                  null &&
+                              conversations[conversations.length - 1]
+                                  .redirectTo
+                                  .contains('appointmentList')) {
+                            Get.to(AppointmentsMain());
+
+                            FlutterToast()
+                                .getToast('Redirecting...', Colors.black54);
                           }
                         });
                       }
@@ -647,6 +657,16 @@ class ChatScreenViewModel extends ChangeNotifier {
                                     .redirectTo
                                     .contains('mycart')) {
                               Get.to(CheckoutPage());
+
+                              FlutterToast()
+                                  .getToast('Redirecting...', Colors.black54);
+                            } else if (conversations[conversations.length - 1]
+                                        .redirectTo !=
+                                    null &&
+                                conversations[conversations.length - 1]
+                                    .redirectTo
+                                    .contains('appointmentList')) {
+                              Get.to(AppointmentsMain());
 
                               FlutterToast()
                                   .getToast('Redirecting...', Colors.black54);
@@ -951,7 +971,8 @@ class ChatScreenViewModel extends ChangeNotifier {
                 preferred_language,
                 qa_subscription,
                 preColor,
-                greColor,tagsList)
+                greColor,
+                tagsList)
             .then((value) {
           createDeviceSelectionModel = value;
           if (createDeviceSelectionModel.isSuccess) {
@@ -973,7 +994,8 @@ class ChatScreenViewModel extends ChangeNotifier {
                     preferred_language,
                     qa_subscription,
                     preColor,
-                    greColor,tagsList)
+                    greColor,
+                    tagsList)
                 .then((value) {
               createDeviceSelectionModel = value;
               if (createDeviceSelectionModel.isSuccess) {
@@ -1052,10 +1074,10 @@ class ChatScreenViewModel extends ChangeNotifier {
         ? getDeviceSelectionModel.result[0].profileSetting.qa_subscription
         : 'Y';
 
-    tagsList=getDeviceSelectionModel
-        .result[0].tags!=null && getDeviceSelectionModel
-        .result[0].tags.length>0?getDeviceSelectionModel
-        .result[0].tags:new List();
+    tagsList = getDeviceSelectionModel.result[0].tags != null &&
+            getDeviceSelectionModel.result[0].tags.length > 0
+        ? getDeviceSelectionModel.result[0].tags
+        : new List();
   }
 
   Future<UpdateDeviceModel> updateDeviceSelectionModel(
@@ -1077,7 +1099,8 @@ class ChatScreenViewModel extends ChangeNotifier {
             preferredLanguage ?? preferred_language,
             qa_subscription,
             preColor,
-            greColor,tagsList)
+            greColor,
+            tagsList)
         .then(
       (value) {
         if (value?.isSuccess ?? false) {
@@ -1100,7 +1123,8 @@ class ChatScreenViewModel extends ChangeNotifier {
                   preferred_language,
                   qa_subscription,
                   preColor,
-                  greColor,tagsList)
+                  greColor,
+                  tagsList)
               .then((value) {
             createDeviceSelectionModel = value;
             if (createDeviceSelectionModel.isSuccess) {
