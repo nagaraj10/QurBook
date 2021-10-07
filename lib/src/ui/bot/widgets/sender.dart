@@ -21,48 +21,51 @@ class SenderLayout extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Text(
-              c.name.toUpperCase(),
-              style: Theme.of(context).textTheme.body1,
-              softWrap: true,
-            ),
-            Card(
-              color: Colors.transparent,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
+        SizedBox(width: 20.0.w),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                c.name.toUpperCase(),
+                style: Theme.of(context).textTheme.body1,
+                softWrap: true,
+              ),
+              Card(
+                color: Colors.transparent,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(25),
+                        bottomLeft: Radius.circular(25),
+                        bottomRight: Radius.circular(25))),
+                child: Container(
+                  // constraints: BoxConstraints(
+                  //   maxWidth: 1.sw * .6,
+                  // ),
+                  padding: const EdgeInsets.all(15.0),
+                  decoration: BoxDecoration(
+                    color: Color(CommonUtil().getMyPrimaryColor()),
+                    borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(25),
                       bottomLeft: Radius.circular(25),
-                      bottomRight: Radius.circular(25))),
-              child: Container(
-                constraints: BoxConstraints(
-                  maxWidth: 1.sw * .6,
-                ),
-                padding: const EdgeInsets.all(15.0),
-                decoration: BoxDecoration(
-                  color: Color(CommonUtil().getMyPrimaryColor()),
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(25),
-                    bottomLeft: Radius.circular(25),
-                    bottomRight: Radius.circular(25),
+                      bottomRight: Radius.circular(25),
+                    ),
+                  ),
+                  child: Text(
+                    c.text,
+                    style: Theme.of(context).textTheme.body1.apply(
+                          color: Colors.white,
+                        ),
                   ),
                 ),
-                child: Text(
-                  c.text,
-                  style: Theme.of(context).textTheme.body1.apply(
-                        color: Colors.white,
-                      ),
-                ),
               ),
-            ),
-            Text(
-              "${c.timeStamp}",
-              style:
-                  Theme.of(context).textTheme.body1.apply(color: Colors.grey),
-            ),
-          ],
+              Text(
+                "${c.timeStamp}",
+                style:
+                    Theme.of(context).textTheme.body1.apply(color: Colors.grey),
+              ),
+            ],
+          ),
         ),
         SizedBox(
           width: 10.0.w,
