@@ -214,6 +214,8 @@ class ChatScreenState extends State<ChatScreen> {
   bool isCareGiver = false;
   bool isChatDisable = true;
 
+  bool isCareGiverApi = true;
+
   @override
   void initState() {
     mInitialTime = DateTime.now();
@@ -343,6 +345,8 @@ class ChatScreenState extends State<ChatScreen> {
       appointmentResult = value;
       if (appointmentResult != null) {
         setState(() {
+          isCareGiverApi = appointmentResult?.isCaregiver ?? false;
+
           if (appointmentResult.upcoming != null) {
             bookingId = appointmentResult.upcoming.bookingId;
           } else {
@@ -1596,40 +1600,45 @@ class ChatScreenState extends State<ChatScreen> {
                             fontFamily: variable.font_poppins,
                             fontSize: 16.0.sp,
                             color: Colors.white)),
-                    !isCareGiver
-                        ? Text('Booking Id: ' + bookingId,
-                            textAlign: TextAlign.left,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                            style: TextStyle(
-                                fontFamily: variable.font_poppins,
-                                fontSize: 12.0.sp,
-                                color: Colors.white))
-                        : SizedBox.shrink(),
-                    !isCareGiver
-                        ? Text(
-                            'Next Appointment: ' +
-                                getFormattedDateTimeAppbar(nextAppointmentDate),
-                            textAlign: TextAlign.left,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                            style: TextStyle(
-                                fontFamily: variable.font_poppins,
-                                fontSize: 12.0.sp,
-                                color: Colors.white))
-                        : SizedBox.shrink(),
-                    !isCareGiver
-                        ? Text(
-                            toBeginningOfSentenceCase('Last Appointment: ' +
-                                getFormattedDateTimeAppbar(
-                                    lastAppointmentDate)),
-                            textAlign: TextAlign.left,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                            style: TextStyle(
-                                fontFamily: variable.font_poppins,
-                                fontSize: 12.0.sp,
-                                color: Colors.white))
+                    !isCareGiverApi
+                        ? Container(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Booking Id: ' + bookingId,
+                                    textAlign: TextAlign.left,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                        fontFamily: variable.font_poppins,
+                                        fontSize: 12.0.sp,
+                                        color: Colors.white)),
+                                Text(
+                                    'Next Appointment: ' +
+                                        getFormattedDateTimeAppbar(
+                                            nextAppointmentDate),
+                                    textAlign: TextAlign.left,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                        fontFamily: variable.font_poppins,
+                                        fontSize: 12.0.sp,
+                                        color: Colors.white)),
+                                Text(
+                                    toBeginningOfSentenceCase(
+                                        'Last Appointment: ' +
+                                            getFormattedDateTimeAppbar(
+                                                lastAppointmentDate)),
+                                    textAlign: TextAlign.left,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                        fontFamily: variable.font_poppins,
+                                        fontSize: 12.0.sp,
+                                        color: Colors.white)),
+                              ],
+                            ),
+                          )
                         : SizedBox.shrink(),
                     Text(
                       widget.lastDate != null
