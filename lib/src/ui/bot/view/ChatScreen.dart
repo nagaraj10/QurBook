@@ -219,6 +219,16 @@ class _ChatScreenState extends State<ChatScreen>
             Visibility(
               visible: !Platform.isIOS,
               child: PopupMenuButton<String>(
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    right: 10.0.w,
+                  ),
+                  child: Image.asset(
+                    variable.icon_language,
+                    width: 35.0.sp,
+                    height: 35.0.sp,
+                  ),
+                ),
                 onSelected: (languageCode) {
                   PreferenceUtil.saveString(constants.SHEELA_LANG,
                       CommonUtil.langaugeCodes[languageCode ?? 'undef']);
