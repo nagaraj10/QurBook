@@ -219,6 +219,16 @@ class _ChatScreenState extends State<ChatScreen>
             Visibility(
               visible: !Platform.isIOS,
               child: PopupMenuButton<String>(
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    right: 10.0.w,
+                  ),
+                  child: Image.asset(
+                    variable.icon_language,
+                    width: 35.0.sp,
+                    height: 35.0.sp,
+                  ),
+                ),
                 onSelected: (languageCode) {
                   PreferenceUtil.saveString(constants.SHEELA_LANG,
                       CommonUtil.langaugeCodes[languageCode ?? 'undef']);
@@ -290,13 +300,17 @@ class _ChatScreenState extends State<ChatScreen>
               child: Icon(
                 Provider.of<ChatScreenViewModel>(context).isSheelaSpeaking
                     ? Icons.pause
-                    : Icons.mic,
+                    : Provider.of<ChatScreenViewModel>(context).isLoading
+                        ? Icons.mic_off
+                        : Icons.mic,
                 color: Colors.white,
               ),
               backgroundColor:
                   Provider.of<ChatScreenViewModel>(context).isMicListening
                       ? Colors.red
-                      : Color(CommonUtil().getMyPrimaryColor()),
+                      : Provider.of<ChatScreenViewModel>(context).isLoading
+                          ? Colors.black45
+                          : Color(CommonUtil().getMyPrimaryColor()),
             ),
           ),
         ),
