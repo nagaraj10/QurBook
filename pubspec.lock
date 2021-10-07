@@ -608,18 +608,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.0"
-  flutter_localizations:
-    dependency: "direct main"
-    description: flutter
-    source: sdk
-    version: "0.0.0"
-  flutter_logs:
-    dependency: "direct main"
-    description:
-      name: flutter_logs
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.1.4"
   flutter_math_fork:
     dependency: transitive
     description:
@@ -1113,13 +1101,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.11.1"
-  pin_input_text_field:
-    dependency: transitive
-    description:
-      name: pin_input_text_field
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "4.1.1"
   platform:
     dependency: transitive
     description:
@@ -1265,13 +1246,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
-  sms_autofill:
-    dependency: "direct main"
-    description:
-      name: sms_autofill
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.1.2"
   source_span:
     dependency: transitive
     description:
