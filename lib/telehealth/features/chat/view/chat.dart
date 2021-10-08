@@ -214,6 +214,8 @@ class ChatScreenState extends State<ChatScreen> {
   bool isCareGiver = false;
   bool isChatDisable = true;
 
+  bool isCareGiverApi = true;
+
   @override
   void initState() {
     mInitialTime = DateTime.now();
@@ -232,10 +234,22 @@ class ChatScreenState extends State<ChatScreen> {
     isFromVideoCall = widget.isFromVideoCall;
     isCareGiver = widget.isCareGiver;
 
+    initLoader();
+
     getPatientDetails();
     set_up_audios();
 
     textEditingController.text = widget?.message;
+  }
+
+  initLoader() async {
+    setState(() {
+      isLoading = true;
+    });
+    await Future.delayed(Duration(seconds: 1));
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -266,21 +280,26 @@ class ChatScreenState extends State<ChatScreen> {
 
   updateReadCount() async {
     try {
-      final snapShot = await FirebaseFirestore.instance
+      await FirebaseFirestore.instance
           .collection(STR_CHAT_LIST)
           .doc(patientId)
           .collection(STR_USER_LIST)
           .doc(peerId)
-          .get();
-      if (snapShot.data != null) {
-        isChatDisable = snapShot.data()[STR_IS_DISABLE] ?? false;
-        await FirebaseFirestore.instance
-            .collection(STR_CHAT_LIST)
-            .doc(patientId)
-            .collection(STR_USER_LIST)
-            .doc(peerId)
-            .update({STR_IS_READ_COUNT: 0});
-      }
+          .get()
+          .then((value) async {
+        if (value.data != null) {
+          setState(() {
+            isChatDisable = value.data()[STR_IS_DISABLE] ?? false;
+          });
+
+          await FirebaseFirestore.instance
+              .collection(STR_CHAT_LIST)
+              .doc(patientId)
+              .collection(STR_USER_LIST)
+              .doc(peerId)
+              .update({STR_IS_READ_COUNT: 0});
+        }
+      });
     } catch (e) {}
   }
 
@@ -343,44 +362,48 @@ class ChatScreenState extends State<ChatScreen> {
       appointmentResult = value;
       if (appointmentResult != null) {
         setState(() {
-          if (appointmentResult.upcoming != null) {
-            bookingId = appointmentResult.upcoming.bookingId;
+          isCareGiverApi = appointmentResult?.isCaregiver ?? false;
+
+          if (appointmentResult?.upcoming != null) {
+            bookingId = appointmentResult?.upcoming?.bookingId;
           } else {
-            if (appointmentResult.past != null) {
-              bookingId = appointmentResult.past.bookingId;
+            if (appointmentResult?.past != null) {
+              bookingId = appointmentResult?.past?.bookingId;
             } else {
               bookingId = '-';
             }
           }
 
-          lastAppointmentDate = appointmentResult.past != null
-              ? appointmentResult.past.plannedStartDateTime
+          lastAppointmentDate = appointmentResult?.past != null
+              ? appointmentResult?.past?.plannedStartDateTime
               : '';
-          nextAppointmentDate = appointmentResult.upcoming != null
-              ? appointmentResult.upcoming.plannedStartDateTime
+          nextAppointmentDate = appointmentResult?.upcoming != null
+              ? appointmentResult?.upcoming?.plannedStartDateTime
               : '';
-          doctorDeviceToken = appointmentResult.deviceToken != null
-              ? appointmentResult.deviceToken.doctor.payload.isNotEmpty
+          doctorDeviceToken = appointmentResult?.deviceToken != null
+              ? appointmentResult?.deviceToken?.doctor?.payload?.isNotEmpty
                   ? appointmentResult
-                      .deviceToken.doctor.payload[0].deviceTokenId
+                      .deviceToken?.doctor?.payload[0]?.deviceTokenId
                   : ''
               : '';
           patientDeviceToken = '';
-          if (appointmentResult.deviceToken != null) {
-            if (appointmentResult.deviceToken.patient.isSuccess &&
-                appointmentResult.deviceToken.patient.payload.isNotEmpty &&
+          if (appointmentResult?.deviceToken != null) {
+            if (appointmentResult?.deviceToken?.patient?.isSuccess &&
+                appointmentResult?.deviceToken?.patient?.payload?.isNotEmpty &&
                 appointmentResult
-                        .deviceToken.patient.payload[0].deviceTokenId !=
+                        ?.deviceToken?.patient?.payload[0]?.deviceTokenId !=
                     null) {
               patientDeviceToken = appointmentResult
-                  .deviceToken.patient.payload[0].deviceTokenId;
-            } else if (appointmentResult.deviceToken.parentMember.isSuccess &&
-                appointmentResult.deviceToken.parentMember.payload.isNotEmpty &&
+                  ?.deviceToken?.patient?.payload[0]?.deviceTokenId;
+            } else if (appointmentResult
+                    ?.deviceToken?.parentMember?.isSuccess &&
                 appointmentResult
-                        .deviceToken.parentMember.payload[0].deviceTokenId !=
+                    ?.deviceToken?.parentMember?.payload?.isNotEmpty &&
+                appointmentResult?.deviceToken?.parentMember?.payload[0]
+                        ?.deviceTokenId !=
                     null) {
               patientDeviceToken = appointmentResult
-                  .deviceToken.parentMember.payload[0].deviceTokenId;
+                  ?.deviceToken?.parentMember?.payload[0]?.deviceTokenId;
             }
           }
           // patientDeviceToken = appointmentResult.deviceToken != null
@@ -458,7 +481,6 @@ class ChatScreenState extends State<ChatScreen> {
     // final file = await CommonUtil.downloadFile(url, 'mp3');
     await _mPlayer.startPlayer(fromURI: url).whenComplete(
       () {
-        print("completed ***************");
         setState(() {
           isPlaying = false;
         });
@@ -1596,40 +1618,45 @@ class ChatScreenState extends State<ChatScreen> {
                             fontFamily: variable.font_poppins,
                             fontSize: 16.0.sp,
                             color: Colors.white)),
-                    !isCareGiver
-                        ? Text('Booking Id: ' + bookingId,
-                            textAlign: TextAlign.left,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                            style: TextStyle(
-                                fontFamily: variable.font_poppins,
-                                fontSize: 12.0.sp,
-                                color: Colors.white))
-                        : SizedBox.shrink(),
-                    !isCareGiver
-                        ? Text(
-                            'Next Appointment: ' +
-                                getFormattedDateTimeAppbar(nextAppointmentDate),
-                            textAlign: TextAlign.left,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                            style: TextStyle(
-                                fontFamily: variable.font_poppins,
-                                fontSize: 12.0.sp,
-                                color: Colors.white))
-                        : SizedBox.shrink(),
-                    !isCareGiver
-                        ? Text(
-                            toBeginningOfSentenceCase('Last Appointment: ' +
-                                getFormattedDateTimeAppbar(
-                                    lastAppointmentDate)),
-                            textAlign: TextAlign.left,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                            style: TextStyle(
-                                fontFamily: variable.font_poppins,
-                                fontSize: 12.0.sp,
-                                color: Colors.white))
+                    !isCareGiverApi
+                        ? Container(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Booking Id: ' + bookingId,
+                                    textAlign: TextAlign.left,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                        fontFamily: variable.font_poppins,
+                                        fontSize: 12.0.sp,
+                                        color: Colors.white)),
+                                Text(
+                                    'Next Appointment: ' +
+                                        getFormattedDateTimeAppbar(
+                                            nextAppointmentDate),
+                                    textAlign: TextAlign.left,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                        fontFamily: variable.font_poppins,
+                                        fontSize: 12.0.sp,
+                                        color: Colors.white)),
+                                Text(
+                                    toBeginningOfSentenceCase(
+                                        'Last Appointment: ' +
+                                            getFormattedDateTimeAppbar(
+                                                lastAppointmentDate)),
+                                    textAlign: TextAlign.left,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                        fontFamily: variable.font_poppins,
+                                        fontSize: 12.0.sp,
+                                        color: Colors.white)),
+                              ],
+                            ),
+                          )
                         : SizedBox.shrink(),
                     Text(
                       widget.lastDate != null
@@ -1723,31 +1750,35 @@ class ChatScreenState extends State<ChatScreen> {
               ),
             )
           : Container(),
-      body: Stack(
-        children: <Widget>[
-          Container(
-            color: Colors.grey[300],
-            child: Column(
+      body: isLoading
+          ? Center(
+              child: CircularProgressIndicator(
+                  color: Color(CommonUtil().getMyPrimaryColor()),))
+          : Stack(
               children: <Widget>[
-                // List of messages
-                buildListMessage(),
+                Container(
+                  color: Colors.grey[300],
+                  child: Column(
+                    children: <Widget>[
+                      // List of messages
+                      buildListMessage(),
 
-                // Sticker
-                (isShowSticker ? buildSticker() : Container()),
+                      // Sticker
+                      (isShowSticker ? buildSticker() : Container()),
 
-                // Input content
-                buildInput(),
-                SizedBox(
-                  height: 20.0.h,
+                      // Input content
+                      !isChatDisable ? buildInput() : SizedBox.shrink(),
+                      SizedBox(
+                        height: 20.0.h,
+                      ),
+                    ],
+                  ),
                 ),
+
+                // Loading
+                buildLoading()
               ],
             ),
-          ),
-
-          // Loading
-          buildLoading()
-        ],
-      ),
       //onWillPop: onBackPress,
     );
   }
@@ -1865,7 +1896,10 @@ class ChatScreenState extends State<ChatScreen> {
 
   Widget buildLoading() {
     return Positioned(
-      child: isLoading ? CommonCircularIndicator() : Container(),
+      child: isLoading
+          ? CircularProgressIndicator(
+              color: Color(CommonUtil().getMyPrimaryColor()))
+          : Container(),
     );
   }
 
@@ -1881,7 +1915,6 @@ class ChatScreenState extends State<ChatScreen> {
               child: Container(
                 height: 58.0.h,
                 child: TextField(
-                  readOnly: isChatDisable,
                   style: TextStyle(fontSize: 16.0.sp),
                   focusNode: focusNode,
                   onTap: () {
@@ -1898,12 +1931,10 @@ class ChatScreenState extends State<ChatScreen> {
                       width: 50.0.h,
                       height: 50.0.h,
                       child: FlatButton(
-                          onPressed: isChatDisable
-                              ? null
-                              : () {
-                                  recordIds.clear();
-                                  FetchRecords(0, true, true, false, recordIds);
-                                },
+                          onPressed: () {
+                            recordIds.clear();
+                            FetchRecords(0, true, true, false, recordIds);
+                          },
                           child: new Icon(
                             Icons.attach_file,
                             color: Color(CommonUtil().getMyPrimaryColor()),
@@ -1937,11 +1968,9 @@ class ChatScreenState extends State<ChatScreen> {
               flex: 1,
               child: new Container(
                 child: RawMaterialButton(
-                  onPressed: isChatDisable
-                      ? null
-                      : () {
-                          onSendMessage(textEditingController.text, 0);
-                        },
+                  onPressed: () {
+                    onSendMessage(textEditingController.text, 0);
+                  },
                   elevation: 2.0,
                   fillColor: Colors.white,
                   child: Icon(Icons.send,
@@ -1957,30 +1986,27 @@ class ChatScreenState extends State<ChatScreen> {
                     flex: 1,
                     child: new Container(
                       child: RawMaterialButton(
-                        onPressed: isChatDisable
-                            ? null
-                            : () {
-                                Navigator.of(context)
-                                    .push(
-                                  MaterialPageRoute(
-                                    builder: (context) => AudioRecorder(
-                                      arguments: AudioScreenArguments(
-                                        fromVoice: false,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                                    .then((results) {
-                                  String audioPath =
-                                      results[Constants.keyAudioFile];
-                                  if (audioPath != null && audioPath != '') {
-                                    setState(() {
-                                      isLoading = true;
-                                    });
-                                    uploadFile(audioPath);
-                                  }
-                                });
-                              },
+                        onPressed: () {
+                          Navigator.of(context)
+                              .push(
+                            MaterialPageRoute(
+                              builder: (context) => AudioRecorder(
+                                arguments: AudioScreenArguments(
+                                  fromVoice: false,
+                                ),
+                              ),
+                            ),
+                          )
+                              .then((results) {
+                            String audioPath = results[Constants.keyAudioFile];
+                            if (audioPath != null && audioPath != '') {
+                              setState(() {
+                                isLoading = true;
+                              });
+                              uploadFile(audioPath);
+                            }
+                          });
+                        },
                         elevation: 2.0,
                         fillColor: Colors.white,
                         child: Icon(Icons.mic,
@@ -2001,7 +2027,9 @@ class ChatScreenState extends State<ChatScreen> {
   Widget buildListMessage() {
     return Flexible(
       child: groupChatId == ''
-          ? CommonCircularIndicator()
+          ? Center(
+          child: CircularProgressIndicator(
+              color: Color(CommonUtil().getMyPrimaryColor())))
           : StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
               stream: FirebaseFirestore.instance
                   .collection(STR_MESSAGES)
@@ -2013,7 +2041,9 @@ class ChatScreenState extends State<ChatScreen> {
               builder: (context,
                   AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
                 if (!snapshot.hasData) {
-                  return CommonCircularIndicator();
+                  return Center(
+                      child: CircularProgressIndicator(
+                          color: Color(CommonUtil().getMyPrimaryColor())));
                 } else {
                   listMessage = snapshot.data.docs;
                   for (var data in snapshot.data.docs) {

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/unit/choose_unit.dart';
+import 'package:myfhb/my_providers/models/Hospitals.dart';
 import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'CommonConstants.dart';
 import 'CommonUtil.dart';
@@ -110,14 +111,22 @@ class CommonDialogBox {
   bool forNotes = false;
 
   final ProvidersBloc _providersBloc = ProvidersBloc();
+  final ProvidersBloc _providersBlocFor = ProvidersBloc();
   Future<MyProvidersResponse> _medicalPreferenceList;
+  Future<MyProvidersResponse> _medicalhospitalPreferenceList;
+
   List<Doctors> doctorsListFromProvider;
   List<Doctors> copyOfdoctorsModel;
 
+  List<Hospitals> hospitalListFromProvider;
+  List<Hospitals> copyOfhospitalModel;
+
   Doctors doctorObj;
+  Hospitals hospitalObj;
 
   CommonWidgets commonWidgets = CommonWidgets();
   bool showDoctorList = true;
+  bool showHospitalList = true;
 
   String tempUnit = "F";
   String weightMainUnit = "Kg";
@@ -143,6 +152,8 @@ class CommonDialogBox {
       containsAudioMain = containsAudio;
 
       _medicalPreferenceList = _providersBloc.getMedicalPreferencesForDoctors();
+      _medicalhospitalPreferenceList =
+          _providersBloc.getMedicalPreferencesForHospital();
 
       if (mediaMetaInfo != null) {
         deviceHealthResult = mediaMetaInfo;
@@ -269,7 +280,54 @@ class CommonDialogBox {
                     ),
                     fhbBasicWidget.getTextForAlertDialog(
                         context, CommonConstants.strHospitalNameWithoutStar),
-                    fhbBasicWidget
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: fhbBasicWidget.getTextFiledWithHint(
+                              context, 'Choose Hospital', hospital,
+                              enabled: false),
+                        ),
+                        if (showHospitalList)
+                          Container(
+                            height: 50,
+                            child: hospitalListFromProvider != null
+                                ? getHospitalDropDown(
+                                    hospitalListFromProvider,
+                                    hospitalObj,
+                                    () {
+                                      Navigator.pop(context);
+                                      moveToSearchScreen(
+                                          context,
+                                          CommonConstants.keyHospital,
+                                          doctor,
+                                          hospital,
+                                          null,
+                                          updateUI,
+                                          audioPath,
+                                          containsAudio,
+                                          setState: setState);
+                                    },
+                                  )
+                                : getAllHospitalRoles(hospitalObj, () {
+                                    Navigator.pop(context);
+                                    moveToSearchScreen(
+                                        context,
+                                        CommonConstants.keyHospital,
+                                        doctor,
+                                        hospital,
+                                        null,
+                                        updateUI,
+                                        audioPath,
+                                        containsAudio,
+                                        setState: setState);
+                                  }),
+                          )
+                        else
+                          Container(),
+                      ],
+                    ),
+                    /* fhbBasicWidget
                         .getTextFieldForDialogWithControllerAndPressed(context,
                             (context, value) {
                       moveToSearchScreen(
@@ -281,7 +339,7 @@ class CommonDialogBox {
                           updateUI,
                           audioPath,
                           containsAudio);
-                    }, hospital, CommonConstants.keyHospital),
+                    }, hospital, CommonConstants.keyHospital),*/
                     SizedBox(
                       height: 15.0.h,
                     ),
@@ -2794,6 +2852,66 @@ class CommonDialogBox {
     );
   }
 
+  Widget getAllHospitalRoles(Hospitals hospitalObj, Function onAdd) {
+    Widget familyWidget;
+
+    return StreamBuilder<ApiResponse<MyProvidersResponse>>(
+      stream: _providersBloc.providershospitalListStream,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          switch (snapshot.data.status) {
+            case Status.LOADING:
+              familyWidget = Center(
+                  child: SizedBox(
+                width: 30.0.h,
+                height: 30.0.h,
+                child: CommonCircularIndicator(),
+              ));
+              break;
+
+            case Status.ERROR:
+              familyWidget = Center(
+                  child: Text(Constants.STR_ERROR_LOADING_DATA,
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 16.0.sp,
+                      )));
+              break;
+
+            case Status.COMPLETED:
+              if (snapshot.data != null &&
+                  snapshot.data.data != null &&
+                  snapshot.data.data.result != null &&
+                  snapshot.data.data.result.hospitals != null &&
+                  snapshot.data.data.result.hospitals.isNotEmpty) {
+                hospitalListFromProvider = snapshot.data.data.result.hospitals;
+                filterDuplicateHospital();
+                familyWidget = getHospitalDropDown(
+                  hospitalListFromProvider,
+                  hospitalObj,
+                  onAdd,
+                );
+              } else {
+                hospitalListFromProvider = List();
+                familyWidget = getHospitalsDropDownWhenNoList(
+                    hospitalListFromProvider, null, onAdd);
+              }
+
+              return familyWidget;
+              break;
+          }
+        } else {
+          hospitalListFromProvider = [];
+          familyWidget = Container(
+            width: 100.0.h,
+            height: 100.0.h,
+          );
+        }
+        return familyWidget;
+      },
+    );
+  }
+
   getDoctorDropDown(
       List<Doctors> doctors, Doctors doctorObjSample, Function onAddClick,
       {Widget child}) {
@@ -2948,6 +3066,89 @@ class CommonDialogBox {
           });
   }
 
+  getHospitalsDropDownWhenNoList(List<Hospitals> hospitallist,
+      Hospitals hospitalObjSample, Function onAddClick,
+      {Widget child}) {
+    if (hospitalObjSample != null) {
+      for (var hospitalObjS in hospitallist) {
+        if (hospitalObjS.id == hospitalObjSample.id) {
+          hospitalObj = hospitalObjS;
+        }
+      }
+    }
+
+    return (hospitallist != null && hospitallist.isNotEmpty)
+        ? StatefulBuilder(builder: (context, setState) {
+            return PopupMenuButton<Hospitals>(
+              offset: Offset(-100, 70),
+              //padding: EdgeInsets.all(20),
+              itemBuilder: (context) => hospitallist
+                  .mapIndexed(
+                      (index, element) => index == hospitallist.length - 1
+                          ? PopupMenuItem<Hospitals>(
+                              value: element,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.symmetric(vertical: 10),
+                                    width: 0.5.sw,
+                                    child: Text(
+                                      element.name,
+                                    ),
+                                  ),
+                                  SizedBox(height: 10),
+                                  fhbBasicWidget.getSaveButton(() {
+                                    onAddClick();
+                                  }, text: 'Add Hospital'),
+                                  SizedBox(height: 10),
+                                ],
+                              ))
+                          : PopupMenuItem<Hospitals>(
+                              value: element,
+                              child: Container(
+                                width: 0.5.sw,
+                                child: Text(
+                                  element.name,
+                                ),
+                              ),
+                            ))
+                  .toList(),
+              onSelected: (value) {
+                hospitalObj = value;
+                setHospitalValue(value);
+                setState(() {
+                  hospital.text =
+                      hospitalObj.name != null ? hospitalObj.name : '';
+                });
+              },
+              child: child ?? getIconButton(),
+            );
+          })
+        : StatefulBuilder(builder: (context, setState) {
+            return PopupMenuButton<Hospitals>(
+              offset: Offset(-100, 70),
+              itemBuilder: (context) => <PopupMenuItem<Hospitals>>[
+                PopupMenuItem<Hospitals>(
+                    child: Container(
+                  width: 150,
+                  child: Column(
+                    children: [
+                      SizedBox(height: 10),
+                      fhbBasicWidget.getSaveButton(() {
+                        onAddClick();
+                      }, text: 'Add Hospital'),
+                      SizedBox(height: 10)
+                    ],
+                  ),
+                )),
+              ],
+              onSelected: (_) {},
+              child: getIconButton(),
+            );
+          });
+  }
+
   void setDoctorValue(Doctors newValue) {
     final doctorNewObj = Doctor(
       doctorId: newValue.id,
@@ -2964,6 +3165,27 @@ class CommonDialogBox {
     );
 
     doctorsData = doctorNewObj;
+  }
+
+  void setHospitalValue(Hospitals newValue) {
+    final hospitalNewObj = Hospital(
+      healthOrganizationId: newValue.id,
+      healthOrganizationName: newValue.name,
+      addressLine1:
+          newValue.healthOrganizationAddressCollection[0]?.addressLine1,
+      addressLine2:
+          newValue.healthOrganizationAddressCollection[0]?.addressLine2,
+      cityName: newValue.healthOrganizationAddressCollection[0]?.city?.name,
+      stateName: newValue.healthOrganizationAddressCollection[0]?.state?.name,
+      /*healthOrganizationTypeName: newValue.healthOrganizationType?.name,
+      healthOrganizationTypeId: newValue.healthOrganizationType?.id,
+      phoneNumber: newValue.healthOrganizationContactCollection[0]?.phoneNumber,
+      phoneNumberTypeId: newValue.healthOrganizationContactCollection[0]?.phoneNumberType?.id,
+      phoneNumberTypeName: newValue.healthOrganizationContactCollection[0]?.phoneNumberType?.name,
+      pincode: newValue.healthOrganizationAddressCollection[0]?.pincode*/
+    );
+
+    hospitalData = hospitalNewObj;
   }
 
   void setValueToDoctorDropdown(doctorsData, Function onTextFinished) {
@@ -3031,6 +3253,145 @@ class CommonDialogBox {
       copyOfdoctorsModel.retainWhere((x) => ids.remove(x?.user?.id));
       doctorsListFromProvider = copyOfdoctorsModel;
     }
+  }
+
+  void filterDuplicateHospital() {
+    if (hospitalListFromProvider.isNotEmpty) {
+      copyOfhospitalModel = hospitalListFromProvider;
+      var ids = copyOfhospitalModel.map((e) => e?.id).toSet();
+      copyOfhospitalModel.retainWhere((x) => ids.remove(x?.id));
+      hospitalListFromProvider = copyOfhospitalModel;
+    }
+  }
+
+  getHospitalDropDown(List<Hospitals> hospitallist, Hospitals hospitalObjSample,
+      Function onAddClick,
+      {Widget child}) {
+    if (hospitalObjSample != null) {
+      for (var hospitalObjS in hospitallist) {
+        if (hospitalObjS.id == hospitalObjSample.id) {
+          hospitalObj = hospitalObjS;
+        }
+      }
+    }
+
+    return StatefulBuilder(builder: (context, setState) {
+      return PopupMenuButton<Hospitals>(
+        offset: Offset(-100, 70),
+        //padding: EdgeInsets.all(20),
+        itemBuilder: (context) => (hospitallist != null &&
+                hospitallist.isNotEmpty)
+            ? hospitallist
+                .mapIndexed((index, element) => index == hospitallist.length - 1
+                    ? PopupMenuItem<Hospitals>(
+                        value: element,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              padding: EdgeInsets.symmetric(vertical: 10),
+                              width: 0.5.sw,
+                              child: Text(
+                                  element.name != null ? element.name : ''),
+                            ),
+                            SizedBox(height: 10),
+                            fhbBasicWidget.getSaveButton(() {
+                              onAddClick();
+                            }, text: 'Add Hospital'),
+                            SizedBox(height: 10),
+                          ],
+                        ))
+                    : PopupMenuItem<Hospitals>(
+                        value: element,
+                        child: Container(
+                          width: 0.5.sw,
+                          child: Text(element.name != null ? element.name : ''),
+                        ),
+                      ))
+                .toList()
+            : PopupMenuItem<Hospitals>(
+                child: Column(
+                  children: [
+                    SizedBox(height: 10),
+                    fhbBasicWidget.getSaveButton(() {
+                      onAddClick();
+                    }, text: 'Add Hospital'),
+                    SizedBox(height: 10)
+                  ],
+                ),
+              ),
+        onSelected: (value) {
+          hospitalObj = value;
+          setHospitalValue(value);
+          setState(() {
+            hospital.text = hospitalObj.name != null ? hospitalObj.name : '';
+            ;
+          });
+        },
+        child: child ?? getIconButton(),
+      );
+    });
+  }
+
+  Widget getFutureAllHospitalRoles(Hospitals hospitalObj, Function onAdd) {
+    Widget familyWidget;
+
+    return StreamBuilder<ApiResponse<MyProvidersResponse>>(
+      stream: _providersBloc.providershospitalListStream,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          switch (snapshot.data.status) {
+            case Status.LOADING:
+              familyWidget = Center(
+                  child: SizedBox(
+                width: 30.0.h,
+                height: 30.0.h,
+                child: CommonCircularIndicator(),
+              ));
+              break;
+
+            case Status.ERROR:
+              familyWidget = Center(
+                  child: Text(Constants.STR_ERROR_LOADING_DATA,
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 16.0.sp,
+                      )));
+              break;
+
+            case Status.COMPLETED:
+              if (snapshot.data != null &&
+                  snapshot.data.data != null &&
+                  snapshot.data.data.result != null &&
+                  snapshot.data.data.result.hospitals != null &&
+                  snapshot.data.data.result.hospitals.isNotEmpty) {
+                hospitalListFromProvider = snapshot.data.data.result.hospitals;
+                //filterDuplicateHospital();
+                familyWidget = getHospitalDropDown(
+                  hospitalListFromProvider,
+                  hospitalObj,
+                  onAdd,
+                );
+              } else {
+                hospitalListFromProvider = List();
+                familyWidget = getHospitalsDropDownWhenNoList(
+                    hospitalListFromProvider, null, onAdd);
+              }
+
+              return familyWidget;
+              break;
+          }
+        } else {
+          hospitalListFromProvider = [];
+          familyWidget = Container(
+            width: 100.0.h,
+            height: 100.0.h,
+          );
+        }
+        return familyWidget;
+      },
+    );
   }
 }
 

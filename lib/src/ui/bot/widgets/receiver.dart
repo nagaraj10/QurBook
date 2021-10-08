@@ -61,72 +61,74 @@ class _ReceiverLayoutState extends State<ReceiverLayout> {
           radius: 30.0.sp,
           backgroundColor: Colors.white,
         ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              variable.strMAYA,
-              style: Theme.of(context).textTheme.body1,
-              softWrap: true,
-            ),
-            Card(
-              color: Colors.transparent,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                variable.strMAYA,
+                style: Theme.of(context).textTheme.body1,
+                softWrap: true,
+              ),
+              Card(
+                color: Colors.transparent,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(25),
+                        bottomLeft: Radius.circular(25),
+                        bottomRight: Radius.circular(25))),
+                child: Container(
+                  // constraints: BoxConstraints(
+                  //   maxWidth: 1.sw * .6,
+                  // ),
+                  padding: const EdgeInsets.all(15.0),
+                  decoration: BoxDecoration(
+                    color: Color(CommonUtil().getMyPrimaryColor()),
+                    borderRadius: BorderRadius.only(
                       topRight: Radius.circular(25),
                       bottomLeft: Radius.circular(25),
-                      bottomRight: Radius.circular(25))),
-              child: Container(
-                constraints: BoxConstraints(
-                  maxWidth: 1.sw * .6,
-                ),
-                padding: const EdgeInsets.all(15.0),
-                decoration: BoxDecoration(
-                  color: Color(CommonUtil().getMyPrimaryColor()),
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(25),
-                    bottomLeft: Radius.circular(25),
-                    bottomRight: Radius.circular(25),
+                      bottomRight: Radius.circular(25),
+                    ),
+                  ),
+                  child: FutureBuilder(
+                    future: (widget.c.loadingDots ?? false)
+                        ? Future.delayed(
+                            Duration(
+                              seconds: 3,
+                            ),
+                            () => MayaConvUI(widget.c, widget.index),
+                          )
+                        : Future.value(
+                            MayaConvUI(widget.c, widget.index),
+                          ),
+                    builder: (BuildContext context, snapshot) {
+                      return snapshot.hasData
+                          ? snapshot.data
+                          : Loading(
+                              indicator: BallPulseIndicator(),
+                              size: 20.0,
+                              color: Colors.white,
+                            );
+                    },
                   ),
                 ),
-                child: FutureBuilder(
-                  future: (widget.c.loadingDots ?? false)
-                      ? Future.delayed(
-                          Duration(
-                            seconds: 3,
-                          ),
-                          () => MayaConvUI(widget.c, widget.index),
-                        )
-                      : Future.value(
-                          MayaConvUI(widget.c, widget.index),
-                        ),
-                  builder: (BuildContext context, snapshot) {
-                    return snapshot.hasData
-                        ? snapshot.data
-                        : Loading(
-                            indicator: BallPulseIndicator(),
-                            size: 20.0,
-                            color: Colors.white,
-                          );
-                  },
-                ),
               ),
-            ),
-            widget?.c?.provider_msg
-                ? Text(
-                    variable.strMsgFromProvider,
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontStyle: FontStyle.italic,
-                        fontSize: 12),
-                  )
-                : SizedBox.shrink(),
-            Text(
-              "${widget.c.timeStamp}",
-              style:
-                  Theme.of(context).textTheme.body1.apply(color: Colors.grey),
-            ),
-          ],
+              widget?.c?.provider_msg
+                  ? Text(
+                      variable.strMsgFromProvider,
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontStyle: FontStyle.italic,
+                          fontSize: 12),
+                    )
+                  : SizedBox.shrink(),
+              Text(
+                "${widget.c.timeStamp}",
+                style:
+                    Theme.of(context).textTheme.body1.apply(color: Colors.grey),
+              ),
+            ],
+          ),
         ),
         SizedBox(width: 20.0.w),
       ],

@@ -2,6 +2,10 @@ import 'dart:io';
 import 'dart:math';
 import 'package:get/get.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
+import 'package:myfhb/src/model/user/Tags.dart';
+import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
+import 'package:myfhb/widgets/DropdownWithTags.dart';
+import 'package:myfhb/widgets/TagsList.dart';
 import '../../constants/fhb_constants.dart';
 import '../../language/blocks/LanguageBlock.dart';
 import '../../language/model/Language.dart';
@@ -161,6 +165,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   bool isFeetOrInches = true;
   bool isKg = true;
 
+  HealthReportListForUserRepository _healthReportListForUserRepository;
+  List<Tags> selectedTags = [];
+  var mediaResultFiltered = [];
   @override
   void initState() {
     mInitialTime = DateTime.now();
@@ -168,6 +175,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     getSupportedLanguages();
     addFamilyUserInfoBloc = AddFamilyUserInfoBloc();
     _addFamilyUserInfoRepository = AddFamilyUserInfoRepository();
+    _healthReportListForUserRepository =
+        new HealthReportListForUserRepository();
+
     setUserId();
     addFamilyUserInfoBloc.getDeviceSelectionValues().then((value) {
       //fetchUserProfileInfo();
@@ -428,6 +438,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                       ),
                 if (widget.arguments.fromClass == CommonConstants.user_update)
                   getLanguageWidget()
+                else
+                  Container(),
+                if (widget.arguments.fromClass == CommonConstants.user_update)
+                  getDropDownWithTagsdrop()
                 else
                   Container(),
                 _showDateOfBirthTextFieldNew(),
@@ -1325,12 +1339,14 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         }
 
         if (widget.arguments.myProfileResult.additionalInfo != null) {
-          if(isFeetOrInches){
-            heightController.text =
-                widget.arguments.myProfileResult.additionalInfo?.heightObj?.valueFeet??'';
-            heightInchController.text =
-                widget.arguments.myProfileResult.additionalInfo?.heightObj?.valueInches??'';
-          }else{
+          if (isFeetOrInches) {
+            heightController.text = widget.arguments.myProfileResult
+                    .additionalInfo?.heightObj?.valueFeet ??
+                '';
+            heightInchController.text = widget.arguments.myProfileResult
+                    .additionalInfo?.heightObj?.valueInches ??
+                '';
+          } else {
             heightController.text =
                 widget.arguments.myProfileResult.additionalInfo.height ?? '';
           }
@@ -1352,6 +1368,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         if (widget.arguments.myProfileResult.gender != null) {
           selectedGender = widget.arguments.myProfileResult.gender;
         }
+
+        selectedTags = addFamilyUserInfoBloc.tagsList != null &&
+                addFamilyUserInfoBloc.tagsList.length > 0
+            ? addFamilyUserInfoBloc.tagsList
+            : new List();
       }
       await setValueLanguages();
     } else if (widget.arguments.fromClass == CommonConstants.my_family) {
@@ -1605,28 +1626,26 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     if (widget.arguments.myProfileResult?.additionalInfo != null) {
       additionalInfo = widget.arguments.myProfileResult.additionalInfo;
 
-      var heightObj=new  HeightObj();
-      if(isFeetOrInches){
-        heightObj.valueFeet=heightController.text;
-        heightObj.valueInches=heightInchController.text;
-        additionalInfo.heightObj=heightObj;
-
-      }else{
+      var heightObj = new HeightObj();
+      if (isFeetOrInches) {
+        heightObj.valueFeet = heightController.text;
+        heightObj.valueInches = heightInchController.text;
+        additionalInfo.heightObj = heightObj;
+      } else {
         additionalInfo.height = heightController.text;
-
       }
 
       additionalInfo.weight = weightController.text;
     } else {
-      var heightObj=new  HeightObj();
-      if(isFeetOrInches){
-        heightObj.valueFeet=heightController.text;
-        heightObj.valueInches=heightInchController.text;
-        additionalInfo.heightObj=heightObj;
-      }else{
+      var heightObj = new HeightObj();
+      if (isFeetOrInches) {
+        heightObj.valueFeet = heightController.text;
+        heightObj.valueInches = heightInchController.text;
+        additionalInfo.heightObj = heightObj;
+      } else {
         additionalInfo.height = heightController.text;
-
-      }      additionalInfo.weight = weightController.text;
+      }
+      additionalInfo.weight = weightController.text;
       additionalInfo.age = 0;
       additionalInfo.mrdNumber = '';
       additionalInfo.patientHistory = '';
@@ -1635,32 +1654,40 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       additionalInfo.language = [];
     }
 
-
     profileResult.additionalInfo = additionalInfo;
 
     if (widget.arguments.fromClass == CommonConstants.user_update) {
       try {
-        List<UserProfileSettingCollection3> userProfileSettingCollection = new List();
+        List<UserProfileSettingCollection3> userProfileSettingCollection =
+            new List();
 
         var userProfileSettingCollection3Obj = UserProfileSettingCollection3();
         var profileSetting = ProfileSetting();
         userProfileSettingCollection = addFamilyUserInfoBloc
             .myprofileObject.result.userProfileSettingCollection3;
         if (userProfileSettingCollection.isNotEmpty) {
-
           /*userProfileSettingCollection3Obj = addFamilyUserInfoBloc
               .myprofileObject.result.userProfileSettingCollection3[0];*/
-          userProfileSettingCollection3Obj = widget.arguments?.myProfileResult
-              ?.userProfileSettingCollection3[0];
+          userProfileSettingCollection3Obj = widget
+              .arguments?.myProfileResult?.userProfileSettingCollection3[0];
           if (userProfileSettingCollection3Obj.profileSetting != null) {
             profileSetting = userProfileSettingCollection3Obj.profileSetting;
             userProfileSettingCollection3Obj.profileSetting.preferred_language =
                 selectedLanguage;
-            profileSetting.preferredMeasurement=widget.arguments.myProfileResult.userProfileSettingCollection3[0].profileSetting.preferredMeasurement;
-
+            profileSetting.preferredMeasurement = widget
+                .arguments
+                .myProfileResult
+                .userProfileSettingCollection3[0]
+                .profileSetting
+                .preferredMeasurement;
           } else {
             profileSetting.preferred_language = selectedLanguage;
-            profileSetting.preferredMeasurement=widget.arguments.myProfileResult.userProfileSettingCollection3[0].profileSetting.preferredMeasurement;
+            profileSetting.preferredMeasurement = widget
+                .arguments
+                .myProfileResult
+                .userProfileSettingCollection3[0]
+                .profileSetting
+                .preferredMeasurement;
             userProfileSettingCollection3Obj.profileSetting = profileSetting;
           }
           userProfileSettingCollection.clear();
@@ -1677,6 +1704,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       } catch (e) {}
     }
 
+    addFamilyUserInfoBloc.tagsList = selectedTags;
+
     if (currentselectedBloodGroup != null &&
         currentselectedBloodGroupRange != null) {
       profileResult.bloodGroup =
@@ -1692,8 +1721,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         userAddressCollection3.id =
             widget?.arguments?.sharedbyme?.child?.userAddressCollection3[0].id;
       }
-    }
-    else if (widget.arguments.fromClass == CommonConstants.user_update) {
+    } else if (widget.arguments.fromClass == CommonConstants.user_update) {
       addFamilyUserInfoBloc.isUpdate = false;
       profileResult.id = widget.arguments.myProfileResult.id;
       if (widget
@@ -1712,8 +1740,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         userContactCollection3List.add(userContact);
         profileResult.userContactCollection3 = userContactCollection3List;
       }
-    }
-    else {
+    } else {
       profileResult.id = widget.arguments.addFamilyUserInfo.childInfo.id;
       addFamilyUserInfoBloc.isUpdate = false;
       if (widget
@@ -1808,8 +1835,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         await Alert.displayAlertPlain(context,
             title: variable.Error, content: strErrorMsg);
       }
-    }
-    else if (widget.arguments.fromClass == CommonConstants.user_update) {
+    } else if (widget.arguments.fromClass == CommonConstants.user_update) {
       //*update the user details
       if (doValidation()) {
         if (addFamilyUserInfoBloc.profileBanner != null) {
@@ -2429,16 +2455,15 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   }
 
   void setUnit() async {
-
     if (widget.arguments.fromClass == CommonConstants.user_update) {
       var profileSetting = widget.arguments?.myProfileResult
           ?.userProfileSettingCollection3[0].profileSetting;
       if (profileSetting != null) {
         if (profileSetting?.preferredMeasurement != null) {
           String heightUnit =
-          await profileSetting?.preferredMeasurement.height.unitCode;
+              await profileSetting?.preferredMeasurement.height.unitCode;
           String weightUnit =
-          await profileSetting?.preferredMeasurement.weight.unitCode;
+              await profileSetting?.preferredMeasurement.weight.unitCode;
           if (heightUnit == Constants.STR_VAL_HEIGHT_IND) {
             isFeetOrInches = true;
           } else {
@@ -2460,11 +2485,65 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           }
         }
       }
-    }else{
+    } else {
       isFeetOrInches = false;
       isKg = true;
     }
+  }
 
+  Widget getDropDownWithTagsdrop() {
+    return FutureBuilder(
+        future: _healthReportListForUserRepository.getTags(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return CommonCircularIndicator();
+          }
+          final List<Tags> tagslist = snapshot.data.result;
 
+          mediaResultFiltered = removeUnwantedCategories(tagslist);
+
+          setTheValuesForDropdown(mediaResultFiltered);
+          return DropdownWithTags(
+            isClickable: true,
+            tags: mediaResultFiltered,
+            onChecked: (result) {
+              addSelectedcategoriesToList(result);
+            },
+          );
+        });
+  }
+
+  List<Tags> removeUnwantedCategories(List<Tags> tagsList) {
+    final tagsListDuplicate = List<Tags>();
+    for (var i = 0; i < tagsList.length; i++) {
+      if (!tagsListDuplicate.contains(tagsList[i].name)) {
+        tagsListDuplicate.add(tagsList[i]);
+      }
     }
+    return tagsListDuplicate;
+  }
+
+  void setTheValuesForDropdown(List<Tags> result) {
+    if (addFamilyUserInfoBloc.tagsList != null &&
+        addFamilyUserInfoBloc.tagsList.isNotEmpty) {
+      for (var mediaResultObj in mediaResultFiltered) {
+        for (var tagsSelected in addFamilyUserInfoBloc.tagsList) {
+          if (tagsSelected.name.toUpperCase() ==
+              mediaResultObj.name.toUpperCase()) {
+            mediaResultObj.isChecked = true;
+          }
+        }
+      }
+    }
+  }
+
+  void addSelectedcategoriesToList(List<Tags> result) {
+    selectedTags = [];
+    for (final mediaResultObj in result) {
+      if (!selectedTags.contains(mediaResultObj.name) &&
+          mediaResultObj.isChecked) {
+        selectedTags.add(mediaResultObj);
+      }
+    }
+  }
 }

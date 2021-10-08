@@ -25,6 +25,7 @@ import '../../constants/variable_constant.dart' as variable;
 import '../../src/resources/repository/health/HealthReportListForUserRepository.dart';
 import '../../constants/fhb_constants.dart';
 import '../../constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/src/model/user/Tags.dart';
 
 class AddFamilyUserInfoBloc extends BaseBloc {
   AddFamilyUserInfoRepository addFamilyUserInfoRepository;
@@ -130,7 +131,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
   File profilePic, profileBanner;
   CreateDeviceSelectionModel createDeviceSelectionModel;
   PreferredMeasurement preferredMeasurement;
-
+  List<Tags> tagsList = new List<Tags>();
 
   @override
   void dispose() {
@@ -368,7 +369,8 @@ class AddFamilyUserInfoBloc extends BaseBloc {
                 preferred_language,
                 qa_subscription,
                 preColor,
-                greColor)
+                greColor,
+                tagsList)
             .then((value) {
           createDeviceSelectionModel = value;
           if (createDeviceSelectionModel?.isSuccess ?? false) {
@@ -390,7 +392,8 @@ class AddFamilyUserInfoBloc extends BaseBloc {
                     preferred_language,
                     qa_subscription,
                     preColor,
-                    greColor)
+                    greColor,
+                    tagsList)
                 .then((value) {
               createDeviceSelectionModel = value;
               if (createDeviceSelectionModel.isSuccess) {
@@ -470,13 +473,24 @@ class AddFamilyUserInfoBloc extends BaseBloc {
         ? getDeviceSelectionModel.result[0].profileSetting.qa_subscription
         : 'Y';
 
-    preferredMeasurement=getDeviceSelectionModel
-        .result[0].profileSetting.preferredMeasurement !=
-        null &&
-        getDeviceSelectionModel.result[0].profileSetting.preferredMeasurement !=
-            ''
+    preferredMeasurement = getDeviceSelectionModel
+                    .result[0].profileSetting.preferredMeasurement !=
+                null &&
+            getDeviceSelectionModel
+                    .result[0].profileSetting.preferredMeasurement !=
+                ''
         ? getDeviceSelectionModel.result[0].profileSetting.preferredMeasurement
         : null;
+    tagsList = getDeviceSelectionModel.result[0].tags != null &&
+            getDeviceSelectionModel.result[0].tags.length > 0
+        ? getDeviceSelectionModel.result[0].tags
+        : new List();
+
+    if (tagsList.length > 0) {
+      for (Tags tags in tagsList) {
+        tags.isChecked = true;
+      }
+    }
   }
 
   Future<UpdateDeviceModel> updateDeviceSelectionModel(
@@ -497,7 +511,9 @@ class AddFamilyUserInfoBloc extends BaseBloc {
             preferredLanguage ?? preferred_language,
             qa_subscription,
             preColor,
-            greColor,preferredMeasurement)
+            greColor,
+            preferredMeasurement,
+            tagsList)
         .then(
       (value) {
         if (value?.isSuccess ?? false) {
@@ -519,7 +535,8 @@ class AddFamilyUserInfoBloc extends BaseBloc {
                   preferred_language,
                   qa_subscription,
                   preColor,
-                  greColor)
+                  greColor,
+                  tagsList)
               .then((value) {
             createDeviceSelectionModel = value;
             if (createDeviceSelectionModel.isSuccess) {

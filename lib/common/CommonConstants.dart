@@ -221,6 +221,7 @@ class CommonConstants {
   static String weightNameUS = 'Weight(lbs)';
 
   static String preferredLanguage = 'Preferred Language';
+  static String tags = 'Tags';
 
   static String specialization = 'Specialization';
   static String hospitalName = 'Hospital Name';

@@ -13,11 +13,17 @@ import '../../constants/variable_constant.dart' as variable;
 class ProvidersBloc implements BaseBloc {
   ProvidersListRepository _providersListRepository;
   StreamController _providersListControlller;
+  StreamController _providershospitalListControlller;
 
   StreamSink<ApiResponse<MyProvidersResponse>> get providersListSink =>
       _providersListControlller.sink;
   Stream<ApiResponse<MyProvidersResponse>> get providersListStream =>
       _providersListControlller.stream;
+
+  StreamSink<ApiResponse<MyProvidersResponse>> get providershospitalListSink =>
+      _providershospitalListControlller.sink;
+  Stream<ApiResponse<MyProvidersResponse>> get providershospitalListStream =>
+      _providershospitalListControlller.stream;
 
   List<Doctors> doctors = [];
   List<Hospitals> hospitals = List();
@@ -26,10 +32,13 @@ class ProvidersBloc implements BaseBloc {
   @override
   void dispose() {
     _providersListControlller?.close();
+    _providershospitalListControlller?.close();
   }
 
   ProvidersBloc() {
     _providersListControlller =
+        StreamController<ApiResponse<MyProvidersResponse>>();
+    _providershospitalListControlller =
         StreamController<ApiResponse<MyProvidersResponse>>();
     _providersListRepository = ProvidersListRepository();
   }
@@ -74,16 +83,23 @@ class ProvidersBloc implements BaseBloc {
 
   Future<MyProvidersResponse> getMedicalPreferencesForHospital(
       {String userId}) async {
-    // providersListSink.add(ApiResponse.loading(variable.strFetchMedicalPrefernces));
+    providershospitalListSink.add(ApiResponse.loading(variable.strFetchMedicalPrefernces));
     MyProvidersResponse myProvidersResponseList;
     try {
       myProvidersResponseList = await _providersListRepository
           .getMedicalPreferencesForHospital(userId: userId);
+
+      try {
+        hospitals = myProvidersResponseList.result?.hospitals;
+      } catch (e) {}
+
+      providershospitalListSink.add(ApiResponse.completed(myProvidersResponseList));
+
       //doctors = myProvidersResponseList.result.doctors;
       // hospitals = myProvidersResponseList.result.hospitals;
       // labs = myProvidersResponseList.result.labs;
     } catch (e) {
-      providersListSink.add(ApiResponse.error(e.toString()));
+      providershospitalListSink.add(ApiResponse.error(e.toString()));
     }
 
     return myProvidersResponseList;
@@ -110,28 +126,28 @@ class ProvidersBloc implements BaseBloc {
     for (final doctorData in doctors) {
       if (doctorData.user.name != null && doctorData.user.name != '') {
         var speciality = doctorData.doctorProfessionalDetailCollection !=
-                null
+            null
             ? doctorData.doctorProfessionalDetailCollection.isNotEmpty
-                ? doctorData.doctorProfessionalDetailCollection[0].specialty !=
-                        null
-                    ? doctorData
-                        .doctorProfessionalDetailCollection[0].specialty.name
-                    : ''
-                : ''
+            ? doctorData.doctorProfessionalDetailCollection[0].specialty !=
+            null
+            ? doctorData
+            .doctorProfessionalDetailCollection[0].specialty.name
+            : ''
+            : ''
             : '';
         final address = doctorData.user != null
             ? doctorData.user.userAddressCollection3 != null
-                ? doctorData.user.userAddressCollection3.isNotEmpty
-                    ? doctorData.user.userAddressCollection3[0].city != null
-                        ? doctorData.user.userAddressCollection3[0].city.name
-                        : ''
-                    : ''
-                : ''
+            ? doctorData.user.userAddressCollection3.isNotEmpty
+            ? doctorData.user.userAddressCollection3[0].city != null
+            ? doctorData.user.userAddressCollection3[0].city.name
+            : ''
+            : ''
+            : ''
             : '';
         if (doctorData.user.name
-                .toLowerCase()
-                .trim()
-                .contains(doctorName.toLowerCase().trim()) ||
+            .toLowerCase()
+            .trim()
+            .contains(doctorName.toLowerCase().trim()) ||
             (speciality != '' &&
                 speciality
                     .toLowerCase()
@@ -152,7 +168,7 @@ class ProvidersBloc implements BaseBloc {
     GetDoctorsByIdModel getDoctorsByIdModel;
     try {
       getDoctorsByIdModel =
-          await _providersListRepository.getDoctorsByID(doctorId: doctorId);
+      await _providersListRepository.getDoctorsByID(doctorId: doctorId);
     } catch (e) {
       providersListSink.add(ApiResponse.error(e.toString()));
     }

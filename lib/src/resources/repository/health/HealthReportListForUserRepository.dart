@@ -25,6 +25,9 @@ import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 
 import 'package:myfhb/constants/fhb_query.dart' as query;
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/src/model/user/Tags.dart';
+import 'package:myfhb/src/model/TagsResult.dart';
+
 
 class HealthReportListForUserRepository {
   ApiBaseHelper _helper = ApiBaseHelper();
@@ -267,7 +270,7 @@ class HealthReportListForUserRepository {
     String preferred_language,
     String qa_subscription,
     int priColor,
-    int greColor,
+    int greColor,List<Tags> tags
   ) async {
     var body = jsonEncode({
       "userId": userId,
@@ -285,7 +288,7 @@ class HealthReportListForUserRepository {
         "priColor": priColor,
         'preferred_language': preferred_language,
         'qa-subscription': qa_subscription
-      }
+      },'tags':tags
     });
 
     final response = await _helper.createDeviceSelection(
@@ -308,6 +311,7 @@ class HealthReportListForUserRepository {
       String qa_subscription,
       int priColor,
       int greColor,PreferredMeasurement preferredMeasurement) async {
+      int greColor,List<Tags> tagsList) async {
     var body = jsonEncode({
       'id': userMappingId,
       'profileSetting': {
@@ -325,7 +329,9 @@ class HealthReportListForUserRepository {
         'preferred_language': preferred_language,
         'qa-subscription': qa_subscription,
         'preferred_measurement':preferredMeasurement
-      }
+        
+      },
+      'tags':tagsList
     });
     final response = await _helper.updateDeviceSelection(
         query.qr_user_profile_no_slash, body);
@@ -337,6 +343,15 @@ class HealthReportListForUserRepository {
     final response = await _helper.updateDeviceSelection(
         query.qr_user_profile_no_slash, body);
     return UpdateDeviceModel.fromJson(response);
+  }
+
+  Future<TagsResult> getTags() async {
+    TagsResult tagResult;
+    var addressQuery = [query.qr_code_tags];
+
+    final response = await _helper
+        .getTags(addressQuery.toString());
+    return TagsResult.fromJson(response);
   }
 
   /* Future<CreateDeviceSelectionModel> createAppColorSelection(
@@ -376,4 +391,5 @@ class HealthReportListForUserRepository {
         await _helper.deleteDeviceRecords(query.device_health + deviceId);
     return DeleteDeviceHealthRecord.fromJson(response);
   }
-}
+
+      }}

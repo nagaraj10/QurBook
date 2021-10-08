@@ -26,7 +26,8 @@ class OtpViewModel extends ChangeNotifier {
       Duration(seconds: 1),
       (timer) {
         timerSeconds = 30 - timer.tick;
-        if (timerSeconds == 0) {
+        if (timerSeconds <= 0) {
+          timerSeconds = 0;
           stopTimer(resetValues: false);
         }
         timeForResend =

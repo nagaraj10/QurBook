@@ -39,375 +39,381 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
           radius: 30.0.sp,
           backgroundColor: Colors.white,
         ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              variable.strMAYA,
-              style: Theme.of(context).textTheme.body1,
-              softWrap: true,
-            ),
-            Card(
-              color: Colors.transparent,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                variable.strMAYA,
+                style: Theme.of(context).textTheme.body1,
+                softWrap: true,
+              ),
+              Card(
+                color: Colors.transparent,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(25),
+                        bottomLeft: Radius.circular(25),
+                        bottomRight: Radius.circular(25))),
+                child: Container(
+                  // constraints: BoxConstraints(
+                  //   maxWidth: 1.sw * .6,
+                  // ),
+                  padding: const EdgeInsets.all(15.0),
+                  decoration: BoxDecoration(
+                    color: Color(CommonUtil().getMyPrimaryColor()),
+                    borderRadius: BorderRadius.only(
                       topRight: Radius.circular(25),
                       bottomLeft: Radius.circular(25),
-                      bottomRight: Radius.circular(25))),
-              child: Container(
-                constraints: BoxConstraints(
-                  maxWidth: 1.sw * .6,
-                ),
-                padding: const EdgeInsets.all(15.0),
-                decoration: BoxDecoration(
-                  color: Color(CommonUtil().getMyPrimaryColor()),
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(25),
-                    bottomLeft: Radius.circular(25),
-                    bottomRight: Radius.circular(25),
+                      bottomRight: Radius.circular(25),
+                    ),
                   ),
-                ),
-                child: FutureBuilder(
-                  future: Future.delayed(
-                      Duration(seconds: 3), () => MayaConvUI(c, index)),
-                  builder: (BuildContext context, snapshot) {
-                    return snapshot.hasData
-                        ? snapshot.data
-                        : Loading(
-                            indicator: BallPulseIndicator(),
-                            size: 20.0,
-                            color: Colors.white);
-                  },
+                  child: FutureBuilder(
+                    future: Future.delayed(
+                        Duration(seconds: 3), () => MayaConvUI(c, index)),
+                    builder: (BuildContext context, snapshot) {
+                      return snapshot.hasData
+                          ? snapshot.data
+                          : Loading(
+                              indicator: BallPulseIndicator(),
+                              size: 20.0,
+                              color: Colors.white);
+                    },
+                  ),
                 ),
               ),
-            ),
-            Text(
-              "${c.timeStamp}",
-              style:
-                  Theme.of(context).textTheme.body1.apply(color: Colors.grey),
-            ),
-            SizedBox(width: 10.0.w),
-            Column(
-              children: [
-                Card(
-                  elevation: 5,
-                  color: Colors.transparent,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
+              Text(
+                "${c.timeStamp}",
+                style:
+                    Theme.of(context).textTheme.body1.apply(color: Colors.grey),
+              ),
+              SizedBox(width: 10.0.w),
+              Column(
+                children: [
+                  Card(
+                    elevation: 5,
+                    color: Colors.transparent,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(10),
+                            topRight: Radius.circular(10),
+                            bottomLeft: Radius.circular(10),
+                            bottomRight: Radius.circular(10))),
+                    child: Container(
+                      constraints: BoxConstraints(
+                        maxWidth: 1.sw,
+                        //maxHeight: 280,
+                      ),
+                      padding: const EdgeInsets.all(5.0),
+                      decoration: BoxDecoration(
+                        color: Color(CommonUtil().getMyPrimaryColor()),
+                        borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(10),
                           topRight: Radius.circular(10),
                           bottomLeft: Radius.circular(10),
-                          bottomRight: Radius.circular(10))),
-                  child: Container(
-                    constraints: BoxConstraints(
-                      maxWidth: 1.sw * .7,
-                      //maxHeight: 280,
-                    ),
-                    padding: const EdgeInsets.all(5.0),
-                    decoration: BoxDecoration(
-                      color: Color(CommonUtil().getMyPrimaryColor()),
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(10),
-                        topRight: Radius.circular(10),
-                        bottomLeft: Radius.circular(10),
-                        bottomRight: Radius.circular(10),
+                          bottomRight: Radius.circular(10),
+                        ),
+                      ),
+                      child: Column(
+                        children: [
+                          Container(
+                            width: 1.sw,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Flexible(
+                                  flex: 1,
+                                  child: Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      FadeInImage.assetNetwork(
+                                        placeholder:
+                                            'assets/icons/placeholder.jpg',
+                                        image: videoThumbnail(0),
+                                      ),
+                                      IconButton(
+                                        icon: Icon(
+                                            Icons.play_circle_fill_rounded),
+                                        color: Colors.black54,
+                                        iconSize: 75,
+                                        onPressed: () {
+                                          stopTTSEngine();
+                                          String videoId;
+                                          videoId =
+                                              YoutubePlayer.convertUrlToId(
+                                                  c?.videoLinks[0]?.url);
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  MyYoutubePlayer(
+                                                videoId: videoId,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Text(
+                            c?.videoLinks[0]?.title,
+                            style: TextStyle(
+                                color: Colors.white, fontSize: 15.0.sp),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
                       ),
                     ),
-                    child: Column(
-                      children: [
-                        Container(
-                          width: 1.sw * .7,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Flexible(
-                                flex: 1,
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    FadeInImage.assetNetwork(
-                                      placeholder:
-                                          'assets/icons/placeholder.jpg',
-                                      image: videoThumbnail(0),
-                                    ),
-                                    IconButton(
-                                      icon:
-                                          Icon(Icons.play_circle_fill_rounded),
-                                      color: Colors.black54,
-                                      iconSize: 75,
-                                      onPressed: () {
-                                        stopTTSEngine();
-                                        String videoId;
-                                        videoId = YoutubePlayer.convertUrlToId(
-                                            c?.videoLinks[0]?.url);
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                MyYoutubePlayer(
-                                              videoId: videoId,
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Text(
-                          c?.videoLinks[0]?.title,
-                          style:
-                              TextStyle(color: Colors.white, fontSize: 15.0.sp),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
                   ),
-                ),
-                Card(
-                  elevation: 5,
-                  color: Colors.transparent,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
+                  Card(
+                    elevation: 5,
+                    color: Colors.transparent,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(10),
+                            topRight: Radius.circular(10),
+                            bottomLeft: Radius.circular(10),
+                            bottomRight: Radius.circular(10))),
+                    child: Container(
+                      constraints: BoxConstraints(
+                        maxWidth: 1.sw,
+                        //maxHeight: 200,
+                      ),
+                      padding: const EdgeInsets.all(5.0),
+                      decoration: BoxDecoration(
+                        color: Color(CommonUtil().getMyPrimaryColor()),
+                        borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(10),
                           topRight: Radius.circular(10),
                           bottomLeft: Radius.circular(10),
-                          bottomRight: Radius.circular(10))),
-                  child: Container(
-                    constraints: BoxConstraints(
-                      maxWidth: 1.sw * .7,
-                      //maxHeight: 200,
-                    ),
-                    padding: const EdgeInsets.all(5.0),
-                    decoration: BoxDecoration(
-                      color: Color(CommonUtil().getMyPrimaryColor()),
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(10),
-                        topRight: Radius.circular(10),
-                        bottomLeft: Radius.circular(10),
-                        bottomRight: Radius.circular(10),
+                          bottomRight: Radius.circular(10),
+                        ),
+                      ),
+                      child: Column(
+                        children: [
+                          Container(
+                            width: 1.sw,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Flexible(
+                                  flex: 1,
+                                  child: Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      FadeInImage.assetNetwork(
+                                        placeholder:
+                                            'assets/icons/placeholder.jpg',
+                                        image: videoThumbnail(1),
+                                      ),
+                                      IconButton(
+                                        icon: Icon(
+                                            Icons.play_circle_fill_rounded),
+                                        color: Colors.black54,
+                                        iconSize: 75,
+                                        onPressed: () {
+                                          stopTTSEngine();
+                                          String videoId;
+                                          videoId =
+                                              YoutubePlayer.convertUrlToId(
+                                                  c?.videoLinks[1]?.url);
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  MyYoutubePlayer(
+                                                videoId: videoId,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Text(
+                            c?.videoLinks[1]?.title,
+                            style: TextStyle(
+                                color: Colors.white, fontSize: 15.0.sp),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
                       ),
                     ),
-                    child: Column(
-                      children: [
-                        Container(
-                          width: 1.sw * .7,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Flexible(
-                                flex: 1,
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    FadeInImage.assetNetwork(
-                                      placeholder:
-                                          'assets/icons/placeholder.jpg',
-                                      image: videoThumbnail(1),
-                                    ),
-                                    IconButton(
-                                      icon:
-                                          Icon(Icons.play_circle_fill_rounded),
-                                      color: Colors.black54,
-                                      iconSize: 75,
-                                      onPressed: () {
-                                        stopTTSEngine();
-                                        String videoId;
-                                        videoId = YoutubePlayer.convertUrlToId(
-                                            c?.videoLinks[1]?.url);
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                MyYoutubePlayer(
-                                              videoId: videoId,
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Text(
-                          c?.videoLinks[1]?.title,
-                          style:
-                              TextStyle(color: Colors.white, fontSize: 15.0.sp),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
                   ),
-                ),
-                Card(
-                  elevation: 5,
-                  color: Colors.transparent,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
+                  Card(
+                    elevation: 5,
+                    color: Colors.transparent,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(10),
+                            topRight: Radius.circular(10),
+                            bottomLeft: Radius.circular(10),
+                            bottomRight: Radius.circular(10))),
+                    child: Container(
+                      constraints: BoxConstraints(
+                        maxWidth: 1.sw,
+                        //maxHeight: 200,
+                      ),
+                      padding: const EdgeInsets.all(5.0),
+                      decoration: BoxDecoration(
+                        color: Color(CommonUtil().getMyPrimaryColor()),
+                        borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(10),
                           topRight: Radius.circular(10),
                           bottomLeft: Radius.circular(10),
-                          bottomRight: Radius.circular(10))),
-                  child: Container(
-                    constraints: BoxConstraints(
-                      maxWidth: 1.sw * .7,
-                      //maxHeight: 200,
-                    ),
-                    padding: const EdgeInsets.all(5.0),
-                    decoration: BoxDecoration(
-                      color: Color(CommonUtil().getMyPrimaryColor()),
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(10),
-                        topRight: Radius.circular(10),
-                        bottomLeft: Radius.circular(10),
-                        bottomRight: Radius.circular(10),
+                          bottomRight: Radius.circular(10),
+                        ),
+                      ),
+                      child: Column(
+                        children: [
+                          Container(
+                            width: 1.sw,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Flexible(
+                                  flex: 1,
+                                  child: Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      FadeInImage.assetNetwork(
+                                        placeholder:
+                                            'assets/icons/placeholder.jpg',
+                                        image: videoThumbnail(2),
+                                      ),
+                                      IconButton(
+                                        icon: Icon(
+                                            Icons.play_circle_fill_rounded),
+                                        color: Colors.black54,
+                                        iconSize: 75,
+                                        onPressed: () {
+                                          stopTTSEngine();
+                                          String videoId;
+                                          videoId =
+                                              YoutubePlayer.convertUrlToId(
+                                                  c?.videoLinks[2]?.url);
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  MyYoutubePlayer(
+                                                videoId: videoId,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Text(
+                            c?.videoLinks[2]?.title,
+                            style: TextStyle(
+                                color: Colors.white, fontSize: 15.0.sp),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
                       ),
                     ),
-                    child: Column(
-                      children: [
-                        Container(
-                          width: 1.sw * .7,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Flexible(
-                                flex: 1,
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    FadeInImage.assetNetwork(
-                                      placeholder:
-                                          'assets/icons/placeholder.jpg',
-                                      image: videoThumbnail(2),
-                                    ),
-                                    IconButton(
-                                      icon:
-                                          Icon(Icons.play_circle_fill_rounded),
-                                      color: Colors.black54,
-                                      iconSize: 75,
-                                      onPressed: () {
-                                        stopTTSEngine();
-                                        String videoId;
-                                        videoId = YoutubePlayer.convertUrlToId(
-                                            c?.videoLinks[2]?.url);
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                MyYoutubePlayer(
-                                              videoId: videoId,
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Text(
-                          c?.videoLinks[2]?.title,
-                          style:
-                              TextStyle(color: Colors.white, fontSize: 15.0.sp),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
                   ),
-                ),
-                Card(
-                  elevation: 5,
-                  color: Colors.transparent,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
+                  Card(
+                    elevation: 5,
+                    color: Colors.transparent,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(10),
+                            topRight: Radius.circular(10),
+                            bottomLeft: Radius.circular(10),
+                            bottomRight: Radius.circular(10))),
+                    child: Container(
+                      constraints: BoxConstraints(
+                        maxWidth: 1.sw,
+                        //maxHeight: 200,
+                      ),
+                      padding: const EdgeInsets.all(5.0),
+                      decoration: BoxDecoration(
+                        color: Color(CommonUtil().getMyPrimaryColor()),
+                        borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(10),
                           topRight: Radius.circular(10),
                           bottomLeft: Radius.circular(10),
-                          bottomRight: Radius.circular(10))),
-                  child: Container(
-                    constraints: BoxConstraints(
-                      maxWidth: 1.sw * .7,
-                      //maxHeight: 200,
-                    ),
-                    padding: const EdgeInsets.all(5.0),
-                    decoration: BoxDecoration(
-                      color: Color(CommonUtil().getMyPrimaryColor()),
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(10),
-                        topRight: Radius.circular(10),
-                        bottomLeft: Radius.circular(10),
-                        bottomRight: Radius.circular(10),
+                          bottomRight: Radius.circular(10),
+                        ),
+                      ),
+                      child: Column(
+                        children: [
+                          Container(
+                            width: 1.sw,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Flexible(
+                                  flex: 1,
+                                  child: Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      FadeInImage.assetNetwork(
+                                        placeholder:
+                                            'assets/icons/placeholder.jpg',
+                                        image: videoThumbnail(3),
+                                      ),
+                                      IconButton(
+                                        icon: Icon(
+                                            Icons.play_circle_fill_rounded),
+                                        color: Colors.black54,
+                                        iconSize: 75,
+                                        onPressed: () {
+                                          stopTTSEngine();
+                                          String videoId;
+                                          videoId =
+                                              YoutubePlayer.convertUrlToId(
+                                                  c?.videoLinks[3]?.url);
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  MyYoutubePlayer(
+                                                videoId: videoId,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Text(
+                            c?.videoLinks[3]?.title,
+                            style: TextStyle(
+                                color: Colors.white, fontSize: 15.0.sp),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
                       ),
                     ),
-                    child: Column(
-                      children: [
-                        Container(
-                          width: 1.sw * .7,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Flexible(
-                                flex: 1,
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    FadeInImage.assetNetwork(
-                                      placeholder:
-                                          'assets/icons/placeholder.jpg',
-                                      image: videoThumbnail(3),
-                                    ),
-                                    IconButton(
-                                      icon:
-                                          Icon(Icons.play_circle_fill_rounded),
-                                      color: Colors.black54,
-                                      iconSize: 75,
-                                      onPressed: () {
-                                        stopTTSEngine();
-                                        String videoId;
-                                        videoId = YoutubePlayer.convertUrlToId(
-                                            c?.videoLinks[3]?.url);
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                MyYoutubePlayer(
-                                              videoId: videoId,
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Text(
-                          c?.videoLinks[3]?.title,
-                          style:
-                              TextStyle(color: Colors.white, fontSize: 15.0.sp),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
         SizedBox(width: 20.0.w),
       ],
