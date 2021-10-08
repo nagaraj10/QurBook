@@ -68,7 +68,7 @@ class OrderModel {
       appointmentDateTime: map['appointmentDateTime'] != null
           ? DateTime.tryParse(
               map['appointmentDateTime'],
-            ).toLocal()
+            )
           : null,
     );
   }
