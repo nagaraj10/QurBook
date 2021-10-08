@@ -4,6 +4,7 @@ import GoogleMaps
 import Speech
 import AVFoundation
 import Firebase
+import IQKeyboardManagerSwift
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate, SFSpeechRecognizerDelegate {
@@ -42,6 +43,10 @@ import Firebase
     let showBothButtonsCat = "showBothButtonsCat"
     let showSingleButtonCat = "showSingleButtonCat"
     let planRenewButton = "planRenewButton"
+    
+    var navigationController: UINavigationController?
+    var resultForMethodChannel : FlutterResult!
+    
     override func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
@@ -86,7 +91,7 @@ import Firebase
         }
         setUpReminders(messanger: controller.binaryMessenger)
         //Add Action button the Notification
-        
+        IQKeyboardManager.shared.enable = true
         let snoozeAction = UNNotificationAction(identifier: "Snooze", title: "Snooze", options: [])
         let declineAction = UNNotificationAction(identifier: "Dismiss", title: "Dismiss", options: [.destructive])
         let renewNowAction = UNNotificationAction(identifier: "Renew", title: "Renew", options: [.foreground])
@@ -157,6 +162,11 @@ import Firebase
         })
         print("fcm token \(String(describing: Messaging.messaging().fcmToken))")
         GeneratedPluginRegistrant.register(with: self)
+        let flutterViewController: FlutterViewController = window?.rootViewController as! FlutterViewController
+        navigationController = UINavigationController(rootViewController: flutterViewController)
+        navigationController?.isNavigationBarHidden = true
+        window?.rootViewController = navigationController
+        window?.makeKeyAndVisible()
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
     
@@ -214,9 +224,9 @@ import Firebase
                         print(result.bestTranscription.formattedString as Any)
                         print(result.isFinal)
                         timer.invalidate()
-                        self.STT_Result!(result.bestTranscription.formattedString as Any);
-                        self.message = "";
                         self.stopRecording()
+                        self.startTheVC(currentmessage: self.message)
+                        self.message = "";
                     }
                 } else {
                     self.detectionTimer = Timer.scheduledTimer(withTimeInterval: 1.5, repeats: false, block: { (timer) in
@@ -224,9 +234,10 @@ import Firebase
                         Loading.sharedInstance.hideLoader()
                         print(self.message)
                         timer.invalidate()
-                        self.STT_Result!(self.message);
-                        self.message = "";
                         self.stopRecording()
+                        self.startTheVC(currentmessage: self.message)
+                        self.message = "";
+                        
                     })
                 }
             }
@@ -236,7 +247,17 @@ import Firebase
             }
         }
     }
-    
+    func startTheVC(currentmessage:String){
+        let storyboard = UIStoryboard(name: "SheelaAI", bundle: nil)
+        if let container = storyboard.instantiateViewController(withIdentifier: "SheelaAIVC") as? SheelaAIVC {
+            container.message = currentmessage
+            container.callback = { message in
+                self.STT_Result!(message)
+            }
+            container.modalPresentationStyle = .overFullScreen
+            navigationController?.present(container, animated: false)
+        }
+    }
     // 2  b)
     // Text to Speech
     func textToSpeech(messageToSpeak: String, isClose:Bool){
