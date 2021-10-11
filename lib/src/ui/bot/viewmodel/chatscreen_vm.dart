@@ -91,7 +91,7 @@ class ChatScreenViewModel extends ChangeNotifier {
       isLoading = false;
       stopTTSEngine();
     }
-    if (!isInitial) notifyListeners();s
+    if (!isInitial) notifyListeners();
   }
 
   void clearMyConversation() {
@@ -1238,4 +1238,4 @@ class ChatScreenViewModel extends ChangeNotifier {
 
     //print(dir.path);
   }
-}s
+}

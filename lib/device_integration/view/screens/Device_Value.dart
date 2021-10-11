@@ -99,8 +99,8 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
   var commonConstants = CommonConstants();
 
-  String tempUnit;
-  String weightUnit;
+  String tempUnit='c';
+  String weightUnit='kg';
 
   @override
   void initState() {
@@ -890,7 +890,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                         width: 50.0.w,
                         constraints: BoxConstraints(maxWidth: 100.0.w),
                         child: InkWell(child:Text(
-                          tempUnit,
+                          tempUnit!=null?tempUnit:'c',
                           style: TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 14.0.sp,
@@ -1135,7 +1135,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                         width: 50.0.w,
                         constraints: BoxConstraints(maxWidth: 100.0.w),
                         child: InkWell(child: Text(
-                          weightUnit,
+                          weightUnit!=null?weightUnit:'kg',
                           style: TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 14.0.sp,

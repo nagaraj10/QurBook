@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
+
 import '../models/update_add_family_info.dart';
 import '../models/update_relatiosnship_model.dart';
 import '../models/update_self_profile_model.dart';
@@ -481,6 +483,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
                 ''
         ? getDeviceSelectionModel.result[0].profileSetting.preferredMeasurement
         : null;
+
     tagsList = getDeviceSelectionModel.result[0].tags != null &&
             getDeviceSelectionModel.result[0].tags.length > 0
         ? getDeviceSelectionModel.result[0].tags
