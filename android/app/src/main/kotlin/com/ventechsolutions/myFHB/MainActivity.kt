@@ -13,6 +13,7 @@ import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
+import android.view.Gravity
 import android.view.View
 import android.view.Window
 import android.widget.*
@@ -89,7 +90,9 @@ class MainActivity : FlutterActivity() {
     private lateinit var dialog: Dialog
 
     //private lateinit var builder: AlertDialog.Builder
-    internal lateinit var displayText: TextView
+    internal lateinit var displayText: EditText
+    internal lateinit var sendBtn: Button
+    internal lateinit var edit_view: LinearLayout
     internal lateinit var errorTxt: TextView
 
     //internal lateinit var errorTxt: TextView
@@ -126,6 +129,8 @@ class MainActivity : FlutterActivity() {
         dialog = Dialog(this)
         customLayout = getLayoutInflater().inflate(R.layout.progess_dialog, null)
         displayText = customLayout.findViewById(R.id.displayTxt)
+        sendBtn = customLayout.findViewById(R.id.send)
+        edit_view = customLayout.findViewById(R.id.edit_view)
         errorTxt = customLayout.findViewById(R.id.errorTxt)
         spin_kit = customLayout.findViewById(R.id.spin_kit)
         tryMe = customLayout.findViewById(R.id.tryMe)
@@ -151,9 +156,24 @@ class MainActivity : FlutterActivity() {
                     print(e.printStackTrace())
                 }
                 dialog.dismiss()
+                spin_kit.visibility = View.VISIBLE
             }
         }
         //builder.show()
+
+        sendBtn.setOnClickListener {
+
+            if (displayText.text.toString().trim() == "") {
+                displayText.clearFocus()
+                val toast = Toast.makeText(context,"Please enter a valid input",Toast.LENGTH_LONG)
+                toast.setGravity(Gravity.CENTER,0,0)
+                toast.show()
+            } else {
+                _result.success(displayText.text.toString())
+                dialog.dismiss()
+                spin_kit.visibility = View.VISIBLE
+            }
+        }
 
     }
 
@@ -484,9 +504,9 @@ class MainActivity : FlutterActivity() {
 
     val handler: Handler = Handler()
     val runnable = Runnable {
-        if (dialog.isShowing) {
-            dialog.dismiss()
-        }
+//        if (dialog.isShowing) {
+//            dialog.dismiss()
+//        }
     }
 
     //todo this method need to uncomment
@@ -524,7 +544,7 @@ class MainActivity : FlutterActivity() {
                                 override fun run() {
                                     //displayText.text = "Speak now"
                                     micOn.visibility = View.VISIBLE
-                                    displayText.visibility = View.GONE
+                                    edit_view.visibility = View.GONE
                                     listeningLayout.visibility = View.VISIBLE
                                     tryMe.visibility = View.GONE
                                 }
@@ -558,7 +578,8 @@ class MainActivity : FlutterActivity() {
                                                     override fun run() {
                                                         //displayText.text = "Speak now"
                                                         micOn.visibility = View.VISIBLE
-                                                        displayText.visibility = View.GONE
+                                                        edit_view.visibility = View.GONE
+                                                        spin_kit.visibility = View.VISIBLE
                                                         listeningLayout.visibility = View.VISIBLE
                                                         tryMe.visibility = View.GONE
                                                         speechRecognizer!!.startListening(intent)
@@ -605,10 +626,11 @@ class MainActivity : FlutterActivity() {
                     val data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
                     finalWords = data!![0].toString()
                     isPartialResultInvoked = false
-                    _result.success(finalWords)
+                    //_result.success(finalWords)
                     if (finalWords != null && finalWords?.length!! > 0 && finalWords != "") {
                         handler.postDelayed(runnable, 1000)
                         //dialog.dismiss()
+                        spin_kit.visibility = View.GONE
                         finalWords = null
                     } else if (finalWords == "") {
                         //do nothing
@@ -626,7 +648,7 @@ class MainActivity : FlutterActivity() {
                                                     override fun run() {
                                                         //displayText.text = "Speak now"
                                                         micOn.visibility = View.VISIBLE
-                                                        displayText.visibility = View.GONE
+                                                        edit_view.visibility = View.GONE
                                                         listeningLayout.visibility = View.VISIBLE
                                                         tryMe.visibility = View.GONE
                                                         speechRecognizer!!.startListening(intent)
@@ -652,13 +674,13 @@ class MainActivity : FlutterActivity() {
                                     this@MainActivity.runOnUiThread(
                                         object : Runnable {
                                             override fun run() {
-                                                displayText.visibility = View.VISIBLE
+                                                edit_view.visibility = View.VISIBLE
                                                 micOn.visibility = View.GONE
                                             }
                                         }
                                     )
                                 }
-                                displayText.text = finalWords
+                                displayText.setText(finalWords)
                             }
                         }
                     )
