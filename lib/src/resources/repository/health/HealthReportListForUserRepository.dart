@@ -310,8 +310,7 @@ class HealthReportListForUserRepository {
       String preferred_language,
       String qa_subscription,
       int priColor,
-      int greColor,PreferredMeasurement preferredMeasurement) async {
-      int greColor,List<Tags> tagsList) async {
+      int greColor,PreferredMeasurement preferredMeasurement,List<Tags> tagsList) async {
     var body = jsonEncode({
       'id': userMappingId,
       'profileSetting': {
@@ -392,4 +391,4 @@ class HealthReportListForUserRepository {
     return DeleteDeviceHealthRecord.fromJson(response);
   }
 
-      }}
+      }
