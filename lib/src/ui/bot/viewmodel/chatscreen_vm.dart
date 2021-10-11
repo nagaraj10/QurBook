@@ -360,6 +360,14 @@ class ChatScreenViewModel extends ChangeNotifier {
 
     conversations.add(model);
     notifyListeners();
+    Future.delayed(Duration(seconds: 3), () {
+      conversations.forEach((conversation) {
+        conversation.buttons?.forEach((button) {
+          button.isSelected = false;
+        });
+      });
+      notifyListeners();
+    });
   }
 
   startSheelaFromDashboard(String inputs) async {
