@@ -3,12 +3,14 @@ class Buttons {
   String title;
   bool isPlaying;
   bool skipTTS;
+  bool isSelected;
 
   Buttons({
     this.payload,
     this.title,
     this.isPlaying,
     this.skipTTS,
+    this.isSelected,
   });
 
   Buttons.fromJson(Map<String, dynamic> json) {
@@ -16,6 +18,7 @@ class Buttons {
     title = json['title'];
     skipTTS = json['skip_tts'] ?? false;
     isPlaying = false;
+    isSelected = false;
   }
 
   Map<String, dynamic> toJson() {

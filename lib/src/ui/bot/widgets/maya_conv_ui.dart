@@ -31,6 +31,7 @@ class MayaConvUI extends StatelessWidget {
                               c.isActionDone != null) {
                             c.isActionDone = true;
                           }
+                          buttonData.isSelected = true;
                           Provider.of<ChatScreenViewModel>(context,
                                   listen: false)
                               .startSheelaFromButton(
@@ -39,12 +40,14 @@ class MayaConvUI extends StatelessWidget {
                           );
                         },
                   child: Card(
-                    color: ((buttonData.isPlaying ?? false) && c.isSpeaking)
-                        ? Colors.lightBlueAccent
-                        : ((c.singleuse != null && c.singleuse) &&
-                                (c.isActionDone != null && c.isActionDone))
-                            ? Colors.white.withOpacity(0.7)
-                            : Colors.white,
+                    color: (buttonData.isSelected ?? false)
+                        ? Colors.green
+                        : ((buttonData.isPlaying ?? false) && c.isSpeaking)
+                            ? Colors.lightBlueAccent
+                            : ((c.singleuse != null && c.singleuse) &&
+                                    (c.isActionDone != null && c.isActionDone))
+                                ? Colors.white.withOpacity(0.7)
+                                : Colors.white,
                     margin: const EdgeInsets.only(top: 10),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -57,10 +60,11 @@ class MayaConvUI extends StatelessWidget {
                       child: Text(
                         buttonData.title,
                         style: TextStyle(
-                          color:
-                              ((buttonData.isPlaying ?? false) && c.isSpeaking)
-                                  ? Colors.white
-                                  : Color(new CommonUtil().getMyPrimaryColor()),
+                          color: ((buttonData.isPlaying ?? false) &&
+                                      c.isSpeaking) ||
+                                  (buttonData.isSelected ?? false)
+                              ? Colors.white
+                              : Color(new CommonUtil().getMyPrimaryColor()),
                           fontSize: 16.0.sp,
                         ),
                       ),
