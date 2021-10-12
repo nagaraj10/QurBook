@@ -61,7 +61,8 @@
                         android:background="@android:color/transparent"
                         app:SpinKit_Color="#6021de"
                         app:SpinKit_Style="DoubleBounce"
-                        android:alpha="0.2"/>
+                        android:alpha="0.2"
+                        android:visibility="visible"/>
 
                     <ImageView
                         android:layout_width="100dp"
@@ -80,17 +81,40 @@
                     android:layout_margin="10dp"/>
 
 
-                <TextView
-                    android:id="@+id/displayTxt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_margin="14dp"
-                    android:gravity="center"
-                    android:textColor="@android:color/black"
-                    android:textSize="14sp"
-                    android:maxLines="3"
-                    android:visibility="gone"/>
+                <LinearLayout
+                        android:id="@+id/edit_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="10dp"
+                        android:background="@drawable/edit_text_border"
+                        android:orientation="horizontal"
+                        android:padding="5dp"
+                        android:visibility="visible"
+                        android:weightSum="5">
+
+                        <EditText
+                            android:id="@+id/displayTxt"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_margin="5dp"
+                            android:layout_weight="5"
+                            android:background="@null"
+                            android:gravity="start"
+                            android:maxLines="3"
+                            android:textColor="@android:color/black"
+                            android:textSize="14sp" />
+
+                        <Button
+                            android:id="@+id/send"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/ic_enable_send"
+                            android:gravity="end" />
+                    </LinearLayout>
 
             </LinearLayout>
 
