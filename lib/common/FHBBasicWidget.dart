@@ -40,8 +40,8 @@ class FHBBasicWidget {
 
   UnitsMesurements unitsMesurements;
 
-  setValues(String unitsTosearch, String range) {
-    commonConstants
+  setValues(String unitsTosearch, String range) async{
+    await commonConstants
         .getValuesForUnit(unitsTosearch, range)
         .then((unitsMesurementsClone) {
       unitsMesurements = unitsMesurementsClone;
@@ -764,7 +764,7 @@ class FHBBasicWidget {
       String device}) {
     var node = FocusScope.of(context);
 
-    //setValues(unitsTosearch,range);
+    setValues(unitsTosearch,range??'');
 
     var valueEnterd = '';
     var errorValue = error;

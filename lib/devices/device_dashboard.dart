@@ -833,7 +833,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                         setState(() {
                           errorMsg = errorValue;
                         });
-                      }, errorMsg, commonConstants.weightUNIT, deviceName),
+                      }, errorMsg, commonConstants.weightUNIT, deviceName,range: ''),
                     ],
                   ),
                 ],
