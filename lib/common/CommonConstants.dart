@@ -307,7 +307,7 @@ class CommonConstants {
   Future<UnitsMesurements> getValuesForUnit(String units, String range) async {
     final db = DatabaseHelper();
 
-    unitsMeasurements = await db.getMeasurementsBasedOnUnits(units, range);
+    unitsMeasurements = await db.getMeasurementsBasedOnUnits(units, range??'');
    //print(unitsMeasurements.maxValue.toString()+"MAX"+unitsMeasurements.minValue.toString()+" MIN"+ "unitsMeasurements*************");
     return unitsMeasurements;
   }
