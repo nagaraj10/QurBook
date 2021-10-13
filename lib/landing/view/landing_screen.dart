@@ -10,6 +10,7 @@ import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/src/utils/dynamic_links.dart';
+import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
 import 'package:myfhb/user_plans/view_model/user_plans_view_model.dart';
 import '../../add_family_user_info/bloc/add_family_user_info_bloc.dart';
 import '../../add_family_user_info/services/add_family_user_info_repository.dart';
@@ -592,6 +593,9 @@ class _LandingScreenState extends State<LandingScreen> {
   }
 
   void callImportantsMethod() async {
+    Get.lazyPut(
+      () => PDFViewController(),
+    );
     await CommonUtil().validateToken();
     await Provider.of<UserPlansViewModel>(context, listen: false)
         ?.getUserPlanInfoLocal();
