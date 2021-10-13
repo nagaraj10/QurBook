@@ -270,12 +270,12 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                     child: getAllDatasInDoctorsListScrap(snapshot.data.data),
                   )
                 : (snapshot.data.data.result == null)
-                    ? Container(
+                    ? /*Container(
                         child: Center(
                           child: Text(variable.strNodata),
                         ),
-                      )
-                    //getEmptyCard()
+                      )*/
+                    getEmptyCard(snapshot.data.data.diagnostics)
                     : snapshot.data.data.result.isEmpty
                         ? Container(
                             child: Center(
