@@ -17,6 +17,8 @@ import '../../src/ui/loader_class.dart';
 import 'package:provider/provider.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
+import 'package:country_pickers/country_pickers.dart';
+import 'package:country_pickers/country.dart';
 
 class InviteContactsScreen extends StatefulWidget {
   const InviteContactsScreen();
@@ -31,6 +33,9 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
   List<Contact> selectedList = [];
   bool onSearch = false;
   TextEditingController searchController = TextEditingController();
+
+  Country _selectedDialogCountry =
+  CountryPickerUtils.getCountryByIsoCode(CommonUtil.REGION_CODE);
 
   @override
   void initState() {
@@ -100,23 +105,23 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
           actions: [
             selectedList.isNotEmpty
                 ? InkWell(
-                    onTap: () {
-                      FocusScope.of(context).unfocus();
-                      sendInviteToFriends();
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(
-                        8.0.sp,
-                      ),
-                      alignment: Alignment.center,
-                      child: Text(
-                        strSendInvite,
-                        style: TextStyle(
-                          fontSize: 16.0.sp,
-                        ),
-                      ),
-                    ),
-                  )
+              onTap: () {
+                FocusScope.of(context).unfocus();
+                sendInviteToFriends();
+              },
+              child: Container(
+                padding: EdgeInsets.all(
+                  8.0.sp,
+                ),
+                alignment: Alignment.center,
+                child: Text(
+                  strSendInvite,
+                  style: TextStyle(
+                    fontSize: 16.0.sp,
+                  ),
+                ),
+              ),
+            )
                 : SizedBox()
           ],
           title: TextWidget(
@@ -168,9 +173,9 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
                         onSearch = true;
                         _contactsSearched = _contacts
                             .where((element) => element.displayName
-                                .trim()
-                                .toLowerCase()
-                                .contains(value.trim().toLowerCase()))
+                            .trim()
+                            .toLowerCase()
+                            .contains(value.trim().toLowerCase()))
                             .toList();
                       });
                     } else {
@@ -194,22 +199,22 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
                     ),
                     suffixIcon: onSearch
                         ? GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                onSearch = false;
-                                searchController.clear();
-                              });
-                            },
-                            child: Icon(
-                              Icons.clear,
-                              size: 24.0.sp,
-                              color: Colors.black54,
-                            ),
-                          )
+                      onTap: () {
+                        setState(() {
+                          onSearch = false;
+                          searchController.clear();
+                        });
+                      },
+                      child: Icon(
+                        Icons.clear,
+                        size: 24.0.sp,
+                        color: Colors.black54,
+                      ),
+                    )
                         : Container(
-                            width: 0.w,
-                            height: 0.h,
-                          ),
+                      width: 0.w,
+                      height: 0.h,
+                    ),
                     border: InputBorder.none,
                     hintStyle: TextStyle(
                       color: Colors.black45,
@@ -234,17 +239,17 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
       child: contactsValue == null
           ? CommonCircularIndicator()
           : contactsValue.isNotEmpty
-              ? listTile(contactsValue)
-              : Center(
-                  child: Container(
-                    child: Text(
-                      onSearch ? strNoContactsSearchlbl : strNoContactsLabel,
-                      style: TextStyle(
-                        fontSize: 16.0.sp,
-                      ),
-                    ),
-                  ),
-                ),
+          ? listTile(contactsValue)
+          : Center(
+        child: Container(
+          child: Text(
+            onSearch ? strNoContactsSearchlbl : strNoContactsLabel,
+            style: TextStyle(
+              fontSize: 16.0.sp,
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -264,61 +269,61 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
         return phone == null || phone.isEmpty
             ? Container()
             : ListTile(
-                selectedTileColor: Color(CommonUtil.bgColor),
-                selected: selectedList.isEmpty
-                    ? false
-                    : selectedList.contains(contact)
-                        ? true
-                        : false,
-                onTap: () {
-                  if (selectedList.contains(contact)) {
-                    setState(() {
-                      selectedList.remove(contact);
-                    });
-                  } else {
-                    setState(() {
-                      selectedList.add(contact);
-                    });
-                  }
-                },
-                leading: (contact.avatar != null && contact.avatar.isNotEmpty)
-                    ? CircleAvatar(
-                        backgroundColor: Color(0xFFf7f6f5),
-                        backgroundImage: MemoryImage(contact.avatar))
-                    : CircleAvatar(
-                        backgroundColor: Color(0xFFf7f6f5),
-                        child: Text(
-                          contact.initials(),
-                          style: TextStyle(
-                              fontSize: 16.0.sp,
-                              color: Color(CommonUtil().getMyPrimaryColor())),
-                        ),
-                      ),
-                title: Text(
-                  contact.displayName ?? '',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16.0.sp,
-                  ),
-                ),
-                trailing: selectedList.isEmpty
-                    ? Container(
-                        height: 0,
-                        width: 0,
-                      )
-                    : selectedList.contains(contact)
-                        ? Icon(
-                            Icons.check,
-                            size: 24.0.sp,
-                            color: Color(CommonUtil().getMyPrimaryColor()),
-                          )
-                        : Container(
-                            height: 0.h,
-                            width: 0.w,
-                          ),
-                subtitle: itemsTile(contact.phones),
-              );
+          selectedTileColor: Color(CommonUtil.bgColor),
+          selected: selectedList.isEmpty
+              ? false
+              : selectedList.contains(contact)
+              ? true
+              : false,
+          onTap: () {
+            if (selectedList.contains(contact)) {
+              setState(() {
+                selectedList.remove(contact);
+              });
+            } else {
+              setState(() {
+                selectedList.add(contact);
+              });
+            }
+          },
+          leading: (contact.avatar != null && contact.avatar.isNotEmpty)
+              ? CircleAvatar(
+              backgroundColor: Color(0xFFf7f6f5),
+              backgroundImage: MemoryImage(contact.avatar))
+              : CircleAvatar(
+            backgroundColor: Color(0xFFf7f6f5),
+            child: Text(
+              contact.initials(),
+              style: TextStyle(
+                  fontSize: 16.0.sp,
+                  color: Color(CommonUtil().getMyPrimaryColor())),
+            ),
+          ),
+          title: Text(
+            contact.displayName ?? '',
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.w600,
+              fontSize: 16.0.sp,
+            ),
+          ),
+          trailing: selectedList.isEmpty
+              ? Container(
+            height: 0,
+            width: 0,
+          )
+              : selectedList.contains(contact)
+              ? Icon(
+            Icons.check,
+            size: 24.0.sp,
+            color: Color(CommonUtil().getMyPrimaryColor()),
+          )
+              : Container(
+            height: 0.h,
+            width: 0.w,
+          ),
+          subtitle: itemsTile(contact.phones),
+        );
       },
     );
   }
@@ -328,26 +333,26 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
         children: _items
             .map(
               (i) => Row(
-                children: [
-                  Text(
-                    '${i.label} : ' ?? '',
-                    style: TextStyle(
-                      color: Colors.black26,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 13.0.sp,
-                    ),
-                  ),
-                  Text(
-                    i.value ?? '',
-                    style: TextStyle(
-                      color: Colors.black45,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 13.0.sp,
-                    ),
-                  ),
-                ],
+            children: [
+              Text(
+                '${i.label} : ' ?? '',
+                style: TextStyle(
+                  color: Colors.black26,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 13.0.sp,
+                ),
               ),
-            )
+              Text(
+                i.value ?? '',
+                style: TextStyle(
+                  color: Colors.black45,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 13.0.sp,
+                ),
+              ),
+            ],
+          ),
+        )
             .toList());
   }
 
@@ -362,7 +367,7 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
             contacts.add(Contacts(name: e.displayName, phoneNumber: mobileNo));
           } else {
             final mobileNo =
-                '+91${element.value.replaceAll(RegExp(r'[^\s\w]'), '').replaceAll(' ', '')}';
+                '+${_selectedDialogCountry.phoneCode}${element.value.replaceAll(RegExp(r'[^\s\w]'), '').replaceAll(' ', '')}';
             contacts.add(Contacts(name: e.displayName, phoneNumber: mobileNo));
           }
         }
@@ -371,7 +376,7 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
     LoaderClass.showLoadingDialog(context);
     var addPatientContactRequest = ReferAFriendRequest(
         source:
-            'qurbook', // since it's Qurbook application we have set "qurbook" as static
+        'qurbook', // since it's Qurbook application we have set "qurbook" as static
         contacts: contacts);
     await sendReferalRequest(addPatientContactRequest);
   }
@@ -418,39 +423,39 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
                               children: [
                                 referalList[index].isExistingUser
                                     ? CircleAvatar(
-                                        radius: 15,
-                                        backgroundColor: Colors.transparent,
-                                        child: Container(
-                                          alignment: Alignment.center,
-                                          child: Image.asset(
-                                              'assets/launcher/myfhb.png'),
-                                        ),
-                                      )
+                                  radius: 15,
+                                  backgroundColor: Colors.transparent,
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    child: Image.asset(
+                                        'assets/launcher/myfhb.png'),
+                                  ),
+                                )
                                     : CircleAvatar(
-                                        backgroundColor: Color(0xFFf7f6f5),
-                                        radius: 15,
-                                        child: Text(
-                                          referalList[index]
-                                                      ?.name
-                                                      .split(' ')
-                                                      .length >
-                                                  1
-                                              ? '${referalList[index]?.name?.split(' ')[0][0]}${referalList[index]?.name?.split(' ')[1][0]}'
-                                              : referalList[index]
-                                                  ?.name
-                                                  ?.split(' ')[0][0],
-                                          style: TextStyle(
-                                            fontSize: 12.0.sp,
-                                          ),
-                                        ),
-                                      ),
+                                  backgroundColor: Color(0xFFf7f6f5),
+                                  radius: 15,
+                                  child: Text(
+                                    referalList[index]
+                                        ?.name
+                                        .split(' ')
+                                        .length >
+                                        1
+                                        ? '${referalList[index]?.name?.split(' ')[0][0]}${referalList[index]?.name?.split(' ')[1][0]}'
+                                        : referalList[index]
+                                        ?.name
+                                        ?.split(' ')[0][0],
+                                    style: TextStyle(
+                                      fontSize: 12.0.sp,
+                                    ),
+                                  ),
+                                ),
                                 SizedBox(
                                   width: 5.0.w,
                                 ),
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         referalList[index]
@@ -489,35 +494,35 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
                                   ),
                                   child: referalList[index].isExistingUser
                                       ? Text(
-                                          '$trailingText',
-                                          style: TextStyle(
-                                            fontSize: 10,
-                                            color: Colors.grey,
-                                          ),
-                                        )
+                                    '$trailingText',
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      color: Colors.grey,
+                                    ),
+                                  )
                                       : Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.end,
-                                          children: [
-                                            Text(
-                                              '$trailingText',
-                                              style: TextStyle(
-                                                fontSize: 10,
-                                                color: Colors.green,
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: 5.0.w,
-                                            ),
-                                            SvgPicture.asset(
-                                              sendIcon,
-                                              width: 15.0.sp,
-                                              height: 15.0.sp,
-                                            ),
-                                          ],
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.end,
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        '$trailingText',
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          color: Colors.green,
                                         ),
+                                      ),
+                                      SizedBox(
+                                        width: 5.0.w,
+                                      ),
+                                      SvgPicture.asset(
+                                        sendIcon,
+                                        width: 15.0.sp,
+                                        height: 15.0.sp,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
@@ -582,9 +587,9 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
   Future<ReferAFriendResponse> referAFriend(
       ReferAFriendRequest referAFriendRequest) async {
     final contactsPatientsViewModel =
-        Provider.of<ReferAFriendViewModel>(context, listen: false);
+    Provider.of<ReferAFriendViewModel>(context, listen: false);
     final response =
-        await contactsPatientsViewModel.referFriendVMModel(referAFriendRequest);
+    await contactsPatientsViewModel.referFriendVMModel(referAFriendRequest);
     return response;
   }
 }
