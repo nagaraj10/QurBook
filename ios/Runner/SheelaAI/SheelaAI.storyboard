@@ -4,7 +4,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
-        <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -19,19 +18,19 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eSg-fy-jCB">
-                                <rect key="frame" x="57" y="241" width="300" height="314"/>
+                                <rect key="frame" x="57" y="254" width="300" height="288"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="maya" translatesAutoresizingMaskIntoConstraints="NO" id="0Hx-a6-RLy">
-                                        <rect key="frame" x="20" y="82" width="260" height="100"/>
+                                        <rect key="frame" x="20" y="56" width="260" height="100"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="100" id="6Zl-sM-C0M"/>
                                         </constraints>
                                     </imageView>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kJt-E6-YUZ">
-                                        <rect key="frame" x="16" y="222" width="268" height="76"/>
+                                        <rect key="frame" x="16" y="196" width="268" height="76"/>
                                         <subviews>
                                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="2w4-sV-peC">
-                                                <rect key="frame" x="8" y="8" width="192" height="60"/>
+                                                <rect key="frame" x="8" y="8" width="207" height="60"/>
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="60" id="Tlb-NQ-ixS"/>
@@ -41,22 +40,20 @@
                                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                             </textView>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="633-cc-dPZ">
-                                                <rect key="frame" x="204" y="8" width="2" height="60"/>
+                                                <rect key="frame" x="219" y="8" width="2" height="60"/>
                                                 <color key="backgroundColor" systemColor="systemBlueColor"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="2" id="3p7-eF-MGK"/>
                                                 </constraints>
                                             </view>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2Wf-vz-LFG">
-                                                <rect key="frame" x="210" y="22.5" width="50" height="31"/>
+                                                <rect key="frame" x="225" y="20.5" width="35" height="35"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" constant="50" id="EO3-L4-K73"/>
+                                                    <constraint firstAttribute="height" constant="35" id="5ZA-PP-cjw"/>
+                                                    <constraint firstAttribute="width" constant="35" id="EO3-L4-K73"/>
                                                 </constraints>
                                                 <color key="tintColor" systemColor="systemBlueColor"/>
-                                                <state key="normal" title="Button"/>
-                                                <buttonConfiguration key="configuration" style="filled" image="paperplane.fill" catalog="system" title=" ">
-                                                    <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                </buttonConfiguration>
+                                                <buttonConfiguration key="configuration" style="plain"/>
                                                 <connections>
                                                     <action selector="sendAction:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="bWM-zD-UpT"/>
                                                 </connections>
@@ -77,17 +74,13 @@
                                         </constraints>
                                     </view>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LYp-q2-7D5">
-                                        <rect key="frame" x="242" y="16" width="50" height="50"/>
+                                        <rect key="frame" x="260" y="16" width="24" height="24"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="50" id="BdS-bI-e45"/>
-                                            <constraint firstAttribute="width" constant="50" id="oi4-vf-x6e"/>
+                                            <constraint firstAttribute="height" constant="24" id="BdS-bI-e45"/>
+                                            <constraint firstAttribute="width" constant="24" id="oi4-vf-x6e"/>
                                         </constraints>
-                                        <color key="tintColor" systemColor="systemBlueColor"/>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="filled" title=" " titleAlignment="center">
-                                            <imageReference key="image" image="clear.fill" catalog="system" symbolScale="large"/>
-                                            <preferredSymbolConfiguration key="preferredSymbolConfigurationForImage" weight="heavy"/>
-                                        </buttonConfiguration>
+                                        <color key="tintColor" systemColor="labelColor"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                         <connections>
                                             <action selector="CloseAction:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="704-JO-aHX"/>
                                         </connections>
@@ -99,7 +92,7 @@
                                     <constraint firstItem="LYp-q2-7D5" firstAttribute="top" secondItem="eSg-fy-jCB" secondAttribute="top" constant="16" id="A0X-PG-JKs"/>
                                     <constraint firstItem="0Hx-a6-RLy" firstAttribute="leading" secondItem="eSg-fy-jCB" secondAttribute="leading" constant="20" id="FvC-DG-9V9"/>
                                     <constraint firstAttribute="trailing" secondItem="0Hx-a6-RLy" secondAttribute="trailing" constant="20" id="Grg-Gv-55h"/>
-                                    <constraint firstAttribute="trailing" secondItem="LYp-q2-7D5" secondAttribute="trailing" constant="8" id="JxX-wC-Bax"/>
+                                    <constraint firstAttribute="trailing" secondItem="LYp-q2-7D5" secondAttribute="trailing" constant="16" id="JxX-wC-Bax"/>
                                     <constraint firstAttribute="bottom" secondItem="kJt-E6-YUZ" secondAttribute="bottom" constant="16" id="MCm-hO-Usg"/>
                                     <constraint firstAttribute="trailing" secondItem="kJt-E6-YUZ" secondAttribute="trailing" constant="16" id="RUv-de-rV1"/>
                                     <constraint firstItem="kJt-E6-YUZ" firstAttribute="leading" secondItem="eSg-fy-jCB" secondAttribute="leading" constant="16" id="ard-0l-9kr"/>
@@ -116,11 +109,11 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="CloseBTN" destination="LYp-q2-7D5" id="4pa-Ww-ygI"/>
                         <outlet property="PopUPView" destination="eSg-fy-jCB" id="ZxA-1h-Rvs"/>
+                        <outlet property="SendBTN" destination="2Wf-vz-LFG" id="2uq-6T-Z8F"/>
                         <outlet property="TVBGV" destination="kJt-E6-YUZ" id="uIn-A8-yGv"/>
                         <outlet property="mainTF" destination="2w4-sV-peC" id="CXw-XM-BPM"/>
-                        <outletCollection property="actionButtons" destination="LYp-q2-7D5" collectionClass="NSMutableArray" id="q19-l2-wSq"/>
-                        <outletCollection property="actionButtons" destination="2Wf-vz-LFG" collectionClass="NSMutableArray" id="xlO-jW-e0G"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -129,9 +122,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="clear.fill" catalog="system" width="128" height="114"/>
         <image name="maya" width="200" height="200"/>
-        <image name="paperplane.fill" catalog="system" width="128" height="118"/>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
