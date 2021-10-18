@@ -15,7 +15,8 @@ class SheelaAIVC: UIViewController {
     @IBOutlet weak var PopUPView: UIView!
     var callback : ((String) -> Void)?
     var message = ""
-    @IBOutlet var actionButtons: [UIButton]!
+    @IBOutlet weak var CloseBTN: UIButton!
+    @IBOutlet weak var SendBTN: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,6 +29,10 @@ class SheelaAIVC: UIViewController {
         TVBGV.layer.borderColor = UIColor.lightGray.cgColor
         TVBGV.layer.borderWidth = 1
         mainTF.becomeFirstResponder()
+        SendBTN.setTitle(" ", for: .normal)
+        CloseBTN.setTitle(" ", for: .normal)
+        SendBTN.setBackgroundImage(UIImage(named: "Send"), for: .normal)
+        CloseBTN.setBackgroundImage(UIImage(named: "Close"), for: .normal)
     }
     
     @IBAction func CloseAction(_ sender: UIButton) {

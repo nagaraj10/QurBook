@@ -287,20 +287,33 @@ class ChatScreenState extends State<ChatScreen> {
           .doc(peerId)
           .get()
           .then((value) async {
-        if (value.data != null) {
-          setState(() {
-            isChatDisable = value.data()[STR_IS_DISABLE] ?? false;
-          });
-
+        if (value != null) {
+          if(value?.data!=null){
+            setState(() {
+              isChatDisable = value?.data()[STR_IS_DISABLE] ?? false;
+            });
+          }else{
+            setState(() {
+              isChatDisable = false;
+            });
+          }
           await FirebaseFirestore.instance
               .collection(STR_CHAT_LIST)
               .doc(patientId)
               .collection(STR_USER_LIST)
               .doc(peerId)
               .update({STR_IS_READ_COUNT: 0});
+        }else{
+          setState(() {
+            isChatDisable = false;
+          });
         }
       });
-    } catch (e) {}
+    } catch (e) {
+      setState(() {
+        isChatDisable = false;
+      });
+    }
   }
 
   getPatientDetails() async {
