@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
+import 'package:myfhb/widgets/checkout_page.dart';
 
 import '../../../model/bot/ConversationModel.dart';
 import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:provider/provider.dart';
+import 'package:myfhb/constants/router_variable.dart' as routervariable;
 
 class MayaConvUI extends StatelessWidget {
   final Conversation c;
@@ -32,12 +37,47 @@ class MayaConvUI extends StatelessWidget {
                             c.isActionDone = true;
                           }
                           buttonData.isSelected = true;
-                          Provider.of<ChatScreenViewModel>(context,
-                                  listen: false)
-                              .startSheelaFromButton(
-                            buttonText: buttonData.title,
-                            payload: buttonData.payload,
-                          );
+
+                          if (buttonData?.redirectTo != null &&
+                              buttonData.redirectTo.contains('myfamily_list')) {
+                            Provider.of<ChatScreenViewModel>(context,
+                                    listen: false)
+                                .startSheelaFromButton(
+                              buttonText: buttonData.title,
+                              payload: buttonData.payload,
+                              isRedirectionNeed: true,
+                            );
+                            FlutterToast()
+                                .getToast('Redirecting...', Colors.black54);
+                            Get.toNamed(
+                              routervariable.rt_UserAccounts,
+                              arguments: UserAccountsArguments(
+                                selectedIndex: 1,
+                              ),
+                            ).then((value) => Provider.of<ChatScreenViewModel>(
+                                    context,
+                                    listen: false)
+                                .reEnableMicButton());
+                          } else if (buttonData?.redirectTo != null &&
+                              buttonData.redirectTo.contains('mycart')) {
+                            Provider.of<ChatScreenViewModel>(context,
+                                    listen: false)
+                                .startSheelaFromButton(
+                              buttonText: buttonData.title,
+                              payload: buttonData.payload,
+                              isRedirectionNeed: true,
+                            );
+                            FlutterToast()
+                                .getToast('Redirecting...', Colors.black54);
+                            Get.to(CheckoutPage());
+                          } else {
+                            Provider.of<ChatScreenViewModel>(context,
+                                    listen: false)
+                                .startSheelaFromButton(
+                              buttonText: buttonData.title,
+                              payload: buttonData.payload,
+                            );
+                          }
                         },
                   child: Card(
                     color: (buttonData.isSelected ?? false)
