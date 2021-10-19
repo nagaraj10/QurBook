@@ -59,6 +59,10 @@ class RegimentService {
     final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var urlForRegiment = Constants.BASE_URL + variable.regiment;
     try {
+      var localTime = CommonUtil.dateFormatterWithdatetimeseconds(
+        DateTime.now(),
+        isIndianTime: true,
+      );
       var headerRequest = await HeaderRequest().getRequestHeadersAuthContent();
       var response = await ApiServices.post(
         urlForRegiment,
@@ -67,7 +71,7 @@ class RegimentService {
           {
             'method': 'post',
             'data':
-                "Action=SaveFormForEvent&eid=$eid${events ?? ''}${variable.qr_patientEqaul}$userId",
+                "Action=SaveFormForEvent&eid=$eid&ack_local=$localTime${events ?? ''}${variable.qr_patientEqaul}$userId",
           },
         ),
       );
@@ -281,7 +285,10 @@ class RegimentService {
       var headerRequest = await HeaderRequest().getRequestHeadersAuthContent();
       var hh = DateFormat('HH').format(startTime);
       var mm = DateFormat('mm').format(startTime);
-      var date = '${CommonUtil.dateConversionToApiFormat(startTime,isIndianTime: true,)}';
+      var date = '${CommonUtil.dateConversionToApiFormat(
+        startTime,
+        isIndianTime: true,
+      )}';
       var hide = isDisable ? '1' : '0';
       var response = await ApiServices.post(
         urlForRegiment,
