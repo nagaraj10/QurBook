@@ -478,11 +478,32 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         if (deviceController.text == '' || deviceController.text == null) {
           validationConditon = false;
           validationMsg = CommonConstants.strSugarLevelEmpty;
-        } else if (isSelected[0] == null && isSelected[1] == null&& isSelected[2] == null) {
+        } else if (isSelected[0] == null &&
+            isSelected[1] == null &&
+            isSelected[2] == null) {
           validationConditon = false;
           validationMsg = CommonConstants.strSugarFasting;
-        } else if ((isSelected[0] == null && isSelected[1] == false&& isSelected[2] == false) ||
-            (isSelected[0] == false && isSelected[1] == null&& isSelected[2] == null)) {
+        } else if ((isSelected[0] == null &&
+                isSelected[1] == false &&
+                isSelected[2] == false) ||
+            (isSelected[0] == false &&
+                    isSelected[1] == null &&
+                    isSelected[2] == null) ||
+                (isSelected[0] == null &&
+                    isSelected[1] == false &&
+                    isSelected[2] == null) ||
+                (isSelected[0] == false &&
+                    isSelected[1] == null &&
+                    isSelected[2] == false) ||
+                (isSelected[0] == false &&
+                    isSelected[1] == false &&
+                    isSelected[2] == null) ||
+                (isSelected[0] == false &&
+                    isSelected[1] == false &&
+                    isSelected[2] == false)||
+                (isSelected[0] == null &&
+                    isSelected[1] == null &&
+                    isSelected[2] == false)) {
           validationConditon = false;
           validationMsg = CommonConstants.strSugarFasting;
         } else {
@@ -1144,33 +1165,36 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
             Expanded(
                 flex: 1,
                 child: Column(
-              children: <Widget>[
-                Text(
-                  'mg/dl',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 14.0.sp,
-                      color: Color(CommonConstants.GlucolightColor)),
-                  softWrap: true,
-                ),
-                fhbBasicWidget.getErrorMsgForUnitEntered(
-                    context,
-                    CommonConstants.strValue,
-                    commonConstants.glucometerUNIT,
-                    deviceController, (errorValue) {
-                  setState(() {
-                    errorMsg = errorValue;
-                  });
-                }, errorMsg, variable.strGlucUnit, deviceName,
-                    range: ((isSelected[0] == null && isSelected[1] == false) ||
-                            (isSelected[0] == false && isSelected[1] == null) ||
-                            (isSelected[0] == null && isSelected[1] == null))
-                        ? 'Random'
-                        : isSelected[0] == true
-                            ? 'Fast'
-                            : 'PP')
-              ],
-            )),
+                  children: <Widget>[
+                    Text(
+                      'mg/dl',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14.0.sp,
+                          color: Color(CommonConstants.GlucolightColor)),
+                      softWrap: true,
+                    ),
+                    fhbBasicWidget.getErrorMsgForUnitEntered(
+                        context,
+                        CommonConstants.strValue,
+                        commonConstants.glucometerUNIT,
+                        deviceController, (errorValue) {
+                      setState(() {
+                        errorMsg = errorValue;
+                      });
+                    }, errorMsg, variable.strGlucUnit, deviceName,
+                        range: ((isSelected[0] == null &&
+                                    isSelected[1] == false) ||
+                                (isSelected[0] == false &&
+                                    isSelected[1] == null) ||
+                                (isSelected[0] == null &&
+                                    isSelected[1] == null))
+                            ? 'Random'
+                            : isSelected[0] == true
+                                ? 'Fast'
+                                : 'PP')
+                  ],
+                )),
             SizedBox(
               width: 5.0.w,
             ),
