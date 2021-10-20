@@ -99,6 +99,11 @@ class ChatScreenViewModel extends ChangeNotifier {
     // notifyListeners();
   }
 
+  void reEnableMicButton() {
+    isButtonResponse = false;
+    notifyListeners();
+  }
+
   ChatScreenViewModel() {
     prof = PreferenceUtil.getProfileData(constants.KEY_PROFILE);
     user_name = prof.result != null
@@ -343,9 +348,12 @@ class ChatScreenViewModel extends ChangeNotifier {
   startSheelaFromButton({
     String buttonText,
     String payload,
+    bool isRedirectionNeed = false,
   }) async {
     stopTTSEngine();
-    Future.delayed(Duration(seconds: 1), () {
+
+    if(!isRedirectionNeed){
+       Future.delayed(Duration(seconds: 1), () {
       sendToMaya(payload, screen: _screen);
     });
 
@@ -362,6 +370,7 @@ class ChatScreenViewModel extends ChangeNotifier {
 
     conversations.add(model);
     notifyListeners();
+    }
     Future.delayed(Duration(seconds: 3), () {
       conversations.forEach((conversation) {
         conversation.buttons?.forEach((button) {
@@ -556,7 +565,7 @@ class ChatScreenViewModel extends ChangeNotifier {
                         gettingReposnseFromNative();
                       } else {
                         refreshData();
-                        Future<dynamic>.delayed(const Duration(seconds: 2),
+                        /* Future<dynamic>.delayed(const Duration(seconds: 2),
                             () async {
                           if (conversations[conversations.length - 1]
                                       .redirectTo !=
@@ -594,7 +603,7 @@ class ChatScreenViewModel extends ChangeNotifier {
                             FlutterToast()
                                 .getToast('Redirecting...', Colors.black54);
                           }
-                        });
+                        }); */
                       }
                     } else {
                       playingIndex = conversations.length - 1;
