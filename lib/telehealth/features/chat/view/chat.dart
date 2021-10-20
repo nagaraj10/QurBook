@@ -2253,13 +2253,21 @@ class ChatScreenState extends State<ChatScreen> {
 
   openYoutubeDialog(String url) {
     final videoId = YoutubePlayer.convertUrlToId(url);
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => MyYoutubePlayer(
-          videoId: videoId,
+    if (videoId != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MyYoutubePlayer(
+            videoId: videoId,
+          ),
         ),
-      ),
-    );
+      );
+    } else {
+      CommonUtil().openWebViewNew(
+        url,
+        url,
+        false,
+      );
+    }
   }
 }
