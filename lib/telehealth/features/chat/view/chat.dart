@@ -288,11 +288,11 @@ class ChatScreenState extends State<ChatScreen> {
           .get()
           .then((value) async {
         if (value != null) {
-          if(value?.data!=null){
+          if (value?.data != null) {
             setState(() {
               isChatDisable = value?.data()[STR_IS_DISABLE] ?? false;
             });
-          }else{
+          } else {
             setState(() {
               isChatDisable = false;
             });
@@ -303,7 +303,7 @@ class ChatScreenState extends State<ChatScreen> {
               .collection(STR_USER_LIST)
               .doc(peerId)
               .update({STR_IS_READ_COUNT: 0});
-        }else{
+        } else {
           setState(() {
             isChatDisable = false;
           });
@@ -1387,7 +1387,7 @@ class ChatScreenState extends State<ChatScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        isCareGiver
+                        !isChatDisable && isCareGiver
                             ? IconButton(
                                 onPressed: () {
                                   CommonUtil().CallbackAPIFromChat(
@@ -1766,7 +1766,8 @@ class ChatScreenState extends State<ChatScreen> {
       body: isLoading
           ? Center(
               child: CircularProgressIndicator(
-                  color: Color(CommonUtil().getMyPrimaryColor()),))
+              color: Color(CommonUtil().getMyPrimaryColor()),
+            ))
           : Stack(
               children: <Widget>[
                 Container(
@@ -2041,8 +2042,8 @@ class ChatScreenState extends State<ChatScreen> {
     return Flexible(
       child: groupChatId == ''
           ? Center(
-          child: CircularProgressIndicator(
-              color: Color(CommonUtil().getMyPrimaryColor())))
+              child: CircularProgressIndicator(
+                  color: Color(CommonUtil().getMyPrimaryColor())))
           : StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
               stream: FirebaseFirestore.instance
                   .collection(STR_MESSAGES)
