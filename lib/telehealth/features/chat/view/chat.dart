@@ -1358,7 +1358,7 @@ class ChatScreenState extends State<ChatScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        isCareGiver
+                        !isChatDisable && isCareGiver
                             ? IconButton(
                                 onPressed: () {
                                   CommonUtil().CallbackAPIFromChat(
