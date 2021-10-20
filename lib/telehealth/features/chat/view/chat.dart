@@ -30,6 +30,7 @@ import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/ui/MyRecordsArguments.dart';
 import 'package:myfhb/src/ui/audio/AudioScreenArguments.dart';
 import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
+import 'package:myfhb/src/ui/bot/widgets/youtube_player.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
@@ -46,6 +47,7 @@ import 'package:open_file/open_file.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../../../../common/CommonUtil.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
@@ -288,11 +290,11 @@ class ChatScreenState extends State<ChatScreen> {
           .get()
           .then((value) async {
         if (value != null) {
-          if(value?.data!=null){
+          if (value?.data != null) {
             setState(() {
               isChatDisable = value?.data()[STR_IS_DISABLE] ?? false;
             });
-          }else{
+          } else {
             setState(() {
               isChatDisable = false;
             });
@@ -303,7 +305,7 @@ class ChatScreenState extends State<ChatScreen> {
               .collection(STR_USER_LIST)
               .doc(peerId)
               .update({STR_IS_READ_COUNT: 0});
-        }else{
+        } else {
           setState(() {
             isChatDisable = false;
           });
@@ -755,44 +757,10 @@ class ChatScreenState extends State<ChatScreen> {
 
     if (document[STR_TYPE] == 0) {
       String tempData = document[STR_CONTENT];
-      //setState(() {
-      wordsList = tempData.split(',');
-      filteredWordsList = wordsList;
-      //});
 
-      String word = document[STR_CONTENT];
-      /*final RegExp REGEX_EMOJI = RegExp(
-          r'(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])');
-      if (word.contains(REGEX_EMOJI)) {
-        word = word.replaceAll(REGEX_EMOJI, '');
-      }*/
-      List<String> tempList =
-          word.length > 1 && word.indexOf(textFieldValue) != -1
-              ? word.split(textFieldValue)
-              : [word, ''];
-      int i = 0;
-      tempList.forEach((item) {
-        if (word.indexOf(textFieldValue) != -1 && i < tempList.length - 1) {
-          if (textFieldValue != '' && textFieldValue != null && firstTime) {
-            textFieldValueClone = textFieldValue;
-            indexList.add(index);
-          }
-          textSpanList = [
-            ...textSpanList,
-            TextSpan(text: '${item}'),
-            TextSpan(
-              text: '${textFieldValue}',
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  background: Paint()..color = Colors.yellow),
-            ),
-          ];
-        } else {
-          //
-          textSpanList = [...textSpanList, TextSpan(text: '${item}')];
-        }
-        i++;
-      });
+      textSpanList = [
+        buildTextWithLinks(tempData, index, document[STR_ID_FROM] == patientId)
+      ];
       //firstTime = false;
       //commonIndex=indexList.length-1;
     }
@@ -1061,7 +1029,10 @@ class ChatScreenState extends State<ChatScreen> {
                           ),
                           child: RichText(
                             text: TextSpan(
-                                style: TextStyle(color: Colors.white),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16.0.sp,
+                                ),
                                 children: textSpanList),
                           ),
                         ),
@@ -1766,7 +1737,8 @@ class ChatScreenState extends State<ChatScreen> {
       body: isLoading
           ? Center(
               child: CircularProgressIndicator(
-                  color: Color(CommonUtil().getMyPrimaryColor()),))
+              color: Color(CommonUtil().getMyPrimaryColor()),
+            ))
           : Stack(
               children: <Widget>[
                 Container(
@@ -2041,8 +2013,8 @@ class ChatScreenState extends State<ChatScreen> {
     return Flexible(
       child: groupChatId == ''
           ? Center(
-          child: CircularProgressIndicator(
-              color: Color(CommonUtil().getMyPrimaryColor())))
+              child: CircularProgressIndicator(
+                  color: Color(CommonUtil().getMyPrimaryColor())))
           : StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
               stream: FirebaseFirestore.instance
                   .collection(STR_MESSAGES)
@@ -2172,5 +2144,122 @@ class ChatScreenState extends State<ChatScreen> {
 
   closeDialog() {
     Navigator.of(context).pop();
+  }
+
+  TextSpan buildTextWithLinks(String textToLink, int index, bool isPatient) =>
+      TextSpan(
+        children: linkify(
+          textToLink,
+          index,
+          isPatient,
+        ),
+      );
+
+  WidgetSpan buildLinkComponent(
+          String text, String linkToOpen, int index, bool isPatient) =>
+      WidgetSpan(
+        child: InkWell(
+          child: RichText(
+            text: TextSpan(
+              children: getSplittedTextWidget(text, index),
+              style: TextStyle(
+                color: isPatient ? Colors.blueAccent : Colors.white,
+                // background: Paint()
+                //   ..color =
+                //       Colors.white,
+                decoration: TextDecoration.underline,
+                fontSize: 16.0.sp,
+              ),
+            ),
+          ),
+          onTap: () {
+            openYoutubeDialog(text);
+          },
+        ),
+      );
+
+  List<InlineSpan> linkify(String text, int index, bool isPatient) {
+    const String urlPattern = 'https?:/\/\\S+';
+    final RegExp linkRegExp = RegExp('($urlPattern)', caseSensitive: false);
+
+    final List<InlineSpan> list = <InlineSpan>[];
+    final RegExpMatch match = linkRegExp.firstMatch(text);
+    if (match == null) {
+      list.add(TextSpan(children: getSplittedTextWidget(text, index)));
+      return list;
+    }
+
+    if (match.start > 0) {
+      list.add(TextSpan(
+          children:
+              getSplittedTextWidget(text.substring(0, match.start), index)));
+    }
+
+    final String linkText = match.group(0);
+    if (linkText.contains(RegExp(urlPattern, caseSensitive: false))) {
+      list.add(buildLinkComponent(linkText, linkText, index, isPatient));
+    } else {
+      throw 'Unexpected match: $linkText';
+    }
+
+    list.addAll(linkify(
+        text.substring(match.start + linkText.length), index, isPatient));
+
+    return list;
+  }
+
+  List<TextSpan> getSplittedTextWidget(String tempData, int index) {
+    List<TextSpan> textSpanList = [];
+    //setState(() {
+    wordsList = tempData.split(',');
+    filteredWordsList = wordsList;
+    //});
+
+    String word = tempData;
+    /*final RegExp REGEX_EMOJI = RegExp(
+          r'(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])');
+      if (word.contains(REGEX_EMOJI)) {
+        word = word.replaceAll(REGEX_EMOJI, '');
+      }*/
+    List<String> tempList =
+        word.length > 1 && word.indexOf(textFieldValue) != -1
+            ? word.split(textFieldValue)
+            : [word, ''];
+    int i = 0;
+    tempList.forEach((item) {
+      if (word.indexOf(textFieldValue) != -1 && i < tempList.length - 1) {
+        if (textFieldValue != '' && textFieldValue != null && firstTime) {
+          textFieldValueClone = textFieldValue;
+          indexList.add(index);
+        }
+        textSpanList = [
+          ...textSpanList,
+          TextSpan(text: '${item}'),
+          TextSpan(
+            text: '${textFieldValue}',
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                background: Paint()..color = Colors.yellow),
+          ),
+        ];
+      } else {
+        //
+        textSpanList = [...textSpanList, TextSpan(text: '${item}')];
+      }
+      i++;
+    });
+    return textSpanList;
+  }
+
+  openYoutubeDialog(String url) {
+    final videoId = YoutubePlayer.convertUrlToId(url);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MyYoutubePlayer(
+          videoId: videoId,
+        ),
+      ),
+    );
   }
 }
