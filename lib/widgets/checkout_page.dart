@@ -666,8 +666,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             ? Text(
                                 strRenewal,
                                 style: TextStyle(
-                                    color:
-                                        Color(CommonUtil().getMyPrimaryColor()),
+                                    color: Colors.black54,
                                     // fontWeight: FontWeight.bold,
                                     fontSize: 13),
                               )
