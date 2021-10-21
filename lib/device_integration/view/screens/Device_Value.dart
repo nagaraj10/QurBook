@@ -82,7 +82,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   TextEditingController memoController = TextEditingController(text: '');
   TextEditingController diaStolicPressure = TextEditingController(text: '');
 
-  List<bool> isSelected = List(2);
+  List<bool> isSelected = List(3);
 
   final HealthReportListForUserBlock _healthReportListForUserBlock =
       HealthReportListForUserBlock();
@@ -361,7 +361,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
           } else if (isSelected[1] == true) {
             postDeviceValuesExtra[parameters.strunit] = variable.strAfter;
           } else {
-            postDeviceValuesExtra[parameters.strunit] = 'Random';
+            postDeviceValuesExtra[parameters.strunit] = '';
           }
 
           postDeviceData.add(postDeviceValuesExtra);
@@ -447,6 +447,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 diaStolicPressure.text = '';
                 isSelected[0] = null;
                 isSelected[1] = null;
+                isSelected[2] = null;
               });
             });
           } else {
@@ -477,11 +478,32 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         if (deviceController.text == '' || deviceController.text == null) {
           validationConditon = false;
           validationMsg = CommonConstants.strSugarLevelEmpty;
-        } else if (isSelected[0] == null && isSelected[1] == null) {
+        } else if (isSelected[0] == null &&
+            isSelected[1] == null &&
+            isSelected[2] == null) {
           validationConditon = false;
           validationMsg = CommonConstants.strSugarFasting;
-        } else if ((isSelected[0] == null && isSelected[1] == false) ||
-            (isSelected[0] == false && isSelected[1] == null)) {
+        } else if ((isSelected[0] == null &&
+                isSelected[1] == false &&
+                isSelected[2] == false) ||
+            (isSelected[0] == false &&
+                    isSelected[1] == null &&
+                    isSelected[2] == null) ||
+                (isSelected[0] == null &&
+                    isSelected[1] == false &&
+                    isSelected[2] == null) ||
+                (isSelected[0] == false &&
+                    isSelected[1] == null &&
+                    isSelected[2] == false) ||
+                (isSelected[0] == false &&
+                    isSelected[1] == false &&
+                    isSelected[2] == null) ||
+                (isSelected[0] == false &&
+                    isSelected[1] == false &&
+                    isSelected[2] == false)||
+                (isSelected[0] == null &&
+                    isSelected[1] == null &&
+                    isSelected[2] == false)) {
           validationConditon = false;
           validationMsg = CommonConstants.strSugarFasting;
         } else {
@@ -1141,38 +1163,43 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
               width: 5.0.w,
             ),
             Expanded(
+                flex: 1,
                 child: Column(
-              children: <Widget>[
-                Text(
-                  'mg/dl',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 14.0.sp,
-                      color: Color(CommonConstants.GlucolightColor)),
-                  softWrap: true,
-                ),
-                fhbBasicWidget.getErrorMsgForUnitEntered(
-                    context,
-                    CommonConstants.strValue,
-                    commonConstants.glucometerUNIT,
-                    deviceController, (errorValue) {
-                  setState(() {
-                    errorMsg = errorValue;
-                  });
-                }, errorMsg, variable.strGlucUnit, deviceName,
-                    range: ((isSelected[0] == null && isSelected[1] == false) ||
-                            (isSelected[0] == false && isSelected[1] == null) ||
-                            (isSelected[0] == null && isSelected[1] == null))
-                        ? 'Random'
-                        : isSelected[0] == true
-                            ? 'Fast'
-                            : 'PP')
-              ],
-            )),
+                  children: <Widget>[
+                    Text(
+                      'mg/dl',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14.0.sp,
+                          color: Color(CommonConstants.GlucolightColor)),
+                      softWrap: true,
+                    ),
+                    fhbBasicWidget.getErrorMsgForUnitEntered(
+                        context,
+                        CommonConstants.strValue,
+                        commonConstants.glucometerUNIT,
+                        deviceController, (errorValue) {
+                      setState(() {
+                        errorMsg = errorValue;
+                      });
+                    }, errorMsg, variable.strGlucUnit, deviceName,
+                        range: ((isSelected[0] == null &&
+                                    isSelected[1] == false) ||
+                                (isSelected[0] == false &&
+                                    isSelected[1] == null) ||
+                                (isSelected[0] == null &&
+                                    isSelected[1] == null))
+                            ? 'Random'
+                            : isSelected[0] == true
+                                ? 'Fast'
+                                : 'PP')
+                  ],
+                )),
             SizedBox(
               width: 5.0.w,
             ),
             Expanded(
+              flex: 2,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -1196,6 +1223,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                 setState(() {
                                   isSelected[0] = value;
                                   isSelected[1] = null;
+                                  isSelected[2] = null;
                                 });
                               })),
                     ],
@@ -1223,6 +1251,35 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                 setState(() {
                                   isSelected[1] = value;
                                   isSelected[0] = null;
+                                  isSelected[2] = null;
+                                });
+                              })),
+                    ],
+                  )),
+                  SizedBox(
+                    width: 5.0.w,
+                  ),
+                  Expanded(
+                      child: Column(
+                    children: <Widget>[
+                      Text(
+                        'Random',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14.0.sp,
+                            color: Colors.grey),
+                        softWrap: true,
+                      ),
+                      Container(
+                          width: 50.0.w,
+                          constraints: BoxConstraints(maxWidth: 100.0.w),
+                          child: MyCheckbox(
+                              value: isSelected[2],
+                              onChanged: (value) {
+                                setState(() {
+                                  isSelected[2] = value;
+                                  isSelected[0] = null;
+                                  isSelected[1] = null;
                                 });
                               })),
                     ],
