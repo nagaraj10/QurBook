@@ -32,7 +32,7 @@ class LanguageResult {
   bool isActive;
   String createdBy;
   String createdOn;
-  Null lastModifiedOn;
+  dynamic lastModifiedOn;
   List<ReferenceValueCollection> referenceValueCollection;
 
   LanguageResult(

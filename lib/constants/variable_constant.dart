@@ -348,7 +348,7 @@ const String strFilesDownloaded = 'All Files are downloaded, view in Gallery';
 const String strFilesView = 'File downloaded, view in Gallery';
 const String strFileDownloaded = 'File downloaded';
 const String strFilesErrorDownload = 'Error in File download.';
-const String strAfter = 'After';
+const String strAfter = 'After Meal';
 const String strDateFormatDay = 'dd/MM/yyyy';
 const String strUSDateFormatDay = 'MM/dd/yyyy';
 
@@ -519,12 +519,13 @@ const String strImgNtClear = 'Image not clear';
 const String strGlucUnit = 'mgdl';
 const String strbfood = 'Before Food';
 const String strafood = 'After Food';
+const String strarandom= 'Random';
 const String strpulseUnit = '%spo2';
 const String strpulse = 'pulse';
 const String strbpunit = 'mmHg';
 const String strbpdp = 'dp';
 
-const String strBefore = 'Before';
+const String strBefore = 'Before Meal';
 const String strNo = 'No';
 
 const String strdflit = 'assets/device_detection.tflite';

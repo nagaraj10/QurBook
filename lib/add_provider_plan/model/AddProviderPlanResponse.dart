@@ -30,7 +30,7 @@ class AddProviderPlanResponseResult {
   String createdOn;
   bool isDefault;
   bool isInvite;
-  Null doctor;
+  dynamic doctor;
   CreatedBy healthOrganization;
   CreatedBy patient;
   String startDate;

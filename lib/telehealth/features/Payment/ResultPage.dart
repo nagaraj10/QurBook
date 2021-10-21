@@ -75,16 +75,21 @@ class _ResultPage extends State<ResultPage> {
                             color: Colors.white,
                             fontWeight: FontWeight.bold)),
                     SizedBox(height: 10.0.h),
-                    Text(
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Text(
                         isFromSubscribe
                             ? PLAN_CONFIRM
                             : status
                                 ? APPOINTMENT_CONFIRM
-                                : UNABLE_PROCESS,
+                                : PAYMENT_FAILURE_CONTENT,
                         style: TextStyle(
-                            fontSize: 16.0.sp,
+                            fontSize: 12.0.sp,
                             color: Colors.white,
-                            fontWeight: FontWeight.bold)),
+                            fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
                     status
                         ? Text(
                             widget.refNo != null
@@ -104,19 +109,18 @@ class _ResultPage extends State<ResultPage> {
                       textColor: Colors.white,
                       padding: EdgeInsets.all(12.0),
                       onPressed: () {
-                          status
-                              ? widget.closePage(STR_SUCCESS)
-                              : widget.closePage(STR_FAILED);
-                          status && !isFromSubscribe
-                              ? Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => TelehealthProviders(
-                                            arguments: HomeScreenArguments(
-                                                selectedIndex: 0),
-                                          )))
-                              : Navigator.pop(context);
-
+                        status
+                            ? widget.closePage(STR_SUCCESS)
+                            : widget.closePage(STR_FAILED);
+                        status && !isFromSubscribe
+                            ? Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => TelehealthProviders(
+                                          arguments: HomeScreenArguments(
+                                              selectedIndex: 0),
+                                        )))
+                            : Navigator.pop(context);
                       },
                       child: Text(
                         STR_DONE.toUpperCase(),

@@ -4,8 +4,7 @@ class LoginDetails {
   LoginDetails({this.result});
 
   LoginDetails.fromJson(Map<String, dynamic> json) {
-    result =
-        json['result'] != null ? Result.fromJson(json['result']) : null;
+    result = json['result'] != null ? Result.fromJson(json['result']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -21,16 +20,16 @@ class Result {
   String id;
   String lastLoggedIn;
   String status;
-  Null verificationCode;
-  Null codeExpirationDatetime;
+  dynamic verificationCode;
+  dynamic codeExpirationDatetime;
   bool isLocked;
   int failedVerificationCount;
-  Null accountLockedDatetime;
-  Null resetPasswordExpiryDatetime;
+  dynamic accountLockedDatetime;
+  dynamic resetPasswordExpiryDatetime;
   bool isActive;
   String createdOn;
   String lastModifiedOn;
-  Null passwordChangedOn;
+  dynamic passwordChangedOn;
   String firstLoggedIn;
 
   Result(
