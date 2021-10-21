@@ -1,12 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/landing/view/landing_arguments.dart';
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/FamilyData.dart';
 import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
@@ -199,7 +202,19 @@ class SwitchProfile {
             //  Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
             getDialogBoxWithFamilyMemberScrap(familyMembersList.result);
           } else {
-            toast.getToast(Constants.NO_DATA_FAMIY_CLONE, Colors.black54);
+            if (PreferenceUtil.getStringValue(Constants.KEY_USERID) !=
+                PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN)) {
+              PreferenceUtil.saveString(Constants.KEY_USERID,
+                      PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN))
+                  .then((value) {
+                Get.offAllNamed(
+                  rt_Landing,
+                  arguments: LandingArguments(),
+                );
+              });
+            } else {
+              toast.getToast(Constants.NO_DATA_FAMIY_CLONE, Colors.black54);
+            }
           }
         });
       } else {
