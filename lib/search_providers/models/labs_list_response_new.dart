@@ -37,7 +37,7 @@ class LabListResult {
   String phoneNumber;
   String phoneNumberTypeId;
   String phoneNumberTypeName;
-  Null healthOrganizationReferenceId;
+  dynamic healthOrganizationReferenceId;
 
   LabListResult(
       {this.healthOrganizationId,

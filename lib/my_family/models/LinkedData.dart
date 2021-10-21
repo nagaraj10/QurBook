@@ -4,7 +4,7 @@ class LinkedData {
   String nickName;
   String customRoleId;
   String roleName;
-  Null modeOfShare;
+  dynamic modeOfShare;
 
   LinkedData(
       {this.nickName, this.customRoleId, this.roleName, this.modeOfShare});
@@ -25,4 +25,3 @@ class LinkedData {
     return data;
   }
 }
-

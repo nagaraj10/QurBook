@@ -651,10 +651,10 @@ class Parent {
   bool isMigrated;
   bool isClaimed;
   bool isIeUser;
-  Null isEmailVerified;
+  dynamic isEmailVerified;
   bool isCpUser;
-  Null communicationPreferences;
-  Null medicalPreferences;
+  dynamic communicationPreferences;
+  dynamic medicalPreferences;
   bool isSignedIn;
   bool isActive;
   String createdBy;
