@@ -1314,13 +1314,12 @@ class CommonUtil {
     try {
       var dateTime = DateTime.tryParse(string);
       if (dateTime != null) {
-       return dateConversionToApiFormat(dateTime);
+        return dateConversionToApiFormat(dateTime);
       }
       return '';
-    }catch(e){
+    } catch (e) {
       return '';
     }
-
   }
 
   static String dateConversionToApiFormat(DateTime dateTime,
@@ -3272,17 +3271,19 @@ class CommonUtil {
     String careProviderId,
     String careProviderName,
   ) async {
-    
     var res = await ApiBaseHelper().callBackFromChat(
       careProviderId,
       patId,
     );
-    
+
     if (res) {
       Get.rawSnackbar(
           messageText: Center(
             child: Text(
-              "Your request is placed. " + (careProviderName.isNotEmpty ? "$careProviderName, " : careProviderName) +
+              "Your callback request is placed. " +
+                  (careProviderName.isNotEmpty
+                      ? "$careProviderName, "
+                      : careProviderName) +
                   " will reach you shortly.",
               style:
                   TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
