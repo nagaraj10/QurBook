@@ -57,8 +57,7 @@ class FamilyListDialogState extends State<FamilyListDialog> {
             PreferenceUtil.getFamilyData(Constants.KEY_FAMILYMEMBER))
         : StreamBuilder<ApiResponse<FamilyMembersList>>(
             stream: _familyListBloc.familyMemberListStream,
-            builder: (context,
-                snapshot) {
+            builder: (context, snapshot) {
               if (snapshot.hasData) {
                 switch (snapshot.data.status) {
                   case Status.LOADING:
@@ -150,8 +149,7 @@ class FamilyListDialogState extends State<FamilyListDialog> {
   }
 
   Widget setupAlertDialoadContainer(List<Sharedbyme> sharedByMe) {
-    var myProfile =
-        PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+    var myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
 
     var profileData = ProfileData(
         id: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN));
@@ -160,8 +158,8 @@ class FamilyListDialogState extends State<FamilyListDialog> {
 
     if (sharedByMe == null) {
       sharedByMe = [];
-      sharedByMe.add(
-          Sharedbyme(profileData: profileData, linkedData: linkedData));
+      sharedByMe
+          .add(Sharedbyme(profileData: profileData, linkedData: linkedData));
     } else {
       sharedByMe.insert(
           0, Sharedbyme(profileData: profileData, linkedData: linkedData));
@@ -206,7 +204,10 @@ class FamilyListDialogState extends State<FamilyListDialog> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Text(
-                                  sharedByMe[index]?.linkedData?.nickName?.capitalizeFirstofEach,
+                                  sharedByMe[index]
+                                      ?.profileData
+                                      ?.name
+                                      ?.capitalizeFirstofEach,
                                   softWrap: false,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
