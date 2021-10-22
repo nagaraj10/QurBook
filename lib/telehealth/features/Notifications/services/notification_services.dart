@@ -20,13 +20,8 @@ class FetchNotificationService {
   HeaderRequest headerRequest = new HeaderRequest();
 
   Future<NotificationModel> fetchNotificationList() async {
-    final lastDate = DateTime.now().subtract(Duration(days: 7)).toString();
     return await ApiServices.get(
-      _baseUrl +
-          qr_notification_fetch +
-          lastDate +
-          qr_to_date +
-          DateTime.now().toString(),
+      _baseUrl + qr_notification_fetch + DateTime.now().toString(),
       headers: await headerRequest.getRequestHeadersAuthContent(),
     ).then((http.Response response) {
 //          print(response.body);
