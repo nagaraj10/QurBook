@@ -273,7 +273,11 @@ class FamilyListView {
                                     Flexible(
                                       child: Text(
                                         index == 0
-                                            ? sharedByMe[index].nickName != null
+                                            ? sharedByMe[index].child != null
+                                                ? getName(
+                                                    sharedByMe[index].child)
+                                                : 'Self'
+                                            : sharedByMe[index].nickName != null
                                                 ? sharedByMe[index]
                                                     ?.nickName
                                                     ?.capitalizeFirstofEach
@@ -281,10 +285,6 @@ class FamilyListView {
                                                     sharedByMe[index]
                                                         .nickName
                                                         .toLowerCase()) */
-                                                : ''
-                                            : sharedByMe[index].child != null
-                                                ? getName(
-                                                    sharedByMe[index].child)
                                                 : '',
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 2,
