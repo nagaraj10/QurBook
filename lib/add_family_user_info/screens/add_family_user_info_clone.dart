@@ -703,11 +703,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 ),
                 labelText: CommonConstants.addr_line_1,
               ),
-              validator: (res) {
+              /* validator: (res) {
                 return (res.isEmpty || res == null)
                     ? 'Address line1 can\'t be empty'
                     : null;
-              },
+              }, */
             ),
             TextFormField(
               style: TextStyle(
@@ -863,11 +863,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 ),
                 labelText: CommonConstants.addr_zip,
               ),
-              validator: (res) {
+              /* validator: (res) {
                 return (res.isEmpty || res == null)
                     ? 'Zip can\'t be empty'
                     : null;
-              },
+              }, */
             ),
           ],
         ),
