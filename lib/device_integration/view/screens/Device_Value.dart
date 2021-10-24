@@ -1152,7 +1152,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                     deviceName,
                     style: TextStyle(
                         fontWeight: FontWeight.w500,
-                        fontSize: 16.0.sp,
+                        fontSize: 14.0.sp,
                         color: Color(CommonConstants.GlucoDarkColor)),
                     softWrap: true,
                   ),
@@ -1170,7 +1170,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                       'mg/dl',
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
-                          fontSize: 14.0.sp,
+                          fontSize: 12.0.sp,
                           color: Color(CommonConstants.GlucolightColor)),
                       softWrap: true,
                     ),
@@ -1210,7 +1210,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                         'Fasting',
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
-                            fontSize: 14.0.sp,
+                            fontSize: 12.0.sp,
                             color: Colors.grey),
                         softWrap: true,
                       ),
@@ -1238,7 +1238,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                         'PP',
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
-                            fontSize: 14.0.sp,
+                            fontSize: 12.0.sp,
                             color: Colors.grey),
                         softWrap: true,
                       ),
@@ -1266,7 +1266,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                         'Random',
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
-                            fontSize: 14.0.sp,
+                            fontSize: 12.0.sp,
                             color: Colors.grey),
                         softWrap: true,
                       ),
