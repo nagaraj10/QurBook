@@ -598,6 +598,13 @@ const String STR_NOTES_HINT =
 const String STR_YES = 'yes';
 const String STR_NO = 'no';
 
+double height = 0.0;
+double width = 0.0;
+double kToolbarHeight = 56.0;
+
+double itemHeight = (height - kToolbarHeight - 24) / 8;
+double itemWidth = width / 2;
+
 FirebaseAnalytics _firebaseAnalytics = FirebaseAnalytics();
 var mInitialTime;
 
