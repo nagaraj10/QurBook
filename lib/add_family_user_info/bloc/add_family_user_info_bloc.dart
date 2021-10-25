@@ -188,6 +188,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
 
     return myProfile;
   }
+  
 
   Future<UpdateAddFamilyInfo> updateUserProfile(bool fromFamily) async {
     userProfileSink.add(ApiResponse.loading(variable.strUpdatingProfile));

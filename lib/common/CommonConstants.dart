@@ -70,6 +70,9 @@ class CommonConstants {
   static String searchPlaces = 'Search Places';
   static String comingSoon = 'Coming Soon';
 
+  static String search = 'Search';
+
+
   static String fromClass = 'My Providers';
 
   static String doctors = 'Doctors';
@@ -169,6 +172,7 @@ class CommonConstants {
 
   static String add = 'Add';
   static String save = 'Save';
+  static String ok = 'OK';
   static String update = 'Update';
   static String send_otp = 'Send OTP';
 
