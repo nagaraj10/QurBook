@@ -354,9 +354,13 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       children: <Widget>[
                         SizedBoxWidget(width: 20),
                         Text(
-                            user.nickName == null
+                            user.child == null
                                 ? 'Self'
-                                : user.nickName?.capitalizeFirstofEach,
+                                : ((user?.child?.firstName ?? '') +
+                                            ' ' +
+                                            (user?.child?.lastName ?? ''))
+                                        ?.capitalizeFirstofEach ??
+                                    '',
                             style: TextStyle(
                               fontSize: 14.0.sp,
                             )),

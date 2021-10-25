@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/src/model/user/Tags.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
@@ -62,6 +63,7 @@ class AddFamilyUserInfoScreen extends StatefulWidget {
   AddFamilyUserInfoArguments arguments;
 
   AddFamilyUserInfoScreen({this.arguments});
+
   @override
   AddFamilyUserInfoScreenState createState() => AddFamilyUserInfoScreenState();
 }
@@ -160,7 +162,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   MyProfileModel myProfile = MyProfileModel();
   HealthReportListForUserRepository _healthReportListForUserRepository;
   List<Tags> selectedTags = [];
-  var mediaResultFiltered=[];
+  List<Tags> mediaResultFiltered = [];
+
   @override
   void initState() {
     mInitialTime = DateTime.now();
@@ -168,11 +171,20 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     getSupportedLanguages();
     addFamilyUserInfoBloc = AddFamilyUserInfoBloc();
     _addFamilyUserInfoRepository = AddFamilyUserInfoRepository();
-    _healthReportListForUserRepository= new HealthReportListForUserRepository();
+    _healthReportListForUserRepository =
+        new HealthReportListForUserRepository();
 
     setUserId();
     addFamilyUserInfoBloc.getDeviceSelectionValues().then((value) {
       //fetchUserProfileInfo();
+    });
+
+    _healthReportListForUserRepository.getTags().then((value) {
+      List<Tags> tagslist = value.result;
+
+      mediaResultFiltered = removeUnwantedCategories(tagslist);
+
+      setTheValuesForDropdown(mediaResultFiltered);
     });
     setValuesInEditText();
 
@@ -453,7 +465,60 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 else
                   Container(),
                 if (widget.arguments.fromClass == CommonConstants.user_update)
-                getDropDownWithTagsdrop()
+                  //getDropDownWithTagsdrop()
+                  Column(
+                    children: [
+                      getTagsWithButton(context),
+                      selectedTags != null && selectedTags.length > 0
+                          ? Container(
+                              child: GridView.count(
+                                  crossAxisCount: 3,
+                                  padding: EdgeInsets.only(left: 20, right: 20, top: 5),
+                                      mainAxisSpacing: 10.0,
+                                  childAspectRatio: (itemWidth / itemHeight) > 0
+                                      ? (itemWidth / itemHeight)
+                                      : 2.0,
+                                  crossAxisSpacing: 10.0,
+                                  controller: new ScrollController(
+                                      keepScrollOffset: false),
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.vertical,
+                                  children: selectedTags.map((Tags tagObj) {
+                                    return Container(
+                                      height: 60.0.h,
+                                      margin: new EdgeInsets.all(
+                                        1.0.sp,
+                                      ),
+                                      padding: EdgeInsets.all(
+                                        5.0.sp,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Color(new CommonUtil()
+                                                .getMyPrimaryColor())),
+                                        borderRadius: BorderRadius.circular(
+                                          10.0.sp,
+                                        ),
+                                      ),
+                                      child: new Row(
+                                        children: [
+                                          Expanded(
+                                            child: Center(
+                                              child: new TextWidget(
+                                                text: tagObj.name,
+                                                fontsize: 16.0.sp,
+                                                colors: Color(new CommonUtil()
+                                                    .getMyPrimaryColor()),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }).toList()))
+                          : SizedBox()
+                    ],
+                  )
                 else
                   Container(),
 
@@ -703,11 +768,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 ),
                 labelText: CommonConstants.addr_line_1,
               ),
-              validator: (res) {
+              /* validator: (res) {
                 return (res.isEmpty || res == null)
                     ? 'Address line1 can\'t be empty'
                     : null;
-              },
+              }, */
             ),
             TextFormField(
               style: TextStyle(
@@ -863,11 +928,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 ),
                 labelText: CommonConstants.addr_zip,
               ),
-              validator: (res) {
+              /* validator: (res) {
                 return (res.isEmpty || res == null)
                     ? 'Zip can\'t be empty'
                     : null;
-              },
+              }, */
             ),
           ],
         ),
@@ -918,6 +983,52 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 30),
         child: addButtonWithGesture);
+  }
+
+  Widget _showOKButton() {
+    final addButtonWithGesture = GestureDetector(
+      onTap: _onOkPressed,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Container(
+            margin: EdgeInsets.only(top: 20, bottom: 20),
+            width: 150.0.w,
+            height: 40.0.h,
+            decoration: BoxDecoration(
+              color: Color(CommonUtil().getMyPrimaryColor()),
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+              boxShadow: <BoxShadow>[
+                BoxShadow(
+                  color: Color.fromARGB(15, 0, 0, 0),
+                  offset: Offset(0, 2),
+                  blurRadius: 5,
+                ),
+              ],
+            ),
+            child: Center(
+              child: Text(
+                CommonConstants.ok,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16.0.sp,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    return Padding(
+        padding: EdgeInsets.only(left: 20, right: 20, top: 30),
+        child: addButtonWithGesture);
+  }
+
+  void _onOkPressed() {
+    Navigator.pop(context);
+    setState(() {});
   }
 
   void verifyEmail() {
@@ -1372,8 +1483,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           selectedGender = widget.arguments.myProfileResult.gender;
         }
 
-        selectedTags=addFamilyUserInfoBloc.tagsList
-            !=null && addFamilyUserInfoBloc.tagsList.length>0?addFamilyUserInfoBloc.tagsList:new List();
+        selectedTags = addFamilyUserInfoBloc.tagsList != null &&
+                addFamilyUserInfoBloc.tagsList.length > 0
+            ? addFamilyUserInfoBloc.tagsList
+            : new List();
+        setTheValuesForDropdown(selectedTags);
       }
       await setValueLanguages();
     } else if (widget.arguments.fromClass == CommonConstants.my_family) {
@@ -1673,7 +1787,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       } catch (e) {}
     }
 
-    addFamilyUserInfoBloc.tagsList=selectedTags;
+    addFamilyUserInfoBloc.tagsList = selectedTags;
 
     if (currentselectedBloodGroup != null &&
         currentselectedBloodGroupRange != null) {
@@ -2451,7 +2565,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           }
           final List<Tags> tagslist = snapshot.data.result;
 
-          mediaResultFiltered= removeUnwantedCategories(tagslist);
+          mediaResultFiltered = removeUnwantedCategories(tagslist);
 
           setTheValuesForDropdown(mediaResultFiltered);
           return DropdownWithTags(
@@ -2464,23 +2578,60 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         });
   }
 
+  Widget getTagsWithButton(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Padding(
+          padding: EdgeInsets.only(left: 20, right: 20, top: 5),
+          child: Text(
+            CommonConstants.tags,
+            style: TextStyle(fontSize: 14.0.sp, color: Colors.grey),
+          ),
+        ),
+        Padding(
+            padding: EdgeInsets.only(left: 20, right: 20, top: 5),
+            child: IconButton(
+              icon: Icon(Icons.add),
+              color: Colors.blue,
+              onPressed: () {
+                showTagDialog(context);
+              },
+            ))
+      ],
+    );
+  }
+
   List<Tags> removeUnwantedCategories(List<Tags> tagsList) {
     final tagsListDuplicate = List<Tags>();
     for (var i = 0; i < tagsList.length; i++) {
-
-        if (!tagsListDuplicate.contains(tagsList[i].name)) {
-          tagsListDuplicate.add(tagsList[i]);
-        }
-
+      if (!tagsListDuplicate.contains(tagsList[i].name)) {
+        tagsListDuplicate.add(tagsList[i]);
+      }
     }
     return tagsListDuplicate;
   }
 
   void setTheValuesForDropdown(List<Tags> result) {
-    if (addFamilyUserInfoBloc.tagsList != null && addFamilyUserInfoBloc.tagsList .isNotEmpty) {
+    if (addFamilyUserInfoBloc.tagsList != null && addFamilyUserInfoBloc.tagsList.length>0 &&
+        addFamilyUserInfoBloc.tagsList.isNotEmpty) {
       for (var mediaResultObj in mediaResultFiltered) {
-        for(var tagsSelected in addFamilyUserInfoBloc.tagsList) {
-          if (tagsSelected.name.toUpperCase()==mediaResultObj.name.toUpperCase()) {
+        for (var tagsSelected in addFamilyUserInfoBloc.tagsList) {
+          if (tagsSelected.name.toUpperCase() ==
+              mediaResultObj.name.toUpperCase()) {
+            mediaResultObj.isChecked = true;
+          }
+        }
+      }
+    }
+  }
+  void refreshDropDown(List<Tags> result) {
+    if (selectedTags != null &&
+        selectedTags.isNotEmpty) {
+      for (var mediaResultObj in mediaResultFiltered) {
+        for (var tagsSelected in selectedTags) {
+          if (tagsSelected.name.toUpperCase() ==
+              mediaResultObj.name.toUpperCase()) {
             mediaResultObj.isChecked = true;
           }
         }
@@ -2493,8 +2644,60 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     for (final mediaResultObj in result) {
       if (!selectedTags.contains(mediaResultObj.name) &&
           mediaResultObj.isChecked) {
-        selectedTags .add(mediaResultObj);
+        selectedTags.add(mediaResultObj);
       }
     }
+  }
+
+  showTagDialog(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(builder: (context, setState) {
+          return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(1)),
+              content: Container(
+                width: 1.sw,
+                height: 1.sh / 1.5,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        IconButton(
+                            icon: Icon(
+                              Icons.close,
+                              size: 24.0.sp,
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            })
+                      ],
+                    ),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: <Widget>[
+                            DropdownWithTags(
+                              isClickable: true,
+                              tags: mediaResultFiltered,
+                              onChecked: (result) {
+                                addSelectedcategoriesToList(result);
+                                refreshDropDown(result);
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    _showOKButton()
+                  ],
+                ),
+              ));
+        });
+      },
+    );
   }
 }

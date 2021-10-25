@@ -22,9 +22,9 @@ class _TaglistState extends State<Taglist> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+      child:  Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
                 padding: EdgeInsets.only(left: 5, right: 5, top: 5),
@@ -38,6 +38,7 @@ class _TaglistState extends State<Taglist> {
 
                 },
                 child: Wrap(
+                  alignment: WrapAlignment.start,
                   children: [
                     Wrap(
                       spacing: 6,
@@ -46,15 +47,13 @@ class _TaglistState extends State<Taglist> {
                               (e) => e.isChecked ? _buildChip(e.name) : Container())
                           .toList(),
                     ),
-                    SizedBox(
-                      width: 4,
-                    ),
+
                   ],
                 ),
               ),
 
             ],
-          )),
+          ),
     );
   }
 
