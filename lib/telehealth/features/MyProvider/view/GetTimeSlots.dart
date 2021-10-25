@@ -298,11 +298,11 @@ class GetTimeSlots extends StatelessWidget {
                             itemPosition);
                       } else {
                         //toast.getToast(noAddress, Colors.red);
-                        CommonUtil().mSnackbar(context, noAddress, 'Add');
+                        CommonUtil().mSnackbar(context, no_addr1_zip, 'Go To Profile');
                       }
                     } else {
                       //toast.getToast(noAddress, Colors.red);
-                      CommonUtil().mSnackbar(context, noAddress, 'Add');
+                      CommonUtil().mSnackbar(context, no_addr1_zip, 'Go To Profile');
                     }
                   } else {
                     //toast.getToast(noWeight, Colors.red);
@@ -355,7 +355,7 @@ class GetTimeSlots extends StatelessWidget {
       navigateToConfirmBook(
           context, rowPosition, itemPosition, null, false, false);
     } else {
-      toast.getToast(noAddress, Colors.red);
+      CommonUtil().mSnackbar(context, no_addr1_zip, 'Go To Profile');
     }
   }
 }
