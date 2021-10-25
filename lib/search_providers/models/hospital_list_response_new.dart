@@ -1,8 +1,11 @@
+import 'package:myfhb/search_providers/models/doctor_list_response_new.dart';
+
 class HospitalsSearchListResponse {
   bool isSuccess;
   List<HospitalsListResult> result;
+  Diagnostics diagnostics;
 
-  HospitalsSearchListResponse({this.isSuccess, this.result});
+  HospitalsSearchListResponse({this.isSuccess, this.result,this.diagnostics});
 
   HospitalsSearchListResponse.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
@@ -12,6 +15,12 @@ class HospitalsSearchListResponse {
         result.add(HospitalsListResult.fromJson(v));
       });
     }
+    if (json.containsKey('diagnostics')) {
+      diagnostics = json['diagnostics'] != null
+          ? Diagnostics.fromJson(json['diagnostics'])
+          : null;
+    }
+
   }
 
   Map<String, dynamic> toJson() {
@@ -19,6 +28,9 @@ class HospitalsSearchListResponse {
     data['isSuccess'] = isSuccess;
     if (result != null) {
       data['result'] = result.map((v) => v.toJson()).toList();
+    }
+    if (diagnostics != null) {
+      data['diagnostics'] = diagnostics.toJson();
     }
     return data;
   }

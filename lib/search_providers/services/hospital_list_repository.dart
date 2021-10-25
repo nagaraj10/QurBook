@@ -1,3 +1,5 @@
+import 'package:myfhb/search_providers/models/NewHospitalResponse.dart';
+
 import '../../common/CommonConstants.dart';
 import '../../constants/fhb_query.dart' as query;
 import '../models/hospital_list_response.dart';
@@ -42,4 +44,14 @@ String categories='[\"HOSPTL\",\"CLINIC\"]';
         "${query.qr_patient_update_default}${query.qr_list}${query.qr_healthOrganizationList}${query.qr_skip}${skip.toString()}${query.qr_And}${query.qr_limit}${limit.toString()}${query.qr_And}${query.qr_halthOrganization}$healthOrganizationId");
     return HospitalsSearchListResponse.fromJson(response);
   }
+
+  Future<NewHospitalResponse> addHospitalList(String jsonData) async {
+    var response = await _helper.addHospitalFromProvider(
+        "${query.qr_health_organization}${query.qr_non_qurpro_hospital}",
+        jsonData);
+    if (response['isSuccess']) {
+      return NewHospitalResponse.fromJson(response);
+    }
+  }
+
 }
