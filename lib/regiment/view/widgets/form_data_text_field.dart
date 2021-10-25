@@ -39,7 +39,11 @@ class FormDataTextField extends StatelessWidget {
           style: TextStyle(
             fontSize: 16.0.sp,
           ),
-          keyboardType: isNumberOnly ? TextInputType.number : null,
+          keyboardType: isNumberOnly
+              ? TextInputType.numberWithOptions(
+                  decimal: true,
+                )
+              : null,
           decoration: InputDecoration(
             isDense: true,
             border: OutlineInputBorder(
@@ -54,7 +58,7 @@ class FormDataTextField extends StatelessWidget {
             updateValue(updatedFieldData);
           },
           inputFormatters: [
-            if (isNumberOnly) FilteringTextInputFormatter.digitsOnly,
+            // if (isNumberOnly) FilteringTextInputFormatter.digitsOnly,
           ],
           validator: (value) {
             if (fieldData.title.startsWith('_') && value.isEmpty) {
@@ -65,10 +69,10 @@ class FormDataTextField extends StatelessWidget {
               if (value?.isEmpty) {
                 return '${fieldData.title} is required';
               } else if (isNumberOnly) {
-                if (((int.tryParse(value) ?? 0) <
-                        (int.tryParse(fieldData?.vmin) ?? 0)) ||
-                    ((int.tryParse(value) ?? 0) >
-                        (int.tryParse(fieldData?.vmax) ?? 0))) {
+                if (((double.tryParse(value) ?? 0) <
+                        (double.tryParse(fieldData?.vmin) ?? 0)) ||
+                    ((double.tryParse(value) ?? 0) >
+                        (double.tryParse(fieldData?.vmax) ?? 0))) {
                   return 'Enter a valid ${fieldData.title}';
                 } else {
                   return null;
